@@ -371,6 +371,65 @@ describe('28.T28.5 — the Agentic Control Room deep pane', () => {
         expect(invoke).not.toHaveBeenCalled();
         expect(screen.getByTestId('acr-capability-source').textContent).toContain('not loaded');
     });
+
+    /**
+     * 26.T26.9 — Aletheia subagent surfacing. `data-observed` is the whole
+     * claim: it must answer from the LIVE `sessions.list` lineage, not from the
+     * register. The fixture dispatches exactly one subagent (moirai), so five
+     * rows must read `false` — a surface rendering the roster would show six
+     * `true` and pass any test that only counted badges.
+     */
+    it('(26.9) surfaces the six subagents, observed ONLY from the live lineage', async () => {
+        render(<AgenticControlRoomPane />);
+        await waitFor(() => expect(screen.getByTestId('acr-run-tree').textContent).toContain('moirai'));
+        const observed = (id: string) =>
+            screen.getByTestId(`acr-aletheia-${id}`).getAttribute('data-observed');
+        expect(observed('moirai')).toBe('true');
+        expect(screen.getByTestId('acr-aletheia-moirai').getAttribute('data-dispatch-count')).toBe(
+            '1'
+        );
+        for (const id of ['anansi', 'janus', 'mercurius', 'agora', 'zeithoven']) {
+            expect(observed(id)).toBe('false');
+        }
+        // Each row carries its OWN contribution, not a shared label.
+        expect(screen.getByTestId('acr-aletheia-anansi').textContent).toContain('citation trail');
+        expect(screen.getByTestId('acr-aletheia-zeithoven').textContent).toContain(
+            'temporal-rhythm anchor'
+        );
+    });
+
+    it('(26.9) states on the surface that no facet-return producer exists', async () => {
+        render(<AgenticControlRoomPane />);
+        const seam = await screen.findByTestId('acr-aletheia-seam-facet-return-feed');
+        expect(seam.getAttribute('data-available')).toBe('false');
+        expect(seam.textContent).toContain('aletheia.rs::FacetReturn');
+        expect(seam.textContent).toContain('NOTHING CONSTRUCTS ONE');
+        // And the negative that governs this whole tranche.
+        const invocation = screen.getByTestId('acr-aletheia-seam-aletheia-tool-invocation');
+        expect(invocation.textContent).toContain("s4'.mediation.route");
+        expect(screen.getByTestId('acr-aletheia-note').textContent).toContain(
+            'never peer review actors'
+        );
+    });
+
+    /**
+     * The fixture's moirai session names `agent:anima` as its dispatcher and
+     * that session is NOT in the list — the orphan case `foldGenealogyTree`
+     * surfaces as a visible root rather than dropping. It must still carry its
+     * sub-trace: a subagent whose parent went missing is exactly the dispatch a
+     * governance reader most needs to see.
+     */
+    it('(26.9) expands the RunTree subagent node into its sub-trace', async () => {
+        render(<AgenticControlRoomPane />);
+        await waitFor(() => expect(screen.getByTestId('acr-run-tree').textContent).toContain('moirai'));
+        const trace = screen.getByTestId('aletheia-subagent-trace-moirai');
+        expect(trace.getAttribute('data-cf')).toBe('CF2');
+        expect(trace.textContent).toContain('tarot cast-anchor');
+        // No facet return on the wire, and the node says so rather than going quiet.
+        expect(screen.getByTestId('aletheia-no-return-moirai').textContent).toContain(
+            'no facet return'
+        );
+    });
 });
 
 /**

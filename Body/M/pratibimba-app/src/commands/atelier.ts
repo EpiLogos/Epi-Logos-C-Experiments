@@ -47,6 +47,8 @@
 
 import { AppCommand, commands } from './registry';
 import type { CrossLayoutIntent, IntentPrivacyClass } from './crossLayoutIntent';
+import { ALETHEIA_SUBAGENT_TRACES } from '../panes/omni/aletheiaSubagents';
+import type { AletheiaSubagentId } from '../panes/omni/evidenceShapes';
 
 /** The etymology:// provenance namespace (UX §5.3 namespace integrity). */
 export const ETYMOLOGY_PROVENANCE_SCHEME = 'etymology://';
@@ -118,21 +120,34 @@ export const SCENT_FOLLOWING_STAGES: readonly AtelierScentStage[] = Object.freez
  * Aletheia subagents surface as EVIDENCE LINEAGE in the scent-trail provenance —
  * NOT peer review actors, NOT gateway-invocable (Aletheia is emergent via Anima
  * dispatch). Rendered from provenance, never called from a pane (DR-M5-1 + 12.1).
+ *
+ * 26.T26.9 — PROJECTED, NOT RE-ENUMERATED. This list used to be a second roster
+ * with its own paraphrased roles, which is how the Atelier and the ACR came to
+ * describe the same six subagents differently. Both now read the ONE register
+ * (`panes/omni/aletheiaSubagents.ts`), whose rows are held against the substrate
+ * contract `Body/S/S3/gateway-contract/src/aletheia.rs::FacetId` by its sibling
+ * suite. `id` carries the canonical lowercase facet id so an Atelier badge and a
+ * dispatch node badge are the same identity.
  */
 export interface AletheiaLineageEntry {
+    /** The canonical lowercase facet id (`FacetId` serde, kebab-case). */
+    readonly id: AletheiaSubagentId;
     readonly subagent: string;
     readonly role: string;
+    /** `FacetId::cf_label()` — the CF the guardian is bound to. */
+    readonly cf: string;
 }
 
-export const ALETHEIA_LINEAGE: readonly AletheiaLineageEntry[] =
-    Object.freeze([
-        { subagent: 'Anansi', role: 'citation trail — source-to-source provenance' },
-        { subagent: 'Janus', role: 'prospective / retrospective weighting' },
-        { subagent: 'Moirai', role: 'tarot cast-anchor' },
-        { subagent: 'Mercurius', role: 'kairos signal' },
-        { subagent: 'Agora', role: 'deliberation log' },
-        { subagent: 'Zeithoven', role: 'temporal-rhythm anchor' }
-    ]);
+export const ALETHEIA_LINEAGE: readonly AletheiaLineageEntry[] = Object.freeze(
+    ALETHEIA_SUBAGENT_TRACES.map(trace =>
+        Object.freeze({
+            id: trace.id,
+            subagent: trace.label,
+            role: trace.traceKind,
+            cf: trace.cf
+        })
+    )
+);
 
 /**
  * 28.7 (d) / DR-M0-1 / 21-m0 SC-2, as a type rather than a comment: no Atelier

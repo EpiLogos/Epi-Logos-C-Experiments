@@ -592,3 +592,89 @@ test('26.T26.7: the control room’s temporal crossing lands the SAME run in the
     await expect(detail).toBeVisible({ timeout: 20_000 });
     await expect(detail).toContainText(await node.locator('.dispatch-node-method').first().innerText());
 });
+
+/**
+ * 26.T26.9 — Aletheia subagent surfacing, in the running app.
+ *
+ * The tranche's risk is precisely the one a unit render cannot rule out: a
+ * lineage list that renders from the roster CONSTANT and reads as live. So this
+ * spec imports ONE real subagent session through the gateway and then asserts
+ * the ASYMMETRY — the imported subagent reads `data-observed="true"` and the
+ * other five read `false`, in a real browser over a real `sessions.list`. A
+ * surface backed by a constant would show six `true`s (or six `false`s) and
+ * fail. Three claims:
+ *   (1) the six surface with their OWN contributions — the badge that used to
+ *       be a bare lowercase id now carries CF binding and trace kind;
+ *   (2) `observed` comes from the wire: exactly the imported one is true;
+ *   (3) the RunTree node for that subagent expands into `<AletheiaSubagentTrace/>`,
+ *       and the absent facet-return feed is named on the surface rather than
+ *       leaving an affordance that looks live and can never fire.
+ *
+ * BUDGET: boot (20s) + one real layout transition (30s) + the control-room body
+ * behind a tab click (20s) + the lineage section off `sessions.list` (20s).
+ * Worst case ~90s, hence 120s. Every wait is on a real signal.
+ */
+test('26.T26.9: the Aletheia lineage is read off the live session lineage, not the roster', async ({
+    page
+}) => {
+    test.setTimeout(120_000);
+
+    // A real Aletheia subagent session. `sessions.import` is `store.ensure`, so
+    // a fixed key is idempotent across runs; the id after `:subagent:` is what
+    // `dispatchGenealogyFromSessions` resolves the guardian identity from.
+    await gatewayRpc('sessions.import', {
+        targetSessionKey: 'agent:pi:subagent:anansi',
+        sourceSessionKey: 'agent:pi',
+        label: 'e2e aletheia lineage'
+    });
+
+    await boot(page);
+    await switchLayout(page, 'ide-deep');
+    await ensureFace(page, '1');
+    await page
+        .locator('.face-active .flexlayout__tab_button', { hasText: ACR_TAB_LABEL })
+        .first()
+        .click();
+    const room = page.locator('.face-active [data-testid="agentic-control-room"]');
+    await expect(room).toBeVisible({ timeout: 20_000 });
+
+    const lineage = room.locator('[data-testid="acr-aletheia-lineage"]');
+    await expect(lineage).toBeVisible({ timeout: 20_000 });
+
+    // (1) six rows, each carrying its own contribution
+    await expect(room.locator('[data-testid^="acr-aletheia-"][data-observed]')).toHaveCount(6, {
+        timeout: 20_000
+    });
+    await expect(room.locator('[data-testid="acr-aletheia-anansi"]')).toContainText(
+        'citation trail'
+    );
+    await expect(room.locator('[data-testid="acr-aletheia-mercurius"]')).toContainText(
+        'kairos signal'
+    );
+
+    // (2) THE ASYMMETRY. Only the session that really exists is observed.
+    await expect(room.locator('[data-testid="acr-aletheia-anansi"]')).toHaveAttribute(
+        'data-observed',
+        'true',
+        { timeout: 20_000 }
+    );
+    for (const absent of ['janus', 'moirai', 'agora', 'zeithoven']) {
+        await expect(
+            room.locator(`[data-testid="acr-aletheia-${absent}"]`),
+            `${absent} has no session — a roster-backed render would claim otherwise`
+        ).toHaveAttribute('data-observed', 'false');
+    }
+
+    // (3) the RunTree node expands into the sub-trace, and the absent feed is named
+    const trace = room.locator('[data-testid="aletheia-subagent-trace-anansi"]');
+    await expect(trace).toBeVisible({ timeout: 20_000 });
+    await expect(trace).toHaveAttribute('data-cf', 'CF0');
+    await expect(trace).toContainText('source-to-source provenance graph');
+    await expect(room.locator('[data-testid="acr-aletheia-seam-facet-return-feed"]')).toHaveAttribute(
+        'data-available',
+        'false'
+    );
+    await expect(room.locator('[data-testid="aletheia-no-return-anansi"]')).toContainText(
+        'no facet return on this dispatch'
+    );
+});

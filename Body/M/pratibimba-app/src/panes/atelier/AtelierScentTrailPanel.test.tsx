@@ -64,24 +64,63 @@ describe('AtelierScentTrailPanel (28.T28.7)', () => {
         expect(screen.getByTestId('atelier-provenance-empty').textContent).toContain('no handles');
     });
 
-    it('surfaces the six Aletheia subagents as lineage badges', () => {
+    /**
+     * 26.T26.9 — a badge naming only the subagent says who MIGHT appear, not
+     * what any of them contributes. Each badge now carries the CF binding and
+     * the per-subagent contribution, projected from the one register the
+     * substrate contract holds (`panes/omni/aletheiaSubagents.ts`), so the
+     * Atelier and the ACR cannot describe the same six differently.
+     */
+    it('surfaces the six Aletheia subagents as lineage badges, with CF + contribution', () => {
         render(<AtelierScentTrailPanel />);
         for (const subagent of ['Anansi', 'Janus', 'Moirai', 'Mercurius', 'Agora', 'Zeithoven']) {
             expect(screen.getByTestId(`atelier-lineage-${subagent}`)).toBeTruthy();
         }
+        const anansi = screen.getByTestId('atelier-lineage-Anansi');
+        expect(anansi.getAttribute('data-subagent')).toBe('anansi');
+        expect(anansi.getAttribute('data-cf')).toBe('CF0');
+        expect(anansi.textContent).toContain('citation trail');
+        expect(screen.getByTestId('atelier-lineage-Janus').getAttribute('data-cf')).toBe('CF1');
+        expect(screen.getByTestId('atelier-lineage-Janus').textContent).toContain(
+            'prospective / retrospective'
+        );
     });
 
-    it('renders a veto as a red, NON-BLOCKING banner', () => {
+    it('renders a veto as a red, NON-BLOCKING banner naming the subagent', () => {
         render(
             <AtelierScentTrailPanel
-                vetoes={[{ subagent: 'Moirai', reason: 'cast anchor is stale' }]}
+                vetoes={[
+                    {
+                        subagent: 'moirai',
+                        reason: 'cast anchor is stale',
+                        whatIsMissed: 'the decision point'
+                    }
+                ]}
             />
         );
-        const banner = screen.getByTestId('atelier-veto-Moirai');
+        const banner = screen.getByTestId('atelier-veto-moirai');
         expect(banner.className).toContain('atelier-veto');
         expect(banner.getAttribute('data-blocking')).toBe('false');
+        expect(banner.getAttribute('data-facet')).toBe('moirai');
         expect(banner.textContent).toContain('Aletheia subagent Moirai veto — cast anchor is stale');
+        expect(banner.textContent).toContain('the decision point');
         expect(banner.textContent).toContain('human gate stays open');
+        expect(screen.queryByTestId('atelier-veto-empty')).toBeNull();
+    });
+
+    /**
+     * 26.T26.9 — THE AMBIGUITY THIS TRANCHE CLOSED. The `vetoes` prop is passed
+     * by no live caller and cannot be: no S-layer source constructs a
+     * `FacetReturn` at all. So an empty veto list rendered as SILENCE, which a
+     * reader would take to mean "the facets agreed". It now says which absence
+     * it is, and names the substrate declaration that has no producer.
+     */
+    it('says WHY there is no veto rather than rendering silence', () => {
+        render(<AtelierScentTrailPanel />);
+        const note = screen.getByTestId('atelier-veto-empty');
+        expect(note.textContent).toContain('no Aletheia facet return on this trail');
+        expect(note.textContent).toContain('aletheia.rs::FacetReturn');
+        expect(note.textContent).toContain('NOTHING CONSTRUCTS ONE');
     });
 
     it('the crystallise button names Canon Studio and refuses without a note', () => {

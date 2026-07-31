@@ -121,10 +121,28 @@ export interface DispatchRoute {
  * An Aletheia facet return (12.T12.19). A `disclosure` carries the angle the
  * subagent surfaced; a `veto` blocks the synthesis and names what was missed —
  * it fires a non-blocking red banner, it does NOT block the human gate.
+ *
+ * 26.T26.9: `facet` is REQUIRED on both variants, exactly as the substrate
+ * contract declares it (`Body/S/S3/gateway-contract/src/aletheia.rs::FacetReturn`
+ * carries `facet: FacetId` in both arms). Without it the banner 26.9 specifies —
+ * "Aletheia subagent {name} veto — {reason}" — is unrepresentable: the carrier
+ * had a veto with no idea whose it was, and rendered an anonymous "Aletheia
+ * veto". Making the field required moves that from a render bug to a compile
+ * error.
  */
 export type AletheiaFacetReturn =
-    | { readonly kind: 'disclosure'; readonly angle: string; readonly evidenceRefs: readonly string[] }
-    | { readonly kind: 'veto'; readonly reason: string; readonly whatIsMissed: string };
+    | {
+          readonly kind: 'disclosure';
+          readonly facet: AletheiaSubagentId;
+          readonly angle: string;
+          readonly evidenceRefs: readonly string[];
+      }
+    | {
+          readonly kind: 'veto';
+          readonly facet: AletheiaSubagentId;
+          readonly reason: string;
+          readonly whatIsMissed: string;
+      };
 
 /** One node of the Pi → Anima → subagent invocation tree (Dispatch Trace
  *  fold; per-node fields per the Per-Tab role table — 27.3 extends). */

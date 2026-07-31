@@ -26,7 +26,8 @@
  * Public surface: AtelierStageBinding, ATELIER_STAGE_BINDINGS,
  *   atelierStageBinding, ProvenanceHandleVerdict, admitProvenanceHandle,
  *   admitProvenanceHandles, AtelierSubagentVeto,
- *   ATELIER_VETO_BLOCKS_HUMAN_GATE, ATELIER_LINEAGE_SUBAGENTS; plus the
+ *   ATELIER_VETO_BLOCKS_HUMAN_GATE, ATELIER_LINEAGE_SUBAGENTS,
+ *   ATELIER_ALETHEIA_FEED_SEAM; plus the
  *   re-exported write-back envelope law (ATELIER_MUTATES_GRAPH_CANON,
  *   MOBIUS_WRITE_BACK_TARGET, mobiusWriteBackIntent).
  * Does NOT own: the stage sequence or the command bodies (`commands/atelier.ts`),
@@ -41,6 +42,11 @@ import {
     SCENT_FOLLOWING_STAGES,
     type AtelierScentStage
 } from '../../commands/atelier';
+import {
+    ALETHEIA_VETO_BLOCKS_HUMAN_GATE,
+    aletheiaSurfacingSeam
+} from '../omni/aletheiaSubagents';
+import type { AletheiaSubagentId } from '../omni/evidenceShapes';
 import { atelierSeamFor, ATELIER_UNDISPATCHED_METHODS, type AtelierSeam } from './atelierSeams';
 
 /**
@@ -141,20 +147,41 @@ export function admitProvenanceHandles(
 
 // ── (e) Aletheia lineage + veto ────────────────────────────────────────────
 
+/**
+ * 26.T26.9: a veto belongs to a FACET, and the facet is one of the six — the
+ * type says so. `Body/S/S3/gateway-contract/src/aletheia.rs::FacetReturn::Veto`
+ * carries `facet: FacetId`, so an Atelier veto and a dispatch-node veto are the
+ * same datum under two renders, and "Aletheia subagent {name} veto — {reason}"
+ * is representable on both.
+ */
 export interface AtelierSubagentVeto {
-    /** One of ALETHEIA_LINEAGE's six — a veto from anyone else is not lineage. */
-    readonly subagent: string;
+    /** One of the six facet ids — a veto from anyone else is not lineage. */
+    readonly subagent: AletheiaSubagentId;
     readonly reason: string;
+    /** What the facet says the emerging synthesis missed (12.19 §5.2). */
+    readonly whatIsMissed?: string;
 }
 
 /**
  * 12.19: an Aletheia veto is ADVISORY. It colours the trail red and it is
  * recorded, but the human gate stays open — the subagents are evidence, not
- * approvers. Pinned as a const so no render can quietly make it blocking.
+ * approvers. 26.T26.9 makes this an ALIAS of the one shared constant rather than
+ * a second `false`: two independently-pinned booleans are two things that can
+ * come apart, and the Atelier and the ACR must never disagree about whether a
+ * veto blocks.
  */
-export const ATELIER_VETO_BLOCKS_HUMAN_GATE = false as const;
+export const ATELIER_VETO_BLOCKS_HUMAN_GATE = ALETHEIA_VETO_BLOCKS_HUMAN_GATE;
 
 /** The six subagent names a veto may legitimately come from. */
 export const ATELIER_LINEAGE_SUBAGENTS: readonly string[] = Object.freeze(
     ALETHEIA_LINEAGE.map(entry => entry.subagent)
 );
+
+/**
+ * 26.T26.9 — the seam the lineage block prints. The Atelier can show WHO may
+ * appear as lineage (the register) but not who DID, and no veto can reach it,
+ * because no S-layer source produces a `FacetReturn` at all. Saying that beside
+ * the badges is the difference between an empty veto list that means "the
+ * facets agreed" and one that means "nothing has ever spoken".
+ */
+export const ATELIER_ALETHEIA_FEED_SEAM = aletheiaSurfacingSeam('facet-return-feed');

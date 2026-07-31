@@ -28,8 +28,10 @@
 import { commands } from '../../commands/registry';
 import { ALETHEIA_LINEAGE, type AletheiaLineageEntry } from '../../commands/atelier';
 import { BridgeReadinessBadge } from '../../ui/BridgeReadinessBadge';
+import { vetoBannerText } from '../omni/aletheiaSubagents';
 import {
     admitProvenanceHandles,
+    ATELIER_ALETHEIA_FEED_SEAM,
     ATELIER_MUTATES_GRAPH_CANON,
     ATELIER_STAGE_BINDINGS,
     ATELIER_VETO_BLOCKS_HUMAN_GATE,
@@ -150,36 +152,58 @@ export function AtelierScentTrailPanel({
                 )}
             </div>
 
+            {/* 26.T26.9 — the lineage badges carry the CF binding and the
+                per-subagent contribution, projected from the ONE register, so
+                the Atelier and the ACR describe the same six the same way. */}
             <div className="atelier-lineage" data-testid="atelier-lineage">
                 <span className="atelier-subhead">
                     Aletheia lineage — evidence, never an invocation
                 </span>
                 {lineage.map(entry => (
                     <span
-                        key={entry.subagent}
-                        className="atelier-lineage-badge"
+                        key={entry.id}
+                        className={`atelier-lineage-badge subagent-${entry.id}`}
                         data-testid={`atelier-lineage-${entry.subagent}`}
+                        data-subagent={entry.id}
+                        data-cf={entry.cf}
                         title={entry.role}
                     >
                         {entry.subagent}
+                        <span className="atelier-lineage-cf">{entry.cf}</span>
+                        <span className="atelier-lineage-role">{entry.role}</span>
                     </span>
                 ))}
             </div>
 
-            {vetoes.map(veto => (
-                <div
-                    key={veto.subagent}
-                    className="atelier-veto"
-                    role="status"
-                    data-testid={`atelier-veto-${veto.subagent}`}
-                    data-blocking={String(ATELIER_VETO_BLOCKS_HUMAN_GATE)}
-                >
-                    {`Aletheia subagent ${veto.subagent} veto — ${veto.reason}`}
-                    <span className="atelier-veto-note">
-                        advisory: the human gate stays open (12.19)
-                    </span>
+            {/* 26.T26.9 — AN EMPTY VETO LIST IS AMBIGUOUS AND THIS SAYS WHICH.
+                "No veto" could mean the facets agreed; here it means nothing has
+                ever spoken, because no source in Body/S constructs a
+                `FacetReturn` at all. Naming the seam is what keeps this block
+                from being a live-looking affordance that can never fire. */}
+            {vetoes.length === 0 ? (
+                <div className="atelier-veto-empty" data-testid="atelier-veto-empty">
+                    {`no Aletheia facet return on this trail — \`${ATELIER_ALETHEIA_FEED_SEAM.contract}\` ${ATELIER_ALETHEIA_FEED_SEAM.reason}`}
                 </div>
-            ))}
+            ) : (
+                vetoes.map(veto => (
+                    <div
+                        key={veto.subagent}
+                        className="atelier-veto"
+                        role="status"
+                        data-testid={`atelier-veto-${veto.subagent}`}
+                        data-facet={veto.subagent}
+                        data-blocking={String(ATELIER_VETO_BLOCKS_HUMAN_GATE)}
+                    >
+                        {vetoBannerText(veto.subagent, veto.reason)}
+                        {veto.whatIsMissed ? (
+                            <span className="atelier-veto-missed">{`missed: ${veto.whatIsMissed}`}</span>
+                        ) : null}
+                        <span className="atelier-veto-note">
+                            advisory: the human gate stays open (12.19)
+                        </span>
+                    </div>
+                ))
+            )}
 
             <div className="atelier-writeback" data-testid="atelier-writeback">
                 <button

@@ -21,6 +21,7 @@ import type { SessionRecord } from '../../bridge/sessionClient';
 import type { ActorIdentity, ActorRole, AletheiaFacetReturn, RunStatus } from './omnipanelRuntime';
 import type { AletheiaSubagentId, PsycheFacet } from './evidenceShapes';
 import type { DispatchGenealogyRecord } from './dispatchGenealogy';
+import { ALETHEIA_SUBAGENT_IDS } from './aletheiaSubagents';
 import { resolveDispatchIdentity } from './psycheFacet';
 
 const RUN_STATUSES: ReadonlySet<RunStatus> = new Set([
@@ -34,15 +35,13 @@ const RUN_STATUSES: ReadonlySet<RunStatus> = new Set([
 /** The canonical s4'.mediation.route method — the ONLY allowed dispatch path. */
 const MEDIATION_ROUTE = "s4'.mediation.route";
 
-/** The six Aletheia techne-guardian subagents (S4-5'). */
-const ALETHEIA_SUBAGENTS: ReadonlySet<string> = new Set([
-    'anansi',
-    'janus',
-    'moirai',
-    'mercurius',
-    'agora',
-    'zeithoven'
-]);
+/**
+ * The six Aletheia techne-guardian subagents (S4-5'), PROJECTED from the one
+ * register rather than re-enumerated — 26.T26.9. A seventh guardian added to
+ * `aletheiaSubagents.ts` is recognised here without a second edit, and a local
+ * list can no longer drift out of agreement with what the surfaces render.
+ */
+const ALETHEIA_SUBAGENTS: ReadonlySet<string> = new Set<string>(ALETHEIA_SUBAGENT_IDS);
 
 function readString(record: SessionRecord, keys: readonly string[]): string | null {
     for (const key of keys) {
@@ -105,12 +104,26 @@ function readStatus(record: SessionRecord, endedAtMs: number | null): RunStatus 
     return endedAtMs === null ? 'running' : 'succeeded';
 }
 
-/** An Aletheia veto (12.19), read ONLY from real record fields — never faked. */
-function readFacetReturn(record: SessionRecord): AletheiaFacetReturn | undefined {
+/**
+ * An Aletheia veto (12.19), read ONLY from real record fields — never faked.
+ *
+ * 26.T26.9: a veto belongs to a FACET, per the substrate contract
+ * (`gateway-contract/src/aletheia.rs::FacetReturn::Veto { facet, .. }`). So this
+ * fold refuses to mint one for a session that is not an Aletheia subagent
+ * session: an anonymous veto is exactly what produced the anonymous banner this
+ * tranche removed. The seam is registered honestly — `vetoReason` /
+ * `veto_reason` occur nowhere in `Body/S`, so no live record carries one today
+ * (`aletheiaSubagents.ts::ALETHEIA_SURFACING_SEAMS` `facet-return-feed`).
+ */
+function readFacetReturn(
+    record: SessionRecord,
+    facet: AletheiaSubagentId | undefined
+): AletheiaFacetReturn | undefined {
     const reason = readString(record, ['vetoReason', 'veto_reason']);
-    if (reason) {
+    if (reason && facet) {
         return {
             kind: 'veto',
+            facet,
             reason,
             whatIsMissed: readString(record, ['vetoMissed', 'veto_missed']) ?? ''
         };
@@ -165,7 +178,7 @@ export function dispatchGenealogyFromSessions(
             aletheiaSubagent,
             aletheiaCrystallisationIntent:
                 readString(record, ['crystallisationIntent', 'crystallisation_intent']) ?? undefined,
-            aletheiaFacetReturn: readFacetReturn(record),
+            aletheiaFacetReturn: readFacetReturn(record, aletheiaSubagent),
             tickAtInvoke: readNumber(record, ['tickAtInvoke', 'tick_at_invoke']) ?? undefined
         };
     });

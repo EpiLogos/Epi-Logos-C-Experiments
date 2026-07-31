@@ -29,6 +29,14 @@
  *         instances; the canonical `select-run` key resolves to the STRUCTURAL
  *         fold, which is why that carriage needed a route of its own), and an
  *         HONEST hold on the Backend Studio link until 28.13 lands it;
+ *     (3b) 26.T26.9 — the Aletheia crystallisation lineage. The six subagents
+ *         with the CF binding, techne class and per-subagent contribution the
+ *         tranche names, `data-observed` answered by the LIVE genealogy fold
+ *         (not by the register), their recorded non-blocking vetoes, and the
+ *         surfacing seam rows that state why an observed subagent normally
+ *         carries no facet return: the 12.19 contract is complete in
+ *         `Body/S/S3/gateway-contract/src/aletheia.rs` and NOTHING in Body/S
+ *         constructs a `FacetReturn`;
  *     (4) the review governance queue — `s5'.review.inbox` → the decision
  *         controls, carrying the IOD-17 three-cell parity readout;
  *         28.T28.9 made this the DEEP half of DR-WC-IS-2 for the REVIEW
@@ -107,6 +115,10 @@ import {
 } from '../omni/omnipanelCapabilities';
 import { PSYCHE_FACET_LABEL, psycheFacetClass } from '../omni/psycheFacet';
 import { PsycheFacetLegend } from '../omni/PsycheFacetLegend';
+import {
+    ALETHEIA_SURFACING_SEAMS,
+    aletheiaLineageFromGenealogy
+} from '../omni/aletheiaSubagents';
 import { AbortRetryContinueControls } from './AbortRetryContinueControls';
 import { PiRuntimeMonitorBanner } from './PiRuntimeMonitorBanner';
 import { ReviewDecisionControls } from './ReviewDecisionControls';
@@ -200,6 +212,12 @@ export function AgenticControlRoomPane() {
 
     const records = useMemo(() => dispatchGenealogyFromSessions(sessions ?? []), [sessions]);
     const index = useMemo(() => genealogyIndex(records), [records]);
+    // 26.T26.9 — the Aletheia lineage read off the LIVE genealogy, not off a
+    // roster constant. The six rows are the register (hiding an unobserved one
+    // would make "Anansi did not run" read as "Anansi does not exist"), but
+    // `observed` / `dispatchCount` / `vetoes` come only from records the fold
+    // really produced from `sessions.list`.
+    const aletheiaLineage = useMemo(() => aletheiaLineageFromGenealogy(records), [records]);
     const selectedRecord = selectedNodeId ? (index.get(selectedNodeId) ?? null) : null;
 
     // 28.T28.9 — the DEEP folding of the governance queue. Same producer the `/`
@@ -400,6 +418,70 @@ export function AgenticControlRoomPane() {
                         {`source anchor \`${heldBackendLink}\` — Backend Studio is CHROME-CONTRACT §2 \`pending\` (28.T28.13 owns it), so this reference is held rather than deep-linked to a surface that does not exist.`}
                     </p>
                 ) : null}
+            </section>
+
+            {/* (3b) 26.T26.9 — ALETHEIA SUBAGENT SURFACING. The six read as six
+                distinct angles: each row carries its CF binding, techne class
+                and the contribution 26.9 names for it, and `data-observed` is
+                answered by the LIVE genealogy above rather than by the register.
+                A veto returned by a subagent appears here as recorded evidence
+                and is non-blocking (12.19) — the human gate is section (4)'s.
+                The seam rows beneath state, on the surface, that no S-layer
+                source constructs a `FacetReturn` yet, which is why an observed
+                subagent normally shows no return. */}
+            <section className="acr-aletheia" data-testid="acr-aletheia-lineage">
+                <h4>Aletheia crystallisation lineage</h4>
+                <p className="acr-aletheia-note" data-testid="acr-aletheia-note">
+                    Evidence lineage, never peer review actors — Aletheia is emergent through Anima
+                    dispatch and is reached by no gateway method (DR-M5-1 / 12.1).
+                </p>
+                <ul className="acr-aletheia-list" role="list">
+                    {aletheiaLineage.map(observation => (
+                        <li
+                            key={observation.trace.id}
+                            role="listitem"
+                            className={`acr-aletheia-row subagent-${observation.trace.id}`}
+                            data-testid={`acr-aletheia-${observation.trace.id}`}
+                            data-observed={String(observation.observed)}
+                            data-dispatch-count={observation.dispatchCount}
+                            data-veto-count={observation.vetoes.length}
+                        >
+                            <strong>{observation.trace.label}</strong>
+                            <span className="acr-aletheia-cf">{observation.trace.cf}</span>
+                            <span className="acr-aletheia-trace-kind">
+                                {observation.trace.traceKind}
+                            </span>
+                            <span className="acr-aletheia-observed">
+                                {observation.observed
+                                    ? `${observation.dispatchCount} dispatch${observation.dispatchCount === 1 ? '' : 'es'} in the live lineage`
+                                    : 'not dispatched in the live lineage'}
+                            </span>
+                            {observation.vetoes.map(veto => (
+                                <span
+                                    key={veto.nodeId}
+                                    className="acr-aletheia-veto"
+                                    data-testid={`acr-aletheia-veto-${observation.trace.id}`}
+                                >
+                                    {`veto — ${veto.reason}`}
+                                </span>
+                            ))}
+                        </li>
+                    ))}
+                </ul>
+                <ul className="acr-aletheia-seams" role="list" data-testid="acr-aletheia-seams">
+                    {ALETHEIA_SURFACING_SEAMS.map(seam => (
+                        <li
+                            key={seam.id}
+                            role="listitem"
+                            data-testid={`acr-aletheia-seam-${seam.id}`}
+                            data-available={String(seam.available)}
+                        >
+                            <code>{seam.contract}</code>
+                            <span className="acr-seam-purpose">{seam.expected}</span>
+                            <span className="acr-seam-reason">{seam.reason}</span>
+                        </li>
+                    ))}
+                </ul>
             </section>
 
             {/* (4) The governance queue + decision controls.

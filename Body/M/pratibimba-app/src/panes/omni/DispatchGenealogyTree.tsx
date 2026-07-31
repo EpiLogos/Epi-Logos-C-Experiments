@@ -8,6 +8,10 @@
  *   identity, a non-blocking veto banner (12.19), and — when Anima dispatches
  *   in crystallisation-mode — wraps the subagent fan-out in an
  *   AletheiaCrystallisationGroup (DR-B-3: subagents stay nested under Anima).
+ *   26.T26.9 replaces the bare subagent badge on such a node with the expanded
+ *   `<AletheiaSubagentTrace />` sub-trace the tranche names — the subagent's own
+ *   contribution kind, CF binding, techne class, and facet return (disclosure or
+ *   veto), so the six read as six distinct angles rather than six labels.
  *   Collapsible nodes (view-local fold state only); selectable nodes emit the
  *   consistent node id; deep-link buttons emit `DispatchDeepLink` descriptors.
  *   This is the reusable face the `omniDispatchTrace` tab body composes.
@@ -27,6 +31,7 @@ import {
 import type { AletheiaSubagentId } from './evidenceShapes';
 import { PSYCHE_FACET_LABEL, psycheFacetClass } from './psycheFacet';
 import { AletheiaCrystallisationGroup } from './AletheiaCrystallisationGroup';
+import { AletheiaSubagentTrace } from './AletheiaSubagentTrace';
 import { VetoBanner } from './VetoBanner';
 
 export interface DispatchGenealogyTreeProps {
@@ -149,7 +154,21 @@ function TreeNode(props: {
                     </button>
                 ))}
             </div>
-            {node.aletheiaFacetReturn && <VetoBanner facetReturn={node.aletheiaFacetReturn} />}
+            {/* 26.T26.9 — a node MEDIATED BY an Aletheia subagent renders the
+                expanded sub-trace: which contribution this subagent makes (the
+                six are not interchangeable), its CF binding and techne class,
+                and its facet return — the disclosure arm included, which had a
+                type and no reader. A non-subagent node with a return still gets
+                the bare banner. */}
+            {node.aletheiaSubagent ? (
+                <AletheiaSubagentTrace
+                    subagent={node.aletheiaSubagent}
+                    facetReturn={node.aletheiaFacetReturn}
+                    tickAtInvoke={node.tickAtInvoke}
+                />
+            ) : node.aletheiaFacetReturn ? (
+                <VetoBanner facetReturn={node.aletheiaFacetReturn} />
+            ) : null}
             {node.children.length > 0 && !isCollapsed && (
                 <ul className="dispatch-tree-children">
                     {normalChildren.map(renderChild)}

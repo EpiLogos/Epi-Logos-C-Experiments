@@ -6482,6 +6482,120 @@ textarea {
     opacity: 0.7;
     font-style: italic;
 }
+/* 26.T26.9 — the per-subagent sub-trace. Bordered on the crystallisation
+   family colour so a subagent return reads as ONE block distinct from its
+   dispatcher's row, without becoming a peer of it. */
+.aletheia-subagent-trace {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin: 0.15rem 0 0.25rem 0.9rem;
+    padding: 0.25rem 0.45rem;
+    font-size: var(--type-micro);
+    border-left: 2px solid color-mix(in srgb, var(--mediator-aletheia) 70%, transparent);
+    background: color-mix(in srgb, var(--mediator-aletheia) 8%, transparent);
+    border-radius: 0 0.4rem 0.4rem 0;
+}
+.aletheia-subagent-trace-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+.aletheia-subagent-cf {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+    opacity: 0.75;
+}
+.aletheia-subagent-techne,
+.aletheia-subagent-canon,
+.aletheia-subagent-tick,
+.aletheia-subagent-no-return {
+    opacity: 0.7;
+}
+.aletheia-subagent-trace-kind {
+    color: var(--mediator-aletheia);
+}
+.aletheia-subagent-disclosure {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+.aletheia-disclosure-evidence {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 0.6rem;
+}
+.aletheia-disclosure-evidence-empty {
+    opacity: 0.6;
+    font-style: italic;
+}
+/* 26.T26.9 — the ACR lineage section. `data-observed` is the load-bearing
+   attribute, so an unobserved row is visibly quieter than an observed one. */
+.acr-aletheia-list,
+.acr-aletheia-seams {
+    list-style: none;
+    margin: 0.2rem 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.acr-aletheia-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    font-size: var(--type-micro);
+    padding: 0.15rem 0.35rem;
+    border-left: 2px solid transparent;
+}
+.acr-aletheia-row[data-observed='true'] {
+    border-left-color: var(--mediator-aletheia);
+}
+.acr-aletheia-row[data-observed='false'] {
+    opacity: 0.6;
+}
+.acr-aletheia-cf {
+    letter-spacing: 0.04em;
+    opacity: 0.75;
+}
+.acr-aletheia-trace-kind {
+    color: var(--mediator-aletheia);
+}
+.acr-aletheia-observed {
+    opacity: 0.7;
+}
+.acr-aletheia-veto {
+    color: var(--danger);
+}
+.acr-aletheia-seams li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    font-size: var(--type-micro);
+    opacity: 0.75;
+}
+.acr-aletheia-note {
+    font-size: var(--type-micro);
+    opacity: 0.75;
+    margin: 0.2rem 0;
+}
+/* 26.T26.9 — the Atelier's lineage badges and its absent-feed disclosure. */
+.atelier-lineage-cf,
+.atelier-lineage-role {
+    margin-left: 0.3rem;
+    opacity: 0.7;
+}
+.atelier-veto-missed {
+    margin-left: 0.4rem;
+    opacity: 0.85;
+}
+.atelier-veto-empty {
+    font-size: var(--type-micro);
+    opacity: 0.7;
+    margin: 0.2rem 0;
+}
 .dispatch-node-detail {
     border: 1px solid var(--hairline);
     border-radius: 0.5rem;
