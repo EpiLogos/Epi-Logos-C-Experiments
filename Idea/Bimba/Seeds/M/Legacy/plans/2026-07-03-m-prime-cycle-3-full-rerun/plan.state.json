@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-31T00:49:38.983Z",
+  "updatedAt": "2026-07-31T01:26:13.250Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13301,16 +13301,54 @@
       "blocker": null
     },
     "26.T26.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-31T01:26:13.225Z",
+      "claimedAt": "2026-07-31T00:49:54.378Z",
+      "completedAt": "2026-07-31T01:26:13.225Z",
+      "evidence": [
+        {
+          "at": "2026-07-31T01:15:45.448Z",
+          "text": "Commit 85b99502. THE DECISION WAS ANNOTATED, NOT ENFORCED. DR-WC-M5-3's negative claim (Sophia never an actor row) was held by exactly one machine statement — acrGovernance.test.ts:256 asserting over acrRoster(), a STATIC projection of a frozen constant, true by construction and structurally blind to the live path. The live path never consulted it: dispatchGenealogyFromSessions.ts:76 derived the actor straight off the session key, so a real agent:sophia:* session minted { actor: 'sophia', role: 'pi' } — the peer actor row the decision forbids — and DispatchTracePanel.test.tsx:109 fed EXACTLY that key while asserting only that a badge appeared. psycheFacet.ts::resolveDispatchIdentity is the enforcement (the one place a session identity becomes a rendered actor): the six non-dispatch registers resolve onto the Pi harness row CARRYING that facet, the decision read literally, nothing dropped; anima exempt as the dispatcher (row and voice). Proven red-then-green: 4 cases failed against the pre-fix fold (all six registers took actor rows), green after. SECOND GAP: the ToolStream badge the decision names reached NO PIXEL — DispatchGenealogyStream read records whose psycheFacet was populated and typed and rendered it nowhere. Landed, plus the legend as ONE component in two hosts (Dispatch header + ACR governance header) with per-facet hover onto Body/S/S4/pi-agent/agents/{name}.md#6-sattva. REGISTER RECORDED AT ITS TRUE STATUS, CORRECTED DOWN: §DR-WC-M5-3 self-declared 'VALIDATED · By: m-dev 26.T26.8 implementation' with Action/Verification pointing at FROZEN Body/M/epi-theia paths; the index row read 'register section landed', sibling DR-WC-M5-1 reads 'ROUTED — user final-validation pending', and 26-m5-epii-frontend-deep.md:172 keeps dr_m5_1_roster_collapse set 'until 26.8 ratification'. Now RESOLVED AT THE WIDGET LAYER — user final-validation PENDING, NOT ratified by the Architect, with live-carrier paths. dr-gate-audit 32/32 unchanged. app-test 2142 passed/4 skipped (baseline 2133/4, +9); typecheck + build clean; laned e2e 135 passed with ONE unrelated red, nara-tuning (one of the six known shared-lane boot-budget specs), green ALONE in 2.1s, re-run laned once with the identical result. Left pending as instructed: backendStudio (28.13), readiness-gate (28.11).",
+          "receipt": {
+            "command": "pnpm --dir Body/M/pratibimba-app typecheck && pnpm --dir Body/M/pratibimba-app test && pnpm --dir Body/M/pratibimba-app build && pnpm --dir Body/M/pratibimba-app test:e2e (laned)",
+            "exitCode": 0,
+            "testsPassed": 2277,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/psycheFacet.ts",
+              "Body/M/pratibimba-app/src/panes/omni/dispatchGenealogyFromSessions.ts",
+              "Body/M/pratibimba-app/src/panes/omni/PsycheFacetLegend.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/DispatchGenealogyStream.tsx",
+              "Body/M/pratibimba-app/src/panes/acr/AgenticControlRoomPane.tsx",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md"
+            ],
+            "tokenUsage": {
+              "input": 312000,
+              "output": 29000
+            }
+          }
+        },
+        {
+          "at": "2026-07-31T01:26:13.225Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260731, distinct from this closer) on the FULL class-scoped gate with no scoping: app-ui-flow 136 playwright specs, app-test 2142 against a 2133 baseline, ta-onta 800, gateway 118, app-typecheck, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint. TWO FINDINGS, BOTH GOVERNANCE-CRITICAL. FIRST, THE DECISION HAD CROWNED ITSELF: the register section for this tranche's decision read VALIDATED, attributed to the m-dev implementation of this very tranche, with its Action and Verification lines pointing at paths inside the FROZEN epi-theia tree. Its real status is established from three independent places — the index row records only that the register section landed, the sibling roster decision is ROUTED with user final-validation pending, and the spec keeps the roster-collapse flag set until this tranche's ratification. It is now recorded honestly as resolved at the widget layer with user final-validation PENDING and explicitly not ratified by the Architect; an agent does not have authority to ratify a decision on the Architect's behalf. The decision-register audit remains 32 of 32. SECOND, THE NON-EXECUTABLE MARKING ON THE PSYCHE REGISTERS WAS ANNOTATION, NOT ENFORCEMENT, and the test that should have caught it was feeding the failing input while looking elsewhere. The existing guard proved Sophia is not an actor over the roster projection — a static projection of a frozen constant, true by construction and blind to the live path. Meanwhile the session-to-genealogy fold took the actor straight off the session key, so a real Sophia agent session minted an actor row with the Pi role: exactly the forbidden constitutional peer the roster collapse exists to prevent. The panel test fed that precise session key and asserted only that a badge appeared. Dispatch identity now resolves the six psyche registers onto the Pi harness row carrying the facet, with Anima exempt as the dispatcher, and four cases failed before the fix and pass after it. Also built: the tool-stream badge, because the stream fold was dropping a populated and correctly typed facet without rendering a pixel, and the legend as one component in two hosts with per-facet links into the agent Sattva sections. Verified standing rather than rebuilt: the tree badge, the register constants, and the roster projection. Commit 85b99502.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 26.T26.8 --owner opus5-mdev-verify-20260731",
+            "exitCode": 0,
+            "testsPassed": 2142,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/psycheFacet.ts",
+              "Body/M/pratibimba-app/src/panes/omni/dispatchGenealogyFromSessions.ts",
+              "app-ui-flow 136 playwright specs PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 8 dirty files.",
+      "owner": "opus5-t26t8-psyche",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-31T01:15:45.448Z",
+      "runId": "20260731T004954Z-26-T26.8",
       "worktree": null,
       "blocker": null
     },
@@ -29226,6 +29264,16 @@
       "leaseExpiresAt": "2026-07-31T04:19:45.112Z",
       "worktree": null,
       "completedAt": "2026-07-31T00:39:09.279Z"
+    },
+    {
+      "runId": "20260731T004954Z-26-T26.8",
+      "taskId": "26.T26.8",
+      "status": "review",
+      "startedAt": "2026-07-31T00:49:54.378Z",
+      "owner": "opus5-t26t8-psyche",
+      "leaseExpiresAt": "2026-07-31T04:49:54.378Z",
+      "worktree": null,
+      "completedAt": "2026-07-31T01:15:45.448Z"
     }
   ],
   "activeRoute": {
