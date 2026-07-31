@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-30T23:49:04.966Z",
+  "updatedAt": "2026-07-31T00:19:30.277Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13197,16 +13197,54 @@
       "blocker": null
     },
     "26.T26.6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-31T00:19:30.249Z",
+      "claimedAt": "2026-07-30T23:49:18.197Z",
+      "completedAt": "2026-07-31T00:19:30.249Z",
+      "evidence": [
+        {
+          "at": "2026-07-31T00:08:11.493Z",
+          "text": "26.6 audit found the pane already carrying its concept header, four-stage Mobius ribbon, six-capacity filter and candidate capacity field; the one seam declared at both ends and fired by neither was the capacity route - intentTarget() aliases ide-shell-m0-m5/capacity:<id> onto autoresearch-pane (crossLayoutIntent.ts:235) and App.tsx decoded it into requestedCapacity (App.tsx:532), with zero dispatchers in the carrier. The 26.2 capacity lanes now dispatch it per lane through one shared codec that also removes App.tsx's duplicated six-id list. The ribbon's recompose-pass ordinal has no producer at all - recompose_pass (epii-autoresearch-core/src/recompose.rs:55) has no non-test caller anywhere in Body/S and ImproveStatus (types.rs:202) carries no pass field - so the cell now names both symbols on the surface and autoresearchSeams.test.ts reads the real crate sources, flipped red by temporarily adding a caller and a field then reverted. app-test 2128 passed / 4 skipped (was 2118), e2e 135 passed laned (was 134), typecheck + build clean, lint-test-honesty 0 findings. Commit a8f5a13b.",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 2263,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/autoresearchSeams.ts",
+              "Body/M/pratibimba-app/src/panes/M5OperationalCapacityLanes.tsx",
+              "Body/M/pratibimba-app/src/panes/autoresearchModel.ts",
+              "Body/M/pratibimba-app/src/panes/AutoresearchPane.tsx",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m5-capacity-lanes.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 181000,
+              "output": 19500
+            }
+          }
+        },
+        {
+          "at": "2026-07-31T00:19:30.249Z",
+          "text": "Independent verification (verifier opus5-mdev-verify-20260731, distinct from this closer). CLOSED ON THE DOCUMENTED UNRELATED-RED PATH, scoping named not hidden: every gate stage green except app-ui-flow, whose only red is session-continuity, a spec owned by tranche 15.2 that this work does not touch, timing out at 23.3 seconds against a 20 second budget. This is the sixth DIFFERENT spec to fail this way across the session's full runs — readiness-state-grammar, nara-tuning, m0-symbolic-question-console, m1-session-close-reader, visual-regression and now session-continuity — every one green in isolation, every one a boot or readiness budget, in a suite already configured workers 1, fullyParallel false, retries 0. Roughly one spec per full run fails this way and it is never the tranche under test. THE TRANCHE'S OWN PROOF IS FULL: typecheck clean, build clean, app-test 2128 against a 2118 baseline, honesty-lint zero findings, and the implementer's own laned UF run green at 135 including this tranche's new spec. MOST OF THE SPEC WAS ALREADY STANDING from 28.T28.10 and that was verified with file and line rather than inherited: the concept header naming dry-run, human-required and forbidden-authority, the four-stage Mobius ribbon with active stage and dry-run badge, the six-capacity dropdown, and the derived capacity on the candidate model. THE DECLARED-BUT-NEVER-FIRED SEAM: the intent resolver had aliased the per-capacity target onto this pane and App.tsx already decoded it into a requested capacity, but NOTHING in the carrier dispatched it — the route existed end to end with no caller. The 26.2 capacity lanes now fire it per lane through one codec, which also deletes the second transcription of the six-id list App.tsx had been carrying. AN ABSENT PRODUCER IS SURFACED RATHER THAN FAKED: the ribbon's recompose-pass count has no producer at all — recompose_pass in the autoresearch crate has no non-test caller anywhere in the S stack and the improve-status type carries no pass field — so the cell names both symbols on screen, a seams map records it, and its test reads the real crate sources; proven red by temporarily adding a caller and a field, then reverted with the tree verified clean. The DOX pass on the carrier's own AGENTS.md was skipped because my dispatch brief said not to stage AGENTS.md, which I meant for the root file's tooling churn; that was my error and the navigation contract was updated separately in commit 83b17bb1. Commit a8f5a13b.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 26.T26.6 --owner opus5-mdev-verify-20260731 --only honesty-lint",
+            "exitCode": 0,
+            "testsPassed": 2128,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/autoresearchSeams.ts",
+              "Body/M/pratibimba-app/src/panes/M5OperationalCapacityLanes.tsx",
+              "laned pnpm test:e2e 135 passed playwright"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 8 dirty files.",
+      "owner": "opus5-t26t6-autoresearch",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-31T00:08:11.493Z",
+      "runId": "20260730T234918Z-26-T26.6",
       "worktree": null,
       "blocker": null
     },
@@ -29130,6 +29168,16 @@
       "leaseExpiresAt": "2026-07-31T03:21:46.477Z",
       "worktree": null,
       "completedAt": "2026-07-30T23:38:38.742Z"
+    },
+    {
+      "runId": "20260730T234918Z-26-T26.6",
+      "taskId": "26.T26.6",
+      "status": "review",
+      "startedAt": "2026-07-30T23:49:18.197Z",
+      "owner": "opus5-t26t6-autoresearch",
+      "leaseExpiresAt": "2026-07-31T03:49:18.197Z",
+      "worktree": null,
+      "completedAt": "2026-07-31T00:08:11.493Z"
     }
   ],
   "activeRoute": {
