@@ -64,14 +64,18 @@ const EXPECTED: ReadonlyArray<readonly [string, OmniPanelTabId, Record<string, u
     ['omnipanel-shell/gateway.open-bridge-readiness', 'diagnostics', { activeSubSection: 'kernel-bridge' }],
     ['omnipanel-shell/pi-chat.dispatch-emitted', 'dispatch-trace', { selectedNodeId: 'art-1' }],
     // carrier completion (Tool Stream fold's evidence chip — sibling of dispatch-trace.open-evidence)
-    ['omnipanel-shell/tool-stream.open-evidence', 'evidence', { selectedPacketId: 'art-1' }]
+    ['omnipanel-shell/tool-stream.open-evidence', 'evidence', { selectedPacketId: 'art-1' }],
+    // carrier completion (26.T26.7 — the deep control room's TEMPORAL crossing.
+    // The canonical ACR key above lands on `dispatch-trace`, the structural fold
+    // that pane renders itself, so 26.7 (a)'s ToolStream needed a key of its own)
+    ['ide-shell-m0-m5/agentic-control-room.open-tool-stream', 'tool-stream', { selectedEventId: 'art-1' }]
 ];
 
 describe('OmniPanelIntentRouter routing table', () => {
-    it('declares the 14 canonical spec routes plus the one carrier completion (15)', () => {
-        expect(OMNIPANEL_DEFAULT_ROUTES.size).toBe(15);
-        expect(omniPanelIntentRouter.routeKeys().length).toBe(15);
-        expect(EXPECTED.length).toBe(15);
+    it('declares the 14 canonical spec routes plus the two carrier completions (16)', () => {
+        expect(OMNIPANEL_DEFAULT_ROUTES.size).toBe(16);
+        expect(omniPanelIntentRouter.routeKeys().length).toBe(16);
+        expect(EXPECTED.length).toBe(16);
         expect(new Set(omniPanelIntentRouter.routeKeys())).toEqual(new Set(EXPECTED.map(([key]) => key)));
     });
 

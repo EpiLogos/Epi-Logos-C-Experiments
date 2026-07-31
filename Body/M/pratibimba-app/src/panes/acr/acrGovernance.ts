@@ -5,7 +5,7 @@
  *   IS, held apart from what it renders. A pure module (no React, no gateway,
  *   no `import.meta.glob`) so the Playwright spec may import it directly —
  *   `scripts/lint-e2e-import-graph.mjs`.
- * Actualises: DR-WC-IS-1 RESOLVED — the ACR is GOVERNANCE PRIMARY. Three things
+ * Actualises: DR-WC-IS-1 RESOLVED — the ACR is GOVERNANCE PRIMARY. Four things
  *   live here, and none of them is a component:
  *
  *   (1) THE METHOD REGISTER (`ACR_METHOD_BINDINGS`). Every substrate seam this
@@ -24,6 +24,17 @@
  *           controls therefore have NO wire, and this tranche renders them as an
  *           honest pending-wire surface that names the missing method instead of
  *           a button that cannot act.
+ *
+ *   (1b) THE FOLD-ROUTE REGISTER (`ACR_FOLD_ROUTES`, 26.T26.7). The same
+ *       discipline for the seams that are NOT wire calls: which OmniPanel fold
+ *       each crossing really activates. 26.7 (a) names a `<ToolStream />` among
+ *       the T8 contents and this carrier composes it as the ONE `tool-stream`
+ *       fold — a composition that is only true if the crossing lands there, and
+ *       it did not: the pane's temporal button fired the canonical
+ *       `agentic-control-room.select-run`, which the 27.9 table resolves to
+ *       `dispatch-trace`, the STRUCTURAL fold this pane already renders. So the
+ *       register names each route's destination and the suite resolves it
+ *       through the LIVE router.
  *
  *   (2) THE IOD-17 THREE-CELL PARITY READOUT (`computeIod17Parity`). One
  *       question — "may an AGENT commit this review decision?" — asked of three
@@ -53,7 +64,8 @@
  *       rather than restating them, so Sophia can never re-acquire an actor row.
  * Public surface: ACR_SURFACE_ID, ACR_WIDGET_ID, ACR_PANE_TITLE, ACR_TAB_LABEL,
  *   PI_RUNTIME_MONITOR_BANNER, AcrMethodBinding, ACR_METHOD_BINDINGS,
- *   acrMethodBinding, ACR_UNWIRED_METHODS, Iod17Face, Iod17FaceState,
+ *   acrMethodBinding, ACR_UNWIRED_METHODS, AcrFoldRoute, ACR_FOLD_ROUTES,
+ *   acrFoldRoute, Iod17Face, Iod17FaceState,
  *   Iod17ParityCell, Iod17ParityReadout, IOD17_PARITY_FACES,
  *   IOD17_PARITY_VIOLATION_MESSAGE, AGENT_REVIEW_COMMIT_CAPABILITIES,
  *   computeIod17Parity, AcrDispatchRow, AcrAspectRow, AcrRoster, acrRoster.
@@ -69,7 +81,7 @@
  */
 
 import type { PsycheFacet } from '../omni/evidenceShapes';
-import type { ActorRole } from '../omni/omnipanelRuntime';
+import type { ActorRole, OmniPanelTabId } from '../omni/omnipanelRuntime';
 import {
     ALETHEIA_TECHNE_GUARDIANS,
     ANIMA_DISPATCH_TARGETS,
@@ -215,6 +227,72 @@ export function acrMethodBinding(id: string): AcrMethodBinding {
 export const ACR_UNWIRED_METHODS: readonly AcrMethodBinding[] = Object.freeze(
     ACR_METHOD_BINDINGS.filter(binding => binding.status === 'unwired')
 );
+
+// ---------------------------------------------------------------------------
+// (1b) The fold-route register — 26.T26.7
+// ---------------------------------------------------------------------------
+
+/**
+ * The OmniPanel folds this pane crosses INTO, and the fold each crossing really
+ * activates. A gateway method register cannot hold these: a fold crossing rides
+ * the 27.9 intent table, not the wire, and it is exactly the kind of seam that
+ * can be declared and land somewhere else without anything noticing — which is
+ * what 26.T26.7 found. So each row names the fold the LIVE
+ * `omnipanelIntentRouter` resolves it to, and the sibling suite asserts that
+ * claim against the real table rather than restating it.
+ */
+export interface AcrFoldRoute {
+    readonly id: string;
+    readonly extensionId: string;
+    readonly contributionId: string;
+    /** The 27.9 routing key: `${extensionId}/${contributionId}`. */
+    readonly routeKey: string;
+    /** The OmniPanel fold this key activates. */
+    readonly landsOn: OmniPanelTabId;
+    /** `outbound` — this pane fires it; `inbound` — another surface fires it AT
+     *  the identity this pane owns. */
+    readonly direction: 'outbound' | 'inbound';
+    readonly purpose: string;
+}
+
+const foldRoute = (route: Omit<AcrFoldRoute, 'routeKey'>): AcrFoldRoute =>
+    Object.freeze({ ...route, routeKey: `${route.extensionId}/${route.contributionId}` });
+
+export const ACR_FOLD_ROUTES: readonly AcrFoldRoute[] = Object.freeze([
+    foldRoute({
+        id: 'temporal-fold',
+        extensionId: 'ide-shell-m0-m5',
+        contributionId: 'agentic-control-room.open-tool-stream',
+        landsOn: 'tool-stream',
+        direction: 'outbound' as const,
+        purpose:
+            "26.7 (a)'s `<ToolStream />`: the TIME-ORDERED folding of the same genealogy this pane "
+            + 'folds structurally (15.11). The carrier has exactly one Tool Stream, so the run '
+            + 'selected here is carried into it rather than a second instance being mounted — and '
+            + 'the node id IS the `selectedEventId` that fold indexes by, so both foldings hold one '
+            + 'run. Added to the 27.9 table by this tranche; the canonical ACR key resolves to the '
+            + 'STRUCTURAL fold, which this pane already renders itself.'
+    }),
+    foldRoute({
+        id: 'structural-fold-inbound',
+        extensionId: 'ide-shell-m0-m5',
+        contributionId: 'agentic-control-room.select-run',
+        landsOn: 'dispatch-trace',
+        direction: 'inbound' as const,
+        purpose:
+            "the canonical 27.9 ACR key, fired by the `/` membrane's Review fold to land a run in "
+            + "the membrane's own RunTree (28.T28.9). This pane does NOT fire it: its own RunTree is "
+            + 'the structural fold, so selecting a node here needs no hop at all.'
+    })
+]);
+
+export function acrFoldRoute(id: string): AcrFoldRoute {
+    const route = ACR_FOLD_ROUTES.find(entry => entry.id === id);
+    if (!route) {
+        throw new Error(`unknown ACR fold route: ${id}`);
+    }
+    return route;
+}
 
 // ---------------------------------------------------------------------------
 // (2) IOD-17 three-cell parity

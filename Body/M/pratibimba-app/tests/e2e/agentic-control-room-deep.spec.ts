@@ -42,7 +42,11 @@
  *
  *   THE SECOND TEST is 28.T28.8's UF half — DR-WC-IS-2's DEEP evidence render,
  *   which lands in this same pane (§5 gives the full governance/evidence work to
- *   the deep surfaces). Its own docblock carries its claims and its budget.
+ *   the deep surfaces). THE THIRD is 28.T28.9's review split. THE FOURTH is
+ *   26.T26.7's T8 ToolStream crossing — the one T8 content this carrier
+ *   composes rather than mounts, and which was therefore reachable from the
+ *   governance pane by no path until that tranche. Each carries its own
+ *   docblock, claims, and budget.
  * Does NOT own: the switch (52.T3 — `layout-switch.spec.ts`), WHICH panes exist
  *   per layout (52.T4 — `deep-pane-set.spec.ts`), the pure governance law
  *   (`src/panes/acr/acrGovernance.test.ts`), or the jsdom render
@@ -476,4 +480,92 @@ test('28.T28.9: one live review row, two foldings — abbreviated in `/`, full p
     await expect(
         deep.locator(`[data-testid="review-item-parity-status-${itemId}"]`)
     ).toContainText('all three faces agree');
+});
+
+/**
+ * 26.T26.7 — the T8 `<ToolStream />`, reachable at last.
+ *
+ * 26.7 (a) lists a ToolStream among the deep control room's T8 contents, and
+ * this carrier composes it as the ONE `tool-stream` fold instead of a second
+ * instance over the same dataset. That composition is a CLAIM about a crossing,
+ * and the crossing did not hold: the pane's button said "open the temporal fold"
+ * and fired `agentic-control-room.select-run`, which the 27.9 table resolves to
+ * `dispatch-trace` — the structural fold the pane already renders. So the
+ * time-ordered list was reachable from the governance surface by no path, and
+ * the compositional argument that justified not duplicating it was untrue.
+ *
+ * The unit suites pin the route and the payload; only a real browser can prove
+ * the whole seam — that the click really opens the Tools border fold on the
+ * active face and that the fold really lands on the SAME node, which is what
+ * "one dataset, two foldings" (15.11) means. Three claims:
+ *   (1) the crossing opens the Tools fold (`revealBorderTab` → `omni-tool-stream`
+ *       on the deep face's model), and the governance pane is still the only
+ *       place the tree is rendered — no second ToolStream inside it;
+ *   (2) the row the temporal fold selects is the node id the RunTree selected,
+ *       read off the DOM of both surfaces, not off a fixture;
+ *   (3) the fold's detail names that run — i.e. the node really resolved through
+ *       `genealogyIndex`, rather than a payload landing on an unknown id.
+ *
+ * BUDGET: boot (20s) + one real layout transition (a full FlexLayout remount of
+ * both faces, polled at 30s) + the control-room body behind a tab click (20s) +
+ * the border fold. Worst case ~90s, hence 120s. Every wait is on a real signal.
+ */
+test('26.T26.7: the control room’s temporal crossing lands the SAME run in the Tools fold', async ({
+    page
+}) => {
+    test.setTimeout(120_000);
+
+    // A genealogy needs a session lineage; the fold synthesises nothing, so one
+    // real session is imported rather than hoping the boot left one behind.
+    const sessionKey = `agent:pi:subagent:moirai-${Date.now().toString(36)}`;
+    await gatewayRpc('sessions.import', {
+        targetSessionKey: sessionKey,
+        sourceSessionKey: 'agent:pi',
+        label: 'e2e acr temporal crossing'
+    });
+
+    await boot(page);
+    await switchLayout(page, 'ide-deep');
+    await ensureFace(page, '1');
+    await page
+        .locator('.face-active .flexlayout__tab_button', { hasText: ACR_TAB_LABEL })
+        .first()
+        .click();
+    const room = page.locator('.face-active [data-testid="agentic-control-room"]');
+    await expect(room).toBeVisible({ timeout: 20_000 });
+
+    // (1) the governance pane hosts the STRUCTURAL fold and only that one.
+    await expect(
+        room.locator('[data-testid="tool-stream-panel"]'),
+        'a second ToolStream in the governance pane would be two readers of one dataset'
+    ).toHaveCount(0);
+
+    const node = room.locator('[data-testid="dispatch-tree-node"]').first();
+    await expect(node).toBeVisible({ timeout: 30_000 });
+    const nodeId = await node.getAttribute('data-node-id');
+    expect(nodeId, 'the RunTree node carries the genealogy identity').toBeTruthy();
+    await node.locator('[data-testid="dispatch-tree-node-row"]').first().click();
+
+    const crossing = room.locator('[data-testid="acr-open-tool-stream"]');
+    await expect(crossing).toBeVisible({ timeout: 20_000 });
+    // the affordance states the fold it opens, and it is the TIME-ORDERED one
+    await expect(crossing).toHaveAttribute('data-lands-on', 'tool-stream');
+    await crossing.click();
+
+    // (1) the Tools border fold really opened on the face on screen
+    const toolsButton = page
+        .locator('.face-active .flexlayout__border_button', { hasText: 'Tools' })
+        .first();
+    await expect(toolsButton).toHaveClass(/--selected/, { timeout: 20_000 });
+    const stream = page.locator('.face-active [data-testid="tool-stream-panel"]');
+    await expect(stream).toBeVisible({ timeout: 20_000 });
+
+    // (2) the SAME node, selected in the temporal folding
+    const row = stream.locator(`[data-testid="dispatch-stream-row"][data-node-id="${nodeId}"]`);
+    await expect(row.first()).toHaveAttribute('aria-selected', 'true', { timeout: 20_000 });
+
+    // (3) …and it resolved: the fold's detail is that run, not an empty payload
+    const detail = stream.locator('[data-testid="tool-stream-detail"]');
+    await expect(detail).toBeVisible({ timeout: 20_000 });
+    await expect(detail).toContainText(await node.locator('.dispatch-node-method').first().innerText());
 });

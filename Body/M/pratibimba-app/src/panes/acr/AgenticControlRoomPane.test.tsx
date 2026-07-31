@@ -176,18 +176,40 @@ describe('28.T28.5 — the Agentic Control Room deep pane', () => {
         expect(screen.getByTestId('acr-run-tree').textContent).toContain('moirai');
     });
 
-    it('routes the selected node to the ONE temporal fold instead of hosting a second ToolStream', async () => {
+    // 26.T26.7 — 26.7 (a) names `<ToolStream />` among the T8 contents, and the
+    // carrier composes it as the ONE `tool-stream` fold rather than a second
+    // instance. That composition is only true if the crossing REALLY lands
+    // there: before this tranche the pane's "open the temporal fold" button
+    // fired `agentic-control-room.select-run`, which the 27.9 table resolves to
+    // `dispatch-trace` — the STRUCTURAL fold this pane already renders — so the
+    // time-ordered list was reachable from the control room by no path at all.
+    // The assertion is therefore on the fold that really activates, through the
+    // LIVE router and the real session store, not on the button's existence.
+    it('26.7 (a) — the temporal crossing lands on the tool-stream fold carrying the same node', async () => {
         render(<AgenticControlRoomPane />);
         await waitFor(() => expect(screen.getByTestId('acr-run-tree').textContent).toContain('pi'));
         const node = screen
             .getByTestId('acr-run-tree')
-            .querySelector('[data-testid="dispatch-tree-node-row"]');
+            .querySelector('[data-testid="dispatch-tree-node"]');
         expect(node, 'the tree renders a selectable node').toBeTruthy();
-        fireEvent.click(node as Element);
-        const link = await screen.findByTestId('acr-open-in-omni-dispatch');
-        expect(link).toBeTruthy();
-        // …and the governance pane hosts no second tool-stream instance
-        expect(screen.queryByTestId('tool-stream-fold')).toBeNull();
+        const nodeId = (node as Element).getAttribute('data-node-id');
+        expect(nodeId, 'the node carries the genealogy identity both folds index by').toBeTruthy();
+        fireEvent.click((node as Element).querySelector(
+            '[data-testid="dispatch-tree-node-row"]'
+        ) as Element);
+        fireEvent.click(await screen.findByTestId('acr-open-tool-stream'));
+
+        const state = readOmniPanelSessionState();
+        expect(
+            state.activeTab,
+            'the TEMPORAL fold is `tool-stream`; `dispatch-trace` is the structural one this pane already renders'
+        ).toBe('tool-stream');
+        expect(
+            state.perTabState['tool-stream'].selectedEventId,
+            'ToolStreamPanel resolves `selectedEventId` through `genealogyIndex` — one node identity across both foldings (15.11)'
+        ).toBe(nodeId);
+        // …and the governance pane still hosts no second tool-stream instance
+        expect(screen.queryByTestId('tool-stream-panel')).toBeNull();
     });
 
     it('(d) reads the open governance queue from the LIVE inbox method', async () => {

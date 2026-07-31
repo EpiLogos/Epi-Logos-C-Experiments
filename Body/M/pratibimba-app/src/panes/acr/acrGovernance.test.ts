@@ -27,6 +27,7 @@ import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
+    ACR_FOLD_ROUTES,
     ACR_METHOD_BINDINGS,
     ACR_PANE_TITLE,
     ACR_SURFACE_ID,
@@ -37,10 +38,12 @@ import {
     IOD17_PARITY_FACES,
     IOD17_PARITY_VIOLATION_MESSAGE,
     PI_RUNTIME_MONITOR_BANNER,
+    acrFoldRoute,
     acrMethodBinding,
     acrRoster,
     computeIod17Parity
 } from './acrGovernance';
+import { omniPanelIntentRouter } from '../omni/omnipanelIntentRouter';
 import { ACR_REVIEW_DECISIONS, parseReviewInbox, reviewResolveRequest } from './acrReviewInbox';
 import {
     ALETHEIA_TECHNE_GUARDIANS,
@@ -258,6 +261,71 @@ describe('28.T28.5 — DR-M5-1 roster collapse', () => {
         for (const aspect of roster.aspectRegisters) {
             expect(actors.has(aspect.register), `${aspect.register} is in both columns`).toBe(false);
         }
+    });
+});
+
+/**
+ * 26.T26.7 — the fold crossings, resolved through the LIVE 27.9 router.
+ *
+ * The defect this closes was not a missing component: it was a crossing that
+ * NAMED one fold and opened another. `agentic-control-room.select-run` resolves
+ * to `dispatch-trace` — the structural fold the governance pane renders itself —
+ * so the `<ToolStream />` 26.7 (a) lists among the T8 contents was reachable
+ * from the control room by no path at all, while the pane's button said it was.
+ * A register that merely asserted the intended destination would have been the
+ * same class of claim, so every row is resolved through the real router here.
+ */
+describe('26.T26.7 — the ACR fold-route register is resolved, not asserted', () => {
+    it('every declared crossing lands on the fold the register names', () => {
+        for (const route of ACR_FOLD_ROUTES) {
+            const resolved = omniPanelIntentRouter.route({
+                coordinate: null,
+                artifactUri: 'node-7',
+                reviewId: null,
+                dayNow: null,
+                sessionKey: null,
+                profileGeneration: null,
+                privacyClass: null,
+                requestedExtensionId: route.extensionId,
+                requestedContributionId: route.contributionId
+            });
+            expect(resolved, `${route.routeKey} resolves to no fold at all`).toBeTruthy();
+            expect(resolved?.activateTab, `${route.routeKey} lands elsewhere`).toBe(route.landsOn);
+        }
+    });
+
+    it('the temporal crossing is the TIME-ORDERED fold, and carries the node as its event id', () => {
+        const temporal = acrFoldRoute('temporal-fold');
+        expect(temporal.landsOn).toBe('tool-stream');
+        expect(temporal.direction).toBe('outbound');
+        const resolved = omniPanelIntentRouter.route({
+            coordinate: null,
+            artifactUri: 'node-7',
+            reviewId: null,
+            dayNow: null,
+            sessionKey: null,
+            profileGeneration: null,
+            privacyClass: null,
+            requestedExtensionId: temporal.extensionId,
+            requestedContributionId: temporal.contributionId
+        });
+        // `ToolStreamPanel` looks `selectedEventId` up in `genealogyIndex` — the
+        // SAME map the RunTree indexes by — so carrying the node id under that
+        // key is what makes "one node, two foldings" true (15.11).
+        expect(resolved?.perTabPayload).toEqual({ selectedEventId: 'node-7' });
+    });
+
+    it('the canonical select-run key is INBOUND — it lands on the structural fold', () => {
+        const structural = acrFoldRoute('structural-fold-inbound');
+        expect(structural.direction).toBe('inbound');
+        // The pane renders that fold itself; a crossing to it would be a second
+        // copy of the tree on screen, which is precisely the misfire found.
+        expect(structural.landsOn).toBe('dispatch-trace');
+        expect(structural.landsOn).not.toBe(acrFoldRoute('temporal-fold').landsOn);
+    });
+
+    it('an unknown crossing is refused rather than silently resolved', () => {
+        expect(() => acrFoldRoute('backend-studio')).toThrow(/unknown ACR fold route/);
     });
 });
 

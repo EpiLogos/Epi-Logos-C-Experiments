@@ -107,13 +107,24 @@ const resolveSessionsRoute: OmniPanelRoutingResolver = intent =>
  * a click-through source to the fold that owns the destination fold-state.
  *
  * The first 14 entries are the canonical spec table (27-omnipanel-tabs-deep.md
- * 27.9, lines 478-493) verbatim. The final entry — `tool-stream.open-evidence` —
- * is a carrier completion of a spec omission: the carrier's Tool Stream fold
- * surfaces the same Evidence chips as Dispatch Trace (shared `deepLinksFor` over
- * `evidenceRef`), so it needs the sibling of `dispatch-trace.open-evidence`. It
- * is added here (rather than via `register()`) so both source folds route
- * symmetrically in the app AND when rendered in isolation. Flagged for Architect
- * review as a proposed addition to the canonical table.
+ * 27.9, lines 478-493) verbatim. The last two are carrier completions of spec
+ * omissions, added here (rather than via `register()`) so the source surfaces
+ * route identically in the app AND when rendered in isolation. Both are flagged
+ * for Architect review as proposed additions to the canonical table:
+ *
+ *   · `tool-stream.open-evidence` — the carrier's Tool Stream fold surfaces the
+ *     same Evidence chips as Dispatch Trace (shared `deepLinksFor` over
+ *     `evidenceRef`), so it needs the sibling of `dispatch-trace.open-evidence`.
+ *   · `agentic-control-room.open-tool-stream` (26.T26.7) — 26.7 (a) names a
+ *     `<ToolStream />` among the deep control room's T8 contents, and the
+ *     carrier composes it as the ONE `tool-stream` fold instead of a second
+ *     instance over the same dataset. That composition needs a key that LANDS
+ *     there. The canonical table's only ACR key, `agentic-control-room.
+ *     select-run`, resolves to `dispatch-trace` — the STRUCTURAL fold the
+ *     governance pane already renders itself — so before this entry the
+ *     time-ordered fold was reachable from the control room by no path at all.
+ *     `select-run` keeps its meaning as the INBOUND seam (the `/` Review fold
+ *     fires it to land a node in the membrane's own RunTree, 28.T28.9).
  */
 export const OMNIPANEL_DEFAULT_ROUTES: ReadonlyMap<string, OmniPanelRoutingResolver> = Object.freeze(
     new Map<string, OmniPanelRoutingResolver>([
@@ -134,8 +145,9 @@ export const OMNIPANEL_DEFAULT_ROUTES: ReadonlyMap<string, OmniPanelRoutingResol
         ['omnipanel-shell/review.open-gateway-blocker', resolveGatewayRoute],
         ['omnipanel-shell/gateway.open-bridge-readiness', resolveDiagnosticsRoute],
         ['omnipanel-shell/pi-chat.dispatch-emitted', resolveDispatchTraceRoute],
-        // Carrier completion (see table doc above):
-        ['omnipanel-shell/tool-stream.open-evidence', resolveEvidenceRoute]
+        // Carrier completions (see table doc above):
+        ['omnipanel-shell/tool-stream.open-evidence', resolveEvidenceRoute],
+        ['ide-shell-m0-m5/agentic-control-room.open-tool-stream', resolveToolStreamRoute]
     ])
 );
 

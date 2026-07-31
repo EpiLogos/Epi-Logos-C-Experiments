@@ -21,13 +21,14 @@
  *         fan-outs in `AletheiaCrystallisationGroup` and renders `VetoBanner`
  *         per node, so 28.5 (e)'s subagent trace + non-blocking veto is carried
  *         rather than re-drawn), with node click-through to the Evidence fold on
- *         `mediatedRunEvidencePacketId`, the canonical 27.9
- *         `agentic-control-room.select-run` route carrying the same node into
- *         the `/` membrane's TEMPORAL fold (28.5 (a)'s ToolStream is
+ *         `mediatedRunEvidencePacketId`, the 26.T26.7
+ *         `agentic-control-room.open-tool-stream` route carrying the same node
+ *         into the `/` membrane's TEMPORAL fold (26.7 (a)'s ToolStream is
  *         `ToolStreamPanel` in `omniLogs`, and DR-WC-IS-2 makes the time-ordered
  *         render agentic primary — one dataset, two foldings, not two
- *         instances), and an HONEST hold on the Backend Studio link until 28.13
- *         lands it;
+ *         instances; the canonical `select-run` key resolves to the STRUCTURAL
+ *         fold, which is why that carriage needed a route of its own), and an
+ *         HONEST hold on the Backend Studio link until 28.13 lands it;
  *     (4) the review governance queue — `s5'.review.inbox` → the decision
  *         controls, carrying the IOD-17 three-cell parity readout;
  *         28.T28.9 made this the DEEP half of DR-WC-IS-2 for the REVIEW
@@ -114,11 +115,14 @@ import {
     reviewItemsDeep
 } from '../omni/review/reviewItemDeep';
 import { REVIEW_EVIDENCE_ROUTE } from '../omni/review/reviewPaneSeams';
-import { ACR_METHOD_BINDINGS, acrRoster } from './acrGovernance';
+import { ACR_FOLD_ROUTES, ACR_METHOD_BINDINGS, acrFoldRoute, acrRoster } from './acrGovernance';
 import { REVIEW_INBOX_METHOD, parseReviewInbox, type AcrReviewItem } from './acrReviewInbox';
 
 /** Same cadence as the Dispatch fold: live without hammering the gateway. */
 const REFETCH_TICKS = 30;
+
+/** 26.T26.7 — the crossing that makes 26.7 (a)'s `<ToolStream />` reachable. */
+const TEMPORAL_FOLD_ROUTE = acrFoldRoute('temporal-fold');
 
 export function AgenticControlRoomPane() {
     const connected = useProvenanceStore(s => s.connection.connected);
@@ -349,30 +353,37 @@ export function AgenticControlRoomPane() {
                 {selectedRecord ? (
                     <p className="acr-run-selected" data-testid="acr-run-selected">
                         {`${selectedRecord.actor.actor} · ${selectedRecord.route.method} · ${selectedRecord.status}`}
-                        {/* THE TEMPORAL FOLD IS NOT DUPLICATED HERE. 28.5 (a)
+                        {/* THE TEMPORAL FOLD IS NOT DUPLICATED HERE. 26.7 (a)
                             lists a ToolStream among the T8 contents, and the
                             carrier already has exactly one: `ToolStreamPanel`
                             in the `omniLogs` fold. DR-WC-IS-2 makes the
                             time-ordered render agentic primary, so a second
                             instance in the governance pane would be two readers
                             of one dataset with two copies of the same tab
-                            state. The canonical 27.9 route for this surface
-                            (`agentic-control-room.select-run`) carries the
-                            selected node into the `/` membrane instead — the
-                            structural fold here, the temporal fold there, one
-                            node identity across both (15.11). */}
+                            state. So the selected run is CARRIED there — and
+                            26.T26.7 is the tranche that made that carriage
+                            true. It fired `agentic-control-room.select-run`,
+                            which the 27.9 table resolves to `dispatch-trace`:
+                            the STRUCTURAL fold, i.e. a second copy of the tree
+                            already on screen, while the time-ordered list the
+                            spec names stayed unreachable from this pane. The
+                            route below lands on `tool-stream`, and the node id
+                            IS that fold's `selectedEventId` — the structural
+                            fold here, the temporal fold there, one node
+                            identity across both (15.11). */}
                         <button
                             type="button"
-                            data-testid="acr-open-in-omni-dispatch"
+                            data-testid="acr-open-tool-stream"
+                            data-lands-on={TEMPORAL_FOLD_ROUTE.landsOn}
                             onClick={() =>
                                 fireOmniPanelRoute({
-                                    requestedExtensionId: 'ide-shell-m0-m5',
-                                    requestedContributionId: 'agentic-control-room.select-run',
+                                    requestedExtensionId: TEMPORAL_FOLD_ROUTE.extensionId,
+                                    requestedContributionId: TEMPORAL_FOLD_ROUTE.contributionId,
                                     artifactUri: selectedRecord.id
                                 })
                             }
                         >
-                            open the temporal fold →
+                            open the temporal fold (Tools) →
                         </button>
                     </p>
                 ) : null}
@@ -540,6 +551,26 @@ export function AgenticControlRoomPane() {
                                     {`spec named \`${binding.specNamed}\` — ${binding.correction}`}
                                 </span>
                             ) : null}
+                        </li>
+                    ))}
+                </ul>
+                {/* 26.T26.7 — the fold crossings, held to the same standard. A
+                    method register cannot cover them: a crossing rides the 27.9
+                    intent table, and this tranche found one that named a fold it
+                    did not open. So each row states the fold it activates. */}
+                <h4>Fold crossings</h4>
+                <ul role="list" data-testid="acr-fold-routes">
+                    {ACR_FOLD_ROUTES.map(route => (
+                        <li
+                            key={route.id}
+                            role="listitem"
+                            data-testid={`acr-fold-route-${route.id}`}
+                            data-lands-on={route.landsOn}
+                            data-direction={route.direction}
+                        >
+                            <code>{route.routeKey}</code>
+                            <span className="acr-seam-status">{`${route.direction} → ${route.landsOn}`}</span>
+                            <span className="acr-seam-purpose">{route.purpose}</span>
                         </li>
                     ))}
                 </ul>

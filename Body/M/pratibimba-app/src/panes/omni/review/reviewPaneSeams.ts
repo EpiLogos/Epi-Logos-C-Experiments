@@ -157,8 +157,10 @@ export const REVIEW_PANE_SEAMS: readonly ReviewPaneSeam[] = Object.freeze([
         reason:
             'the 27.9 routing table resolves this key to the Dispatch Trace fold with '
             + '`selectedNodeId = artifactUri`, which is the same node identity the genealogy fold '
-            + 'and the evidence packet use (15.11). It is the seam the deep pane already fires for '
-            + 'its own selected run.'
+            + 'and the evidence packet use (15.11). It is the INBOUND seam only: 26.T26.7 '
+            + 'established that the deep pane does not fire it — its own RunTree IS the structural '
+            + 'fold, so it fires `agentic-control-room.open-tool-stream` for the TEMPORAL one '
+            + 'instead (`panes/acr/acrGovernance.ts::ACR_FOLD_ROUTES`).'
     }),
     Object.freeze({
         deliverable: '28.9 (c) — the surface the spec wanted that click to land on',
