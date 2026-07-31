@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-31T02:08:13.759Z",
+  "updatedAt": "2026-07-31T02:58:16.488Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -16766,16 +16766,54 @@
       "blocker": null
     },
     "32.T32.8": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-31T02:58:16.463Z",
+      "claimedAt": "2026-07-31T02:09:07.310Z",
+      "completedAt": "2026-07-31T02:58:16.463Z",
+      "evidence": [
+        {
+          "at": "2026-07-31T02:47:40.852Z",
+          "text": "commit 5abb0b1d. epi-logos.privacy.default-class is live at protected_local, DERIVED from the preference register (no second literal; a src-wide scan bans ?? / || / default-param spellings outside it) and enforced at the READ path by readDefaultPrivacyClass, so an absent value or an older vocabulary resolves to the shipped default rather than a caller's guess. The 07-T0 per-extension privacyClass is a ceiling held in lockstep with the real contract JSON, and NO ceiling row resolves to shared_archetype_opt_in, which makes 'per-artifact opt-in is the only public-bridge crossing path' a property of the table. The gate is CONSULTED by the behaviour it guards: requestPublicCrossing loads the PASU ledger and returns before performCrossing (an injected effect) when no qualifying nara.shared-archetype.publish consent exists; removing the consult reds 4 cases including 'the ONLY difference between the two outcomes is the ledger content'. Found and fixed: evaluateVoiceCorpusAdmission was exported and called by nothing; SettingsPane dispatched controls by control KIND so a second select would have rendered the theme dropdown for the privacy class (now keyed). Two corrections recorded with substrate warrant: consent rides nara.pasu.consents.append (pasu_set_key takes six scalar keys, not c_4_atlas_sync_consents) and the opt-in is an inline surface not a dialog (lint:no-modal). publish_shared_archetype_event has a reducer client at Body/S/S3/gateway/src/spacetime/presence.rs:600 but no dispatch arm, disclosed as PUBLIC_CROSSING_SEAM on the surface and held against the real S-stack sources. app-test 2218 passed / 4 skipped (baseline 2173); e2e 5/5 new + 17/17 laned neighbours.",
+          "receipt": {
+            "command": "pnpm typecheck && pnpm test && pnpm build (Body/M/pratibimba-app), then laned: node .codex/scripts/gate-lane.mjs --owner opus5-t32t8-privacy -- npx playwright test tests/e2e/privacy-default-class.spec.ts tests/e2e/settings.spec.ts tests/e2e/walkthrough.spec.ts tests/e2e/privacy-chrome.spec.ts tests/e2e/no-modal-discipline.spec.ts tests/e2e/pratibimba-consent.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 2235,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/privacyDefault.ts",
+              "Body/M/pratibimba-app/src/panes/privacyCrossing.ts",
+              "Body/M/pratibimba-app/src/ui/PrivacyOptInSurface.tsx",
+              "Body/M/pratibimba-app/tests/e2e/privacy-default-class.spec.ts",
+              "Body/M/pratibimba-app/src/ui/preferences.ts",
+              "Body/M/pratibimba-app/src/panes/omni/SettingsPane.tsx"
+            ],
+            "tokenUsage": {
+              "input": 268000,
+              "output": 38000
+            }
+          }
+        },
+        {
+          "at": "2026-07-31T02:58:16.463Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260731, distinct from this closer) on the FULL class-scoped gate with no scoping: app-ui-flow, app-test 2218 against a 2173 baseline, ta-onta 800, gateway 118, app-typecheck, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint. Note the implementer's own laned runs had reddened several unrelated specs, DIFFERENT ones each run, which this clean verifier gate on the same commit confirms was machine contention rather than the tranche. THE DEFAULT IS ENFORCED AT THE READ PATH, not merely declared: the privacy default-class key moved from pending to live in the one preference authority, and a single value-to-class reader is the only path, with the exported default DERIVED from that descriptor rather than written twice. A repository-wide scan bans the alternative spellings — nullish-coalescing, logical-or and default-parameter forms — anywhere else, which is the direct counter to a default declared in one place and separately hard-coded at the point of use, where changing the default changes nothing. THE OPT-IN GATE IS ACTUALLY CONSULTED BY THE BEHAVIOUR IT GUARDS, which is the failure this tranche most needed to avoid: the public-crossing request loads the identity ledger and returns BEFORE performing the crossing when no qualifying consent exists, with the crossing itself injected so the test can observe it. The test pins that the ONLY difference between the two outcomes is the ledger content, and deleting the consult reds four cases. A DECLARED-BUT-NEVER-FIRED SEAM WAS FOUND: the voice-corpus admission evaluator is exported and has its own tests but is called by nothing, so tranche 25.14 has been appending consents that no path ever reads back. A real rendering defect was also fixed: the settings pane dispatched its controls by KIND, so a second select control would have rendered the theme dropdown in place of the privacy-class chooser. A finding is left for the 25.18 owner rather than silently patched: the privacy-chrome no-drift scan walks only the top-level panes and components directories, so a tinted surface living under the ui directory gets no register row. Commit 5abb0b1d.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 32.T32.8 --owner opus5-mdev-verify-20260731",
+            "exitCode": 0,
+            "testsPassed": 2218,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/privacyDefault.ts",
+              "Body/M/pratibimba-app/src/panes/privacyCrossing.ts",
+              "app-ui-flow playwright PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 8 dirty files.",
+      "owner": "opus5-t32t8-privacy",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-31T02:47:40.852Z",
+      "runId": "20260731T020907Z-32-T32.8",
       "worktree": null,
       "blocker": null
     },
@@ -29329,6 +29367,16 @@
       "leaseExpiresAt": "2026-07-31T05:26:28.829Z",
       "worktree": null,
       "completedAt": "2026-07-31T01:57:36.159Z"
+    },
+    {
+      "runId": "20260731T020907Z-32-T32.8",
+      "taskId": "32.T32.8",
+      "status": "review",
+      "startedAt": "2026-07-31T02:09:07.310Z",
+      "owner": "opus5-t32t8-privacy",
+      "leaseExpiresAt": "2026-07-31T06:09:07.310Z",
+      "worktree": null,
+      "completedAt": "2026-07-31T02:47:40.852Z"
     }
   ],
   "activeRoute": {
