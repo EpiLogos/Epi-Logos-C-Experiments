@@ -36,6 +36,7 @@
 import { OMNIPANEL_TABS } from '../panes/omni/omnipanelRuntime';
 import { LEFT_SIDEBAR_MODES } from '../ui/leftSidebarModes';
 import { PREFERENCE_KEYS } from '../ui/preferences';
+import { DEFAULT_PRIVACY_CLASS } from '../ui/privacyDefault';
 import { STATE_THREAD_COUNT } from '../ui/shellSlotPolicy';
 import { ONBOARDING_COMPLETED_STEPS_PREFERENCE, type KairosPreferenceAccess } from '../panes/kairosEnablement';
 
@@ -125,7 +126,10 @@ export function walkthroughSteps(): readonly WalkthroughStep[] {
             title: 'Cosmic and personal',
             body:
                 'The active coordinate is where you are standing. Flipping 0/1 changes the face, never the ' +
-                'coordinate — you see the same place from the cosmic side or the personal one.',
+                'coordinate — you see the same place from the cosmic side or the personal one. ' +
+                `By default everything you create rests at ${DEFAULT_PRIVACY_CLASS} and stays on this ` +
+                'machine. Crossing to the public bridge is per-artifact opt-in — there is no switch that ' +
+                'shares everything. You can change the default in Settings → Privacy.',
             anchors: ['[data-testid="status-coordinate"]', '[data-testid="active-coordinate"]']
         }
     ] as const);

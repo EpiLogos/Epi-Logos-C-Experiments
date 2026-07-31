@@ -202,8 +202,13 @@ export const SETTINGS_SECTIONS: readonly SettingsSection[] = Object.freeze([
         label: 'Privacy',
         scope: 'user',
         purpose:
-            'What the carrier is permitted to reach for on your behalf. Kairos is opt-in and stays off until its local dependency actually answers.',
+            'What the carrier is permitted to reach for on your behalf, and what a new artifact rests at before you decide anything about it. Kairos is opt-in and stays off until its local dependency actually answers.',
         live: [
+            live(
+                PREFERENCE_KEYS.privacyDefaultClass,
+                'select',
+                'the default-class control here (ui/privacyDefault.ts is the read path) — it can only ever tighten: the 07-T0 per-extension ceiling clamps it, and no ceiling reaches the crossing class'
+            ),
             live(
                 PREFERENCE_KEYS.privacyKairosEnabled,
                 'toggle',

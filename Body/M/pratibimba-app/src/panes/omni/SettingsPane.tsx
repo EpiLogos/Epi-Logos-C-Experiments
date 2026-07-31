@@ -39,7 +39,13 @@ import {
     type KairosEnableResult,
     type KairosPreferenceAccess
 } from '../kairosEnablement';
-import { SPECIFIED_PREFERENCES, preferenceDescriptor } from '../../ui/preferences';
+import { PREFERENCE_KEYS, SPECIFIED_PREFERENCES, preferenceDescriptor } from '../../ui/preferences';
+import { PRIVACY_CLASSES, type PrivacyClass } from '../../ui/privacyChrome';
+import {
+    PRIVACY_DEFAULT_CLASS_PREFERENCE,
+    effectivePrivacyClass,
+    readDefaultPrivacyClass
+} from '../../ui/privacyDefault';
 import {
     SETTINGS_SECTIONS,
     disclosedEntries,
@@ -114,6 +120,48 @@ function ThemeControl() {
                 </option>
             ))}
         </select>
+    );
+}
+
+/**
+ * The 32.T32.8 default-class select. It writes the preference key directly
+ * because there is no richer seam to defer to — unlike kairos, choosing a
+ * resting class has no probe and no side effect. What it CANNOT do is widen
+ * anything: `effectivePrivacyClass` clamps every read to the owning extension's
+ * 07-T0 ceiling, and the row shows that clamp for the tightest extension so a
+ * person can see the choice is a ceiling-bounded preference, not a switch.
+ */
+function PrivacyDefaultClassControl(props: { readonly preferences: KairosPreferenceAccess }) {
+    const [value, setValue] = useState<PrivacyClass>(() =>
+        readDefaultPrivacyClass(props.preferences.get(PRIVACY_DEFAULT_CLASS_PREFERENCE))
+    );
+    return (
+        <>
+            <select
+                data-testid="settings-privacy-default-class"
+                aria-label="Default privacy class"
+                value={value}
+                onChange={event => {
+                    const next = readDefaultPrivacyClass(event.target.value);
+                    props.preferences.set(PRIVACY_DEFAULT_CLASS_PREFERENCE, next);
+                    setValue(next);
+                }}
+            >
+                {PRIVACY_CLASSES.map(option => (
+                    <option key={option} value={option}>
+                        {option}
+                    </option>
+                ))}
+            </select>
+            <span
+                className="settings-row-status"
+                data-testid="settings-privacy-default-effective"
+                data-effective={effectivePrivacyClass('m4-nara', value)}
+            >
+                Effective in m4-nara (the tightest ceiling): {effectivePrivacyClass('m4-nara', value)}.
+                Crossing to the public bridge stays per-artifact opt-in.
+            </span>
+        </>
     );
 }
 
@@ -209,8 +257,16 @@ function LiveRow(props: {
         >
             <span className="settings-row-key">{props.entry.key}</span>
             <span className="settings-row-control">
-                {props.entry.control === 'select' ? <ThemeControl /> : null}
-                {props.entry.control === 'toggle' ? (
+                {/* Dispatched by KEY, never by control KIND. `select` and
+                    `toggle` were each hard-bound to one control while exactly
+                    one preference used them; the second `select` (32.T32.8)
+                    would have silently rendered the theme dropdown for the
+                    privacy default class. A control belongs to its preference. */}
+                {props.entry.key === PREFERENCE_KEYS.appearanceTheme ? <ThemeControl /> : null}
+                {props.entry.key === PREFERENCE_KEYS.privacyDefaultClass ? (
+                    <PrivacyDefaultClassControl preferences={props.preferences} />
+                ) : null}
+                {props.entry.key === PREFERENCE_KEYS.privacyKairosEnabled ? (
                     <KairosControl
                         preferences={props.preferences}
                         invokeGatewayRpc={props.invokeGatewayRpc}

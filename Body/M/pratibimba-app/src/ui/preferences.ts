@@ -21,6 +21,7 @@
  */
 
 import { LAYOUT_IDS } from './layoutId';
+import { PRIVACY_CLASSES } from './privacyChrome';
 import { THEME_SELECTIONS } from './themeMapping';
 
 /**
@@ -40,6 +41,7 @@ export const PREFERENCE_NAMESPACE_PATTERN = /^epi-logos\.[a-z][a-z0-9]*\.[a-zA-Z
 export const PREFERENCE_KEYS = Object.freeze({
     appearanceTheme: 'epi-logos.appearance.theme',
     layoutActive: 'epi-logos.layout.active',
+    privacyDefaultClass: 'epi-logos.privacy.default-class',
     privacyKairosEnabled: 'epi-logos.privacy.kairos-enabled',
     onboardingCompletedSteps: 'epi-logos.onboarding.completed-steps',
     onboardingPasuSkipped: 'epi-logos.onboarding.pasu-skipped',
@@ -92,6 +94,16 @@ export const EPI_LOGOS_PREFERENCES: readonly PreferenceDescriptor[] = Object.fre
             'Active workspace layout, persisted across reload. Consumed by the cross-layout intent spine and by OmniPanel fold filtering (`availableInLayouts`).',
         owningTranche: '31.T31.3 / 52.T1',
         consumer: 'src/panes/omni/omnipanelRuntime.ts'
+    },
+    {
+        key: PREFERENCE_KEYS.privacyDefaultClass,
+        type: 'string',
+        defaultValue: 'protected_local',
+        enumValues: PRIVACY_CLASSES,
+        description:
+            'The privacy class a new artifact rests at. `protected_local` is the shipped default and the tightest of the three: nothing you make leaves your machine until you say so, per artifact. The per-extension 07-T0 `privacyClass` is a CEILING over this choice — the effective class is the tighter of the two — and no ceiling can reach `shared_archetype_opt_in`, so there is no setting anywhere that makes everything public.',
+        owningTranche: '32.T32.8',
+        consumer: 'src/ui/privacyDefault.ts'
     },
     {
         key: PREFERENCE_KEYS.privacyKairosEnabled,
@@ -156,11 +168,6 @@ export const SPECIFIED_PREFERENCES: readonly {
         key: 'epi-logos.profile.tick.visible',
         status: 'pending',
         note: 'Status-bar profile-tick visibility. The six-entry status bar is fixed (15.10); a visibility toggle needs the 32.4 settings surface to expose it.'
-    },
-    {
-        key: 'epi-logos.privacy.default-class',
-        status: 'pending',
-        note: 'Default privacy class for new artifacts. The privacy-class vocabulary landed (25.T25.18) but application is per-artifact; a global default is a 25/32 decision.'
     },
     {
         key: 'epi-logos.kairos.enabled',
