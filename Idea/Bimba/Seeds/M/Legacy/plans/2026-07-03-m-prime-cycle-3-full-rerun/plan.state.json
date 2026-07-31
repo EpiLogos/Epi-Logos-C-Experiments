@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-31T02:58:16.488Z",
+  "updatedAt": "2026-07-31T03:53:14.401Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -16818,16 +16818,54 @@
       "blocker": null
     },
     "32.T32.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-31T03:53:14.375Z",
+      "claimedAt": "2026-07-31T02:58:31.253Z",
+      "completedAt": "2026-07-31T03:53:14.375Z",
+      "evidence": [
+        {
+          "at": "2026-07-31T03:42:00.594Z",
+          "text": "Status-bar profile-tick entry now reads tick:n gen:g over two real quantities: g is the kernel generation off the wire, n is useTickStore.observedTicks counted INSIDE the store generation gate, so a re-render, a refused stale frame and a repeated generation all leave it unmoved (both defects pinned red-then-green: counting outside the gate; deriving from a render counter, which reds three tests). Pre-first-tick the entry speaks the 32.5 pending_first_tick copy verbatim via new flavourEntry() - those five flavour copies were declared, tested and rendered by nothing until now; first advance announces 'Profile-tick 1 - system alive.'. The 32.1 cold-start splash spec :269 names does not exist on this carrier (32.1 landed as branch functions; .boot-splash is a one-line placeholder), so PROFILE_TICK_SEAMS discloses it with the reason and the suite walks the real src tree to red the day one lands. shellSlotPolicy declared only the count 6, so the walkthrough transcribed thread names and had drifted (claimed a 'profile generation' thread that never existed, omitted the supervisor thread that does): STATUS_STRIP_THREADS is now the one declaration, STATE_THREAD_COUNT derived, strip and walkthrough both read it. epi-logos.profile.tick.visible (default true) promoted from SPECIFIED pending to live, Motion section's first control, written through useProfileTickVisibilityStore.setVisible not a raw key; hiding removes the paint not the row (six declared while five render). Hover shows last-tick-fired ISO; click routes to Diagnostics via catalogued omnipanel.tab.activate.7 PLUS the profile sub-section patch (frozen omnipanel.openTab is absent). Two latent e2e bugs the second number surfaced and fixed: single-clock read the entry with replace(/[^0-9]/g,'') which concatenates 5419, and visual-regression's crossing release finished EVERY document animation (throws on any perpetual waiting-pulse; the app has several by design) - now filtered to face-slot like its own freeze step. Verification: pnpm typecheck clean; pnpm test 5 lints GREEN + 2231 passed / 4 skipped (baseline 2218, +13); pnpm build clean; pnpm test:e2e laned 145 passed / 1 failed - nara-tuning.spec.ts, a vault save-status timeout that touches no tick, strip or preference path and passes GREEN ALONE laned in 2.1s. Commit 56c292b3.",
+          "receipt": {
+            "command": "pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e (laned)",
+            "exitCode": 0,
+            "testsPassed": 2231,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/profileTickVisibility.ts",
+              "Body/M/pratibimba-app/src/components/StatusStrip.tsx",
+              "Body/M/pratibimba-app/src/state/stores.ts",
+              "Body/M/pratibimba-app/src/ui/shellSlotPolicy.ts",
+              "Body/M/pratibimba-app/src/ui/preferences.ts",
+              "Body/M/pratibimba-app/tests/e2e/profile-tick-visibility.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 486000,
+              "output": 41000
+            }
+          }
+        },
+        {
+          "at": "2026-07-31T03:53:14.375Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260731, distinct from this closer) on the FULL class-scoped gate with no scoping: app-ui-flow 145 playwright specs, app-test 2231 against a 2218 baseline, ta-onta 800, gateway 118, app-typecheck, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint, and all five carrier lints green. THE NEW-USER CONDITION COMES FROM REAL FIRST-RUN STATE rather than a constant or a fixture: it is observed ticks equal to zero, meaning no frame has yet passed the gate FOR THIS SHELL. The kernel generation cannot answer that question at all, because it belongs to the gateway process and is already in the hundreds by the time a client attaches — which is precisely what the previous entry was printing and calling a tick. THE INDICATOR IS PROVEN TO MOVE ON A REAL TICK RATHER THAN A RE-RENDER, which was the trap this tranche most needed to avoid: the counter increments INSIDE the store's generation gate, and the test drives it from a parent re-render, then a refused stale frame, then a repeated generation which must not move it, then a genuine advance which must. Both failure modes were pinned red before being fixed — counting outside the gate, and deriving the value from a render counter, the latter reddening three tests including the looks-live-while-stale case. TWO DECLARED-BUT-NEVER-BOUND FINDINGS: all five readiness flavour copies from tranche 32.5 were authored and tested and rendered by nothing, so the pre-tick reading now actually speaks one of them; and the shell slot policy declared only the count six, so the walkthrough's separately transcribed thread list had silently drifted, claiming a profile-generation thread that never existed while omitting the supervisor. Two latent defects in the shared e2e suite were also repaired, both surfaced by this tranche's second number: the single-clock spec stripped non-digits in a way that concatenated two readings into one bogus value, and the visual-regression release finished EVERY animation, which throws on any perpetual pulse, and is now filtered to the same face slot its own freeze step uses. Commit 56c292b3.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 32.T32.9 --owner opus5-mdev-verify-20260731",
+            "exitCode": 0,
+            "testsPassed": 2231,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/state/stores.ts",
+              "Body/M/pratibimba-app/src/ui/readinessGrammar.ts",
+              "app-ui-flow 145 playwright specs PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 8 dirty files.",
+      "owner": "opus5-t32t9-profiletick",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-31T03:42:00.594Z",
+      "runId": "20260731T025831Z-32-T32.9",
       "worktree": null,
       "blocker": null
     },
@@ -29377,6 +29415,16 @@
       "leaseExpiresAt": "2026-07-31T06:09:07.310Z",
       "worktree": null,
       "completedAt": "2026-07-31T02:47:40.852Z"
+    },
+    {
+      "runId": "20260731T025831Z-32-T32.9",
+      "taskId": "32.T32.9",
+      "status": "review",
+      "startedAt": "2026-07-31T02:58:31.253Z",
+      "owner": "opus5-t32t9-profiletick",
+      "leaseExpiresAt": "2026-07-31T06:58:31.253Z",
+      "worktree": null,
+      "completedAt": "2026-07-31T03:42:00.594Z"
     }
   ],
   "activeRoute": {
