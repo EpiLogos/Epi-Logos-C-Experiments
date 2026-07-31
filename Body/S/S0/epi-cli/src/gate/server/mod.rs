@@ -658,23 +658,6 @@ fn optional_str(params: &Value, key: &str) -> Option<String> {
         .map(str::to_owned)
 }
 
-fn optional_parse_param<T>(params: &Value, key: &str) -> Result<Option<T>, (String, String)>
-where
-    T: serde::de::DeserializeOwned,
-{
-    params
-        .get(key)
-        .map(|value| {
-            serde_json::from_value(value.clone()).map_err(|err| {
-                (
-                    "invalid-params".to_owned(),
-                    format!("{key} is invalid: {err}"),
-                )
-            })
-        })
-        .transpose()
-}
-
 fn is_stop_command_text(text: &str) -> bool {
     let trimmed = text.trim();
     !trimmed.is_empty() && trimmed.eq_ignore_ascii_case("/stop")

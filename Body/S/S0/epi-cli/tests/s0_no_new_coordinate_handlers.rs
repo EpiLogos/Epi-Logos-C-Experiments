@@ -97,6 +97,12 @@ const DIRECTLY_SERVED: &[(&str, &str)] = &[
     ("s5'.gnostic.episode_search", "not-yet-drained: techne::gnosis"),
     ("s5'.gnostic.evidence_trace", "not-yet-drained: techne::gnosis"),
     ("s5'.gnostic.musical_transcript", "not-yet-drained: techne::gnosis"),
+    // 12.T12.13 — the family's only WRITE (mints the cross-namespace
+    // MAPS_TO_COORDINATE edge). Same residency as its 13 siblings above: the
+    // whole gnostic family is `techne::gnosis`, an epi-cli subsystem, and drains
+    // to a coordinate crate as ONE family or not at all. Splitting one member
+    // out ahead of the rest would fragment the seam, not drain it.
+    ("s5'.gnostic.enrich", "not-yet-drained: techne::gnosis"),
 ];
 
 fn dispatch_source() -> String {

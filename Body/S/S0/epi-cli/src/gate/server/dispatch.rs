@@ -36,7 +36,7 @@ use super::method_envelope::{DispatchResult, PostResponseAction};
 use super::{
     agent_id_from_session_key, branch_session, inherit_nullable_string_field,
     inherit_nullable_value_field, internal_error, invalid_params_error, is_stop_command_text,
-    not_found_error, now_ms, nullable_string_field, optional_parse_param, optional_str,
+    not_found_error, now_ms, nullable_string_field, optional_str,
     publish_activity_surface, publish_presence_surfaces, publish_session_surface, required_str,
     required_str_alias, session_identifier, session_tree, session_value_with_run_state,
 };
