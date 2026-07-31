@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-31T01:26:13.250Z",
+  "updatedAt": "2026-07-31T02:08:13.759Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13353,16 +13353,61 @@
       "blocker": null
     },
     "26.T26.9": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-31T02:08:13.733Z",
+      "claimedAt": "2026-07-31T01:26:28.829Z",
+      "completedAt": "2026-07-31T02:08:13.733Z",
+      "evidence": [
+        {
+          "at": "2026-07-31T01:57:36.159Z",
+          "text": "commit 3382ff72. app-test 2173 passed/4 skipped (baseline 2142/4), e2e 137 passed LANED (baseline 136), typecheck+build+lint-test-honesty+carrier-tokens+import-boundaries green. Landed 26.9 per-subagent sub-trace: ALETHEIA_SUBAGENT_TRACES (id/label/CF/techne-class/traceKind/canonRef) held against Body/S/S3/gateway-contract/src/aletheia.rs::FacetId label()+cf_label() by aletheiaSubagents.test.ts, and AletheiaSubagentTrace mounted by DispatchGenealogyTree on any node whose mediator is a subagent, still nested under Anima per DR-B-3. Widened AletheiaFacetReturn to carry the required facet the S3 FacetReturn declares on both arms, so 26.9 verbatim banner Aletheia subagent {name} veto — {reason} is a compile-time guarantee; the fold now refuses an anonymous veto on a non-subagent session; one shared ALETHEIA_VETO_BLOCKS_HUMAN_GATE backs data-blocking=false on ACR and Atelier; the disclosure arm typed since 27.3 with no reader now renders angle+citations. FOUND: the 12.19 producer is absent — no Body/S code outside aletheia.rs constructs a FacetReturn (only the orchestration SKILL.md in prose), publish_aletheia_veto has no caller outside its own contract test, and vetoReason/veto_reason/crystallisationIntent/crystallisation_intent occur nowhere in Body/S, so the veto banner and crystallisation-intent label were render paths gated on data the wire never carries. Disclosed via ALETHEIA_SURFACING_SEAMS on both surfaces, with the suite deriving availability FROM the real Body/S sources so it reds when a producer lands. Guards proven red-then-green: flipping facet-return-feed to available and re-binding Janus CF1 to CF4 failed 3 tests, reverted to 20 pass. ACR lineage data-observed answers from aletheiaLineageFromGenealogy over folded sessions.list, never the register; the new e2e imports one real agent:pi:subagent:anansi session and asserts the asymmetry (anansi true, the other five false) in a real browser.",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 2310,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/aletheiaSubagents.ts",
+              "Body/M/pratibimba-app/src/panes/omni/AletheiaSubagentTrace.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/VetoBanner.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/omnipanelRuntime.ts",
+              "Body/M/pratibimba-app/src/panes/omni/dispatchGenealogyFromSessions.ts",
+              "Body/M/pratibimba-app/src/panes/omni/DispatchGenealogyTree.tsx",
+              "Body/M/pratibimba-app/src/panes/acr/AgenticControlRoomPane.tsx",
+              "Body/M/pratibimba-app/src/panes/atelier/AtelierScentTrailPanel.tsx",
+              "Body/M/pratibimba-app/src/panes/atelier/atelierScentTrail.ts",
+              "Body/M/pratibimba-app/src/commands/atelier.ts",
+              "Body/M/pratibimba-app/src/panes/omni/aletheiaSubagents.test.ts",
+              "Body/M/pratibimba-app/src/panes/omni/AletheiaSubagentTrace.test.tsx",
+              "Body/M/pratibimba-app/tests/e2e/agentic-control-room-deep.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 268000,
+              "output": 41000
+            }
+          }
+        },
+        {
+          "at": "2026-07-31T02:08:13.733Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260731, distinct from this closer) on the FULL class-scoped gate with no scoping: app-ui-flow 137 playwright specs, app-test 2173 against a 2142 baseline, ta-onta 800, gateway 118, app-typecheck, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint, plus carrier-tokens, import-boundaries and e2e-import-graph lints. The named component mounts on any genealogy node whose mediator is a subagent and stays nested under Anima rather than promoted to a peer; one register carries id, facet label, context-frame label, techne class, trace kind and canon ref, and its suite holds that register against the real S3 gateway-contract source rather than against a copy. The Atelier lineage badges project FROM that register rather than declaring a second roster, and both surfaces share one veto-blocking constant. WHAT RENDERS COMES FROM THE LIVE PATH, AND THE TEST PROVES IT RATHER THAN ASSUMING IT: the observed flag is folded from the real session list, never from the register, and the new browser test imports ONE real subagent session and asserts the ASYMMETRY — that subagent true and the other five false — so a roster-backed render showing six of a kind fails the test. That is the direct counter to the trap this session kept finding, where a surface renders a frozen constant and looks alive. THREE DECLARED-BUT-NEVER-RENDERED DEFECTS FOUND. First, the carrier facet-return type had dropped the facet field that the S3 contract carries on BOTH arms, which made this tranche's verbatim veto banner literally unrepresentable and left it reading an anonymous veto; it is now required, so the failure is a compile error rather than a render bug. Second, the disclosure arm has been typed since tranche 27.3 with no reader anywhere; it now renders its angle and citations. Third and largest, THE 12.19 PRODUCER DOES NOT EXIST: no code in the S stack outside the contract file constructs a facet return, the veto publisher has no caller outside its own contract test, and the veto-reason and crystallisation-intent fields occur nowhere in the S stack at all — the contract, the types and a prose skill file describe a pathway nothing emits. That is surfaced on both surfaces through a seams register whose suite derives availability from the real sources, so it reds the day an arm lands. Guards proven red then green by flipping availability true and rebinding a context frame: three failures, reverted to twenty passing. No decision-register status was changed. The carrier navigation contract was updated. Commit 3382ff72.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 26.T26.9 --owner opus5-mdev-verify-20260731",
+            "exitCode": 0,
+            "testsPassed": 2173,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/AletheiaSubagentTrace.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/aletheiaSubagents.ts",
+              "app-ui-flow 137 playwright specs PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 8 dirty files.",
+      "owner": "opus5-t26t9-aletheia",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-31T01:57:36.159Z",
+      "runId": "20260731T012628Z-26-T26.9",
       "worktree": null,
       "blocker": null
     },
@@ -29274,6 +29319,16 @@
       "leaseExpiresAt": "2026-07-31T04:49:54.378Z",
       "worktree": null,
       "completedAt": "2026-07-31T01:15:45.448Z"
+    },
+    {
+      "runId": "20260731T012628Z-26-T26.9",
+      "taskId": "26.T26.9",
+      "status": "review",
+      "startedAt": "2026-07-31T01:26:28.829Z",
+      "owner": "opus5-t26t9-aletheia",
+      "leaseExpiresAt": "2026-07-31T05:26:28.829Z",
+      "worktree": null,
+      "completedAt": "2026-07-31T01:57:36.159Z"
     }
   ],
   "activeRoute": {
