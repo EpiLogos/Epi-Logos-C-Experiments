@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-31T13:18:32.426Z",
+  "updatedAt": "2026-07-31T14:54:58.526Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -5958,10 +5958,10 @@
       "blocker": null
     },
     "12.T12.13": {
-      "status": "review",
-      "updatedAt": "2026-07-31T04:33:27.855Z",
+      "status": "done",
+      "updatedAt": "2026-07-31T14:54:51.674Z",
       "claimedAt": "2026-07-31T03:53:41.453Z",
-      "completedAt": null,
+      "completedAt": "2026-07-31T14:54:51.674Z",
       "evidence": [
         {
           "at": "2026-07-07T22:41:50.269Z",
@@ -6013,11 +6013,30 @@
               "Body/S/S4/ta-onta/S4-4p-anima/modules/vak-eval-emit.ts"
             ]
           }
+        },
+        {
+          "at": "2026-07-31T14:54:51.674Z",
+          "text": "BUILT, not just audited — Architect ruled 'build it, plug the gaps', so all four flagged surfaces and the unmet clause (c) are landed (85cfec1e, 02896219, 6763d44f, 100d56d7). (1) resolve_gnostic_bin() replaces the bare-PATH python_bin default that made EVERY s5'.gnostic.* method fail with ModuleNotFoundError under a default environment — 4 tests. (2) One _enricher_for seam binds config.workspace at both cli.py call sites; the workspace IS the node label, so the old default-'gnostic' construction matched zero nodes under any non-default GNOSTIC_WORKSPACE, wrote nothing and reported success — red-then-green proven (fails with 'gnostic' where the configured label was expected). (3) s5'.gnostic.enrich registered across all six wiring points + ratcheted: the gnostic family's only WRITE, where its 13 siblings all read. (4) neo4j_bridge_env() bridges EPILOGOS_NEO4J_* onto the bare NEO4J_* that LightRAG's Neo4JStorage reads, never clobbering an already-set target — 3 tests. CLAUSE (c) BUILT: resonance72-retrieval.ts reads the live MathemeHarmonicProfile.resonance72 off 'epi profile show' and conditions BOTH gnosis-RAG entry points (the Pi tool and the spine query) via the existing [coordinate context: X] idiom; it refuses rather than invents — unreadable, out-of-domain, or self-inconsistent yields null and the question goes out unconditioned — 11 tests. LIVE-WIRE PROOF with EPI_GNOSTIC_PYTHON deliberately UNSET (so the resolver fix is proven in the same shot): real spawned gateway, protocol v3, 14 gnostic methods advertised (was 13), enrich returns {status ok, method direct} not the unimplemented fallthrough, and a real MAPS_TO_COORDINATE {method:'direct',confidence:1.0} edge landed on the live :Bimba '#0' node from a scoped probe then removed — graph identical at 3312 nodes/13365 rels/2141 :Bimba before and after. THE GATE CAUGHT THREE DEFECTS IN MY OWN CHANGE, each fixed at the cause: the Track 53 residency guard (enrich now declared 'not-yet-drained: techne::gnosis' with its 13 siblings — the family drains as one or not at all); gateway-method-gate reading it absent (evaluateRatchet derives 'present' from probe ROWS and the corpus scans only top-level plan .md, so an unasked method reads as missing — fixed by naming the delivered surface in the tranche spec, 284 probed/0 missing); and the S0 membrane line ratchet at 22291/22287 (removed the genuinely dead optional_parse_param + its unused dispatch.rs import — zero call sites, compiler-confirmed; now 22275/22287, 12 under rather than 4 over — the ceiling was NOT raised). Prose corrected to code: MAPS_TO_COORDINATE in the tranche spec, S4-ARCHITECTURE and M5-ARCHITECTURE; the Hermes matrix deliberately keeps RELATES_TO_COORDINATE because its subject-bridge edge is a different unbuilt proposal. The spec's 'grep returns single value' line marked stale with the reason it was never runnable (epi-gnostic vendors a .venv: 1060 hits, 909 third-party); a concurrent lane separately narrowed VALID_EMBEDDING_DIMS to {3072} in 52b65f80, which closes clause (a) literally. STILL OPEN, flagged not silently skipped: finding D3 — aletheia_gnosis_query declares notebook and top_k and drops both; plumbing them widens the interface across three layers and is the Architect's call, not mine. Independent verify PASS (verifier opus-mdev-verify-final != closer opus-mdev-t1213-build): 34/34 stages, 14822 tests, 0 failures, verify-all GREEN in 762.9s including app-ui-flow 146, live-wire, gateway-methods, lint-boundaries, honesty-lint.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 12.T12.13 --owner opus-mdev-verify-final --full",
+            "exitCode": 0,
+            "testsPassed": 14822,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/techne/gnosis/config.rs",
+              "Body/S/S0/epi-cli/src/gate/gnostic.rs",
+              "Body/S/S3/gateway-contract/src/protocol.rs",
+              "Body/S/S4/ta-onta/S4-5p-aletheia/modules/resonance72-retrieval.ts",
+              "Body/S/S5/epi-gnostic/epi_gnostic/cli.py",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/12.T12.13.md",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/wire-captures/12-T12.13-gnostic-enrich-gateway-wire.json"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 215 dirty files. claimed with --allow-dirty over 8 dirty files.",
       "owner": "opus5-t12t13-seamaudit",
-      "leaseExpiresAt": "2026-07-31T07:53:41.453Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-07-31T04:33:27.855Z",
       "runId": "20260731T035341Z-12-T12.13",
       "worktree": null,

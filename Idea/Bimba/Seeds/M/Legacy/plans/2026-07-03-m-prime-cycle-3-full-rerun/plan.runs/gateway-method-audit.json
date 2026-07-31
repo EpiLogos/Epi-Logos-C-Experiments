@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-31T04:26:19.245Z",
+ "generatedAt": "2026-07-31T14:53:49.611Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -7,8 +7,8 @@
   "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation"
  ],
  "summary": {
-  "probed": 283,
-  "present": 107,
+  "probed": 284,
+  "present": 108,
   "absent": 176,
   "absentFamilyLive": 115,
   "absentFamilyDark": 61,
@@ -2414,17 +2414,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2433,17 +2433,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2452,17 +2452,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2471,17 +2471,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2490,17 +2490,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2509,17 +2509,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2528,17 +2528,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2547,17 +2547,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2587,17 +2587,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2606,17 +2606,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2625,17 +2625,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2643,7 +2643,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": "domain-error: epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5"
+   "errorClass": null
   },
   {
    "method": "s5'.gnostic.candidates(filter)",
@@ -2651,17 +2651,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2670,18 +2670,25 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
+  },
+  {
+   "method": "s5'.gnostic.enrich",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required string parameter; expected one of entityId, entity_id, id, vectorId, vector_id"
   },
   {
    "method": "s5'.gnostic.episode_search",
@@ -2703,17 +2710,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2722,17 +2729,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2747,7 +2754,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": "domain-error: epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5"
+   "errorClass": null
   },
   {
    "method": "s5'.gnostic.list_notebooks(coord)",
@@ -2755,17 +2762,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2774,17 +2781,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2799,7 +2806,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": "domain-error: epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5"
+   "errorClass": null
   },
   {
    "method": "s5'.gnostic.query",
@@ -2828,17 +2835,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2847,17 +2854,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2865,7 +2872,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": "domain-error: epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5"
+   "errorClass": null
   },
   {
    "method": "s5'.improve",
@@ -2873,17 +2880,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2934,17 +2941,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -2981,17 +2988,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -3000,17 +3007,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -3026,17 +3033,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
@@ -3052,17 +3059,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 32,
+   "familyServed": 33,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "s5'.epii.axiom_translation_history",
     "s5'.epii.deposit",
     "s5'.epii.deposit.list",
     "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
     "s5'.gnostic.episode_search",
     "s5'.gnostic.etymology",
-    "s5'.gnostic.ingest",
-    "s5'.gnostic.list_notebooks"
+    "s5'.gnostic.ingest"
    ]
   },
   {
