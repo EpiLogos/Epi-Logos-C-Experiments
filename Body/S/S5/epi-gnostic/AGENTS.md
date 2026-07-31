@@ -16,6 +16,7 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S5-SPEC]] / [[S5-ARCHITECTURE]]
 
 ## Local Contracts
 - Coordinate Header: `epi_gnostic/__init__.py` (`"""Gnostic namespace RAG pipeline for Epi-Logos."""`) + `cli.py` usage docstring (the JSON CLI surface Rust binds to).
+- **Embedding dimension is 3072, full stop.** `config.py` exports `CANONICAL_EMBEDDING_DIM = 3072` and `VALID_EMBEDDING_DIMS = {3072}`; `GnosticConfig.__post_init__` refuses any other width, so a stray `GNOSTIC_EMBEDDING_DIM` fails at config load rather than writing unstorable vectors. Gnosis shares Bimba's `coord_embedding` (3072/COSINE) index — the width is not a tunable. Bimba's own `GEMINI_EMBED_DIMS` (S2 `graph-services/src/embeddings.rs`) is a *different, deliberately variable* knob and is NOT read here; aliasing it would let a Bimba-side matryoshka setting break every Gnosis command. Pinned by `tests/test_config.py`.
 - `schema-context.md` (graph schema), `.env.example` (required env).
 - Owning specs: [[S5-SPEC]], [[S5-ARCHITECTURE]], [[S-SYSTEM-INDEX]]. No local CONTRACT.md — see parent + Canon.
 
