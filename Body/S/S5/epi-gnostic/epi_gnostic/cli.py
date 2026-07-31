@@ -106,7 +106,6 @@ async def _run(args: list[str]):
             return
 
     from epi_gnostic.wrapper import GnosticRAG
-    from epi_gnostic.enrichment.coordinator import CoordinateEnricher
     from neo4j import AsyncGraphDatabase
 
     rag = GnosticRAG(config)
