@@ -37,7 +37,10 @@ export function registerGnosisTools(api: ExtensionAPI) {
     parameters: Type.Object({
       path: Type.String({ description: "Filesystem path to document" }),
       notebook: Type.Optional(Type.String({ description: "Target Gnosis notebook name" })),
-      coordinate: Type.Optional(Type.String({ description: "Coordinate for RELATES_TO_COORDINATE edge" })),
+      // 12.T12.13: the edge the ingest path actually mints is MAPS_TO_COORDINATE
+      // (CoordinateEnricher.assign_direct, run over the ingested nodes whenever a
+      // coordinate is supplied). RELATES_TO_COORDINATE is prose only.
+      coordinate: Type.Optional(Type.String({ description: "Coordinate for the MAPS_TO_COORDINATE edge" })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const args = ["techne", "gnosis", "ingest-gnostic", params.path];

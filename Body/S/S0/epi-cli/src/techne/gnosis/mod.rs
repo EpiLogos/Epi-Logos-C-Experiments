@@ -212,11 +212,28 @@ pub fn dispatch(cmd: &GnosisCmd) -> Result<String, String> {
         GnosisCmd::QueryGnostic { question, mode } => {
             query::query_gnostic(&config, question, mode.as_deref())
         }
+        // 12.T12.13 clause (b): the cross-namespace `MAPS_TO_COORDINATE` edge is
+        // minted by `CoordinateEnricher.assign_direct`, reachable only via the
+        // epi-gnostic `enrich` subcommand. This arm used to call
+        // `ingest::ingest_gnostic`, which handed the entity id to
+        // `epi-gnostic ingest` as a document path — so the enrich branch of the
+        // Python CLI was dispatched by nothing, and the Aletheia Pi tool
+        // `aletheia_gnosis_enrich` (which spawns this command) could never reach
+        // the enricher.
         GnosisCmd::Enrich {
             entity_id,
             coordinate,
             family,
-        } => ingest::ingest_gnostic(&config, entity_id, coordinate.as_deref(), family.as_deref()),
+        } => {
+            let mut args = vec!["enrich", entity_id.as_str()];
+            if let Some(coord) = coordinate.as_deref() {
+                args.extend(["--coordinate", coord]);
+            }
+            if let Some(fam) = family.as_deref() {
+                args.extend(["--family", fam]);
+            }
+            query::run_gnostic_passthrough(&config, &args)
+        }
         GnosisCmd::Resolve { reference } => {
             query::run_gnostic_passthrough(&config, &["resolve", reference])
         }
