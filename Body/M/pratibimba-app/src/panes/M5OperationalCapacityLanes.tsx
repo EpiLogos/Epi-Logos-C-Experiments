@@ -9,6 +9,13 @@
  *   that opens the Pi-monitor (ACR, `agentic-control-room`) scoped to the lane's
  *   subsystem vak coordinate for dispatch-trace context (12.5). Re-reads on the
  *   profile-tick advance — one clock only, no local timer (15.6).
+ *
+ *   26.T26.6 adds the SECOND click-through this surface always implied: the
+ *   `capacity:<id>` cross-layout route into the Autoresearch pane's per-capacity
+ *   filter. The intent ledger has aliased that prefix onto `autoresearch-pane`
+ *   since 31.T31.10 and `App.tsx` has decoded it into `requestedCapacity` since
+ *   28.T28.10 — but no surface in the carrier ever dispatched one, so the alias
+ *   and the decode were a route with no traffic. This is the traffic.
  * Public surface: M5OperationalCapacityLanes.
  * Does NOT own: the improvement law (S5 substrate), the lane derivation
  *   (m5CapacityLanes.ts), the autoresearch candidate/promotion surface
@@ -30,7 +37,12 @@ import { CROSS_LAYOUT_INTENT_COMMAND, IntentPrivacyClass } from '../commands/cro
 import { useSessionStore } from '../state/stores';
 import { useProfileTick } from '../state/useProfileTick';
 import { BridgeReadinessBadge } from '../ui/BridgeReadinessBadge';
-import { AutoresearchCandidate, IMPROVE_HISTORY_METHOD, parseImproveHistory } from './autoresearchModel';
+import {
+    AutoresearchCandidate,
+    capacityIntentContributionId,
+    IMPROVE_HISTORY_METHOD,
+    parseImproveHistory
+} from './autoresearchModel';
 import { buildCapacityLanes, CapacityLane } from './m5CapacityLanes';
 
 export interface M5OperationalCapacityLanesProps {
@@ -38,9 +50,15 @@ export interface M5OperationalCapacityLanesProps {
     readonly fixture?: readonly AutoresearchCandidate[];
     /** Override the default Pi-monitor cross-layout dispatch (used by tests/hosts). */
     readonly onOpenPiMonitor?: (lane: CapacityLane) => void;
+    /** Override the default capacity-scoped Autoresearch dispatch (26.T26.6). */
+    readonly onOpenAutoresearch?: (lane: CapacityLane) => void;
 }
 
-export function M5OperationalCapacityLanes({ fixture, onOpenPiMonitor }: M5OperationalCapacityLanesProps) {
+export function M5OperationalCapacityLanes({
+    fixture,
+    onOpenPiMonitor,
+    onOpenAutoresearch
+}: M5OperationalCapacityLanesProps) {
     const tick = useProfileTick();
     const dayNow = useSessionStore(state => state.dayNow);
     const sessionKey = useSessionStore(state => state.sessionKey);
@@ -69,11 +87,7 @@ export function M5OperationalCapacityLanes({ fixture, onOpenPiMonitor }: M5Opera
 
     const lanes = useMemo(() => buildCapacityLanes(candidates ?? []), [candidates]);
 
-    const openPiMonitor = (lane: CapacityLane) => {
-        if (onOpenPiMonitor) {
-            onOpenPiMonitor(lane);
-            return;
-        }
+    const dispatchLaneIntent = (lane: CapacityLane, requestedContributionId: string) => {
         const privacyClass: IntentPrivacyClass | null =
             sessionPrivacy === 'public' || sessionPrivacy === 'protected' || sessionPrivacy === 'private'
                 ? sessionPrivacy
@@ -87,8 +101,30 @@ export function M5OperationalCapacityLanes({ fixture, onOpenPiMonitor }: M5Opera
             profileGeneration: tick.generation,
             privacyClass,
             requestedExtensionId: 'ide-shell-m0-m5',
-            requestedContributionId: 'agentic-control-room'
+            requestedContributionId
         });
+    };
+
+    const openPiMonitor = (lane: CapacityLane) => {
+        if (onOpenPiMonitor) {
+            onOpenPiMonitor(lane);
+            return;
+        }
+        dispatchLaneIntent(lane, 'agentic-control-room');
+    };
+
+    /**
+     * 26.T26.6 — the capacity-scoped entry into the Autoresearch pane. The
+     * `capacity:<id>` alias and its decode were both already live; this is the
+     * dispatch that had never existed, so the pane's per-capacity filter now has
+     * a real route in as well as a dropdown.
+     */
+    const openAutoresearch = (lane: CapacityLane) => {
+        if (onOpenAutoresearch) {
+            onOpenAutoresearch(lane);
+            return;
+        }
+        dispatchLaneIntent(lane, capacityIntentContributionId(lane.id));
     };
 
     return (
@@ -144,14 +180,24 @@ export function M5OperationalCapacityLanes({ fixture, onOpenPiMonitor }: M5Opera
                                     : `last activity @ ${lane.lastActivityMs}`}
                             </span>
                         </div>
-                        <button
-                            type="button"
-                            className="m5-capacity-open-pi-monitor"
-                            data-testid={`m5-capacity-open-pi-monitor-${lane.id}`}
-                            onClick={() => openPiMonitor(lane)}
-                        >
-                            Open in Pi-monitor
-                        </button>
+                        <div className="m5-capacity-lane-actions">
+                            <button
+                                type="button"
+                                className="m5-capacity-open-pi-monitor"
+                                data-testid={`m5-capacity-open-pi-monitor-${lane.id}`}
+                                onClick={() => openPiMonitor(lane)}
+                            >
+                                Open in Pi-monitor
+                            </button>
+                            <button
+                                type="button"
+                                className="m5-capacity-open-autoresearch"
+                                data-testid={`m5-capacity-open-autoresearch-${lane.id}`}
+                                onClick={() => openAutoresearch(lane)}
+                            >
+                                Open in Autoresearch
+                            </button>
+                        </div>
                     </article>
                 ))}
             </div>

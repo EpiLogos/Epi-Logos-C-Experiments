@@ -20,7 +20,12 @@ test('Autoresearch mounts over the real S5 wire with governed, honest state', as
     await expect(page.getByTestId('autoresearch-pane')).toBeVisible({ timeout: 15_000 });
     await expect(page.getByTestId('autoresearch-as-concept')).toContainText('forbidden_authority');
     await expect(page.getByTestId('autoresearch-dry-run')).toContainText('dry-run enforced');
-    await expect(page.getByTestId('autoresearch-recompose-pass')).toContainText('not projected');
+    // 26.T26.6: the absent ordinal NAMES its missing producer on the surface —
+    // a reader gets the Rust symbol to go fix, not a shrug.
+    const recomposeCell = page.getByTestId('autoresearch-recompose-pass');
+    await expect(recomposeCell).toContainText('not projected');
+    await expect(recomposeCell).toContainText('recompose.rs::recompose_pass');
+    await expect(recomposeCell).toHaveAttribute('data-available', 'false');
     await expect(page.getByText('Surface', { exact: true })).toHaveAttribute('aria-current', 'step');
     await expect(page.getByTestId('autoresearch-capacity-filter').locator('option')).toHaveCount(7);
     await expect(page.getByTestId('autoresearch-capacity-matrix').getByRole('button')).toHaveCount(6);

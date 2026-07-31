@@ -19,6 +19,7 @@ vi.mock('../bridge/gatewayHolder', () => ({
 }));
 
 import { commands } from '../commands/registry';
+import { intentTarget } from '../commands/crossLayoutIntent';
 import { parseImproveHistory } from './autoresearchModel';
 import { M5OperationalCapacityLanes } from './M5OperationalCapacityLanes';
 
@@ -116,6 +117,40 @@ describe('M5OperationalCapacityLanes', () => {
             })
         );
         execute.mockRestore();
+    });
+
+    it('fires the capacity-scoped Autoresearch route the intent ledger already aliased (26.T26.6)', () => {
+        const execute = vi.spyOn(commands, 'execute').mockResolvedValue(undefined);
+        render(<M5OperationalCapacityLanes fixture={CANDIDATES} />);
+        fireEvent.click(screen.getByTestId('m5-capacity-open-autoresearch-epii-self-referential'));
+        expect(execute).toHaveBeenCalledWith(
+            'pratibimba.intent.dispatch',
+            expect.objectContaining({
+                requestedExtensionId: 'ide-shell-m0-m5',
+                requestedContributionId: 'capacity:epii-self-referential',
+                coordinate: "M5'"
+            })
+        );
+        // …and the ledger really resolves that contribution id onto the pane that
+        // decodes it, so the click is a landing rather than an unregistered-target throw.
+        expect(
+            intentTarget({
+                requestedExtensionId: 'ide-shell-m0-m5',
+                requestedContributionId: 'capacity:epii-self-referential'
+            })?.component
+        ).toBe('autoresearch');
+        execute.mockRestore();
+    });
+
+    it('routes a lane to Autoresearch via the injected handler with its capacity id', () => {
+        const onOpenAutoresearch = vi.fn();
+        render(
+            <M5OperationalCapacityLanes fixture={CANDIDATES} onOpenAutoresearch={onOpenAutoresearch} />
+        );
+        fireEvent.click(screen.getByTestId('m5-capacity-open-autoresearch-parashakti-graph-relational-ml'));
+        expect(onOpenAutoresearch).toHaveBeenCalledWith(
+            expect.objectContaining({ id: 'parashakti-graph-relational-ml', coordinate: 'M2' })
+        );
     });
 
     it('reads improve history from the gateway and re-reads on profile-tick advance (no local clock)', async () => {

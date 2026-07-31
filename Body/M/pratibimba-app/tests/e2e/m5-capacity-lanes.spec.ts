@@ -81,3 +81,36 @@ test('a capacity lane opens the Pi-monitor (ACR) dispatch-trace surface via the 
     // surface opens in the OmniPanel border (which rides the cosmic face).
     await expect(page.getByTestId('composition-dispatch-trace')).toBeVisible({ timeout: 15_000 });
 });
+
+/**
+ * 26.T26.6 — the seam that was declared and consumed but fired by nothing. The
+ * intent ledger has aliased `capacity:<id>` onto `autoresearch-pane` and App.tsx
+ * has decoded it into `requestedCapacity` for tranches, with no producer at
+ * either end of the repo. This drives the whole route in a real browser: lane
+ * click → cross-layout dispatch → face change → pane mount → filter pre-seated.
+ */
+test('a capacity lane opens the Autoresearch pane with its per-capacity filter pre-seated', async ({
+    page
+}) => {
+    await bootConnected(page);
+    await switchToCosmicFace(page);
+    await ensureTabSelected(page, 'M5 EBM');
+
+    const observatory = page.locator('.face-active [data-testid="m5-ebm-observatory"]');
+    await expect(observatory.locator('[data-testid="m5-capacity-lanes"]')).toBeVisible({ timeout: 15_000 });
+
+    await observatory
+        .locator('[data-testid="m5-capacity-open-autoresearch-parashakti-graph-relational-ml"]')
+        .click();
+
+    // The target row is face 1, so the shell crosses faces and lands the pane.
+    await expect(page.getByTestId('shell')).toHaveAttribute('data-face', '1', { timeout: 15_000 });
+    const pane = page.locator('.face-active [data-testid="autoresearch-pane"]');
+    await expect(pane).toBeVisible({ timeout: 15_000 });
+
+    // …and the capacity travelled: the filter is already narrowed, no click.
+    await expect(pane.locator('[data-testid="autoresearch-capacity-filter"]')).toHaveValue(
+        'parashakti-graph-relational-ml'
+    );
+    await expect(pane.locator('[data-testid="autoresearch-error"]')).toHaveCount(0);
+});

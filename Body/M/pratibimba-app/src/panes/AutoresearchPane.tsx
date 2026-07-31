@@ -1,9 +1,13 @@
 /**
- * Coordinate: M' M5' (Autoresearch pane - 28.T28.10)
+ * Coordinate: M' M5' (Autoresearch pane - 28.T28.10, deepened 26.T26.6)
  * Residency: Body/M/pratibimba-app/src/panes
  * Position (#n): M5-4' governed autoresearch surface
  * Actualises: concept disclosure, Mobius lifecycle ribbon, capacity filtering,
- *   profile-tick refresh, and governed Review-pane click-through.
+ *   profile-tick refresh, and governed Review-pane click-through. 26.T26.6 makes
+ *   the ribbon's absent recompose-pass ordinal NAME its missing producer on the
+ *   surface (`autoresearchSeams.ts`), and gives `requestedCapacity` a real
+ *   producer — the 26.2 capacity lanes now dispatch `capacity:<id>`, a route the
+ *   ledger aliased and this pane decoded but nothing had ever fired.
  * Public surface: AutoresearchPane, MobiusPassRibbon.
  * Does NOT own: autoresearch execution, promotion, canon mutation, or time.
  * Contract: [[M5'-SPEC]] / [[CHROME-CONTRACT]]
@@ -32,6 +36,11 @@ import {
     REVIEW_SUBMIT_METHOD,
     type QReviewEntry
 } from './autoresearchModel';
+import {
+    RECOMPOSE_PASS_PRODUCER,
+    RECOMPOSE_PASS_SEAM,
+    RECOMPOSE_PASS_STATUS_STRUCT
+} from './autoresearchSeams';
 import { composeQPairCandidate, validateQPairCandidate } from './qPairComposition';
 import { BridgeReadinessBadge } from '../ui/BridgeReadinessBadge';
 
@@ -49,7 +58,22 @@ export function MobiusPassRibbon({ status }: Pick<AutoresearchSnapshot, 'status'
         <section className="autoresearch-ribbon" data-testid="autoresearch-mobius-ribbon">
             <div className="autoresearch-ribbon-head">
                 <strong>Mobius lifecycle</strong>
-                <span data-testid="autoresearch-recompose-pass">recompose pass: not projected</span>
+                {/*
+                  26.T26.6: the spec asks this cell for a recompose-pass count.
+                  There is no producer — `recompose_pass` has no non-test caller
+                  and `ImproveStatus` carries no pass field — so the cell names
+                  the absent producer and says why, on the surface, rather than
+                  counting something else and calling it a pass.
+                */}
+                <span
+                    data-testid="autoresearch-recompose-pass"
+                    data-seam={RECOMPOSE_PASS_SEAM.name}
+                    data-available="false"
+                    title={RECOMPOSE_PASS_SEAM.reason}
+                >
+                    recompose pass: not projected — no producer ({RECOMPOSE_PASS_PRODUCER} has no
+                    non-test caller in Body/S; {RECOMPOSE_PASS_STATUS_STRUCT} carries no pass field)
+                </span>
                 <span className="autoresearch-dry-run" data-testid="autoresearch-dry-run">
                     dry-run enforced
                 </span>

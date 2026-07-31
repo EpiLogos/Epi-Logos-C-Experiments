@@ -65,6 +65,7 @@ import { CoordinateTreePane } from './panes/coordinateTree/CoordinateTreePane';
 import { COORDINATE_TREE_TAB_LABEL } from './panes/coordinateTree/coordinateTreeModel';
 import { registerCoordinateTreeCommands } from './panes/coordinateTree/coordinateTreeCommands';
 import { AutoresearchPane } from './panes/AutoresearchPane';
+import { capacityFromIntentContributionId } from './panes/autoresearchModel';
 import { KairosEnablementPane } from './panes/KairosEnablementPane';
 import { M4MercuriusRelayChip } from './panes/M4MercuriusRelayPane';
 import { MedicineViewPane } from './panes/MedicineViewPane';
@@ -532,23 +533,12 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
                 const requestedContributionId = (node.getConfig() as {
                     crossLayoutIntent?: { requestedExtensionId?: string; requestedContributionId?: string };
                 })?.crossLayoutIntent?.requestedContributionId;
-                const requestedCapacity = requestedContributionId?.startsWith('capacity:')
-                    ? requestedContributionId.slice('capacity:'.length)
-                    : null;
+                // 26.T26.6: the prefix and the six-id membership test are the
+                // codec's, not a second copy transcribed here — a capacity added
+                // to `M5_OPERATIONAL_CAPACITIES` stays routable without an edit.
                 return (
                     <AutoresearchPane
-                        requestedCapacity={
-                            requestedCapacity && [
-                                'anuttara-construction',
-                                'paramasiva-cpt-rag',
-                                'parashakti-graph-relational-ml',
-                                'mahamaya-process-reward-rl',
-                                'nara-anima-dialogic',
-                                'epii-self-referential'
-                            ].includes(requestedCapacity)
-                                ? requestedCapacity as import('./panes/autoresearchModel').M5OperationalCapacity
-                                : null
-                        }
+                        requestedCapacity={capacityFromIntentContributionId(requestedContributionId)}
                     />
                 );
             }

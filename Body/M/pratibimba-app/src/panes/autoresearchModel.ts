@@ -5,7 +5,8 @@
  * Actualises: strict `s5'.improve.status` / `.history` / `.q_review.latest`
  *   consumption, the six operational-capacity filters, and an honest Mobius
  *   lifecycle projection.
- * Public surface: parsers, capacity vocabulary, AutoresearchSnapshot.
+ * Public surface: parsers, capacity vocabulary, AutoresearchSnapshot, the
+ *   `capacity:<id>` cross-layout contribution-id codec (26.T26.6).
  * Does NOT own: S5 improvement law, promotion, review decisions, or a clock.
  */
 
@@ -192,6 +193,37 @@ const SUBSYSTEM_CAPACITY: Readonly<Record<string, M5OperationalCapacity>> = Obje
     nara: 'nara-anima-dialogic',
     epii: 'epii-self-referential'
 });
+
+/**
+ * 26.T26.6 — the `requestedContributionId` prefix `intentTarget()` aliases onto
+ * `ide-shell-m0-m5/autoresearch-pane` (`commands/crossLayoutIntent.ts`). The
+ * alias and its App-side decode both predate this tranche; NOTHING dispatched
+ * one, so the per-capacity entry into this pane existed only as a dropdown the
+ * user had to find. The producer now lives on the 26.2 capacity lanes and both
+ * ends read this one pair, so the prefix cannot drift apart across the seam.
+ */
+export const CAPACITY_INTENT_PREFIX = 'capacity:';
+
+/** Compose the contribution id that opens this pane scoped to one capacity. */
+export function capacityIntentContributionId(capacity: M5OperationalCapacity): string {
+    return `${CAPACITY_INTENT_PREFIX}${capacity}`;
+}
+
+/**
+ * Decode a `capacity:<id>` contribution id back to a capacity, or null when the
+ * id is not a capacity request or names one this vocabulary does not carry. The
+ * membership test reads `M5_OPERATIONAL_CAPACITIES`, so a seventh capacity is
+ * routable the moment it joins the vocabulary — no second list to update.
+ */
+export function capacityFromIntentContributionId(
+    contributionId: string | null | undefined
+): M5OperationalCapacity | null {
+    if (typeof contributionId !== 'string' || !contributionId.startsWith(CAPACITY_INTENT_PREFIX)) {
+        return null;
+    }
+    const candidate = contributionId.slice(CAPACITY_INTENT_PREFIX.length);
+    return CAPACITY_IDS.has(candidate) ? (candidate as M5OperationalCapacity) : null;
+}
 
 function candidateCapacity(run: Record<string, unknown>): M5OperationalCapacity | null {
     if (typeof run.capacity === 'string' && CAPACITY_IDS.has(run.capacity)) {

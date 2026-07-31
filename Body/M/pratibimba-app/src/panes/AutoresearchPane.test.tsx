@@ -13,12 +13,16 @@ vi.mock('../bridge/gatewayHolder', () => ({
     gatewayReady: () => true
 }));
 import {
+    capacityFromIntentContributionId,
+    capacityIntentContributionId,
+    M5_OPERATIONAL_CAPACITIES,
     parseImproveHistory,
     parseImproveStatus,
     parseQReviewQueue,
     profileVakCf,
     type AutoresearchSnapshot
 } from './autoresearchModel';
+import { RECOMPOSE_PASS_SEAM } from './autoresearchSeams';
 
 const STATUS_WIRE = {
     loop_state: 'evaluating',
@@ -171,6 +175,43 @@ describe('AutoresearchPane', () => {
         fireEvent.click(screen.getByTestId('autoresearch-capacity-pane-epii-self-referential'));
         expect(screen.getAllByTestId('autoresearch-candidate')).toHaveLength(1);
         expect((screen.getByTestId('autoresearch-capacity-filter') as HTMLSelectElement).value).toBe('epii-self-referential');
+    });
+
+    it('pre-seats the filter from a `capacity:<id>` cross-layout intent on first paint (26.T26.6)', () => {
+        // The consumer end of the seam the 26.2 lanes now fire: the pane opens
+        // already narrowed, with no click and no second render pass.
+        render(<AutoresearchPane fixture={SNAPSHOT} requestedCapacity="parashakti-graph-relational-ml" />);
+        expect((screen.getByTestId('autoresearch-capacity-filter') as HTMLSelectElement).value).toBe(
+            'parashakti-graph-relational-ml'
+        );
+        const narrowed = screen.getAllByTestId('autoresearch-candidate');
+        expect(narrowed).toHaveLength(1);
+        expect(narrowed[0].getAttribute('data-capacity')).toBe('parashakti-graph-relational-ml');
+    });
+
+    it('round-trips the capacity codec and refuses ids outside the six-capacity vocabulary', () => {
+        for (const capacity of M5_OPERATIONAL_CAPACITIES) {
+            expect(capacityFromIntentContributionId(capacityIntentContributionId(capacity.id))).toBe(
+                capacity.id
+            );
+        }
+        expect(capacityFromIntentContributionId('capacity:not-a-capacity')).toBeNull();
+        expect(capacityFromIntentContributionId('capacity:')).toBeNull();
+        expect(capacityFromIntentContributionId('agentic-control-room')).toBeNull();
+        expect(capacityFromIntentContributionId(undefined)).toBeNull();
+    });
+
+    it('names the ABSENT recompose-pass producer on the ribbon instead of counting something else', () => {
+        render(<AutoresearchPane fixture={SNAPSHOT} />);
+        const cell = screen.getByTestId('autoresearch-recompose-pass');
+        expect(cell.getAttribute('data-available')).toBe('false');
+        // The producer that would supply it is NAMED at the datum (15.6), not
+        // hidden in a comment — a reader can go straight to the missing arm.
+        expect(cell.textContent).toContain('recompose.rs::recompose_pass');
+        expect(cell.textContent).toContain('types.rs::ImproveStatus');
+        expect(cell.getAttribute('data-seam')).toBe(RECOMPOSE_PASS_SEAM.name);
+        // …and no digit is rendered where a pass count would go.
+        expect(cell.textContent).not.toMatch(/pass:\s*\d/);
     });
 
     it('routes a candidate review id through the Review-pane click-through', () => {
