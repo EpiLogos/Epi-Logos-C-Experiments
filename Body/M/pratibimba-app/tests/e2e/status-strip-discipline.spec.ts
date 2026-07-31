@@ -29,7 +29,8 @@ import { expect, test } from '@playwright/test';
 
 /** The six spine state-threads the strip surfaces, one entry each (DR-FACE-7 §3). */
 const STATE_THREAD_TESTIDS = [
-    'status-tick', // the store's monotonic generation — the only clock
+    'status-tick', // 32.T32.9: `tick:n gen:g` — this window's observed advances
+    //             // and the kernel generation, both off the one clock
     'status-daynow', // session-store thread 1: day-now anchor
     'status-session', // session-store thread 2: gateway session key
     'status-gateway', // provenance connection state
@@ -81,11 +82,12 @@ test('status strip: the tick entry is the live wire — real gateway connection 
     // real connection against the spawned `epi gate start` — not a mount
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
 
-    // the tick entry is the store's monotonic generation — the only clock. A
-    // mounted mock cannot move it; only the real gateway heartbeat does.
+    // the tick entry carries the store's monotonic generation — the only clock.
+    // A mounted mock cannot move it; only the real gateway heartbeat does.
+    // 32.T32.9 gave the entry two numbers, so the generation is read by name.
     const readGeneration = async (): Promise<number> => {
         const text = (await page.getByTestId('status-tick').textContent()) ?? '';
-        const match = text.match(/(\d+)/);
+        const match = text.match(/gen:(\d+)/);
         return match ? Number(match[1]) : Number.NaN;
     };
     await expect

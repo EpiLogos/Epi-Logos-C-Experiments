@@ -523,6 +523,47 @@ textarea {
   min-width: 0;
 }
 
+/* 32.T32.9 — the profile-tick entry. It is a control (it opens the Diagnostics
+   fold on the profile-tick history), so it is a real button; it reads as strip
+   text because a status thread that looked like a form control would break the
+   readout's line. */
+.status-tick-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.status-tick-button:hover,
+.status-tick-button:focus-visible {
+  color: var(--ink);
+}
+
+/* Before the first advance the entry carries the 32.5 `pending_first_tick`
+   flavour: the same shimmer the readiness badges use for it, so "waiting for
+   the clock" looks the same everywhere it is said. */
+.status-tick-pre-tick {
+  animation: loading-pulse-fade 900ms ease-in-out infinite alternate;
+}
+
+/* The birth of the clock (spec :269) — one tick long, then the steady reading. */
+.status-tick-announcement {
+  color: var(--accent);
+  font-style: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-tick-pre-tick {
+    animation: none !important;
+  }
+}
+
 /* 31.T31.6 — top coordinate-path breadcrumb (family → archetype → position).
    A thin chrome bar at the top of the shell; the per-segment tint is applied
    inline from coordinateFamilyGrade (30.T30.2), never a raw literal here. */

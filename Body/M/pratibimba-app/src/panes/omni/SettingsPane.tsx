@@ -46,6 +46,8 @@ import {
     effectivePrivacyClass,
     readDefaultPrivacyClass
 } from '../../ui/privacyDefault';
+import { useProfileTickVisibilityStore } from '../../ui/profileTickVisibility';
+import { STATE_THREAD_COUNT } from '../../ui/shellSlotPolicy';
 import {
     SETTINGS_SECTIONS,
     disclosedEntries,
@@ -165,6 +167,39 @@ function PrivacyDefaultClassControl(props: { readonly preferences: KairosPrefere
     );
 }
 
+/**
+ * The 32.T32.9 profile-tick visibility toggle. Unlike kairos it has no probe to
+ * gate on — but it does have a live consumer in another subtree, so it writes
+ * through the store rather than the key: `setVisible` persists AND publishes,
+ * and the status strip re-renders on the same click. A raw preference write
+ * here would leave the strip painting the old answer until the next reload.
+ */
+function ProfileTickVisibilityControl() {
+    const visible = useProfileTickVisibilityStore(state => state.visible);
+    const setVisible = useProfileTickVisibilityStore(state => state.setVisible);
+    return (
+        <>
+            <button
+                type="button"
+                data-testid="settings-profile-tick-visible"
+                aria-pressed={visible}
+                onClick={() => setVisible(!visible)}
+            >
+                {visible ? 'Hide the profile-tick entry' : 'Show the profile-tick entry'}
+            </button>
+            <span
+                className="settings-row-status"
+                data-testid="settings-profile-tick-status"
+                data-visible={visible}
+            >
+                {visible
+                    ? 'The status bar shows tick:n gen:g — n is how many ticks this window has seen, g is the kernel generation.'
+                    : `Hidden. The clock keeps running and every surface still re-renders on it; the status bar still declares all ${STATE_THREAD_COUNT} threads.`}
+            </span>
+        </>
+    );
+}
+
 function KairosControl(props: {
     readonly preferences: KairosPreferenceAccess;
     readonly invokeGatewayRpc: (
@@ -271,6 +306,9 @@ function LiveRow(props: {
                         preferences={props.preferences}
                         invokeGatewayRpc={props.invokeGatewayRpc}
                     />
+                ) : null}
+                {props.entry.key === PREFERENCE_KEYS.profileTickVisible ? (
+                    <ProfileTickVisibilityControl />
                 ) : null}
                 {props.entry.control === 'read-only' ? (
                     <span data-testid={`settings-value-${props.entry.key}`}>

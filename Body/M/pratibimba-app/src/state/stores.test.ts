@@ -28,6 +28,30 @@ describe('stores', () => {
         expect(useTickStore.getState().generation).toBe(6);
     });
 
+    it('32.T32.9: observedTicks counts ACCEPTED advances, and resets with the clock', () => {
+        expect(useTickStore.getState().observedTicks).toBe(0);
+        useTickStore.getState().setProfile(profileWithGeneration(5));
+        expect(useTickStore.getState().observedTicks).toBe(1);
+
+        // refused frames are not ticks: a stale generation and a repeat of the
+        // current one both leave the count exactly where it was
+        useTickStore.getState().setProfile(profileWithGeneration(3));
+        useTickStore.getState().setProfile(profileWithGeneration(5));
+        expect(useTickStore.getState().observedTicks).toBe(1);
+
+        useTickStore.getState().setProfile(profileWithGeneration(6));
+        expect(useTickStore.getState().observedTicks).toBe(2);
+
+        // and a gap in the wire is still ONE advance — the count is of frames
+        // this shell accepted, never of kernel generations that elapsed
+        useTickStore.getState().setProfile(profileWithGeneration(90));
+        expect(useTickStore.getState().observedTicks).toBe(3);
+        expect(useTickStore.getState().generation).toBe(90);
+
+        resetProfileTicks();
+        expect(useTickStore.getState().observedTicks).toBe(0);
+    });
+
     it('session store patches without clobbering unset fields', () => {
         useSessionStore.getState().setSession({ dayNow: '02-07-2026' });
         useSessionStore.getState().setSession({ sessionKey: 'sess-1' });

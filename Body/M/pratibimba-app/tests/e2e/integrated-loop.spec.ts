@@ -161,7 +161,10 @@ test('integrated loop: cast crosses UI → CLI ledger → vault bytes → timeli
         })
         .toBeGreaterThanOrEqual(2);
     const tickText = (await page.getByTestId('status-tick').textContent()) ?? '';
-    const domGeneration = Number(tickText.match(/(\d+)/)?.[1] ?? Number.NaN);
+    // 32.T32.9: the entry reads `tick:n gen:g` — n is this window's observed
+    // advances, g is the kernel generation. Read the NAMED group: taking the
+    // first number in the entry was only ever right while the entry printed one.
+    const domGeneration = Number(tickText.match(/gen:(\d+)/)?.[1] ?? Number.NaN);
     expect(Number.isFinite(domGeneration), `status-tick shows no generation: "${tickText}"`).toBeTruthy();
     const wireGenerations = await readWireGenerations();
     for (let i = 1; i < wireGenerations.length; i += 1) {

@@ -19,18 +19,38 @@ import {
 export interface TickState {
     profile: KernelBridgeCachedProfile | null;
     generation: number | null;
+    /**
+     * 32.T32.9 — how many real tick ADVANCES this shell has observed, counted
+     * inside the accepted branch of the generation gate below.
+     *
+     * It is deliberately NOT a render counter and NOT the kernel's generation.
+     * The kernel's generation belongs to the gateway PROCESS (it starts at 0
+     * when `epi gate start` boots and is already in the hundreds by the time a
+     * later client connects), so it cannot answer "has the clock ticked for
+     * ME yet, and how many times". This can: it is 0 before the first frame,
+     * 1 on the first accepted frame — the visible birth of the clock — and it
+     * advances only when a frame really passed the gate. A component
+     * re-rendering, a stale frame being refused, or a repeated generation all
+     * leave it exactly where it was.
+     */
+    observedTicks: number;
     setProfile(profile: KernelBridgeCachedProfile): void;
 }
 
 export const useTickStore = create<TickState>(set => ({
     profile: null,
     generation: null,
+    observedTicks: 0,
     setProfile: profile =>
         set(state => {
             if (state.generation !== null && profile.generation <= state.generation) {
                 return state;
             }
-            return { profile, generation: profile.generation };
+            return {
+                profile,
+                generation: profile.generation,
+                observedTicks: state.observedTicks + 1
+            };
         })
 }));
 

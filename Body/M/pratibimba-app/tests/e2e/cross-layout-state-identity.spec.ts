@@ -98,7 +98,7 @@ test('11.T11.6: real shared identity survives daily -> deep -> daily routing', a
     await sessionButton.click();
     await expect(page.getByTestId('status-session')).toContainText(sessionKey);
 
-    const generation = Number((await page.getByTestId('status-tick').textContent())?.match(/\d+/)?.[0]);
+    const generation = Number((await page.getByTestId('status-tick').textContent())?.match(/gen:(\d+)/)?.[1]);
     expect(Number.isInteger(generation)).toBeTruthy();
     const common = {
         coordinate: 'M3-3',
@@ -161,7 +161,7 @@ test('11.T11.6: real shared identity survives daily -> deep -> daily routing', a
 
     await dispatchIntent(page, {
         ...common,
-        profileGeneration: Number((await page.getByTestId('status-tick').textContent())?.match(/\d+/)?.[0]),
+        profileGeneration: Number((await page.getByTestId('status-tick').textContent())?.match(/gen:(\d+)/)?.[1]),
         requestedExtensionId: 'm0-anuttara',
         requestedContributionId: 'personal'
     });
@@ -173,7 +173,7 @@ test('11.T11.6: real shared identity survives daily -> deep -> daily routing', a
 
     await dispatchIntent(page, {
         ...common,
-        profileGeneration: Number((await page.getByTestId('status-tick').textContent())?.match(/\d+/)?.[0]),
+        profileGeneration: Number((await page.getByTestId('status-tick').textContent())?.match(/gen:(\d+)/)?.[1]),
         requestedExtensionId: 'm0-anuttara',
         requestedContributionId: 'graph'
     });

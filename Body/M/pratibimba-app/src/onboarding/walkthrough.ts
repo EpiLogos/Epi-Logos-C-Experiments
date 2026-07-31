@@ -12,9 +12,15 @@
  *   THE COPY IS GENERATED FROM THE LIVE INVENTORIES, not transcribed. Step 2
  *   names the OmniPanel tabs by reading `OMNIPANEL_TABS`; step 3 names the
  *   left-sidebar modes by reading `LEFT_SIDEBAR_MODES`; step 4 names the status
- *   threads from the six-entry discipline. A walkthrough that hardcodes what
+ *   threads by reading `STATUS_STRIP_THREADS` (32.T32.9 — it used to read only
+ *   the COUNT from that module and transcribe the names, and the transcription
+ *   had already drifted off the real strip). A walkthrough that hardcodes what
  *   the app contains is a walkthrough that starts lying the first time a tab is
  *   added — these cannot drift, and `walkthrough.test.ts` proves it.
+ *
+ *   Step 1 opens with the profile-tick, per tranche 32.9 (spec :267): the first
+ *   thing a new user is told is that things move on their own, before anything
+ *   asks them to move something themselves.
  *
  *   ANCHORS ARE CANDIDATES, resolved against the real DOM in order. Four of the
  *   six point at chrome this carrier really has (`face-toggle`, `status-strip`,
@@ -37,7 +43,7 @@ import { OMNIPANEL_TABS } from '../panes/omni/omnipanelRuntime';
 import { LEFT_SIDEBAR_MODES } from '../ui/leftSidebarModes';
 import { PREFERENCE_KEYS } from '../ui/preferences';
 import { DEFAULT_PRIVACY_CLASS } from '../ui/privacyDefault';
-import { STATE_THREAD_COUNT } from '../ui/shellSlotPolicy';
+import { STATE_THREAD_COUNT, STATUS_STRIP_THREADS } from '../ui/shellSlotPolicy';
 import { ONBOARDING_COMPLETED_STEPS_PREFERENCE, type KairosPreferenceAccess } from '../panes/kairosEnablement';
 
 /** The six ledger step ids, in walk order. */
@@ -72,14 +78,13 @@ export interface WalkthroughStep {
     readonly anchors: readonly string[];
 }
 
-const STATUS_THREADS = [
-    'profile-tick',
-    'day-now anchor',
-    'session id',
-    'gateway readiness',
-    'profile generation',
-    'active coordinate'
-];
+/**
+ * 32.T32.9: READ from the six-thread declaration, not transcribed. The
+ * hand-written list this replaced named "profile generation" as a thread of its
+ * own — the strip has never had one — and omitted the gateway SUPERVISOR thread
+ * it does have, so the status-bar step was teaching a strip that does not exist.
+ */
+const STATUS_THREADS = STATUS_STRIP_THREADS.map(thread => thread.label);
 
 /** Build the six steps against the LIVE inventories. */
 export function walkthroughSteps(): readonly WalkthroughStep[] {
@@ -90,6 +95,8 @@ export function walkthroughSteps(): readonly WalkthroughStep[] {
             id: 'walkthrough.0-1-toggle',
             title: 'The 0/1 toggle',
             body:
+                'Everything advances on its own — that is the profile-tick. The system is alive whether ' +
+                'you touch it or not, and the status bar counts the ticks so you can see it. ' +
                 'One shell, two faces. 0 is the cosmic side, 1 the personal side, and ⌘. flips between ' +
                 'them — the # inversion made a keystroke. Nothing is lost in the flip: both faces read the ' +
                 'same state.',

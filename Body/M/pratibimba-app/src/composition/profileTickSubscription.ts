@@ -132,7 +132,9 @@ export function publishProfileTick(profile: KernelBridgeCachedProfile): void {
     useTickStore.getState().setProfile(profile);
 }
 
-/** Return the clock to its pre-tick state (test teardown). */
+/** Return the clock to its pre-tick state (test teardown). `observedTicks` is
+ *  part of that state: a suite that left it standing would hand the next test a
+ *  clock claiming ticks it never published (32.T32.9). */
 export function resetProfileTicks(): void {
-    useTickStore.setState({ profile: null, generation: null });
+    useTickStore.setState({ profile: null, generation: null, observedTicks: 0 });
 }

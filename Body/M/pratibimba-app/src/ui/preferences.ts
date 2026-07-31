@@ -43,6 +43,7 @@ export const PREFERENCE_KEYS = Object.freeze({
     layoutActive: 'epi-logos.layout.active',
     privacyDefaultClass: 'epi-logos.privacy.default-class',
     privacyKairosEnabled: 'epi-logos.privacy.kairos-enabled',
+    profileTickVisible: 'epi-logos.profile.tick.visible',
     onboardingCompletedSteps: 'epi-logos.onboarding.completed-steps',
     onboardingPasuSkipped: 'epi-logos.onboarding.pasu-skipped',
     onboardingSkippedSteps: 'epi-logos.onboarding.skipped-steps'
@@ -115,6 +116,15 @@ export const EPI_LOGOS_PREFERENCES: readonly PreferenceDescriptor[] = Object.fre
         consumer: 'src/panes/kairosEnablement.ts'
     },
     {
+        key: PREFERENCE_KEYS.profileTickVisible,
+        type: 'boolean',
+        defaultValue: true,
+        description:
+            'Whether the profile-tick entry is shown in the status bar. Default ON: the tick is the foundation-principle-2 substrate — every surface re-renders when it advances — and a new user seeing things move on their own deserves to see the clock that moves them. Turning it off hides the ENTRY; it never stops the clock, and the six status threads stay declared (15.10 discipline).',
+        owningTranche: '32.T32.9',
+        consumer: 'src/ui/profileTickVisibility.ts'
+    },
+    {
         key: PREFERENCE_KEYS.onboardingCompletedSteps,
         type: 'string-array',
         defaultValue: [],
@@ -164,11 +174,6 @@ export const SPECIFIED_PREFERENCES: readonly {
     readonly status: 'pending' | 'superseded' | 'declined';
     readonly note: string;
 }[] = Object.freeze([
-    {
-        key: 'epi-logos.profile.tick.visible',
-        status: 'pending',
-        note: 'Status-bar profile-tick visibility. The six-entry status bar is fixed (15.10); a visibility toggle needs the 32.4 settings surface to expose it.'
-    },
     {
         key: 'epi-logos.kairos.enabled',
         status: 'superseded',

@@ -62,6 +62,8 @@ const EMPTY_TICK: M3ProfileTickValue = Object.freeze({
     tick12: null,
     degree720: null,
     graphRevision: null,
+    observedTicks: 0,
+    lastTickAtMs: null,
     cachedProfile: null,
     payload: null
 });

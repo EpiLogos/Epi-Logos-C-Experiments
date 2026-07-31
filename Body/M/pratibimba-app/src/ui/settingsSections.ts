@@ -12,8 +12,10 @@
  *   scope per section (User vs Workspace, WC-OB-21), every preference read in
  *   exactly one place, and the action affordances each section offers.
  *
- *   THE HONEST SHAPE. The 32.4 spec lists roughly twenty preferences. Six of
- *   them exist: `ui/preferences.ts` (31.T31.9) declares the live register and
+ *   THE HONEST SHAPE. The 32.4 spec lists roughly twenty preferences. Seven of
+ *   them exist (`profile.tick.visible` became live in 32.T32.9, which is why
+ *   Motion finally has a control rather than only an OS report):
+ *   `ui/preferences.ts` (31.T31.9) declares the live register and
  *   deliberately records the rest as `pending` / `superseded` / `declined`
  *   rather than declaring keys nothing reads. This module inherits that
  *   posture instead of overturning it — a section renders its LIVE entries as
@@ -113,8 +115,10 @@ const live = (
  * is the only place in `src` that spells one, and a hand-written list of
  * disclosures here would have been a second spelling free to drift from the
  * register. Areas that name a section go to it; the four that do not go where
- * their SUBJECT lives — `kairos` is a privacy opt-in, `profile` is motion,
- * `keymap` is chrome, and the developer/per-surface modes are diagnostics.
+ * their SUBJECT lives — `kairos` is a privacy opt-in, `keymap` is chrome, and
+ * the developer/per-surface modes are diagnostics. (`profile` had a row here
+ * for `profile.tick.visible`; 32.T32.9 made that key LIVE, so the row went with
+ * the disclosure rather than lingering as a mapping for nothing.)
  */
 const DISCLOSURE_AREA_SECTION: Readonly<Record<string, SettingsSectionId>> = Object.freeze({
     layout: 'layout',
@@ -122,7 +126,6 @@ const DISCLOSURE_AREA_SECTION: Readonly<Record<string, SettingsSectionId>> = Obj
     privacy: 'privacy',
     kairos: 'privacy',
     motion: 'motion',
-    profile: 'motion',
     identity: 'identity',
     ui: 'diagnostics',
     m1: 'diagnostics',
@@ -223,7 +226,13 @@ export const SETTINGS_SECTIONS: readonly SettingsSection[] = Object.freeze([
         scope: 'user',
         purpose:
             'How much the surfaces move. Reduced motion is the platform\u2019s call, not the carrier\u2019s — this section reports what the OS is currently asking for.',
-        live: [],
+        live: [
+            live(
+                PREFERENCE_KEYS.profileTickVisible,
+                'toggle',
+                'the profile-tick visibility toggle here — useProfileTickVisibilityStore.setVisible (ui/profileTickVisibility.ts) writes the key AND publishes the change, so the status strip stops painting the entry the moment it flips'
+            )
+        ],
         actions: []
     }),
     section({

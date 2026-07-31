@@ -19,10 +19,22 @@
  *   `ide-deep`; `bottom` — previously the ONLY slot declared per-layout — is
  *   composed by neither layout. Per-layout-ness is a property of the slot's
  *   CONTENT and is therefore declared beside `policy`, not inside it.
+ *   32.T32.9 replaced the bare `STATE_THREAD_COUNT = 6` with the six threads
+ *   THEMSELVES (`STATUS_STRIP_THREADS`) and derived the count from them. The
+ *   count alone could not carry the 15.10 clause that tranche had to honour —
+ *   "the preference HIDES the entry but does NOT remove it from the contract;
+ *   still exactly 6 entries declared" — because a bare 6 says nothing about
+ *   WHICH six, so "declared but not rendered" was unrepresentable. It also let
+ *   two other spellings of the list drift: the walkthrough's status-bar step
+ *   named "profile generation" as a thread the strip has never had, and omitted
+ *   the supervisor thread it does have. Both now read this register.
  * Public surface: ShellSlotId, SlotPolicy, ShellSlot, SHELL_SLOT_POLICY,
- *   shellSlot, STATE_THREAD_COUNT.
+ *   shellSlot, StatusStripThreadId, StatusStripThread, STATUS_STRIP_THREADS,
+ *   STATE_THREAD_COUNT.
  * Does NOT own: the surfaces themselves (StatusStrip, CoordinateBreadcrumb,
- *   OmniPanel, leftSidebarModes, the FlexLayout faces) — it names their slots.
+ *   OmniPanel, leftSidebarModes, the FlexLayout faces) — it names their slots;
+ *   which thread may be HIDDEN and by which preference (ui/profileTickVisibility,
+ *   32.T32.9).
  * Contract: [[CHROME-CONTRACT]] + rerun tranche [[31.T31.7]] (CC-07 / CCT-7).
  */
 
@@ -57,8 +69,45 @@ export interface ShellSlot {
     readonly exactCount?: number;
 }
 
-/** The six state-thread entries the status bar admits (15.10 discipline). */
-export const STATE_THREAD_COUNT = 6;
+export type StatusStripThreadId =
+    | 'profile-tick'
+    | 'day-now'
+    | 'session'
+    | 'gateway'
+    | 'supervisor'
+    | 'coordinate';
+
+export interface StatusStripThread {
+    readonly id: StatusStripThreadId;
+    /** The thread's name in prose — what the walkthrough calls it. */
+    readonly label: string;
+    /** The entry's `data-testid` in the rendered strip. DECLARED here even when
+     *  a preference hides the entry: 15.10 pins the contract, not the paint. */
+    readonly testId: string;
+}
+
+/**
+ * The six state-thread entries the status bar admits (15.10 discipline,
+ * re-grounded as threads-not-widgets by DR-FACE-7 §3).
+ *
+ * `profile-tick` carries BOTH threads 15.10 names separately — "profile-tick
+ * state" and "profile generation" — because in this carrier they are one
+ * reading of one clock; 32.T32.9 made the entry say so out loud (`tick:n
+ * gen:g`) rather than printing the generation under the word "tick". The
+ * carrier's sixth thread is the gateway SUPERVISOR, which is carrier-truth
+ * (boot = supervise, DR-FACE-2) and has no Theia equivalent.
+ */
+export const STATUS_STRIP_THREADS: readonly StatusStripThread[] = Object.freeze([
+    { id: 'profile-tick', label: 'profile-tick and generation', testId: 'status-tick' },
+    { id: 'day-now', label: 'day-now anchor', testId: 'status-daynow' },
+    { id: 'session', label: 'session id', testId: 'status-session' },
+    { id: 'gateway', label: 'gateway readiness', testId: 'status-gateway' },
+    { id: 'supervisor', label: 'gateway supervisor', testId: 'status-supervisor' },
+    { id: 'coordinate', label: 'active coordinate', testId: 'status-coordinate' }
+] as const);
+
+/** The 15.10 count, DERIVED from the declaration so the two cannot disagree. */
+export const STATE_THREAD_COUNT = STATUS_STRIP_THREADS.length;
 
 export const SHELL_SLOT_POLICY: readonly ShellSlot[] = Object.freeze([
     {

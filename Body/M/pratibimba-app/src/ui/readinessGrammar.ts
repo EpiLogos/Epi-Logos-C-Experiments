@@ -27,7 +27,8 @@
  *   law wins; the prose described the frozen Theia shape.
  * Public surface: MExtensionReadinessFlavour, READINESS_FLAVOURS,
  *   ReadinessFlavourEntry, READINESS_FLAVOUR_ENTRIES, ReadinessGrammarEntry,
- *   READINESS_GRAMMAR, grammarFor, ReadinessFlavourContext, flavourOf.
+ *   READINESS_GRAMMAR, grammarFor, flavourEntry, ReadinessFlavourContext,
+ *   flavourOf.
  * Does NOT own: the nine-id taxonomy, severity/tier/recovery law
  *   (bridgeReadiness.ts), the privacy spelling (panes/omni/PrivacyClassBadge
  *   `privacyClassKind`), or the readiness transport (state/readinessStore).
@@ -168,6 +169,30 @@ const GRAMMAR_BY_STATE: Readonly<Record<BridgeReadinessId, ReadinessGrammarEntry
 
 export function grammarFor(state: BridgeReadinessId): ReadinessGrammarEntry {
     return GRAMMAR_BY_STATE[state];
+}
+
+const FLAVOUR_BY_ID: Readonly<Record<MExtensionReadinessFlavour, ReadinessFlavourEntry>> =
+    Object.freeze(
+        Object.fromEntries(READINESS_FLAVOUR_ENTRIES.map(entry => [entry.flavour, entry])) as Record<
+            MExtensionReadinessFlavour,
+            ReadinessFlavourEntry
+        >
+    );
+
+/**
+ * A flavour's row — the sibling of `grammarFor`, and the reason the flavour
+ * COPY is reachable at all.
+ *
+ * Until 32.T32.9 the per-state copy had a render consumer (`emptyStateRegistry`
+ * reads `grammarFor(state).copy`) and the per-flavour copy had none: every
+ * renderer took the flavour as a CSS class and a `data-flavour`, so five
+ * authored strings — 'Awaiting first profile-tick…' among them — were declared,
+ * structurally tested, and never shown to anyone. The status entry's pre-tick
+ * reading is the first surface to say one out loud, and it says it from HERE
+ * rather than re-typing it, so the grammar stays the authority on the words.
+ */
+export function flavourEntry(flavour: MExtensionReadinessFlavour): ReadinessFlavourEntry {
+    return FLAVOUR_BY_ID[flavour];
 }
 
 /**

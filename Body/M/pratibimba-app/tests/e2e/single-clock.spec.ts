@@ -19,11 +19,19 @@
 
 import { expect, test, type Page } from '@playwright/test';
 
-/** The status strip's tick, as a number — the shell's view of the one clock. */
+/**
+ * The status strip's GENERATION — the shell's view of the one clock.
+ *
+ * 32.T32.9 gave the entry two numbers (`tick:n gen:g`: advances this window has
+ * observed, and the kernel generation), so the generation is read by NAME.
+ * Stripping every non-digit used to be equivalent while the entry printed one
+ * number; against two it CONCATENATES them (`tick:5 gen:419` → 5419) and the
+ * agreement poll below could never succeed.
+ */
 async function statusTick(page: Page): Promise<number> {
     const text = (await page.getByTestId('status-tick').textContent()) ?? '';
-    const value = Number(text.replace(/[^0-9]/g, ''));
-    return Number.isFinite(value) ? value : -1;
+    const match = text.match(/gen:(\d+)/);
+    return match ? Number(match[1]) : -1;
 }
 
 async function bootConnected(page: Page): Promise<void> {

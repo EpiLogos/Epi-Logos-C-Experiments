@@ -361,9 +361,24 @@ test('(a) 0/1 lemniscate face-toggle: 400ms law + deterministic mid-crossing bas
 
     // Release: finish the crossing, drop the slow-motion override, and the
     // shell settles on the cosmic face with a fully opaque active slot.
+    //
+    // Finish only the animations this test SLOWED — the same face-slot filter
+    // the freeze above uses. Finishing every animation in the document threw
+    // `InvalidStateError: Cannot finish Animation with an infinite target
+    // effect end` the moment any perpetual "waiting" pulse was on screen, and
+    // the app has several by design (the 32.5 `pending_first_tick` shimmer, the
+    // 30.6 LoadingPulse, and — always mounted, so the likeliest — the 32.T32.9
+    // status entry before the first tick lands). Those are not this test's to
+    // finish, and none of them is in the crossing it is releasing.
     await page.evaluate(() => {
         for (const a of document.getAnimations()) {
-            a.finish();
+            if (
+                a.effect instanceof KeyframeEffect
+                && a.effect.target instanceof Element
+                && a.effect.target.classList.contains('face-slot')
+            ) {
+                a.finish();
+            }
         }
         document.getElementById('e2e-slow-face-transition')?.remove();
     });
