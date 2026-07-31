@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-31T00:19:30.277Z",
+  "updatedAt": "2026-07-31T00:49:38.983Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -13249,16 +13249,54 @@
       "blocker": null
     },
     "26.T26.7": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": null,
+      "status": "done",
+      "updatedAt": "2026-07-31T00:49:38.955Z",
+      "claimedAt": "2026-07-31T00:19:45.112Z",
+      "completedAt": "2026-07-31T00:49:38.955Z",
+      "evidence": [
+        {
+          "at": "2026-07-31T00:39:09.279Z",
+          "text": "Commit ae66074c. VERIFIED-NOT-REBUILT against the tree with file:line: 26.7 (a)'s RunTree (AgenticControlRoomPane.tsx:340 DispatchGenealogyTree over dispatchGenealogyFromSessions), EvidenceDepositForm (:461, live s5'.epii.deposit), ReviewDecisionControls (:443, live inbox->resolve under m5ReviewGate with the IOD-17 three-cell readout), AbortRetryContinueControls (:456, honest unwired surface naming s5'.epii.runtime_control and its reason); (b)'s DR-M5-1 roster projected from omnipanelCapabilities via acrRoster() (acrGovernance.ts:373) with Sophia facet-only; (c)'s PiRuntimeMonitorBanner (:279) carrying the spec copy verbatim over the preserved widget id. Those stood; none was rebuilt. THE ONE REAL DELTA is the T8 content the composition argument covered for: 26.7 (a)'s <ToolStream />. The pane rendered a button reading 'open the temporal fold' that fired ide-shell-m0-m5/agentic-control-room.select-run, which omnipanelIntentRouter.ts:121 resolves to resolveDispatchTraceRoute -> the STRUCTURAL dispatch-trace fold that this pane already renders itself. So the crossing opened a second copy of the on-screen tree, the time-ordered fold was reachable from the governance surface by no path, and 28.T28.5's 'carried, not duplicated' claim (AGENTS.md, reviewPaneSeams.ts:160) was untrue. The suite could not catch it: AgenticControlRoomPane.test.tsx asserted only that the button EXISTED and queried a 'tool-stream-fold' testid no component renders. FIX: ide-shell-m0-m5/agentic-control-room.open-tool-stream -> resolveToolStreamRoute, the SECOND declared carrier completion in OMNIPANEL_DEFAULT_ROUTES beside tool-stream.open-evidence and flagged for Architect review the same way; the node id is ToolStreamPanel's selectedEventId (both folds index one genealogyIndex, ToolStreamPanel.tsx:99/147), so 15.11's one-dataset-two-foldings is now true of the running app. select-run keeps its meaning as the INBOUND seam the / Review fold fires (28.T28.9); reviewPaneSeams.ts no longer claims the deep pane fires it. New ACR_FOLD_ROUTES register extends the pane's seam discipline to crossings that ACR_METHOD_BINDINGS structurally cannot cover (a crossing rides the intent table, not the wire), rendered as a 'Fold crossings' list on the surface, and every row is RESOLVED through the LIVE omniPanelIntentRouter rather than asserted. Proven red-then-green: the new pane test failed on the missing affordance before the fix and passes after; the router-table test went 15->16 rows. UF proof is a fourth e2e in agentic-control-room-deep.spec.ts that boots, crosses into ide-deep, clicks a real RunTree node, clicks the crossing, and asserts the Tools border fold opens on the deep face with the dispatch-stream row carrying that data-node-id aria-selected and the detail naming that run. FOUND AND REPORTED, NOT FIXED (the / membrane owns them): omnipanel-shell/dispatch-trace.open-tool-stream and omnipanel-shell/tool-stream.open-dispatch-trace are canonical 27.9 rows with ZERO producers - DispatchTracePanel fires only dispatch-trace.open-evidence and ToolStreamPanel patches dispatch-trace state directly instead of routing - so the two 15.11 folds still cannot cross to each other from the membrane. backendStudio (28.13) and readiness-gate (28.11) untouched and still pending; the held sourceRef deep-link still waits on a session field nothing populates. Counts: app-test 2133 passed / 4 skipped (was 2128/4), e2e 136 passed / 0 failed laned (was 135), typecheck + build clean, five lints green, lint-test-honesty 0 dishonest blocks.",
+          "receipt": {
+            "command": "cd Body/M/pratibimba-app && pnpm typecheck && pnpm test && pnpm build && pnpm test:e2e",
+            "exitCode": 0,
+            "testsPassed": 136,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/acr/acrGovernance.ts",
+              "Body/M/pratibimba-app/src/panes/acr/AgenticControlRoomPane.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/omnipanelIntentRouter.ts",
+              "Body/M/pratibimba-app/src/panes/omni/review/reviewPaneSeams.ts",
+              "Body/M/pratibimba-app/tests/e2e/agentic-control-room-deep.spec.ts",
+              "Body/M/pratibimba-app/AGENTS.md"
+            ],
+            "tokenUsage": {
+              "input": 330000,
+              "output": 31000
+            }
+          }
+        },
+        {
+          "at": "2026-07-31T00:49:38.955Z",
+          "text": "Independent PASS (verifier opus5-mdev-verify-20260731, distinct from this closer) on the FULL class-scoped gate with no scoping applied: app-ui-flow 136 playwright specs, app-test 2133, ta-onta 800, gateway 118, app-typecheck, app-build, app-smoke, live-wire, gateway-methods, carrier-tokens, honesty-lint. Everything the spec names except one item was already standing after the sibling ACR tranche, and each was verified against the tree with file and line rather than inherited: the run tree at AgenticControlRoomPane 340, the evidence deposit form at 461 over the live deposit method, the review decision controls at 443 riding inbox to resolve under the review gate with the IOD-17 readout, the abort-retry-continue controls at 456 left honestly unwired because their backing method does not exist, the roster projection at acrGovernance 373 with the Sophia facet held non-executable, and the Pi-monitor banner at 279. None were rebuilt. THE ONE GAP WAS A COMPOSITION CLAIM THAT WAS FALSE. The tool-stream content was the single T8 item covered by a claim rather than by code, and the claim did not hold: the pane's button read open the temporal fold but fired the select-run crossing, which the intent router resolves to the dispatch-trace fold — the STRUCTURAL view the pane already renders. Pressing it opened a second copy of the tree already on screen, and the time-ordered fold was reachable from the control room by no path whatsoever. The existing suite could not catch it twice over: the test asserted only that the button EXISTED, and its guard against a duplicate tool stream queried a testid that nothing in the carrier renders, so it passed unconditionally. A real crossing now exists, resolved through the LIVE router rather than asserted, with the node id being the tool stream panel's own selected event id so the genealogy click-through law holds in the running app; the inbound meaning of select-run is unchanged and the review seams map no longer claims otherwise. A fold-route register was added for crossings, which the method-bindings map structurally cannot cover, rendered on the surface and proven red then green. TWO ORPHANS REPORTED RATHER THAN ABSORBED: the dispatch-trace-to-tool-stream and tool-stream-to-dispatch-trace crossings are canonical rows in the 27.9 table with ZERO producers anywhere; they belong to the slash membrane and are named for its owner rather than quietly implemented here. The two reserved contract rows remain pending. Commit ae66074c.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 26.T26.7 --owner opus5-mdev-verify-20260731",
+            "exitCode": 0,
+            "testsPassed": 2133,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/omni/AgenticControlRoomPane.tsx",
+              "Body/M/pratibimba-app/src/panes/omni/acrGovernance.ts",
+              "app-ui-flow 136 playwright specs PASS"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 8 dirty files.",
+      "owner": "opus5-t26t7-acrcontents",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-07-31T00:39:09.279Z",
+      "runId": "20260731T001945Z-26-T26.7",
       "worktree": null,
       "blocker": null
     },
@@ -29178,6 +29216,16 @@
       "leaseExpiresAt": "2026-07-31T03:49:18.197Z",
       "worktree": null,
       "completedAt": "2026-07-31T00:08:11.493Z"
+    },
+    {
+      "runId": "20260731T001945Z-26-T26.7",
+      "taskId": "26.T26.7",
+      "status": "review",
+      "startedAt": "2026-07-31T00:19:45.112Z",
+      "owner": "opus5-t26t7-acrcontents",
+      "leaseExpiresAt": "2026-07-31T04:19:45.112Z",
+      "worktree": null,
+      "completedAt": "2026-07-31T00:39:09.279Z"
     }
   ],
   "activeRoute": {
