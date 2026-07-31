@@ -6319,6 +6319,11 @@ textarea {
     align-items: center;
     gap: 0.2rem;
 }
+/* 26.T26.8 — the legend caption the governance header carries. */
+.psyche-legend-caption {
+    flex: 1 1 100%;
+    opacity: 0.75;
+}
 .facet-sophia { --facet-color: var(--facet-sophia); }
 .facet-anima { --facet-color: var(--facet-anima); }
 .facet-logos { --facet-color: var(--facet-logos); }

@@ -158,6 +158,31 @@ describe('28.T28.5 — the Agentic Control Room deep pane', () => {
         expect(screen.getByTestId('acr-aspect-registers').querySelectorAll('li')).toHaveLength(6);
     });
 
+    /**
+     * 26.T26.8 — DR-WC-M5-3's legend clause: the seven-name legend belongs in
+     * THIS header, in canonical order, each facet hovering the `## 6. Sattva`
+     * section that is its source of record. The roster's six aspect rows are the
+     * governance reading; the legend is the RENDERING vocabulary and includes
+     * Anima, which is a facet and a dispatcher both.
+     */
+    it('(26.8) carries the seven-facet legend in the governance header, sourced to Sattva', () => {
+        render(<AgenticControlRoomPane />);
+        const legend = screen.getByTestId('acr-psyche-legend');
+        expect(legend.querySelectorAll('[role="listitem"]')).toHaveLength(7);
+        const order = [...legend.querySelectorAll('[role="listitem"]')].map(item =>
+            item.getAttribute('data-psyche-facet')
+        );
+        expect(order).toEqual(['sophia', 'anima', 'logos', 'eros', 'mythos', 'psyche', 'nous']);
+        for (const facet of order) {
+            expect(
+                screen.getByTestId(`acr-psyche-legend-${facet}`).getAttribute('title')
+            ).toContain(`Body/S/S4/pi-agent/agents/${facet}.md#6-sattva`);
+        }
+        // A legend entry is a voice, never a row: none of them is an actor.
+        expect(screen.queryByTestId('acr-dispatch-target-sophia')).toBeNull();
+        expect(screen.queryByTestId('acr-dispatch-target-nous')).toBeNull();
+    });
+
     it('is the IOD-17 capability-matrix source of truth — it reads the live projection', async () => {
         render(<AgenticControlRoomPane />);
         await waitFor(() =>

@@ -19,9 +19,9 @@
 
 import type { SessionRecord } from '../../bridge/sessionClient';
 import type { ActorIdentity, ActorRole, AletheiaFacetReturn, RunStatus } from './omnipanelRuntime';
-import type { AletheiaSubagentId } from './evidenceShapes';
+import type { AletheiaSubagentId, PsycheFacet } from './evidenceShapes';
 import type { DispatchGenealogyRecord } from './dispatchGenealogy';
-import { psycheFacetForAgent } from './psycheFacet';
+import { resolveDispatchIdentity } from './psycheFacet';
 
 const RUN_STATUSES: ReadonlySet<RunStatus> = new Set([
     'pending',
@@ -64,8 +64,21 @@ function readNumber(record: SessionRecord, keys: readonly string[]): number | nu
     return null;
 }
 
-/** Parse `agent:<id>[:subagent:<child>]` into the actor + its subagent id. */
-function parseSessionKey(sessionKey: string): { actor: ActorIdentity; subagentId: string | null } {
+/**
+ * Parse `agent:<id>[:subagent:<child>]` into the actor, its subagent id, and
+ * the psyche facet the dispatch speaks in.
+ *
+ * DR-WC-M5-3 (26.T26.8): the raw agent id is NOT the actor. It is resolved
+ * through `resolveDispatchIdentity` first, so a session the gateway keys
+ * `agent:sophia:*` folds to the **Pi harness row carrying a Sophia badge** —
+ * the decision's own words — instead of minting the peer actor row the decision
+ * forbids. Nothing is dropped: the register is preserved as the facet.
+ */
+function parseSessionKey(sessionKey: string): {
+    actor: ActorIdentity;
+    subagentId: string | null;
+    psycheFacet?: PsycheFacet;
+} {
     const parts = sessionKey.split(':');
     const subagentAt = parts.indexOf('subagent');
     if (subagentAt !== -1 && subagentAt + 1 < parts.length) {
@@ -73,8 +86,13 @@ function parseSessionKey(sessionKey: string): { actor: ActorIdentity; subagentId
         return { actor: { actor: child, role: 'subagent' }, subagentId: child };
     }
     const agentId = parts[0] === 'agent' && parts.length > 1 ? parts[1] : parts[0] || sessionKey;
-    const role: ActorRole = agentId === 'anima' ? 'anima' : 'pi';
-    return { actor: { actor: agentId, role }, subagentId: null };
+    const identity = resolveDispatchIdentity(agentId);
+    const role: ActorRole = identity.actor === 'anima' ? 'anima' : 'pi';
+    return {
+        actor: { actor: identity.actor, role },
+        subagentId: null,
+        psycheFacet: identity.psycheFacet
+    };
 }
 
 function readStatus(record: SessionRecord, endedAtMs: number | null): RunStatus {
@@ -111,7 +129,7 @@ export function dispatchGenealogyFromSessions(
     sessions: readonly SessionRecord[]
 ): DispatchGenealogyRecord[] {
     return sessions.map(record => {
-        const { actor, subagentId } = parseSessionKey(record.sessionKey);
+        const { actor, subagentId, psycheFacet } = parseSessionKey(record.sessionKey);
         const parentId = readString(record, ['spawnedBy', 'spawned_by', 'parent']);
         const capability = subagentId ? `s4.subagent.${subagentId}` : null;
         const startedAtMs =
@@ -139,8 +157,11 @@ export function dispatchGenealogyFromSessions(
             gate: { capability, allowed: true },
             evidenceRef: readString(record, ['evidenceRef', 'evidence_ref']),
             sourceRef: readString(record, ['sourceRef', 'source_ref']),
-            // 27.3 enrichment from real fields only:
-            psycheFacet: psycheFacetForAgent(actor.actor),
+            // 27.3 enrichment from real fields only. The facet comes from the
+            // SESSION's own identity (DR-WC-M5-3 resolution above), not from the
+            // resolved actor — reading it back off `actor.actor` would lose the
+            // register the moment the row collapses onto the Pi harness.
+            psycheFacet,
             aletheiaSubagent,
             aletheiaCrystallisationIntent:
                 readString(record, ['crystallisationIntent', 'crystallisation_intent']) ?? undefined,

@@ -106,6 +106,7 @@ import {
     type MediationCapabilitySnapshot
 } from '../omni/omnipanelCapabilities';
 import { PSYCHE_FACET_LABEL, psycheFacetClass } from '../omni/psycheFacet';
+import { PsycheFacetLegend } from '../omni/PsycheFacetLegend';
 import { AbortRetryContinueControls } from './AbortRetryContinueControls';
 import { PiRuntimeMonitorBanner } from './PiRuntimeMonitorBanner';
 import { ReviewDecisionControls } from './ReviewDecisionControls';
@@ -311,6 +312,13 @@ export function AgenticControlRoomPane() {
                     Psyche aspect registers — authorial voices composed by Anima, never dispatch
                     targets (DR-M5-1).
                 </p>
+                {/* 26.T26.8 — DR-WC-M5-3's legend clause, in the governance header
+                    the decision names. Seven facets in canonical order, each
+                    hovering its `## 6. Sattva` reading and the file that holds it. */}
+                <PsycheFacetLegend
+                    idPrefix="acr"
+                    caption="Facet legend — the voice a dispatch speaks in, never an actor:"
+                />
                 <ul className="acr-roster-aspects" role="list" data-testid="acr-aspect-registers">
                     {roster.aspectRegisters.map(aspect => (
                         <li

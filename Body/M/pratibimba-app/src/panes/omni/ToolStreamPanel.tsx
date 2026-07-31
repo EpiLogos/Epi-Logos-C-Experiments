@@ -32,6 +32,7 @@ import {
 } from './dispatchGenealogy';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
 import { fireOmniPanelRoute } from './omnipanelIntentRouter';
+import { PSYCHE_FACET_LABEL } from './psycheFacet';
 import type { ActorRole } from './omnipanelRuntime';
 
 const ACTOR_FILTERS: readonly { readonly role: ActorRole | 'all'; readonly label: string }[] = [
@@ -284,6 +285,14 @@ export function ToolStreamPanel() {
                         <dd>{selected.route.method}</dd>
                         <dt>status</dt>
                         <dd>{selected.status}</dd>
+                        {selected.psycheFacet && (
+                            <>
+                                <dt>psyche facet</dt>
+                                <dd data-testid="stream-detail-psyche-facet">
+                                    {PSYCHE_FACET_LABEL[selected.psycheFacet]}
+                                </dd>
+                            </>
+                        )}
                         {selected.aletheiaSubagent && (
                             <>
                                 <dt>Aletheia subagent</dt>

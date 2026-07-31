@@ -119,3 +119,41 @@ describe('ToolStreamPanel — temporal fold of the pi→subagent genealogy', () 
         expect(screen.queryByTestId('dispatch-genealogy-stream')).toBeNull();
     });
 });
+
+/**
+ * 26.T26.8 — DR-WC-M5-3 asks for the facet badge on the RunTree AND the
+ * ToolStream. The tree carried it from 27.3; this fold read the same records,
+ * carried the same populated `psycheFacet` field, and rendered it nowhere — a
+ * typed value that reached no pixel on this face.
+ */
+describe('26.T26.8 — the temporal fold carries the psyche-facet badge too', () => {
+    it('badges a facet-bearing dispatch in the stream row, on the Pi actor', async () => {
+        mockSessions([{ sessionKey: 'agent:sophia:main', startedAtMs: 1000 }]);
+        connect(true);
+        render(<ToolStreamPanel />);
+        const badges = await screen.findAllByTestId('stream-psyche-badge');
+        expect(badges.length).toBeGreaterThan(0);
+        expect(badges[0].textContent).toBe('Sophia');
+        expect(badges[0].getAttribute('data-psyche-facet')).toBe('sophia');
+        const row = badges[0].closest('[data-testid="dispatch-stream-row"]')!;
+        expect(row.querySelector('.dispatch-stream-actor')!.textContent).toContain('pi');
+        expect(row.querySelector('.dispatch-stream-actor')!.textContent).not.toContain('sophia');
+    });
+
+    it('badges nothing when the dispatch carries no facet — never invented', async () => {
+        mockSessions([{ sessionKey: 'agent:pi:main', startedAtMs: 1000 }]);
+        connect(true);
+        render(<ToolStreamPanel />);
+        await screen.findAllByTestId('dispatch-stream-row');
+        expect(screen.queryByTestId('stream-psyche-badge')).toBeNull();
+    });
+
+    it('names the facet in the event detail beside the Aletheia identity', async () => {
+        mockSessions([{ sessionKey: 'agent:nous:main', startedAtMs: 1000 }]);
+        connect(true);
+        render(<ToolStreamPanel />);
+        const rows = await screen.findAllByTestId('dispatch-stream-row');
+        fireEvent.click(rows[0]);
+        expect(screen.getByTestId('stream-detail-psyche-facet').textContent).toBe('Nous');
+    });
+});

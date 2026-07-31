@@ -198,6 +198,29 @@ test('28.T28.5: the Pi Runtime Monitor is the governance-primary pane of `person
         'Sophia surfaces only as a facet, never an actor row (DR-M5-1)'
     ).toHaveCount(0);
 
+    // 26.T26.8 — DR-WC-M5-3's legend clause, in a real browser: seven facets in
+    // canonical order in the governance header, each hovering the `## 6. Sattva`
+    // section that is its source of record, and NONE of them an actor row.
+    const legend = room.locator('[data-testid="acr-psyche-legend"]');
+    await expect(legend).toBeVisible();
+    await expect(legend.locator('[role="listitem"]')).toHaveCount(7);
+    expect(
+        await legend.locator('[role="listitem"]').evaluateAll(items =>
+            items.map(item => item.getAttribute('data-psyche-facet'))
+        ),
+        'the legend order DR-WC-M5-3 fixes'
+    ).toEqual(['sophia', 'anima', 'logos', 'eros', 'mythos', 'psyche', 'nous']);
+    for (const facet of ['sophia', 'nous', 'psyche']) {
+        await expect(room.locator(`[data-testid="acr-psyche-legend-${facet}"]`)).toHaveAttribute(
+            'title',
+            new RegExp(`Body/S/S4/pi-agent/agents/${facet}\\.md#6-sattva$`)
+        );
+        await expect(
+            room.locator(`[data-testid="acr-dispatch-target-${facet}"]`),
+            `${facet} is a voice, never a dispatch target`
+        ).toHaveCount(0);
+    }
+
     // (d) the governance sections are really rendered, over live reads
     await expect(room.locator('[data-testid="acr-run-tree"]')).toBeVisible();
     await expect(room.locator('[data-testid="acr-review-queue"]')).toBeVisible();

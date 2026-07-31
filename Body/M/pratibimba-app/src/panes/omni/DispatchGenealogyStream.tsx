@@ -9,8 +9,15 @@
  *   reusable face the Tools tab composes when 27.4 extends — LogsPane (the
  *   raw ring fold) is untouched; this face folds GENEALOGY records, not the
  *   gateway event ring.
- * Does NOT own: the dataset or the folds (dispatchGenealogy.ts), the Tools
- *   tab body (27.4, live via LogsPane today), intent routing.
+ *
+ *   26.T26.8: rows carry the psyche-facet badge. DR-WC-M5-3 asks for the badge
+ *   on the RunTree AND the ToolStream; the tree had it since 27.3, but this fold
+ *   dropped `record.psycheFacet` on the floor — the field was populated, typed,
+ *   and reached no pixel on this face. One dataset, two foldings means the badge
+ *   too.
+ * Does NOT own: the dataset or the folds (dispatchGenealogy.ts), the facet
+ *   vocabulary (psycheFacet.ts), the Tools tab body (27.4, live via LogsPane
+ *   today), intent routing.
  */
 
 import { useMemo } from 'react';
@@ -21,6 +28,7 @@ import {
     DispatchDeepLink,
     DispatchGenealogyRecord
 } from './dispatchGenealogy';
+import { PSYCHE_FACET_LABEL, psycheFacetClass } from './psycheFacet';
 
 export interface DispatchGenealogyStreamProps {
     readonly records: readonly DispatchGenealogyRecord[];
@@ -67,6 +75,16 @@ export function DispatchGenealogyStream(props: DispatchGenealogyStreamProps) {
                                 <span className="dispatch-stream-actor">
                                     {event.actor.actor} ({event.actor.role})
                                 </span>
+                                {record?.psycheFacet && (
+                                    <span
+                                        className={`dispatch-psyche-badge ${psycheFacetClass(record.psycheFacet)}`}
+                                        data-testid="stream-psyche-badge"
+                                        data-psyche-facet={record.psycheFacet}
+                                        title="psyche-facet register"
+                                    >
+                                        {PSYCHE_FACET_LABEL[record.psycheFacet]}
+                                    </span>
+                                )}
                                 <span className="dispatch-stream-channel">
                                     {event.channel ?? '—'}
                                 </span>

@@ -26,7 +26,8 @@ import { ContextPackSection } from './ContextPackSection';
 import { DispatchGenealogyTree } from './DispatchGenealogyTree';
 import { dispatchGenealogyFromSessions } from './dispatchGenealogyFromSessions';
 import { genealogyIndex, type DispatchDeepLink } from './dispatchGenealogy';
-import { PSYCHE_FACETS, PSYCHE_FACET_LABEL, psycheFacetClass } from './psycheFacet';
+import { PSYCHE_FACET_LABEL } from './psycheFacet';
+import { PsycheFacetLegend } from './PsycheFacetLegend';
 import { useOmniPanelSessionStore, useOmniPanelTabState } from './omnipanelSessionState';
 import { fireOmniPanelRoute } from './omnipanelIntentRouter';
 import type { ActorRole } from './omnipanelRuntime';
@@ -178,19 +179,7 @@ export function DispatchTracePanel() {
                         ))}
                     </span>
                 </div>
-                <div className="dispatch-psyche-legend" data-testid="dispatch-psyche-legend" role="list" aria-label="psyche-facet legend">
-                    {PSYCHE_FACETS.map(facet => (
-                        <span
-                            key={facet}
-                            role="listitem"
-                            className={`psyche-legend-item ${psycheFacetClass(facet)}`}
-                            data-testid={`psyche-legend-${facet}`}
-                        >
-                            <span className="psyche-legend-swatch" aria-hidden="true" />
-                            {PSYCHE_FACET_LABEL[facet]}
-                        </span>
-                    ))}
-                </div>
+                <PsycheFacetLegend />
             </header>
 
             {!connected ? (

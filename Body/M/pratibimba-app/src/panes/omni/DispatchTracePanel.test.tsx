@@ -105,12 +105,41 @@ describe('DispatchTracePanel — full 27.3 surface', () => {
         expect(anima.contains(group)).toBe(true);
     });
 
-    it('renders a psyche-facet badge for a constitutional register', async () => {
+    /**
+     * 26.T26.8 — this case used to assert ONLY that a badge appeared, while the
+     * row it appeared beside read `sophia (pi)`: the decision's negative claim
+     * inverted, proven green by the very test meant to guard it. The badge is
+     * now asserted where DR-WC-M5-3 puts it — on the PI row.
+     */
+    it('renders a constitutional register as a facet badge on the Pi row, never as an actor row', async () => {
         mockSessions([{ sessionKey: 'agent:sophia:main' }]);
         connect(true);
         render(<DispatchTracePanel />);
         const badge = await screen.findByTestId('dispatch-psyche-badge');
         expect(badge.textContent).toBe('Sophia');
+
+        const nodes = screen.getAllByTestId('dispatch-tree-node');
+        expect(nodes).toHaveLength(1);
+        const actor = nodes[0].querySelector('.dispatch-node-actor')!;
+        expect(actor.textContent).toContain('pi');
+        // The row Sophia is forbidden from occupying.
+        expect(actor.textContent).not.toContain('sophia');
+        expect(badge.closest('[data-testid="dispatch-tree-node"]')).toBe(nodes[0]);
+    });
+
+    it('hovers each legend facet onto its Sattva source in the S4 agent definition', () => {
+        connect(false);
+        render(<DispatchTracePanel />);
+        for (const facet of ['sophia', 'anima', 'logos', 'eros', 'mythos', 'psyche', 'nous']) {
+            const item = screen.getByTestId(`psyche-legend-${facet}`);
+            expect(item.getAttribute('title')).toContain(
+                `Body/S/S4/pi-agent/agents/${facet}.md#6-sattva`
+            );
+            // …and the tooltip says something, not just a path.
+            expect((item.getAttribute('title') ?? '').length).toBeGreaterThan(
+                `Body/S/S4/pi-agent/agents/${facet}.md#6-sattva`.length + 10
+            );
+        }
     });
 
     it('fires a non-blocking veto banner when a dispatch returns a veto (12.19)', async () => {
