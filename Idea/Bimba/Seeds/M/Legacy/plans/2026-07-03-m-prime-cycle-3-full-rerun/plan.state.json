@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-07-31T04:33:27.884Z",
+  "updatedAt": "2026-07-31T13:18:32.426Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -29474,13 +29474,13 @@
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-07-30T22:39:27.339Z",
-    "updatedAt": "2026-07-30T22:39:27.339Z",
+    "createdAt": "2026-07-31T13:18:25.741Z",
+    "updatedAt": "2026-07-31T13:18:25.741Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
-      "54.T54.02",
-      "28.T28.9"
+      "12.T12.13",
+      "52.T5"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -29488,8 +29488,8 @@
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
-      "54.T54.02": "in-session",
-      "28.T28.9": "in-session"
+      "12.T12.13": "in-session",
+      "52.T5": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

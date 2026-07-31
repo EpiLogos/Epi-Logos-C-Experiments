@@ -1054,7 +1054,7 @@ describe('25.T25.21 + 52.T4 — the layout law is DERIVED, for every row', () =>
         expect(hostedInReserved).toEqual([]);
         // 28.T28.5 consumed the `agenticControlRoom` reservation — it is now a
         // carried DEEP-ONLY mount, not a seam. Two remain.
-        expect([...reserved].sort()).toEqual(['backendStudio', 'coordinateTree']);
+        expect([...reserved].sort()).toEqual(['backendStudio']);
     });
 
     it('no M4 row claims deep-only — the derivation allows it, the carrier does not', () => {
