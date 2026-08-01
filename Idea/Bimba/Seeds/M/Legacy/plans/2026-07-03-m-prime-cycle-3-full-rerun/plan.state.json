@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-08-01T10:17:22.391Z",
+  "updatedAt": "2026-08-01T12:16:12.169Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -22353,16 +22353,33 @@
       "blocker": null
     },
     "52.T6": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-08-01T12:16:12.142Z",
+      "claimedAt": "2026-08-01T10:39:23.469Z",
+      "completedAt": "2026-08-01T12:16:12.142Z",
+      "evidence": [
+        {
+          "at": "2026-08-01T12:16:12.142Z",
+          "text": "Activity-bar mode registry WIRED (DR-ABAR-1): five leftSidebar.mode.* commands on the spine (catalog gate tether flipped dead->live, family reconstructed from LEFT_SIDEBAR_MODES); store synced on every real layout transition AFTER the seven-field identity receipt so the crossing preserves activityBarMode and resolveModeForLayout settles afterwards (one-way, never an empty slot); activation reveals a left-resident mode surface's border tab on the explicit command gesture only. Smart-connections contradiction SETTLED in the registry's favour: daily Connections tab withdrawn (LAYOUT_VERSION 26), deep rails the surface's only home; the pratibimba.smart-connections-sidebar claim flipped code-pending->landed on receiver semanticConnections with the fail-closed check live at render (pending-layout-claim.spec rewritten; M5'-SPEC :211 flagged for canon update). Adversarial review (11-agent workflow) confirmed 7 findings, ALL fixed pre-close: the reveal was a FlexLayout border TOGGLE (collapse on re-select — guarded), the fallback fired an unasked coordinateTree reveal (reveal rescoped to explicit command path via decorated store, which also dissolved the stale-faceRef intent path), CHROME-CONTRACT SS11 + AGENTS.md stale dead-factory/code-pending prose corrected, Backend Studio docblock overclaim fixed + e2e coverage added, LAYOUT_VERSION ledger 25 entry restored. UF proof: activity-bar-modes.spec 4 tests (offer/refuse per layout, rail activation, receipt-intact crossing + no-unasked-reveal fallback, already-up no-collapse) + full verify-tranche gate GREEN incl. complete app-ui-flow. Verifier fable5-verify-0801 != closer fable5-mdev-0801.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 52.T6 (full class-scoped gate incl. app-ui-flow playwright) + pnpm test:e2e activity-bar-modes/pending-layout-claim/semantic-connections/layout-switch/cross-layout-state-identity (9/9) + pnpm test 2241",
+            "exitCode": 0,
+            "testsPassed": 2250,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/leftSidebarModes.ts",
+              "Body/M/pratibimba-app/src/ui/layoutClaims.ts",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/tests/e2e/activity-bar-modes.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable5-mdev-0801",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-08-01T10:39:23.469Z",
+      "runId": "20260801T103923Z-52-T6",
       "worktree": null,
       "blocker": null
     },
@@ -29554,17 +29571,27 @@
       "leaseExpiresAt": "2026-08-01T11:40:31.082Z",
       "worktree": null,
       "completedAt": "2026-08-01T10:17:22.363Z"
+    },
+    {
+      "runId": "20260801T103923Z-52-T6",
+      "taskId": "52.T6",
+      "status": "done",
+      "startedAt": "2026-08-01T10:39:23.469Z",
+      "owner": "fable5-mdev-0801",
+      "leaseExpiresAt": "2026-08-01T13:39:23.469Z",
+      "worktree": null,
+      "completedAt": "2026-08-01T12:16:12.142Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-08-01T01:09:31.488Z",
-    "updatedAt": "2026-08-01T01:09:31.488Z",
+    "createdAt": "2026-08-01T10:39:08.769Z",
+    "updatedAt": "2026-08-01T10:39:08.769Z",
     "taskIds": [
       "25.T25.4",
       "14.T14.4",
-      "52.T5",
-      "52.T6"
+      "52.T6",
+      "24.T24.6"
     ],
     "totalWeight": 8,
     "taxingLevel": "balanced",
@@ -29572,8 +29599,8 @@
     "modeHints": {
       "25.T25.4": "in-session",
       "14.T14.4": "in-session",
-      "52.T5": "in-session",
-      "52.T6": "in-session"
+      "52.T6": "in-session",
+      "24.T24.6": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",

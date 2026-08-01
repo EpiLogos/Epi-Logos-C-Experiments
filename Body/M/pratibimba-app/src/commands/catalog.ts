@@ -41,14 +41,16 @@ export interface CatalogCommand {
  *   - src/commands/theme.ts (8)     — `registerThemeCommands` (30.T30.4)
  *   - src/commands/layout.ts (3)    — `registerLayoutCommands` (52.T3)
  *   - src/commands/subsystem.ts (6) — `registerSubsystemCommands` (52.T5)
+ *   - src/ui/leftSidebarModes.ts (5) — data-driven over LEFT_SIDEBAR_MODES;
+ *     `registerLeftSidebarModeCommands` wired by App.tsx since 52.T6
  *   - src/commands/walkthrough.ts (1) — `registerWalkthroughCommand` (32.T32.3)
  *   - src/panes/M0LayerRail.tsx (4) — data-driven over M0_LAYER_ROUTES local layers (01.T1.1)
  *   - src/panes/coordinateTree/coordinateTreeCommands.ts (6) — data-driven over
  *     COORDINATE_TREE_FAMILY_ROOTS × FAMILY_NAMES (28.T28.6)
- * `src/ui/leftSidebarModes.ts` also *declares* a register site, but its factory
- * (`registerLeftSidebarModeCommands`) has no caller — it is dead code, so its
- * commands are NOT registered and are deliberately absent here (the gate
- * proves the factory is uncalled).
+ * `registerLeftSidebarModeCommands` was dead code (declared, no caller) until
+ * 52.T6 wired it into App.tsx — its five rows are catalogued below and the
+ * gate now proves the factory IS called and reconstructs the family from
+ * `LEFT_SIDEBAR_MODES` itself.
  */
 export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
     // --- App.tsx shell chrome (registered on App mount) ---
@@ -224,6 +226,16 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
     { id: 'subsystem.open.m3', title: "Subsystem: Open M3' Clock Cosmos page", owner: 'subsystem-pages', tranche: '52.T5' },
     { id: 'subsystem.open.m4', title: "Subsystem: Open M4' Nara page", owner: 'subsystem-pages', tranche: '52.T5' },
     { id: 'subsystem.open.m5', title: "Subsystem: Open M5' Epii IDE page", owner: 'subsystem-pages', tranche: '52.T5' },
+
+    // --- src/ui/leftSidebarModes.ts (registerLeftSidebarModeCommands, 52.T6) ---
+    // Data-driven over LEFT_SIDEBAR_MODES; the gate reconstructs these five
+    // from the SAME registry rather than trusting the rows. Deep-only modes
+    // are enabled-gated by the store's layout (they grey out in daily).
+    { id: 'leftSidebar.mode.coordinate-tree', title: 'Left Sidebar: Coordinate Tree', owner: 'left-sidebar-modes', tranche: '52.T6' },
+    { id: 'leftSidebar.mode.bimba-graph', title: 'Left Sidebar: Bimba Graph Viewer', owner: 'left-sidebar-modes', tranche: '52.T6' },
+    { id: 'leftSidebar.mode.canon-studio', title: 'Left Sidebar: Canon Studio', owner: 'left-sidebar-modes', tranche: '52.T6' },
+    { id: 'leftSidebar.mode.backend-studio', title: 'Left Sidebar: Backend Studio', owner: 'left-sidebar-modes', tranche: '52.T6' },
+    { id: 'leftSidebar.mode.smart-connections', title: 'Left Sidebar: Smart Connections', owner: 'left-sidebar-modes', tranche: '52.T6' },
 
     // --- src/commands/walkthrough.ts (registerWalkthroughCommand, 32.T32.3) ---
     {

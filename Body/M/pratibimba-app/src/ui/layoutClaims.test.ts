@@ -7,25 +7,29 @@ import {
 } from './layoutClaims';
 
 describe('active layout claims', () => {
-    it('keeps Smart Connections explicitly code-pending without inventing a receiver', () => {
-        const receiverExists = vi.fn(() => false);
+    it('the Smart Connections claim LANDED (52.T6) on its real receiver, and fails closed without it', () => {
+        const receiverExists = vi.fn((component: string) => component === 'semanticConnections');
         const resolutions = resolveLayoutClaims('ide-deep', receiverExists);
 
         expect(resolutions).toEqual([
             expect.objectContaining({
                 id: 'pratibimba.smart-connections-sidebar',
-                status: 'code-pending',
-                receiverComponent: null,
-                gate: '03.T6.5',
-                deliveryOwner: '28.T28.12',
+                status: 'landed',
+                receiverComponent: 'semanticConnections',
+                gate: null,
                 migrationSource: 'Body/M/epi-theia/extensions/MIGRATION-SOURCES.md'
             })
         ]);
-        expect(receiverExists).not.toHaveBeenCalled();
+        // A landed claim gets NO tolerance: the receiver really was looked up…
+        expect(receiverExists).toHaveBeenCalledWith('semanticConnections');
         expect(ACTIVE_LAYOUT_CLAIMS).toHaveLength(1);
+        // …and a shell that cannot find it must throw, not shrug.
+        expect(() => resolveLayoutClaims('ide-deep', () => false)).toThrow(
+            'landed layout claim pratibimba.smart-connections-sidebar has no receiver for semanticConnections'
+        );
     });
 
-    it('does not project the ide-deep-only pending claim into daily-0-1', () => {
+    it('does not project the ide-deep-only claim into daily-0-1', () => {
         expect(resolveLayoutClaims('daily-0-1', () => false)).toEqual([]);
     });
 

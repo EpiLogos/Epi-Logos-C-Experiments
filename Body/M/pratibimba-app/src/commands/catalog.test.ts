@@ -29,14 +29,15 @@ import {
     coordinateTreeExpandCommandId,
     coordinateTreeExpandCommandTitle
 } from '../panes/coordinateTree/coordinateTreeCommands';
+import { LEFT_SIDEBAR_MODES } from '../ui/leftSidebarModes';
 
 const SRC_ROOT = resolve(__dirname, '..');
 
-/** The three register sites whose id/title cannot be resolved statically: two
- *  live data-driven families (M0LayerRail, coordinateTreeCommands) and one dead
- *  factory (leftSidebarModes). Any OTHER file with a dynamic AppCommand literal
- *  fails the gate — a new dynamic register idiom must be reconciled here on
- *  purpose, never silently. */
+/** The three register sites whose id/title cannot be resolved statically —
+ *  all three are live data-driven families since 52.T6 wired
+ *  `registerLeftSidebarModeCommands` (dead code until then). Any OTHER file
+ *  with a dynamic AppCommand literal fails the gate — a new dynamic register
+ *  idiom must be reconciled here on purpose, never silently. */
 const M0_RAIL_FILE = 'M0LayerRail.tsx';
 const LEFT_SIDEBAR_FILE = 'leftSidebarModes.ts';
 const COORDINATE_TREE_FILE = 'coordinateTreeCommands.ts';
@@ -200,12 +201,29 @@ function coordinateTreeCommands(): LiveCommand[] {
     }));
 }
 
+/** The live activity-bar mode commands (52.T6), reconstructed from the SAME
+ *  registry `registerLeftSidebarModeCommands` maps over — id template and
+ *  title template mirrored from `leftSidebarModes.ts`, data from
+ *  LEFT_SIDEBAR_MODES itself, never a second hardcode. */
+function leftSidebarModeCommands(): LiveCommand[] {
+    return LEFT_SIDEBAR_MODES.map(mode => ({
+        id: `leftSidebar.mode.${mode.id}`,
+        title: `Left Sidebar: ${mode.label}`
+    }));
+}
+
 const files = sourceFiles(SRC_ROOT);
 const consts = buildConstTable(files);
 const scan = scanSources(files, consts);
 const m0Live = m0LayerCommands();
 const coordinateTreeLive = coordinateTreeCommands();
-const liveCommands: LiveCommand[] = [...scan.staticCommands, ...m0Live, ...coordinateTreeLive];
+const leftSidebarLive = leftSidebarModeCommands();
+const liveCommands: LiveCommand[] = [
+    ...scan.staticCommands,
+    ...m0Live,
+    ...coordinateTreeLive,
+    ...leftSidebarLive
+];
 
 const liveById = new Map(liveCommands.map(command => [command.id, command]));
 const catalogById = new Map(COMMAND_CATALOG.map(command => [command.id, command]));
@@ -267,12 +285,22 @@ describe('command catalog — AST walk finds the real registry (31.T31.2)', () =
         expect(scan.dynamicFiles.has(M0_RAIL_FILE)).toBe(true);
     });
 
-    it('leftSidebar mode commands are excluded because their factory is dead code', () => {
+    it('leftSidebar mode commands are backed by a really-called dynamic register site (52.T6)', () => {
         expect(scan.dynamicFiles.has(LEFT_SIDEBAR_FILE)).toBe(true);
+        // The factory was dead code until 52.T6 wired it into App.tsx. If the
+        // caller ever disappears again, leftSidebarModeCommands() would
+        // silently invent rows — this tether fails first.
         expect(
             scan.calledFunctions.has('registerLeftSidebarModeCommands'),
-            'registerLeftSidebarModeCommands has a live caller — its commands are now registered and MUST be catalogued'
-        ).toBe(false);
+            'registerLeftSidebarModeCommands lost its caller — its five rows would be fabrications'
+        ).toBe(true);
+        expect(leftSidebarLive.map(command => command.id).sort()).toEqual([
+            'leftSidebar.mode.backend-studio',
+            'leftSidebar.mode.bimba-graph',
+            'leftSidebar.mode.canon-studio',
+            'leftSidebar.mode.coordinate-tree',
+            'leftSidebar.mode.smart-connections'
+        ]);
     });
 });
 

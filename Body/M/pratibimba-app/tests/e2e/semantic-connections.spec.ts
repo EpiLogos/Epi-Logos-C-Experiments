@@ -16,6 +16,15 @@ test('semantic sidebar queries the real S1 gateway and discloses index state', a
         timeout: 20_000
     });
 
+    // 52.T6: smart-connections settled `ide-deep`-only — the surface's home is
+    // the deep rail, so the flow enters the deep layout first.
+    const layoutControl = page.locator('.face-active [data-testid="omnipanel-layout-switch"]');
+    await expect(layoutControl).toBeVisible({ timeout: 15_000 });
+    await layoutControl.getByTestId('omnipanel-layout-option-ide-deep').click();
+    await expect(page.getByTestId('shell')).toHaveAttribute('data-active-layout', 'ide-deep', {
+        timeout: 20_000
+    });
+
     const activeFace = page.locator('.face-active');
     await activeFace.locator('.flexlayout__border_button', { hasText: 'Connections' }).click();
     const pane = activeFace.getByTestId('semantic-connections-pane');

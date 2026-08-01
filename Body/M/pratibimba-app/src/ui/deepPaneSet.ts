@@ -157,7 +157,7 @@ export const DEEP_PANE_SET: readonly DeepPaneMount[] = Object.freeze([
         label: 'Connections',
         slot: 'left',
         model: 'both',
-        why: "`ui/leftSidebarModes.ts` declares `smart-connections` as `availableInLayouts: ['ide-deep']`; the deep rail is where that declaration is finally true. Its DAILY residency is 52.T6's contradiction to settle, not this tranche's."
+        why: "`ui/leftSidebarModes.ts` declares `smart-connections` as `availableInLayouts: ['ide-deep']`, and 52.T6 settled the contradiction in the registry's favour: the daily face-1 Connections tab is withdrawn, so these deep rails are the surface's ONLY home — which is exactly what the `pratibimba.smart-connections-sidebar` layout claim (now `landed`, `ui/layoutClaims.ts`) always named."
     }),
     Object.freeze({
         surfaceId: 'coordinateTree',

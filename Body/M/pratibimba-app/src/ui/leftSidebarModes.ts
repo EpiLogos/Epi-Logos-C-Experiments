@@ -190,12 +190,20 @@ interface CommandRegistryLike {
  * the "switching among live surfaces rides commands/registry" path. Each
  * command sets the active mode; a command is only enabled while its mode is
  * available in the current layout (Backend Studio / Smart Connections grey out
- * in `daily-0-1`). Pending modes register too — activating one records its id;
- * the honest pending pane (owned by 28.x) is what mounts, never a fabricated
- * body. Returns disposers, mirroring `registerEngineCommands`.
+ * in `daily-0-1`). Pending modes register too — activating one records its id
+ * and NOTHING mounts: the pending surface has no factory case (mounting a
+ * `pending` §2 id fails the chrome-contract gate), so the mode is a recorded
+ * state until its owner (28.x) lands the real pane — never a fabricated body.
+ * Returns disposers, mirroring `registerEngineCommands`.
  *
- * NOT wired into App.tsx here (App.tsx is out of this tranche's write scope);
- * the controller wires it beside the other `register*Commands` calls.
+ * WIRED by 52.T6: `App.tsx` registers these beside the other
+ * `register*Commands` calls, syncs `switchLayout` on every real layout
+ * transition (AFTER the identity receipt — the fallback is the slot's lawful
+ * resolution, not an identity drift), and selects a left-resident mode
+ * surface's border tab on activation. The same tranche settled the
+ * smart-connections contradiction in THIS registry's favour: the mode is
+ * `ide-deep`-only, so the daily face-1 Connections border tab was withdrawn
+ * (a developer semantic-index surface is depth, not lived flow).
  */
 export function registerLeftSidebarModeCommands(
     commands: CommandRegistryLike,

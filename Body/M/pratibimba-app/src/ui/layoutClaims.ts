@@ -8,7 +8,7 @@
  * Public surface: LayoutClaim, ACTIVE_LAYOUT_CLAIMS, resolveLayoutClaim,
  *   resolveLayoutClaims.
  * Does NOT own: Smart Connections implementation, layout selection, or pane
- *   factories; Track 03 T6.5 and 28.T28.12 own the future receiver.
+ *   factories; 28.T28.12 owns the receiver pane, 52.T6 the mode-switched rail.
  * Contract: [[M5'-SPEC]] carrier foothold; frozen provenance at
  *   Body/M/epi-theia/extensions/MIGRATION-SOURCES.md.
  */
@@ -41,15 +41,24 @@ export interface LandedLayoutClaim extends LayoutClaimBase {
 export type LayoutClaim = CodePendingLayoutClaim | LandedLayoutClaim;
 
 /** The frozen Theia manifest is provenance only. This active-carrier record is
- * the executable disposition of its ide-deep expectedWidgets claim. */
+ * the executable disposition of its ide-deep expectedWidgets claim.
+ *
+ * LANDED by 52.T6: the claim was held `code-pending` while the sidebar it
+ * named — a mode-switched ide-deep rail — did not exist as a mechanism.
+ * 28.T28.12 landed the pane (`SemanticConnectionsPane`, §2 `live`), 52.T4
+ * mounted it in both deep rails, and 52.T6 wired the activity-bar mode
+ * registry that makes "smart-connections SIDEBAR" a real, mode-switched
+ * left-slot state — so the receiver is `semanticConnections` and the gate is
+ * discharged. [[M5'-SPEC]] :211 (which records the claim as retained
+ * code-pending) is flagged for canon update in [[DR-ABAR-1]]. */
 export const ACTIVE_LAYOUT_CLAIMS: readonly LayoutClaim[] = Object.freeze([
     {
         id: 'pratibimba.smart-connections-sidebar',
         layout: 'ide-deep',
-        status: 'code-pending',
-        receiverComponent: null,
-        gate: '03.T6.5',
-        deliveryOwner: '28.T28.12',
+        status: 'landed',
+        receiverComponent: 'semanticConnections',
+        gate: null,
+        deliveryOwner: '28.T28.12 (pane) + 52.T6 (mode-switched rail)',
         migrationSource: 'Body/M/epi-theia/extensions/MIGRATION-SOURCES.md'
     }
 ]);

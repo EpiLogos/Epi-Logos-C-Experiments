@@ -135,7 +135,7 @@ export const SUBSYSTEM_WORKSPACE_OWNERSHIP: readonly DepthTabDisposition[] = Obj
 
     // ── stays: IDE chrome and config ───────────────────────────────────────
     stays('fileTree', 'chrome', 'stays-chrome', 'The explorer rail — workspace chrome in both layouts, never a page stratum.'),
-    stays('semanticConnections', 'chrome', 'stays-chrome', "The connections rail (28.T28.12); 52.T6 owns its mode-registry contradiction."),
+    stays('semanticConnections', 'chrome', 'stays-chrome', "The connections rail (28.T28.12) — settled `ide-deep`-only by 52.T6 (the daily tab withdrew; the deep rails are its home as an activity-bar mode surface)."),
     stays('coordinateTree', 'chrome', 'stays-chrome', "The M0' navigation backbone rides the daily face-1 rail AND both deep left rails (28.T28.6) — chrome by declaration, deliberately not duplicated as an M0' stratum."),
     stays('editor', 'chrome', 'stays-chrome', 'Canon Studio editor tabs are dynamic (`vault.open`) and dock into whichever layout the user is in (52.T4) — a chrome mechanism, not a subsystem stratum.'),
     stays('kairosEnablement', 'config', 'stays-config', 'FR-3 configuration surface (32.T32.10), deliberately reachable in both layouts; configuration is not depth.')

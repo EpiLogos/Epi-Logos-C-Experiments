@@ -129,6 +129,15 @@ import { HomePane } from './panes/HomePane';
 import { registerSubsystemCommands } from './commands/subsystem';
 import { readStoredLayout, writeStoredLayout } from './ui/layoutPreference';
 import { registerLayoutCommands } from './commands/layout';
+// 52.T6 — the activity-bar mode registry, finally wired: commands on the
+// spine, the store synced at every layout transition (fallback AFTER the
+// identity receipt), and left-resident mode surfaces revealed on activation.
+import {
+    leftSidebarMode,
+    registerLeftSidebarModeCommands,
+    useLeftSidebarModeStore,
+    type LeftSidebarModeId
+} from './ui/leftSidebarModes';
 import { OmniPanelLayoutSwitch } from './components/OmniPanelLayoutSwitch';
 import { readOmniPanelSessionState, useOmniPanelSessionStore } from './panes/omni/omnipanelSessionState';
 import {
@@ -219,7 +228,12 @@ function personalDefault(activeLayout: OmniPanelLayoutId) {
                 },
                 { type: 'tab', name: 'Calendar', component: 'dayCalendar', enableClose: false },
                 { type: 'tab', name: 'Oracle', component: 'oracle', enableClose: false },
-                { type: 'tab', name: 'Connections', component: 'semanticConnections', enableClose: false },
+                // 52.T6 settled the smart-connections contradiction: the mode
+                // is `ide-deep`-only (`ui/leftSidebarModes.ts`), so the daily
+                // Connections tab is WITHDRAWN — a developer semantic-index
+                // surface is depth, not lived flow. The `[[` completion inside
+                // Canon Studio rides `s1'.semantic.suggest_links` on its own
+                // and never needed this tab.
                 // 25.T25.19 — a ceremony READS, so it lives with the reading
                 // surfaces on the border rather than as an 11th main tab: at
                 // 1280x800 an eleventh `personal-main` tab makes the strip
@@ -335,8 +349,12 @@ function ideDeepDefault(model: DeepPaneModelId, activeLayout: OmniPanelLayoutId)
 
 /** Bumped when the default layouts gain/lose panes — stale saved layouts
  *  fall back to defaults (face/session/coordinate still restore).
- *  24: 52.T4 added the two `ide-deep` models and their persistence keys. */
-const LAYOUT_VERSION = 25;
+ *  24: 52.T4 added the two `ide-deep` models and their persistence keys.
+ *  25: 28.T28.6 landed the Coordinate Tree in the daily face-1 border and
+ *  both deep rails.
+ *  26: 52.T6 withdrew the daily face-1 Connections border tab (smart-
+ *  connections settled `ide-deep`-only). */
+const LAYOUT_VERSION = 26;
 
 /** The four flexlayout models the shell holds: one per (layout, face) cell.
  *  52.T4 — before this tranche there was one pair, shared by both layouts. */
@@ -673,6 +691,10 @@ export function App() {
     const [m0Surface, setM0Surface] = useState<M0SurfaceState>(DEFAULT_M0_SURFACE_STATE);
     const [m2Surface, setM2Surface] = useState<M2SurfaceState>(DEFAULT_M2_SURFACE_STATE);
     const activeOmniTab = useOmniPanelSessionStore(state => state.session.activeTab);
+    // 52.T6 — the activity-bar mode, live on the shell for tests and chrome.
+    const activityBarMode: LeftSidebarModeId = useLeftSidebarModeStore(
+        state => state.activeModeId
+    );
     const [routedHost, setRoutedHost] = useState<{
         readonly face: Face;
         readonly extensionId: string;
@@ -747,6 +769,10 @@ export function App() {
                 useOmniPanelSessionStore.getState().hydrate(state.omniPanel);
                 activeLayoutRef.current = restoredLayout;
                 setActiveLayout(restoredLayout);
+                // 52.T6 — the activity-bar store tracks the layout it serves;
+                // a shell that resumes into `ide-deep` must not leave the
+                // mode store believing it is in daily.
+                useLeftSidebarModeStore.getState().switchLayout(restoredLayout);
                 // 52.T4: each layout's models are built with THEIR OWN layout
                 // id, not with whichever layout the shell restored into — the
                 // `/` membrane's per-layout tab filter belongs to the model it
@@ -868,6 +894,14 @@ export function App() {
                 identityBefore,
                 readCrossLayoutIdentity()
             );
+            // 52.T6 — the activity-bar fallback happens AFTER the receipt is
+            // minted: `activityBarMode` is one of the seven identity fields,
+            // and the crossing must preserve it (the receipt throws on drift).
+            // The fallback that follows is the LEFT SLOT's own lawful
+            // resolution (`resolveModeForLayout` — a deep-only mode cannot
+            // survive into daily and falls back to the backbone), not an
+            // identity drift, so it lives outside the receipt window.
+            useLeftSidebarModeStore.getState().switchLayout(next);
             // 52.T4 — this is the seam 52.T3 flagged for the tranche that
             // builds models per layout. It STAYS, with a changed reason. The
             // two `<Layout>` slots are now fed a DIFFERENT Model object per
@@ -961,6 +995,50 @@ export function App() {
     }, [persist]);
 
     useEffect(() => useOmniPanelSessionStore.subscribe(() => persist()), [persist]);
+
+    // 52.T6 — mode activation has a real effect on the LEFT SLOT: when a mode
+    // is EXPLICITLY selected and its surface is left-border-resident in the
+    // current (face, layout) model, that border tab is selected — opening the
+    // collapsed deep rail, which is exactly the explicit gesture the
+    // opens-closed law waits for. Called ONLY from the command path (via the
+    // decorated store below), never from a store subscription: the
+    // `resolveModeForLayout` fallback that settles a crossing must not fire an
+    // unasked reveal (DR-ABAR-1 scopes the reveal to "selecting a mode", and
+    // the 28.T28.6 law holds — the navigation backbone never mounts unasked).
+    // TOGGLE GUARD: flexlayout's SELECT_TAB on a border TOGGLES — re-selecting
+    // the already-selected tab collapses the rail — so an activation whose tab
+    // is already up is a no-op, never a collapse. Main-area mode surfaces
+    // (Bimba Graph Viewer, Canon Studio) keep their main-tabset homes: the
+    // activity bar governs the left slot and records the mode; it never
+    // re-mounts a main surface into a rail.
+    const revealLeftSidebarMode = useCallback(
+        (modeId: LeftSidebarModeId) => {
+            const current = modelsRef.current;
+            if (!current) {
+                return;
+            }
+            const surfaceId = leftSidebarMode(modeId).surfaceId;
+            const model = modelOf(current, faceRef.current, activeLayoutRef.current);
+            for (const border of model.getBorderSet().getBorders()) {
+                if (border.getLocation() !== DockLocation.LEFT) {
+                    continue;
+                }
+                const selected = border.getSelectedNode();
+                for (const child of border.getChildren()) {
+                    if ((child as TabNode).getComponent() !== surfaceId) {
+                        continue;
+                    }
+                    if (selected?.getId() === child.getId()) {
+                        return; // already up — selecting again would COLLAPSE
+                    }
+                    model.doAction(Actions.selectTab(child.getId()));
+                    persist();
+                    return;
+                }
+            }
+        },
+        [persist]
+    );
 
     // 27.11 authority is the shared session store (activeTab + per-tab state,
     // persisted) surfaced via `data-omnipanel-active-tab`; `syncOmniPanelSelection`
@@ -1123,6 +1201,28 @@ export function App() {
             registerSubsystemCommands({
                 openWorkspace: pageId => openSubsystemWorkspace(pageId)
             }),
+            // 52.T6 — the five `leftSidebar.mode.*` commands, registered at
+            // the seam the registry documented for its controller. Deep-only
+            // modes are enabled-gated by the store's layout, which is now
+            // really synced (above/below), so Backend Studio and Smart
+            // Connections genuinely grey out in `daily-0-1`. The store is
+            // DECORATED so the left-slot reveal rides the explicit command
+            // gesture itself — and only when the activation actually took
+            // (the store refuses modes unavailable in the current layout).
+            ...registerLeftSidebarModeCommands(commands, {
+                getState: () => {
+                    const state = useLeftSidebarModeStore.getState();
+                    return {
+                        ...state,
+                        setActiveMode: modeId => {
+                            state.setActiveMode(modeId);
+                            if (useLeftSidebarModeStore.getState().activeModeId === modeId) {
+                                revealLeftSidebarMode(modeId);
+                            }
+                        }
+                    };
+                }
+            }),
             registerCrossLayoutIntentCommand({
                 setCoordinate: coordinate => useCoordinateStore.getState().setSelected(coordinate),
                 applySession: context =>
@@ -1188,6 +1288,9 @@ export function App() {
                         identityBefore,
                         readCrossLayoutIdentity()
                     );
+                    // 52.T6 — same law as `switchLayout`: the activity-bar
+                    // fallback settles AFTER the receipt, outside the window.
+                    useLeftSidebarModeStore.getState().switchLayout(toLayout);
                     // FlexLayout caches factory output. Remount the view shell so
                     // the selected host consumes its newly delivered node config.
                     setRoutingRevision(revision => revision + 1);
@@ -1606,6 +1709,7 @@ export function App() {
             data-code-pending-layout-claims={codePendingLayoutClaims || undefined}
             data-layout-pane-set={[...activePaneSet].sort().join(' ')}
             data-omnipanel-active-tab={activeOmniTab}
+            data-activity-bar-mode={activityBarMode}
             data-cross-layout-identity-receipt={
                 crossLayoutIdentityReceiptRef.current
                     ? JSON.stringify(crossLayoutIdentityReceiptRef.current)
