@@ -620,7 +620,7 @@ describe('25.T25.21 — the three per-export seams are real (SPEC:288)', () => {
     const live = M4_WAVE_C_CONTRIBUTIONS.filter(row => row.carrier !== null && row.gap === null);
 
     it('carries all three seams exactly on the rows that render', () => {
-        expect(live.length, 'no live row at all would make every assertion below vacuous').toBe(16);
+        expect(live.length, 'no live row at all would make every assertion below vacuous').toBe(17);
         for (const row of M4_WAVE_C_CONTRIBUTIONS) {
             const shouldCarry = row.carrier !== null && row.gap === null;
             const carries = [row.currentStateSelector, row.selectionHandler, row.evidenceSerializer];
@@ -1142,6 +1142,7 @@ describe('25.T25.21 — NO DRIFT in the other direction', () => {
             'm4.nara.medicine',
             'm4.nara.mercuriusRelay',
             'm4.nara.oracleCast',
+            'm4.nara.oracleHistory',
             'm4.nara.pasuWizard',
             'm4.nara.pratibimbaCoordinate',
             'm4.nara.psycheAnchorCoherence',

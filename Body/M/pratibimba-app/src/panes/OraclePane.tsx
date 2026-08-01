@@ -28,6 +28,7 @@
 
 import { useState } from 'react';
 import { gateway, gatewayReady } from '../bridge/gatewayHolder';
+import { OracleHistoryPane } from './OracleHistoryPane';
 import { invokeCommand } from '../bridge/tauri';
 import { commands } from '../commands/registry';
 import { useSessionStore, useTickStore } from '../state/stores';
@@ -241,6 +242,10 @@ export function OraclePane() {
                     </button>
                 </div>
             ) : null}
+            {/* 25.T25.9 — casts already lived, nested here because history
+                belongs beside the cast that makes it (and `personal-main` is
+                at its tab-strip limit). */}
+            <OracleHistoryPane />
         </div>
     );
 }

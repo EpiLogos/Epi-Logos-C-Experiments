@@ -157,6 +157,12 @@ export const SPEC_ASSIGNED_SURFACES: readonly PrivacySurface[] = Object.freeze([
         warrant: `${SPEC}:133 — "Privacy chrome: \`mext-privacy-protected-local\`"`
     },
     {
+        file: 'panes/OracleHistoryPane.tsx',
+        privacyClass: 'protected_local_handle_only',
+        tranche: '25.9',
+        warrant: `${SPEC}:143 — "View id: \`m4.nara.oracleHistory\` (new). Privacy chrome: \`mext-privacy-protected-local-handle-only\`"`
+    },
+    {
         file: 'panes/MedicineViewPane.tsx',
         privacyClass: 'protected_local',
         tranche: '25.10',

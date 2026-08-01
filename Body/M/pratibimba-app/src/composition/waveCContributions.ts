@@ -735,29 +735,27 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         frozenExport: 'M4OracleHistoryCard',
         tranche: '25.T25.9',
         landedBy: null,
-        carrier: null,
-        testid: null,
-        mount: { kind: 'absent' },
-        layoutLaw: null,
+        carrier: { file: 'panes/OracleHistoryPane.tsx', symbol: 'OracleHistoryPane' },
+        testid: 'oracle-history',
+        mount: {
+            kind: 'nested-section',
+            hostComponent: 'oracle',
+            note: 'History belongs beside the cast that makes it, and `personal-main` is at its tab-strip limit, so the viewer nests in the Oracle pane rather than claiming an eleventh tab — the same discipline the day container uses (25.2). It reads the REAL S0 cast ledger through `nara.oracle.history` + `nara.oracle.hygiene`. TWO BRIEF CLAUSES ARE DISCLOSED RATHER THAN PAINTED: `show_history` drops `cast_at`, so only the newest row\u2019s 4h decay window is computable (from the hygiene line\u2019s minutes-ago) and older rows read `decay unknown` instead of an assumed `closed`; and the 5.17 spread-position aliveness join has no producer at any coordinate (`nara.oracle.update_position_state` is unserved), so the badge is absent and the pane names the missing wire.'
+        },
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
         warrant: `${SPEC}:143 — "View id: \`m4.nara.oracleHistory\` (new)"`,
-        currentStateSelector: null,
-        selectionHandler: null,
-        evidenceSerializer: null,
-        gap: {
-            kind: 'no-face',
-            ownerTranche: '25.T25.9',
-            compositionBlocker: null,
-            evidence:
-                'No oracleHistory symbol, view id or pane exists anywhere under src/. The OraclePane renders the current cast only.',
-            citations: [
-                { file: 'panes/OraclePane.tsx', anchor: 'data-testid="oracle-pane"' },
-                { file: 'App.tsx', anchor: 'oracleHistory', mustBeAbsent: true },
-                { file: 'panes/OraclePane.tsx', anchor: 'castHistory', mustBeAbsent: true }
-            ],
-        },
+        currentStateSelector: selector('m4.nara.oracleHistory', 'tick-store', 'useTickStore', [
+            'generation'
+        ]),
+        selectionHandler: unrouted(
+            'm4.nara.oracleHistory',
+            'A read-only record of casts already lived — a selection never travels INTO it, and its rows carry handles rather than routes because the brief\u2019s click-through target (25.8 read-only mode) is a mode the cast surface does not have. No intent target is registered rather than one that lands nowhere.'
+        ),
+        evidenceSerializer: evidence('m4.nara.oracleHistory', 'protected_local_handle_only', 'data-decay'),
+        gap: null,
         disposition: null
     },
     {
