@@ -26,7 +26,11 @@ import {
 import { M3PentadicRelationInspector } from '../components/M3PentadicRelationInspector';
 import {
     M3TarotWheel,
+    minorRefFromCardId,
+    suitColour,
+    suitElementName,
     tarotCardKeyString,
+    type M3ArcanaState,
     type TarotCardKey
 } from '../components/M3TarotWheel';
 import { M3TranscriptionEngine } from '../components/M3TranscriptionEngine';
@@ -164,6 +168,19 @@ function M3InspectorsSurface() {
             return next;
         });
     };
+
+    // 24.T24.8 — the body-dynamics read, handed to the hexagram browser so the
+    // browser stays a surface and the pane keeps owning the service registry.
+    const lookupHexagramBody = useMemo(
+        () => (hexagramId: number) => services.hexagramBodyDynamics.lookup(hexagramId),
+        [services]
+    );
+    // The silhouette's halo is the ACTIVE CODON's suit element — now a bussed
+    // fact (24.T24.6) rather than a renderer guess. No minor card, no halo.
+    const bodyHalo = useMemo(
+        () => haloFromMinorArcana(wheelSurface.minorArcana),
+        [wheelSurface.minorArcana]
+    );
 
     // 24.T24.6 — "turning the card IS changing the mode": every turn goes out
     // over `s2.codon.scalar_ref.read`. The gateway's tarot arm currently answers
@@ -327,7 +344,12 @@ function M3InspectorsSurface() {
                     trace={pentadicTrace ?? undefined}
                 />
             ) : null}
-            {showHexagramBrowser ? <M3HexagramBrowser /> : null}
+            {showHexagramBrowser ? (
+                <M3HexagramBrowser
+                    lookupBody={lookupHexagramBody}
+                    bodyHalo={bodyHalo}
+                />
+            ) : null}
             {showTarotWheel ? (
                 <M3TarotWheel
                     majorArcana={wheelSurface.majorArcana}
@@ -454,6 +476,23 @@ function M3InspectorsSurface() {
         </M3ReadinessBoundary>
         </M3ReadinessProvider>
     );
+}
+
+/**
+ * The body viewer's halo is the active codon's suit element. When the codon
+ * falls outside the 56-card cover there IS no suit, so there is no halo —
+ * absence, not a default colour standing in for one.
+ */
+function haloFromMinorArcana(
+    state: M3ArcanaState
+): { readonly element: string; readonly colour: string } | null {
+    if (state.kind !== 'card') {
+        return null;
+    }
+    const ref = minorRefFromCardId(state.cardId);
+    return ref === null
+        ? null
+        : { element: suitElementName(ref.suit), colour: suitColour(ref.suit) };
 }
 
 interface TarotTurnState {

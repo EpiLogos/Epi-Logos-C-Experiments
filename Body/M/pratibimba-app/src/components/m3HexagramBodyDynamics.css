@@ -1,0 +1,43 @@
+/*
+ * Coordinate: M' M3' (hexagram body-dynamics presentation — Track 24.T24.8)
+ * Residency: Body/M/pratibimba-app/src/components
+ * Position (#n): M3' body-map surface chrome.
+ * Actualises: the silhouette stroke + readout grid for the body-dynamics viewer.
+ * Public surface: .m3-hexagram-body-* classes consumed by
+ *   M3HexagramBodyDynamicsViewer.tsx.
+ * Does NOT own: chakra data, body zones, readiness state, or layout.
+ * Contract: [[M3'-SPEC]] / [[24-m3-mahamaya-frontend-deep]] 24.8
+ */
+
+.m3-hexagram-body-dynamics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.m3-hexagram-body-header h4 {
+  margin: 0;
+}
+
+.m3-hexagram-body-silhouette line,
+.m3-hexagram-body-silhouette circle {
+  fill: none;
+  stroke: var(--hairline, #3a2e58);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.m3-hexagram-body-readout {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.15rem 0.6rem;
+  margin: 0;
+}
+
+.m3-hexagram-body-readout dt {
+  color: var(--ink-dim, #9a8fb8);
+}
+
+.m3-hexagram-body-readout dd {
+  margin: 0;
+}

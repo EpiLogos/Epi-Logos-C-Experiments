@@ -25,9 +25,15 @@
  *   view law (m3Inspectors.ts), the profile cache.
  */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { inkBright, inkDim, ringLit, wheelUnlit } from '../ui/tokens';
 import { ProvenanceBadge } from '../ui/primitives';
+import { M3HexagramBodyDynamicsViewer } from '../components/M3HexagramBodyDynamicsViewer';
+import {
+    HEXAGRAM_BODY_PENDING,
+    type HexagramBodyEntry,
+    type HexagramBodyPending
+} from '../services/m3/HexagramBodyDynamicsService';
 import { buildM3InspectorsView } from './m3Inspectors';
 import { M3ReadinessBoundary, useM3ProfileTick } from './m3SurfaceContext';
 
@@ -40,7 +46,21 @@ function trigramLines(trigram: number): readonly number[] {
     return [trigram & 1, (trigram >> 1) & 1, (trigram >> 2) & 1];
 }
 
-export function M3HexagramBrowser() {
+export interface M3HexagramBrowserProps {
+    /**
+     * 24.T24.8 — reads the per-hexagram body row over
+     * `s2.codon.scalar_ref.read`. Injected rather than constructed here so the
+     * browser stays a pure surface over one gateway port; the pane owns the
+     * service registry.
+     */
+    readonly lookupBody?: (
+        hexagramId: number
+    ) => Promise<HexagramBodyEntry | HexagramBodyPending>;
+    /** Suit-element halo for the body viewer, from the active codon's minor arcana. */
+    readonly bodyHalo?: { readonly element: string; readonly colour: string } | null;
+}
+
+export function M3HexagramBrowser({ lookupBody, bodyHalo = null }: M3HexagramBrowserProps = {}) {
     const tick = useM3ProfileTick();
     const view = useMemo(() => {
         if (!tick.payload) {
@@ -66,6 +86,30 @@ export function M3HexagramBrowser() {
         setLastHex(activeHexagramId);
         setChanging(new Set());
     }
+
+    // 24.T24.8 — the body row for the ACTIVE King Wen hexagram. The read is
+    // keyed to the King Wen ordinal because that is what `HEXAGRAM_BODY_DYNAMICS`
+    // is indexed by; passing the Fu-Xi address would silently read the wrong row.
+    const [bodyEntry, setBodyEntry] = useState<HexagramBodyEntry | HexagramBodyPending | null>(
+        null
+    );
+    useEffect(() => {
+        if (lookupBody === undefined || activeKingWen === null) {
+            setBodyEntry(null);
+            return;
+        }
+        let live = true;
+        void lookupBody(activeKingWen)
+            .then(resolved => {
+                if (live) setBodyEntry(resolved);
+            })
+            .catch(() => {
+                if (live) setBodyEntry(HEXAGRAM_BODY_PENDING);
+            });
+        return () => {
+            live = false;
+        };
+    }, [lookupBody, activeKingWen]);
 
     if (!m || activeHexagramId === null) {
         return (
@@ -198,6 +242,16 @@ export function M3HexagramBrowser() {
                     </p>
                 ) : null}
             </div>
+
+            {/* 24.T24.8 — the body-dynamics sub-panel hangs off THIS browser,
+                keyed to the same active King Wen hexagram the grid lights. */}
+            {lookupBody !== undefined ? (
+                <M3HexagramBodyDynamicsViewer
+                    hexagramId={activeKingWen}
+                    entry={bodyEntry}
+                    halo={bodyHalo}
+                />
+            ) : null}
         </section>
         </M3ReadinessBoundary>
     );

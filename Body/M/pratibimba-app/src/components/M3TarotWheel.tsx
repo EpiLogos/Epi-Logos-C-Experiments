@@ -179,13 +179,15 @@ export function readArcanaState(
 
 const hex = (value: number): string => `#${value.toString(16).padStart(6, '0')}`;
 
-function suitColour(suit: TarotMinorSuit): string {
+/** Suit → its element colour, from the [[L2']] register. */
+export function suitColour(suit: TarotMinorSuit): string {
     const mahabhuta = mahabhutaFromAlchemical(SUIT_ELEMENT[suit]);
     const colour = mahabhuta === null ? undefined : ELEMENT_COLOURS[mahabhuta];
     return colour === undefined ? inkDim : hex(colour);
 }
 
-function suitElementName(suit: TarotMinorSuit): string {
+/** Suit → its element NAME, from the [[L2']] register. */
+export function suitElementName(suit: TarotMinorSuit): string {
     return alchemicalElementName(SUIT_ELEMENT[suit]) ?? 'unknown';
 }
 
