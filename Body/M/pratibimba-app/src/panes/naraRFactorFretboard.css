@@ -1,0 +1,142 @@
+/* 25.T25.23 — R-factor fretboard. Tokens only (Track 30 law). */
+
+.rfactor-fretboard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    overflow: auto;
+    height: 100%;
+}
+
+.rfactor-fretboard-head {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+}
+
+.rfactor-fretboard-coordinate {
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+}
+
+.rfactor-fretboard-title {
+    color: var(--ink);
+    font-size: var(--type-heading-3);
+}
+
+.rfactor-string {
+    stroke: var(--hairline);
+    stroke-width: 1;
+}
+
+.rfactor-fret {
+    stroke: var(--hairline);
+    stroke-width: 1;
+    opacity: 0.7;
+}
+
+.rfactor-string-label {
+    fill: var(--ink-dim);
+    font-size: var(--type-caption);
+}
+
+.rfactor-marker {
+    fill: none;
+    stroke: var(--ink-dim);
+    stroke-width: 1.2;
+}
+
+.rfactor-r0-drone {
+    stroke-dasharray: 2 3;
+}
+
+.rfactor-r1r4-course {
+    stroke: var(--accent);
+}
+
+.rfactor-r2r3-course {
+    stroke: var(--ink-dim);
+}
+
+.rfactor-lit.rfactor-band-pravritti {
+    fill: var(--ring);
+    stroke: var(--ring);
+}
+
+.rfactor-lit.rfactor-band-nivritti {
+    fill: var(--accent);
+    stroke: var(--accent);
+}
+
+.rfactor-unreturned-glow {
+    stroke: var(--ready);
+    stroke-width: 2.4;
+}
+
+.rfactor-marker-label {
+    fill: var(--ink);
+    font-size: var(--type-micro);
+    pointer-events: none;
+}
+
+.rfactor-fretless,
+.rfactor-band-turn {
+    fill: var(--ink-dim);
+    font-size: var(--type-caption);
+}
+
+.rfactor-turn-flare {
+    fill: var(--ring);
+}
+
+.rfactor-virtue-lamps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.rfactor-virtue-lamps li {
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 2px 8px;
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+}
+
+.rfactor-virtue-lamps li[data-lit='true'] {
+    border-color: var(--ring);
+    color: var(--ink);
+}
+
+.rfactor-band-balance {
+    display: flex;
+    gap: 12px;
+    color: var(--ink-dim);
+    font-size: var(--type-body-small);
+}
+
+.rfactor-open-questions {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rfactor-open-questions button {
+    font-size: var(--type-body-small);
+    text-align: left;
+}
+
+.rfactor-open-questions button[data-emit-state='sent'] {
+    border-color: var(--ready);
+}
+
+.rfactor-open-questions button[data-emit-state='failed'] {
+    border-color: var(--danger);
+}

@@ -168,6 +168,28 @@ pub mod m0_verifier {
         fn anuttara_language_is_member(coordinate_or_symbol: *const c_char) -> bool;
         static ARCHETYPE_COORDINATE_LUT: [*const c_char; 12];
         static CONTEMPLATION_PROMPT_LUT: [*const c_char; 12];
+        static VIRTUE_LUT: [VirtueEntryC; 9];
+    }
+
+    /// Mirror of m0.h `Virtue_Entry` (the compiled 9-row virtue authority).
+    #[repr(C)]
+    struct VirtueEntryC {
+        r_factor: u8,
+        divine_act: u8,
+        cross_branch_refs: u16,
+        name: *const c_char,
+        symbol: *const c_char,
+    }
+
+    /// One projected `VIRTUE_LUT` row. `r_factor` is `None` for the three
+    /// meta rows (indices 0..=2, compiled as 0xFF) — the R-mapped virtues are
+    /// rows 3..=8 per `VIRTUE_TO_RFACTOR`.
+    #[derive(Clone, Debug, PartialEq)]
+    pub struct VirtueLutEntry {
+        pub virtue_index: u8,
+        pub r_factor: Option<u8>,
+        pub name: String,
+        pub symbol: String,
     }
 
     #[derive(Clone, Debug, PartialEq)]
@@ -274,6 +296,35 @@ pub mod m0_verifier {
                     .to_str()
                     .expect("contemplation prompt must be UTF-8 compatible")
                     .to_owned()
+            })
+            .collect()
+    }
+
+    /// Projects the compiled 9-row `VIRTUE_LUT` (name, symbol, R-factor)
+    /// without recreating its contents in Rust. 25.T25.23: the fretboard's
+    /// virtue lamps consume these symbols over the profile wire — the one
+    /// place they exist is the C authority, never a renderer-local copy.
+    pub fn virtue_lut() -> Vec<VirtueLutEntry> {
+        unsafe { &VIRTUE_LUT }
+            .iter()
+            .enumerate()
+            .map(|(index, entry)| {
+                assert!(
+                    !entry.name.is_null() && !entry.symbol.is_null(),
+                    "compiled virtue pointers must not be null"
+                );
+                VirtueLutEntry {
+                    virtue_index: index as u8,
+                    r_factor: (entry.r_factor != 0xFF).then_some(entry.r_factor),
+                    name: unsafe { CStr::from_ptr(entry.name) }
+                        .to_str()
+                        .expect("virtue name must be UTF-8 compatible")
+                        .to_owned(),
+                    symbol: unsafe { CStr::from_ptr(entry.symbol) }
+                        .to_str()
+                        .expect("virtue symbol must be UTF-8 compatible")
+                        .to_owned(),
+                }
             })
             .collect()
     }
@@ -1247,6 +1298,30 @@ mod m4_session_lifecycle {
         assert_eq!(protein.truncated, 1);
         assert_eq!(protein.steps[1].codon, M4_TRANSCRIPTION_TAIL_MARKER_CODON);
         assert_ne!(protein.steps[1].flags & M4_TRANSCRIPTION_STEP_TAIL, 0);
+    }
+}
+
+#[cfg(all(test, feature = "m0_verifier"))]
+mod m0_virtue_lut_projection {
+    use super::m0_verifier::virtue_lut;
+
+    /// 25.T25.23 — the projection is the C authority verbatim: 9 rows, the
+    /// three meta rows carry no R-factor, rows 3..=8 map to R0..=R5 exactly
+    /// as `VIRTUE_TO_RFACTOR` computes, and every row carries its symbol.
+    #[test]
+    fn virtue_lut_projects_the_compiled_nine_rows_with_their_r_factors() {
+        let lut = virtue_lut();
+        assert_eq!(lut.len(), 9);
+        for (index, entry) in lut.iter().enumerate() {
+            assert_eq!(entry.virtue_index, index as u8);
+            let expected = if index >= 3 { Some(index as u8 - 3) } else { None };
+            assert_eq!(entry.r_factor, expected, "row {index} R-factor");
+            assert!(!entry.name.is_empty(), "row {index} name");
+            assert!(!entry.symbol.is_empty(), "row {index} symbol");
+        }
+        // The 0R Joy/Play symbol is the fretboard's drone lamp — pin one
+        // literal so a re-ordered LUT cannot pass as a re-labelling.
+        assert!(lut[3].symbol.starts_with("0R"), "lut[3] symbol: {}", lut[3].symbol);
     }
 }
 

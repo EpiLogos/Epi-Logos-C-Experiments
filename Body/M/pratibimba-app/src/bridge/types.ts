@@ -765,6 +765,30 @@ export interface RFactorPathStep {
     readonly isTurn: boolean;
 }
 
+/** 25.T25.23 — one string of the fretboard: a base route's row of the
+ *  kernel distribution matrix (`positions[r]` = fret 0..5, 7 = positionless). */
+export interface RFactorRouteProjection {
+    readonly baseRoute: RFactorPathStep['baseRoute'];
+    readonly mColumn: number;
+    readonly positions: readonly number[];
+}
+
+/** One virtue lamp — a compiled VIRTUE_LUT row; meta rows carry no rFactor. */
+export interface RFactorVirtueProjection {
+    readonly virtueIndex: number;
+    readonly rFactor?: number;
+    readonly name: string;
+    readonly symbol: string;
+}
+
+/** The compiled Archetype-7 route table riding `profile.rfactorRouteTable`. */
+export interface RFactorRouteTableProjection {
+    readonly routes: readonly RFactorRouteProjection[];
+    readonly positionless: number;
+    readonly bandTurnSymbol: string;
+    readonly virtues: readonly RFactorVirtueProjection[];
+}
+
 export interface AnuttaraWitnessProjection {
     readonly virtueWitnessVector: number;
     readonly syntaxWitnessVector: number;

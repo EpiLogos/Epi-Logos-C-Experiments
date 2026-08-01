@@ -576,7 +576,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         viewId: 'm4.nara.journalEntries',
         frozenExport: 'M4JournalTimelineCard',
         tranche: '25.T25.3',
-        landedBy: '25.T25.3 (nara.journal.timeline read; the T3.2 file-browser pane was replaced)',
+        landedBy: null,
         carrier: { file: 'panes/JournalTimelinePane.tsx', symbol: 'JournalTimelinePane' },
         testid: 'journal-timeline',
         mount: { kind: 'flexlayout-tab', component: 'journalTimeline', tabLabel: 'Journal', face: 1, region: 'personal-left-border' },
@@ -1009,6 +1009,29 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
     },
     {
         subsystem: 'M4',
+        viewId: 'm4.nara.rfactorFretboard',
+        frozenExport: 'M4RFactorFretboardCard',
+        tranche: '25.T25.23',
+        landedBy: null,
+        carrier: { file: 'panes/NaraRFactorFretboardPane.tsx', symbol: 'NaraRFactorFretboardPane' },
+        testid: 'rfactor-fretboard',
+        mount: { kind: 'flexlayout-tab', component: 'rfactorFretboard', tabLabel: 'Fretboard', face: 1, region: 'personal-left-border' },
+        layoutLaw: 'daily-only',
+        privacyClass: 'protected_local',
+        miniModes: [],
+        miniModeWarrant: null,
+        warrant: `${SPEC}:335 — "View id: \`m4.nara.rfactorFretboard\` (new). Privacy chrome: \`mext-privacy-protected-local\` (a personal traversal record)"`,
+        currentStateSelector: selector('m4.nara.rfactorFretboard', 'tick-store', 'useTickStore', ['profile']),
+        selectionHandler: unrouted(
+            'm4.nara.rfactorFretboard',
+            'The fretboard is an instrument over the emit-only witness — nothing routes a selection into it; its ?-object chips dispatch OUT to the verifier and its own tab is the entry point.'
+        ),
+        evidenceSerializer: evidence('m4.nara.rfactorFretboard', 'protected_local', 'data-walked-steps'),
+        gap: null,
+        disposition: null
+    },
+    {
+        subsystem: 'M4',
         viewId: 'm4.nara.psycheAnchorCoherence',
         frozenExport: 'M4PsycheAnchorCoherenceCard',
         tranche: '25.T25.20',
@@ -1071,36 +1094,6 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
             'data-seam'
         ),
         gap: null,
-        disposition: null
-    },
-    {
-        subsystem: 'M4',
-        viewId: 'm4.nara.rfactorFretboard',
-        frozenExport: 'M4RFactorFretboardCard',
-        tranche: '25.T25.23',
-        landedBy: null,
-        carrier: null,
-        testid: null,
-        mount: { kind: 'absent' },
-        layoutLaw: null,
-        privacyClass: 'protected_local',
-        miniModes: [],
-        miniModeWarrant: null,
-        warrant: `${SPEC}:335 — "View id: \`m4.nara.rfactorFretboard\` (new)"`,
-        currentStateSelector: null,
-        selectionHandler: null,
-        evidenceSerializer: null,
-        gap: {
-            kind: 'no-face',
-            ownerTranche: '25.T25.23',
-            compositionBlocker: null,
-            evidence:
-                'Enrolled although 25.21\'s own export list (SPEC:262-285) omits it: SPEC:335 declares it a TRACK_08 contribution in its own words, and 25.21\'s acceptance is that EVERY Wave-C view id maps to its owner. A register that silently drops a specced id fails its own contract.',
-            citations: [
-                { file: 'App.tsx', anchor: 'rfactorFretboard', mustBeAbsent: true },
-                { file: 'commands/crossLayoutIntent.ts', anchor: 'fretboard', mustBeAbsent: true }
-            ],
-        },
         disposition: null
     },
     {

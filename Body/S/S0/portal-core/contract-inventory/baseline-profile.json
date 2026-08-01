@@ -15262,6 +15262,149 @@
     "",
     ""
   ],
+  "rfactorRouteTable": {
+    "routes": [
+      {
+        "baseRoute": "O#",
+        "mColumn": 1,
+        "positions": [
+          1,
+          0,
+          7,
+          7,
+          5,
+          7
+        ]
+      },
+      {
+        "baseRoute": "X#",
+        "mColumn": 2,
+        "positions": [
+          2,
+          1,
+          0,
+          5,
+          4,
+          7
+        ]
+      },
+      {
+        "baseRoute": "N#",
+        "mColumn": 3,
+        "positions": [
+          3,
+          2,
+          1,
+          4,
+          3,
+          7
+        ]
+      },
+      {
+        "baseRoute": "M#",
+        "mColumn": 4,
+        "positions": [
+          7,
+          3,
+          2,
+          3,
+          2,
+          7
+        ]
+      },
+      {
+        "baseRoute": "Nara",
+        "mColumn": 4,
+        "positions": [
+          7,
+          4,
+          3,
+          2,
+          1,
+          7
+        ]
+      },
+      {
+        "baseRoute": "Siva",
+        "mColumn": 5,
+        "positions": [
+          7,
+          5,
+          4,
+          1,
+          0,
+          7
+        ]
+      },
+      {
+        "baseRoute": "Shakti",
+        "mColumn": 5,
+        "positions": [
+          7,
+          7,
+          5,
+          0,
+          7,
+          7
+        ]
+      }
+    ],
+    "positionless": 7,
+    "bandTurnSymbol": "(@#)",
+    "virtues": [
+      {
+        "virtueIndex": 0,
+        "name": "Love/Peace - Foundational Essence",
+        "symbol": "(inf*inf)*(R#/##) = 00/00, (0/1), 9"
+      },
+      {
+        "virtueIndex": 1,
+        "name": "Truth - Structural Foundation",
+        "symbol": "## = @ = (0/1)-(00)-00"
+      },
+      {
+        "virtueIndex": 2,
+        "name": "Openness/Creativity - Structural Fusion",
+        "symbol": "#R = @ = (7-8-9-(0/1)/O#-X#-N#)"
+      },
+      {
+        "virtueIndex": 3,
+        "rFactor": 0,
+        "name": "Joy/Play - Creation Virtue",
+        "symbol": "0R = @ = (9-O#-X#-N#)"
+      },
+      {
+        "virtueIndex": 4,
+        "rFactor": 1,
+        "name": "Goodness - Sustenance Virtue",
+        "symbol": "1R = @ = (O#-X#-N#-M#-#-(#))"
+      },
+      {
+        "virtueIndex": 5,
+        "rFactor": 2,
+        "name": "Beauty - Dissolution Virtue",
+        "symbol": "2R = @ = (X#-N#-M#-#-(#)-(@#))"
+      },
+      {
+        "virtueIndex": 6,
+        "rFactor": 3,
+        "name": "Life/Nature - Veiling Virtue",
+        "symbol": "3R = @ = ((@#)-(#)-#-M#-N#-X#)"
+      },
+      {
+        "virtueIndex": 7,
+        "rFactor": 4,
+        "name": "Wisdom - Grace Virtue",
+        "symbol": "4R = @ = ((#)-#-M#-N#-X#-O#)"
+      },
+      {
+        "virtueIndex": 8,
+        "rFactor": 5,
+        "name": "Reality - Completion Virtue",
+        "symbol": "5R = @ = (##)"
+      }
+    ]
+  },
   "s2Anchor": {
     "coordinate": "M0",
     "readiness": "cycle-2-s2-coordinate-anchor",

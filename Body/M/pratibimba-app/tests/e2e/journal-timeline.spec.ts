@@ -77,9 +77,13 @@ test('25.T25.3: the timeline lists the real NOW inscriptions over the gateway an
     const firstRow = pane.locator('[data-testid^="journal-row-"]').first();
     await expect(firstRow).toHaveAttribute('data-session-key', sessionKey);
 
-    // Click-through opens the session's own NOW inscription in the editor.
+    // Click-through opens the session's own NOW inscription as a dynamic
+    // editor tab (`vault.open` → MarkdownEditorPane keyed by path).
     await row.click();
-    const editor = page.locator('.face-active [data-testid="m4-nara-editor"]');
+    // The Journal border panel overlays the main strip; fold it back so the
+    // freshly-opened editor tab is the visible surface.
+    await face.locator('.flexlayout__border_button', { hasText: 'Journal' }).click();
+    const editor = page.locator(`.face-active [data-testid="editor-${sessionDir}/now.md"]`);
     await expect(editor).toBeVisible({ timeout: 15_000 });
     await expect(editor).toContainText('timeline-proof-inscription', { timeout: 15_000 });
 });

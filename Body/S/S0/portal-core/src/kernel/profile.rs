@@ -11,6 +11,7 @@ use crate::profile_projections::{
     AnuttaraWitnessBandBalance, AnuttaraWitnessPalindromeState, AnuttaraWitnessProjection,
     CanonRecognitionEvent, CosmicCompositionState, InversionOperatorHandle, M1TopologyProjection,
     PasuBeingPatternProjection, PersonalPoleProjection, PsychoidFieldProjection,
+    RFactorRouteTableProjection,
 };
 use crate::vak_address::{CpfState, VakAddress};
 
@@ -728,6 +729,10 @@ pub struct MathemeHarmonicProfile {
     /// verbatim from `epi-lib`; renderers select by canonical archetype index.
     #[serde(default)]
     pub contemplation_prompt_lut: Vec<String>,
+    /// Track 25.T25.23 — the compiled Archetype-7 R-factor route table +
+    /// virtue lamps; the fretboard consumes this, never a renderer copy.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub rfactor_route_table: Option<RFactorRouteTableProjection>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub cosmic_composition_state: Option<CosmicCompositionState>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -866,6 +871,7 @@ impl MathemeHarmonicProfile {
             pasu_being_pattern: None,
             anuttara_witness: Some(bootstrap_anuttara_witness(tick12, position)),
             contemplation_prompt_lut: epi_lib::m0_verifier::contemplation_prompt_lut(),
+            rfactor_route_table: Some(RFactorRouteTableProjection::compiled()),
             cosmic_composition_state: None,
             personal_pole: None,
             psychoid_field: None,

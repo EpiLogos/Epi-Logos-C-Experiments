@@ -125,6 +125,7 @@ export const SUBSYSTEM_WORKSPACE_OWNERSHIP: readonly DepthTabDisposition[] = Obj
     // ── stays: daily lived-flow reading surfaces ───────────────────────────
     stays('sessionCloseCeremony', 'm4', 'stays-daily-lived', 'A read-only Möbius-turn ceremony over the day just closed (25.T25.19) — lived flow; canon does not name it in the M4-dashboard list.'),
     stays('psycheAnchorCoherence', 'm4', 'stays-daily-lived', 'The tarot psyche-anchor read of the same close (25.T25.20) — same law as the ceremony it sits beside.'),
+    stays('rfactorFretboard', 'm4', 'stays-daily-lived', 'The R-factor fretboard replays the SESSION traversal (25.T25.23) — a personal lived-flow record beside the ceremony that asks whether it returned.'),
 
     // ── stays: depth surfaces whose deep home is the T4 overview ───────────
     stays('m1SurfaceDeep', 'm1', 'stays-deep-overview', "The standalone eight-slot workbench opens only where DR-M1-FACE-LAYOUT-1's two gates put it (`personal-deep-main`); re-mounting it here would bypass the face gate and re-trip the mount-publication hazard."),

@@ -253,6 +253,80 @@ pub struct AnuttaraWitnessProjection {
     pub coherence_score: f32,
 }
 
+// ── 25.T25.23 — the R-factor route-table projection ─────────────────────────
+// The fretboard is a pure consumer: it never recomputes the route table. The
+// table therefore rides the profile wire as a compiled projection — the same
+// move as `contemplationPromptLut` (21.T21.9) — so the ONLY copies are the C
+// authority (`m0.c R_FACTOR_ROUTE_TABLE` / `VIRTUE_LUT`) and its Rust mirror
+// (`rfactor.rs R_FACTOR_DISTRIBUTION`, pinned to the C words by kernel_truth).
+
+/// One string of the instrument: a base route's row of the distribution
+/// matrix. `positions[r]` is the fret (`0..5`) act `rR` occupies on this
+/// route, or `7` (`R5_POSITIONLESS`) when the act does not distribute here.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RFactorRouteProjection {
+    pub base_route: String,
+    pub m_column: u8,
+    pub positions: [u8; 6],
+}
+
+/// One virtue lamp: a compiled `VIRTUE_LUT` row. `r_factor` is `None` for
+/// the three meta rows — only `0R..5R` light a fret signature.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RFactorVirtueProjection {
+    pub virtue_index: u8,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub r_factor: Option<u8>,
+    pub name: String,
+    pub symbol: String,
+}
+
+/// The holographic R-distribution as an instrument: 7 routes × 6 acts, the
+/// positionless sentinel, the `(@#)` band-turn mark, and the virtue lamps.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RFactorRouteTableProjection {
+    pub routes: Vec<RFactorRouteProjection>,
+    pub positionless: u8,
+    pub band_turn_symbol: String,
+    pub virtues: Vec<RFactorVirtueProjection>,
+}
+
+impl RFactorRouteTableProjection {
+    /// The wire labels for the seven bases, spec order (`25-…-deep.md` §25.23).
+    pub const ROUTE_LABELS: [&'static str; 7] = ["O#", "X#", "N#", "M#", "Nara", "Siva", "Shakti"];
+
+    pub fn compiled() -> Self {
+        use crate::rfactor::{Base, R5_POSITIONLESS, BAND_TURN_SYMBOL, R_FACTOR_DISTRIBUTION};
+        let routes = Base::ALL
+            .iter()
+            .enumerate()
+            .map(|(row, base)| RFactorRouteProjection {
+                base_route: Self::ROUTE_LABELS[row].to_owned(),
+                m_column: base.m_column(),
+                positions: R_FACTOR_DISTRIBUTION[row],
+            })
+            .collect();
+        let virtues = epi_lib::m0_verifier::virtue_lut()
+            .into_iter()
+            .map(|entry| RFactorVirtueProjection {
+                virtue_index: entry.virtue_index,
+                r_factor: entry.r_factor,
+                name: entry.name,
+                symbol: entry.symbol,
+            })
+            .collect();
+        Self {
+            routes,
+            positionless: R5_POSITIONLESS,
+            band_turn_symbol: BAND_TURN_SYMBOL.to_owned(),
+            virtues,
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct AnuttaraLayerProjection {

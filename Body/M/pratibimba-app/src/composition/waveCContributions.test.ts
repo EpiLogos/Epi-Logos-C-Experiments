@@ -620,7 +620,7 @@ describe('25.T25.21 — the three per-export seams are real (SPEC:288)', () => {
     const live = M4_WAVE_C_CONTRIBUTIONS.filter(row => row.carrier !== null && row.gap === null);
 
     it('carries all three seams exactly on the rows that render', () => {
-        expect(live.length, 'no live row at all would make every assertion below vacuous').toBe(17);
+        expect(live.length, 'no live row at all would make every assertion below vacuous').toBe(18);
         for (const row of M4_WAVE_C_CONTRIBUTIONS) {
             const shouldCarry = row.carrier !== null && row.gap === null;
             const carries = [row.currentStateSelector, row.selectionHandler, row.evidenceSerializer];
@@ -1128,7 +1128,7 @@ describe('25.T25.21 — NO DRIFT in the other direction', () => {
         expect(laundered, 'landedBy must name a DIFFERENT tranche than the one that owns the surface').toEqual([]);
         expect(
             M4_WAVE_C_CONTRIBUTIONS.filter(row => row.landedBy !== null).map(row => row.viewId).sort()
-        ).toEqual(['m4.nara.journalEntries', 'm4.nara.oracleCast', 'm4.nara.quintessence']);
+        ).toEqual(['m4.nara.oracleCast', 'm4.nara.quintessence']);
     });
 
     it('exposes exactly the rows a browser can drive', () => {
@@ -1147,6 +1147,7 @@ describe('25.T25.21 — NO DRIFT in the other direction', () => {
             'm4.nara.pratibimbaCoordinate',
             'm4.nara.psycheAnchorCoherence',
             'm4.nara.quintessence',
+            'm4.nara.rfactorFretboard',
             'm4.nara.sessionCloseCeremony',
             'm4.nara.timeAxisSwitcher',
             'm4.nara.transformContainers'

@@ -1980,6 +1980,34 @@ export const MathemeHarmonicProfile = z
     // Track 21.T21.9: compiled C CONTEMPLATION_PROMPT_LUT[12], projected
     // verbatim by portal-core. Empty strings are canonical unpopulated slots.
     contemplationPromptLut: z.array(z.string()).length(12).optional(),
+    // Track 25.T25.23: the compiled Archetype-7 R-factor route table + the
+    // nine virtue lamps (portal-core RFactorRouteTableProjection). 7 routes ×
+    // 6 acts; 7 is the positionless sentinel; meta virtues carry no rFactor.
+    rfactorRouteTable: z
+        .object({
+            routes: z
+                .array(
+                    z.object({
+                        baseRoute: z.string().min(1),
+                        mColumn: z.number().int().min(1).max(5),
+                        positions: z.array(z.number().int().min(0).max(7)).length(6),
+                    }),
+                )
+                .length(7),
+            positionless: z.literal(7),
+            bandTurnSymbol: z.literal("(@#)"),
+            virtues: z
+                .array(
+                    z.object({
+                        virtueIndex: z.number().int().min(0).max(8),
+                        rFactor: z.number().int().min(0).max(5).optional(),
+                        name: z.string().min(1),
+                        symbol: z.string().min(1),
+                    }),
+                )
+                .length(9),
+        })
+        .optional(),
     // Kairos tier (kernel/profile.rs kairos_mode/kairos_decays_at_ms, S3 gate
     // server/mod.rs) — skip-serialized Options: absent = kairos-pending, else
     // the tier that won (kairotic > realtime). decaysAtMs present only in
