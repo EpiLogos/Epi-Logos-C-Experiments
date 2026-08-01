@@ -58,6 +58,14 @@ export const TRACK_51_SURFACES: readonly Track51Surface[] = Object.freeze([
         commandTitle: 'M2: Open the meaning-packet inspector',
         coordinate: "M2'",
         tranche: '51.T51.4'
+    }),
+    Object.freeze({
+        surfaceId: 'm3DoubleTorus',
+        tabLabel: 'World Clock',
+        commandId: 'm3.open.doubleTorus',
+        commandTitle: "M3: Open the M3-5' double-torus world clock",
+        coordinate: "M3-5'",
+        tranche: '51.T51.5'
     })
 ]);
 

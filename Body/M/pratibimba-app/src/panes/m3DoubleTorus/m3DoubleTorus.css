@@ -1,0 +1,116 @@
+/*
+ * Coordinate: M3-5' double-torus presentation (rerun 51.T51.5)
+ * Residency: Body/M/pratibimba-app/src/panes/m3DoubleTorus/m3DoubleTorus.css
+ * Position (#n): #1 — Definition: the depth mode's visual grammar only.
+ * Actualises: the co-located pane stylesheet convention (`m3SurfaceContext.css`).
+ *   The two leaf families are visually DISTINCT but share one chart — the
+ *   co-foliation is the point, so nothing here may separate them into panels.
+ * Public surface: .m3-double-torus and its descendants.
+ * Does NOT own: token definitions (`styles.css`), any behaviour.
+ * Contract: [[M3'-SPEC]] §8.13 · rerun tranche [[51.T51.5]].
+ */
+
+.m3-double-torus {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 0.9rem 1rem;
+    overflow: auto;
+    height: 100%;
+    font-size: 0.85rem;
+}
+
+.m3-dt-header h2 {
+    margin: 0.2rem 0;
+    font-size: 1.05rem;
+}
+
+.m3-dt-coordinate {
+    font-family: var(--mono, monospace);
+    opacity: 0.7;
+    letter-spacing: 0.08em;
+}
+
+.m3-dt-essence,
+.m3-dt-note {
+    margin: 0.15rem 0;
+    opacity: 0.75;
+    max-width: 72ch;
+    line-height: 1.45;
+}
+
+.m3-dt-chart-wrap {
+    max-width: 520px;
+}
+
+.m3-dt-chart {
+    width: 100%;
+    height: auto;
+}
+
+.m3-dt-domain {
+    fill: color-mix(in srgb, currentColor 4%, transparent);
+    stroke: var(--hairline, rgba(128, 128, 128, 0.35));
+    stroke-width: 1;
+}
+
+.m3-dt-leaf {
+    stroke-width: 1;
+    opacity: 0.28;
+}
+
+.m3-dt-leaf-k2 {
+    stroke: var(--accent, #8ab4f8);
+}
+
+.m3-dt-leaf-t2 {
+    stroke: var(--ready, #6fbf73);
+}
+
+.m3-dt-leaf.is-active {
+    opacity: 1;
+    stroke-width: 2.5;
+}
+
+.m3-dt-crossing {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+}
+
+.m3-dt-readout dl {
+    display: grid;
+    grid-template-columns: minmax(12ch, auto) 1fr;
+    gap: 0.15rem 0.8rem;
+    margin: 0;
+    font-family: var(--mono, monospace);
+    font-size: 0.76rem;
+}
+
+.m3-dt-readout dt {
+    opacity: 0.7;
+}
+
+.m3-dt-readout dd {
+    margin: 0;
+}
+
+.m3-dt-dual {
+    border-top: 1px solid var(--hairline, rgba(128, 128, 128, 0.22));
+    padding-top: 0.5rem;
+}
+
+.m3-dt-dual h3 {
+    margin: 0 0 0.3rem;
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.m3-dt-dual ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}

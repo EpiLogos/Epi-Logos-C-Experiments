@@ -135,6 +135,7 @@ import { track51SurfaceFor } from './panes/track51Surfaces';
 import { M1TraversalTimelinePane } from './panes/m1Traversal/M1TraversalTimelinePane';
 import { startTraversalRecorder } from './panes/m1Traversal/traversalTimeline';
 import { M2MeaningPacketInspectorPane } from './panes/m2MeaningPacket/M2MeaningPacketInspectorPane';
+import { M3DoubleTorusPane } from './panes/m3DoubleTorus/M3DoubleTorusPane';
 import {
     publishRegisteredPanes,
     recordPaneRender,
@@ -602,6 +603,11 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
         // consumes and nothing could see; absent fields are named, never filled.
         case 'm2MeaningPacket':
             return <M2MeaningPacketInspectorPane />;
+        // 51.T51.5 — the M3-5' co-foliated double-torus world clock. Canon calls
+        // it "a depth mode" in its own words (M3'-SPEC §1), so it lands in the
+        // deep layout; §8.13 is its surface law.
+        case 'm3DoubleTorus':
+            return <M3DoubleTorusPane />;
         // 52.T5 — the Home affordance (DR-SUBSYS-3): the same lived Now
         // surface, now carrying the `0/1` ↔ `#0-#5` subsystems-grid toggle.
         case 'personalHome':
@@ -1388,6 +1394,11 @@ export function App() {
                 id: 'm2.open.meaningPacket',
                 title: 'M2: Open the meaning-packet inspector',
                 run: () => openTrack51Surface('m2MeaningPacket')
+            }),
+            commands.register({
+                id: 'm3.open.doubleTorus',
+                title: "M3: Open the M3-5' double-torus world clock",
+                run: () => openTrack51Surface('m3DoubleTorus')
             }),
             // 52.T6 — the five `leftSidebar.mode.*` commands, registered at
             // the seam the registry documented for its controller. Deep-only
