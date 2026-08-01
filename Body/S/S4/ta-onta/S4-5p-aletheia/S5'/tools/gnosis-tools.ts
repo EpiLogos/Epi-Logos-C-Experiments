@@ -95,9 +95,10 @@ export function registerGnosisTools(api: ExtensionAPI) {
     name: "aletheia_gnosis_query",
     label: "Aletheia Gnosis Query",
     description:
-      "Retrieval from Gnosis. Without `notebook`: hybrid RAG over the LightRAG/Neo4j gnostic store " +
-      "(vector + graph + RRF). With `notebook`: scoped retrieval over that notebook's source pool in " +
-      "the local gnosis store — where session pools written by nous_disclose live.",
+      "Hybrid RAG retrieval over the RAG-Anything/Neo4j gnostic corpus (vector + graph + RRF). " +
+      "`notebook` is declared but REFUSES: notebook-scoped RAG is unbuilt (no chunk carries a " +
+      "notebook; `gnosis sync --from-vimarsa` does not exist), and the local keyword-scored path " +
+      "is not substituted for it.",
     parameters: Type.Object({
       query: Type.String(),
       // 12.T12.13 finding D3, CORRECTED 2026-08-01.
@@ -112,12 +113,15 @@ export function registerGnosisTools(api: ExtensionAPI) {
       // `GnosisQueryHit.notebook`). Retrieval over a notebook is very much a
       // thing — it is THE thing session pools exist for.
       //
-      // What is true is narrower: the two stores are not the same store.
-      // Notebook scoping is implemented in the LOCAL gnosis store, and is not
-      // wired through the LightRAG/Neo4j path that `query-gnostic` uses. So a
-      // notebook query routes to the store that actually implements it.
+      // What is true is narrower, and correcting it a second time (2026-08-01):
+      // the notebook scoping that DOES exist lives in the local gnosis store,
+      // whose `query_local` scores by counting lowercase substring hits over
+      // re-chunked markdown — keyword search, not RAG. So it is neither a
+      // registry (the first wrong claim) nor a usable substitute for
+      // notebook-scoped RAG (the second). The parameter stays declared and
+      // REFUSES, naming the gap, until the pooling route is built.
       notebook: Type.Optional(
-        Type.String({ description: "Scope retrieval to this notebook's source pool (local gnosis store)" }),
+        Type.String({ description: "Scope retrieval to a notebook source pool (REFUSES — unbuilt, see tool description)" }),
       ),
       top_k: Type.Optional(
         Type.Integer({ description: "Bound how many retrieved items the mode considers", minimum: 1 }),
@@ -141,13 +145,36 @@ export function registerGnosisTools(api: ExtensionAPI) {
       const projection = params.resonance72 === false ? null : readLiveResonance72();
       const question = conditionQuestionOnResonance72(coordinateScoped, projection);
 
-      // A notebook names a source pool in the LOCAL gnosis store, so route
-      // there — that is the store whose retrieval actually filters by notebook.
-      // Sending it to `query-gnostic` would search a corpus the notebook does
-      // not partition, which is how the parameter came to do nothing.
-      const args = params.notebook
-        ? ["techne", "gnosis", "query", question, "--notebook", String(params.notebook)]
-        : ["techne", "gnosis", "query-gnostic", question, "--mode", "hybrid"];
+      // Notebook-scoped retrieval REFUSES rather than silently degrading.
+      //
+      // The previous revision routed a notebook query to `epi techne gnosis
+      // query --notebook`, which does run and does partition — but it scores by
+      // counting lowercase substring hits over locally re-chunked markdown
+      // (`query.rs:80-95`). That is keyword search, not retrieval: no
+      // embeddings, no graph, no RRF. Routing there dressed a fallback up as an
+      // option and would have quietly given an agent asking for RAG something
+      // categorically weaker, with no signal that it had happened.
+      //
+      // Notebook-scoped RAG over the RAG-Anything corpus is the intended shape
+      // and is genuinely unbuilt: no chunk in the Neo4j store carries a
+      // notebook, and `epi techne gnosis sync --from-vimarsa` — the bkmr
+      // pooling route that would populate one — does not exist.
+      if (params.notebook) {
+        return {
+          details: undefined,
+          content: [{
+            type: "text",
+            text:
+              `notebook-scoped retrieval is not built: no chunk in the RAG-Anything/Neo4j corpus ` +
+              `carries a notebook, and the bkmr pooling route (\`gnosis sync --from-vimarsa\`) is ` +
+              `unbuilt. The local \`gnosis query --notebook\` path exists but is substring keyword ` +
+              `scoring, not RAG, so it is not silently substituted here. Use \`coordinate\`, which ` +
+              `is genuinely carried into retrieval.`,
+          }],
+          isError: true,
+        };
+      }
+      const args = ["techne", "gnosis", "query-gnostic", question, "--mode", "hybrid"];
       // 12.T12.13 finding D3: `top_k` is carried on both routes — LightRAG's
       // QueryParam on the gnostic path, the local scorer's bound on the other —
       // instead of being declared and discarded.
