@@ -576,7 +576,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         viewId: 'm4.nara.journalEntries',
         frozenExport: 'M4JournalTimelineCard',
         tranche: '25.T25.3',
-        landedBy: '03.T3.2 (the pane header names plan T3.2 as what built it)',
+        landedBy: '25.T25.3 (nara.journal.timeline read; the T3.2 file-browser pane was replaced)',
         carrier: { file: 'panes/JournalTimelinePane.tsx', symbol: 'JournalTimelinePane' },
         testid: 'journal-timeline',
         mount: { kind: 'flexlayout-tab', component: 'journalTimeline', tabLabel: 'Journal', face: 1, region: 'personal-left-border' },

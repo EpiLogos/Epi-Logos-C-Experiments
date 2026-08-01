@@ -704,6 +704,10 @@ pub fn dispatch_nara_with_state_root(
         // session-close bundle above. `nara.pasu.show` is the handle-only read
         // (the natal-chart raw body never transits — only its path string).
         "nara.pasu.show" => show_pasu_record(peer_is_loopback),
+        // 25.T25.3 — the NOW-inscription timeline. Protected-local like the
+        // PASU reads: day ids, NOW timestamps, session keys and artifact KINDS
+        // cross the wire; no artifact body ever does.
+        "nara.journal.timeline" => journal_timeline(peer_is_loopback, params),
         "nara.pasu.set" => set_pasu_field(peer_is_loopback, params),
         "nara.pasu.consents.append" => append_pasu_consent(peer_is_loopback, params),
         "nara.identity.proposals.detect" => {
@@ -977,6 +981,167 @@ fn show_pasu_record(peer_is_loopback: bool) -> Result<Value, (String, String)> {
         object.insert("exists".to_owned(), Value::Bool(exists));
     }
     Ok(value)
+}
+
+// ─── 25.T25.3 — nara.journal.timeline ───────────────────────────────────────
+
+/// Sessions are datetime-prefixed by law (`{YYYYMMDD-HHmmss}-{suffix}`, no
+/// counters); the prefix IS the NOW inscription time, so the timeline never
+/// opens a now.md to learn when it was written.
+const SESSION_STAMP_FORMAT: &str = "%Y%m%d-%H%M%S";
+const JOURNAL_TIMELINE_DEFAULT_DAY_RANGE: u32 = 30;
+const JOURNAL_TIMELINE_MAX_DAY_RANGE: u32 = 90;
+/// Frontmatter scan cap per artifact — the role key sits in the header block.
+const ARTIFACT_ROLE_SCAN_LINES: usize = 40;
+
+/// `nara.journal.timeline` ({dayRange}): the NOW-inscription timeline across
+/// Present days. One row per session — day id, NOW timestamp (from the
+/// session-dir stamp), session key, and the artifact KINDS the session
+/// inscribed (each sibling artifact's `c_4_artifact_role`, never its body).
+/// Rows come newest-first. Protected-local — loopback peer required.
+fn journal_timeline(peer_is_loopback: bool, params: &Value) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.journal.timeline requires a loopback peer".to_owned(),
+        ));
+    }
+    let day_range = match params.get("dayRange") {
+        None | Some(Value::Null) => JOURNAL_TIMELINE_DEFAULT_DAY_RANGE,
+        Some(raw) => {
+            let parsed = raw.as_u64().and_then(|n| u32::try_from(n).ok());
+            match parsed {
+                Some(n) if (1..=JOURNAL_TIMELINE_MAX_DAY_RANGE).contains(&n) => n,
+                _ => {
+                    return Err((
+                        "nara-error".to_owned(),
+                        format!(
+                            "dayRange must be an integer 1..={JOURNAL_TIMELINE_MAX_DAY_RANGE}"
+                        ),
+                    ))
+                }
+            }
+        }
+    };
+
+    let vault_root = crate::vault::resolve_vault_root();
+    let present = vault_root.join("Empty").join("Present");
+    let today = crate::vault::paths::day_of(Utc::now());
+    let oldest = today - chrono::Duration::days(i64::from(day_range) - 1);
+
+    let mut rows: Vec<Value> = Vec::new();
+    let mut days_seen = 0u32;
+    let day_entries = std::fs::read_dir(&present)
+        .map(|it| it.flatten().collect::<Vec<_>>())
+        .unwrap_or_default();
+    for day_entry in day_entries {
+        let day_name = day_entry.file_name().to_string_lossy().into_owned();
+        let Ok(day) = chrono::NaiveDate::parse_from_str(&day_name, crate::vault::paths::DAY_ID_FORMAT)
+        else {
+            continue; // not a day folder (FLOW notes, stray files)
+        };
+        if day < oldest || day > today || !day_entry.path().is_dir() {
+            continue;
+        }
+        days_seen += 1;
+        let session_entries = std::fs::read_dir(day_entry.path())
+            .map(|it| it.flatten().collect::<Vec<_>>())
+            .unwrap_or_default();
+        for session_entry in session_entries {
+            let session_key = session_entry.file_name().to_string_lossy().into_owned();
+            let session_path = session_entry.path();
+            if !session_path.is_dir() || !session_path.join("now.md").exists() {
+                continue;
+            }
+            let Some(now_timestamp) = session_now_timestamp(&session_key) else {
+                continue; // no datetime prefix — not a session dir
+            };
+            rows.push(json!({
+                "day": day_name,
+                "nowTimestamp": now_timestamp,
+                "sessionKey": session_key,
+                "artifactKinds": session_artifact_kinds(&session_path),
+            }));
+        }
+    }
+
+    // Newest first: the datetime-prefixed session key sorts chronologically
+    // WITHIN a day; across days the day id must be compared as a date (the
+    // month-first id does not sort lexically across years).
+    rows.sort_by(|a, b| {
+        let key = |v: &Value| -> (String, String) {
+            let day = v["day"].as_str().unwrap_or_default();
+            let iso = chrono::NaiveDate::parse_from_str(day, crate::vault::paths::DAY_ID_FORMAT)
+                .map(|d| d.format("%Y-%m-%d").to_string())
+                .unwrap_or_default();
+            (iso, v["sessionKey"].as_str().unwrap_or_default().to_owned())
+        };
+        key(b).cmp(&key(a))
+    });
+
+    Ok(json!({
+        "dayRange": day_range,
+        "daysScanned": days_seen,
+        "rows": rows,
+        "privacyClass": "protected-local",
+        "authority": "epi-cli::vault::paths (Present day law) + c_4_artifact_role frontmatter",
+    }))
+}
+
+/// `{YYYYMMDD-HHmmss}` session-dir prefix → RFC3339 UTC timestamp string.
+fn session_now_timestamp(session_key: &str) -> Option<String> {
+    let stamp = session_key.get(0..15)?;
+    let parsed = chrono::NaiveDateTime::parse_from_str(stamp, SESSION_STAMP_FORMAT).ok()?;
+    // A stamp with no `-suffix` after it is a plain file name, not a session.
+    if session_key.len() > 15 && !session_key[15..].starts_with('-') {
+        return None;
+    }
+    Some(parsed.and_utc().to_rfc3339())
+}
+
+/// The DISTINCT artifact kinds a session inscribed: `now` for now.md itself,
+/// plus each sibling `.md`'s `c_4_artifact_role` (frontmatter scan, capped),
+/// `unclassified` when an artifact declares no role. Bodies are never read
+/// past the frontmatter fence.
+fn session_artifact_kinds(session_path: &Path) -> Vec<String> {
+    let mut kinds: Vec<String> = vec!["now".to_owned()];
+    let entries = std::fs::read_dir(session_path)
+        .map(|it| it.flatten().collect::<Vec<_>>())
+        .unwrap_or_default();
+    for entry in entries {
+        let name = entry.file_name().to_string_lossy().into_owned();
+        if name == "now.md" || !name.ends_with(".md") || !entry.path().is_file() {
+            continue;
+        }
+        let kind = artifact_role_of(&entry.path()).unwrap_or_else(|| "unclassified".to_owned());
+        if !kinds.contains(&kind) {
+            kinds.push(kind);
+        }
+    }
+    kinds
+}
+
+/// Read `c_4_artifact_role` out of an artifact's frontmatter block. Returns
+/// None when the file has no fence, the key is absent, or the value is empty.
+fn artifact_role_of(path: &Path) -> Option<String> {
+    let content = std::fs::read_to_string(path).ok()?;
+    let mut lines = content.lines();
+    if lines.next()?.trim() != "---" {
+        return None;
+    }
+    for line in lines.take(ARTIFACT_ROLE_SCAN_LINES) {
+        let trimmed = line.trim();
+        if trimmed == "---" {
+            break;
+        }
+        if let Some(value) = trimmed.strip_prefix("c_4_artifact_role:") {
+            let role = value.trim().trim_matches('"').trim_matches('\'').trim();
+            if !role.is_empty() {
+                return Some(role.to_owned());
+            }
+        }
+    }
+    None
 }
 
 /// `nara.pasu.consents.append` (DR-WC-M4-4): append a typed ConsentRecord to the
