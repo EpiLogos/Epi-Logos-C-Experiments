@@ -120,13 +120,24 @@ import {
     omniPanelTabForComponent,
     parseOmniPanelLayoutPreference
 } from './panes/omni/omnipanelRuntime';
-import { parseLayoutId, type LayoutId } from './ui/layoutId';
+import { LAYOUT_IDS, parseLayoutId, type LayoutId } from './ui/layoutId';
 import { deepLayoutJson, deepMainTabsetId, type DeepPaneModelId } from './ui/deepPaneSet';
 // 52.T5 — the 4+2 body: six subsystem pages + the Home grid affordance.
 import { SUBSYSTEM_PAGES, subsystemPageNodeId, type SubsystemPageId } from './ui/subsystemPages';
 import { SubsystemWorkspacePane } from './panes/SubsystemWorkspacePane';
 import { HomePane } from './panes/HomePane';
 import { registerSubsystemCommands } from './commands/subsystem';
+// 51.T51.2 — the M5-3' Frontend Studio and the data-driven pane registry it
+// reads. The registry OBSERVES this shell (the factory's render ledger + a
+// walk of the four live models); it declares no surface of its own.
+import { FrontendStudioPane } from './panes/frontendStudio/FrontendStudioPane';
+import { track51SurfaceFor } from './panes/track51Surfaces';
+import {
+    publishRegisteredPanes,
+    recordPaneRender,
+    type PaneSlotKind,
+    type RegisteredPaneMount
+} from './panes/frontendStudio/paneRegistry';
 import { readStoredLayout, writeStoredLayout } from './ui/layoutPreference';
 import { registerLayoutCommands } from './commands/layout';
 // 52.T6 — the activity-bar mode registry, finally wired: commands on the
@@ -368,6 +379,54 @@ function modelOf(models: ShellModels, face: Face, layout: LayoutId): Model {
     return face === 0 ? pair.cosmic : pair.personal;
 }
 
+/**
+ * 51.T51.2 — walk ALL FOUR live models for their mounted tabs. This is the
+ * widened form of the `activePaneSet` walk below (52.T4): that one answers
+ * "what does the ACTIVE layout mount", this one answers "which panes are
+ * registered", across every (face × layout) cell, off the models themselves.
+ * The Frontend Studio consumes it; nothing else may, because a second reader
+ * would be a second reading.
+ */
+function collectRegisteredPaneMounts(models: ShellModels): readonly RegisteredPaneMount[] {
+    const mounts: RegisteredPaneMount[] = [];
+    for (const layout of LAYOUT_IDS) {
+        for (const face of [0, 1] as const) {
+            const model = modelOf(models, face, layout);
+            model.visitNodes(node => {
+                if (node.getType() !== 'tab') {
+                    return;
+                }
+                const tab = node as TabNode;
+                const component = tab.getComponent();
+                if (!component) {
+                    return;
+                }
+                const parent = tab.getParent();
+                const slot: PaneSlotKind =
+                    parent instanceof BorderNode
+                        ? parent.getLocation() === DockLocation.RIGHT
+                            ? 'right-membrane'
+                            : parent.getLocation() === DockLocation.LEFT
+                                ? 'left'
+                                : 'other'
+                        : parent?.getType() === 'tabset'
+                            ? 'main'
+                            : 'other';
+                mounts.push({
+                    component,
+                    nodeId: tab.getId(),
+                    name: tab.getName(),
+                    face,
+                    layout,
+                    slot,
+                    selected: tab.isVisible()
+                });
+            });
+        }
+    }
+    return mounts;
+}
+
 /** Where `vault.open` docks a new Canon Studio editor when no tabset is
  *  active — the main tabset of the layout the user is actually in. */
 function mainTabsetIdFor(layout: LayoutId): string {
@@ -411,6 +470,12 @@ function syncOmniPanelSelection(model: Model): void {
 }
 
 function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
+    // 51.T51.2 — the ONE instrumentation call that makes the M5-3' Frontend
+    // Studio's "cannot drift from what actually rendered" literal rather than
+    // aspirational. The switch below stays the render dispatch (three
+    // validators AST-walk it as the live chrome registry); this records what
+    // it really did, including the `unknown pane` fallback.
+    recordPaneRender(node.getComponent() ?? '');
     const pane = (() => {
         switch (node.getComponent()) {
         case 'fileTree':
@@ -520,6 +585,11 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
             return <M3InspectorsPane />;
         case 'm5Ebm':
             return <M5EbmObservatoryPane />;
+        // 51.T51.2 — the M5-3' Frontend Studio: the sixfold IDE studio that
+        // had no tranche. It reports on THIS layout system, so it reads the
+        // registry that observes this shell, never a restatement of it.
+        case 'frontendStudio':
+            return <FrontendStudioPane />;
         // 52.T5 — the Home affordance (DR-SUBSYS-3): the same lived Now
         // surface, now carrying the `0/1` ↔ `#0-#5` subsystems-grid toggle.
         case 'personalHome':
@@ -980,6 +1050,84 @@ export function App() {
         [switchLayout, persist]
     );
 
+    // Track 51 — the entry gesture for the five specced-but-unplanned depth
+    // surfaces (51.T51.2 · .3 · .4 · .5 · .6). Same mechanism as the subsystem
+    // pages (DR-SUBSYS-1): a DYNAMIC deep-layout tab opened by an explicit
+    // command into the active face's deep main tabset, idempotent by node id,
+    // never mounted by a default model — so `LAYOUT_VERSION` does not move and
+    // no surface seizes shared state on a mount nobody asked for. Unlike a
+    // subsystem page these do NOT take single occupancy: an inspector is meant
+    // to sit beside the instrument it inspects.
+    const openDepthSurface = useCallback(
+        (surfaceId: string, tabLabel: string) => {
+            const current = modelsRef.current;
+            if (!current) {
+                return;
+            }
+            if (activeLayoutRef.current !== 'ide-deep') {
+                switchLayout('ide-deep');
+            }
+            const model = modelOf(current, faceRef.current, 'ide-deep');
+            const nodeId = `depth-surface-${surfaceId}`;
+            if (model.getNodeById(nodeId)) {
+                model.doAction(Actions.selectTab(nodeId));
+            } else {
+                const namedTabset = deepMainTabsetId(faceRef.current === 0 ? 'cosmic' : 'personal');
+                const targetTabset = model.getNodeById(namedTabset)
+                    ? namedTabset
+                    : model.getActiveTabset()?.getId();
+                if (!targetTabset) {
+                    return;
+                }
+                model.doAction(
+                    Actions.addNode(
+                        {
+                            type: 'tab',
+                            id: nodeId,
+                            name: tabLabel,
+                            component: surfaceId,
+                            enableClose: true
+                        },
+                        targetTabset,
+                        DockLocation.CENTER,
+                        -1,
+                        true
+                    )
+                );
+            }
+            persist();
+        },
+        [switchLayout, persist]
+    );
+
+    /**
+     * 51.T51.2 — republish the four-cell mount inventory to the pane registry.
+     * Called from the render body AND from every `onModelChange`, because a
+     * `doAction` (a dynamic `addNode`, a tab close, a drag) mutates the model
+     * WITHOUT re-rendering `App` — the layout re-renders, the shell does not.
+     * Publishing only on render would have made the studio silently stale
+     * exactly when a pane was added, which is the one thing it must not be.
+     */
+    const publishPaneInventory = useCallback(() => {
+        const current = modelsRef.current;
+        if (current) {
+            publishRegisteredPanes(collectRegisteredPaneMounts(current));
+        }
+    }, []);
+
+    /** Open a Track-51 surface by its declared row — label and node id come
+     *  from `panes/track51Surfaces.ts`, never from the call site. */
+    const openTrack51Surface = useCallback(
+        (surfaceId: string) => {
+            const surface = track51SurfaceFor(surfaceId);
+            if (!surface) {
+                return;
+            }
+            openDepthSurface(surface.surfaceId, surface.tabLabel);
+        },
+        [openDepthSurface]
+    );
+
     const updateM0Surface = useCallback((patch: Partial<M0SurfaceState>) => {
         const next = { ...m0SurfaceRef.current, ...patch };
         m0SurfaceRef.current = next;
@@ -1200,6 +1348,16 @@ export function App() {
             // route to the pages today — named in DR-SUBSYS-3).
             registerSubsystemCommands({
                 openWorkspace: pageId => openSubsystemWorkspace(pageId)
+            }),
+            // Track 51 — the specced-surface entries. Registered with LITERAL
+            // id/title (the command-catalog AST gate resolves only literals and
+            // its three reconciled dynamic families; a fourth dynamic register
+            // idiom would blind that gate), and routed through the ONE
+            // declaration table so the label and coordinate stay single-sourced.
+            commands.register({
+                id: 'studio.open.frontend',
+                title: "Studio: Open M5-3' Frontend Studio",
+                run: () => openTrack51Surface('frontendStudio')
             }),
             // 52.T6 — the five `leftSidebar.mode.*` commands, registered at
             // the seam the registry documented for its controller. Deep-only
@@ -1688,6 +1846,13 @@ export function App() {
             }
         });
     }
+    // 51.T51.2 — publish the four-cell mount inventory to the pane registry.
+    // Called from the render body on purpose: the registry no-ops an identical
+    // inventory and defers subscriber wake-up to a microtask, so this cannot
+    // update another component mid-render and cannot loop. Doing it here (and
+    // not in an effect) is what keeps the studio's reading exact after a
+    // dynamic `addNode`, which is a model mutation, not a state change.
+    publishRegisteredPanes(collectRegisteredPaneMounts(models));
     const layoutClaims = resolveLayoutClaims(activeLayout, component =>
         activePaneSet.has(component)
     );
@@ -1731,6 +1896,9 @@ export function App() {
                         onRenderTabSet={renderOmniBorderChrome}
                         onModelChange={model => {
                             syncOmniPanelSelection(model);
+                            // 51.T51.2 — a model action (addNode / close / drag)
+                            // does not re-render App; the registry must still see it.
+                            publishPaneInventory();
                             persist();
                         }}
                     />
@@ -1748,6 +1916,9 @@ export function App() {
                         onRenderTabSet={renderOmniBorderChrome}
                         onModelChange={model => {
                             syncOmniPanelSelection(model);
+                            // 51.T51.2 — a model action (addNode / close / drag)
+                            // does not re-render App; the registry must still see it.
+                            publishPaneInventory();
                             persist();
                         }}
                     />

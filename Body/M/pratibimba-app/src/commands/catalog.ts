@@ -227,6 +227,9 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
     { id: 'subsystem.open.m4', title: "Subsystem: Open M4' Nara page", owner: 'subsystem-pages', tranche: '52.T5' },
     { id: 'subsystem.open.m5', title: "Subsystem: Open M5' Epii IDE page", owner: 'subsystem-pages', tranche: '52.T5' },
 
+    // --- Track 51 specced-surface entries (App.tsx, over panes/track51Surfaces.ts) ---
+    { id: 'studio.open.frontend', title: "Studio: Open M5-3' Frontend Studio", owner: 'frontend-studio', tranche: '51.T51.2' },
+
     // --- src/ui/leftSidebarModes.ts (registerLeftSidebarModeCommands, 52.T6) ---
     // Data-driven over LEFT_SIDEBAR_MODES; the gate reconstructs these five
     // from the SAME registry rather than trusting the rows. Deep-only modes
