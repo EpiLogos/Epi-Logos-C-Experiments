@@ -82,7 +82,18 @@ describe('buildM3WheelSurface', () => {
         expect(surface.activeProjection?.codonClass).toBe('non-dual');
         expect(surface.activeProjection?.rotationalStateCount).toBe(7);
         expect(surface.activeProjection?.hexagramId).toBe(10);
-        expect(surface.majorArcana).toBe('pending-major-arcana-map');
+        // 24.T24.6: this payload's `mahamaya` predates the WC-M3-SA-2 mirror —
+        // the key is ABSENT, which is `pending`, not "no card".
+        expect(surface.majorArcana).toEqual({
+            kind: 'pending',
+            reason: 'pending-profile-field:mahamaya.tarotMajorArcanaCardId'
+        });
+        // …while `tarotMinorId` IS on the wire as an explicit `null`: the kernel
+        // answering "this codon is one of the 8 outside the 56-card cover".
+        expect(surface.minorArcana).toEqual({
+            kind: 'no-arcana',
+            reason: 'no-minor-arcana:outside-56-card-cover'
+        });
         expect(surface.tick12).toBe(4);
         expect(surface.degree720).toBe(415);
         expect(surface.generation).toBe(9);
@@ -290,11 +301,68 @@ describe('M3CosmicWheelRenderService', () => {
         );
     });
 
-    it('renders arcana SLOTS with the honest pending marker (no local arcana table)', () => {
+    it('leaves the arcana ring unlit and NAMES why when the card id is absent', () => {
         render(<M3CosmicWheelRenderService surface={ready()} mode="full" />);
         expect(screen.getByTestId('m3-wheel-arcana-ring').children.length).toBe(22);
         expect(screen.getByTestId('m3-wheel-arcana-pending').textContent).toContain(
-            'pending-major-arcana-map'
+            'pending-profile-field:mahamaya.tarotMajorArcanaCardId'
+        );
+        expect(
+            screen.getAllByTestId(/m3-wheel-arcana-slot-/).some(
+                slot => slot.getAttribute('data-active') === 'true'
+            )
+        ).toBe(false);
+    });
+
+    it('lights the arcana slot the bus names — 24.T24.6, no local arcana table', () => {
+        const surface = buildM3WheelSurface({
+            payload: {
+                harmonicProfile: {
+                    ...WIRE_PAYLOAD.harmonicProfile,
+                    mahamaya: {
+                        ...WIRE_PAYLOAD.harmonicProfile.mahamaya,
+                        tarotMajorArcanaCardId: 14,
+                        tarotMinorId: 30
+                    }
+                }
+            },
+            generation: 3
+        });
+        expect(surface.majorArcana).toEqual({ kind: 'card', cardId: 14 });
+        expect(surface.minorArcana).toEqual({ kind: 'card', cardId: 30 });
+
+        render(<M3CosmicWheelRenderService surface={surface} mode="full" />);
+        expect(screen.getByTestId('m3-wheel-arcana-slot-14').getAttribute('data-active')).toBe(
+            'true'
+        );
+        expect(screen.getByTestId('m3-wheel-arcana-slot-13').getAttribute('data-active')).toBe(
+            'false'
+        );
+        expect(screen.getByTestId('m3-wheel-arcana-pending').textContent).toContain(
+            'arcana ring: card 14 lit'
+        );
+    });
+
+    it('separates "STOP codon, no arcana" from "field never arrived"', () => {
+        const stopCodon = buildM3WheelSurface({
+            payload: {
+                harmonicProfile: {
+                    ...WIRE_PAYLOAD.harmonicProfile,
+                    mahamaya: {
+                        ...WIRE_PAYLOAD.harmonicProfile.mahamaya,
+                        tarotMajorArcanaCardId: null
+                    }
+                }
+            },
+            generation: 4
+        });
+        expect(stopCodon.majorArcana).toEqual({
+            kind: 'no-arcana',
+            reason: 'no-major-arcana:stop-codon'
+        });
+        render(<M3CosmicWheelRenderService surface={stopCodon} mode="full" />);
+        expect(screen.getByTestId('m3-wheel-arcana-pending').textContent).toContain(
+            'no-major-arcana:stop-codon'
         );
     });
 

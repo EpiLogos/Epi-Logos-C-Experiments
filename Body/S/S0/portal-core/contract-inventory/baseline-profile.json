@@ -15091,13 +15091,14 @@
     "m2VibrationIndex": 0,
     "m2ToM3Symbol": 0,
     "roundTripLoss": false,
-    "tarotMinorId": null,
+    "tarotMinorId": 0,
+    "tarotMajorArcanaCardId": 14,
     "tarotShadowCodon": null,
     "aminoAcidCode": null,
     "datasetLutState": "pending-dataset-lut",
     "transcriptionState": "round-trip-anchor",
     "frameBreathingRole": "sq1-boundary-totality",
-    "m3CodecProvenance": "portal-core::mahamaya address law; tarot/amino LUTs pending"
+    "m3CodecProvenance": "portal-core::mahamaya address law; tarot ids from m3_transcription_bridge (kernel m3.c parity); amino LUT pending"
   },
   "mahamaya": {
     "mahamayaAddress64": 0,
@@ -15120,13 +15121,14 @@
     "m2VibrationIndex": 0,
     "m2ToM3Symbol": 0,
     "roundTripLoss": false,
-    "tarotMinorId": null,
+    "tarotMinorId": 0,
+    "tarotMajorArcanaCardId": 14,
     "tarotShadowCodon": null,
     "aminoAcidCode": null,
     "datasetLutState": "pending-dataset-lut",
     "transcriptionState": "round-trip-anchor",
     "frameBreathingRole": "sq1-boundary-totality",
-    "m3CodecProvenance": "portal-core::mahamaya address law; tarot/amino LUTs pending"
+    "m3CodecProvenance": "portal-core::mahamaya address law; tarot ids from m3_transcription_bridge (kernel m3.c parity); amino LUT pending"
   },
   "codonRotationProjection": {
     "lens": 0,

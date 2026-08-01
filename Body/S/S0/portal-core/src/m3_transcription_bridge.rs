@@ -609,7 +609,15 @@ pub fn major_arcana(codon: Codon6Bit) -> Option<MajorArcanaCard> {
     })
 }
 
-fn minor_arcana(card_id: u8) -> Option<MinorArcanaCard> {
+/// Name a minor-arcana card id (0..=55) as `{ suit, rank }`.
+///
+/// The decomposition IS the deck's law: `suit = card_id / 14`, `rank =
+/// card_id % 14`, with the suit ordering fixed by `suit_name` (Cups · Wands ·
+/// Pentacles · Swords — the A/T/C/G family order the kernel's
+/// `M3_TAROT_CODON_MAP[4][16]` is written in). Public per 24.T24.6 so the M3'
+/// tarot wheel's `{ suit, rank }` consuming shape is checkable against the
+/// substrate instead of resting on a renderer-local deck table.
+pub fn minor_arcana(card_id: u8) -> Option<MinorArcanaCard> {
     if card_id >= 56 {
         return None;
     }
@@ -635,7 +643,15 @@ fn suit_element(card_id: u8) -> Option<Element> {
     }
 }
 
-fn minor_arcana_id_from_codon(codon: Codon6Bit) -> Option<u8> {
+/// Codon → minor-arcana card id (0..=55) over the kernel's 56-card exact cover
+/// (`m3.h M3_MINOR_ARCANA_COUNT = 56`, `M3_TAROT_CODON_MAP`). `None` means this
+/// codon is not a card's PRIMARY codon — the `56 + 8` exact-cover remainder
+/// ([[M3'-SPEC]] §8.7), an answer, not an absence.
+///
+/// Public per 24.T24.6: the clock projection (`kernel::projections::binary`)
+/// mirrors this onto `mahamaya.tarotMinorId` so the M3' tarot wheel reads a
+/// bussed card id instead of holding a renderer-local deck table.
+pub fn minor_arcana_id_from_codon(codon: Codon6Bit) -> Option<u8> {
     const PRIMARY_CODONS_BY_CARD: [u8; 56] = [
         0, 3, 1, 10, 7, 12, 13, 15, 5, 4, 8, 11, 2, 9, 21, 20, 22, 31, 18, 24, 26, 16, 25, 17, 19,
         29, 27, 23, 42, 43, 41, 32, 46, 47, 45, 39, 37, 38, 40, 44, 63, 60, 62, 49, 56, 50, 48, 52,

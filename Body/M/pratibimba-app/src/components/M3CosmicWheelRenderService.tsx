@@ -34,6 +34,12 @@ import {
     CosmicClockRenderService,
     type CosmicClockMode
 } from './CosmicClockRenderService';
+import {
+    readArcanaState,
+    TAROT_MAJOR_COUNT,
+    TAROT_MINOR_COUNT,
+    type M3ArcanaState
+} from './M3TarotWheel';
 
 export interface M3WheelProjection {
     readonly surfaceIndex: number | null;
@@ -55,9 +61,14 @@ export interface M3WheelProjection {
 export interface M3WheelSurface {
     readonly readiness: { readonly surfaceReady: boolean; readonly reason: string | null };
     readonly activeProjection: M3WheelProjection | null;
-    /** WC-M3-SA-2: the codon → Major-Arcana card id is kernel-owned and not
-     *  yet bussed; the inner ring renders slots + this pending marker. */
-    readonly majorArcana: 'pending-major-arcana-map';
+    /** WC-M3-SA-2 (24.T24.6): the codon → Major-Arcana card id, mirrored onto
+     *  the bus off the kernel authority `m3_major_arcana_from_codon`. Three
+     *  distinct answers — a card, "this codon is a STOP codon so it carries no
+     *  arcana", or "the field never crossed the wire". */
+    readonly majorArcana: M3ArcanaState;
+    /** The codon's minor-arcana card id (`mahamaya.tarotMinorId`) over the
+     *  kernel's 56-card exact cover. `no-arcana` is the `56 + 8` remainder. */
+    readonly minorArcana: M3ArcanaState;
     readonly tick: number | null;
     readonly tick12: number | null;
     readonly degree720: number | null;
@@ -247,7 +258,16 @@ export function buildM3WheelSurface(input: {
                       : null
         }),
         activeProjection,
-        majorArcana: 'pending-major-arcana-map' as const,
+        majorArcana: readArcanaState(mahamaya?.tarotMajorArcanaCardId, {
+            max: TAROT_MAJOR_COUNT,
+            pendingReason: 'pending-profile-field:mahamaya.tarotMajorArcanaCardId',
+            noArcanaReason: 'no-major-arcana:stop-codon'
+        }),
+        minorArcana: readArcanaState(mahamaya?.tarotMinorId, {
+            max: TAROT_MINOR_COUNT,
+            pendingReason: 'pending-profile-field:mahamaya.tarotMinorId',
+            noArcanaReason: 'no-minor-arcana:outside-56-card-cover'
+        }),
         tick: num(root.tick),
         tick12: num(root.tick12),
         degree720: num(root.degree720),
@@ -407,23 +427,35 @@ export function M3CosmicWheelRenderService({
         );
     }
 
+    // 24.T24.6 — the arcana ring is no longer "slots only". The active card
+    // lights off the bussed `mahamaya.tarotMajorArcanaCardId`; when the bus
+    // answers "no arcana" (STOP codon) or the field is absent, the ring stays
+    // unlit and the caption says WHICH of the two it is.
+    const activeArcanaCard =
+        surface.majorArcana.kind === 'card' ? surface.majorArcana.cardId : null;
     const arcanaSlots = [];
     if (showArcana) {
-        for (let card = 0; card < 22; card++) {
-            const angle = -Math.PI / 2 + (card / 22) * Math.PI * 2;
+        for (let card = 0; card < TAROT_MAJOR_COUNT; card++) {
+            const angle = -Math.PI / 2 + (card / TAROT_MAJOR_COUNT) * Math.PI * 2;
+            const active = card === activeArcanaCard;
             arcanaSlots.push(
                 <circle
                     key={card}
                     data-testid={`m3-wheel-arcana-slot-${card}`}
+                    data-active={active ? 'true' : 'false'}
                     cx={c + Math.cos(angle) * arcanaR}
                     cy={c + Math.sin(angle) * arcanaR}
-                    r={size * 0.014}
-                    fill="none"
-                    stroke={hex(CL42_PALETTE.implicateIndigo)}
+                    r={active ? size * 0.022 : size * 0.014}
+                    fill={active ? ringLit : 'none'}
+                    stroke={active ? ringLit : hex(CL42_PALETTE.implicateIndigo)}
                     strokeWidth={1}
-                    opacity={0.7}
+                    opacity={active ? 1 : 0.7}
                 >
-                    <title>{`Major Arcana slot ${card + 1} · ${surface.majorArcana}`}</title>
+                    <title>
+                        {active
+                            ? `Major Arcana ${card} · active`
+                            : `Major Arcana slot ${card + 1}`}
+                    </title>
                 </circle>
             );
         }
@@ -557,8 +589,21 @@ export function M3CosmicWheelRenderService({
                 </div>
                 {mode === 'full' ? (
                     <figcaption data-testid="m3-wheel-arcana-pending">
-                        <ProvenanceBadge state="pending" reason={surface.majorArcana} />
-                        arcana ring: slots only — {surface.majorArcana} (WC-M3-SA-2)
+                        {surface.majorArcana.kind === 'card' ? (
+                            <>arcana ring: card {surface.majorArcana.cardId} lit (WC-M3-SA-2)</>
+                        ) : (
+                            <>
+                                <ProvenanceBadge
+                                    state={
+                                        surface.majorArcana.kind === 'no-arcana'
+                                            ? 'canonical_absent'
+                                            : 'pending'
+                                    }
+                                    reason={surface.majorArcana.reason}
+                                />
+                                arcana ring: unlit — {surface.majorArcana.reason} (WC-M3-SA-2)
+                            </>
+                        )}
                         {mode === 'full' && surface.quintessenceState === 'pending-charge-quaternion' ? (
                             <span data-testid="m3-wheel-quintessence-pending">
                                 {' '}

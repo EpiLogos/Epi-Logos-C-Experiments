@@ -24,6 +24,11 @@ import {
     M3CosmicWheelRenderService
 } from '../components/M3CosmicWheelRenderService';
 import { M3PentadicRelationInspector } from '../components/M3PentadicRelationInspector';
+import {
+    M3TarotWheel,
+    tarotCardKeyString,
+    type TarotCardKey
+} from '../components/M3TarotWheel';
 import { M3TranscriptionEngine } from '../components/M3TranscriptionEngine';
 import { buildCouplingFlowOverlay } from '../engine/couplingFlowOverlay';
 import { M3HexagramBrowser } from './M3HexagramBrowser';
@@ -85,6 +90,8 @@ function M3InspectorsSurface() {
     const [selectedLensId, setSelectedLensId] = useState(16);
     const [showThirdSpanda, setShowThirdSpanda] = useState(false);
     const [showHexagramBrowser, setShowHexagramBrowser] = useState(false);
+    const [showTarotWheel, setShowTarotWheel] = useState(false);
+    const [tarotTurn, setTarotTurn] = useState<TarotTurnState | null>(null);
     const [functionalLens, setFunctionalLens] = useState<LensCodonBinaryProjection | null>(null);
     const [functionalLensError, setFunctionalLensError] = useState<string | null>(null);
     const [ichingReceipt, setIChingReceipt] = useState<IChingCastRibbonReceipt | null>(null);
@@ -156,6 +163,25 @@ function M3InspectorsSurface() {
             }
             return next;
         });
+    };
+
+    // 24.T24.6 — "turning the card IS changing the mode": every turn goes out
+    // over `s2.codon.scalar_ref.read`. The gateway's tarot arm currently answers
+    // an explicit `resolved: false` naming its owning tranche; that answer is
+    // rendered verbatim rather than dressed up as a resolution or swallowed.
+    const turnTarotCard = (card: TarotCardKey) => {
+        const scalarRef = tarotCardKeyString(card);
+        setTarotTurn({ card, status: 'pending', detail: `reading ${scalarRef}` });
+        void services.tarotDecan
+            .resolve(scalarRef)
+            .then(receipt => setTarotTurn(readTarotTurn(card, receipt.artifact)))
+            .catch(cause =>
+                setTarotTurn({
+                    card,
+                    status: 'error',
+                    detail: cause instanceof Error ? cause.message : String(cause)
+                })
+            );
     };
 
     const castIChing = () => {
@@ -284,6 +310,15 @@ function M3InspectorsSurface() {
                 >
                     64-hexagram browser
                 </button>
+                <button
+                    type="button"
+                    className="instrument-toggle"
+                    data-testid="m3-summon-tarot-wheel"
+                    aria-pressed={showTarotWheel}
+                    onClick={() => setShowTarotWheel(v => !v)}
+                >
+                    Tarot wheel 22+56
+                </button>
             </div>
 
             {showThirdSpanda ? (
@@ -293,6 +328,14 @@ function M3InspectorsSurface() {
                 />
             ) : null}
             {showHexagramBrowser ? <M3HexagramBrowser /> : null}
+            {showTarotWheel ? (
+                <M3TarotWheel
+                    majorArcana={wheelSurface.majorArcana}
+                    minorArcana={wheelSurface.minorArcana}
+                    onTurn={turnTarotCard}
+                    turnState={tarotTurn}
+                />
+            ) : null}
 
             <M3ReadinessBoundary
                 bindingKey="m3.functional-lens"
@@ -411,6 +454,38 @@ function M3InspectorsSurface() {
         </M3ReadinessBoundary>
         </M3ReadinessProvider>
     );
+}
+
+interface TarotTurnState {
+    readonly card: TarotCardKey;
+    readonly status: 'pending' | 'resolved' | 'unresolved' | 'error';
+    readonly detail: string;
+}
+
+/**
+ * Read a `s2.codon.scalar_ref.read` artifact into the turn readout.
+ *
+ * The method answers one of two honest shapes: `resolved: true` with an entry,
+ * or `resolved: false` with a `reason` and the `ownerTranche` that owes the
+ * producer. Both are rendered as themselves — an unresolved turn is a real
+ * answer about the substrate, and flattening it into a generic error would hide
+ * which tranche owns the gap.
+ */
+function readTarotTurn(card: TarotCardKey, artifact: unknown): TarotTurnState {
+    const record =
+        artifact !== null && typeof artifact === 'object' && !Array.isArray(artifact)
+            ? (artifact as Record<string, unknown>)
+            : null;
+    const inner =
+        record?.detail !== null && typeof record?.detail === 'object' && !Array.isArray(record.detail)
+            ? (record.detail as Record<string, unknown>)
+            : record;
+    if (inner?.resolved === true) {
+        return { card, status: 'resolved', detail: 'resolved' };
+    }
+    const reason = typeof inner?.reason === 'string' ? inner.reason : 'unresolved';
+    const owner = typeof inner?.ownerTranche === 'string' ? ` (owner ${inner.ownerTranche})` : '';
+    return { card, status: 'unresolved', detail: `${reason}${owner}` };
 }
 
 function groundAddress(projection: LensCodonBinaryProjection): string {
