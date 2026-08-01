@@ -66,6 +66,14 @@ export const TRACK_51_SURFACES: readonly Track51Surface[] = Object.freeze([
         commandTitle: "M3: Open the M3-5' double-torus world clock",
         coordinate: "M3-5'",
         tranche: '51.T51.5'
+    }),
+    Object.freeze({
+        surfaceId: 'dreamJournal',
+        tabLabel: 'Dream Journal',
+        commandId: 'm4.open.dreamJournal',
+        commandTitle: 'M4: Open the Dream Journal',
+        coordinate: "M4'",
+        tranche: '51.T51.6'
     })
 ]);
 

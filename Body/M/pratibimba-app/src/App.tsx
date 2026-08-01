@@ -136,6 +136,7 @@ import { M1TraversalTimelinePane } from './panes/m1Traversal/M1TraversalTimeline
 import { startTraversalRecorder } from './panes/m1Traversal/traversalTimeline';
 import { M2MeaningPacketInspectorPane } from './panes/m2MeaningPacket/M2MeaningPacketInspectorPane';
 import { M3DoubleTorusPane } from './panes/m3DoubleTorus/M3DoubleTorusPane';
+import { DreamJournalPane } from './panes/dreamJournal/DreamJournalPane';
 import {
     publishRegisteredPanes,
     recordPaneRender,
@@ -608,6 +609,11 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
         // deep layout; §8.13 is its surface law.
         case 'm3DoubleTorus':
             return <M3DoubleTorusPane />;
+        // 51.T51.6 — the M4' Dream Journal, over the SAME protected local flow
+        // substrate as Daily Note / Oracle / Highlight. Private local flow: the
+        // body reaches the vault file and nothing else.
+        case 'dreamJournal':
+            return <DreamJournalPane />;
         // 52.T5 — the Home affordance (DR-SUBSYS-3): the same lived Now
         // surface, now carrying the `0/1` ↔ `#0-#5` subsystems-grid toggle.
         case 'personalHome':
@@ -1399,6 +1405,11 @@ export function App() {
                 id: 'm3.open.doubleTorus',
                 title: "M3: Open the M3-5' double-torus world clock",
                 run: () => openTrack51Surface('m3DoubleTorus')
+            }),
+            commands.register({
+                id: 'm4.open.dreamJournal',
+                title: 'M4: Open the Dream Journal',
+                run: () => openTrack51Surface('dreamJournal')
             }),
             // 52.T6 — the five `leftSidebar.mode.*` commands, registered at
             // the seam the registry documented for its controller. Deep-only
