@@ -94,17 +94,31 @@ export function registerGnosisTools(api: ExtensionAPI) {
   api.registerTool({
     name: "aletheia_gnosis_query",
     label: "Aletheia Gnosis Query",
-    description: "Hybrid retrieval from Gnosis (vector + graph + Redis RRF fusion). Returns relevant chunks.",
+    description:
+      "Retrieval from Gnosis. Without `notebook`: hybrid RAG over the LightRAG/Neo4j gnostic store " +
+      "(vector + graph + RRF). With `notebook`: scoped retrieval over that notebook's source pool in " +
+      "the local gnosis store — where session pools written by nous_disclose live.",
     parameters: Type.Object({
       query: Type.String(),
-      // 12.T12.13 finding D3: `notebook` was declared here and dropped on the
-      // floor — an agent that set it got no error and no effect. It is REMOVED
-      // rather than plumbed, because notebooks are a registry (name, coordinate,
-      // documents) and NOT a retrieval partition: nothing in LightRAG scopes a
-      // query by notebook and no chunk carries one. Declaring a filter the
-      // substrate cannot honour is the defect; making it real needs chunk-level
-      // tagging plus a retrieval filter, which is unbuilt. Use `coordinate`,
-      // which is genuinely carried into the retrieval.
+      // 12.T12.13 finding D3, CORRECTED 2026-08-01.
+      //
+      // `notebook` was declared here and dropped on the floor. The first fix
+      // REMOVED it on the false premise that "notebooks are a registry, not a
+      // retrieval partition". That was wrong: notebooks are runtime SOURCE
+      // POOLS, session-rooted, operated via psyche -> nous. `nous_disclose`
+      // creates `khora-session-<session_id>` and ingests the curated context
+      // package into it (`--source-type SessionContext`), and `query_local`
+      // filters retrieval by notebook (`SourceSelection.notebook`,
+      // `GnosisQueryHit.notebook`). Retrieval over a notebook is very much a
+      // thing — it is THE thing session pools exist for.
+      //
+      // What is true is narrower: the two stores are not the same store.
+      // Notebook scoping is implemented in the LOCAL gnosis store, and is not
+      // wired through the LightRAG/Neo4j path that `query-gnostic` uses. So a
+      // notebook query routes to the store that actually implements it.
+      notebook: Type.Optional(
+        Type.String({ description: "Scope retrieval to this notebook's source pool (local gnosis store)" }),
+      ),
       top_k: Type.Optional(
         Type.Integer({ description: "Bound how many retrieved items the mode considers", minimum: 1 }),
       ),
@@ -126,9 +140,17 @@ export function registerGnosisTools(api: ExtensionAPI) {
         : params.query;
       const projection = params.resonance72 === false ? null : readLiveResonance72();
       const question = conditionQuestionOnResonance72(coordinateScoped, projection);
-      const args = ["techne", "gnosis", "query-gnostic", question, "--mode", "hybrid"];
-      // 12.T12.13 finding D3: `top_k` reaches LightRAG's QueryParam now instead
-      // of being declared and discarded.
+
+      // A notebook names a source pool in the LOCAL gnosis store, so route
+      // there — that is the store whose retrieval actually filters by notebook.
+      // Sending it to `query-gnostic` would search a corpus the notebook does
+      // not partition, which is how the parameter came to do nothing.
+      const args = params.notebook
+        ? ["techne", "gnosis", "query", question, "--notebook", String(params.notebook)]
+        : ["techne", "gnosis", "query-gnostic", question, "--mode", "hybrid"];
+      // 12.T12.13 finding D3: `top_k` is carried on both routes — LightRAG's
+      // QueryParam on the gnostic path, the local scorer's bound on the other —
+      // instead of being declared and discarded.
       if (params.top_k !== undefined && params.top_k !== null) {
         args.push("--top-k", String(params.top_k));
       }
