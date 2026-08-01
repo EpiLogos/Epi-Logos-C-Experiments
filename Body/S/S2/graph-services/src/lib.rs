@@ -26,11 +26,11 @@ pub mod link_enforcement;
 pub mod meta;
 pub mod ontology;
 pub mod pointers;
-pub mod row_projection;
 pub mod q_articulation;
 pub mod relationship_manager;
 pub mod retrieval;
 mod retrieval_query;
+pub mod row_projection;
 /// The `s2.*` / `s2'.*` gateway handlers, resident at their own coordinate
 /// (Track 53). Registered into an `epi_kernel_contract::MethodRegistry` by the
 /// composition root; S3 routes to them without importing this crate.
@@ -73,7 +73,10 @@ pub use doctor::{
     PrivacyProjectionReadiness, ProcedureReadiness, RedisStackStatus, SchemaReadiness,
     SemanticCacheStatus, ServiceStatus,
 };
-pub use embeddings::{EmbeddingConfig, GeminiEmbeddingClient};
+pub use embeddings::{
+    check_write_width, ensure_index_accepts_writes, live_index_width, EmbeddingConfig,
+    GeminiEmbeddingClient, IndexWidth, IndexWidthSource, EMBED_DIMS_ENV, EMBED_DIMS_ENV_ALIAS,
+};
 pub use gds::{
     algorithm_descriptors, blocked_overlay_payload, gds_procedure_count, option1_projection_plan,
     GdsAlgorithmDescriptor, GdsOverlayNode, GdsOverlayPayload, GdsOverlayRequest,

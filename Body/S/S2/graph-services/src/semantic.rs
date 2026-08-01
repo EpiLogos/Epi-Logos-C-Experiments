@@ -278,6 +278,15 @@ pub async fn refresh_coordinate_embedding(
     embedder: &GeminiEmbeddingClient,
     embedding_version: &str,
 ) -> Result<SemanticDocument, String> {
+    // The write/index boundary. `GEMINI_EMBED_DIMS` is a matryoshka *request*
+    // knob — 1536 and 768 stay generatable on purpose — but the vector index
+    // below has ONE width, and a vector of any other width would be stored on
+    // the node yet silently excluded from the index. Asked here rather than
+    // after `embed` only so a refusal does not first burn a paid API call; the
+    // contract it enforces is the `SET n.c_5_embedding` a few lines down. See
+    // `embeddings`' module header.
+    crate::embeddings::ensure_index_accepts_writes(client, embedder).await?;
+
     let doc = build_semantic_document(client, coordinate).await?;
     let embedding = embedder.embed(&doc.text).await?;
     let embedding: Vec<f64> = embedding.into_iter().map(f64::from).collect();
