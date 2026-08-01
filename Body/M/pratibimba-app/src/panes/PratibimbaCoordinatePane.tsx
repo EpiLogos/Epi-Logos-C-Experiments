@@ -24,6 +24,7 @@ import type { GatewayClient } from '../bridge/gatewayClient';
 import { useProvenanceStore, useTickStore } from '../state/stores';
 import { PrivacyClassBadge } from '../ui/PrivacyClassBadge';
 import { enforceHumanGate } from './m5ReviewGate';
+import { M4BeingPatternPerspectiveCard } from './beingPattern/M4BeingPatternPerspectiveCard';
 import {
     CONSENT_ACTIONS,
     CONSENT_SCOPES,
@@ -446,6 +447,11 @@ export function PratibimbaCoordinatePane() {
             <PersonalHandlePanel />
             <ConsentEditorPanel client={client} />
             <ProposalsPanel client={client} />
+            {/* 25.T25.22 — the being-pattern READ (DR-WC-M4-6): PASU
+                continuity is this pane's law, so the perspective card nests
+                here rather than costing the strip an eleventh tab; the M4'
+                subsystem page reaches it through this pane's stratum mirror. */}
+            <M4BeingPatternPerspectiveCard />
         </div>
     );
 }

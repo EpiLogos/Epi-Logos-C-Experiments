@@ -181,6 +181,12 @@ export const SPEC_ASSIGNED_SURFACES: readonly PrivacySurface[] = Object.freeze([
         warrant: `${SPEC}:189 — "View id: \`m4.nara.pratibimbaCoordinate\` (new). Privacy chrome: \`mext-privacy-protected-local-handle-only\`"`
     },
     {
+        file: 'panes/beingPattern/M4BeingPatternPerspectiveCard.tsx',
+        privacyClass: 'protected_local_handle_only',
+        tranche: '25.22',
+        warrant: `${SPEC}:315 — "View id: \`m4.nara.beingPatternPerspective\` (new). Privacy chrome: \`mext-privacy-protected-local-handle-only\`"`
+    },
+    {
         file: 'components/TimeAxisSwitcher.tsx',
         privacyClass: 'protected_local',
         tranche: '25.17',

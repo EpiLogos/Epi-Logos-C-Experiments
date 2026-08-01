@@ -1044,28 +1044,35 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         frozenExport: 'M4BeingPatternPerspectiveCard',
         tranche: '25.T25.22',
         landedBy: null,
-        carrier: null,
-        testid: null,
-        mount: { kind: 'absent' },
-        layoutLaw: null,
+        carrier: {
+            file: 'panes/beingPattern/M4BeingPatternPerspectiveCard.tsx',
+            symbol: 'M4BeingPatternPerspectiveCard'
+        },
+        testid: 'being-pattern-perspective',
+        mount: {
+            kind: 'nested-section',
+            hostComponent: 'pratibimbaCoordinate',
+            note: 'DR-WC-M4-6: PASU continuity is the personal-coordinate pane’s law, so the being-pattern READ nests there rather than costing the strip an eleventh tab; the M4′ subsystem page reaches it through the same pane’s workspace mirror (52.T5). The card reads the LIVE CCT-21 producer — `s3′.being_pattern.subscribe` (`Body/S/S3/gateway/src/being_pattern.rs`, registered in `S3_METHODS` since 373709f0, live-probe `exists: true`) — preferring the 18.10 `pasuBeingPattern` handle on the profile tick when the heartbeat attaches one. It never calls `observe`, because `observe` requires the CALLER to supply `perspectiveRole` and `monopolyOperator`, and authoring the reading is exactly what this surface must not do; an empty roster renders the producer’s own "no entity observed yet" sentence rather than a defaulted reading. The `ActualisingOne` gate opens a candidate through the emit-review-only arm `s3′.being_pattern.review_candidate` (no S2 canon write) and then routes to the Epii review fold — accepting is structurally impossible here.'
+        },
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
         warrant: `${SPEC}:315 — "View id: \`m4.nara.beingPatternPerspective\` (new)"`,
-        currentStateSelector: null,
-        selectionHandler: null,
-        evidenceSerializer: null,
-        gap: {
-            kind: 'substrate-dark',
-            ownerTranche: '25.T25.22',
-            compositionBlocker: null,
-            evidence:
-                'The being-pattern gateway methods are declared but answer absent, so there is no projection to read even if a pane existed. Building a face over a dark producer would render defaults and call them a reading.',
-            citations: [
-                { file: 'App.tsx', anchor: 'beingPatternPerspective', mustBeAbsent: true },
-                { file: 'commands/crossLayoutIntent.ts', anchor: 'beingPattern', mustBeAbsent: true }
-            ],
-        },
+        currentStateSelector: selector('m4.nara.beingPatternPerspective', 'tick-store', 'useTickStore', [
+            'generation',
+            'profile'
+        ]),
+        selectionHandler: unrouted(
+            'm4.nara.beingPatternPerspective',
+            'A protected-local READ of how the entity is being read — a selection never travels INTO it, so no intent target is registered. Its only outward routes are the S3′ emit-review-only candidate arm and the review fold (`omnipanel.openReview`) on the ActualisingOne review-gate, which are a method call and a command, not selections.'
+        ),
+        evidenceSerializer: evidence(
+            'm4.nara.beingPatternPerspective',
+            'protected_local_handle_only',
+            'data-seam'
+        ),
+        gap: null,
         disposition: null
     },
     {

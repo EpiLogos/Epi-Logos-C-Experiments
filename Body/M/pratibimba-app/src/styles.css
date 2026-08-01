@@ -9137,3 +9137,120 @@ button.tool-stream-timerange.active {
     font-size: var(--type-micro);
     margin-bottom: 0.3rem;
 }
+
+/* ── 25.T25.22: PASU being-pattern perspective card ─────────────────────── */
+
+.being-pattern-perspective {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    border-top: 1px solid var(--hairline);
+}
+
+.being-pattern-dial,
+.being-perspective-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.being-dial-stop,
+.being-perspective-stop {
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 0.1rem 0.45rem;
+    font-size: var(--type-micro);
+    color: var(--ink-dim);
+}
+
+.being-dial-stop[aria-current='true'],
+.being-perspective-stop[aria-current='true'] {
+    color: inherit;
+    border-color: currentColor;
+}
+
+.being-pattern-dial-reading {
+    font-size: var(--type-micro);
+}
+
+.being-family-chip {
+    border: 1px dashed var(--hairline);
+    border-radius: 4px;
+    padding: 0.1rem 0.45rem;
+    font-size: var(--type-micro);
+}
+
+.being-pattern-handles {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.15rem 0.6rem;
+    font-size: var(--type-micro);
+    margin: 0;
+}
+
+.being-pattern-handles dt {
+    color: var(--ink-dim);
+}
+
+.being-pattern-handles dd {
+    margin: 0;
+    font-family: monospace;
+}
+
+.being-entity-roster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.being-entity-stop {
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 0.1rem 0.45rem;
+    font-size: var(--type-micro);
+    background: none;
+    color: var(--ink-dim);
+    cursor: pointer;
+}
+
+.being-entity-stop[aria-current='true'] {
+    color: inherit;
+    border-color: currentColor;
+}
+
+.being-relation-edges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--type-micro);
+    font-family: monospace;
+}
+
+.being-review-risk {
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 0.5rem 0.7rem;
+    font-size: var(--type-micro);
+}
+
+.being-review-risk button {
+    margin-top: 0.35rem;
+    margin-right: 0.35rem;
+}
+
+.being-review-emission {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.15rem 0.6rem;
+    margin: 0.4rem 0 0;
+}
+
+.being-review-emission dt {
+    color: var(--ink-dim);
+}
+
+.being-review-emission dd {
+    margin: 0;
+    font-family: monospace;
+}

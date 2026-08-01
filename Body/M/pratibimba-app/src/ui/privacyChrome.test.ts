@@ -138,7 +138,8 @@ describe('25.T25.18 — every Wave-C surface declares its tint at mount', () => 
             'panes/OraclePane.tsx',
             'panes/PasuWizardPane.tsx',
             'panes/PratibimbaCoordinatePane.tsx',
-            'panes/TransformContainersPane.tsx'
+            'panes/TransformContainersPane.tsx',
+            'panes/beingPattern/M4BeingPatternPerspectiveCard.tsx'
         ]);
         for (const surface of SPEC_ASSIGNED_SURFACES) {
             expect(surface.warrant, `${surface.file} must quote its assigning spec line`).toMatch(
