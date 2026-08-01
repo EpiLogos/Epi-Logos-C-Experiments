@@ -60,7 +60,11 @@ export function registerGnosisTools(api: ExtensionAPI) {
     description: "Ingest a document into the Gnosis RAG pipeline (RAG-Anything/LightRAG/MinerU-oriented parse -> chunk -> 3072-dim embed -> Neo4j).",
     parameters: Type.Object({
       path: Type.String({ description: "Filesystem path to document" }),
-      notebook: Type.Optional(Type.String({ description: "Target Gnosis notebook name" })),
+      // 12.T12.13 finding D3: this pushed `--notebook` at a CLI arm that did not
+      // accept the flag, so clap refused the invocation and the ingest FAILED
+      // whenever it was set. The arm accepts it now and records the document
+      // against the notebook registry — an association, not retrieval scoping.
+      notebook: Type.Optional(Type.String({ description: "Record the document against this Gnosis notebook" })),
       // 12.T12.13: the edge the ingest path actually mints is MAPS_TO_COORDINATE
       // (CoordinateEnricher.assign_direct, run over the ingested nodes whenever a
       // coordinate is supplied). RELATES_TO_COORDINATE is prose only.
@@ -93,8 +97,17 @@ export function registerGnosisTools(api: ExtensionAPI) {
     description: "Hybrid retrieval from Gnosis (vector + graph + Redis RRF fusion). Returns relevant chunks.",
     parameters: Type.Object({
       query: Type.String(),
-      notebook: Type.Optional(Type.String({ description: "Notebook to query" })),
-      top_k: Type.Optional(Type.Integer({ default: 5 })),
+      // 12.T12.13 finding D3: `notebook` was declared here and dropped on the
+      // floor — an agent that set it got no error and no effect. It is REMOVED
+      // rather than plumbed, because notebooks are a registry (name, coordinate,
+      // documents) and NOT a retrieval partition: nothing in LightRAG scopes a
+      // query by notebook and no chunk carries one. Declaring a filter the
+      // substrate cannot honour is the defect; making it real needs chunk-level
+      // tagging plus a retrieval filter, which is unbuilt. Use `coordinate`,
+      // which is genuinely carried into the retrieval.
+      top_k: Type.Optional(
+        Type.Integer({ description: "Bound how many retrieved items the mode considers", minimum: 1 }),
+      ),
       coordinate: Type.Optional(Type.String({ description: "Filter by coordinate context" })),
       // 12.T12.13 clause (c): condition retrieval on the live 72-fold harmonic
       // address. Defaults ON so the seam is live rather than opt-in-and-unused,
@@ -114,6 +127,11 @@ export function registerGnosisTools(api: ExtensionAPI) {
       const projection = params.resonance72 === false ? null : readLiveResonance72();
       const question = conditionQuestionOnResonance72(coordinateScoped, projection);
       const args = ["techne", "gnosis", "query-gnostic", question, "--mode", "hybrid"];
+      // 12.T12.13 finding D3: `top_k` reaches LightRAG's QueryParam now instead
+      // of being declared and discarded.
+      if (params.top_k !== undefined && params.top_k !== null) {
+        args.push("--top-k", String(params.top_k));
+      }
       const result = spawnSync("epi", args, { encoding: "utf8", timeout: 30_000 });
       if (result.status !== 0) {
         return {

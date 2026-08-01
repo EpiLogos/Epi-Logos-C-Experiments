@@ -43,12 +43,26 @@ pub enum GnosisCmd {
         coordinate: Option<String>,
         #[arg(long)]
         family: Option<String>,
+        /// Record the ingested document against a Gnosis notebook.
+        ///
+        /// 12.T12.13 finding D3: `aletheia_gnosis_ingest` has always pushed
+        /// `--notebook <name>`, and this arm did not accept it — so clap
+        /// refused the whole invocation and the ingest FAILED rather than
+        /// silently ignoring the parameter.
+        #[arg(long)]
+        notebook: Option<String>,
     },
     /// Query the gnostic namespace via the Python epi-gnostic CLI
     QueryGnostic {
         question: String,
         #[arg(long)]
         mode: Option<String>,
+        /// Bound how many retrieved items the mode considers (LightRAG `top_k`).
+        ///
+        /// 12.T12.13 finding D3: declared by `aletheia_gnosis_query` and
+        /// dropped on the floor — no error, no effect.
+        #[arg(long)]
+        top_k: Option<u32>,
     },
     /// Enrich a known entity via the Python epi-gnostic CLI
     Enrich {
@@ -208,10 +222,19 @@ pub fn dispatch(cmd: &GnosisCmd) -> Result<String, String> {
             source,
             coordinate,
             family,
-        } => ingest::ingest_gnostic(&config, source, coordinate.as_deref(), family.as_deref()),
-        GnosisCmd::QueryGnostic { question, mode } => {
-            query::query_gnostic(&config, question, mode.as_deref())
-        }
+            notebook,
+        } => ingest::ingest_gnostic(
+            &config,
+            source,
+            coordinate.as_deref(),
+            family.as_deref(),
+            notebook.as_deref(),
+        ),
+        GnosisCmd::QueryGnostic {
+            question,
+            mode,
+            top_k,
+        } => query::query_gnostic(&config, question, mode.as_deref(), *top_k),
         // 12.T12.13 clause (b): the cross-namespace `MAPS_TO_COORDINATE` edge is
         // minted by `CoordinateEnricher.assign_direct`, reachable only via the
         // epi-gnostic `enrich` subcommand. This arm used to call

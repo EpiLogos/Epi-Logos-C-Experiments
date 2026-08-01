@@ -165,8 +165,12 @@ pub fn ingest_gnostic(
     source: &str,
     coordinate: Option<&str>,
     family: Option<&str>,
+    notebook: Option<&str>,
 ) -> Result<String, String> {
     let mut cmd = std::process::Command::new(&config.python_bin);
+    for (key, value) in super::config::neo4j_bridge_env() {
+        cmd.env(key, value);
+    }
     cmd.arg("ingest").arg(source);
 
     if let Some(coord) = coordinate {
@@ -174,6 +178,9 @@ pub fn ingest_gnostic(
     }
     if let Some(fam) = family {
         cmd.arg("--family").arg(fam);
+    }
+    if let Some(nb) = notebook {
+        cmd.arg("--notebook").arg(nb);
     }
 
     let output = cmd

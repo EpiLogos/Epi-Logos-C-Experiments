@@ -116,12 +116,23 @@ async def _run(args: list[str]):
             file_path = args[1]
             coordinate = _flag(args, "--coordinate")
             family = _flag(args, "--family") or "#"
+            # 12.T12.13 finding D3: `aletheia_gnosis_ingest` has always declared a
+            # `notebook` parameter and pushed `--notebook <name>`, but neither
+            # this command nor the Rust arm accepted the flag — so setting it did
+            # not merely get dropped, clap REFUSED the whole invocation and the
+            # ingest failed outright. Accepted here and recorded against the
+            # notebook registry that already exists (`notebooks.json`), so the
+            # parameter names a real association instead of breaking the call.
+            notebook = _flag(args, "--notebook")
 
             result = await rag.ingest_document(
                 file_path=file_path,
                 coordinate=coordinate,
                 family=family,
             )
+
+            if notebook:
+                result["notebook"] = _record_notebook_document(config, notebook, file_path)
 
             # If direct coordinate supplied, run enrichment on ingested nodes
             if coordinate:
@@ -149,8 +160,25 @@ async def _run(args: list[str]):
         elif cmd == "query":
             question = args[1]
             mode = _flag(args, "--mode") or "hybrid"
-            answer = await rag.query(question, mode=mode)
-            _json_out({"status": "ok", "answer": answer, "mode": mode})
+            # 12.T12.13 finding D3: `top_k` was a declared tool parameter with
+            # no route to the retriever — an agent that set it got no error and
+            # no effect. QueryParam carries a real `top_k`, so it is plumbed
+            # rather than dropped. A non-integer or non-positive value is
+            # REFUSED, not silently coerced: a bad bound would quietly change
+            # what the retrieval saw.
+            top_k_raw = _flag(args, "--top-k")
+            top_k = None
+            if top_k_raw is not None:
+                try:
+                    top_k = int(top_k_raw)
+                except ValueError:
+                    _json_out({"status": "error", "message": f"--top-k must be an integer, got {top_k_raw!r}"})
+                    return
+                if top_k < 1:
+                    _json_out({"status": "error", "message": f"--top-k must be >= 1, got {top_k}"})
+                    return
+            answer = await rag.query(question, mode=mode, top_k=top_k)
+            _json_out({"status": "ok", "answer": answer, "mode": mode, "top_k": top_k})
 
         elif cmd == "query-with-layers":
             question = args[1]
@@ -339,6 +367,43 @@ async def _graph_read(config, cmd: str, args: list[str]) -> dict:
             }
     finally:
         await driver.close()
+
+
+def _record_notebook_document(config, notebook: str, file_path: str) -> dict:
+    """Record an ingested document against a notebook (12.T12.13 finding D3).
+
+    Notebooks are a REGISTRY (`notebooks.json`: name, created_at, workspace,
+    optional coordinate), not a retrieval partition — nothing in LightRAG scopes
+    a query by notebook, and no chunk carries one. So this records the
+    association truthfully and claims nothing more: the notebook is created on
+    first use, the document is appended once (idempotent on re-ingest), and the
+    returned payload says exactly what happened. It does NOT make retrieval
+    notebook-scoped; that needs chunk-level tagging plus a retrieval filter, and
+    is unbuilt.
+    """
+    path = Path(config.working_dir) / "notebooks.json"
+    notebooks = _read_notebooks(path)
+    entry = next((item for item in notebooks if item.get("name") == notebook), None)
+    created = entry is None
+    if entry is None:
+        entry = {
+            "name": notebook,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "workspace": config.workspace,
+        }
+        notebooks.append(entry)
+    documents = entry.setdefault("documents", [])
+    already = file_path in documents
+    if not already:
+        documents.append(file_path)
+    _write_notebooks(path, notebooks)
+    return {
+        "name": notebook,
+        "created": created,
+        "document_recorded": not already,
+        "document_count": len(documents),
+        "retrieval_scoped": False,
+    }
 
 
 def _list_notebooks(config, coordinate: str | None) -> dict:

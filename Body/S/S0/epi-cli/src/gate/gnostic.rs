@@ -205,7 +205,7 @@ where
     let config = GnosisConfig::from_env();
     let mut command = Command::new(&config.python_bin);
     command.args(args);
-    for (key, value) in neo4j_bridge_env() {
+    for (key, value) in crate::techne::gnosis::config::neo4j_bridge_env() {
         command.env(key, value);
     }
     let output = command
@@ -226,36 +226,6 @@ where
         .map_err(|err| format!("epi-gnostic returned non-JSON output: {err}; stdout={stdout}"))
 }
 
-/// 12.T12.13: bridge the repo's canonical Neo4j env onto the names the S5
-/// bridge's own dependencies read.
-///
-/// LightRAG's `Neo4JStorage.initialize` builds `auth=(USERNAME, PASSWORD)` from
-/// the bare `NEO4J_URI`/`NEO4J_USERNAME`/`NEO4J_PASSWORD` (`neo4j_impl.py:137`),
-/// but this repo's canonical spelling is `EPILOGOS_NEO4J_*` (`DEPENDENCIES.md`).
-/// The gateway therefore spawned the bridge with no credentials at all: against
-/// the no-auth dev instance that happens to connect, but against ANY
-/// authenticated Neo4j `Neo4JStorage` refuses and gnosis-RAG retrieval never
-/// runs. Anything already present in the environment is left alone — an
-/// explicitly-set `NEO4J_PASSWORD=""` means "no auth" and must not be clobbered.
-fn neo4j_bridge_env() -> Vec<(&'static str, String)> {
-    neo4j_bridge_env_from(&|key| std::env::var(key).ok())
-}
-
-fn neo4j_bridge_env_from(
-    lookup: &dyn Fn(&str) -> Option<String>,
-) -> Vec<(&'static str, String)> {
-    const PAIRS: [(&str, &str); 3] = [
-        ("NEO4J_URI", "EPILOGOS_NEO4J_URI"),
-        ("NEO4J_USERNAME", "EPILOGOS_NEO4J_USER"),
-        ("NEO4J_PASSWORD", "EPILOGOS_NEO4J_PASSWORD"),
-    ];
-    PAIRS
-        .iter()
-        .filter(|(target, _)| lookup(target).is_none())
-        .filter_map(|(target, source)| lookup(source).map(|value| (*target, value)))
-        .collect()
-}
-
 fn required_str_alias(params: &Value, keys: &[&str]) -> Result<String, String> {
     optional_str_alias(params, keys).ok_or_else(|| {
         format!(
@@ -274,56 +244,6 @@ fn optional_str(params: &Value, key: &str) -> Option<String> {
         .get(key)
         .and_then(Value::as_str)
         .map(ToOwned::to_owned)
-}
-
-#[cfg(test)]
-mod neo4j_bridge_env_tests {
-    use super::*;
-    use std::collections::HashMap;
-
-    fn lookup_from(pairs: &[(&str, &str)]) -> HashMap<String, String> {
-        pairs
-            .iter()
-            .map(|(k, v)| ((*k).to_owned(), (*v).to_owned()))
-            .collect()
-    }
-
-    #[test]
-    fn canonical_epilogos_names_are_bridged_to_the_names_lightrag_reads() {
-        let env = lookup_from(&[
-            ("EPILOGOS_NEO4J_URI", "bolt://graph.internal:7687"),
-            ("EPILOGOS_NEO4J_USER", "neo4j"),
-            ("EPILOGOS_NEO4J_PASSWORD", "s3cret"),
-        ]);
-        let bridged = neo4j_bridge_env_from(&|key| env.get(key).cloned());
-
-        assert_eq!(bridged.len(), 3, "all three credentials must cross: {bridged:?}");
-        assert!(bridged.contains(&("NEO4J_URI", "bolt://graph.internal:7687".to_owned())));
-        assert!(bridged.contains(&("NEO4J_USERNAME", "neo4j".to_owned())));
-        assert!(bridged.contains(&("NEO4J_PASSWORD", "s3cret".to_owned())));
-    }
-
-    /// An explicit `NEO4J_PASSWORD=""` is the no-auth signal; bridging over it
-    /// would hand LightRAG a password it must not use.
-    #[test]
-    fn an_explicitly_set_target_is_never_clobbered() {
-        let env = lookup_from(&[
-            ("NEO4J_PASSWORD", ""),
-            ("EPILOGOS_NEO4J_PASSWORD", "would-clobber"),
-        ]);
-        let bridged = neo4j_bridge_env_from(&|key| env.get(key).cloned());
-        assert!(
-            !bridged.iter().any(|(key, _)| *key == "NEO4J_PASSWORD"),
-            "an already-present NEO4J_PASSWORD must be left alone: {bridged:?}"
-        );
-    }
-
-    #[test]
-    fn nothing_is_invented_when_the_canonical_names_are_absent() {
-        let env = lookup_from(&[]);
-        let bridged = neo4j_bridge_env_from(&|key| env.get(key).cloned());
-        assert!(bridged.is_empty(), "expected no synthesised env: {bridged:?}");
-    }
 }
 
 #[cfg(test)]

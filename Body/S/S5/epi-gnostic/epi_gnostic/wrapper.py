@@ -142,11 +142,20 @@ class GnosticRAG:
             "family": family,
         }
 
-    async def query(self, question: str, mode: str = "hybrid") -> str:
-        """Query the gnostic namespace."""
+    async def query(
+        self, question: str, mode: str = "hybrid", top_k: int | None = None
+    ) -> str:
+        """Query the gnostic namespace.
+
+        ``top_k`` bounds how many retrieved items the mode considers.
+        ``QueryParam`` defaults it from the ``TOP_K`` environment variable, so
+        `None` means "leave LightRAG's own default alone" — passing `None`
+        explicitly would override that default with nothing and raise.
+        """
         if self.lightrag is None:
             raise RuntimeError("GnosticRAG not initialized. Call initialize() first.")
-        result = await self.lightrag.aquery(question, param=QueryParam(mode=mode))
+        param = QueryParam(mode=mode) if top_k is None else QueryParam(mode=mode, top_k=top_k)
+        result = await self.lightrag.aquery(question, param=param)
         return result if isinstance(result, str) else ""
 
     async def shutdown(self) -> None:

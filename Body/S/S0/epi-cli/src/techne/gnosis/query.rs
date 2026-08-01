@@ -173,12 +173,19 @@ pub fn query_gnostic(
     config: &GnosisConfig,
     question: &str,
     mode: Option<&str>,
+    top_k: Option<u32>,
 ) -> Result<String, String> {
     let mut cmd = std::process::Command::new(&config.python_bin);
+    for (key, value) in super::config::neo4j_bridge_env() {
+        cmd.env(key, value);
+    }
     cmd.arg("query").arg(question);
 
     if let Some(m) = mode {
         cmd.arg("--mode").arg(m);
+    }
+    if let Some(k) = top_k {
+        cmd.arg("--top-k").arg(k.to_string());
     }
 
     let output = cmd
@@ -197,8 +204,12 @@ pub fn query_gnostic(
 /// production Python the gateway routes dispatch to — ONE substrate, no
 /// duplicated logic host-side).
 pub fn run_gnostic_passthrough(config: &GnosisConfig, args: &[&str]) -> Result<String, String> {
-    let output = std::process::Command::new(&config.python_bin)
-        .args(args)
+    let mut cmd = std::process::Command::new(&config.python_bin);
+    cmd.args(args);
+    for (key, value) in super::config::neo4j_bridge_env() {
+        cmd.env(key, value);
+    }
+    let output = cmd
         .output()
         .map_err(|e| format!("Failed to run epi-gnostic: {e}"))?;
 

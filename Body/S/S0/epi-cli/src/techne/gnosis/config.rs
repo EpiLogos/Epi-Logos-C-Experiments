@@ -41,6 +41,44 @@ impl GnosisConfig {
     }
 }
 
+/// Bridge the repo's canonical Neo4j env onto the names the S5 bridge reads.
+///
+/// LightRAG refuses to construct `Neo4JStorage` unless `NEO4J_URI`,
+/// `NEO4J_USERNAME` and `NEO4J_PASSWORD` are all PRESENT
+/// (`lightrag/utils.py::check_storage_env_vars`), and it builds
+/// `auth=(USERNAME, PASSWORD)` from them. This repo's canonical spelling is
+/// `EPILOGOS_NEO4J_*` (`DEPENDENCIES.md`), so without this every `query` and
+/// `ingest` through the bridge dies at config load with that ValueError —
+/// `enrich` survives only because it talks to Neo4j directly and never
+/// initialises LightRAG.
+///
+/// This lives on `GnosisConfig` rather than at one call site because the bridge
+/// is spawned from BOTH the gateway (`gate/gnostic.rs`) and the CLI passthrough
+/// (`techne/gnosis/{query,ingest}.rs`) — 12.T12.13 first fixed only the gateway
+/// path, and the Aletheia Pi tools shell the CLI one, so the seam stayed dark
+/// exactly where the agents use it.
+///
+/// Anything already present is left alone: an explicit `NEO4J_PASSWORD=""` is
+/// the no-auth signal and must survive.
+pub fn neo4j_bridge_env() -> Vec<(&'static str, String)> {
+    neo4j_bridge_env_from(&|key| std::env::var(key).ok())
+}
+
+pub(crate) fn neo4j_bridge_env_from(
+    lookup: &dyn Fn(&str) -> Option<String>,
+) -> Vec<(&'static str, String)> {
+    const PAIRS: [(&str, &str); 3] = [
+        ("NEO4J_URI", "EPILOGOS_NEO4J_URI"),
+        ("NEO4J_USERNAME", "EPILOGOS_NEO4J_USER"),
+        ("NEO4J_PASSWORD", "EPILOGOS_NEO4J_PASSWORD"),
+    ];
+    PAIRS
+        .iter()
+        .filter(|(target, _)| lookup(target).is_none())
+        .filter_map(|(target, source)| lookup(source).map(|value| (*target, value)))
+        .collect()
+}
+
 /// Resolve the `epi-gnostic` bridge executable.
 ///
 /// Search order:
@@ -84,6 +122,55 @@ fn resolve_gnostic_bin_from(explicit: Option<String>, manifest_dir: &Path) -> St
     }
 
     "epi-gnostic".to_owned()
+}
+
+#[cfg(test)]
+mod neo4j_bridge_env_tests {
+    use super::*;
+    use std::collections::HashMap;
+
+    fn env_of(pairs: &[(&str, &str)]) -> HashMap<String, String> {
+        pairs
+            .iter()
+            .map(|(k, v)| ((*k).to_owned(), (*v).to_owned()))
+            .collect()
+    }
+
+    #[test]
+    fn canonical_epilogos_names_are_bridged_to_the_names_lightrag_reads() {
+        let env = env_of(&[
+            ("EPILOGOS_NEO4J_URI", "bolt://graph.internal:7687"),
+            ("EPILOGOS_NEO4J_USER", "neo4j"),
+            ("EPILOGOS_NEO4J_PASSWORD", "s3cret"),
+        ]);
+        let bridged = neo4j_bridge_env_from(&|key| env.get(key).cloned());
+
+        assert_eq!(bridged.len(), 3, "all three must cross: {bridged:?}");
+        assert!(bridged.contains(&("NEO4J_URI", "bolt://graph.internal:7687".to_owned())));
+        assert!(bridged.contains(&("NEO4J_USERNAME", "neo4j".to_owned())));
+        assert!(bridged.contains(&("NEO4J_PASSWORD", "s3cret".to_owned())));
+    }
+
+    /// An explicit `NEO4J_PASSWORD=""` is the no-auth signal; bridging over it
+    /// would hand LightRAG a password it must not use.
+    #[test]
+    fn an_explicitly_set_target_is_never_clobbered() {
+        let env = env_of(&[
+            ("NEO4J_PASSWORD", ""),
+            ("EPILOGOS_NEO4J_PASSWORD", "would-clobber"),
+        ]);
+        let bridged = neo4j_bridge_env_from(&|key| env.get(key).cloned());
+        assert!(
+            !bridged.iter().any(|(key, _)| *key == "NEO4J_PASSWORD"),
+            "an already-present NEO4J_PASSWORD must be left alone: {bridged:?}"
+        );
+    }
+
+    #[test]
+    fn nothing_is_invented_when_the_canonical_names_are_absent() {
+        let bridged = neo4j_bridge_env_from(&|_| None);
+        assert!(bridged.is_empty(), "expected no synthesised env: {bridged:?}");
+    }
 }
 
 #[cfg(test)]

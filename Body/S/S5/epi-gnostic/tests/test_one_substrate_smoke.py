@@ -11,7 +11,13 @@ import json
 import pytest
 from neo4j import AsyncGraphDatabase
 
-from epi_gnostic.cli import _graph_read, _list_notebooks, _notebook, _run
+from epi_gnostic.cli import (
+    _graph_read,
+    _list_notebooks,
+    _notebook,
+    _record_notebook_document,
+    _run,
+)
 from epi_gnostic.config import GnosticConfig
 
 TEST_WS = "gnostic_smoke_test"
@@ -147,3 +153,52 @@ def test_query_with_layers_refuses_unknown_layers_before_rag_init(capsys, smoke_
     out = json.loads(capsys.readouterr().out.strip())
     assert out["status"] == "error"
     assert "question" in out["message"]
+
+
+def test_ingest_notebook_is_recorded_not_dropped(smoke_config):
+    """12.T12.13 finding D3: `--notebook` on ingest must do something real.
+
+    `aletheia_gnosis_ingest` declared a `notebook` parameter and pushed
+    `--notebook <name>` at a CLI arm that did not accept the flag, so clap
+    REFUSED the whole invocation — the ingest failed outright rather than
+    quietly ignoring it. The flag is now accepted and recorded against the
+    notebook registry.
+    """
+    first = _record_notebook_document(smoke_config, "field-notes", "/docs/torus.md")
+    assert first["name"] == "field-notes"
+    assert first["created"] is True
+    assert first["document_recorded"] is True
+    assert first["document_count"] == 1
+    # The registry claims an association, never retrieval scoping — nothing in
+    # LightRAG filters a query by notebook and no chunk carries one.
+    assert first["retrieval_scoped"] is False
+
+    listed = _list_notebooks(smoke_config, None)
+    assert listed["count"] == 1
+    assert listed["notebooks"][0]["documents"] == ["/docs/torus.md"]
+
+
+def test_recording_the_same_document_twice_is_idempotent(smoke_config):
+    _record_notebook_document(smoke_config, "field-notes", "/docs/torus.md")
+    again = _record_notebook_document(smoke_config, "field-notes", "/docs/torus.md")
+    assert again["created"] is False
+    assert again["document_recorded"] is False, "a re-ingest must not duplicate the entry"
+    assert again["document_count"] == 1
+
+    second = _record_notebook_document(smoke_config, "field-notes", "/docs/klein.md")
+    assert second["document_count"] == 2
+
+
+def test_query_top_k_is_validated_before_any_rag_init(capsys, smoke_config, monkeypatch):
+    """A bad bound is refused, never coerced — it would silently change what
+    the retrieval saw."""
+    monkeypatch.setenv("EPI_GNOSTIC_WORKSPACE", TEST_WS)
+    asyncio.run(_run(["query", "what is M2-1?", "--top-k", "not-a-number"]))
+    out = json.loads(capsys.readouterr().out.strip())
+    assert out["status"] == "error"
+    assert "top-k" in out["message"]
+
+    asyncio.run(_run(["query", "what is M2-1?", "--top-k", "0"]))
+    out = json.loads(capsys.readouterr().out.strip())
+    assert out["status"] == "error"
+    assert ">= 1" in out["message"]
