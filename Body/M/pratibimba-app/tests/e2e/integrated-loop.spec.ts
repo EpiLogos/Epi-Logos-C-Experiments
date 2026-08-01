@@ -193,18 +193,24 @@ test('integrated loop: cast crosses UI → CLI ledger → vault bytes → timeli
     expect(bytes).toContain('c_2_oracle_system: "rws"');
     expect(bytes).toContain(`c_3_day_id: "${dayId}"`);
 
-    // ── UI store layer: the deposit handle surfaces in the journal timeline
-    await page.locator('.face-active .flexlayout__border_button', { hasText: 'Journal' }).click();
-    await page.getByTestId(`timeline-day-${dayId}`).click();
-    await expect(page.getByTestId(`timeline-file-${artifactPath}`)).toBeVisible({ timeout: 15_000 });
+    // ── UI store layer: the deposit handle surfaces in the day container.
+    // (25.T25.3 made the Journal border tab the NOW-inscription timeline —
+    // sessions only, by spec — so a day-ROOT artifact's UI home is the day
+    // calendar's container view, which classifies it off its real
+    // c_4_artifact_role frontmatter.)
+    const artifactName = artifactPath.split('/').pop() ?? '';
+    await page.locator('.face-active .flexlayout__border_button', { hasText: 'Calendar' }).click();
+    await page.getByTestId(`cal-day-${dayId}`).click();
+    await expect(page.getByTestId(`day-artifact-${artifactName}`)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByTestId(`day-artifact-role-${artifactName}`)).toContainText('oracle');
 
     // ── rehydration layer: a fresh boot re-lists the artifact from the vault,
     // not from component state
     await page.reload();
     await expect(page.getByTestId('status-gateway')).toContainText('connected', { timeout: 20_000 });
-    await page.locator('.face-active .flexlayout__border_button', { hasText: 'Journal' }).click();
-    await page.getByTestId(`timeline-day-${dayId}`).click();
-    await expect(page.getByTestId(`timeline-file-${artifactPath}`)).toBeVisible({ timeout: 15_000 });
+    await page.locator('.face-active .flexlayout__border_button', { hasText: 'Calendar' }).click();
+    await page.getByTestId(`cal-day-${dayId}`).click();
+    await expect(page.getByTestId(`day-artifact-${artifactName}`)).toBeVisible({ timeout: 15_000 });
 
     // ── wire layer: the reloaded document's OWN socket carried real profile
     // frames, strictly advancing, and the DOM tick shows a generation the wire

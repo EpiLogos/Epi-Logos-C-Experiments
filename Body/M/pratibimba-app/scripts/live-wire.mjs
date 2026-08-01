@@ -996,6 +996,55 @@ export const PROJECTION_MANIFEST = [
         }
     },
     {
+        name: 'rfactorRouteTable',
+        required: true,
+        covers: ['rfactorRouteTable'],
+        describe:
+            '25.T25.23: the compiled Archetype-7 R-factor route table + virtue lamps cross the public-current profile bus verbatim (fretboard consumer law)',
+        assert(capture) {
+            const errors = [];
+            // The kernel words (m0.c R_FACTOR_ROUTE_TABLE decoded; pinned in
+            // portal-core rfactor.rs and its kernel_truth cross-check).
+            const expectedRows = {
+                'O#': [1, 0, 7, 7, 5, 7],
+                'X#': [2, 1, 0, 5, 4, 7],
+                'N#': [3, 2, 1, 4, 3, 7],
+                'M#': [7, 3, 2, 3, 2, 7],
+                Nara: [7, 4, 3, 2, 1, 7],
+                Siva: [7, 5, 4, 1, 0, 7],
+                Shakti: [7, 7, 5, 0, 7, 7],
+            };
+            for (const profile of profilesOf(capture)) {
+                const table = profile.rfactorRouteTable;
+                if (!table || typeof table !== 'object') {
+                    errors.push('rfactorRouteTable missing from a live profile frame');
+                    continue;
+                }
+                if (!Array.isArray(table.routes) || table.routes.length !== 7) {
+                    errors.push('rfactorRouteTable.routes must carry exactly 7 base routes');
+                    continue;
+                }
+                for (const route of table.routes) {
+                    const expected = expectedRows[route.baseRoute];
+                    if (!expected) {
+                        errors.push(`unknown base route '${route.baseRoute}' on the wire`);
+                        continue;
+                    }
+                    if (JSON.stringify(route.positions) !== JSON.stringify(expected)) {
+                        errors.push(`route ${route.baseRoute} diverges from the kernel distribution`);
+                    }
+                }
+                if (table.positionless !== 7 || table.bandTurnSymbol !== '(@#)') {
+                    errors.push('rfactorRouteTable sentinel/band-turn law violated');
+                }
+                if (!Array.isArray(table.virtues) || table.virtues.length !== 9) {
+                    errors.push('rfactorRouteTable.virtues must carry the nine compiled lamps');
+                }
+            }
+            return errors;
+        }
+    },
+    {
         name: 'contemplationPromptLut',
         required: true,
         covers: ['contemplationPromptLut'],
