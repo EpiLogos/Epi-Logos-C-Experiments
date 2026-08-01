@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-01T01:26:56.407Z",
+ "generatedAt": "2026-08-01T08:43:06.345Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -337,7 +337,7 @@
    "advertised": true,
    "exists": true,
    "responds": true,
-   "errorClass": null
+   "errorClass": "domain-error: live Kairos state unavailable: run 'epi nara kairos sync' first"
   },
   {
    "method": "kernelBridge.m2m3.lensOrbiterRelations()",
