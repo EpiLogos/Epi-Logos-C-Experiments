@@ -43,6 +43,14 @@ export const TRACK_51_SURFACES: readonly Track51Surface[] = Object.freeze([
         coordinate: "M5-3'",
         tranche: '51.T51.2'
     }),
+    Object.freeze({
+        surfaceId: 'm1TraversalTimeline',
+        tabLabel: 'Traversal Timeline',
+        commandId: 'm1.open.traversalTimeline',
+        commandTitle: 'M1: Open the traversal timeline',
+        coordinate: "M1'",
+        tranche: '51.T51.3'
+    })
 ]);
 
 export function track51SurfaceFor(surfaceId: string): Track51Surface | null {

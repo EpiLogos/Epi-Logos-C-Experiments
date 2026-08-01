@@ -1,0 +1,98 @@
+/*
+ * Coordinate: M1' traversal timeline presentation (rerun 51.T51.3)
+ * Residency: Body/M/pratibimba-app/src/panes/m1Traversal/m1TraversalTimeline.css
+ * Position (#n): #1 — Definition: the timeline's visual grammar only.
+ * Actualises: the co-located pane stylesheet convention (`m3SurfaceContext.css`).
+ *   A crossing is given a visible left edge because canon requires the Möbius
+ *   return to be SEEN rather than smoothed over; the colour comes from the
+ *   shell's existing tokens, never a local hex literal.
+ * Public surface: .m1-traversal-timeline and its descendants.
+ * Does NOT own: token definitions (`styles.css`), any behaviour.
+ * Contract: rerun tranche [[51.T51.3]].
+ */
+
+.m1-traversal-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 0.9rem 1rem;
+    overflow: auto;
+    height: 100%;
+    font-size: 0.85rem;
+}
+
+.m1-traversal-header h2 {
+    margin: 0.2rem 0;
+    font-size: 1.05rem;
+}
+
+.m1-traversal-coordinate {
+    font-family: var(--mono, monospace);
+    opacity: 0.7;
+    letter-spacing: 0.08em;
+}
+
+.m1-traversal-essence,
+.m1-traversal-note,
+.m1-traversal-empty {
+    margin: 0;
+    opacity: 0.75;
+    max-width: 68ch;
+    line-height: 1.45;
+}
+
+.m1-traversal-track {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-family: var(--mono, monospace);
+    font-size: 0.76rem;
+}
+
+.m1-traversal-track li {
+    display: flex;
+    gap: 0.7rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+    padding: 0.2rem 0.45rem;
+    border-left: 3px solid transparent;
+    border-bottom: 1px solid var(--hairline, rgba(128, 128, 128, 0.18));
+}
+
+.m1-traversal-track li.m1-traversal-crossing-mobius-return {
+    border-left-color: var(--accent, #8ab4f8);
+    background: color-mix(in srgb, var(--accent, #8ab4f8) 10%, transparent);
+}
+
+.m1-traversal-track li.m1-traversal-crossing-klein-flip {
+    border-left-color: var(--ready, #6fbf73);
+}
+
+.m1-traversal-seq {
+    opacity: 0.5;
+    min-width: 3ch;
+    text-align: right;
+}
+
+.m1-traversal-field {
+    opacity: 0.85;
+}
+
+.m1-traversal-field b {
+    font-weight: 600;
+}
+
+.m1-traversal-field em {
+    opacity: 0.7;
+    font-style: normal;
+}
+
+.m1-traversal-relation,
+.m1-traversal-crossing {
+    padding: 0.02rem 0.4rem;
+    border: 1px solid var(--hairline, rgba(128, 128, 128, 0.35));
+    border-radius: 999px;
+}

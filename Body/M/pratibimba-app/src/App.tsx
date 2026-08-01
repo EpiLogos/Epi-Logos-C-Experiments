@@ -132,6 +132,8 @@ import { registerSubsystemCommands } from './commands/subsystem';
 // walk of the four live models); it declares no surface of its own.
 import { FrontendStudioPane } from './panes/frontendStudio/FrontendStudioPane';
 import { track51SurfaceFor } from './panes/track51Surfaces';
+import { M1TraversalTimelinePane } from './panes/m1Traversal/M1TraversalTimelinePane';
+import { startTraversalRecorder } from './panes/m1Traversal/traversalTimeline';
 import {
     publishRegisteredPanes,
     recordPaneRender,
@@ -590,6 +592,11 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
         // registry that observes this shell, never a restatement of it.
         case 'frontendStudio':
             return <FrontendStudioPane />;
+        // 51.T51.3 — the M1' traversal timeline. The RECORDER is shell-level
+        // (below), so this surface renders a path that was really travelled,
+        // not the samples it happened to be the selected tab for.
+        case 'm1TraversalTimeline':
+            return <M1TraversalTimelinePane />;
         // 52.T5 — the Home affordance (DR-SUBSYS-3): the same lived Now
         // surface, now carrying the `0/1` ↔ `#0-#5` subsystems-grid toggle.
         case 'personalHome':
@@ -1128,6 +1135,14 @@ export function App() {
         [openDepthSurface]
     );
 
+    // 51.T51.3 — the M1' traversal recorder runs at SHELL level for the life of
+    // the shell, over the same tick + coordinate stores `WalkPane` reads. The
+    // timeline surface is one tab among many and flexlayout renders only the
+    // selected one; a recorder living in that surface's mount effect would
+    // record precisely the ticks nobody was walking through. It writes to a
+    // module ledger, never to a store, so it adds no re-render path.
+    useEffect(() => startTraversalRecorder(), []);
+
     const updateM0Surface = useCallback((patch: Partial<M0SurfaceState>) => {
         const next = { ...m0SurfaceRef.current, ...patch };
         m0SurfaceRef.current = next;
@@ -1358,6 +1373,11 @@ export function App() {
                 id: 'studio.open.frontend',
                 title: "Studio: Open M5-3' Frontend Studio",
                 run: () => openTrack51Surface('frontendStudio')
+            }),
+            commands.register({
+                id: 'm1.open.traversalTimeline',
+                title: 'M1: Open the traversal timeline',
+                run: () => openTrack51Surface('m1TraversalTimeline')
             }),
             // 52.T6 — the five `leftSidebar.mode.*` commands, registered at
             // the seam the registry documented for its controller. Deep-only
