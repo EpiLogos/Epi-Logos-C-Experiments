@@ -28,7 +28,7 @@
 .m3-tarot-major,
 .m3-tarot-minor {
   cursor: pointer;
-  transition: r 240ms linear, opacity 240ms linear;
+  transition: r var(--m3-tarot-turn-duration) linear, opacity var(--m3-tarot-turn-duration) linear;
 }
 
 .m3-tarot-major:focus-visible,
@@ -49,7 +49,7 @@
 }
 
 .m3-tarot-wheel-readout dt {
-  color: var(--ink-dim, #9a8fb8);
+  color: var(--ink-dim);
 }
 
 .m3-tarot-wheel-readout dd {

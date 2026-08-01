@@ -56,11 +56,11 @@ export function M3DoubleTorusPane() {
             data-pending={reading.pending.join(' | ')}
         >
             <header className="m3-dt-header">
-                <span className="m3-dt-coordinate">M3-5&#8242;</span>
+                <span className="m3-dt-coordinate">M3-5′</span>
                 <h2>Double-torus world clock</h2>
                 <p className="m3-dt-essence">
-                    K&#178; — the chromatic-fifths double cover, the audio-genesis substrate —
-                    co-foliated with T&#178;<sub>Mahāmāyā</sub>, the inscription-circle × lens-circle
+                    K² — the chromatic-fifths double cover, the audio-genesis substrate —
+                    co-foliated with T²<sub>Mahāmāyā</sub>, the inscription-circle × lens-circle
                     transcription substrate. One chart, two transverse leaf families; the state of
                     the wheel is the crossing where they meet, not two pictures side by side.
                 </p>
@@ -125,18 +125,18 @@ export function M3DoubleTorusPane() {
 
             <section className="m3-dt-readout">
                 <dl>
-                    <dt>K&#178; degree720</dt>
+                    <dt>K² degree720</dt>
                     <dd data-testid="m3-dt-degree720">{cell(reading.k2.degree720)}</dd>
-                    <dt>K&#178; sheet · pitch class · fifths</dt>
+                    <dt>K² sheet · pitch class · fifths</dt>
                     <dd data-testid="m3-dt-k2-parts">
                         {cell(reading.k2.sheet)} · {cell(reading.k2.pitchClass)} ·{' '}
                         {cell(reading.k2.fifthsIndex)}
                     </dd>
-                    <dt>T&#178; lens · mode</dt>
+                    <dt>T² lens · mode</dt>
                     <dd data-testid="m3-dt-t2-parts">
                         {cell(reading.t2.lens)} · {cell(reading.t2.mode)}
                     </dd>
-                    <dt>T&#178; inscription (codon)</dt>
+                    <dt>T² inscription (codon)</dt>
                     <dd data-testid="m3-dt-inscription">{cell(reading.t2.inscription)}</dd>
                     <dt>active crossing</dt>
                     <dd data-testid="m3-dt-crossing-readout">

@@ -144,7 +144,7 @@ export function DreamJournalPane() {
             data-privacy-class="protected_local"
         >
             <header className="dream-header">
-                <span className="dream-coordinate">M4&#8242;</span>
+                <span className="dream-coordinate">M4′</span>
                 <h2>Dream Journal</h2>
                 <p className="dream-essence">
                     Private local flow, in the same day container as the Daily Note, the Oracle and

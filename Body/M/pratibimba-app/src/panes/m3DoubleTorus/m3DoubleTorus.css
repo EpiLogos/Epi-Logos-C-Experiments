@@ -17,12 +17,12 @@
     padding: 0.9rem 1rem;
     overflow: auto;
     height: 100%;
-    font-size: 0.85rem;
+    font-size: var(--type-body);
 }
 
 .m3-dt-header h2 {
     margin: 0.2rem 0;
-    font-size: 1.05rem;
+    font-size: var(--type-glyph);
 }
 
 .m3-dt-coordinate {
@@ -60,11 +60,11 @@
 }
 
 .m3-dt-leaf-k2 {
-    stroke: var(--accent, #8ab4f8);
+    stroke: var(--accent);
 }
 
 .m3-dt-leaf-t2 {
-    stroke: var(--ready, #6fbf73);
+    stroke: var(--ready);
 }
 
 .m3-dt-leaf.is-active {
@@ -84,7 +84,7 @@
     gap: 0.15rem 0.8rem;
     margin: 0;
     font-family: var(--mono, monospace);
-    font-size: 0.76rem;
+    font-size: var(--type-body-small);
 }
 
 .m3-dt-readout dt {
@@ -102,7 +102,7 @@
 
 .m3-dt-dual h3 {
     margin: 0 0 0.3rem;
-    font-size: 0.86rem;
+    font-size: var(--type-body);
     font-weight: 600;
 }
 

@@ -133,4 +133,12 @@ test('51.T51.3: the timeline records the walk as a trajectory, and marks the P5 
     await expect(marked).toHaveAttribute('data-position6', '0');
     await expect(marked).toHaveAttribute('data-helix-sheet', '0');
     await expect(marked).toHaveAttribute('data-mode', /held|walking/);
+
+    // ── release the organism ────────────────────────────────────────────────
+    // The gateway is ONE transport shared by every spec in this suite; a spec
+    // that parks the anchor and walks away leaves the next spec's organism
+    // held (spanda-navigator.spec.ts opens asserting `flowing`).
+    await page.locator('.face-active .flexlayout__tab_button', { hasText: 'Spanda' }).click();
+    await spanda.getByTestId('spanda-release').click();
+    await expect(spanda).toHaveAttribute('data-mode', 'flowing', { timeout: 20_000 });
 });

@@ -18,12 +18,12 @@
     padding: 0.9rem 1rem;
     overflow: auto;
     height: 100%;
-    font-size: 0.85rem;
+    font-size: var(--type-body);
 }
 
 .frontend-studio-header h2 {
     margin: 0.2rem 0;
-    font-size: 1.05rem;
+    font-size: var(--type-glyph);
 }
 
 .frontend-studio-coordinate {
@@ -56,15 +56,15 @@
 }
 
 .frontend-studio-sections button[aria-pressed='true'] {
-    border-color: var(--accent, #8ab4f8);
-    background: color-mix(in srgb, var(--accent, #8ab4f8) 14%, transparent);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
 .frontend-studio table {
     width: 100%;
     border-collapse: collapse;
     font-family: var(--mono, monospace);
-    font-size: 0.78rem;
+    font-size: var(--type-body-small);
 }
 
 .frontend-studio th,
@@ -105,12 +105,12 @@
     padding: 0.05rem 0.4rem;
     border-radius: 999px;
     border: 1px solid var(--hairline, rgba(128, 128, 128, 0.35));
-    font-size: 0.72rem;
+    font-size: var(--type-caption);
     white-space: nowrap;
 }
 
 .fs-chip-live {
-    border-color: var(--ready, #6fbf73);
+    border-color: var(--ready);
 }
 
 .fs-chip-mounted,
@@ -120,7 +120,7 @@
 }
 
 .fs-chip-blocked {
-    border-color: var(--danger, #d96565);
+    border-color: var(--danger);
 }
 
 .fs-note {

@@ -85,6 +85,7 @@
   --type-matheme-inline: var(--type-body);
   --m2-mef-flip-duration: 200ms;
   --m2-epogdoon-bloom-duration: 250ms;
+  --m3-tarot-turn-duration: 240ms;
 
   font-family: -apple-system, 'SF Pro Text', 'Segoe UI', sans-serif;
 }

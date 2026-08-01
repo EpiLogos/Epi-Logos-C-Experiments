@@ -81,7 +81,7 @@ export function FrontendStudioPane() {
                 .join(' ')}
         >
             <header className="frontend-studio-header">
-                <span className="frontend-studio-coordinate">M5-3&#8242;</span>
+                <span className="frontend-studio-coordinate">M5-3′</span>
                 <h2>Frontend Studio</h2>
                 <p className="frontend-studio-essence">
                     The 0/1 daily layout, the deep IDE layout, the M-extension surfaces and the

@@ -22,7 +22,7 @@
 .m3-hexagram-body-silhouette line,
 .m3-hexagram-body-silhouette circle {
   fill: none;
-  stroke: var(--hairline, #3a2e58);
+  stroke: var(--hairline);
   stroke-width: 1.5;
   stroke-linecap: round;
 }
@@ -35,7 +35,7 @@
 }
 
 .m3-hexagram-body-readout dt {
-  color: var(--ink-dim, #9a8fb8);
+  color: var(--ink-dim);
 }
 
 .m3-hexagram-body-readout dd {

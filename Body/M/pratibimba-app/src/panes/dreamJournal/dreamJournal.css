@@ -18,12 +18,12 @@
     padding: 0.9rem 1rem;
     overflow: auto;
     height: 100%;
-    font-size: 0.85rem;
+    font-size: var(--type-body);
 }
 
 .dream-header h2 {
     margin: 0.2rem 0;
-    font-size: 1.05rem;
+    font-size: var(--type-glyph);
 }
 
 .dream-coordinate {
@@ -70,7 +70,7 @@
 .dream-list h3,
 .dream-opened h3 {
     margin: 0.4rem 0 0.25rem;
-    font-size: 0.86rem;
+    font-size: var(--type-body);
     font-weight: 600;
 }
 
@@ -82,7 +82,7 @@
     flex-direction: column;
     gap: 0.25rem;
     font-family: var(--mono, monospace);
-    font-size: 0.76rem;
+    font-size: var(--type-body-small);
 }
 
 .dream-list li {
@@ -102,6 +102,6 @@
     word-break: break-word;
     margin: 0.2rem 0 0;
     font-family: var(--mono, monospace);
-    font-size: 0.78rem;
+    font-size: var(--type-body-small);
     line-height: 1.5;
 }

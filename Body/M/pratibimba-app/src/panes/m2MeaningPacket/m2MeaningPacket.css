@@ -17,12 +17,12 @@
     padding: 0.9rem 1rem;
     overflow: auto;
     height: 100%;
-    font-size: 0.85rem;
+    font-size: var(--type-body);
 }
 
 .m2-packet-header h2 {
     margin: 0.2rem 0;
-    font-size: 1.05rem;
+    font-size: var(--type-glyph);
 }
 
 .m2-packet-coordinate {
@@ -47,7 +47,7 @@
 
 .m2-packet-section h3 {
     margin: 0 0 0.3rem;
-    font-size: 0.86rem;
+    font-size: var(--type-body);
     font-weight: 600;
     opacity: 0.9;
 }
@@ -60,7 +60,7 @@
     flex-direction: column;
     gap: 0.22rem;
     font-family: var(--mono, monospace);
-    font-size: 0.76rem;
+    font-size: var(--type-body-small);
 }
 
 .m2-packet-section li {
@@ -77,7 +77,7 @@
 
 .m2-packet-parts {
     font-family: var(--mono, monospace);
-    font-size: 0.76rem;
+    font-size: var(--type-body-small);
 }
 
 .m2-packet-kernel {
@@ -89,7 +89,7 @@
     width: 100%;
     border-collapse: collapse;
     font-family: var(--mono, monospace);
-    font-size: 0.75rem;
+    font-size: var(--type-body-small);
 }
 
 .m2-meaning-packet th,

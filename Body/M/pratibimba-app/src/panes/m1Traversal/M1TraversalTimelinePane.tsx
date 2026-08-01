@@ -50,12 +50,12 @@ export function M1TraversalTimelinePane() {
             data-walked-samples={walkedSamples}
         >
             <header className="m1-traversal-header">
-                <span className="m1-traversal-coordinate">M1&#8242;</span>
+                <span className="m1-traversal-coordinate">M1′</span>
                 <h2>Traversal timeline</h2>
                 <p className="m1-traversal-essence">
                     The walk in progress as motion over time — tick, position6, helix face,
                     degree720 and relation movement, recorded whether or not this surface is the
-                    tab you are looking at. A P5 → P0&#8242; Möbius return is marked, never smoothed
+                    tab you are looking at. A P5 → P0′ Möbius return is marked, never smoothed
                     into the run of ticks — but only on a step the walk actually took: the 1 Hz
                     heartbeat samples a faster oscillator, so a <b>flowing</b> pair that reads 11
                     then 0 skipped most of a turn and crossed nothing observable.

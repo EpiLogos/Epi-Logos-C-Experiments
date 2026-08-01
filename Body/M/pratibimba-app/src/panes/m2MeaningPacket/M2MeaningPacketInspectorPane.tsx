@@ -68,7 +68,7 @@ export function M2MeaningPacketInspectorPane() {
             data-present-field-count={packet.fields.filter(field => field.present).length}
         >
             <header className="m2-packet-header">
-                <span className="m2-packet-coordinate">M2&#8242;</span>
+                <span className="m2-packet-coordinate">M2′</span>
                 <h2>Meaning-packet inspector</h2>
                 <p className="m2-packet-essence">
                     The active <code>M2PrimeMeaningPacket</code> — the typed object the rest of the
@@ -124,7 +124,7 @@ export function M2MeaningPacketInspectorPane() {
             <section className="m2-packet-section" data-testid="m2-packet-elemental">
                 <h3>Elemental-medium frame</h3>
                 <p className="m2-packet-note" data-testid="m2-packet-element-register">
-                    L2&#8242; alchemical register:{' '}
+                    L2′ alchemical register:{' '}
                     {packet.elementalMedium.register
                         .map((name, index) => `${index}=${name}`)
                         .join(' · ')}
@@ -143,7 +143,7 @@ export function M2MeaningPacketInspectorPane() {
                             >
                                 {entry.name ?? (
                                     <em>
-                                        outside the L2&#8242; register — {preview(entry.raw)}
+                                        outside the L2′ register — {preview(entry.raw)}
                                     </em>
                                 )}
                                 {entry.operative === null ? null : (
