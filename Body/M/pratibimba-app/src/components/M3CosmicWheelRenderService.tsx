@@ -58,8 +58,62 @@ export interface M3WheelProjection {
     readonly datasetLutState: string | null;
 }
 
+// ============================================================================
+// 24.T24.9 — the TCT / Nine-of-Wands renderer-side surfacing rule (DR-WC-M3-1,
+// downstream of DR-M3-1).
+//
+// DR-M3-1 settled a contradiction between a dataset and the runtime: the
+// Nine-of-Wands dataset row claimed EIGHT rotational states for TCT, the
+// runtime classifier says SEVEN, and the ratified resolution is that the
+// runtime is authority — the dataset moves 8 → 7, no code changes. That makes
+// the count an INVARIANT the renderer can check, so a regressed producer is
+// caught at the surface instead of quietly re-rendering the dataset's old lie.
+//
+// HEX CORRECTION, and it matters: tranche 24.9's brief names TCT as `0x35`.
+// That literal is wrong and was corrected in the decision register on
+// 2026-07-10 — `0x35` is GTT. TCT encodes as `0x19` (T=01, C=10, T=01 →
+// 0b01_10_01), pinned substrate-side by
+// `portal-core/src/luts/codon.rs::dr_m3_1_tct_0x19_is_imperfect_palindromic_seven_state`.
+// Implementing the brief's literal verbatim would have watched the wrong codon
+// forever and reported a permanently-passing invariant.
+// ============================================================================
+
+/** TCT / Nine of Wands, 6-bit. NOT `0x35` — see the correction note above. */
+export const TCT_CODON_ID = 0x19;
+
+/** DR-M3-1: TCT is 7-state non-dual (`ImperfectPalindromic`), never 8. */
+export const TCT_ROTATIONAL_STATE_COUNT = 7;
+
+export const TCT_BLOCKER = 'tct-rotational-state-count-mismatch';
+
+/**
+ * The surface's blocker accumulator — the carrier's `surfaceBlockers`.
+ *
+ * A blocker is not a pending: pending means "the bus has not said yet",
+ * blocked means "the bus said something that cannot be true". A TCT tick
+ * carrying 8 states is the second kind, and must not be rendered as a normal
+ * wheel with a slightly wrong denominator.
+ */
+export function surfaceBlockers(projection: M3WheelProjection | null): readonly string[] {
+    if (
+        projection === null ||
+        projection.codonId !== TCT_CODON_ID ||
+        projection.rotationalStateCount === null
+    ) {
+        return Object.freeze([]);
+    }
+    return projection.rotationalStateCount === TCT_ROTATIONAL_STATE_COUNT
+        ? Object.freeze([])
+        : Object.freeze([TCT_BLOCKER]);
+}
+
 export interface M3WheelSurface {
-    readonly readiness: { readonly surfaceReady: boolean; readonly reason: string | null };
+    readonly readiness: {
+        readonly surfaceReady: boolean;
+        readonly reason: string | null;
+        /** 24.T24.9 — violated invariants, empty when the surface is coherent. */
+        readonly blockers: readonly string[];
+    };
     readonly activeProjection: M3WheelProjection | null;
     /** WC-M3-SA-2 (24.T24.6): the codon → Major-Arcana card id, mirrored onto
      *  the bus off the kernel authority `m3_major_arcana_from_codon`. Three
@@ -243,19 +297,27 @@ export function buildM3WheelSurface(input: {
               })
             : null;
 
+    const blockers = surfaceBlockers(activeProjection);
+
     return Object.freeze({
         readiness: Object.freeze({
             surfaceReady:
                 activeProjection !== null &&
+                blockers.length === 0 &&
                 quintessenceState !== 'authority_payload_missing' &&
                 quintessenceState !== 'authority_payload_invariant_violation',
             reason:
                 activeProjection === null
                     ? 'pending-codon-rotation-projection'
-                    : quintessenceState === 'authority_payload_missing' ||
-                        quintessenceState === 'authority_payload_invariant_violation'
-                      ? 'authority_payload_missing'
-                      : null
+                    : // A violated invariant outranks a missing payload: the
+                      // surface is not merely incomplete, it is incoherent.
+                      blockers.length > 0
+                      ? blockers[0]
+                      : quintessenceState === 'authority_payload_missing' ||
+                          quintessenceState === 'authority_payload_invariant_violation'
+                        ? 'authority_payload_missing'
+                        : null,
+            blockers
         }),
         activeProjection,
         majorArcana: readArcanaState(mahamaya?.tarotMajorArcanaCardId, {
@@ -365,6 +427,7 @@ export function M3CosmicWheelRenderService({
                     data-hexagram-id={projection.hexagramId ?? 'pending'}
                     data-tarot-minor-id={projection.tarotMinorId ?? 'pending'}
                     data-generation={surface.generation}
+                    data-blockers={surface.readiness.blockers.join(',')}
                     data-readiness={
                         surface.readiness.surfaceReady ? 'ready' : surface.readiness.reason
                     }
@@ -479,6 +542,7 @@ export function M3CosmicWheelRenderService({
                 data-hexagram-id={projection.hexagramId ?? 'pending'}
                 data-tarot-minor-id={projection.tarotMinorId ?? 'pending'}
                 data-generation={surface.generation}
+                data-blockers={surface.readiness.blockers.join(',')}
                 data-readiness={surface.readiness.surfaceReady ? 'ready' : surface.readiness.reason}
             >
                 <svg
@@ -542,6 +606,19 @@ export function M3CosmicWheelRenderService({
                     />
                 </svg>
                 <div className="m3-fibonacci-readiness">
+                    {/* 24.T24.9 — a violated invariant is stated, not swallowed.
+                        The wheel still draws (hiding it would lose the evidence),
+                        but it says which law the bus broke. */}
+                    {surface.readiness.blockers.map(blocker => (
+                        <span
+                            key={blocker}
+                            data-testid={`m3-wheel-blocker-${blocker}`}
+                            data-blocker={blocker}
+                        >
+                            <ProvenanceBadge state="blocked" reason={blocker} />
+                            {blocker}
+                        </span>
+                    ))}
                     {surface.fibonacciGround === null ? (
                         <span data-testid="m3-fibonacci-ground-pending">
                             <ProvenanceBadge

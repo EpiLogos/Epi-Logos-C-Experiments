@@ -12,7 +12,11 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
     buildM3WheelSurface,
-    M3CosmicWheelRenderService
+    M3CosmicWheelRenderService,
+    surfaceBlockers,
+    TCT_BLOCKER,
+    TCT_CODON_ID,
+    TCT_ROTATIONAL_STATE_COUNT
 } from './M3CosmicWheelRenderService';
 import { QuintessenceIndicator } from './QuintessenceIndicator';
 
@@ -136,7 +140,10 @@ describe('buildM3WheelSurface', () => {
         );
         expect(authorityViolation.readiness).toEqual({
             surfaceReady: false,
-            reason: 'authority_payload_missing'
+            reason: 'authority_payload_missing',
+            // 24.T24.9: a bad charge payload is a missing AUTHORITY, not a
+            // violated M3 invariant — the blocker list stays empty.
+            blockers: []
         });
     });
 });
@@ -419,5 +426,93 @@ describe('M3CosmicWheelRenderService', () => {
             <M3CosmicWheelRenderService surface={ready()} mode="full" tickHandler={tickHandler} />
         );
         expect(tickHandler).toHaveBeenCalledWith(4, 415);
+    });
+});
+
+// ============================================================================
+// 24.T24.9 — TCT / Nine-of-Wands surfacing rule (DR-WC-M3-1 ← DR-M3-1).
+//
+// Note the codon: TCT is 0x19, NOT the 0x35 the tranche brief names. 0x35 is
+// GTT; the register corrected that literal on 2026-07-10 after the substrate
+// pin test caught it. These fixtures assert the rule watches the RIGHT codon —
+// a rule aimed at 0x35 would pass forever without ever checking anything.
+// ============================================================================
+
+function withCodon(codonId: number, rotationalStateCount: number) {
+    return buildM3WheelSurface({
+        payload: {
+            harmonicProfile: {
+                ...WIRE_PAYLOAD.harmonicProfile,
+                codonRotationProjection: {
+                    ...WIRE_PAYLOAD.harmonicProfile.codonRotationProjection,
+                    codonId,
+                    rotationalStateCount
+                }
+            }
+        },
+        generation: 21
+    });
+}
+
+describe('24.T24.9 — the TCT rotational-state invariant', () => {
+    it('names TCT as 0x19, the runtime codon — not the brief\'s 0x35 typo', () => {
+        expect(TCT_CODON_ID).toBe(0x19);
+        expect(TCT_ROTATIONAL_STATE_COUNT).toBe(7);
+    });
+
+    it('TCT-7 passes: the surface stays ready and carries no blocker', () => {
+        const surface = withCodon(TCT_CODON_ID, 7);
+        expect(surfaceBlockers(surface.activeProjection)).toEqual([]);
+        expect(surface.readiness.blockers).toEqual([]);
+        expect(surface.readiness.surfaceReady).toBe(true);
+        expect(surface.readiness.reason).toBeNull();
+    });
+
+    it('TCT-8 is REFUSED: the dataset\'s superseded 8-count raises the blocker', () => {
+        const surface = withCodon(TCT_CODON_ID, 8);
+        expect(surfaceBlockers(surface.activeProjection)).toEqual([TCT_BLOCKER]);
+        expect(surface.readiness.blockers).toEqual([TCT_BLOCKER]);
+        // A broken invariant is not a pending — the surface is not ready.
+        expect(surface.readiness.surfaceReady).toBe(false);
+        expect(surface.readiness.reason).toBe(TCT_BLOCKER);
+    });
+
+    it('renders the blocker rather than quietly drawing a wrong denominator', () => {
+        render(<M3CosmicWheelRenderService surface={withCodon(TCT_CODON_ID, 8)} mode="full" />);
+        const wheel = screen.getByTestId('m3-cosmic-wheel');
+        expect(wheel.getAttribute('data-blockers')).toBe(TCT_BLOCKER);
+        expect(wheel.getAttribute('data-readiness')).toBe(TCT_BLOCKER);
+        expect(screen.getByTestId(`m3-wheel-blocker-${TCT_BLOCKER}`).textContent).toContain(
+            TCT_BLOCKER
+        );
+        // The evidence is still on screen — the wheel is not hidden, it is flagged.
+        expect(wheel.getAttribute('data-rotation-states')).toBe('8');
+    });
+
+    it('watches ONLY TCT — 0x35 (GTT) with 8 states is not a violation', () => {
+        // If the rule had been written against the brief's 0x35 literal, this
+        // fixture would fail: GTT is an ordinary codon whose state count the
+        // TCT law says nothing about.
+        const gtt = withCodon(0x35, 8);
+        expect(gtt.readiness.blockers).toEqual([]);
+        expect(gtt.readiness.surfaceReady).toBe(true);
+    });
+
+    it('cannot judge what the bus did not send — an absent count is no blocker', () => {
+        const surface = buildM3WheelSurface({
+            payload: {
+                harmonicProfile: {
+                    ...WIRE_PAYLOAD.harmonicProfile,
+                    codonRotationProjection: {
+                        ...WIRE_PAYLOAD.harmonicProfile.codonRotationProjection,
+                        codonId: TCT_CODON_ID,
+                        rotationalStateCount: null
+                    }
+                }
+            },
+            generation: 22
+        });
+        expect(surface.activeProjection?.rotationalStateCount).toBeNull();
+        expect(surface.readiness.blockers).toEqual([]);
     });
 });
