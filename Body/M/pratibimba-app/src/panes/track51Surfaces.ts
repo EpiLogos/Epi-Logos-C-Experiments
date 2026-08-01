@@ -50,6 +50,14 @@ export const TRACK_51_SURFACES: readonly Track51Surface[] = Object.freeze([
         commandTitle: 'M1: Open the traversal timeline',
         coordinate: "M1'",
         tranche: '51.T51.3'
+    }),
+    Object.freeze({
+        surfaceId: 'm2MeaningPacket',
+        tabLabel: 'Meaning Packet',
+        commandId: 'm2.open.meaningPacket',
+        commandTitle: 'M2: Open the meaning-packet inspector',
+        coordinate: "M2'",
+        tranche: '51.T51.4'
     })
 ]);
 

@@ -230,6 +230,7 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
     // --- Track 51 specced-surface entries (App.tsx, over panes/track51Surfaces.ts) ---
     { id: 'studio.open.frontend', title: "Studio: Open M5-3' Frontend Studio", owner: 'frontend-studio', tranche: '51.T51.2' },
     { id: 'm1.open.traversalTimeline', title: 'M1: Open the traversal timeline', owner: 'm1-traversal-timeline', tranche: '51.T51.3' },
+    { id: 'm2.open.meaningPacket', title: 'M2: Open the meaning-packet inspector', owner: 'm2-meaning-packet', tranche: '51.T51.4' },
 
     // --- src/ui/leftSidebarModes.ts (registerLeftSidebarModeCommands, 52.T6) ---
     // Data-driven over LEFT_SIDEBAR_MODES; the gate reconstructs these five
