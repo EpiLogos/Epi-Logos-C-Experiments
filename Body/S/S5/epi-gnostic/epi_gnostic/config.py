@@ -1,5 +1,7 @@
 """Configuration for the Gnostic RAG namespace."""
 import os
+
+from epi_gnostic.embedding import CANONICAL_EMBEDDING_MODEL
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -42,7 +44,12 @@ class GnosticConfig:
     )
     embedding_model: str = field(
         default_factory=lambda: os.getenv(
-            "GNOSTIC_EMBEDDING_MODEL", "gemini-embedding-2-preview"
+            # gemini-embedding-2 is the STABLE multimodal model (confirmed against
+            # the live models.list surface). The old default pinned the -preview
+            # id. Note: vectors from gemini-embedding-001 and gemini-embedding-2
+            # occupy DIFFERENT coordinate spaces — changing this invalidates every
+            # stored vector, so the corpus must be re-embedded, never topped up.
+            "GNOSTIC_EMBEDDING_MODEL", CANONICAL_EMBEDDING_MODEL
         )
     )
     llm_model: str = field(

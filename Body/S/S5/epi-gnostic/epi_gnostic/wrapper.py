@@ -8,11 +8,12 @@ from functools import partial
 
 from lightrag import LightRAG
 from lightrag.base import QueryParam
-from lightrag.llm.gemini import gemini_model_complete, gemini_embed
+from lightrag.llm.gemini import gemini_model_complete
 from lightrag.utils import EmbeddingFunc
 from raganything import RAGAnything, RAGAnythingConfig
 
 from epi_gnostic.config import GnosticConfig
+from epi_gnostic.embedding import gemini_multimodal_embed
 from epi_gnostic.storage.neo4j_vector import Neo4jVectorStorage, POOL_FIELD
 
 
@@ -72,13 +73,24 @@ class GnosticRAG:
 
         api_key = self.config.gemini_api_key
 
+        # Per-input embeddings from a natively multimodal model. The vendored
+        # `gemini_embed` passes a bare list, which Gemini Embedding 2 treats as
+        # ONE aggregated input — the "Vector count mismatch" that failed every
+        # document and left the corpus empty. `supports_asymmetric` lets
+        # LightRAG tell us query from document so retrieval is embedded with the
+        # matching task type.
         embedding_func = EmbeddingFunc(
             embedding_dim=self.config.embedding_dim,
             max_token_size=8192,
-            func=lambda texts: gemini_embed(
+            model_name=self.config.embedding_model,
+            send_dimensions=True,
+            supports_asymmetric=True,
+            func=lambda texts, embedding_dim=None, context="document": gemini_multimodal_embed(
                 texts,
                 model=self.config.embedding_model,
                 api_key=api_key,
+                embedding_dim=embedding_dim or self.config.embedding_dim,
+                context=context,
             ),
         )
 
@@ -97,7 +109,11 @@ class GnosticRAG:
             graph_storage="Neo4JStorage",
             vector_storage="Neo4jVectorStorage",
             vector_db_storage_cls_kwargs={
-                "vector_index_name": f"{self.config.workspace}_entity_embedding",
+                # No `vector_index_name` here on purpose: all three vector
+                # stores share one workspace label and one `embedding`
+                # property, so they must share ONE index. The storage derives
+                # `vec_<workspace>` itself; pinning an entity-flavoured name
+                # here is what made the shared index look entity-specific.
                 "embedding_dim": self.config.embedding_dim,
             },
             auto_manage_storages_states=False,

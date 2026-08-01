@@ -1,5 +1,6 @@
 import os
 import pytest
+from epi_gnostic.embedding import CANONICAL_EMBEDDING_MODEL
 from epi_gnostic.config import GnosticConfig
 
 
@@ -9,7 +10,13 @@ def test_config_loads_defaults(tmp_path):
     assert config.neo4j_database == "neo4j"
     assert config.workspace == "gnostic"
     assert config.embedding_dim == 3072
-    assert config.embedding_model == "gemini-embedding-2-preview"
+    # gemini-embedding-2 is the STABLE multimodal id (confirmed against the live
+    # models.list surface: gemini-embedding-001, -2-preview, -2). Bound to the
+    # constant so the default and the adapter cannot drift apart — and note the
+    # vectors of -001 and -2 are DIFFERENT coordinate spaces, so changing this
+    # invalidates the corpus rather than extending it.
+    assert config.embedding_model == CANONICAL_EMBEDDING_MODEL
+    assert CANONICAL_EMBEDDING_MODEL == "gemini-embedding-2"
     assert config.llm_model == "gemini-3.1-flash-lite"
     assert str(config.working_dir).endswith("gnostic")
 

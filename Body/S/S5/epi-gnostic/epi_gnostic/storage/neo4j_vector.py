@@ -36,6 +36,14 @@ POOL_OVERFETCH_CAP = 500
 # belong to several pools (a session pool and a coordinate pool at once).
 POOL_FIELD = "gnostic_pools"
 
+# Which LightRAG vector store a node belongs to ("entities" / "relationships" /
+# "chunks"). All three write nodes under ONE workspace label with ONE
+# `embedding` property, so they necessarily share a single Neo4j vector index —
+# which means every store's query sees every other store's nodes unless the
+# results are discriminated here. Without it, `entities_vdb` receives chunk rows
+# that carry no `entity_name` and LightRAG dies with a KeyError mid-query.
+NAMESPACE_FIELD = "gnostic_ns"
+
 
 def vector_row_for_item(
     vector_id: str,
@@ -152,9 +160,20 @@ class Neo4jVectorStorage(BaseVectorStorage):
         uri = cfg.get("neo4j_uri", "bolt://localhost:7687")
         self._db = cfg.get("neo4j_database", "neo4j")
 
-        # Derive defaults when the caller left them at sentinel values
+        # Derive defaults when the caller left them at sentinel values.
+        #
+        # The index name is derived from the WORKSPACE ONLY, never the
+        # namespace. LightRAG builds three vector stores (entities,
+        # relationships, chunks) and they all write nodes carrying the same
+        # workspace label and the same `embedding` property — and Neo4j permits
+        # exactly ONE index per (label, property). So a per-namespace name meant
+        # the first store created `vec_<ws>_entities` and the other two silently
+        # got nothing back from `CREATE ... IF NOT EXISTS`, then queried
+        # `vec_<ws>_chunks` / `vec_<ws>_relationships`, which do not exist. Chunk
+        # retrieval therefore returned empty for every query while the corpus
+        # looked correctly populated. One label, one property, one index.
         if not self.vector_index_name:
-            self.vector_index_name = f"vec_{self.workspace}_{self.namespace}"
+            self.vector_index_name = f"vec_{self.workspace}"
         if self.embedding_dim == 0:
             self.embedding_dim = getattr(self.embedding_func, "embedding_dim", 3072)
 
@@ -249,12 +268,14 @@ class Neo4jVectorStorage(BaseVectorStorage):
         # the index for more candidates and truncate to top_k after filtering.
         # The over-fetch is bounded so a narrow pool cannot drag the whole index.
         fetch_k = top_k if pool is None else min(max(top_k * POOL_OVERFETCH, top_k), POOL_OVERFETCH_CAP)
-        pool_clause = " AND $pool IN node.gnostic_pools" if pool is not None else ""
+        pool_clause = f" AND $pool IN node.{POOL_FIELD}" if pool is not None else ""
+        # Only this store's own nodes: the index is shared, the namespaces are not.
+        ns_clause = f" AND node.{NAMESPACE_FIELD} = $ns"
 
         cypher = (
             f"CALL db.index.vector.queryNodes('{idx}', $fetch_k, $vec) "
             f"YIELD node, score "
-            f"WHERE score >= $threshold AND node:`{label}`{pool_clause} "
+            f"WHERE score >= $threshold AND node:`{label}`{ns_clause}{pool_clause} "
             f"RETURN node {{.*, score: score}} AS doc "
             f"ORDER BY score DESC LIMIT $top_k"
         )
@@ -268,6 +289,7 @@ class Neo4jVectorStorage(BaseVectorStorage):
                 vec=query_embedding,
                 threshold=threshold,
                 pool=pool,
+                ns=self.namespace,
             )
             records = await cursor.data()
             for rec in records:
@@ -307,7 +329,11 @@ class Neo4jVectorStorage(BaseVectorStorage):
         # Build parameter rows
         rows: list[dict[str, Any]] = []
         for vid, item in zip(ids, items):
-            rows.append(vector_row_for_item(vid, item, self.meta_fields))
+            row = vector_row_for_item(vid, item, self.meta_fields)
+            # Stamp which store owns this node so the shared index can be
+            # queried per-namespace.
+            row[NAMESPACE_FIELD] = self.namespace
+            rows.append(row)
 
         # Batch via UNWIND
         batch_size = self.global_config.get("upsert_batch_size", _DEFAULT_BATCH_SIZE)
