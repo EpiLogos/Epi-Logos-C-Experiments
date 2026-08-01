@@ -52,7 +52,7 @@ Surface ids are the carrier's **flexlayout component keys** (`App.tsx::factory`)
 | `fileTree` | face 1 left border "Vault" | M0' chrome | live | `FileTreePane` | — |
 | `journalTimeline` | face 1 left border "Journal" · **deep:** withdrawn | M0' chrome | live | `JournalTimelinePane` | — |
 | `dayCalendar` | face 1 left border "Calendar" · **deep:** withdrawn | M0' chrome | live | `DayCalendarPane` | — |
-| `oracle` | face 1 left border "Oracle" · **deep:** withdrawn | M0' chrome | live | `OraclePane` (real CLI cast via Tauri `oracle_cast`) | — |
+| `oracle` | face 1 left border "Oracle" · **deep:** withdrawn | M0' chrome | live | `OraclePane` (real CLI cast via gateway `nara.oracle.cast`, deposited by `oracle_deposit` — 25.T25.24) | — |
 | `personalHome` | face 1 `personal-main` tab "Now" · **deep:** withdrawn | M0' chrome | live | `NowPane` (M4' day surface) | — |
 | `medicineView` | face 1 `personal-main` tab "Medicine" | M0' chrome | live | `MedicineViewPane` (25.T25.10 — profile-tick `nara.medicine.snapshot`, eight canonical chakra rows, active Sun decan, botanical evidence, explicit S1-governed NOW pin; never prescription) | `m4.nara.medicine` |
 | `transformContainers` | face 1 `personal-main` tab "Transform" | M0' chrome | live | `TransformContainersPane` (25.T25.11; governed `nara.transform.start/advance` lifecycle over protected-local NOW state) | `m4.nara.transform` |

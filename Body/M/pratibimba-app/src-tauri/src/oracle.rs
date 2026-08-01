@@ -1,12 +1,25 @@
-//! Coordinate: M' M4' (oracle cast seam, plan T4.1/T4.2)
-//! Actualises: the typed oracle invocation — runs the real consent-gated
-//!   `epi nara oracle cast` (never slash-strings) and deposits the cast as a
-//!   first-class day artifact in the Present scope (M4' oracle-artifact law).
-//!   The epi CLI owns casting (entropy, hygiene limits, ledger); this seam
-//!   owns invocation + day deposition only.
-//! Public surface: oracle_cast (tauri command), compose_oracle_artifact.
+//! Coordinate: M' M4' (oracle deposition seam, plan T4.1/T4.2; rewired 25.T25.24)
+//! Actualises: the DAY DEPOSITION of an oracle cast — composing the cast into
+//!   a first-class day artifact in the Present scope (M4' oracle-artifact law)
+//!   and writing it through the S1 vault seam. `compose_oracle_artifact` is
+//!   the single composition authority; the e2e vault sidecar mirrors it.
+//!
+//!   25.T25.24 SPLIT THE TWO ACTS THIS FILE USED TO FUSE. Casting now
+//!   dispatches to the gateway (`nara.oracle.cast`) — the Track-24 law is that
+//!   a cast is a gateway act, never a local spawn, and the Track-00
+//!   hardening-T17 finding was that the carrier's `OraclePane` reached past
+//!   the gateway straight into the CLI through this file. Deposition stays
+//!   here, unchanged, because it is S1 law and always was.
+//!
+//!   `oracle_cast` therefore survives as the OFFLINE FALLBACK ONLY (spawn +
+//!   deposit, the pre-rewire behaviour) and is NOT wired to any surface; its
+//!   retirement is the Architect's call at review per the 25.24 brief. The
+//!   surface path is: gateway `nara.oracle.cast` → `oracle_deposit`.
+//! Public surface: oracle_deposit (tauri command), oracle_cast (tauri command,
+//!   offline fallback), compose_oracle_artifact.
 //! Does NOT own: divination logic, hygiene law, the cast ledger (epi-cli),
-//!   session-NOW creation (Khora).
+//!   the cast dispatch (S3 gateway `nara.oracle.cast`), session-NOW creation
+//!   (Khora).
 
 use std::process::Command;
 
@@ -41,6 +54,46 @@ pub fn compose_oracle_artifact(
     (rel, content)
 }
 
+/// Deposit an ALREADY-CAST oracle result as a day artifact (25.T25.24).
+///
+/// The `output` comes from the gateway's `nara.oracle.cast` — this seam does
+/// not cast, does not judge the text, and does not touch the S0 cast ledger
+/// (the CLI already appended to it, under the gateway). It composes and
+/// writes, which is the whole of its S1 authority.
+#[tauri::command]
+pub fn oracle_deposit(
+    state: State<'_, VaultState>,
+    system: String,
+    question: String,
+    day_id: String,
+    output: String,
+) -> Result<OracleCastResult, String> {
+    if output.trim().is_empty() {
+        return Err("oracle_deposit: refusing to deposit an empty cast".to_owned());
+    }
+    let now = chrono::Local::now();
+    let (rel, content) = compose_oracle_artifact(
+        &day_id,
+        &system,
+        &question,
+        output.trim(),
+        &now.to_utc().to_rfc3339(),
+        &now.format("%H%M%S").to_string(),
+    );
+    vault::vault_write(state, rel.clone(), content)?;
+    Ok(OracleCastResult {
+        artifact_path: rel,
+        output,
+        system,
+    })
+}
+
+/// OFFLINE FALLBACK ONLY — spawn the CLI and deposit, the pre-25.24 path.
+///
+/// No surface calls this. The live cast dispatches to the gateway
+/// (`nara.oracle.cast`) and deposits through [`oracle_deposit`]; this remains
+/// so a host with no gateway still has a real cast, and its retirement is the
+/// Architect's call at review per the 25.24 brief.
 #[tauri::command]
 pub fn oracle_cast(
     state: State<'_, VaultState>,
@@ -59,22 +112,7 @@ pub fn oracle_cast(
         return Err(if stderr.is_empty() { stdout } else { stderr });
     }
     let output = if stdout.is_empty() { stderr } else { stdout };
-
-    let now = chrono::Local::now();
-    let (rel, content) = compose_oracle_artifact(
-        &day_id,
-        &system,
-        &question,
-        &output,
-        &now.to_utc().to_rfc3339(),
-        &now.format("%H%M%S").to_string(),
-    );
-    vault::vault_write(state, rel.clone(), content)?;
-    Ok(OracleCastResult {
-        artifact_path: rel,
-        output,
-        system,
-    })
+    oracle_deposit(state, system, question, day_id, output)
 }
 
 #[cfg(test)]

@@ -28,6 +28,7 @@ pub fn run() {
             vault::vault_write,
             vault::begin_today,
             oracle::oracle_cast,
+            oracle::oracle_deposit,
             vault::ui_state_load,
             vault::ui_state_save,
             composition_state::composition_state_load,

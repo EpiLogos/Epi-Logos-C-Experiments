@@ -12,7 +12,9 @@
  *   file bytes) · GET /health.
  * Does NOT own: vault law (src-tauri/src/vault.rs is the mirrored source of
  *   truth — change that first, then this).
- *   GET /nara-history serves the raw S0 cast-ledger bytes; oracle_cast spawns
+ *   GET /nara-history serves the raw S0 cast-ledger bytes; oracle_deposit
+ *   composes + writes an already-cast day artifact (the cast itself is a
+ *   gateway act since 25.T25.24); the oracle_cast fallback spawns
  *   the REAL epi binary (--epi-bin) under an isolated $HOME (--nara-home),
  *   mirroring src-tauri/src/oracle.rs — never a simulated draw.
  * Run: node scripts/e2e-vault-sidecar.mjs --port 18934 --vault <root> --gateway-port 18933 \
@@ -36,6 +38,12 @@ const GATEWAY_PORT = Number(arg('gateway-port', '18933'));
 // the cast ledger/hygiene state never touches the developer's ~/.epi-logos
 const EPI_BIN = arg('epi-bin');
 const NARA_HOME = arg('nara-home');
+// 25.T25.24: the cast is a GATEWAY act now, so the S0 cast ledger the
+// integrated loop reads belongs to the gateway's nara home, not to the
+// fallback spawn's. Two different homes because there are two different
+// casters; `/nara-history` serves the one that actually casts.
+const CAST_LEDGER_HOME =
+    arg('cast-home') ?? (NARA_HOME ? join(NARA_HOME, '.epi-logos', 'nara') : undefined);
 if (!VAULT_ROOT || !existsSync(VAULT_ROOT)) {
     console.error('[e2e-vault-sidecar] --vault <existing dir> is required');
     process.exit(2);
@@ -173,31 +181,18 @@ const commands = {
     composition_state_load: () => null,
     composition_state_save: () => null,
     natal_sky: () => null, // no natal chart configured in the e2e vault
-    // Mirrors src-tauri/src/oracle.rs oracle_cast: runs the REAL consent-gated
-    // `epi nara oracle cast` (real entropy, real hygiene ledger — under the
-    // isolated NARA_HOME), then composes + deposits the day artifact with
-    // compose_oracle_artifact's exact template. Never simulates a draw.
-    oracle_cast: args => {
-        if (!EPI_BIN || !NARA_HOME) {
-            throw new Error('e2e sidecar: oracle_cast needs --epi-bin and --nara-home (see global-setup)');
-        }
+    // Mirrors src-tauri/src/oracle.rs oracle_deposit (25.T25.24): composes +
+    // deposits an ALREADY-CAST result with compose_oracle_artifact's exact
+    // template. It does not cast — the cast now dispatches to the gateway
+    // (`nara.oracle.cast`), which is the whole point of the rewire.
+    oracle_deposit: args => {
         const system = String(args?.system ?? '');
         const question = String(args?.question ?? '');
         const dayId = String(args?.dayId ?? '');
-        let stdout = '';
-        let stderr = '';
-        try {
-            stdout = execFileSync(
-                EPI_BIN,
-                ['nara', 'oracle', 'cast', '--system', system, '--question', question, '--yes'],
-                { env: { ...process.env, HOME: NARA_HOME }, encoding: 'utf8' }
-            ).trim();
-        } catch (err) {
-            stdout = String(err?.stdout ?? '').trim();
-            stderr = String(err?.stderr ?? '').trim();
-            throw new Error(stderr || stdout || String(err?.message ?? err));
+        const output = String(args?.output ?? '').trim();
+        if (!output) {
+            throw new Error('e2e sidecar: oracle_deposit refuses to deposit an empty cast');
         }
-        const output = stdout || stderr;
 
         // compose_oracle_artifact mirror (oracle.rs) — same rel path, same
         // typed C-family frontmatter, same fenced output block
@@ -229,6 +224,31 @@ ${output}
 `;
         commands.vault_write({ path: rel, content });
         return { artifactPath: rel, output, system };
+    },
+    // OFFLINE FALLBACK ONLY, mirroring src-tauri/src/oracle.rs oracle_cast:
+    // spawn the REAL consent-gated `epi nara oracle cast` under the isolated
+    // NARA_HOME, then deposit. No surface calls it; it exists so the shim's
+    // command set stays congruent with the Tauri host's.
+    oracle_cast: args => {
+        if (!EPI_BIN || !NARA_HOME) {
+            throw new Error('e2e sidecar: oracle_cast needs --epi-bin and --nara-home (see global-setup)');
+        }
+        const system = String(args?.system ?? '');
+        const question = String(args?.question ?? '');
+        let stdout = '';
+        let stderr = '';
+        try {
+            stdout = execFileSync(
+                EPI_BIN,
+                ['nara', 'oracle', 'cast', '--system', system, '--question', question, '--yes'],
+                { env: { ...process.env, HOME: NARA_HOME }, encoding: 'utf8' }
+            ).trim();
+        } catch (err) {
+            stdout = String(err?.stdout ?? '').trim();
+            stderr = String(err?.stderr ?? '').trim();
+            throw new Error(stderr || stdout || String(err?.message ?? err));
+        }
+        return commands.oracle_deposit({ ...args, output: stdout || stderr });
     }
 };
 
@@ -267,14 +287,14 @@ const server = createServer((req, res) => {
         return;
     }
     // test-facing endpoint: the REAL S0 cast-ledger bytes (epi-cli's own
-    // oracle history under the isolated nara home) — proves the CLI layer
+    // oracle history under the CASTER's nara home) — proves the CLI layer
     // actually ran; the browser cannot reach into this file any other way
     if (req.method === 'GET' && url.pathname === '/nara-history') {
-        if (!NARA_HOME) {
-            respond(res, 404, { ok: false, error: 'no --nara-home configured' });
+        if (!CAST_LEDGER_HOME) {
+            respond(res, 404, { ok: false, error: 'no --cast-home/--nara-home configured' });
             return;
         }
-        const ledger = join(NARA_HOME, '.epi-logos', 'nara', 'oracle', 'history.jsonl');
+        const ledger = join(CAST_LEDGER_HOME, 'oracle', 'history.jsonl');
         if (!existsSync(ledger)) {
             respond(res, 404, { ok: false, error: `no cast ledger yet at ${ledger}` });
             return;

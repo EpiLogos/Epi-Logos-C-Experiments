@@ -6,23 +6,30 @@
  *     wire (S3)   real `profile.update` frames captured on the app's OWN
  *                 WebSocket; generations strictly advance; the DOM tick value
  *                 must be one the wire actually carried (wire↔store↔DOM
- *                 congruence — a store mocked without the wire fails it)
+ *                 congruence — a store mocked without the wire fails it) — AND
+ *                 (25.T25.24) the `nara.oracle.cast` REQUEST FRAME itself,
+ *                 answered by the gateway on the same request id
  *     UI          OraclePane cast button → rendered draw output `Tarot Draw #N`
- *     S0 (CLI)    the sidecar spawns the REAL `epi nara oracle cast` (isolated
- *                 nara home); its own cast ledger gains EXACTLY one line whose
- *                 cast_id is the same N the UI rendered
+ *     S0 (CLI)    the gateway runs the REAL `epi nara oracle cast` under
+ *                 `nara.oracle.cast` (isolated nara home); its own cast ledger
+ *                 gains EXACTLY one line whose cast_id is the same N the UI
+ *                 rendered
  *     S1 (vault)  the deposited day artifact's raw disk bytes carry the same
  *                 draw output + typed C-family frontmatter
  *     UI (store)  the deposit handle appears in the journal timeline
  *     rehydrate   a full reload re-lists the artifact from disk, not memory
  *
- *   Cut-points guarded: gateway down → no connect/no frames; wire→store seam
- *   cut → congruence fails; sidecar→CLI spawn replaced by a canned result →
- *   cast-id/ledger congruence fails (and the companion negative test fails);
+ *   Cut-points guarded: gateway down → no connect/no frames AND no cast at all
+ *   (25.T25.24 removed the silent Tauri fallback, so a dead gateway is a
+ *   refusal, not a quieter path to the same artifact); the cast reverting to
+ *   the Tauri `oracle_cast` spawn → the cast frame never appears on the socket;
+ *   wire→store seam cut → congruence fails; the CLI replaced by a canned result
+ *   → cast-id/ledger congruence fails (and the companion negative test fails);
  *   vault write cut → /raw 404s; vault read cut → timeline/reload fail.
  */
 
 import { expect, test } from '@playwright/test';
+import { gatewayRpc } from './gateway-rpc';
 import { SIDECAR_URL, todayId } from './e2e-env';
 
 /** Lines of the real S0 cast ledger (epi-cli's history.jsonl), '' if absent. */
@@ -41,9 +48,29 @@ test('integrated loop: cast crosses UI → CLI ledger → vault bytes → timeli
     await page.addInitScript(() => {
         const generations: number[] = [];
         (window as unknown as { __e2eProfileGenerations: number[] }).__e2eProfileGenerations = generations;
+        // 25.T25.24: the CAST FRAME itself, not only the profile-tick spine.
+        // A cast is a gateway act; if the pane ever reverts to the Tauri
+        // `oracle_cast` spawn the socket carries nothing and this stays empty,
+        // which is exactly the regression this capture exists to catch.
+        const sent: { method: string; id: unknown }[] = [];
+        const answered: { id: unknown; ok: boolean }[] = [];
+        (window as unknown as { __e2eSentFrames: typeof sent }).__e2eSentFrames = sent;
+        (window as unknown as { __e2eAnsweredFrames: typeof answered }).__e2eAnsweredFrames = answered;
         const NativeWebSocket = window.WebSocket;
         function CapturingWebSocket(this: WebSocket, url: string, protocols?: string | string[]) {
             const ws = protocols === undefined ? new NativeWebSocket(url) : new NativeWebSocket(url, protocols);
+            const nativeSend = ws.send.bind(ws);
+            ws.send = (data: Parameters<WebSocket['send']>[0]) => {
+                try {
+                    const frame = JSON.parse(String(data));
+                    if (frame?.type === 'req' && typeof frame.method === 'string') {
+                        sent.push({ method: frame.method, id: frame.id });
+                    }
+                } catch {
+                    /* binary/non-JSON frames are not ours to judge */
+                }
+                nativeSend(data);
+            };
             ws.addEventListener('message', evt => {
                 try {
                     const frame = JSON.parse(String((evt as MessageEvent).data));
@@ -52,6 +79,9 @@ test('integrated loop: cast crosses UI → CLI ledger → vault bytes → timeli
                         if (typeof generation === 'number') {
                             generations.push(generation);
                         }
+                    }
+                    if (frame?.type === 'res') {
+                        answered.push({ id: frame.id, ok: !frame.error });
                     }
                 } catch {
                     /* binary/non-JSON frames are not ours to judge */
@@ -100,6 +130,35 @@ test('integrated loop: cast crosses UI → CLI ledger → vault bytes → timeli
     expect(castIdMatch, `UI did not render a real draw: ${resultText.slice(0, 200)}`).toBeTruthy();
     const castId = Number(castIdMatch![1]);
     expect(resultText).toContain(question);
+
+    // ── S3 layer (25.T25.24): the CAST CROSSED THE WIRE. Read now, before the
+    // reload wipes the capture. This is the assertion that fails if the pane
+    // ever goes back to spawning the CLI through the Tauri `oracle_cast`
+    // bypass — that path sends nothing on this socket, so the frame is absent
+    // even though every layer below (ledger, vault, timeline) still passes.
+    const castFrames = await page.evaluate(
+        () =>
+            (window as unknown as { __e2eSentFrames?: { method: string; id: unknown }[] })
+                .__e2eSentFrames ?? []
+    );
+    const castFrame = castFrames.find(frame => frame.method === 'nara.oracle.cast');
+    expect(
+        castFrame,
+        `the cast never crossed the app's own socket — methods sent: ${castFrames
+            .map(frame => frame.method)
+            .join(',')}`
+    ).toBeTruthy();
+    // …and the gateway ANSWERED that exact request id, so the rendered draw is
+    // the gateway's reply and not something the client made up around it.
+    const answered = await page.evaluate(
+        () =>
+            (window as unknown as { __e2eAnsweredFrames?: { id: unknown; ok: boolean }[] })
+                .__e2eAnsweredFrames ?? []
+    );
+    expect(
+        answered.some(frame => frame.id === castFrame!.id && frame.ok),
+        `the gateway never answered cast request id ${String(castFrame!.id)}`
+    ).toBe(true);
 
     // the deposit handle the pane returned
     const linkText = (await page.getByTestId('oracle-artifact-link').textContent()) ?? '';
@@ -176,21 +235,50 @@ test('integrated loop: cast crosses UI → CLI ledger → vault bytes → timeli
     ).toContain(domGeneration);
 });
 
-test('cut-point: replacing the real CLI with a canned success cannot stand — the oracle rejects an invalid system through the same seam', async ({
+test('cut-point: replacing the real CLI with a canned success cannot stand — the GATEWAY rejects an invalid system', async ({
     request
 }) => {
     const ledgerBefore = await ledgerText(request);
-    // the exact seam the browser shim uses (e2eShim.ts forwards invoke() here);
-    // the UI select only offers valid systems, so this cut-point is proven at
-    // the harness seam: the REAL epi binary must be the judge
+    // 25.T25.24 moved this cut-point onto the seam the pane now uses. The UI
+    // select only offers valid systems, so the probe goes at the wire: the REAL
+    // epi binary, under the gateway, must be the judge of what a system is.
+    await expect(
+        gatewayRpc('nara.oracle.cast', { system: 'tarot', question: 'cut-point probe', yes: true })
+    ).rejects.toThrow(/Unknown tarot system/);
+    // and the failed cast mutated NOTHING: the S0 ledger is byte-identical
+    expect(await ledgerText(request)).toBe(ledgerBefore);
+});
+
+test('cut-point: the offline fallback is still the real CLI, and still not a surface path', async ({
+    request
+}) => {
+    // `oracle_cast` survives as the offline fallback (src-tauri/src/oracle.rs).
+    // It must stay REAL — a canned success here would make the fallback a lie —
+    // while the pane no longer calls it. This probes the shim seam directly.
+    // It deliberately makes NO claim about /nara-history: since 25.T25.24 that
+    // route serves the GATEWAY's ledger, and the fallback spawns under its own
+    // isolated home, so asserting the gateway ledger is unchanged here would
+    // pass for a reason having nothing to do with what is being tested.
     const res = await request.post(`${SIDECAR_URL}/invoke`, {
-        data: { cmd: 'oracle_cast', args: { system: 'tarot', question: 'cut-point probe', dayId: todayId() } }
+        data: { cmd: 'oracle_cast', args: { system: 'tarot', question: 'fallback probe', dayId: todayId() } }
     });
     const body = (await res.json()) as { ok: boolean; error?: string };
     expect(body.ok).toBe(false);
     expect(body.error ?? '').toContain('Unknown tarot system');
-    // and the failed cast mutated NOTHING: the S0 ledger is byte-identical
-    expect(await ledgerText(request)).toBe(ledgerBefore);
+});
+
+test('cut-point: a deposition with no cast behind it is refused', async ({ request }) => {
+    // The deposit seam is S1 authority only — it never invents a cast. An empty
+    // output must not become an empty artifact on the user's day.
+    const res = await request.post(`${SIDECAR_URL}/invoke`, {
+        data: {
+            cmd: 'oracle_deposit',
+            args: { system: 'rws', question: 'empty deposit probe', dayId: todayId(), output: '   ' }
+        }
+    });
+    const body = (await res.json()) as { ok: boolean; error?: string };
+    expect(body.ok).toBe(false);
+    expect(body.error ?? '').toContain('empty cast');
 });
 
 test('cut-point: the persistence read is real — a path with no file behind it 404s', async ({ request }) => {

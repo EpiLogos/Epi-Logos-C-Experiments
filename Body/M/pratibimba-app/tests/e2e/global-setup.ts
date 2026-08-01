@@ -305,7 +305,13 @@ export default async function globalSetup(): Promise<void> {
             '--epi-bin',
             EPI_BIN,
             '--nara-home',
-            naraHome
+            naraHome,
+            // 25.T25.24: `/nara-history` must serve the ledger of whoever
+            // CASTS. The pane dispatches `nara.oracle.cast` to the gateway, so
+            // that is the gateway's own nara home — the fallback spawn's
+            // isolated home stays `--nara-home` and is a different ledger.
+            '--cast-home',
+            join(gatewayHome, '.epi-logos', 'nara')
         ],
         { stdio: ['ignore', 'ignore', 'inherit'], detached: false }
     );

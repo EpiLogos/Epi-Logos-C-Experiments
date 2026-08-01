@@ -1,7 +1,16 @@
+/**
+ * 25.T25.24 — the cast is a GATEWAY act. These tests assert the two-step
+ * flow the tranche installed: `nara.oracle.cast` on the wire, then the S1
+ * `oracle_deposit`. The old single-step `oracle_cast` spawn was the Track-00
+ * hardening-T17 bypass, and a test that still asserted it would keep the
+ * bypass green.
+ */
+
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { OraclePane } from './OraclePane';
+import { ORACLE_CAST_METHOD, ORACLE_DEPOSIT_COMMAND, OraclePane, castTextOf } from './OraclePane';
 import { commands } from '../commands/registry';
+import { setGateway } from '../bridge/gatewayHolder';
 import { useSessionStore } from '../state/stores';
 import { publishProfileTick, resetProfileTicks } from '../composition/profileTickSubscription';
 
@@ -11,13 +20,26 @@ vi.mock('../bridge/tauri', () => ({
     listenEvent: vi.fn(async () => () => undefined)
 }));
 
+const gatewayInvoke = vi.fn();
+
+/** The one socket, answering the cast with the CLI text `cli_to_rpc` wraps. */
+function gatewayCasting(text = 'The Star'): void {
+    gatewayInvoke.mockResolvedValue({ artifact: { result: text } });
+    setGateway({ connected: true, invoke: gatewayInvoke } as never);
+}
+
 describe('OraclePane', () => {
     beforeEach(() => {
         invokeCommand.mockReset();
+        gatewayInvoke.mockReset();
+        gatewayCasting();
         useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
         resetProfileTicks();
     });
-    afterEach(cleanup);
+    afterEach(() => {
+        cleanup();
+        setGateway(null);
+    });
 
     it('refuses to cast without an anchored day', () => {
         render(<OraclePane />);
@@ -41,11 +63,21 @@ describe('OraclePane', () => {
 
         const result = await screen.findByTestId('oracle-result');
         expect(result.textContent).toContain('The Star');
-        expect(invokeCommand).toHaveBeenCalledWith('oracle_cast', {
+        // the CAST went to the gateway…
+        expect(gatewayInvoke).toHaveBeenCalledWith(ORACLE_CAST_METHOD, {
             system: 'rws',
             question: 'what now?',
-            dayId: '02-07-2026'
+            yes: true
         });
+        // …and only the DEPOSIT went to the host, carrying the gateway's text
+        expect(invokeCommand).toHaveBeenCalledWith(ORACLE_DEPOSIT_COMMAND, {
+            system: 'rws',
+            question: 'what now?',
+            dayId: '02-07-2026',
+            output: 'The Star'
+        });
+        // the retired bypass is never reached
+        expect(invokeCommand).not.toHaveBeenCalledWith('oracle_cast', expect.anything());
         fireEvent.click(screen.getByTestId('oracle-artifact-link'));
         expect(opened).toEqual(['Empty/Present/02-07-2026/oracle-120000-tarot.md']);
         expect(screen.getByTestId('provenance-derived')).toBeTruthy();
@@ -179,10 +211,48 @@ describe('OraclePane', () => {
 
     it('surfaces cast errors honestly (hygiene refusals included)', async () => {
         useSessionStore.setState({ dayNow: '02-07-2026' });
-        invokeCommand.mockRejectedValue(new Error('Excessive frequency: 6 casts today (max 6)'));
+        // the hygiene ledger lives under the CLI, so the refusal arrives on the
+        // wire — the pane must show it verbatim, not translate it
+        gatewayInvoke.mockRejectedValue(new Error('Excessive frequency: 6 casts today (max 6)'));
         render(<OraclePane />);
         fireEvent.change(screen.getByTestId('oracle-question'), { target: { value: 'again?' } });
         fireEvent.click(screen.getByTestId('oracle-cast'));
         expect((await screen.findByTestId('oracle-error')).textContent).toContain('Excessive frequency');
+        // a refused cast deposits NOTHING
+        expect(invokeCommand).not.toHaveBeenCalled();
+    });
+
+    it('25.T25.24: a disconnected gateway REFUSES — it never falls back to the Tauri spawn', async () => {
+        useSessionStore.setState({ dayNow: '02-07-2026' });
+        setGateway(null);
+        render(<OraclePane />);
+        fireEvent.change(screen.getByTestId('oracle-question'), { target: { value: 'offline?' } });
+        fireEvent.click(screen.getByTestId('oracle-cast'));
+        const error = await screen.findByTestId('oracle-error');
+        expect(error.textContent).toContain(ORACLE_CAST_METHOD);
+        // the whole point: no spawn, no deposit, no artifact
+        expect(invokeCommand).not.toHaveBeenCalled();
+        expect(screen.queryByTestId('oracle-result')).toBeNull();
+    });
+
+    it('25.T25.24: a cast with no text is a refusal, never an empty artifact', async () => {
+        useSessionStore.setState({ dayNow: '02-07-2026' });
+        gatewayInvoke.mockResolvedValue({ artifact: { result: '   ' } });
+        render(<OraclePane />);
+        fireEvent.change(screen.getByTestId('oracle-question'), { target: { value: 'empty?' } });
+        fireEvent.click(screen.getByTestId('oracle-cast'));
+        expect((await screen.findByTestId('oracle-error')).textContent).toContain('no cast text');
+        expect(invokeCommand).not.toHaveBeenCalled();
+    });
+
+    it('25.T25.24: castTextOf narrows the cli_to_rpc envelope and refuses everything else', () => {
+        // `cli_to_rpc` parses JSON when it can and wraps plain text as {result}
+        expect(castTextOf({ result: 'Tarot Draw #4' })).toBe('Tarot Draw #4');
+        expect(castTextOf('Tarot Draw #4')).toBe('Tarot Draw #4');
+        expect(castTextOf({ result: '  padded  ' })).toBe('padded');
+        expect(castTextOf({ result: '' })).toBeNull();
+        expect(castTextOf({ primary_hex: 12 })).toBeNull();
+        expect(castTextOf(null)).toBeNull();
+        expect(castTextOf(undefined)).toBeNull();
     });
 });

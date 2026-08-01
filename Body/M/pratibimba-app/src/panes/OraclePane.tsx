@@ -1,8 +1,23 @@
 /**
- * Coordinate: M' M4' (oracle modality, plan T4.1)
+ * Coordinate: M' M4' (oracle modality, plan T4.1; gateway-dispatched 25.T25.24)
  * Actualises: the cast surface — typed invocation of the real consent-gated
  *   epi oracle, deposited as a day artifact the timeline shows immediately.
  *   Requires an anchored day (casts are lived events, not floating queries).
+ *
+ *   THE CAST DISPATCHES TO THE GATEWAY. `nara.oracle.cast` is the wire act
+ *   (Track-24 law: casts dispatch to the gateway, never local randomness;
+ *   every gateway route has a CLI twin and surfaces route through the
+ *   gateway). Until 25.T25.24 this pane invoked the Tauri `oracle_cast`
+ *   command, which spawned the CLI directly and reached past the gateway
+ *   entirely — the Track-00 hardening-T17 integrated-smoke finding. The
+ *   spawn survives in `src-tauri/src/oracle.rs` as an offline fallback that
+ *   nothing here calls.
+ *
+ *   THERE IS NO SILENT FALLBACK. With the gateway down the cast REFUSES and
+ *   says so. A quiet drop back to the Tauri spawn would restore the bypass
+ *   while every test still passed, which is the failure this tranche closes.
+ *   Deposition is unchanged S1 law: `oracle_deposit` composes the day
+ *   artifact through the one composition authority and writes it.
  *   Each deposited artifact renders its §6.5 resonance indicator (numeric +
  *   Major/Minor/Shadow, pending-resonance fallback) via M4NaraResonance
  *   (05.T5.1) and its §5.11 envelope strip (oracle-frame/protein refs, deck
@@ -12,6 +27,7 @@
  */
 
 import { useState } from 'react';
+import { gateway, gatewayReady } from '../bridge/gatewayHolder';
 import { invokeCommand } from '../bridge/tauri';
 import { commands } from '../commands/registry';
 import { useSessionStore, useTickStore } from '../state/stores';
@@ -25,6 +41,29 @@ import {
     readingCardinality,
     type NaraOracleEnvelopeIndicator
 } from './m4NaraOracleEnvelope';
+
+/** The gateway method that OWNS the cast (25.T25.24). */
+export const ORACLE_CAST_METHOD = 'nara.oracle.cast';
+/** The S1 deposition seam — composition authority in src-tauri/src/oracle.rs. */
+export const ORACLE_DEPOSIT_COMMAND = 'oracle_deposit';
+
+/**
+ * `nara.oracle.cast` answers the CLI's text through `cli_to_rpc`, which wraps
+ * non-JSON output as `{result: "<text>"}`. Narrowed here rather than trusted:
+ * a cast with no text is a refusal, never an empty artifact.
+ */
+export function castTextOf(artifact: unknown): string | null {
+    if (typeof artifact === 'string') {
+        return artifact.trim() || null;
+    }
+    if (artifact && typeof artifact === 'object') {
+        const result = (artifact as { result?: unknown }).result;
+        if (typeof result === 'string') {
+            return result.trim() || null;
+        }
+    }
+    return null;
+}
 
 interface CastResult {
     artifactPath: string;
@@ -115,10 +154,29 @@ export function OraclePane() {
         setError(null);
         setResult(null);
         try {
-            const outcome = await invokeCommand<CastResult>('oracle_cast', {
+            if (!gatewayReady()) {
+                throw new Error(
+                    `Gateway disconnected — a cast is a gateway act (${ORACLE_CAST_METHOD}). ` +
+                        'Nothing was cast and nothing was deposited.'
+                );
+            }
+            // S3: the cast itself. The CLI twin runs UNDER the gateway, which
+            // owns consent, hygiene and the S0 ledger append.
+            const receipt = await gateway().invoke(ORACLE_CAST_METHOD, {
                 system,
                 question: q,
-                dayId: dayNow
+                yes: true
+            });
+            const output = castTextOf(receipt.artifact);
+            if (!output) {
+                throw new Error(`${ORACLE_CAST_METHOD} answered with no cast text — nothing to deposit.`);
+            }
+            // S1: the day deposition, unchanged.
+            const outcome = await invokeCommand<CastResult>(ORACLE_DEPOSIT_COMMAND, {
+                system,
+                question: q,
+                dayId: dayNow,
+                output
             });
             setResult(outcome);
         } catch (err) {
