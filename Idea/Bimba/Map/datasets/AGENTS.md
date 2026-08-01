@@ -48,6 +48,13 @@ and the reflection/crystallisation law in [[45-bimba-map-indexing-and-dox-okf-un
 - Projector `scripts/project-map-index.mjs` reads the seed JSON to regenerate the `M0/`–`M5/`
   navigation projection; that is a **repo-projection convenience over frozen provenance**, not a
   runtime data path, and it never re-promotes into the graph (reflection is downward-only).
+- `scripts/generate-deep-regional-cypher.mjs` owns `registeredTargets` — the **recovery allowlist**.
+  A property absent from it is unrecoverable after a wipe (2026-07-28). Register a camelCase→target
+  mapping the moment a new property enters the write path, not after it is lost; declare StringList
+  targets in `stringListTargets` too. The generator emits `SET n +=` on `:Bimba` nodes only, so it
+  carries **no label and no relationship** — those recover from their own idempotent migration
+  (Tranche 09.T9.14's `:World`/`:Archetypal`/`:Gnostic` + `WORLD_*` set recovers from
+  `Body/S/S2/graph-services/migrations/2026-08-01-world-gnostic-namespace-promotion.cypher`).
 
 ## Work Guidance
 - To change correspondence data, change the **live graph** (the authority) — never edit a

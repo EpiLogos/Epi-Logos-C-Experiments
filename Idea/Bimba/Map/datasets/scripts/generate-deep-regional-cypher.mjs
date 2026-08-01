@@ -64,7 +64,26 @@ export const registeredTargets = new Set([
   "l_2_vedic_mantra",
   "l_3_spiritual_function",
   "s_4_english_translation",
+  // 2026-08-01 registration ahead of the write (Tranche 09.T9.14). The `/World`
+  // namespace promotion mints this CCT-17b wikilink span-pointer on `:World`
+  // nodes. Registering it BEFORE the migration is ever applied is the whole
+  // lesson of the 2026-07-28 wipe: an unregistered property is unrecoverable
+  // afterwards, and the moment to fix that is before it exists, not after it
+  // is lost. Hen populates the values; this line is what makes them restorable.
+  "c_1_source_artifact_span",
 ]);
+
+// RECOVERY BOUNDARY — read this before assuming the standard restore chain is
+// total. This generator restores *node properties* on `:Bimba` nodes and
+// nothing else: it emits `MATCH (n:Bimba {coordinate: …}) SET n += {…}`, so it
+// can carry no LABEL and no RELATIONSHIP. Tranche 09.T9.14 mints both — the
+// `:World` / `:Archetypal` / `:Gnostic` labels and the `WORLD_FORM_OF` /
+// `WORLD_ONTOLOGY_OF` relations — and their in-repo restore authority is the
+// migration itself, which is idempotent precisely so it can be re-run as a
+// recovery step:
+//     Body/S/S2/graph-services/migrations/2026-08-01-world-gnostic-namespace-promotion.cypher
+// Its literals are machine-bound to the schema registries by
+// `cargo test -p epi-s2-graph-services --test world_namespace_migration`.
 
 // NAMED STALENESS, not fixed here because it is a canon decision.
 // `mappings.m_prime` emits the LOOSE global form (`arabicText -> m_2_arabic_text`,
@@ -82,6 +101,11 @@ export const stringListTargets = new Set([
   "c_5_resonances",
   "l_2_therapeutic_properties",
   "s_5_tool_affinity",
+  // StringList per `SOURCE_ARTIFACT_SPAN_PROPERTY` in Body/S/S2/graph-schema
+  // (`GraphPropertyType::StringList`, cardinality Many). Registering the type
+  // alongside the target is what keeps a restore from writing a comma-joined
+  // scalar where the schema declares a list.
+  "c_1_source_artifact_span",
 ]);
 
 export const mappings = {
@@ -108,6 +132,7 @@ export const mappings = {
     keyPrinciples: "c_1_key_principles",
     practicalApplications: "c_3_practical_applications",
     relatedCoordinates: "c_3_related_coordinates",
+    sourceArtifactSpan: "c_1_source_artifact_span", // 2026-08-01, Tranche 09.T9.14
   },
   p: {
     qlVariant: "p_1_variant",
