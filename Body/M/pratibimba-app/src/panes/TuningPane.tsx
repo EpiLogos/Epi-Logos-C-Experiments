@@ -1,19 +1,24 @@
 /**
- * Coordinate: M' M5' (live tunability surface — 38.T06.8)
+ * Coordinate: M' M5' (live tunability surface — 38.T06.8, 38.T38.1)
  * Residency: Body/M/pratibimba-app/src/panes.
  * Position (#n): governed carrier projection over the S0 tuning adapter.
  * Actualises: live registry reads, Tier-1 developer writes, audit reads, and
- *   local locking through the declared `s5'.tune.*` gateway surface.
+ *   local locking through the declared `s5'.tune.*` gateway surface; the
+ *   38.T38.1 render contract — an `owning_subsystem`-grouped tree, per-knob
+ *   residency / scope / privacy / risk / ml-trainable / authority citation, and
+ *   greyed never-editable structural invariants. No modals: the pane IS the
+ *   landing surface.
  * Public surface: TuningPane.
  * Does NOT own: tunable schemas, validation policy, audit persistence, or the
  *   Tier-2 proposal lifecycle.
- * Contract: [[M5'-SPEC]] / [[S0-SPEC]] / [[S3-SPEC]] / [[DR-TUNE-1]].
+ * Contract: [[M5'-SPEC]] / [[S0-SPEC]] / [[S3-SPEC]] / [[DR-TUNE-1]] / [[DR-TUNE-3]].
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { useProvenanceStore } from '../state/stores';
 import { useOmniPanelSessionStore } from './omni/omnipanelSessionState';
+import './TuningPane.css';
 
 const REGISTRY_LIST_RPC = "s5'.tune.registry.list";
 const REGISTRY_GET_RPC = "s5'.tune.registry.get";
@@ -31,8 +36,35 @@ interface TunableKnob {
     readonly locked: boolean;
     readonly structural_invariant: boolean;
     readonly tuning_risk_class: string;
+    readonly residency_class: string;
+    readonly scope_class: string;
+    readonly privacy_class: string;
+    readonly ml_trainable: boolean;
+    readonly authoritative_doc: string;
     readonly owning_subsystem: string;
     readonly description: string;
+}
+
+/**
+ * The left tree is grouped by `owning_subsystem` per the 38.T38.1 render
+ * contract, not sorted flat: the schema's subsystem column IS the tree's
+ * spine, so a knob's coordinate home is legible before its key is read.
+ */
+interface KnobGroup {
+    readonly subsystem: string;
+    readonly knobs: readonly TunableKnob[];
+}
+
+function groupBySubsystem(knobs: readonly TunableKnob[]): readonly KnobGroup[] {
+    const groups = new Map<string, TunableKnob[]>();
+    for (const knob of knobs) {
+        const subsystem = knob.owning_subsystem || 'unassigned';
+        const bucket = groups.get(subsystem);
+        if (bucket) bucket.push(knob); else groups.set(subsystem, [knob]);
+    }
+    return Object.freeze([...groups.entries()]
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([subsystem, bucket]) => Object.freeze({ subsystem, knobs: Object.freeze(bucket) })));
 }
 
 interface AuditEntry {
@@ -73,6 +105,15 @@ function normalizeKnob(value: unknown): TunableKnob | null {
         locked: row.locked,
         structural_invariant: row.structural_invariant,
         tuning_risk_class: row.tuning_risk_class,
+        // The schema classes below ride the same `s5'.tune.registry.*` payload
+        // (serialized `TunableMetadata`). They are optional-with-fallback rather
+        // than required so an older gateway still lists its knobs instead of
+        // dropping every row at the normalizer.
+        residency_class: typeof row.residency_class === 'string' ? row.residency_class : '',
+        scope_class: typeof row.scope_class === 'string' ? row.scope_class : '',
+        privacy_class: typeof row.privacy_class === 'string' ? row.privacy_class : '',
+        ml_trainable: row.ml_trainable === true,
+        authoritative_doc: typeof row.authoritative_doc === 'string' ? row.authoritative_doc : '',
         owning_subsystem: row.owning_subsystem,
         description: typeof row.description === 'string' ? row.description : ''
     });
@@ -147,6 +188,7 @@ export function TuningPane() {
         () => knobs.find(knob => knob.key === tuningState.selectedKnobKey) ?? knobs[0] ?? null,
         [knobs, tuningState.selectedKnobKey]
     );
+    const groups = useMemo(() => groupBySubsystem(knobs), [knobs]);
 
     const refresh = useCallback(async () => {
         if (!connected) return;
@@ -242,16 +284,33 @@ export function TuningPane() {
             </header>
             <div className="tuning-grid">
                 <aside className="tuning-list" aria-label="Tunables">
-                    {knobs.map(knob => (
-                        <button
-                            key={knob.key}
-                            type="button"
-                            data-selected={knob.key === selected?.key}
-                            onClick={() => patchTab('tuning', { selectedKnobKey: knob.key, subsystemFilter: knob.owning_subsystem })}
+                    {groups.map(group => (
+                        <section
+                            key={group.subsystem}
+                            className="tuning-group"
+                            data-subsystem={group.subsystem}
+                            aria-label={`${group.subsystem} tunables`}
                         >
-                            <span>{knob.key}</span>
-                            <small>{knob.owning_subsystem} · {knob.tuning_risk_class}{knob.locked ? ' · locked' : ''}</small>
-                        </button>
+                            <h3 className="tuning-group-label">{group.subsystem}<small>{group.knobs.length}</small></h3>
+                            {group.knobs.map(knob => (
+                                <button
+                                    key={knob.key}
+                                    type="button"
+                                    data-selected={knob.key === selected?.key}
+                                    data-structural-invariant={knob.structural_invariant}
+                                    data-locked={knob.locked}
+                                    onClick={() => patchTab('tuning', { selectedKnobKey: knob.key, subsystemFilter: knob.owning_subsystem })}
+                                >
+                                    <span>{knob.key}</span>
+                                    <small>
+                                        {knob.tuning_risk_class}
+                                        {knob.ml_trainable ? ' · ml-trainable' : ''}
+                                        {knob.locked ? ' · locked' : ''}
+                                        {knob.structural_invariant ? ' · structural invariant' : ''}
+                                    </small>
+                                </button>
+                            ))}
+                        </section>
                     ))}
                 </aside>
                 <div className="tuning-detail">
@@ -264,6 +323,15 @@ export function TuningPane() {
                             <div><dt>Type</dt><dd>{selected.value_type}</dd></div>
                             <div><dt>Default</dt><dd>{displayValue(selected.default)}</dd></div>
                             <div><dt>Risk</dt><dd>{selected.tuning_risk_class}</dd></div>
+                            <div><dt>Residency</dt><dd>{selected.residency_class || 'unspecified'}</dd></div>
+                            <div><dt>Scope</dt><dd>{selected.scope_class || 'unspecified'}</dd></div>
+                            <div><dt>Privacy</dt><dd>{selected.privacy_class || 'unspecified'}</dd></div>
+                            <div><dt>ML-trainable</dt><dd>{selected.ml_trainable ? 'yes' : 'no'}</dd></div>
+                            <div><dt>Subsystem</dt><dd>{selected.owning_subsystem}</dd></div>
+                            <div className="tuning-citation">
+                                <dt>Authority</dt>
+                                <dd>{selected.authoritative_doc || 'unattributed'}</dd>
+                            </div>
                         </dl>
                         <label className="tuning-value">Value
                             <input value={draft} onChange={event => setDraft(event.currentTarget.value)} disabled={loading || selected.locked || selected.structural_invariant} />

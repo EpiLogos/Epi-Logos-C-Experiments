@@ -1,0 +1,53 @@
+/*
+ * Coordinate: M' M5' (tunability tree chrome — 38.T38.1)
+ * Residency: Body/M/pratibimba-app/src/panes.
+ * Position (#n): co-located leaf styles for the Tuning pane's subsystem tree.
+ * Actualises: the `owning_subsystem` grouping spine and the structural-invariant
+ *   greying named by the 38.T38.1 render contract.
+ * Public surface: .tuning-group, .tuning-group-label, .tuning-citation, and the
+ *   [data-structural-invariant] / [data-locked] states on .tuning-list buttons.
+ * Does NOT own: the base tuning surface layout (src/styles.css §Governed tuning
+ *   surface), tunable schema law, or any tuning behaviour.
+ * Contract: [[M5'-SPEC]] / [[S0-SPEC]] / [[S3-SPEC]] / [[DR-TUNE-1]] / [[DR-TUNE-3]].
+ */
+
+.tuning-group-label {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin: 0;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--surface, inherit);
+  padding: 0.35rem 0.6rem;
+  color: var(--ink-dim);
+  font-size: var(--type-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tuning-group-label small {
+  font-size: var(--type-micro);
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Structural invariants stay listed and stay selectable — the ~15 never-tunable
+ * constants are part of the surface's honesty, and a developer must be able to
+ * read one. What they must never read as is editable, so the row greys and the
+ * caption names the class; the detail side is what actually refuses the write.
+ */
+.tuning-list button[data-structural-invariant='true'] {
+  opacity: 0.55;
+}
+
+.tuning-list button[data-locked='true'] {
+  border-left: 3px solid var(--hairline);
+}
+
+.tuning-citation {
+  grid-column: 1 / -1;
+}

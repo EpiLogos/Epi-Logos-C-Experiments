@@ -64,8 +64,8 @@ The audit discipline: nothing builds on a cycle-3 claim until verified. Runs con
 
 ## Architect Decision Queue
 
-Register §3, in one place: **S5.5b** (recommend a) · **aperture-17 confirm** · **palette law (D0)** · **planet: address** · **batch-DR posture** (recommend: substance stands, implementations re-verify) · **DR-VAK-4/5/6 + DR-M3-TRANSCRIPT-1 + DR-ENTITY-CODON-1 + DR-TUNE-1..4 ratifications** · **roster mis-count canon correction** (CLAUDE.md/S4-SPEC) · **pratibimba-app git baseline** · carried gates (E5 eyes, S6.4/S5.4).
+Register §3, in one place: **S5.5b** (recommend a) · **aperture-17 confirm** · **palette law (D0)** · **planet: address** · **batch-DR posture** (recommend: substance stands, implementations re-verify) · **DR-VAK-4/5/6 + DR-M3-TRANSCRIPT-1 + DR-ENTITY-CODON-1 ratifications** (DR-TUNE-1..4 **ratified 2026-08-01**, off this queue) · **roster mis-count canon correction** (CLAUDE.md/S4-SPEC) · **pratibimba-app git baseline** · carried gates (E5 eyes, S6.4/S5.4).
 
 ## Out of scope for Phase 2 (do not drift into)
 
-Vama-Shakti arena UI (until Track-41 substrate verifies); tunability UI (until DR-TUNE ratifies); model-slot/MoE dispatch surfaces; Graphiti UI; WebGPU rewrites of working three.js strata; any epi-theia modification (frozen reference only); canon writes outside the CU-ledger/Hen law.
+Vama-Shakti arena UI (until Track-41 substrate verifies); ~~tunability UI (until DR-TUNE ratifies)~~ — **IN SCOPE from 2026-08-01**: DR-TUNE-1..4 are VALIDATED by Architect ruling, so the carrier Tuning pane (Track 38 / [[38.T38.1]]) is released work, not drift; model-slot/MoE dispatch surfaces; Graphiti UI; WebGPU rewrites of working three.js strata; any epi-theia modification (frozen reference only); canon writes outside the CU-ledger/Hen law.
