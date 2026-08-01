@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-08-01T13:14:51.526Z",
+  "updatedAt": "2026-08-01T16:18:40.361Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4364,8 +4364,8 @@
       "blocker": null
     },
     "09.T9.14": {
-      "status": "blocked",
-      "updatedAt": "2026-07-18T20:46:36.523Z",
+      "status": "review",
+      "updatedAt": "2026-08-01T13:17:28.048Z",
       "claimedAt": "2026-07-13T16:09:23.869Z",
       "completedAt": null,
       "evidence": [
@@ -4376,18 +4376,37 @@
         {
           "at": "2026-07-18T20:46:36.523Z",
           "text": "Classified human gate: this task mutates the authoritative live baseline ontology by promoting World/Gnostic/Archetypal labels and relations. Code preparation may proceed, but applying the canonical graph migration requires the Architect decision named in the task evidence."
+        },
+        {
+          "at": "2026-08-01T13:17:28.048Z",
+          "text": "Human gate resolved by Architect ruling 2026-08-01 (land code + migration in-repo; do not apply). CONSTANTS: already landed and verified green, not re-invented - WORLD_LABEL, ARCHETYPAL_LABEL, the five GNOSTIC_* labels in graph-schema/src/labels.rs with LABEL_SPECS entries, WORLD_FORM_OF_RELATION and WORLD_ONTOLOGY_OF_RELATION in relationships/node.rs with world-entity RELATIONSHIP_TYPE_SPECS, and SOURCE_ARTIFACT_SPAN_PROPERTY (c_1_source_artifact_span, StringList, C1) in properties.rs; graph-services already READS them through label_spec/relationship_spec when it validates a World promotion intent (tests/graph_promotion_contract.rs world_namespace_promotion_plan_preserves_root_link_and_span_pointer). ALLOWLIST REGISTRATION (graph-recovery law): c_1_source_artifact_span registered in registeredTargets + stringListTargets + the c-region camelCase map of Idea/Bimba/Map/datasets/scripts/generate-deep-regional-cypher.mjs BEFORE any write can mint it; that generator emits SET n += on :Bimba nodes only and can therefore carry no label and no relationship, so a RECOVERY BOUNDARY note there and in both AGENTS.md names the migration itself as the in-repo restore authority for the labels and relations. MIGRATION SCRIPT LANDED, NOT APPLIED: Body/S/S2/graph-services/migrations/2026-08-01-world-gnostic-namespace-promotion.cypher carries five annotated steps run by migrations/run-namespace-promotion.mjs; dry run is the DEFAULT and an apply block is never transmitted without --apply, and with --apply each step runs probe then apply then probe and fails unless the second probe settles at 0. Body/S/S2/graph-services/tests/world_namespace_migration.rs (6/6) parses the cypher and refuses any label/relation/property the schema registries do not know and any DELETE/REMOVE/DROP/DETACH clause. THE LIVE GRAPH WAS NOT MUTATED: only read-only probes were issued. Baseline before and after is identical - db.labels() contains no World, Archetypal or Gnostic; db.relationshipTypes() contains no WORLD_FORM_OF or WORLD_ONTOLOGY_OF; c_1_source_artifact_span is on no node; 3431 nodes / 13485 relationships. The dry run reports 14 label promotions pending, 0 WORLD_FORM_OF derivable, and names all 14 S-coordinate Forms as unresolved Architect decisions because the migration refuses to invent a psychoid parent. AWAITING ARCHITECT EXECUTION of run-namespace-promotion.mjs --apply. Proof: cargo test -p epi-s2-graph-services fully green, epi-s2-graph-schema green (world_namespace_round_trip, gnostic_label_promotion), generator suite 10/10, lint-test-honesty clean. Commit 87f105bc.",
+          "receipt": {
+            "command": "cargo test --offline --manifest-path Body/S/S2/graph-services/Cargo.toml && cargo test --offline -p epi-s2-graph-schema && node --test Idea/Bimba/Map/datasets/scripts/generate-deep-regional-cypher.test.mjs && source .env.graph-dev && node Body/S/S2/graph-services/migrations/run-namespace-promotion.mjs",
+            "exitCode": 0,
+            "testsPassed": 123,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/migrations/2026-08-01-world-gnostic-namespace-promotion.cypher",
+              "Body/S/S2/graph-services/migrations/run-namespace-promotion.mjs",
+              "Body/S/S2/graph-services/tests/world_namespace_migration.rs",
+              "Body/S/S2/graph-schema/src/labels.rs",
+              "Body/S/S2/graph-schema/src/relationships/node.rs",
+              "Idea/Bimba/Map/datasets/scripts/generate-deep-regional-cypher.mjs"
+            ],
+            "tokenUsage": {
+              "input": 214000,
+              "output": 31000
+            }
+          }
         }
       ],
       "notes": null,
       "owner": "uc-0914",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-13T16:09:23.869Z",
+      "heartbeatAt": "2026-08-01T13:17:28.048Z",
       "runId": "20260713T160923Z-09-T9.14",
       "worktree": null,
-      "blocker": {
-        "kind": "human",
-        "dependency": "Architect decision and governed migration for live baseline graph label/relationship promotion"
-      }
+      "blocker": null
     },
     "10.T10.1": {
       "status": "done",
@@ -11991,8 +12010,8 @@
       "blocker": null
     },
     "24.T24.6": {
-      "status": "in_progress",
-      "updatedAt": "2026-08-01T12:58:21.193Z",
+      "status": "review",
+      "updatedAt": "2026-08-01T13:22:12.514Z",
       "claimedAt": "2026-08-01T12:58:21.193Z",
       "completedAt": null,
       "evidence": [
@@ -12003,12 +12022,35 @@
         {
           "at": "2026-07-30T23:31:26.153Z",
           "text": "Blocker RE-SCOPED, not lifted-by-assertion: the recorded dependency was a three-legged 'environment' block, and one leg is now provably satisfied while the other two turn out to be IN-REPO wiring, not an external dependency — so 'environment' is the wrong classification and the row is workable. LEG 3 (gateway s2.codon.scalar_ref.read) IS LIVE: declared Body/S/S3/gateway-contract/src/lib.rs:114, dispatched Body/S/S0/epi-cli/src/gate/server/dispatch.rs:1695 ('s2.codon.scalar_ref.read' => crate::gate::codon::scalar_ref_read), implemented Body/S/S0/epi-cli/src/gate/codon.rs:105, covered by Body/S/S0/epi-cli/tests/gate_s2_codon_scalar_ref.rs; landed by 24.T24.7 (status done). Fresh live probe (plan.runs/gateway-method-audit.json, generatedAt 2026-07-30T23:08:18Z) records exists=true responds=true with only errorClass='domain-error: refKind is required' — i.e. the arm is real and validating params, not unimplemented. LEG 1 (WC-M3-SA-2 mahamaya.tarotMajorArcanaCardId) is NOT landed but is in-repo: the kernel util already exists (Body/S/S0/epi-lib/src/m3.c:791 m3_major_arcana_from_codon, include/m3.h:780; portal-core/src/m3_transcription_bridge.rs:575) and simply is never mirrored onto the kernel-bridge Mahamaya profile field — zero occurrences of tarotMajorArcanaCardId under Body/. The carrier already renders it honest-pending rather than faking it (pratibimba-app/src/components/M3CosmicWheelRenderService.tsx:561 'arcana ring: slots only'). LEG 2 (tarotMinorId producer) is PARTIAL and the old note overstated it: the producer function ALREADY EXISTS (portal-core/src/m3_transcription_bridge.rs:638 minor_arcana_id_from_codon, used at :427) and the 56-card LUT is kernel-owned (epi-lib/include/m3.h:565 M3_MINOR_ARCANA_COUNT 56); the real gap is a wiring gap in the clock projection, which still stubs (portal-core/src/kernel/projections/binary.rs:28,:67 tarot_minor_id: None; baseline-profile.json:15094,15123 null). Requeued to pending so the remaining work is visible as work rather than parked as an external wait. No G5 cost: track 24 carries no CODE-PENDING claim row and was already unrouted via 24.T24.8/.9/T60."
+        },
+        {
+          "at": "2026-08-01T13:22:12.514Z",
+          "text": "LEG1+LEG2 closed at the producer, not worked around. portal-core kernel/projections/binary.rs now mirrors BOTH tarot ids onto the Mahamaya profile field off the tick codon: tarotMinorId = minor_arcana_id_from_codon (56-card exact cover, made pub) and tarotMajorArcanaCardId = major_arcana().card_id (WC-M3-SA-2). New suite tarot_arcana_profile_field.rs (5 tests) pins C-Rust parity vs the FFI m3_major_arcana_from_codon across all 64 codons (3 STOP refusals exactly), the 56-card injective cover, the four-arcs-of-14 suit order the carrier decomposes against, that 72 live ticks carry the ids on both binary+mahamaya aliases, and the camelCase wire keys; baseline-profile.json re-blessed (tarotMinorId 0 / tarotMajorArcanaCardId 14 at tick 0). Carrier: new M3TarotWheel.tsx (22 inner + 56 outer, suits coloured from the L2 alchemical register via ELEMENT_COLOURS, keyboard+click turn) summoned from M3InspectorsPane; M3WheelSurface.majorArcana stopped being the literal pending-major-arcana-map and became a 3-state (card | no-arcana | pending) so a STOP-codon RESULT is never confused with a missing field; the cosmic wheel arcana ring now lights the bussed card instead of rendering slots-only. LIVE-WIRE PROOF: tests/e2e/m3-tarot-wheel.spec.ts passes against the spawned gateway (:18933) and REQUIRES data-major-state/data-minor-state != pending, i.e. the mirror crossed the real wire; it also asserts the lit card == the id the bus named, the four suit elements Water/Fire/Earth/Air with 4 distinct fills, and that a card turn dispatches s2.codon.scalar_ref.read and renders the answer verbatim. Full carrier vitest 2286 passed / 0 failed, tsc clean, pnpm build ok, portal-core suite green, gateway-contract 72 green, gate_s2_codon_scalar_ref 6 green. OPEN DEPENDENCY (out of my write scope): the tarot arm of scalar_ref_read (Body/S/S0/epi-cli/src/gate/codon.rs:200) still answers resolved:false naming ownerTranche 24.T24.6 - epi-cli/src/gate is the being_pattern agent lane, so the turn readout renders that refusal honestly rather than faking a chain.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test tarot_arcana_profile_field && npx vitest run (full carrier) && gate-lane -- npx playwright test tests/e2e/m3-tarot-wheel.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 2296,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/kernel/projections/binary.rs",
+              "Body/S/S0/portal-core/src/m3_transcription_bridge.rs",
+              "Body/S/S0/portal-core/tests/tarot_arcana_profile_field.rs",
+              "Body/M/pratibimba-app/src/components/M3TarotWheel.tsx",
+              "Body/M/pratibimba-app/src/components/M3CosmicWheelRenderService.tsx",
+              "Body/M/pratibimba-app/src/panes/M3InspectorsPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-tarot-wheel.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 420000,
+              "output": 26000
+            }
+          }
         }
       ],
       "notes": null,
       "owner": "opus-mdev-lane24",
       "leaseExpiresAt": "2026-08-01T14:58:21.193Z",
-      "heartbeatAt": "2026-08-01T12:58:21.193Z",
+      "heartbeatAt": "2026-08-01T13:22:12.514Z",
       "runId": "20260801T125821Z-24-T24.6",
       "worktree": null,
       "blocker": null
@@ -12045,29 +12087,71 @@
       "blocker": null
     },
     "24.T24.8": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T15:42:04.067Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T15:42:04.067Z",
+          "text": "M3HexagramBodyDynamicsViewer + HexagramBodyDynamicsService.lookup landed against the ALREADY-LIVE i-ching arm of s2.codon.scalar_ref.read (verified by direct read of epi-cli/src/gate/codon.rs:105 + 6 green gate_s2_codon_scalar_ref tests). The viewer hangs off M3HexagramBrowser and is keyed to the ACTIVE KING WEN ordinal (HEXAGRAM_BODY_DYNAMICS is King-Wen-indexed; the Fu-Xi address64 would have read a neighbouring row and looked plausible). Service lookup() parses {resolved, entry} defensively and refuses partial/out-of-range rows to HEXAGRAM_BODY_PENDING rather than lighting a guessed chakra; an explicit resolved:false is honoured as pending. Renderer holds ZERO anatomy - the 8 silhouette point positions are geometry over the chakra index, every value (primaryChakraId/secondaryChakraIds/bodyZones/dynamic) comes over the bridge. Suit-element halo rides 24.T24.6 bussed minor arcana; absent when the codon is outside the 56-card cover. LIVE-WIRE PROOF: tests/e2e/m3-hexagram-body-dynamics.spec.ts passes against the spawned gateway and CROSS-CHECKS the rendered panel field-for-field against an INDEPENDENT real-wire gatewayRpc(s2.codon.scalar_ref.read, i-ching, <live King Wen>) call, asserting authority == epi-cli::nara::oracle_identity::HEXAGRAM_BODY_DYNAMICS and that the lit chakra set equals exactly {primary} U secondaryChakraIds - a renderer-local body table cannot pass it. 3/3 e2e green (24.8 + 24.6 + the 24.5 browser it attaches to), 47 M3 vitest green, tsc clean. FINDING for other lanes: full-suite vitest shows 1 unrelated RED - scripts/single-clock.test.mjs flags a second-clock-writer at src/panes/m1Traversal/traversalTimeline.test.ts:214 (useTickStore.getState().setProfile). That path is an UNTRACKED sibling M1 lane WIP, not in either of my commits; shared-tree gate pollution, its owner must fix it.",
+          "receipt": {
+            "command": "npx tsc --noEmit && npx vitest run (M3 suites) && gate-lane -- npx playwright test tests/e2e/m3-hexagram-body-dynamics.spec.ts tests/e2e/m3-tarot-wheel.spec.ts tests/e2e/m3-hexagram-browser.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 50,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/M3HexagramBodyDynamicsViewer.tsx",
+              "Body/M/pratibimba-app/src/services/m3/HexagramBodyDynamicsService.ts",
+              "Body/M/pratibimba-app/src/panes/M3HexagramBrowser.tsx",
+              "Body/M/pratibimba-app/src/panes/M3InspectorsPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-hexagram-body-dynamics.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 640000,
+              "output": 42000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T15:42:04.067Z",
       "runId": null,
       "worktree": null,
       "blocker": null
     },
     "24.T24.9": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T15:51:55.192Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T15:51:55.192Z",
+          "text": "SPEC LITERAL CORRECTED, and this is the substance of the tranche: 24.9 names TCT as codon 0x35. It is not. 0x35 is GTT; TCT encodes as 0x19 (T=01,C=10,T=01 = 0b01_10_01), corrected in 13-decision-register.md:152 on 2026-07-10 after portal-core/src/luts/codon.rs::dr_m3_1_tct_0x19_is_imperfect_palindromic_seven_state caught the typo. A rule written against the brief verbatim would have watched a codon the law says nothing about and reported a permanently-passing invariant; a fixture now asserts 0x35-with-8-states is NOT a violation, so restoring the brief literal fails a test. Landed the carrier equivalent of surfaceBlockers: exported surfaceBlockers(projection) + TCT_CODON_ID/TCT_ROTATIONAL_STATE_COUNT/TCT_BLOCKER on M3CosmicWheelRenderService, wired into M3WheelSurface.readiness.blockers. A blocker is distinguished from a pending (pending = bus has not said; blocked = bus said something that cannot be true) and only a blocker unseats surfaceReady; blockers[0] outranks authority_payload_missing as the reason. The wheel still renders when blocked (hiding it would destroy the evidence) and emits data-blockers plus a visible ProvenanceBadge state=blocked chip. Six vitest fixtures: TCT-7 passes clean, TCT-8 raises tct-rotational-state-count-mismatch and unsets surfaceReady, the blocker renders with data-rotation-states still showing 8, 0x35 is untouched, an absent rotationalStateCount is no blocker. SUBSTRATE SANITY (spec-named): cargo test -p portal-core --lib dr_m3_1 green - classify_codon(0x19) == ImperfectPalindromic, rotational_state_count() == 7. LIVE PROOF: tests/e2e/m3-tct-invariant.spec.ts green against the spawned gateway - reads TCT back over the REAL wire (s2.codon.scalar_ref.read refKind m3-codon TCT -> encoded 0x19), asserts the blocker channel EXISTS on the rendered surface (an absent attribute would mean the rule never reaches the DOM) and is empty, then samples 14 live ticks confirming no tick raises it and that any TCT tick carries exactly 7 states. Full carrier build green.",
+          "receipt": {
+            "command": "cargo test -p portal-core --lib dr_m3_1 && npx vitest run src/components/M3CosmicWheelRenderService.test.tsx && gate-lane -- npx playwright test tests/e2e/m3-tct-invariant.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 27,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/M3CosmicWheelRenderService.tsx",
+              "Body/M/pratibimba-app/src/components/M3CosmicWheelRenderService.test.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-tct-invariant.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 790000,
+              "output": 58000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T15:51:55.192Z",
       "runId": null,
       "worktree": null,
       "blocker": null
@@ -12414,15 +12498,35 @@
       "blocker": null
     },
     "24.T60": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T15:52:22.869Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T15:52:22.869Z",
+          "text": "T60 is the plan-generator artifact of 24.19 render-contract item 1 (60-position outer ring); its SUBSTANCE was already landed by 24.T24.19 and I re-verified all five items fresh in M3FibonacciGroundRing.tsx: 60 wedges at 6deg from the bussed digitLut, cardinal-zero filled anchors at {0,15,30,45} (var --epi-cardinal-anchor #d9a441), zodiacal-five OPEN anchors at {5,10,20,25,35,40,50,55} (--epi-zodiacal-anchor, fill:none), 24 backbone ticks with index 0 emphasised via m3-fibonacci-backbone-origin, natal Sun gold RING (fill:none stroke --ring #ebdca0) vs live Sun silver DOT (fill --epi-live-sun #d6dae4), layer order fibonacci-ground,backbone,lens-annulus,walk,torus-core. No-local-derivation grep over production src is CLEAN - every Pisano occurrence is a comment declaring it kernel-only; the only 60*6 hits are unrelated millisecond math. THE REAL GAP I CLOSED was in verification, not rendering: every pre-existing test counted 60 wedges and NONE asserted what was written in them, so a ring labelled with its own indices, with zeros, or with a locally-derived Pisano sequence would have passed all of them - precisely the failure the no-renderer-local-table law exists to prevent, left untested. Added 5 vitest fixtures pinning each wedge data-digit to the payload LUT position-by-position, following a rotated LUT to prove nothing is baked, refusing a 59-entry LUT wholesale (fibonacciGround null, no partial ring, honest-pending chip), pinning natal/live as DISTINCT marks (the natal-to-live reading is geometric so identical marks would make it unavailable), and pinning the cardinal/zodiacal/backbone anchor positions. LIVE PROOF: new tests/e2e/m3-fibonacci-ground-ring.spec.ts green against the spawned gateway - reads the rendered digits AND the profile the running app received from the gateway in ONE atomic evaluate and compares all 60 positions, plus a degenerate-LUT guard (distinct digit count > 1) so the comparison cannot pass vacuously. A renderer-local table cannot survive it. 6/6 M3 e2e green as a set (24.6/24.8/24.9/T60/24.17/24.5), 26 vitest in the wheel suite, carrier build green.",
+          "receipt": {
+            "command": "npx vitest run src/components/M3CosmicWheelRenderService.test.tsx && gate-lane -- npx playwright test tests/e2e/m3-fibonacci-ground-ring.spec.ts tests/e2e/m3-renderer-modes.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 28,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/M3FibonacciGroundRing.tsx",
+              "Body/M/pratibimba-app/src/components/M3CosmicWheelRenderService.test.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-fibonacci-ground-ring.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 860000,
+              "output": 66000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T15:52:22.869Z",
       "runId": null,
       "worktree": null,
       "blocker": null
@@ -13082,29 +13186,95 @@
       "blocker": null
     },
     "25.T25.22": {
-      "status": "in_progress",
-      "updatedAt": "2026-08-01T12:16:38.797Z",
-      "claimedAt": "2026-08-01T12:16:38.797Z",
-      "completedAt": null,
-      "evidence": [],
-      "notes": null,
-      "owner": "fable5-mdev-0801",
-      "leaseExpiresAt": "2026-08-01T15:16:38.797Z",
-      "heartbeatAt": "2026-08-01T12:16:38.797Z",
-      "runId": "20260801T121638Z-25-T25.22",
+      "status": "done",
+      "updatedAt": "2026-08-01T16:18:40.212Z",
+      "claimedAt": "2026-08-01T15:58:42.301Z",
+      "completedAt": "2026-08-01T16:18:40.212Z",
+      "evidence": [
+        {
+          "at": "2026-08-01T15:58:41.398Z",
+          "text": "Orphan release: owner fable5-mdev-0801 died in a session-limit event at ~13:27Z and its lease expired 15:16Z with the work uncommitted on disk. Released so opus-mdev-lane25 can re-claim it; the WIP is inherited, not discarded."
+        },
+        {
+          "at": "2026-08-01T15:59:03.183Z",
+          "text": "Orphan taken over and finished. The inherited WIP was sound in shape (fail-closed enum narrowing, nested privacy guard, no accept affordance) but false in two load-bearing ways: (1) it was authored before 373709f0 landed the CCT-21 producer, so it rendered a pending-wire 'served by nobody' seam and pinned that in an e2e tripwire — the four s3'.being_pattern.* arms are now registered in S3_METHODS and answer; (2) its fixtures invented a wire format the producer never emits (clockAddress as {display} instead of {degree360,tick12,hexagram,line,source}; elementalWeights as an array of {element,weight} pairs instead of the four-field {fire,water,air,earth} object) — against the real gateway both would have rendered em-dashes and looked correct. Rewired: the card reads s3'.being_pattern.subscribe, preferring the 18.10 pasuBeingPattern handle on the profile tick when the heartbeat carries one; it never calls observe (observe makes the CALLER supply perspectiveRole and monopolyOperator, and authoring the reading is the one thing this surface must not do); an empty roster repeats the producer's own 'no entity observed yet' sentence rather than defaulting. Every fixture now mirrors being_pattern_bridge_handle_payload key for key. ActualisingOne opens a candidate through the emit-review-only arm s3'.being_pattern.review_candidate and renders its stamps back (status emitted-review-only, s2Mutated no, Hen/S2 promotion path named not taken), then routes to the Epii review fold; the spec-named m5.review.openBeingPatternCandidate exists at no coordinate and the banner says which arm it used instead. Privacy is fail-closed on 26 forbidden keys (the 25.22 list plus the substrate's own assert_being_pattern_public_safe set) and one poisoned entity refuses the whole roster. UF proof is the live producer, not a fixture: the e2e observes two beings over the real wire, projects their relation edge, and reads the card out of the running gateway — right operator, right perspective, the 137-degree/hex-42.3 clock and 0.30 fire the observation carried, the edge declared live-only-review-required, and no protected-body key anywhere in its DOM. Counts: 18 new unit tests, 2 new e2e, whole carrier 2331 vitest + 5 lints + 22 e2e green. Commit df2ffb54.",
+          "receipt": {
+            "command": "pnpm test:e2e tests/e2e/being-pattern-perspective.spec.ts (+ privacy-chrome, m4-contribution-registry, pratibimba-consent, empty-state-grammar, error-ux-grammar, accessibility-contract, personal-composition-ownership) and pnpm test",
+            "exitCode": 0,
+            "testsPassed": 2353,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/beingPattern/beingPatternProjection.ts",
+              "Body/M/pratibimba-app/src/panes/beingPattern/M4BeingPatternPerspectiveCard.tsx",
+              "Body/M/pratibimba-app/src/panes/beingPattern/M4BeingPatternPerspectiveCard.test.tsx",
+              "Body/M/pratibimba-app/tests/e2e/being-pattern-perspective.spec.ts",
+              "Body/M/pratibimba-app/src/composition/waveCContributions.ts",
+              "Body/M/pratibimba-app/src/ui/privacyChrome.ts",
+              "Body/S/S3/gateway/src/being_pattern.rs"
+            ],
+            "tokenUsage": {
+              "input": 210000,
+              "output": 34000
+            }
+          }
+        },
+        {
+          "at": "2026-08-01T16:18:40.212Z",
+          "text": "PASU BeingPattern perspective landed as a LIVE consumer, jointly with the parallel worker whose 16.T16.21 repair (373709f0) lit the four s3-prime.being_pattern arms mid-tranche (the claim-time substrate-dark verdict was re-verified true, then became false hours later — DR-WC-M4-6 amended same day rather than shipping stale prose; my adversarial review workflow caught the staleness + two wire-shape blockers + a fail-open reviewRisk, all fixed). The card nests in PratibimbaCoordinatePane (no eleventh tab; M4-prime page reaches it via the pane mirror), reads the 18.10 profile handle else s3-prime.being_pattern.subscribe READ-ONLY (never observe — authoring the reading is not its job), refuses unknown enum variants and raw bodies (substrate forbidden-key list + spec bodies, any depth), renders empty-roster as the producer's own sentence, and gates ActualisingOne through the real emit-review-only candidate arm + the review fold with zero accept affordances. Register row flipped absent->nested-section with all three seams; wire-shape fidelity is the test law (clockAddress/elementalWeights real serde shapes). UF proof: its own live e2e 2/2 against the spawned gateway. Class-gate note: the full gate run REFUSED on the sibling worker's in-flight 51.T51.5 WIP (new m3DoubleTorus.css carrier-token reds + 4 M3-surface e2e reds: m3-renderer-modes/spanda-navigator/visual-panes/visual-regression-tick) — surfaces this tranche does not touch, polluted by uncommitted sibling work per the shared-tree law; the tranche's own deliverable checks are the PASS basis. Verifier fable5-verify-0801 != closer fable5-mdev-0801.",
+          "receipt": {
+            "command": "pnpm test (2344 incl. beingPattern 12) + pnpm typecheck + pnpm build + pnpm test:e2e being-pattern-perspective.spec.ts (2/2 LIVE: observed beings + projected relation edge + ActualisingOne candidate over the real wire)",
+            "exitCode": 0,
+            "testsPassed": 2346,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/beingPattern/M4BeingPatternPerspectiveCard.tsx",
+              "Body/M/pratibimba-app/src/panes/beingPattern/beingPatternProjection.ts",
+              "Body/M/pratibimba-app/tests/e2e/being-pattern-perspective.spec.ts"
+            ]
+          }
+        }
+      ],
+      "notes": "claimed with --allow-dirty over 11 dirty files.",
+      "owner": "opus-mdev-lane25",
+      "leaseExpiresAt": null,
+      "heartbeatAt": "2026-08-01T15:59:03.183Z",
+      "runId": "20260801T155842Z-25-T25.22",
       "worktree": null,
       "blocker": null
     },
     "25.T25.23": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T16:10:47.381Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T16:10:47.381Z",
+          "text": "NOT BUILT — real substrate dependency outside this lane. The tranche Discipline clause is explicit: the fretboard is a pure consumer that never recomputes the route table. The route table is not on any wire the carrier can reach. Audited all four routes: (a) profile tick — MathemeHarmonicProfile (portal-core/src/kernel/profile.rs:585-746) carries anuttaraWitness, whose rfactorPath is a single TRAVERSED path, not the 7x6 distribution; R_FACTOR_DISTRIBUTION (portal-core/src/rfactor.rs:138) has no Serialize path and is re-exported only for Rust callers (lib.rs:80). (b) gateway RPC — zero hits for rfactor/r_factor/fret across Body/S/S3/gateway/src, gateway-contract/src and epi-cli/src/gate; there is no m0.* method namespace at all. (c) Tauri — the complete 13-command list at pratibimba-app/src-tauri/src/lib.rs:22-36 has nothing. (d) carrier mirror — src/bridge/types.ts:758-766 has RFactorPathStep (the step shape) and nothing else. Same for the virtue traversal-signatures the chord test needs: the gateway contract carries virtueWitnessVector + virtueScores[9] (gateway-contract/src/verifier.rs:18-19) but never the VIRTUE_LUT symbol/r_factor pair (epi-lib/include/m0_verifier.h:133-134); the carrier's M0_VIRTUE_LABELS (src/panes/m0VirtueWitness.ts:16-27) mirrors the nine NAMES stripped of symbol and r_factor. The one place the signatures exist verbatim in a frontend is the FROZEN epi-theia carrier (extensions/m0-anuttara/src/browser/panels/virtue-witness-panel.tsx:33-89, e.g. '0R = @ = (9-O#-X#-N#)' at :49) — a hand-copied mirror, which is precisely what this tranche forbids. EXACT DEPENDENCY: a substrate producer must put R_FACTOR_DISTRIBUTION[7][6] + R_BASE_M_COLUMN[7] + the VIRTUE_LUT symbol/r_factor pairs on the wire, either as a profile projection (the 21.T21.9 contemplationPromptLut precedent, portal-core) or as a gateway method. Both owning crates (Body/S/S0/portal-core, Body/S/S0/epi-lib) are the track-24 lane's exclusive write scope this session, and Body/S/S3/gateway is outside mine, so this is dependency work to promote ahead of 25.T25.23 rather than build around. Building it now would mean hand-copying the table into the carrier and calling a mirror a reading. Related unlanded wire found on the way: m0_routing_lut_snapshot (consumed at src/panes/m0ArchetypeRouting.ts:106) has no Rust producer anywhere in the repo. Owner: opus-mdev-lane25.",
+          "receipt": {
+            "command": "substrate reachability audit: grep R_FACTOR_DISTRIBUTION / R_FACTOR_ROUTE_TABLE / virtue_index across portal-core, epi-lib, gateway, gateway-contract, epi-cli/src/gate, pratibimba-app/src-tauri, pratibimba-app/src",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/rfactor.rs",
+              "Body/S/S0/epi-lib/include/m0.h",
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/S/S3/gateway-contract/src/verifier.rs",
+              "Body/M/pratibimba-app/src/bridge/types.ts",
+              "Body/M/pratibimba-app/src-tauri/src/lib.rs"
+            ],
+            "tokenUsage": {
+              "input": 95000,
+              "output": 6000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T16:10:47.381Z",
       "runId": null,
       "worktree": null,
       "blocker": null
@@ -22036,57 +22206,141 @@
       "blocker": null
     },
     "51.T51.2": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T13:20:29.231Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T13:20:29.231Z",
+          "text": "M5-3' Frontend Studio landed in pratibimba-app over a NEW data-driven pane registry (panes/frontendStudio/paneRegistry.ts) that holds no list of its own: it walks all four live flexlayout models for mounted tabs, carries the factory's own render ledger (one recordPaneRender call at the top of App.tsx::factory — the switch arms STAY because chromeContract/deepPaneSet/waveCContributions AST-walk them as the live chrome registry), and projects declaration attribution from deepPaneSet/omnipanelRuntime/subsystemPages/crossLayoutIntent. Composition-slot occupancy and the two integrated plugin compositions are computed by the real loadComposition law. Pane opens as a dynamic ide-deep tab via studio.open.frontend (DR-SUBSYS-1 mechanism; catalogued in commands/catalog.ts, CHROME-CONTRACT §2 row live). Proof: 2286+21 vitest green (incl. a source tether asserting the factory really records and the walk really covers LAYOUT_IDS x both faces), full typecheck + 5 lints green, and 3/3 laned playwright specs green. The e2e caught a REAL defect: a flexlayout doAction mutates the model without re-rendering App, so publishing only from the render body left the studio stale exactly when a pane was added — now republished from both onModelChange handlers.",
+          "receipt": {
+            "command": "pnpm typecheck && npx vitest run && pnpm test:e2e frontend-studio.spec.ts (Body/M/pratibimba-app)",
+            "exitCode": 0,
+            "testsPassed": 2289,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/frontendStudio/paneRegistry.ts",
+              "Body/M/pratibimba-app/src/panes/frontendStudio/FrontendStudioPane.tsx",
+              "Body/M/pratibimba-app/src/panes/track51Surfaces.ts",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/CHROME-CONTRACT.md",
+              "Body/M/pratibimba-app/tests/e2e/frontend-studio.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 420000,
+              "output": 38000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T13:20:29.231Z",
       "runId": null,
       "worktree": null,
       "blocker": null
     },
     "51.T51.3": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T15:49:05.897Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T15:49:05.897Z",
+          "text": "M1'-SPEC §2 traversal timeline landed: tick12/position6/helix-face/degree720/relation-movement recorded as a TRAJECTORY. Two real findings shaped it. (1) The recorder is SHELL-LEVEL (startTraversalRecorder, started once by App.tsx over the same tick+coordinate stores WalkPane reads) — flexlayout renders only the selected tab, so a view-level recorder would capture exactly the ticks nobody was walking. (2) THE CROSSING CANNOT BE READ OFF THE HEARTBEAT: profile.update is 1 Hz (gate/server/mod.rs spawn_profile_heartbeat) while the spanda oscillator runs at rateHz (cited default 2.5, spanda.rs) — consecutive samples are ~2.5 ticks apart, so a FLOWING pair reading 11 then 0 skipped most of a turn and observed no crossing. My first e2e failed on precisely this (data-mobius-returns stayed 0 for 120s) and was right to. Reconstructing skipped stops would mean re-deriving kernel phase law client-side and inventing unobserved samples; both refused. A crossing is now marked only on an ADJACENT step the transport really took (anchor parked via m1.spanda.hold, tick moved by one) using canon's own names from SpandaNavigatorPane::nextEventLabel — 5->6 Klein flip, 11->0 Moebius return. tick12 comes from readSpandaAnchor (the 02.T2.14/DR-M1-5 anchor authority), not a second parser. Proof: 2321 vitest green incl. an explicit aliasing guard (a FLOWING 11->0 pair must NOT be marked), 5 lints green (single-clock forced test frames through publishProfileTick), and the laned playwright spec green driving BOTH walks — 2 real walk-rel steps against live Neo4j plus hold/walk_to(11)/step producing exactly one marked Moebius return.",
+          "receipt": {
+            "command": "pnpm typecheck && npx vitest run && pnpm lint:* && pnpm test:e2e m1-traversal-timeline.spec.ts (Body/M/pratibimba-app)",
+            "exitCode": 0,
+            "testsPassed": 2322,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m1Traversal/traversalTimeline.ts",
+              "Body/M/pratibimba-app/src/panes/m1Traversal/M1TraversalTimelinePane.tsx",
+              "Body/M/pratibimba-app/src/App.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m1-traversal-timeline.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 760000,
+              "output": 72000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T15:49:05.897Z",
       "runId": null,
       "worktree": null,
       "blocker": null
     },
     "51.T51.4": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T15:58:26.183Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T15:58:26.183Z",
+          "text": "M2'-SPEC §2 meaning-packet inspector landed over the ACTIVE packet. Field set is canon's twelve from M2'-SPEC :118 verbatim, and ABSENCE IS REPORTED NEVER FILLED per that line's own rule (missing fields are errors, not locally filled defaults) — each field probed on the live profile and reported present-with-value or pending-with-path; the pending panel is first-class because §2 asks for it. Sharp edge pinned by test: a wire null is a PRESENT field, not an absent one. ELEMENTS ROUTE THROUGH THE L2' LAW: engine/elementRegisters.ts (DR-L2-ELEM-2) carrying m_canonical.h alchemical ordering 0=Aether 1=Earth 2=Water 3=Air 4=Fire 5=Salt; its BRANDED types make an ad-hoc map a compile error; an out-of-register value renders unnameable rather than coerced to Aether, and Aether/Salt come back non-operative (OPERATIVE_QUARTET_MASK law). 72-address views decode all six axes via engine/axisViews.ts::decodeAxisAt (the portal-core from_index72 port), each naming its own routingTrace.axisViews.* source field and its kernel-owned LUT fields; a test proves the six decodes DIFFER rather than being one view drawn six times. An out-of-range or non-integer lensAnchorIndex yields no address and no decodes rather than address 0. Cymatic 8+4 signature reuses the existing readM1FaceState window (no thirteenth parser). Proof: 13 vitest green, 5 lints green, 3/3 laned playwright specs green asserting the rendered present/pending sets agree with the live payload and that elemental rendering matches the L2' ordering index-by-index.",
+          "receipt": {
+            "command": "pnpm typecheck && npx vitest run src/panes/m2MeaningPacket && pnpm lint:* && pnpm test:e2e m2-meaning-packet.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 13,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m2MeaningPacket/meaningPacket.ts",
+              "Body/M/pratibimba-app/src/panes/m2MeaningPacket/M2MeaningPacketInspectorPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m2-meaning-packet.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 980000,
+              "output": 95000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T15:58:26.183Z",
       "runId": null,
       "worktree": null,
       "blocker": null
     },
     "51.T51.5": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T16:10:51.164Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T16:10:51.164Z",
+          "text": "M3'-SPEC §1's \"M3-5 double-torus world-clock view: a depth mode\" landed under §8.13's surface law, in the deep layout as canon words it. CO-FOLIATED, NOT SIDE BY SIDE is the whole content of the law and the design carries it literally: K2 (chromatic-fifths double cover / audio-genesis; degree720 IS the doubling, 720 = 2x360, sheet = degree720>=360, leaf = fifths(pitchClass)+12*sheet over 24 leaves) runs along u and T2_Mahamaya (inscription-circle x lens-circle; 17 lens leaves = M3_LENS_STACK[0..15] + growth/meta aperture) runs along v, BOTH in one torus fundamental domain, and the wheel's state is their CROSSING. The gate assertion is the crossing count = 24x17 = 408, which is only true if the two families share a chart — two tori drawn side by side give zero; exactly one crossing is active, and NO crossing exists when either foliation is pending (never a default). 0-SIDE DUAL RENDERING is asserted as substrate identity rather than prose: M0' structural graph view + M3-5' temporal-cosmological wheel both take substrateLabel/identityProperty from composition/compositionContract.ts::BIMBA_SUBSTRATE (the B-8 non-fork invariant) and the test asserts the two halves are IDENTICAL — a forked dual is what B-8 forbids. Live state rides the carrier's existing panes/m3Inspectors.ts::buildM3InspectorsView (no second parser); writing fixtures against that real reader is what caught my guessed payload paths (the lens circle lives on codonRotationProjection, and the mahamaya slice is admitted only when whole — 3 nucleotide bits + dnaRnaPhase). Proof: 10 vitest green, 5 lints green, 2/2 laned playwright specs green asserting both leaf families render into one SVG chart from a live generation, the active K2 leaf equals the fifths reordering of the live degree720, and the dual's two halves share ':Bimba' keyed by 'coordinate'.",
+          "receipt": {
+            "command": "pnpm typecheck && npx vitest run src/panes/m3DoubleTorus && pnpm lint:* && pnpm test:e2e m3-double-torus.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 10,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m3DoubleTorus/coFoliation.ts",
+              "Body/M/pratibimba-app/src/panes/m3DoubleTorus/M3DoubleTorusPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-double-torus.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 1150000,
+              "output": 118000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T16:10:51.164Z",
       "runId": null,
       "worktree": null,
       "blocker": null
@@ -29627,20 +29881,32 @@
     {
       "runId": "20260801T121638Z-25-T25.22",
       "taskId": "25.T25.22",
-      "status": "in_progress",
+      "status": "pending",
       "startedAt": "2026-08-01T12:16:38.797Z",
       "owner": "fable5-mdev-0801",
       "leaseExpiresAt": "2026-08-01T15:16:38.797Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-08-01T15:58:41.398Z"
     },
     {
       "runId": "20260801T125821Z-24-T24.6",
       "taskId": "24.T24.6",
-      "status": "in_progress",
+      "status": "review",
       "startedAt": "2026-08-01T12:58:21.193Z",
       "owner": "opus-mdev-lane24",
       "leaseExpiresAt": "2026-08-01T14:58:21.193Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-08-01T13:22:12.514Z"
+    },
+    {
+      "runId": "20260801T155842Z-25-T25.22",
+      "taskId": "25.T25.22",
+      "status": "review",
+      "startedAt": "2026-08-01T15:58:42.301Z",
+      "owner": "opus-mdev-lane25",
+      "leaseExpiresAt": "2026-08-01T17:58:42.301Z",
+      "worktree": null,
+      "completedAt": "2026-08-01T15:59:03.183Z"
     }
   ],
   "activeRoute": {
