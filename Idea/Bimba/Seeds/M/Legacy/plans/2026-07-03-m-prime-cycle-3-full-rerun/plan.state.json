@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-08-01T12:16:12.169Z",
+  "updatedAt": "2026-08-01T13:14:51.526Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -7442,8 +7442,8 @@
       "blocker": null
     },
     "16.T16.21": {
-      "status": "done",
-      "updatedAt": "2026-07-11T23:53:55.530Z",
+      "status": "review",
+      "updatedAt": "2026-08-01T13:13:39.262Z",
       "claimedAt": "2026-07-11T23:49:55.993Z",
       "completedAt": "2026-07-11T23:53:55.530Z",
       "evidence": [
@@ -7461,12 +7461,34 @@
               "Body/S/S3/redis-context/src/redis_cache.rs"
             ]
           }
+        },
+        {
+          "at": "2026-08-01T13:13:39.262Z",
+          "text": "EVIDENCE AMENDMENT + REPAIR-IN-PLACE (owner opus-mdev-bp, 2026-08-01; Architect ruling: repair, no quarantine). THE FALSE CLAIM was clause (b) of the 2026-07-11 close: 'The four s3'.being_pattern.* methods are registered and gateway-handled (being_pattern_live_state 3 green).' Registration and gateway handling did not exist. TWO INDEPENDENT PROOFS. (1) SOURCE: no handler for any of the four existed at ANY coordinate — epi-cli/src/gate/server/dispatch.rs served only s3'.temporal.subscribe and s3'.spacetime.subscribe from the family, and the S3 crate's own table (gateway/src/s3_handlers.rs:102) read exactly S3_METHODS = ['s3'.temporal.context']. parity.rs:709-712 only CLASSIFIES the four into the s3'.* namespace and dispatches nothing; dispatch_contract.rs listed all four in s3_only_methods() as unbuilt exemptions. (2) LIVE PROBE: gateway-method-audit.json generatedAt 2026-08-01T12:15:50Z recorded all four advertised:true, exists:false, responds:true, errorClass:'unimplemented' against a REAL spawned gateway. CORRECTION TO THE FINDING AS STATED TO ME: the cited test file DOES exist (Body/S/S3/gateway/tests/being_pattern_live_state.rs, 3 tests, green then and now) — but it never proved the claim: it asserted only that classify_method() maps the four NAMES to the S3' temporal route, plus fixture self-consistency of being_pattern_acceptance_replay(). Name-classification is not dispatch. That is how the false clause passed review. EVERYTHING ELSE IN THE ORIGINAL CLOSE RE-VERIFIED TRUE: the three SpaceTimeDB tables + three reducers with the ActualisingOne-only assert (epi-spacetime-module/src/lib.rs:216-255, 548-700), the four Redis key families (redis-context/src/redis_cache.rs:157-177), the ProtectedReferenceOnly privacy rows (gateway-contract/src/kernel_bridge.rs:205-207), and the contract declarations (protocol.rs:171-174, dispatch_plan.rs:311-333). Only the handler layer was missing. THE REPAIR (commit 373709f0): new Body/S/S3/gateway/src/being_pattern.rs — a real producer. observe() inducts an entity and emits EntityObserved/BeingPatternProjected/PerspectiveRoleResolved/MonoPolyOperatorResolved/ClockAddressUpdated; project() COMPUTES the live relation edge (aspect separation from the two observed clock addresses, elemental delta target-minus-source) and emits AspectEdgeComputed/ElementalResonanceChanged/PatternPacketFormed; subscribe() serves one generation, the ordered nine-event chain, the observed roster and the Redis/SpaceTimeDB handles; review_candidate() admits ONLY ActualisingOne (Mono/Poly/ActuallyMany/PotentiallyOne/MonoPoly all refused invalid-params), stamps reviewRisk forced-unification + status emitted-review-only + s2Mutated false, and NAMES the Hen/S2 promotion path (s1'.q_articulation.accept behind M5 review + M0 witness) instead of taking it — CCT-21 (f) holds. Three SpaceTimeDB reducer client methods added at gateway/src/spacetime/presence.rs (observe_being_pattern_entity / project_being_pattern_relation / emit_being_pattern_review_candidate); Redis writes use the redis-context key families and report landed:false with a reason when Redis is absent rather than claiming a cache. HONESTY INVARIANTS BUILT IN: the producer never invents an inhabitant — project on an unobserved entity is not-found ('the producer does not invent live entities'), an empty roster says so, and the acceptance replay is returned only on request and labelled source:'acceptance-replay-fixture' against source:'live-producer'. PRIVACY: assert_being_pattern_public_safe gates params on the way IN as well as payloads on the way OUT, so a protected episodeBody cannot enter the stream. RESIDENCY (Track 53): registration is in the S3 crate's OWN table (S3_METHODS 1->5, register_s3_handlers) reached through the S-root port — NO epi-cli match arm was added; the four consequently LEFT dispatch_contract's s3_only_methods() exemption list and the T9 route cross-walk re-armed on them. FRESH PROOF: gateway-method-audit.json regenerated 2026-08-01T13:07:11Z against a real spawned gateway now records s3'.being_pattern.observe/.project/.subscribe/.review_candidate all exists:true (subscribe answers ok with empty params; the other three answer a domain-error naming their required param — no longer 'unimplemented'); the four are ratcheted into gateway-method-expected-present.json claimedBy 16.T16.21 and gateway-method-gate is GREEN with 0 missing. Direct live-wire over a spawned 'epi gate start' drove the whole two-entity acceptance scenario (user-being FirstPerson/Mono, school-of-thought-being ThirdPerson/Poly, a computed 120-degree separation edge, one shared generation, the ActualisingOne refusal-and-emission pair, and the protected-body refusal): 22/22 green. being_pattern_live_state.rs grew from 3 to 8 tests — the new five are REAL MethodRegistry dispatch, which is what actually reaches the wire. STANDING GAP (unchanged, named honestly): the SpaceTimeDB reducer calls are exercised only when SPACETIMEDB_URL/EPI_GATE_SPACETIME_URL is configured; with no module running the producer is in-process and says so in every response's spacetime.attempted field. Status set to review, not done: verifier must differ from implementer.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S3/gateway/Cargo.toml (127) + gateway-contract (93) + epi-spacetime-module (11) + redis-context (15) + graphiti-runtime (16) + epi-cli --test gate_spacetimedb_bridge_being_pattern --test kernel_bridge_runtime_contract (29) = 291 rust tests; LIVE-WIRE over a spawned `epi gate start` (scratchpad bp-live-wire.mjs, port 18937): 22/22 checks green; node Body/M/pratibimba-app/scripts/gateway-method-audit.mjs (real gateway, 284 methods) -> all four s3-prime being_pattern rows exists:true; node .codex/scripts/gateway-method-gate.mjs GREEN (83 ratcheted, 0 missing); node .codex/scripts/lint-test-honesty.mjs 0 dishonest; node Body/M/pratibimba-app/scripts/live-wire.mjs PASS (66 frames)",
+            "exitCode": 0,
+            "testsPassed": 313,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway/src/being_pattern.rs",
+              "Body/S/S3/gateway/src/s3_handlers.rs",
+              "Body/S/S3/gateway/src/spacetime/presence.rs",
+              "Body/S/S3/gateway/tests/being_pattern_live_state.rs",
+              "Body/S/S3/gateway/tests/dispatch_contract.rs",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/gateway-method-audit.json"
+            ],
+            "tokenUsage": {
+              "input": 420000,
+              "output": 34000
+            }
+          }
         }
       ],
       "notes": null,
       "owner": "opus-a-m3",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-11T23:49:55.993Z",
+      "heartbeatAt": "2026-08-01T13:13:39.262Z",
       "runId": "20260711T234955Z-16-T16.21",
       "worktree": null,
       "blocker": null
@@ -11969,9 +11991,9 @@
       "blocker": null
     },
     "24.T24.6": {
-      "status": "pending",
-      "updatedAt": "2026-07-30T23:31:26.153Z",
-      "claimedAt": "2026-07-23T03:11:06.999Z",
+      "status": "in_progress",
+      "updatedAt": "2026-08-01T12:58:21.193Z",
+      "claimedAt": "2026-08-01T12:58:21.193Z",
       "completedAt": null,
       "evidence": [
         {
@@ -11984,10 +12006,10 @@
         }
       ],
       "notes": null,
-      "owner": "opus-mdev-t24-build",
-      "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-23T03:11:13.793Z",
-      "runId": "20260723T031106Z-24-T24.6",
+      "owner": "opus-mdev-lane24",
+      "leaseExpiresAt": "2026-08-01T14:58:21.193Z",
+      "heartbeatAt": "2026-08-01T12:58:21.193Z",
+      "runId": "20260801T125821Z-24-T24.6",
       "worktree": null,
       "blocker": null
     },
@@ -13060,16 +13082,16 @@
       "blocker": null
     },
     "25.T25.22": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
+      "status": "in_progress",
+      "updatedAt": "2026-08-01T12:16:38.797Z",
+      "claimedAt": "2026-08-01T12:16:38.797Z",
       "completedAt": null,
       "evidence": [],
       "notes": null,
-      "owner": null,
-      "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "owner": "fable5-mdev-0801",
+      "leaseExpiresAt": "2026-08-01T15:16:38.797Z",
+      "heartbeatAt": "2026-08-01T12:16:38.797Z",
+      "runId": "20260801T121638Z-25-T25.22",
       "worktree": null,
       "blocker": null
     },
@@ -15581,14 +15603,18 @@
       "blocker": null
     },
     "29.T29.16": {
-      "status": "blocked",
-      "updatedAt": "2026-07-25T12:55:11.609Z",
+      "status": "pending",
+      "updatedAt": "2026-08-01T13:14:51.485Z",
       "claimedAt": "2026-07-25T12:54:11.198Z",
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-25T12:55:11.609Z",
           "text": "BLOCKED on a real missing service — CCT-21's producer stream is unimplemented; established by live probe, not assumption. 29.16's brief states the split verbatim: 'CCT-21 owns the S3 producer stream; this tranche owns composition subscription, rendering, privacy enforcement, and readiness over that stream.' That stream does not exist. All four CCT-21 methods answer unimplemented against a REAL spawned gateway (plan.runs/gateway-method-audit.json, 278 methods probed): s3'.being_pattern.observe, .project, .subscribe, .review_candidate — each exists=false, responds=true, errorClass=unimplemented. Source confirms the probe: epi-cli/src/gate/server/dispatch.rs contains NO being_pattern entry; the only gateway-side occurrence is epi-cli/src/gate/parity.rs:702-705, which merely CLASSIFIES those four names into the s3'.* namespace for parity accounting and dispatches nothing. Partial substrate DOES exist and is worth knowing when CCT-21 is picked up: Body/S/S3/epi-spacetime-module/tests/being_pattern_projection.rs (SpacetimeDB table tests), Body/S/S3/redis-context/src/redis_cache.rs (being_pattern_presence / being_pattern_state / being_pattern_stream_delta keys), and being_pattern_acceptance_replay + being_pattern_bridge_handle_payload in epi-cli/src/gate/spacetimedb_bridge.rs:46 — tables and cache keys landed, nothing surfaced to the carrier; Body/M/pratibimba-app/src has zero occurrences of being_pattern or BeingPattern. NOT STARTED, deliberately: every deliverable here (composition subscription, InhabitedBimbaEntityState rendering across the cosmic and personal compositions, the four composition.being_pattern.* events, the four readiness blockers, the graphiti-source-guard) consumes live entities off that subscription, and the brief's own verification demands a CCT-21 replay fixture asserting the nine-event chain EntityObserved -> BeingPatternProjected -> PerspectiveRoleResolved -> MonoPolyOperatorResolved -> ClockAddressUpdated -> AspectEdgeComputed -> ElementalResonanceChanged -> PatternPacketFormed -> ReviewCandidateEmitted. Implementing subscription and rendering against a method that answers unimplemented would mean synthesising the entity feed to make it look alive — the exact fraud pattern this rerun exists to stop, and doubly wrong here because the tranche's whole point is that live state must NEVER be made canonical. Unblocks the moment s3'.being_pattern.subscribe (plus observe/project/review_candidate) is dispatched: the carrier work is then subscribe -> drop stale generations per 18.10 -> render, and it becomes genuinely UF-provable."
+        },
+        {
+          "at": "2026-08-01T13:14:51.485Z",
+          "text": "RECLASSIFIED blocked(environment) -> pending by opus-mdev-bp, 2026-08-01. The 2026-07-25 blocker was wrong on two counts. (1) MISCLASSIFICATION: blocker.kind was 'environment', but the named dependency — 's3'.being_pattern.subscribe/.observe/.project/.review_candidate are unimplemented' — was a REPOSITORY-OWNED missing method. Per the m-dev subagent brief's standing law, 'a repository-owned missing method, adapter, service, producer, receiver, route, or test harness is dependency work, not an external blocker'; 'not implemented yet inside this repository never qualifies' for blocked. The correct disposition at the time was review-with-named-dependency so the orchestrator could promote CCT-21 ahead of this tranche — which is exactly what has now happened. The technical FINDING in that evidence was accurate and well-evidenced (source read + live probe); only its classification was wrong. (2) NO LONGER TRUE: the producer stream is built and live. 16.T16.21 landed at commit 373709f0 (Body/S/S3/gateway/src/being_pattern.rs, registered via S3's own s3_handlers table per Track 53). A fresh probe of a REAL spawned gateway (plan.runs/gateway-method-audit.json, generatedAt 2026-08-01T13:07:11Z, 284 methods) now records all four s3'.being_pattern.* rows exists:true — the four values the old blocker cited as exists:false/unimplemented. Direct live-wire over 'epi gate start' drove the full nine-event chain end to end: EntityObserved -> BeingPatternProjected -> PerspectiveRoleResolved -> MonoPolyOperatorResolved -> ClockAddressUpdated -> AspectEdgeComputed -> ElementalResonanceChanged -> PatternPacketFormed -> ReviewCandidateEmitted, with two entities (FirstPerson/Mono + ThirdPerson/Poly) sharing one generation, 22/22 checks green. The subscribe response carries entities, relationEdges, reviewCandidates, generation, streamDeltaKey and eventChain — the surface this tranche's composition subscription consumes — and honestly reports an empty roster when nothing has been observed, so the overlay can render absence instead of synthesising a feed. PENDING, NOT READY: this tranche also consumes 25.22, which is in_progress right now (owner fable5-mdev-0801, claimed 2026-08-01T12:16:38Z). Its other consumed work is landed (10.PASU track done, 18.T18.10 done, formal dependsOn 29.T29.15 done). I deliberately did NOT build the overlay: implementing the M4 aural/perspective consumer's sibling against an unlanded 25.22 would repeat the very build-against-an-unfinished-dependency pattern this rerun exists to stop. FOR THE NEXT AGENT: the carrier work is now subscribe -> drop stale generations per 18.10 -> render InhabitedBimbaEntityState, plus the four composition.being_pattern.* events, the four readiness blockers, and the graphiti-source-guard. Note Body/M/pratibimba-app still has zero occurrences of being_pattern/BeingPattern, and Body/M/pratibimba-app/src/panes/beingPattern/ is currently owned by the 25.22 lane — coordinate before writing there. The CCT-21 replay fixture the brief's verification demands is available on the wire: call s3'.being_pattern.subscribe with includeAcceptanceReplay:true; it returns source:'acceptance-replay-fixture' (never mislabelled as live) with m4ConsumerGeneration == clockOverlayGeneration and s2MutationAttempted:false."
         }
       ],
       "notes": "claimed with --allow-dirty over 11 dirty files.",
@@ -15597,10 +15623,7 @@
       "heartbeatAt": "2026-07-25T12:54:11.198Z",
       "runId": "20260725T125411Z-29-T29.16",
       "worktree": null,
-      "blocker": {
-        "kind": "environment",
-        "dependency": "CCT-21 gateway producer stream: s3'.being_pattern.subscribe/.observe/.project/.review_candidate are unimplemented (no dispatch.rs entry; live probe errorClass=unimplemented)"
-      }
+      "blocker": null
     },
     "30.T30.1": {
       "status": "done",
@@ -21301,26 +21324,45 @@
       "blocker": null
     },
     "38.T38.1": {
-      "status": "blocked",
-      "updatedAt": "2026-07-19T08:53:45.891Z",
+      "status": "review",
+      "updatedAt": "2026-08-01T13:06:54.620Z",
       "claimedAt": null,
       "completedAt": null,
       "evidence": [
         {
           "at": "2026-07-19T08:53:45.891Z",
           "text": "Fresh carrier audit: Body/M/pratibimba-app/src/panes/TuningPane.tsx and its App registration already implement the no-modal Tuning pane over s5'.tune.{registry.list,get,set,audit.read,lock.toggle}; gateway-contract declares the full method family. The tranche cannot advance because its explicit authority gate remains unmet: 2026-07-03-cycle-3-recapture-register.md records DR-TUNE-1..4 as PROPOSED, and 2026-07-03-pratibimba-app-phase-2.md keeps tunability UI out of scope until DR-TUNE ratification. No implementation was changed."
+        },
+        {
+          "at": "2026-08-01T13:06:54.620Z",
+          "text": "Human gate lifted by Architect ruling 2026-08-01: DR-TUNE-1, DR-TUNE-2, DR-TUNE-3, DR-TUNE-4 flipped PROPOSED to VALIDATED in 13-decision-register.md (Status lines carry the id per the DR-M4-3 precedent so the machine check resolves), the recapture register's track-38 heading + CARRIER note updated, its open-question 6 closed, and 2026-07-03-pratibimba-app-phase-2.md moves tunability UI out of its out-of-scope list; dr-gate-audit 32/32 green. Verified rather than inherited: the prior audit's 'already implemented' claim was true of the seams but not of the T38.1 render contract - the left tree was flat where the brief specifies owning_subsystem grouping, and residency_class/scope_class/privacy_class/ml_trainable/authoritative_doc were on the serialized TunableMetadata wire yet dropped at normalizeKnob. Both closed in TuningPane.tsx with a co-located TuningPane.css for the group spine and the greyed-invariant state. Source 38 section 7.1 states the ~15 structural invariants are deliberately NOT in the schema and no tunable.toml declares one, so that branch is canon-correct and stays covered; s5'.tune.propose stays off this pane because DR-TUNE-2 sites the Tier-2 lifecycle at M5-4' Review and registry.set already refuses tier != 1. Proof: TuningPane.test.tsx 5/5 with rows lifted verbatim from the live schema TOMLs, tests/e2e/tuning.spec.ts 1/1 against a real spawned gateway under the gate lane (Tier-1 write persisted, audit trail rendered), tsc --noEmit clean. Commit d9fe60e6.",
+          "receipt": {
+            "command": "npx vitest run src/panes/TuningPane.test.tsx && node .codex/scripts/gate-lane.mjs --owner opus-mdev-gates -- npx playwright test tests/e2e/tuning.spec.ts && npx tsc --noEmit && node .codex/scripts/dr-gate-audit.mjs",
+            "exitCode": 0,
+            "testsPassed": 38,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+              "Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md",
+              "Idea/Bimba/Seeds/M/plans/2026-07-03-pratibimba-app-phase-2.md",
+              "Body/M/pratibimba-app/src/panes/TuningPane.tsx",
+              "Body/M/pratibimba-app/src/panes/TuningPane.test.tsx",
+              "Body/M/pratibimba-app/src/panes/TuningPane.css"
+            ],
+            "tokenUsage": {
+              "input": 118000,
+              "output": 14000
+            }
+          }
         }
       ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T13:06:54.620Z",
       "runId": null,
       "worktree": null,
-      "blocker": {
-        "kind": "human",
-        "dependency": "DR-TUNE-1..4 ratification"
-      }
+      "blocker": null
     },
     "02.T2.12": {
       "status": "done",
@@ -29581,6 +29623,24 @@
       "leaseExpiresAt": "2026-08-01T13:39:23.469Z",
       "worktree": null,
       "completedAt": "2026-08-01T12:16:12.142Z"
+    },
+    {
+      "runId": "20260801T121638Z-25-T25.22",
+      "taskId": "25.T25.22",
+      "status": "in_progress",
+      "startedAt": "2026-08-01T12:16:38.797Z",
+      "owner": "fable5-mdev-0801",
+      "leaseExpiresAt": "2026-08-01T15:16:38.797Z",
+      "worktree": null
+    },
+    {
+      "runId": "20260801T125821Z-24-T24.6",
+      "taskId": "24.T24.6",
+      "status": "in_progress",
+      "startedAt": "2026-08-01T12:58:21.193Z",
+      "owner": "opus-mdev-lane24",
+      "leaseExpiresAt": "2026-08-01T14:58:21.193Z",
+      "worktree": null
     }
   ],
   "activeRoute": {
