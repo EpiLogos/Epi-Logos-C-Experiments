@@ -40,6 +40,7 @@ export interface CatalogCommand {
  *   - src/commands/omnipanelTabChords (8) — `registerOmnipanelTabActivationCommands` (31.T31.3, CCT-4)
  *   - src/commands/theme.ts (8)     — `registerThemeCommands` (30.T30.4)
  *   - src/commands/layout.ts (3)    — `registerLayoutCommands` (52.T3)
+ *   - src/commands/subsystem.ts (6) — `registerSubsystemCommands` (52.T5)
  *   - src/commands/walkthrough.ts (1) — `registerWalkthroughCommand` (32.T32.3)
  *   - src/panes/M0LayerRail.tsx (4) — data-driven over M0_LAYER_ROUTES local layers (01.T1.1)
  *   - src/panes/coordinateTree/coordinateTreeCommands.ts (6) — data-driven over
@@ -211,6 +212,18 @@ export const COMMAND_CATALOG: readonly CatalogCommand[] = Object.freeze([
         owner: 'shell-layout',
         tranche: '52.T3'
     },
+
+    // --- src/commands/subsystem.ts (registerSubsystemCommands, 52.T5) ---
+    // The six 4+2 entry gestures. One addressed command per subsystem page
+    // (the palette runs commands with no argument, so the six ARE the
+    // picker — the layout.ts / theme.ts precedent); the Home grid tiles fire
+    // the same six. No OmniPanel route exists (DR-SUBSYS-3 names the gap).
+    { id: 'subsystem.open.m0', title: "Subsystem: Open M0' Bimba Map page", owner: 'subsystem-pages', tranche: '52.T5' },
+    { id: 'subsystem.open.m1', title: "Subsystem: Open M1' Traversal page", owner: 'subsystem-pages', tranche: '52.T5' },
+    { id: 'subsystem.open.m2', title: "Subsystem: Open M2' Matrix page", owner: 'subsystem-pages', tranche: '52.T5' },
+    { id: 'subsystem.open.m3', title: "Subsystem: Open M3' Clock Cosmos page", owner: 'subsystem-pages', tranche: '52.T5' },
+    { id: 'subsystem.open.m4', title: "Subsystem: Open M4' Nara page", owner: 'subsystem-pages', tranche: '52.T5' },
+    { id: 'subsystem.open.m5', title: "Subsystem: Open M5' Epii IDE page", owner: 'subsystem-pages', tranche: '52.T5' },
 
     // --- src/commands/walkthrough.ts (registerWalkthroughCommand, 32.T32.3) ---
     {

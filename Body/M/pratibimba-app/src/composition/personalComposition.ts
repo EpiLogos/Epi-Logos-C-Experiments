@@ -93,7 +93,8 @@ export interface PersonalSlotCarrier {
  * function, which is the DR-FACE-7 fate law: the journal LEFT column is carried
  * by `NowPane` (day-resonance strip + ambient state strip + tuning bar + the
  * Tiptap canvas, i.e. 11.10 + 11.12 together), and the ambient control sits in
- * the `personalHome` case that wraps the engine rather than inside it.
+ * `panes/HomePane.tsx` — the component the `personalHome` case renders — which
+ * wraps the engine rather than sitting inside it (52.T5).
  */
 export const PERSONAL_SLOT_CARRIERS: Readonly<
     Record<Exclude<PersonalGeometricSlotName, 'center-composition'>, PersonalSlotCarrier>
@@ -114,9 +115,9 @@ export const PERSONAL_SLOT_CARRIERS: Readonly<
         note: 'the M0 R-virtue witness under-layer (Track 21 / 19.6 Verifier reading)'
     }),
     'composition-ambient': Object.freeze({
-        file: 'App.tsx',
+        file: 'panes/HomePane.tsx',
         symbol: 'TimeAxisSwitcher',
-        note: 'the three-mode time-axis control (25.17), mounted by the personalHome case above the engine'
+        note: "the three-mode time-axis control (25.17), mounted above the engine by HomePane — the personalHome case's component since 52.T5 gave Home the subsystems-grid toggle"
     }),
     'composition-status': Object.freeze({
         file: 'panes/NaraCanvasEditor.tsx',

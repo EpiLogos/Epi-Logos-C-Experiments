@@ -959,7 +959,10 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         testid: 'time-axis-switcher',
         mount: {
             kind: 'direct-jsx',
-            site: { file: 'App.tsx', anchor: '<TimeAxisSwitcher />' }
+            // 52.T5: the `personalHome` case body moved into HomePane so Home
+            // can carry the subsystems-grid toggle; the ambient switcher now
+            // renders above the engine there, one import deep.
+            site: { file: 'panes/HomePane.tsx', anchor: '<TimeAxisSwitcher />' }
         },
         layoutLaw: 'daily-only',
         privacyClass: 'protected_local',
@@ -1254,7 +1257,7 @@ export const INTEGRATED_450_CONSUMER_LAYOUT: readonly WaveCConsumerSlot[] = Obje
         specViewId: null,
         carrierOwner: 'm4-nara',
         ownerAttribute: 'data-composition-ambient-owner',
-        carrier: { file: 'App.tsx', symbol: 'TimeAxisSwitcher' },
+        carrier: { file: 'panes/HomePane.tsx', symbol: 'TimeAxisSwitcher' },
         fate: 'unspecced',
         carriedAt: null,
         evidence:

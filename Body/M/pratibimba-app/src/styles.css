@@ -8991,3 +8991,149 @@ button.tool-stream-timerange.active {
     display: block;
     font-size: var(--type-micro);
 }
+
+/* ── 52.T5: the 4+2 body — subsystem pages + Home grid ─────────────────── */
+
+.home-view-toggle {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.home-view-toggle button {
+    background: transparent;
+    color: var(--ink-dim);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 0.1rem 0.55rem;
+    font-size: var(--type-micro);
+    cursor: pointer;
+}
+
+.home-view-toggle button[aria-pressed='true'] {
+    color: inherit;
+    border-style: solid;
+    border-color: currentColor;
+}
+
+.home-subsystems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.6rem;
+    padding: 0.75rem;
+    overflow: auto;
+}
+
+.home-subsystem-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    text-align: left;
+    background: transparent;
+    color: inherit;
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 0.7rem 0.8rem;
+    cursor: pointer;
+}
+
+.home-subsystem-tile:hover {
+    border-color: currentColor;
+}
+
+.home-subsystem-tile-coordinate {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    opacity: 0.8;
+}
+
+.home-subsystem-tile-title {
+    font-weight: 600;
+}
+
+.home-subsystem-tile-essence {
+    font-size: var(--type-micro);
+    color: var(--ink-dim);
+}
+
+.subsystem-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.subsystem-strata-rail {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.3rem 0.5rem;
+    border-bottom: 1px solid var(--hairline);
+    flex: 0 0 auto;
+}
+
+.subsystem-strata-coordinate {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    margin-right: 0.4rem;
+    opacity: 0.8;
+}
+
+.subsystem-strata-rail button {
+    background: transparent;
+    color: var(--ink-dim);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    padding: 0.1rem 0.5rem;
+    font-size: var(--type-micro);
+    cursor: pointer;
+}
+
+.subsystem-strata-rail button[aria-pressed='true'] {
+    color: inherit;
+    border-color: currentColor;
+}
+
+.subsystem-stratum-n,
+.subsystem-ground-stratum-n {
+    font-family: monospace;
+    opacity: 0.7;
+}
+
+.subsystem-stratum-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.subsystem-stratum-content > * {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.subsystem-ground {
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    overflow: auto;
+}
+
+.subsystem-ground-coordinate {
+    font-family: monospace;
+    font-size: var(--type-mono);
+    opacity: 0.8;
+}
+
+.subsystem-ground-essence,
+.subsystem-ground-unbuilt li {
+    color: var(--ink-dim);
+}
+
+.subsystem-ground-strata li,
+.subsystem-ground-unbuilt li {
+    font-size: var(--type-micro);
+    margin-bottom: 0.3rem;
+}

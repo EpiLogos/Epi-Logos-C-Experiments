@@ -45,14 +45,12 @@ import {
 } from './state/crossLayoutIdentity';
 import { CoordinateBreadcrumb } from './components/CoordinateBreadcrumb';
 import { StatusStrip } from './components/StatusStrip';
-import { TimeAxisSwitcher } from './components/TimeAxisSwitcher';
 import { FaceToggleChrome } from './components/FaceToggleChrome';
 import { M3DailyWheelMiniView } from './components/M3CompactViews';
 import { CosmicEngine } from './engine/CosmicEngine';
 import { CompositionProfileProvider } from './composition/compositionProfileContext';
 import { publishProfileTick } from './composition/profileTickSubscription';
 import { modulationEngine, registerEngineCommands, useEngineStore } from './engine/modulation/engine';
-import { PersonalRecognitionEngine } from './engine/PersonalRecognitionEngine';
 import { GraphExplorerPane } from './panes/GraphExplorerPane';
 import { SpandaNavigatorPane } from './panes/SpandaNavigatorPane';
 import { WalkPane } from './panes/WalkPane';
@@ -124,6 +122,11 @@ import {
 } from './panes/omni/omnipanelRuntime';
 import { parseLayoutId, type LayoutId } from './ui/layoutId';
 import { deepLayoutJson, deepMainTabsetId, type DeepPaneModelId } from './ui/deepPaneSet';
+// 52.T5 — the 4+2 body: six subsystem pages + the Home grid affordance.
+import { SUBSYSTEM_PAGES, subsystemPageNodeId, type SubsystemPageId } from './ui/subsystemPages';
+import { SubsystemWorkspacePane } from './panes/SubsystemWorkspacePane';
+import { HomePane } from './panes/HomePane';
+import { registerSubsystemCommands } from './commands/subsystem';
 import { readStoredLayout, writeStoredLayout } from './ui/layoutPreference';
 import { registerLayoutCommands } from './commands/layout';
 import { OmniPanelLayoutSwitch } from './components/OmniPanelLayoutSwitch';
@@ -499,17 +502,24 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
             return <M3InspectorsPane />;
         case 'm5Ebm':
             return <M5EbmObservatoryPane />;
+        // 52.T5 — the Home affordance (DR-SUBSYS-3): the same lived Now
+        // surface, now carrying the `0/1` ↔ `#0-#5` subsystems-grid toggle.
         case 'personalHome':
-            return (
-                <CompositionProfileProvider>
-                    <div className="personal-pole">
-                        <TimeAxisSwitcher />
-                        <div className="personal-pole-body">
-                            <PersonalRecognitionEngine />
-                        </div>
-                    </div>
-                </CompositionProfileProvider>
-            );
+            return <HomePane />;
+        // 52.T5 — the six M0'-M5' subsystem pages (DR-SUBSYS-1): dynamic deep
+        // workspace tabs opened by `subsystem.open.*`, never default-mounted.
+        case 'm0SubsystemPage':
+            return <SubsystemWorkspacePane subsystem="m0" />;
+        case 'm1SubsystemPage':
+            return <SubsystemWorkspacePane subsystem="m1" />;
+        case 'm2SubsystemPage':
+            return <SubsystemWorkspacePane subsystem="m2" />;
+        case 'm3SubsystemPage':
+            return <SubsystemWorkspacePane subsystem="m3" />;
+        case 'm4SubsystemPage':
+            return <SubsystemWorkspacePane subsystem="m4" />;
+        case 'm5SubsystemPage':
+            return <SubsystemWorkspacePane subsystem="m5" />;
         // 41.T41.7 — the M4' dia-logical arena carrier pane (CPF-gated wizard)
         case 'm4DialogicalArena':
             return <M4DialogicalArenaPane />;
@@ -710,10 +720,20 @@ export function App() {
 
     // boot: restore persisted UI state (or defaults outside tauri)
     useEffect(() => {
+        // 52.T5: the restore is CANCELLED on effect cleanup. StrictMode runs
+        // this effect twice, so two loads used to race — and the second
+        // `setModels` replaced the live models object, silently swallowing any
+        // tab the user (or a test) had opened between the two resolutions
+        // (dynamic workspace tabs, `vault.open` editors). Exactly one restore
+        // may apply.
+        let cancelled = false;
         invokeCommand<string | null>('ui_state_load')
             .then(raw => (raw ? (JSON.parse(raw) as PersistedUiState) : {}))
             .catch(() => ({}) as PersistedUiState)
             .then(state => {
+                if (cancelled) {
+                    return;
+                }
                 // 52.T3: the switch's own store first; the pre-52.T3 `ui_state`
                 // value is the legacy fallback so an existing install resumes
                 // into the layout it was left in exactly once, then migrates.
@@ -770,6 +790,9 @@ export function App() {
         // Sprint-2 verifier flagged
         invokeCommand<VaultEntry[]>('vault_list', { path: 'Empty/Present' })
             .then(entries => {
+                if (cancelled) {
+                    return;
+                }
                 const candidates = [todayId(), todayIdLegacy()];
                 const found = candidates.find(id => entries.some(e => e.isDir && e.name === id));
                 if (found) {
@@ -777,6 +800,9 @@ export function App() {
                 }
             })
             .catch(() => undefined);
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     const persist = useCallback(() => {
@@ -856,6 +882,68 @@ export function App() {
             setRoutingRevision(revision => revision + 1);
         },
         [applyLayout]
+    );
+
+    // 52.T5 — the subsystem-page entry (DR-SUBSYS-1). Ensures the deep layout
+    // through the ONE transition seam (identity receipt minted there), then
+    // opens/selects the page's workspace tab in the ACTIVE face's deep model —
+    // idempotent by node id, face-local mechanically (the hidden face keeps
+    // its overview; state continuity rides the shared stores per
+    // [[M'-SYSTEM-SPEC]] :176), dynamic always (default models unchanged, so
+    // LAYOUT_VERSION does not move). SINGLE OCCUPANCY: opening a page removes
+    // any OTHER page tab from that model first — a full-page workspace, and
+    // the strip stays under the carrier's measured 11-tab click-death limit.
+    // The dock target falls back to the model's active tabset when the named
+    // deep tabset is gone (a drag-split can auto-delete an emptied tabset and
+    // persist that shape; flexlayout SKIPS an addNode to a missing target, so
+    // without the fallback the command would be a silent permanent no-op).
+    const openSubsystemWorkspace = useCallback(
+        (pageId: SubsystemPageId) => {
+            const current = modelsRef.current;
+            const page = SUBSYSTEM_PAGES.find(candidate => candidate.id === pageId);
+            if (!current || !page) {
+                return;
+            }
+            if (activeLayoutRef.current !== 'ide-deep') {
+                switchLayout('ide-deep');
+            }
+            const model = modelOf(current, faceRef.current, 'ide-deep');
+            const nodeId = subsystemPageNodeId(page.id);
+            for (const other of SUBSYSTEM_PAGES) {
+                const otherId = subsystemPageNodeId(other.id);
+                if (otherId !== nodeId && model.getNodeById(otherId)) {
+                    model.doAction(Actions.deleteTab(otherId));
+                }
+            }
+            if (model.getNodeById(nodeId)) {
+                model.doAction(Actions.selectTab(nodeId));
+            } else {
+                const namedTabset = deepMainTabsetId(faceRef.current === 0 ? 'cosmic' : 'personal');
+                const targetTabset = model.getNodeById(namedTabset)
+                    ? namedTabset
+                    : model.getActiveTabset()?.getId();
+                if (!targetTabset) {
+                    return;
+                }
+                model.doAction(
+                    Actions.addNode(
+                        {
+                            type: 'tab',
+                            id: nodeId,
+                            name: page.tabLabel,
+                            component: page.surfaceId,
+                            enableClose: true
+                        },
+                        targetTabset,
+                        DockLocation.CENTER,
+                        -1,
+                        true
+                    )
+                );
+            }
+            persist();
+        },
+        [switchLayout, persist]
     );
 
     const updateM0Surface = useCallback((patch: Partial<M0SurfaceState>) => {
@@ -1028,6 +1116,12 @@ export function App() {
             registerLayoutCommands({
                 activeLayout: () => activeLayoutRef.current,
                 switchTo: layout => switchLayout(layout)
+            }),
+            // 52.T5 — the six subsystem-page entries (the Home grid tiles and
+            // the command palette land on these; the OmniPanel carries no
+            // route to the pages today — named in DR-SUBSYS-3).
+            registerSubsystemCommands({
+                openWorkspace: pageId => openSubsystemWorkspace(pageId)
             }),
             registerCrossLayoutIntentCommand({
                 setCoordinate: coordinate => useCoordinateStore.getState().setSelected(coordinate),

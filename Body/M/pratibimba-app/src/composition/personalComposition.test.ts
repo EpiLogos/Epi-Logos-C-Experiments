@@ -178,15 +178,29 @@ describe('personal composition slot ownership (29.T29.3 / DR-WC-IP-3)', () => {
     });
 
     it('the personalHome case mounts the engine and its ambient control together', () => {
-        // The ambient slot renders OUTSIDE the engine, in the case that wraps
-        // it. That is a layout fact the parity map states, so it is asserted
-        // rather than left to a reader to notice.
+        // The ambient slot renders OUTSIDE the engine, in the surface that
+        // wraps it. Since 52.T5 the `personalHome` case renders `HomePane`
+        // (which carries the Home grid toggle), so the layout fact is asserted
+        // through the real chain: the case mounts HomePane, and HomePane's
+        // default 0/1 view mounts the ambient control above the engine.
         const app = readFileSync(join(__dirname, '..', 'App.tsx'), 'utf8');
         const personalHome = app.slice(app.indexOf("case 'personalHome':"));
         // …up to the NEXT case label, not this one (index 0).
         const body = personalHome.slice(0, personalHome.indexOf('case ', 1));
-        expect(body).toContain('TimeAxisSwitcher');
-        expect(body).toContain('PersonalRecognitionEngine');
+        expect(body).toContain('HomePane');
+        const home = readFileSync(join(__dirname, '..', 'panes', 'HomePane.tsx'), 'utf8');
+        expect(home).toContain('PersonalRecognitionEngine');
+        // POSITIONAL, not just containment: the ambient control mounts BEFORE
+        // the view conditional — in BOTH Home views — so no view flip can
+        // silently unmount it (it owns the ⌘⇧T chord listener).
+        const ambientAt = home.indexOf('<TimeAxisSwitcher />');
+        const conditionalAt = home.indexOf("{view === 'zero-one' ? (");
+        expect(ambientAt, 'HomePane no longer mounts the ambient control').toBeGreaterThan(-1);
+        expect(conditionalAt, 'HomePane lost its view conditional').toBeGreaterThan(-1);
+        expect(
+            ambientAt,
+            'the ambient control must mount OUTSIDE (before) the view conditional'
+        ).toBeLessThan(conditionalAt);
     });
 
     it('blocks exactly the slots that have no carrier, and names why', () => {

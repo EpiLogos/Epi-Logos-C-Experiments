@@ -370,6 +370,12 @@ export const DEEP_PANE_RESERVATIONS: readonly DeepPaneReservation[] = Object.fre
  * [[M'-TAURI-PORT-SPEC]] :65 — "Shell surfaces preview; subsystem pages deliver
  * depth. Do not merge them." The validator holds this list total against the
  * real daily registry, so a future daily surface cannot quietly go unclassified.
+ *
+ * SCOPE (52.T5): a withdrawal governs the deep OVERVIEW tabsets this module
+ * declares. The six subsystem pages are a different surface class — a page may
+ * GATHER a withdrawn surface as an inner stratum (the M4' page mirrors the
+ * journal/day/oracle/recognition surfaces), and that per-surface law lives in
+ * `ui/subsystemWorkspaceOwnership.ts`, not here.
  */
 export const DEEP_PANE_WITHDRAWALS: readonly DeepPaneWithdrawal[] = Object.freeze([
     Object.freeze({

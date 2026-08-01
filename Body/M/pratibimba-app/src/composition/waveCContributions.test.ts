@@ -45,6 +45,8 @@ const SRC = resolve(__dirname, '..');
 const APP = readFileSync(join(SRC, 'App.tsx'), 'utf8');
 const CATALOG = readFileSync(join(SRC, 'commands/catalog.ts'), 'utf8');
 const ENGINE = readFileSync(join(SRC, 'engine/PersonalRecognitionEngine.tsx'), 'utf8');
+// 52.T5: the personalHome arm renders HomePane, which mounts the engine.
+const HOME = readFileSync(join(SRC, 'panes/HomePane.tsx'), 'utf8');
 
 function readSurface(relFile: string): string {
     return readFileSync(join(SRC, relFile), 'utf8');
@@ -921,13 +923,18 @@ describe('25.T25.21 + 52.T4 — the layout law is DERIVED, for every row', () =>
             return { kind: 'unrendered' };
         }
         if (mount.kind === 'composition-slot') {
-            // BRIDGE, read out of the sources rather than assumed: the personal
-            // composition is loaded by the root the `personalHome` factory arm
-            // renders, so a geometric slot is hosted by `personalHome`.
-            const arm = componentRenderedBy('PersonalRecognitionEngine');
+            // BRIDGE, read out of the sources rather than assumed: since 52.T5
+            // the `personalHome` arm renders HomePane, and HomePane's default
+            // 0/1 view mounts the personal composition root — so a geometric
+            // slot is hosted by `personalHome`, one indirection deep.
+            const arm = componentRenderedBy('HomePane');
             expect(arm, 'the personal composition root is not rendered by any factory arm').toBe(
                 'personalHome'
             );
+            expect(
+                HOME.includes('<PersonalRecognitionEngine'),
+                'HomePane no longer mounts the personal composition root'
+            ).toBe(true);
             expect(
                 ENGINE.includes('loadPersonalComposition'),
                 'the composition root no longer loads the personal composition'
@@ -956,6 +963,25 @@ describe('25.T25.21 + 52.T4 — the layout law is DERIVED, for every row', () =>
         const arm = enclosingFactoryCase(body, at);
         if (arm !== null) {
             return { kind: 'surface', component: arm, via: `inside the \`${arm}\` factory arm` };
+        }
+        // 52.T5: a direct-jsx site OUTSIDE App.tsx is a component module some
+        // factory arm mounts — resolve it to that arm through App.tsx's own
+        // import, the same derivation the cross-coordinate branch uses. The
+        // law still reads off the REAL hosting arm, never off the row.
+        if (mount.site.file !== 'App.tsx') {
+            const specifier = `./${mount.site.file.replace(/\.tsx?$/, '')}`;
+            const imported = new RegExp(
+                `import \\{([^}]+)\\} from '${specifier.replace(/[.\/]/g, m => `\\${m}`)}'`
+            ).exec(APP);
+            expect(imported, `App.tsx imports nothing from ${specifier}`).not.toBeNull();
+            const symbol = imported![1].split(',')[0].trim();
+            const component = componentRenderedBy(symbol);
+            expect(component, `no factory arm renders <${symbol}>`).not.toBeNull();
+            return {
+                kind: 'surface',
+                component: component!,
+                via: `<${symbol}> hosts ${mount.site.anchor}`
+            };
         }
         // bounded window: the gate must WRAP the anchor, not merely exist somewhere
         const gates = [...body.slice(Math.max(0, at - 200), at).matchAll(/activeLayout === '([^']+)'/g)];

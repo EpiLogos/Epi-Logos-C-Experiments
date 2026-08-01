@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-08-01T08:43:26.056Z",
+  "updatedAt": "2026-08-01T10:17:22.391Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -22320,14 +22320,33 @@
       "blocker": null
     },
     "52.T5": {
-      "status": "in_progress",
-      "updatedAt": "2026-08-01T08:40:31.082Z",
+      "status": "done",
+      "updatedAt": "2026-08-01T10:17:22.363Z",
       "claimedAt": "2026-08-01T08:40:31.082Z",
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-08-01T10:17:22.363Z",
+      "evidence": [
+        {
+          "at": "2026-08-01T10:17:22.363Z",
+          "text": "The 4+2 body landed: six M0'-M5' subsystem pages as dynamic deep-workspace tabs (DR-SUBSYS-1: gesture-opened, single-occupancy, never default-mounted, inner 0-5 strata opening on Ground), Home affordance on the Now surface (DR-SUBSYS-3: 0/1 default + #0-#5 grid toggle, ambient switcher mounted in BOTH views), and the total disposition ledger (DR-SUBSYS-2: 19 gathered/14 stays, zero moves, AST-derived inventory so an unaccounted tab FAILS). UF proof: subsystem-pages e2e reaches all six pages from Home against the real substrate, asserts own-depth per page (never a preview engine), seven-field identity receipt intact on entry AND exit; visual baseline for the personal composition re-cut intentionally and proven stable. Adversarial review (20-agent workflow) confirmed 13 findings, ALL fixed: boot-restore StrictMode race (second ui_state_load silently replaced live models — cancelled on cleanup), missing-tabset silent no-op (active-tabset fallback), tab-strip growth capped by single-occupancy, stratum continuity across routingRevision remounts (walk hazard excluded), m5 strata de-canonized from M5-n' identity, false OmniPanel-navigation claim corrected at 6 sites + the :176 which-subsystem readout named undelivered, renderer mirror-fidelity AST gate added (catches a wired-wrong renderer), omni default-mount guard added. Full gate: 147/148 app-ui-flow + all other suites PASS; the one red (m3-lens-switcher, 24.T24.3, untouched by this tranche) timed out at 20.2s under 148-spec load and passes green in isolation (3.5s) — confirmed environmental flake per the unrelated-flake mechanism; verification record PASS via --only honesty-lint on the tranche's own line.",
+          "receipt": {
+            "command": "pnpm test:e2e subsystem-pages.spec.ts visual-regression.spec.ts (laned playwright, real gateway) + pnpm test + pnpm typecheck + pnpm build",
+            "exitCode": 0,
+            "testsPassed": 2250,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/ui/subsystemPages.ts",
+              "Body/M/pratibimba-app/src/ui/subsystemWorkspaceOwnership.ts",
+              "Body/M/pratibimba-app/src/panes/SubsystemWorkspacePane.tsx",
+              "Body/M/pratibimba-app/src/panes/HomePane.tsx",
+              "Body/M/pratibimba-app/src/commands/subsystem.ts",
+              "Body/M/pratibimba-app/tests/e2e/subsystem-pages.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": "fable5-mdev-0801",
-      "leaseExpiresAt": "2026-08-01T11:40:31.082Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-08-01T08:40:31.082Z",
       "runId": "20260801T084031Z-52-T5",
       "worktree": null,
@@ -29529,11 +29548,12 @@
     {
       "runId": "20260801T084031Z-52-T5",
       "taskId": "52.T5",
-      "status": "in_progress",
+      "status": "done",
       "startedAt": "2026-08-01T08:40:31.082Z",
       "owner": "fable5-mdev-0801",
       "leaseExpiresAt": "2026-08-01T11:40:31.082Z",
-      "worktree": null
+      "worktree": null,
+      "completedAt": "2026-08-01T10:17:22.363Z"
     }
   ],
   "activeRoute": {
