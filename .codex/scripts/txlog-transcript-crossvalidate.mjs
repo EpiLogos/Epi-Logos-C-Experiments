@@ -684,13 +684,23 @@ export function collect(opts = {}) {
 // T54.02 reconstruction readers + diff
 // ---------------------------------------------------------------------------
 
+
+/** Undo Cypher single-quoted escaping. `\n` is a NEWLINE, not the letter n.
+ *  Stripping the backslash blindly corrupts every multi-line value and shows
+ *  up as a false value-disagreement (found 2026-08-01 on M1-4.s_5_agent_prompt,
+ *  where the live graph matched the transcript exactly at 4923 chars). */
+function unescapeCypher(str) {
+  return str.replace(/\\(.)/g, (_, c) =>
+    c === "n" ? "\n" : c === "t" ? "\t" : c === "r" ? "\r" : c);
+}
+
 /** Parse T54.02's `MATCH (n:Bimba {coordinate: '…'}) SET n += { `k`: '…' };` form. */
 export function parseReconstructionCypher(text) {
   const out = new Map();
   const blockRe = /MATCH\s*\(n:Bimba\s*\{coordinate:\s*'((?:\\.|[^'\\])*)'\}\)\s*SET\s+n\s*\+=\s*\{([\s\S]*?)\n\};/g;
   let m;
   while ((m = blockRe.exec(text)) !== null) {
-    const coordinate = m[1].replace(/\\(.)/g, "$1");
+    const coordinate = unescapeCypher(m[1]);
     const body = m[2];
     const props = out.get(coordinate) ?? new Map();
     const pairRe = /`([^`]+)`\s*:\s*(?:\[([\s\S]*?)\]|'((?:\\.|[^'\\])*)'|(-?\d+(?:\.\d+)?)|(true|false|null))/g;
@@ -703,11 +713,11 @@ export function parseReconstructionCypher(text) {
         const elemRe = /'((?:\\.|[^'\\])*)'|(-?\d+(?:\.\d+)?)|(true|false|null)/g;
         let e;
         while ((e = elemRe.exec(p[2])) !== null) {
-          if (e[1] !== undefined) value.push(e[1].replace(/\\(.)/g, "$1"));
+          if (e[1] !== undefined) value.push(unescapeCypher(e[1]));
           else if (e[2] !== undefined) value.push(Number(e[2]));
           else value.push(e[3] === "true" ? true : e[3] === "false" ? false : null);
         }
-      } else if (p[3] !== undefined) value = p[3].replace(/\\(.)/g, "$1");
+      } else if (p[3] !== undefined) value = unescapeCypher(p[3]);
       else if (p[4] !== undefined) value = Number(p[4]);
       else value = p[5] === "true" ? true : p[5] === "false" ? false : null;
       props.set(key, value);
