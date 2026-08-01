@@ -516,3 +516,113 @@ describe('24.T24.9 — the TCT rotational-state invariant', () => {
         expect(surface.readiness.blockers).toEqual([]);
     });
 });
+
+// ============================================================================
+// 24.T60 — the 60-position Fibonacci Ground outer ring (24.19 render contract
+// item 1).
+//
+// The ring's whole discipline is that its digits are BACKEND-AUTHORED: the
+// Pisano table is kernel law and the renderer must hold none. Counting 60
+// wedges does not test that — a ring labelled with indices, zeros, or a
+// locally-derived Pisano sequence counts 60 just as well. These fixtures pin
+// the digits to the payload, position by position, so a local table cannot
+// pass.
+// ============================================================================
+
+describe('24.T60 — the 60-position outer ring is a projection of the bussed LUT', () => {
+    const ready = () => buildM3WheelSurface({ payload: WIRE_PAYLOAD, generation: 9 });
+    const groundOf = () => WIRE_PAYLOAD.harmonicProfile.phaseSpace.fibonacciGround;
+
+    it('renders each wedge with the payload digit at that position', () => {
+        const digitLut = groundOf().digitLut;
+        expect(digitLut).toHaveLength(60);
+        render(<M3CosmicWheelRenderService surface={ready()} mode="full" />);
+
+        for (let position = 0; position < 60; position++) {
+            const wedge = screen.getByTestId(`m3-fibonacci-wedge-${position}`);
+            expect(wedge.getAttribute('data-position')).toBe(String(position));
+            expect(wedge.getAttribute('data-digit')).toBe(String(digitLut[position]));
+        }
+        // And the labels are those digits, not the positions — a ring that
+        // printed its own index would satisfy every count-based assertion.
+        expect(
+            screen.getByTestId('m3-fibonacci-wedge-7').textContent
+        ).toBe(String(digitLut[7]));
+    });
+
+    it('follows the payload when the LUT changes — no baked sequence', () => {
+        // Same shape, different digits. A renderer-local Pisano table would
+        // keep printing the old sequence and fail here.
+        const rotated = groundOf().digitLut.map(digit => (digit + 1) % 10);
+        const surface = buildM3WheelSurface({
+            payload: {
+                harmonicProfile: {
+                    ...WIRE_PAYLOAD.harmonicProfile,
+                    phaseSpace: {
+                        fibonacciGround: { ...groundOf(), digitLut: rotated }
+                    }
+                }
+            },
+            generation: 31
+        });
+        render(<M3CosmicWheelRenderService surface={surface} mode="full" />);
+        for (const position of [0, 13, 41, 59]) {
+            expect(
+                screen.getByTestId(`m3-fibonacci-wedge-${position}`).getAttribute('data-digit')
+            ).toBe(String(rotated[position]));
+        }
+    });
+
+    it('refuses the whole ring when the LUT is the wrong length — no partial ring', () => {
+        const surface = buildM3WheelSurface({
+            payload: {
+                harmonicProfile: {
+                    ...WIRE_PAYLOAD.harmonicProfile,
+                    phaseSpace: {
+                        fibonacciGround: {
+                            ...groundOf(),
+                            digitLut: groundOf().digitLut.slice(0, 59)
+                        }
+                    }
+                }
+            },
+            generation: 32
+        });
+        expect(surface.fibonacciGround).toBeNull();
+        render(<M3CosmicWheelRenderService surface={surface} mode="full" />);
+        expect(screen.queryByTestId('m3-fibonacci-wedge-0')).toBeNull();
+        expect(screen.getByTestId('m3-fibonacci-ground-pending').textContent).toContain(
+            'pending-profile-field:phaseSpace.fibonacciGround'
+        );
+    });
+
+    it('marks the natal Sun as a RING and the live Sun as a DOT', () => {
+        // The spec reads natal-to-live as a geometric distance between two
+        // DIFFERENT marks (gold ring vs silver dot). If both rendered the same
+        // way the reading would be unavailable, so the distinction is contract.
+        render(<M3CosmicWheelRenderService surface={ready()} mode="full" />);
+        const natal = screen.getByTestId('m3-fibonacci-natal-sun');
+        const live = screen.getByTestId('m3-fibonacci-live-sun');
+        expect(natal.getAttribute('class')).toBe('m3-fibonacci-natal-sun');
+        expect(live.getAttribute('class')).toBe('m3-fibonacci-live-sun');
+        expect(natal.getAttribute('data-position')).toBe('36');
+        expect(live.getAttribute('data-position')).toBe('16');
+        // Two distinct positions ⇒ two distinct marks on the ring.
+        expect(natal.getAttribute('cx')).not.toBe(live.getAttribute('cx'));
+    });
+
+    it('anchors cardinals and zodiacals at the contract positions', () => {
+        render(<M3CosmicWheelRenderService surface={ready()} mode="full" />);
+        for (const position of [0, 15, 30, 45]) {
+            expect(screen.getByTestId(`m3-fibonacci-cardinal-${position}`)).toBeTruthy();
+        }
+        for (const position of [5, 10, 20, 25, 35, 40, 50, 55]) {
+            expect(screen.getByTestId(`m3-fibonacci-zodiacal-${position}`)).toBeTruthy();
+        }
+        // 24 backbone ticks, origin emphasised.
+        expect(screen.getAllByTestId(/m3-fibonacci-backbone-/)).toHaveLength(24);
+        expect(screen.getByTestId('m3-fibonacci-backbone-0').getAttribute('class')).toContain(
+            'm3-fibonacci-backbone-origin'
+        );
+    });
+});
