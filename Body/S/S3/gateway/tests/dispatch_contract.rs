@@ -785,11 +785,14 @@ mod t9_route_ownership_cross_walk {
             // 16.T16.14 (CCT-14) + 16.T16.15 (CCT-15): the whole S1' canon-
             // promotion family now carries real S0 dispatch arms — nothing
             // from it remains in this exemption list.
-            // S3-native live-state routes handled by gateway runtime surfaces.
-            "s3'.being_pattern.observe",
-            "s3'.being_pattern.project",
-            "s3'.being_pattern.review_candidate",
-            "s3'.being_pattern.subscribe",
+            // 16.T16.21 (CCT-21) repair, 2026-08-01: the four
+            // `s3'.being_pattern.*` routes LEFT this list. They were exempted
+            // while nothing dispatched them anywhere; they are now registered
+            // by `s3_handlers::register_s3_handlers` — the S3 crate's own
+            // table (Track 53 residency) — so `coordinate_registered_methods()`
+            // counts them as served and the cross-walk has re-armed, exactly
+            // as the removal rule above requires. A live probe now records all
+            // four `exists: true`. Do not re-add them.
             // S5 governance routes mediated beyond the S0 gate host.
             // (`s5'.gnostic.resolve` left this list at 12.T12.2 — it gained a
             // real S0 adapter over the production epi-gnostic consolidated read.)

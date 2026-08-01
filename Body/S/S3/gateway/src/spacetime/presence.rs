@@ -538,6 +538,113 @@ impl SpacetimePresence {
         )
     }
 
+    // ============ CCT-21 BeingPattern live-state producer reducers ============
+    //
+    // Argument ORDER is the reducer signature in
+    // `Body/S/S3/epi-spacetime-module/src/lib.rs` — positional, so a reorder
+    // here silently corrupts rows. The reducer re-asserts public-safety on
+    // every `*_json` argument; the caller (`crate::being_pattern`) asserts it
+    // first so a violation fails inside S3 rather than at the module boundary.
+
+    /// `observe_being_pattern_entity` — upsert live presence and emit the
+    /// first five stream events of the CCT-21 chain.
+    pub fn observe_being_pattern_entity(
+        &self,
+        entity_id: &str,
+        entity_kind: &str,
+        installation_id: &str,
+        gateway_id: &str,
+        session_key: &str,
+        generation: u64,
+        live_state_json: &str,
+        projection_json: &str,
+        provenance_refs_json: &str,
+    ) -> Result<(), String> {
+        require_nonempty(entity_id, "entity_id")?;
+        require_nonempty(entity_kind, "entity_kind")?;
+        require_nonempty(installation_id, "installation_id")?;
+        require_nonempty(gateway_id, "gateway_id")?;
+        self.post_reducer(
+            "observe_being_pattern_entity",
+            json!([
+                entity_id,
+                entity_kind,
+                installation_id,
+                gateway_id,
+                session_key,
+                generation,
+                live_state_json,
+                projection_json,
+                provenance_refs_json,
+            ]),
+        )
+    }
+
+    /// `project_being_pattern_relation` — upsert a live aspect-like relation
+    /// edge and emit AspectEdgeComputed/ElementalResonanceChanged/
+    /// PatternPacketFormed.
+    #[allow(clippy::too_many_arguments)]
+    pub fn project_being_pattern_relation(
+        &self,
+        edge_id: &str,
+        source_entity_id: &str,
+        target_entity_id: &str,
+        generation: u64,
+        edge_kind: &str,
+        aspect_label: &str,
+        elemental_delta_json: &str,
+        verifier_refs_json: &str,
+    ) -> Result<(), String> {
+        require_nonempty(edge_id, "edge_id")?;
+        require_nonempty(source_entity_id, "source_entity_id")?;
+        require_nonempty(target_entity_id, "target_entity_id")?;
+        require_nonempty(edge_kind, "edge_kind")?;
+        self.post_reducer(
+            "project_being_pattern_relation",
+            json!([
+                edge_id,
+                source_entity_id,
+                target_entity_id,
+                generation,
+                edge_kind,
+                aspect_label,
+                elemental_delta_json,
+                verifier_refs_json,
+            ]),
+        )
+    }
+
+    /// `emit_being_pattern_review_candidate` — emit-review-only. The reducer
+    /// itself asserts `monopoly_operator == "ActualisingOne"` and stamps
+    /// `review_risk = forced-unification` / `status = emitted-review-only`; it
+    /// writes no S2 canon. Canon promotion stays on the Hen/S2 write path.
+    pub fn emit_being_pattern_review_candidate(
+        &self,
+        candidate_id: &str,
+        generation: u64,
+        entity_ids: &str,
+        monopoly_operator: &str,
+        verifier_refs_json: &str,
+    ) -> Result<(), String> {
+        require_nonempty(candidate_id, "candidate_id")?;
+        require_nonempty(entity_ids, "entity_ids")?;
+        if monopoly_operator != "ActualisingOne" {
+            return Err(format!(
+                "review candidate reducer only accepts ActualisingOne hypotheses (got {monopoly_operator})"
+            ));
+        }
+        self.post_reducer(
+            "emit_being_pattern_review_candidate",
+            json!([
+                candidate_id,
+                generation,
+                entity_ids,
+                monopoly_operator,
+                verifier_refs_json,
+            ]),
+        )
+    }
+
     // =================== 03.T4 shared-cosmos reducer calls ===================
 
     /// Advance the authoritative shared world_clock. Inherits idempotent retry

@@ -1,3 +1,4 @@
+pub mod being_pattern;
 pub mod bootstrap;
 pub mod canon_update;
 pub mod chat;

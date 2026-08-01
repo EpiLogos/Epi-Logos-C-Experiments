@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-01T08:43:06.345Z",
+ "generatedAt": "2026-08-01T13:07:11.630Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,9 +8,9 @@
  ],
  "summary": {
   "probed": 284,
-  "present": 108,
-  "absent": 176,
-  "absentFamilyLive": 115,
+  "present": 112,
+  "absent": 172,
+  "absentFamilyLive": 111,
   "absentFamilyDark": 61,
   "unknown": 0
  },
@@ -2196,54 +2196,30 @@
   {
    "method": "s3'.being_pattern.observe",
    "advertised": true,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented",
-   "familyServed": 2,
-   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
-   "servedSiblings": [
-    "s3'.temporal.context",
-    "s3'.temporal.subscribe"
-   ]
+   "errorClass": "domain-error: entityId must be a non-empty string"
   },
   {
    "method": "s3'.being_pattern.project",
    "advertised": true,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented",
-   "familyServed": 2,
-   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
-   "servedSiblings": [
-    "s3'.temporal.context",
-    "s3'.temporal.subscribe"
-   ]
+   "errorClass": "domain-error: entityId must be a non-empty string"
   },
   {
    "method": "s3'.being_pattern.review_candidate",
    "advertised": true,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented",
-   "familyServed": 2,
-   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
-   "servedSiblings": [
-    "s3'.temporal.context",
-    "s3'.temporal.subscribe"
-   ]
+   "errorClass": "domain-error: candidateId must be a non-empty string"
   },
   {
    "method": "s3'.being_pattern.subscribe",
    "advertised": true,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented",
-   "familyServed": 2,
-   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
-   "servedSiblings": [
-    "s3'.temporal.context",
-    "s3'.temporal.subscribe"
-   ]
+   "errorClass": null
   },
   {
    "method": "s3'.subscription.lifecycle",
@@ -2251,9 +2227,13 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 2,
+   "familyServed": 6,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
+    "s3'.being_pattern.observe",
+    "s3'.being_pattern.project",
+    "s3'.being_pattern.review_candidate",
+    "s3'.being_pattern.subscribe",
     "s3'.temporal.context",
     "s3'.temporal.subscribe"
    ]

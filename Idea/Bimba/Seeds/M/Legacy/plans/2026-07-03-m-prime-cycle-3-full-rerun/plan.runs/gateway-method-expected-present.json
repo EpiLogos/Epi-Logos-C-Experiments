@@ -316,6 +316,22 @@
     {
       "method": "s5'.gnostic.enrich",
       "claimedBy": "12.T12.13 (the seam write; live-wire proven — edge landed on :Bimba #0, graph counts held)"
+    },
+    {
+      "method": "s3'.being_pattern.observe",
+      "claimedBy": "16.T16.21 (CCT-21 producer stream, repaired 2026-08-01)"
+    },
+    {
+      "method": "s3'.being_pattern.project",
+      "claimedBy": "16.T16.21 (CCT-21 producer stream, repaired 2026-08-01)"
+    },
+    {
+      "method": "s3'.being_pattern.subscribe",
+      "claimedBy": "16.T16.21 (CCT-21 producer stream, repaired 2026-08-01)"
+    },
+    {
+      "method": "s3'.being_pattern.review_candidate",
+      "claimedBy": "16.T16.21 (CCT-21 producer stream, repaired 2026-08-01)"
     }
   ]
 }

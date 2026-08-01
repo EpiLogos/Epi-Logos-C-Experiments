@@ -14,6 +14,9 @@
 //! * [`register_s3_handlers`] — registers every method S3 owns.
 //! * [`TemporalContextEnv`] — the context bound the composition root satisfies.
 //!
+//! The `s3'.being_pattern.*` producer (CCT-21) registers here too; its law is
+//! [`crate::being_pattern`].
+//!
 //! # Does NOT own
 //! * `s3'.temporal.subscribe` and `s3'.spacetime.subscribe`. Both are
 //!   cross-coordinate composites: besides this module's temporal context they
@@ -32,6 +35,7 @@ use epi_kernel_contract::{
     MethodRequest, MethodResult,
 };
 
+use crate::being_pattern;
 use crate::session_store::SessionStore;
 use crate::temporal_session::{self, TemporalSurfaces};
 
@@ -95,17 +99,94 @@ impl<C: TemporalContextEnv> MethodHandler<C> for TemporalContextHandler {
     }
 }
 
+/// The four CCT-21 BeingPattern producer methods. The handler bodies are
+/// `crate::being_pattern`; these are the thin bindings that put the producer on
+/// the wire. `subscribe` needs the state root (it reads the SpaceTimeDB
+/// registration to name the consumer's subscription plan); the other three do
+/// not touch `ctx`.
+struct BeingPatternObserveHandler;
+struct BeingPatternProjectHandler;
+struct BeingPatternSubscribeHandler;
+struct BeingPatternReviewCandidateHandler;
+
+impl<C: TemporalContextEnv> MethodHandler<C> for BeingPatternObserveHandler {
+    fn handle<'a>(&'a self, _ctx: &'a C, request: &'a MethodRequest) -> BoxFuture<'a, MethodResult> {
+        Box::pin(async move {
+            being_pattern::producer()
+                .observe(&request.params)
+                .await
+                .map(MethodOutcome::immediate)
+        })
+    }
+}
+
+impl<C: TemporalContextEnv> MethodHandler<C> for BeingPatternProjectHandler {
+    fn handle<'a>(&'a self, _ctx: &'a C, request: &'a MethodRequest) -> BoxFuture<'a, MethodResult> {
+        Box::pin(async move {
+            being_pattern::producer()
+                .project(&request.params)
+                .await
+                .map(MethodOutcome::immediate)
+        })
+    }
+}
+
+impl<C: TemporalContextEnv> MethodHandler<C> for BeingPatternSubscribeHandler {
+    fn handle<'a>(&'a self, ctx: &'a C, request: &'a MethodRequest) -> BoxFuture<'a, MethodResult> {
+        Box::pin(async move {
+            being_pattern::producer()
+                .subscribe(&request.params, ctx.state_root())
+                .map(MethodOutcome::immediate)
+        })
+    }
+}
+
+impl<C: TemporalContextEnv> MethodHandler<C> for BeingPatternReviewCandidateHandler {
+    fn handle<'a>(&'a self, _ctx: &'a C, request: &'a MethodRequest) -> BoxFuture<'a, MethodResult> {
+        Box::pin(async move {
+            being_pattern::producer()
+                .review_candidate(&request.params)
+                .await
+                .map(MethodOutcome::immediate)
+        })
+    }
+}
+
 /// Every `s3'.*` method whose law is resident at this coordinate.
 ///
 /// A table rather than a match arm, so the count is checkable and a name can
 /// never be silently dropped on the way to registration.
-pub const S3_METHODS: &[&str] = &["s3'.temporal.context"];
+pub const S3_METHODS: &[&str] = &[
+    "s3'.temporal.context",
+    "s3'.being_pattern.observe",
+    "s3'.being_pattern.project",
+    "s3'.being_pattern.subscribe",
+    "s3'.being_pattern.review_candidate",
+];
 
 /// Register every method S3 owns into a registry the composition root builds.
 pub fn register_s3_handlers<C: TemporalContextEnv + 'static>(
     registry: &mut MethodRegistry<C>,
 ) -> Result<(), DuplicateMethod> {
     registry.register("s3'.temporal.context", Arc::new(TemporalContextHandler))?;
+    // CCT-21 (16.T16.21). Track 53 residency: the producer is S3's law, so it
+    // registers HERE and never as an `epi-cli` match arm.
+    registry.register(
+        "s3'.being_pattern.observe",
+        Arc::new(BeingPatternObserveHandler),
+    )?;
+    registry.register(
+        "s3'.being_pattern.project",
+        Arc::new(BeingPatternProjectHandler),
+    )?;
+    registry.register(
+        "s3'.being_pattern.subscribe",
+        Arc::new(BeingPatternSubscribeHandler),
+    )?;
+    registry.register(
+        "s3'.being_pattern.review_candidate",
+        Arc::new(BeingPatternReviewCandidateHandler),
+    )?;
     Ok(())
 }
 
