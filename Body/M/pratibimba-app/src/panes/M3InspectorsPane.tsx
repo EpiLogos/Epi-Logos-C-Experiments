@@ -519,8 +519,13 @@ function readTarotTurn(card: TarotCardKey, artifact: unknown): TarotTurnState {
         record?.detail !== null && typeof record?.detail === 'object' && !Array.isArray(record.detail)
             ? (record.detail as Record<string, unknown>)
             : record;
-    if (inner?.resolved === true) {
-        return { card, status: 'resolved', detail: 'resolved' };
+    // `resolved` lives on the OUTER record (24.T24.6 tarot arm: the card facts
+    // nest under `detail`, the resolution verdict does not travel down with
+    // them); older pending replies carry it flat. Check both homes.
+    if (record?.resolved === true || inner?.resolved === true) {
+        const kindValue = record?.kind ?? inner?.kind;
+        const kind = typeof kindValue === 'string' ? kindValue : null;
+        return { card, status: 'resolved', detail: kind ? `resolved (${kind})` : 'resolved' };
     }
     const reason = typeof inner?.reason === 'string' ? inner.reason : 'unresolved';
     const owner = typeof inner?.ownerTranche === 'string' ? ` (owner ${inner.ownerTranche})` : '';

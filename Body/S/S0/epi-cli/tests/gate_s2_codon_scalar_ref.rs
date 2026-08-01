@@ -137,7 +137,6 @@ async fn scalar_ref_read_names_the_owner_of_a_kind_that_cannot_resolve_yet() {
     let mut client = TestGatewayClient::connected_with_temp_store(18995).await;
 
     for (kind, owner) in [
-        ("tarot", "24.T24.6"),
         ("line-change", "24.T24.9"),
         ("chronos", "32.T32.10"),
         ("kairos", "32.T32.10"),
@@ -161,6 +160,120 @@ async fn scalar_ref_read_names_the_owner_of_a_kind_that_cannot_resolve_yet() {
             response.get("entry").is_none(),
             "{kind} must not carry an entry it cannot produce"
         );
+    }
+}
+
+#[tokio::test]
+async fn scalar_ref_read_resolves_a_pip_card_to_its_full_decan_chain() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18996).await;
+
+    // 2 of Wands — Golden Dawn/Thoth: Mars in Aries I. Every fact below is a
+    // tradition literal the datasets encode (PIP_DECAN_MAP routes the card,
+    // ZODIAC_DECAN_TABLE + PLANETARY_RESONANCE carry the chain), so a dataset
+    // edit that re-addressed the card fails here rather than rendering wrong.
+    let response = client
+        .request(
+            "s2.codon.scalar_ref.read",
+            json!({ "refKind": "tarot", "scalarRef": "wands:02" }),
+        )
+        .await
+        .expect("tarot pip should resolve");
+
+    assert_eq!(response["resolved"], true);
+    assert_eq!(response["kind"], "pip");
+    let detail = &response["detail"];
+    assert_eq!(detail["suit"], "wands");
+    assert_eq!(detail["cardId"], 15); // wands suit index 1 → 1*14 + 1
+    assert_eq!(detail["decanIndex"], 0); // Aries I
+    assert_eq!(detail["zodiacSign"], 0); // Aries
+    assert_eq!(detail["rulingPlanet"], 7); // Mars (kairos Planet_Id order)
+    assert_eq!(detail["elementId"], 4); // Fire in the L2' alchemical register
+    assert_eq!(detail["chakraId"], 3); // Mars → Manipura
+    assert!(detail["bodyZones"].as_array().is_some_and(|z| !z.is_empty()));
+    assert!(detail["decanBodyPart"].as_str().is_some_and(|s| !s.is_empty()));
+    assert!(detail["decanHerbs"].as_array().is_some_and(|h| !h.is_empty()));
+    // The primary-codon cover is exact over 56 cards; a pip always has one.
+    assert!(detail["codonId"].as_u64().is_some_and(|c| c < 64));
+
+    // 2 of Cups — Venus in Cancer I: a second, independent tradition literal
+    // so a systematic off-by-one in the pip routing cannot pass as agreement.
+    let cups = client
+        .request(
+            "s2.codon.scalar_ref.read",
+            json!({ "refKind": "tarot", "scalarRef": "cups:02" }),
+        )
+        .await
+        .expect("tarot pip should resolve");
+    assert_eq!(cups["detail"]["decanIndex"], 9); // Cancer I = sign 3 × 3
+    assert_eq!(cups["detail"]["zodiacSign"], 3);
+    assert_eq!(cups["detail"]["rulingPlanet"], 2); // Venus
+    assert_eq!(cups["detail"]["elementId"], 2); // Water (L2' register)
+    assert_eq!(cups["detail"]["chakraId"], 4); // Venus → Anahata
+}
+
+#[tokio::test]
+async fn scalar_ref_read_resolves_aces_courts_and_majors_without_inventing_decans() {
+    let mut client = TestGatewayClient::connected_with_temp_store(18997).await;
+
+    // Ace of Wands — the root of Fire; element serialised in the L2' register.
+    let ace = client
+        .request(
+            "s2.codon.scalar_ref.read",
+            json!({ "refKind": "tarot", "scalarRef": "wands:ace" }),
+        )
+        .await
+        .expect("ace should resolve");
+    assert_eq!(ace["kind"], "ace");
+    assert_eq!(ace["detail"]["elementId"], 4); // Agni → Fire (alchemical)
+    assert_eq!(ace["detail"]["elementName"], "Agni");
+    assert!(ace["detail"].get("decanIndex").is_none(), "aces have no decan");
+
+    // Queen of Wands — Pisces/Aries cusp band per COURT_SIGN_MAP.
+    let queen = client
+        .request(
+            "s2.codon.scalar_ref.read",
+            json!({ "refKind": "tarot", "scalarRef": "wands:queen" }),
+        )
+        .await
+        .expect("court should resolve");
+    assert_eq!(queen["kind"], "court");
+    assert_eq!(queen["detail"]["signA"], 11); // Pisces
+    assert_eq!(queen["detail"]["signB"], 0); // Aries
+    assert!(queen["detail"].get("decanIndex").is_none(), "courts have no decan");
+
+    // Atu 0 — kernel-bound: the codon set comes off `major_arcana` and is
+    // non-empty with a name; Atu 10 is the amino-acid STOP hole and answers
+    // an EMPTY codon set with the note, never an invented binding.
+    let fool = client
+        .request(
+            "s2.codon.scalar_ref.read",
+            json!({ "refKind": "tarot", "scalarRef": "major:0" }),
+        )
+        .await
+        .expect("major should resolve");
+    assert_eq!(fool["kind"], "major");
+    assert!(fool["detail"]["name"].as_str().is_some_and(|n| !n.is_empty()));
+    assert!(fool["detail"]["codons"].as_array().is_some_and(|c| !c.is_empty()));
+
+    let wheel = client
+        .request(
+            "s2.codon.scalar_ref.read",
+            json!({ "refKind": "tarot", "scalarRef": "major:10" }),
+        )
+        .await
+        .expect("the STOP-hole major should still answer");
+    assert_eq!(wheel["detail"]["codons"], json!([]));
+    assert!(wheel["detail"]["note"].as_str().is_some_and(|n| !n.is_empty()));
+
+    // Out-of-deck refusals stay refusals.
+    for bad in ["wands:11", "swords:emperor", "major:22", "spoons:02"] {
+        let refused = client
+            .request(
+                "s2.codon.scalar_ref.read",
+                json!({ "refKind": "tarot", "scalarRef": bad }),
+            )
+            .await;
+        assert!(refused.is_err(), "'{bad}' must be refused, got {refused:?}");
     }
 }
 

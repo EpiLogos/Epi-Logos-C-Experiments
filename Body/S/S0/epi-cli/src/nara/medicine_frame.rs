@@ -900,6 +900,12 @@ pub fn body_zones_for_planet(planet_id: u8) -> &'static [&'static str] {
     body_zones_for_chakra(chakra_id)
 }
 
+/// Chakra id (0-7) for a planet id (kairos display order), or `None` when the
+/// planet id is outside the PLANETARY_RESONANCE dataset.
+pub fn chakra_for_planet(planet_id: u8) -> Option<u8> {
+    PLANET_CHAKRA.get(planet_id as usize).copied()
+}
+
 /// Canonical decan entry for a decan index (0-35).
 /// The single authoritative access point for the M0→M1→M2 chain.
 pub fn zodiac_decan(decan_index: u8) -> Option<&'static ZodiacDecanEntry> {

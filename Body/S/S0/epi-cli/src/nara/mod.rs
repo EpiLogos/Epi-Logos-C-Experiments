@@ -36,6 +36,9 @@ pub(crate) use medicine_frame::{
     ananda_harmonic_for_decan, body_zones_for_decan, herb_for_decan, mode_for_decan,
     zodiac_decan,
 };
+// 24.T24.6 tarot scalar-ref resolution: card → decan/court/ace facts route
+// through these accessors; the maps themselves stay private to their modules.
+pub(crate) use medicine_frame::{body_zones_for_chakra, canonical_from_m2_tattva, chakra_for_planet};
 mod medicine_route;
 pub mod oracle;
 mod oracle_cast;
@@ -44,6 +47,8 @@ mod oracle_frame;
 mod oracle_identity;
 // 24.T24.8's hexagram body dynamics reach the gateway through this one read.
 pub(crate) use oracle_identity::hexagram_body_lookup;
+// 24.T24.6's tarot card scalar-refs resolve through these three lookups.
+pub(crate) use oracle_identity::{ace_element_lookup, court_sign_lookup, pip_decan_lookup};
 mod oracle_route;
 pub mod pratibimba;
 pub mod rotational;

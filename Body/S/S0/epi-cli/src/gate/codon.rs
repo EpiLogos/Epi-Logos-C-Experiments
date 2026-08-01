@@ -63,9 +63,11 @@ pub fn aa_lookup(params: &Value) -> Result<Value, String> {
 // ---------------------------------------------------------------------------
 
 use crate::nara::{
-    ananda_harmonic_for_decan, body_zones_for_decan, herb_for_decan, hexagram_body_lookup,
-    mode_for_decan, zodiac_decan,
+    ace_element_lookup, ananda_harmonic_for_decan, body_zones_for_chakra, body_zones_for_decan,
+    canonical_from_m2_tattva, chakra_for_planet, court_sign_lookup, herb_for_decan,
+    hexagram_body_lookup, mode_for_decan, pip_decan_lookup, zodiac_decan,
 };
+use portal_core::m3_transcription_bridge::{major_arcana, minor_arcana_id_from_codon};
 
 /// Scalar-ref kinds portal-core declares (`NaraScalarRefKind`, kebab-case over
 /// the wire). Named here so an unknown kind is refused rather than silently
@@ -197,10 +199,13 @@ pub fn scalar_ref_read(params: &Value) -> Result<Value, String> {
                 "authority": "portal-core::transcription"
             }))
         }
-        "tarot" => pending(
-            "no scalar tarot producer has landed; the deck identity lives in the oracle cast path",
-            "24.T24.6",
-        ),
+        "tarot" => {
+            let key = scalar_ref.as_str().ok_or_else(|| {
+                "tarot scalarRef must be a card key string like 'wands:02', 'cups:queen' or 'major:5'"
+                    .to_owned()
+            })?;
+            resolve_tarot_card(&scalar_ref_text, key)
+        }
         "line-change" => pending(
             "line-change scalars are carried on the oracle envelope, not resolvable standalone",
             "24.T24.9",
@@ -211,4 +216,174 @@ pub fn scalar_ref_read(params: &Value) -> Result<Value, String> {
         ),
         other => Err(format!("unhandled refKind '{other}'")),
     }
+}
+
+// ---------------------------------------------------------------------------
+// refKind "tarot" — 24.T24.6 card-key resolution
+// ---------------------------------------------------------------------------
+
+/// Suit token → suit index (m3.h `Tarot_Suit`: Cups=0, Wands=1, Pentacles=2,
+/// Swords=3 — the A/T/C/G family order `M3_TAROT_CODON_MAP` is written in).
+fn tarot_suit_index(token: &str) -> Option<u8> {
+    match token {
+        "cups" => Some(0),
+        "wands" => Some(1),
+        "pentacles" => Some(2),
+        "swords" => Some(3),
+        _ => None,
+    }
+}
+
+/// Card id (0..=55, `suit*14 + rank-1`) → its PRIMARY codon, through the
+/// public kernel inverse rather than a second copy of the cover table.
+fn primary_codon_for_card(card_id: u8) -> Option<u8> {
+    (0u8..64).find(|codon| minor_arcana_id_from_codon(*codon) == Some(card_id))
+}
+
+/// Resolve a tarot card key (`major:N` | `{suit}:{rank}`) to its public facts.
+///
+/// Pips resolve the FULL decan chain the 24.7 consumer parses (suit → codon →
+/// decan → sign → planet → element → chakra → body zones), every fact off the
+/// one `ZODIAC_DECAN_TABLE` authority the `decan` kind already serves — the
+/// pip map contributes only the card → (sign, decan) address. Courts carry
+/// their cusp signs, aces their root element, majors their kernel codon set;
+/// none of those three HAS a decan in the dataset, so none pretends to.
+fn resolve_tarot_card(scalar_ref_text: &str, key: &str) -> Result<Value, String> {
+    let normalized = key.trim().to_ascii_lowercase();
+    let (head, tail) = normalized
+        .split_once(':')
+        .ok_or_else(|| "tarot scalarRef must be '<suit|major>:<rank|id>'".to_owned())?;
+
+    let reply = |kind: &str, detail: Value, authority: &str| {
+        json!({
+            "refKind": "tarot",
+            "scalarRef": scalar_ref_text,
+            "resolved": true,
+            "kind": kind,
+            "detail": detail,
+            "authority": authority
+        })
+    };
+
+    if head == "major" {
+        let card_id: u8 = tail
+            .parse()
+            .map_err(|_| "major arcana id must be an integer 0..=21".to_owned())?;
+        if card_id > 21 {
+            return Err("major arcana id must be an integer 0..=21".to_owned());
+        }
+        // The kernel law binds arcana to codons via the amino-acid index
+        // (19.5 `m3_major_arcana_from_codon`); the card's codon set and name
+        // are read back through that one authority. Atu 10 is the STOP hole —
+        // no codon produces it, and an empty set is the honest answer.
+        let mut codons: Vec<u8> = Vec::new();
+        let mut name: Option<String> = None;
+        for codon in 0u8..64 {
+            if let Some(card) = major_arcana(codon) {
+                if card.card_id == card_id {
+                    codons.push(codon);
+                    name.get_or_insert(card.name);
+                }
+            }
+        }
+        return Ok(reply(
+            "major",
+            json!({
+                "cardId": card_id,
+                "name": name,
+                "codons": codons,
+                "note": if codons.is_empty() {
+                    Some("no codon binds this card — the amino-acid STOP hole, an answer not an absence")
+                } else {
+                    None
+                }
+            }),
+            "portal-core::m3_transcription_bridge::major_arcana",
+        ));
+    }
+
+    let suit = tarot_suit_index(head)
+        .ok_or_else(|| format!("unknown tarot suit '{head}' — cups|wands|pentacles|swords"))?;
+
+    // Rank tokens mirror the carrier's `RANK_TOKENS` ('ace', '02'..'10',
+    // 'page'/'knight'/'queen'/'king'); the Thoth court names are accepted as
+    // aliases because the dataset itself is Thoth-ordered.
+    let (rank_in_deck, court_rank): (u8, Option<u8>) = match tail {
+        "ace" | "01" | "1" => (1, None),
+        "page" | "princess" => (11, Some(10)),
+        "knight" | "prince" => (12, Some(11)),
+        "queen" => (13, Some(12)),
+        "king" => (14, Some(13)),
+        pip => {
+            let value: u8 = pip
+                .parse()
+                .map_err(|_| format!("unknown tarot rank token '{pip}'"))?;
+            if !(2..=10).contains(&value) {
+                return Err("pip value must be 2..=10".to_owned());
+            }
+            (value, None)
+        }
+    };
+
+    let card_id = suit * 14 + (rank_in_deck - 1);
+
+    if rank_in_deck == 1 {
+        let entry = ace_element_lookup(suit).ok_or_else(|| "ace lookup out of range".to_owned())?;
+        return Ok(reply(
+            "ace",
+            json!({
+                "suit": head,
+                "cardId": card_id,
+                "codonId": primary_codon_for_card(card_id),
+                // Serialised in the L2' alchemical register (DR-37-3 wire law);
+                // the dataset stores the m2.h tattva id, converted here.
+                "elementId": canonical_from_m2_tattva(entry.element_id),
+                "elementName": entry.element_name
+            }),
+            "epi-cli::nara::oracle_identity::ACE_ELEMENT_MAP",
+        ));
+    }
+
+    if let Some(rank) = court_rank {
+        let entry =
+            court_sign_lookup(suit, rank).ok_or_else(|| "court lookup out of range".to_owned())?;
+        return Ok(reply(
+            "court",
+            json!({
+                "suit": head,
+                "rank": tail,
+                "cardId": card_id,
+                "codonId": primary_codon_for_card(card_id),
+                "signA": entry.sign_a,
+                "signB": if entry.sign_b == 0xFF { Value::Null } else { json!(entry.sign_b) }
+            }),
+            "epi-cli::nara::oracle_identity::COURT_SIGN_MAP",
+        ));
+    }
+
+    // Pip 2..=10 — the full decan chain.
+    let pip = pip_decan_lookup(suit, rank_in_deck)
+        .ok_or_else(|| "pip lookup out of range".to_owned())?;
+    let decan_index = pip.zodiac_sign * 3 + pip.decan;
+    let decan = zodiac_decan(decan_index)
+        .ok_or_else(|| "pip decan address is outside the 36-decan table".to_owned())?;
+    let chakra = chakra_for_planet(decan.ruling_planet)
+        .ok_or_else(|| "decan ruling planet is outside the resonance dataset".to_owned())?;
+    Ok(reply(
+        "pip",
+        json!({
+            "suit": head,
+            "cardId": card_id,
+            "codonId": primary_codon_for_card(card_id),
+            "decanIndex": decan_index,
+            "zodiacSign": decan.sign,
+            "rulingPlanet": decan.ruling_planet,
+            "elementId": decan.element,
+            "chakraId": chakra,
+            "bodyZones": body_zones_for_chakra(chakra),
+            "decanBodyPart": decan.body_part,
+            "decanHerbs": [decan.herb]
+        }),
+        "epi-cli::nara::{oracle_identity::PIP_DECAN_MAP, medicine_frame::ZODIAC_DECAN_TABLE}",
+    ))
 }
