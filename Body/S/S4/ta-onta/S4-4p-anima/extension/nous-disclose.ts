@@ -96,7 +96,13 @@ export function registerNousDiscloseTool(api: ExtensionAPI) {
       }
 
       const ingest = runEpi(
-        ["techne", "gnosis", "ingest", tmpPath, "--notebook", notebookName, "--source-type", "SessionContext"],
+        // The session context package goes into the RAG corpus, not the local
+        // keyword store. `ingest-gnostic` runs RAG-Anything (parse -> chunk ->
+        // 3072-dim embed -> Neo4j) and `--notebook` stamps pool membership on
+        // the chunks, so `gnosis query --notebook <pool>` is real retrieval over
+        // this session's sources. The old `gnosis ingest` arm wrote to a
+        // side store the RAG path could not see at all.
+        ["techne", "gnosis", "ingest-gnostic", tmpPath, "--notebook", notebookName],
         30_000,
       );
 

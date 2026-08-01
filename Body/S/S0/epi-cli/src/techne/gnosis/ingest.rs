@@ -168,7 +168,7 @@ pub fn ingest_gnostic(
     notebook: Option<&str>,
 ) -> Result<String, String> {
     let mut cmd = std::process::Command::new(&config.python_bin);
-    for (key, value) in super::config::neo4j_bridge_env() {
+    for (key, value) in super::config::gnostic_bridge_env() {
         cmd.env(key, value);
     }
     cmd.arg("ingest").arg(source);

@@ -174,9 +174,10 @@ pub fn query_gnostic(
     question: &str,
     mode: Option<&str>,
     top_k: Option<u32>,
+    notebook: Option<&str>,
 ) -> Result<String, String> {
     let mut cmd = std::process::Command::new(&config.python_bin);
-    for (key, value) in super::config::neo4j_bridge_env() {
+    for (key, value) in super::config::gnostic_bridge_env() {
         cmd.env(key, value);
     }
     cmd.arg("query").arg(question);
@@ -186,6 +187,9 @@ pub fn query_gnostic(
     }
     if let Some(k) = top_k {
         cmd.arg("--top-k").arg(k.to_string());
+    }
+    if let Some(pool) = notebook {
+        cmd.arg("--notebook").arg(pool);
     }
 
     let output = cmd
@@ -206,7 +210,7 @@ pub fn query_gnostic(
 pub fn run_gnostic_passthrough(config: &GnosisConfig, args: &[&str]) -> Result<String, String> {
     let mut cmd = std::process::Command::new(&config.python_bin);
     cmd.args(args);
-    for (key, value) in super::config::neo4j_bridge_env() {
+    for (key, value) in super::config::gnostic_bridge_env() {
         cmd.env(key, value);
     }
     let output = cmd

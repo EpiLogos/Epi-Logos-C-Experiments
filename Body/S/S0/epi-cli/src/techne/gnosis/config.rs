@@ -79,6 +79,63 @@ pub(crate) fn neo4j_bridge_env_from(
         .collect()
 }
 
+/// Put the gnostic venv's `bin/` at the FRONT of the bridge's `PATH`.
+///
+/// RAG-Anything checks its parser by shelling a bare `mineru --version`
+/// (`raganything/parser.py:1440`) and treats any failure as "not installed",
+/// which aborts ingestion before LightRAG initialises. The bridge is spawned
+/// with the parent's `PATH`, which does not contain the venv — so `mineru`
+/// resolved to a stale user-level install (x86_64 onnxruntime on an arm64
+/// machine) that cannot load, and EVERY document ingest through RAG-Anything
+/// failed with "Parser 'mineru' is not properly installed".
+///
+/// Same pathology as [`resolve_gnostic_bin`]: the bridge needs its own
+/// environment, not whatever the parent happens to carry. Prepending rather
+/// than replacing keeps the caller's tools reachable.
+pub fn bridge_path_env() -> Option<(&'static str, String)> {
+    let bin = gnostic_venv_bin()?;
+    let existing = std::env::var("PATH").unwrap_or_default();
+    let prefixed = if existing.is_empty() {
+        bin.clone()
+    } else {
+        format!("{bin}:{existing}")
+    };
+    Some(("PATH", prefixed))
+}
+
+/// The gnostic venv's `bin/` directory, when it exists on disk.
+fn gnostic_venv_bin() -> Option<String> {
+    let dir = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("..")
+        .join("..")
+        .join("S5")
+        .join("epi-gnostic")
+        .join(".venv")
+        .join("bin");
+    if !dir.exists() {
+        return None;
+    }
+    Some(
+        dir.canonicalize()
+            .unwrap_or(dir)
+            .display()
+            .to_string(),
+    )
+}
+
+/// Every environment adjustment a spawned gnostic bridge needs.
+///
+/// One place, because the bridge is spawned from the gateway AND from three CLI
+/// passthrough sites; fixing only one of them is how the seam kept working in
+/// tests and failing in use.
+pub fn gnostic_bridge_env() -> Vec<(&'static str, String)> {
+    let mut env = neo4j_bridge_env();
+    if let Some(path) = bridge_path_env() {
+        env.push(path);
+    }
+    env
+}
+
 /// Resolve the `epi-gnostic` bridge executable.
 ///
 /// Search order:

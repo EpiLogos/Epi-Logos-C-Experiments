@@ -2,6 +2,7 @@ pub mod config;
 pub mod ingest;
 pub mod notebook;
 pub mod query;
+pub mod sync;
 
 use clap::Subcommand;
 use config::GnosisConfig;
@@ -63,6 +64,34 @@ pub enum GnosisCmd {
         /// dropped on the floor — no error, no effect.
         #[arg(long)]
         top_k: Option<u32>,
+        /// Scope retrieval to a pool's members (`gnostic_pools` on the chunks).
+        ///
+        /// Real RAG restricted to the pool — the same vector+graph corpus with
+        /// a membership filter, not a different store and not keyword search.
+        #[arg(long)]
+        notebook: Option<String>,
+    },
+    /// Pool bkmr/vimarsa sources into the RAG corpus (`--from-vimarsa`).
+    ///
+    /// The missing half of notebook-scoped RAG: discover a pool's sources from
+    /// bkmr, ingest them through RAG-Anything, and stamp pool membership on the
+    /// chunks so `query --notebook <pool>` is real retrieval restricted to it.
+    Sync {
+        /// Discover sources from the bkmr/vimarsa bookmark store.
+        #[arg(long)]
+        from_vimarsa: bool,
+        /// Coordinate to search for (also the fallback pool name).
+        #[arg(long)]
+        coordinate: String,
+        /// Override the bkmr project namespace (default: aperture-derived).
+        #[arg(long)]
+        project: Option<String>,
+        /// Pool/notebook name to stamp (default: `coord-<coordinate>`).
+        #[arg(long)]
+        notebook: Option<String>,
+        /// Maximum bkmr hits to consider.
+        #[arg(long)]
+        limit: Option<usize>,
     },
     /// Enrich a known entity via the Python epi-gnostic CLI
     Enrich {
@@ -234,7 +263,14 @@ pub fn dispatch(cmd: &GnosisCmd) -> Result<String, String> {
             question,
             mode,
             top_k,
-        } => query::query_gnostic(&config, question, mode.as_deref(), *top_k),
+            notebook,
+        } => query::query_gnostic(
+            &config,
+            question,
+            mode.as_deref(),
+            *top_k,
+            notebook.as_deref(),
+        ),
         // 12.T12.13 clause (b): the cross-namespace `MAPS_TO_COORDINATE` edge is
         // minted by `CoordinateEnricher.assign_direct`, reachable only via the
         // epi-gnostic `enrich` subcommand. This arm used to call
@@ -243,6 +279,27 @@ pub fn dispatch(cmd: &GnosisCmd) -> Result<String, String> {
         // Python CLI was dispatched by nothing, and the Aletheia Pi tool
         // `aletheia_gnosis_enrich` (which spawns this command) could never reach
         // the enricher.
+        GnosisCmd::Sync {
+            from_vimarsa,
+            coordinate,
+            project,
+            notebook,
+            limit,
+        } => {
+            if !*from_vimarsa {
+                return Err(
+                    "gnosis sync currently supports only --from-vimarsa; no other source is wired"
+                        .to_owned(),
+                );
+            }
+            sync::sync_from_vimarsa(
+                &config,
+                coordinate,
+                project.as_deref(),
+                notebook.as_deref(),
+                *limit,
+            )
+        }
         GnosisCmd::Enrich {
             entity_id,
             coordinate,

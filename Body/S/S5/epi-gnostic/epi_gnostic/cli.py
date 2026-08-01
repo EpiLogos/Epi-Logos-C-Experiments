@@ -3,9 +3,9 @@
 Usage:
     epi-gnostic status
     epi-gnostic models
-    epi-gnostic ingest <file_path> [--coordinate COORD] [--family FAM]
+    epi-gnostic ingest <file_path> [--coordinate COORD] [--family FAM] [--notebook POOL]
     epi-gnostic ingest-text <text> [--source-id ID]
-    epi-gnostic query <question> [--mode MODE]
+    epi-gnostic query <question> [--mode MODE] [--top-k N] [--notebook POOL]
     epi-gnostic notebook list
     epi-gnostic notebook create <name> [--coordinate COORD]
     epi-gnostic notebook delete <name>
@@ -132,7 +132,15 @@ async def _run(args: list[str]):
             )
 
             if notebook:
-                result["notebook"] = _record_notebook_document(config, notebook, file_path)
+                # A notebook IS a pool: the registry entry records the
+                # association, and the stamp puts membership on the chunks so
+                # pool-scoped RAG can filter on it. Recording without stamping
+                # is what made `--notebook` look wired while retrieval stayed
+                # blind to it.
+                record = _record_notebook_document(config, notebook, file_path)
+                record["chunks_stamped"] = await rag.stamp_pool(file_path, notebook)
+                record["retrieval_scoped"] = record["chunks_stamped"] > 0
+                result["notebook"] = record
 
             # If direct coordinate supplied, run enrichment on ingested nodes
             if coordinate:
@@ -177,8 +185,17 @@ async def _run(args: list[str]):
                 if top_k < 1:
                     _json_out({"status": "error", "message": f"--top-k must be >= 1, got {top_k}"})
                     return
-            answer = await rag.query(question, mode=mode, top_k=top_k)
-            _json_out({"status": "ok", "answer": answer, "mode": mode, "top_k": top_k})
+            # Notebook-scoped retrieval: real RAG restricted to the pool's
+            # members, not a keyword fallback over a side store.
+            notebook = _flag(args, "--notebook")
+            answer = await rag.query(question, mode=mode, top_k=top_k, pool=notebook)
+            _json_out({
+                "status": "ok",
+                "answer": answer,
+                "mode": mode,
+                "top_k": top_k,
+                "notebook": notebook,
+            })
 
         elif cmd == "query-with-layers":
             question = args[1]

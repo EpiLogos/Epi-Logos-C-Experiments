@@ -23,6 +23,20 @@ _DEFAULT_BATCH_SIZE = 500
 _COORDINATE_TAG_FIELDS = ("bimba_coordinate", "bimba_resonances")
 
 
+# Pool-scoped retrieval over-fetch (bkmr pooling -> sync -> RAG).
+#
+# The Neo4j vector procedure applies its own top_k before any WHERE clause, so
+# filtering by pool afterwards would return fewer rows than asked for — often
+# zero for a small pool inside a large corpus. Ask for more candidates, filter,
+# then truncate. The cap keeps a narrow pool from scanning the whole index.
+POOL_OVERFETCH = 10
+POOL_OVERFETCH_CAP = 500
+
+# The node property carrying pool membership. A list, because one source can
+# belong to several pools (a session pool and a coordinate pool at once).
+POOL_FIELD = "gnostic_pools"
+
+
 def vector_row_for_item(
     vector_id: str,
     item: dict[str, Any],
@@ -30,11 +44,17 @@ def vector_row_for_item(
 ) -> dict[str, Any]:
     """Build the Neo4j property row for one LightRAG vector item."""
     row: dict[str, Any] = {"vector_id": vector_id, "embedding": item.get("embedding")}
-    for key in ("entity_name", "content", *_COORDINATE_TAG_FIELDS, *meta_fields):
+    # POOL_FIELD is written unconditionally, like the coordinate tags and unlike
+    # `meta_fields`: pool membership is what a pool-scoped query filters on, so
+    # leaving it to a caller-supplied allowlist meant a stamped chunk silently
+    # lost its membership on write and every scoped query returned empty.
+    for key in ("entity_name", "content", *_COORDINATE_TAG_FIELDS, POOL_FIELD, *meta_fields):
         if key not in item:
             continue
         if key == "bimba_resonances":
             row[key] = _normalize_resonances(item[key])
+        elif key == POOL_FIELD:
+            row[key] = _normalize_pools(item[key])
         elif key == "bimba_coordinate":
             coordinate = _normalize_coordinate(item[key])
             if coordinate is not None:
@@ -42,6 +62,29 @@ def vector_row_for_item(
         else:
             row[key] = item[key]
     return row
+
+
+def _normalize_pools(value: Any) -> list[str]:
+    """Normalise pool membership to a de-duplicated list of non-empty strings.
+
+    Accepts a bare string (one pool) or any iterable of them, so a caller that
+    stamps a single pool does not accidentally store a list of characters.
+    """
+    if isinstance(value, str):
+        raw: Iterable[Any] = [value]
+    elif isinstance(value, Iterable):
+        raw = value
+    else:
+        raw = []
+
+    seen: set[str] = set()
+    pools: list[str] = []
+    for item in raw:
+        pool = (item if isinstance(item, str) else str(item)).strip()
+        if pool and pool not in seen:
+            seen.add(pool)
+            pools.append(pool)
+    return pools
 
 
 def _normalize_coordinate(value: Any) -> str | None:
@@ -91,6 +134,12 @@ class Neo4jVectorStorage(BaseVectorStorage):
     # Internal — not part of the dataclass public API
     _driver: Any = field(default=None, init=False, repr=False)
     _db: str = field(default="neo4j", init=False, repr=False)
+    # Pool-scoped retrieval (bkmr pooling -> sync -> RAG). When set, only
+    # chunks carrying this pool in `gnostic_pools` are eligible. LightRAG's
+    # `aquery` has no channel for it, so the caller sets it on the storage for
+    # the duration of one query — safe because each CLI invocation is one
+    # process serving one question.
+    _pool_filter: str | None = field(default=None, init=False, repr=False)
 
     # ------------------------------------------------------------------ #
     # Lifecycle
@@ -193,12 +242,21 @@ class Neo4jVectorStorage(BaseVectorStorage):
         label = self.workspace
         idx = self.vector_index_name
         threshold = self.cosine_better_than_threshold
+        pool = self._pool_filter
+
+        # `db.index.vector.queryNodes` returns its top_k BEFORE the WHERE runs,
+        # so a pool filter applied afterwards can starve the result set — ask
+        # the index for more candidates and truncate to top_k after filtering.
+        # The over-fetch is bounded so a narrow pool cannot drag the whole index.
+        fetch_k = top_k if pool is None else min(max(top_k * POOL_OVERFETCH, top_k), POOL_OVERFETCH_CAP)
+        pool_clause = " AND $pool IN node.gnostic_pools" if pool is not None else ""
 
         cypher = (
-            f"CALL db.index.vector.queryNodes('{idx}', $top_k, $vec) "
+            f"CALL db.index.vector.queryNodes('{idx}', $fetch_k, $vec) "
             f"YIELD node, score "
-            f"WHERE score >= $threshold AND node:`{label}` "
-            f"RETURN node {{.*, score: score}} AS doc"
+            f"WHERE score >= $threshold AND node:`{label}`{pool_clause} "
+            f"RETURN node {{.*, score: score}} AS doc "
+            f"ORDER BY score DESC LIMIT $top_k"
         )
 
         results: list[dict[str, Any]] = []
@@ -206,8 +264,10 @@ class Neo4jVectorStorage(BaseVectorStorage):
             cursor = await session.run(
                 cypher,
                 top_k=top_k,
+                fetch_k=fetch_k,
                 vec=query_embedding,
                 threshold=threshold,
+                pool=pool,
             )
             records = await cursor.data()
             for rec in records:
