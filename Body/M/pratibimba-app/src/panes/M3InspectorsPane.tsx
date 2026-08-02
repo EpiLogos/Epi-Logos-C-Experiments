@@ -183,9 +183,10 @@ function M3InspectorsSurface() {
     );
 
     // 24.T24.6 — "turning the card IS changing the mode": every turn goes out
-    // over `s2.codon.scalar_ref.read`. The gateway's tarot arm currently answers
-    // an explicit `resolved: false` naming its owning tranche; that answer is
-    // rendered verbatim rather than dressed up as a resolution or swallowed.
+    // over `s2.codon.scalar_ref.read`. The gateway's tarot arm resolves cards to
+    // their real chains; a refusal (`resolved: false` naming its owning tranche)
+    // stays a rendered answer rather than being dressed up or swallowed, so a
+    // future gap in the substrate still surfaces as itself.
     const turnTarotCard = (card: TarotCardKey) => {
         const scalarRef = tarotCardKeyString(card);
         setTarotTurn({ card, status: 'pending', detail: `reading ${scalarRef}` });

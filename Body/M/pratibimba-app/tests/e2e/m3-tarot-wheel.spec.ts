@@ -207,22 +207,20 @@ test('24.T24.6: the 22+56 tarot wheel lights the LIVE bussed arcana ids and turn
     expect(new Set(snap.suitFills).size).toBe(4);
 
     // ── (b) Turning a card goes out over the REAL gateway method and the answer
-    //        is rendered as itself. The tarot arm of `s2.codon.scalar_ref.read`
-    //        currently answers an explicit `resolved: false` naming its owner;
-    //        the surface must show that, not a fabricated resolution.
+    //        is rendered as itself. This assertion used to tolerate EITHER a
+    //        resolution or an `resolved: false` refusal, because the tarot arm
+    //        of `s2.codon.scalar_ref.read` owed its producer to this very
+    //        tranche. 24.T24.6 landed `resolve_tarot_card`, so that debt is
+    //        closed: `wands:09` is a pip and answers its full decan chain off
+    //        the one `ZODIAC_DECAN_TABLE` authority. Accepting either outcome
+    //        would no longer prove the tranche — it would pass on a regression.
     await expect(wheel).toHaveAttribute('data-rpc-method', 's2.codon.scalar_ref.read');
     await wheel.getByTestId('m3-tarot-minor-22').click();
     const turn = wheel.getByTestId('m3-tarot-turn-readout');
     await expect(turn).toBeVisible();
     await expect(turn).toHaveAttribute('data-turn-card', 'wands:09');
-    await expect(turn).toHaveAttribute('data-turn-status', /resolved|unresolved/, {
-        timeout: 15_000
-    });
-    const status = await turn.getAttribute('data-turn-status');
-    expect(['resolved', 'unresolved']).toContain(status);
-    if (status === 'unresolved') {
-        // The honest refusal must name its owner so the surface cannot be
-        // mistaken for a broken call.
-        await expect(turn).toContainText('owner');
-    }
+    await expect(turn).toHaveAttribute('data-turn-status', 'resolved', { timeout: 15_000 });
+    // The readout names the resolution KIND, so a pip cannot be mistaken for an
+    // ace/court/major answer — and no pending glyph survives a resolution.
+    await expect(turn).toContainText('wands:09 — resolved (pip)');
 });
