@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-01T13:07:11.630Z",
+ "generatedAt": "2026-08-01T23:51:13.158Z",
  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
  "port": 18923,
  "corpus": [
@@ -8,9 +8,9 @@
  ],
  "summary": {
   "probed": 284,
-  "present": 112,
-  "absent": 172,
-  "absentFamilyLive": 111,
+  "present": 113,
+  "absent": 171,
+  "absentFamilyLive": 110,
   "absentFamilyDark": 61,
   "unknown": 0
  },
@@ -757,17 +757,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -776,17 +776,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -795,17 +795,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -818,21 +818,9 @@
   {
    "method": "nara.journal.timeline",
    "advertised": false,
-   "exists": false,
+   "exists": true,
    "responds": true,
-   "errorClass": "unimplemented",
-   "familyServed": 22,
-   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
-   "servedSiblings": [
-    "nara.contemplate_session_close",
-    "nara.identity.proposals.list",
-    "nara.kairos.probe_kerykeion",
-    "nara.lens.apply",
-    "nara.lens.list",
-    "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
-   ]
+   "errorClass": null
   },
   {
    "method": "nara.kairos.natal_positions",
@@ -840,17 +828,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -866,17 +854,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -941,17 +929,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -960,17 +948,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -993,17 +981,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1012,17 +1000,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1031,17 +1019,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1050,17 +1038,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1090,17 +1078,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1109,17 +1097,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1128,17 +1116,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1147,17 +1135,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1166,17 +1154,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1185,17 +1173,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1204,17 +1192,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1223,17 +1211,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1284,17 +1272,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {
@@ -1303,17 +1291,17 @@
    "exists": false,
    "responds": true,
    "errorClass": "unimplemented",
-   "familyServed": 22,
+   "familyServed": 23,
    "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
    "servedSiblings": [
     "nara.contemplate_session_close",
     "nara.identity.proposals.list",
+    "nara.journal.timeline",
     "nara.kairos.probe_kerykeion",
     "nara.lens.apply",
     "nara.lens.list",
     "nara.lens.synthesize",
-    "nara.logos.advance",
-    "nara.logos.regress"
+    "nara.logos.advance"
    ]
   },
   {

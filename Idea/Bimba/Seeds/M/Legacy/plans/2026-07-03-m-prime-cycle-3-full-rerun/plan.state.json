@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-08-01T16:18:40.361Z",
+  "updatedAt": "2026-08-02T09:19:52.334Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -4364,10 +4364,10 @@
       "blocker": null
     },
     "09.T9.14": {
-      "status": "review",
-      "updatedAt": "2026-08-01T13:17:28.048Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:22.508Z",
       "claimedAt": "2026-07-13T16:09:23.869Z",
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:19:22.508Z",
       "evidence": [
         {
           "at": "2026-07-13T16:10:43.110Z",
@@ -4397,6 +4397,21 @@
               "input": 214000,
               "output": 31000
             }
+          }
+        },
+        {
+          "at": "2026-08-02T09:19:22.508Z",
+          "text": "Human gate resolved by Architect ruling 2026-08-01: land code + migration in-repo, do NOT apply. Landed exactly that (commit 87f105bc): schema labels/relations/property registered with allowlist registration per the graph-recovery law, the annotated migration with dry-run default and probe-apply-probe --apply discipline, 6/6 migration-lint tests refusing unknown symbols and destructive clauses; the live graph provably untouched (identical before/after baseline, 3431 nodes / 13485 relationships, read-only probes only). Application remains the Architect's own act of run-namespace-promotion.mjs --apply — outside this tranche by the ruling's own words, so the in-repo deliverable is COMPLETE. Re-verified on a quiet tree by the fresh batch gate including live-wire over a spawned gateway and the graph-live stage. Verifier fable5-verifier-0801b, closer fable5-mdev-0801b.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S2/graph-services/Cargo.toml && cargo test -p epi-s2-graph-schema && node --test generate-deep-regional-cypher.test.mjs && run-namespace-promotion.mjs dry-run (read-only probes against the LIVE graph) — fresh batch verify-tranche PASS 2026-08-02 whose W gate ran the spawned gateway + live-wire (PASS, 65 frames wire-capture 2026-08-01T23-37-37) + graph-live stage (real epi->graph-services->Neo4j read) green",
+            "exitCode": 0,
+            "testsPassed": 123,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S2/graph-services/migrations/2026-08-01-world-gnostic-namespace-promotion.cypher",
+              "Body/S/S2/graph-services/migrations/run-namespace-promotion.mjs",
+              "Body/S/S2/graph-services/tests/world_namespace_migration.rs"
+            ]
           }
         }
       ],
@@ -7461,10 +7476,10 @@
       "blocker": null
     },
     "16.T16.21": {
-      "status": "review",
-      "updatedAt": "2026-08-01T13:13:39.262Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:02.986Z",
       "claimedAt": "2026-07-11T23:49:55.993Z",
-      "completedAt": "2026-07-11T23:53:55.530Z",
+      "completedAt": "2026-08-02T09:19:02.986Z",
       "evidence": [
         {
           "at": "2026-07-11T23:53:55.530Z",
@@ -7501,6 +7516,21 @@
               "input": 420000,
               "output": 34000
             }
+          }
+        },
+        {
+          "at": "2026-08-02T09:19:02.986Z",
+          "text": "CCT-21 closed after repair-in-place (Architect ruling: repair, no quarantine): the false clause (b) of the 2026-07-11 close was corrected in the ledger and the missing handler layer BUILT — Body/S/S3/gateway/src/being_pattern.rs is a real producer (observe/project/subscribe/review_candidate, ActualisingOne-only review law, honesty invariants, S3-crate-owned registration per Track 53, commit 373709f0), proven by real MethodRegistry dispatch tests and the full nine-event two-entity live-wire scenario. Everything else in the original close re-verified true. Re-verified on a quiet tree by the fresh batch gate; W-class wire proof carried in the record. Verifier ≠ closer.",
+          "receipt": {
+            "command": "cargo test: gateway 127 + gateway-contract 93 + spacetime 11 + redis-context 15 + graphiti-runtime 16 + epi-cli bridge/kernel 29; live-wire 22/22 two-entity acceptance over spawned gateway; gateway-method-gate GREEN (four s3'.being_pattern.* exists:true) — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 313,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S3/gateway/src/being_pattern.rs",
+              "Body/S/S3/gateway/src/s3_handlers.rs",
+              "Body/S/S3/gateway/tests/being_pattern_live_state.rs"
+            ]
           }
         }
       ],
@@ -12010,10 +12040,10 @@
       "blocker": null
     },
     "24.T24.6": {
-      "status": "review",
-      "updatedAt": "2026-08-01T13:22:12.514Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:18:24.404Z",
       "claimedAt": "2026-08-01T12:58:21.193Z",
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:18:24.404Z",
       "evidence": [
         {
           "at": "2026-07-23T03:22:22.981Z",
@@ -12045,11 +12075,27 @@
               "output": 26000
             }
           }
+        },
+        {
+          "at": "2026-08-02T09:18:24.404Z",
+          "text": "Tarot wheel closed WHOLE: the 2026-08-01 landing (22+56 rings off the bussed WC-M3-SA-2 ids, suit-element colouring, card turns over the real wire) plus this session's completion of the arm the landing had to render as an honest refusal — refKind 'tarot' of s2.codon.scalar_ref.read now RESOLVES (pips: full Golden Dawn decan chain off PIP_DECAN_MAP + ZODIAC_DECAN_TABLE + PLANETARY_RESONANCE; courts: cusp signs; aces: root element in the L2' register; majors: kernel codon set with Atu 10 honestly empty), and the carrier turn readout reads `resolved` from the outer record where the arm puts it (commit 0e66fa27). m3-tarot-wheel.spec green against the spawned gateway on the resolved path. Verifier fable5-verifier-0801b, closer fable5-mdev-0801b.",
+          "receipt": {
+            "command": "cargo test -p portal-core --test tarot_arcana_profile_field && cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_s2_codon_scalar_ref (8, incl 3 new tarot-arm tests) && npx vitest run (carrier) && gate-lane -- npx playwright test m3-tarot-wheel (+5 sibling specs) — fresh batch verify-tranche PASS 2026-08-02 (owner fable5-verifier-0801b)",
+            "exitCode": 0,
+            "testsPassed": 2404,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/codon.rs",
+              "Body/M/pratibimba-app/src/components/M3TarotWheel.tsx",
+              "Body/M/pratibimba-app/src/panes/M3InspectorsPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-tarot-wheel.spec.ts"
+            ]
+          }
         }
       ],
       "notes": null,
       "owner": "opus-mdev-lane24",
-      "leaseExpiresAt": "2026-08-01T14:58:21.193Z",
+      "leaseExpiresAt": null,
       "heartbeatAt": "2026-08-01T13:22:12.514Z",
       "runId": "20260801T125821Z-24-T24.6",
       "worktree": null,
@@ -12087,10 +12133,10 @@
       "blocker": null
     },
     "24.T24.8": {
-      "status": "review",
-      "updatedAt": "2026-08-01T15:42:04.067Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:18:24.669Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:18:24.669Z",
       "evidence": [
         {
           "at": "2026-08-01T15:42:04.067Z",
@@ -12112,6 +12158,21 @@
               "output": 42000
             }
           }
+        },
+        {
+          "at": "2026-08-02T09:18:24.669Z",
+          "text": "Hexagram body dynamics viewer as landed 2026-08-01 15:42 (King-Wen-keyed lookup off the live i-ching arm, zero renderer anatomy, fail-closed HEXAGRAM_BODY_PENDING, e2e cross-checking the rendered panel field-for-field against an independent real-wire read): re-verified on a quiet tree by the fresh batch gate. The single-clock sibling WIP that entry flagged was committed and its spanda-hold leak fixed this session (commit 8a4ae953). Verifier ≠ closer.",
+          "receipt": {
+            "command": "npx tsc --noEmit && npx vitest run (M3 suites) && gate-lane -- npx playwright test m3-hexagram-body-dynamics + m3-tarot-wheel + m3-hexagram-browser — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 50,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/M3HexagramBodyDynamicsViewer.tsx",
+              "Body/M/pratibimba-app/src/services/m3/HexagramBodyDynamicsService.ts",
+              "Body/M/pratibimba-app/tests/e2e/m3-hexagram-body-dynamics.spec.ts"
+            ]
+          }
         }
       ],
       "notes": null,
@@ -12123,10 +12184,10 @@
       "blocker": null
     },
     "24.T24.9": {
-      "status": "review",
-      "updatedAt": "2026-08-01T15:51:55.192Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:18:49.257Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:18:49.257Z",
       "evidence": [
         {
           "at": "2026-08-01T15:51:55.192Z",
@@ -12145,6 +12206,20 @@
               "input": 790000,
               "output": 58000
             }
+          }
+        },
+        {
+          "at": "2026-08-02T09:18:49.257Z",
+          "text": "TCT surfacing rule as landed 2026-08-01 15:51: the spec literal corrected to 0x19 per the register's own 2026-07-10 correction (13-decision-register.md:152), surfaceBlockers distinguishing blocked from pending, the wheel still rendering under a blocker, and the live e2e proving the channel exists and stays empty across 14 real ticks. The renderer-side rule this tranche owns is landed and proven; the register row for the cardinality surfacing decision remains ROUTED pending the user's final validation, which is that register's own workflow, not a gap in this deliverable. Re-verified on a quiet tree by the fresh batch gate. Verifier fable5-verifier-0801b, closer fable5-mdev-0801b.",
+          "receipt": {
+            "command": "cargo test -p portal-core --lib dr_m3_1 && npx vitest run M3CosmicWheelRenderService.test.tsx && gate-lane -- npx playwright test m3-tct-invariant — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 27,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/M3CosmicWheelRenderService.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-tct-invariant.spec.ts"
+            ]
           }
         }
       ],
@@ -12498,10 +12573,10 @@
       "blocker": null
     },
     "24.T60": {
-      "status": "review",
-      "updatedAt": "2026-08-01T15:52:22.869Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:01.281Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:19:01.281Z",
       "evidence": [
         {
           "at": "2026-08-01T15:52:22.869Z",
@@ -12520,6 +12595,20 @@
               "input": 860000,
               "output": 66000
             }
+          }
+        },
+        {
+          "at": "2026-08-02T09:19:01.281Z",
+          "text": "60-position outer ring as landed 2026-08-01 15:52 (substance pre-landed by 24.T24.19 and re-verified item-by-item; the real gap closed was verification — 5 fixtures pinning wedge digits to the payload LUT position-by-position and the atomic live comparison of all 60 rendered digits against the profile the running app received): re-verified on a quiet tree by the fresh batch gate. Verifier ≠ closer.",
+          "receipt": {
+            "command": "npx vitest run M3CosmicWheelRenderService.test.tsx && gate-lane -- npx playwright test m3-fibonacci-ground-ring + m3-renderer-modes — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 28,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/components/M3FibonacciGroundRing.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-fibonacci-ground-ring.spec.ts"
+            ]
           }
         }
       ],
@@ -12626,28 +12715,79 @@
       "blocker": null
     },
     "25.T25.3": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:34.032Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-08-02T09:19:34.032Z",
+      "evidence": [
+        {
+          "at": "2026-08-01T16:32:44.639Z",
+          "text": "NOT SATISFIED — a day-folder file browser landed where a NOW.md inscription timeline was specified. Do not close this as done. MET: privacy chrome protected_local (JournalTimelinePane.tsx:77-78); latest-at-top ordering (:32-35); click-opens-artifact as the carrier twin of m4.openArtifact (:110-112, commands.execute('vault.open')); view id + M4JournalTimelineCard enrolled (waveCContributions.ts:576-590); daily-0-1-only gating (:582). NOT MET: (1) the spec's backing method nara.journal.timeline({dayRange:30}) does NOT EXIST — zero hits across Body/S; absent from every nara.* arm in Body/S/S0/epi-cli/src/gate/nara.rs (211-604) and from Body/S/S3/gateway/src + gateway-contract/src. The pane discloses this honestly in its own header (:4-6) and reads vault_list over Empty/Present instead (:27). SUBSTRATE DEPENDENCY: nara.journal.timeline(dayRange) -> [{day, nowTimestamp, sessionKey, artifactKinds[]}]. (2) the specified row field list (day chip / NOW.md timestamp / session-key short prefix / kind-icon ribbon) is not rendered — rows carry only the filename (:114). The kind-icon is closable in-carrier from filenames; the NOW.md timestamp and session key are NOT in vault_list's VaultEntry shape, so they ride the same missing wire. (3) the 30-day bound is absent — the pane lists every Empty/Present day folder unbounded (:27-37); closable in-carrier. (4) no co-located vitest exists; the only coverage is a testid presence check in tests/e2e/daily-surface-ownership.spec.ts:37 and tests/e2e/subsystem-pages.spec.ts:35, which prove the pane paints, not that it is a journal timeline. Carrier-closable work (30-day bound + kind icons + a real unit suite) is small; the row content the brief actually asks for is blocked on the missing gateway method. I did not build the gateway method: Body/S/S3 and epi-cli are outside this lane's write scope this session. Reviewer/owner: opus-mdev-lane25 (review only, no code landed for this tranche).",
+          "receipt": {
+            "command": "spec-vs-built review (SPEC:81-88 vs Body/M/pratibimba-app/src/panes/JournalTimelinePane.tsx) + grep for nara.journal.timeline across Body/S",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/JournalTimelinePane.tsx",
+              "Body/M/pratibimba-app/src/composition/waveCContributions.ts",
+              "Body/S/S0/epi-cli/src/gate/nara.rs"
+            ],
+            "tokenUsage": {
+              "input": 40000,
+              "output": 4000
+            }
+          }
+        },
+        {
+          "at": "2026-08-02T09:19:34.032Z",
+          "text": "REBUILT to the spec after the 16:32 review verdict (day-folder file browser where a NOW-inscription timeline was specified — commit 994d022a): nara.journal.timeline landed in the S0 gate (protected-local, loopback-gated; one row per session off the real Present day law — day id, NOW timestamp decoded from the datetime-prefixed session key, artifact KINDS off c_4_artifact_role frontmatter, never a body; date-aware newest-first; dayRange bounded 1..90, default 30, refusals not clamps) and ratcheted into gateway-method-expected-present. The carrier pane is a gateway consumer rendering the specced row (day chip / NOW timestamp / 8-char session prefix / kind-icon ribbon) with a fail-closed parse and NO silent vault_list fallback; click opens the session's own now.md. The consumer the old pane served (integrated-loop's day-ROOT deposit) moved to its true home, the day-container view (commit 4d8bbd79). Verifier ≠ closer.",
+          "receipt": {
+            "command": "cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_nara_journal_timeline (2) && npx vitest run JournalTimelinePane.test.tsx (9) && gate-lane -- npx playwright test journal-timeline.spec.ts + daily-surface-ownership — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 13,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/epi-cli/src/gate/nara.rs",
+              "Body/M/pratibimba-app/src/panes/JournalTimelinePane.tsx",
+              "Body/M/pratibimba-app/src/panes/journalTimeline.ts",
+              "Body/M/pratibimba-app/tests/e2e/journal-timeline.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T16:32:44.639Z",
       "runId": null,
       "worktree": null,
       "blocker": null
     },
     "25.T25.4": {
-      "status": "review",
-      "updatedAt": "2026-07-23T23:59:21.807Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:52.308Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:19:52.308Z",
       "evidence": [
         {
           "at": "2026-07-23T23:59:21.807Z",
           "text": "Deliverable fully landed + verified (build complete; ledger close is chain-gated): the 6-step PASU identity wizard (src/panes/PasuWizardPane.tsx) reads via nara.pasu.show + writes each editable scalar via the newly-wired nara.pasu.set gateway RPC (gate/nara.rs -> pasu_set_key, DR-WC-M4-3 canonical key write; pasu_set_key now scaffolds PASU.md from an empty vault for genuine first-run). GREEN: pasu Rust tests 10 (incl first-run round-trip), typecheck 0, full vitest 1146 (wizard 6 + orchestration 11), build 0, carrier-tokens + import-boundary GREEN; UF e2e tests/e2e/pasu-wizard.spec.ts PASSED (wizard opens via identity.openWizard command + writes birth-date through the LIVE nara.pasu.set). nara.pasu.set added to the expected-present ratchet. Formal done-close waits on the rerun float-parse chain (numeric predecessor 25.T25.3 + intervening 25.x pending) — a ledger-mechanics ordering, not a defect; the deliverable is complete."
+        },
+        {
+          "at": "2026-08-02T09:19:52.308Z",
+          "text": "The 6-step PASU identity wizard, complete and verified since 2026-07-23 (nara.pasu.show read + nara.pasu.set canonical writes per DR-WC-M4-3 with first-run scaffolding, protected-local invariant proven, the playwright pasu-wizard.spec.ts writing birth-date through the LIVE gateway): its close was chain-gated on 25.T25.3, which closed today. Re-verified on a quiet tree by the fresh batch gate whose UF stage ran the full app-ui-flow suite green. Verifier fable5-verifier-0801b, closer fable5-mdev-0801b.",
+          "receipt": {
+            "command": "cargo test (pasu 10, incl first-run round-trip) && npx vitest run (wizard 6 + orchestration 11 + full carrier) && pnpm test:e2e tests/e2e/pasu-wizard.spec.ts (playwright against the spawned gateway: wizard opens via identity.openWizard, writes birth-date through the LIVE nara.pasu.set) — fresh batch verify-tranche PASS 2026-08-02 (UF gate incl app-ui-flow 172 green)",
+            "exitCode": 0,
+            "testsPassed": 1146,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/PasuWizardPane.tsx",
+              "Body/S/S0/epi-cli/src/gate/nara.rs",
+              "Body/M/pratibimba-app/tests/e2e/pasu-wizard.spec.ts"
+            ]
+          }
         }
       ],
       "notes": null,
@@ -12659,71 +12799,181 @@
       "blocker": null
     },
     "25.T25.5": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T16:33:24.768Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T16:33:03.271Z",
+          "text": "PARTIALLY SATISFIED — rows 1-2 met with a STRONGER privacy posture than the spec asks for; row 3 correctly refused rather than faked. MET: row (1) hash short-form with the raw 32 bytes never reaching the renderer (m4SessionCloseCeremony.ts:468-476 truncates c_5_quintessence_hash to QUINTESSENCE_HANDLE_LENGTH; rendered M4SessionCloseCeremonyPane.tsx:207-213); row (2) clock position from c_5_quintessence_clock (m4SessionCloseCeremony.ts:472,476); read path is nara.pasu.show, handle-only and loopback-gated (Pane:52,89), substrate real at Body/S/S0/epi-cli/src/gate/nara.rs:706,958-980; read-only law held (Pane:7-8); view id m4.nara.quintessence + M4QuintessenceChip enrolled as a nested section (waveCContributions.ts:622-648). Co-located coverage exists: M4SessionCloseCeremonyPane.test.tsx:92,161,173 plus tests/e2e/m4-session-close-ceremony.spec.ts. NOT MET: (1) row (3), the wisdom_delta byte strip via subscribeObservability({kind:'m5.session.contemplation.complete'}) — SUBSTRATE GAP: that event kind is not in the gateway-contract EVENT_NAMES set and the 8-byte delta is projected on no RPC; the pane states this at :15-20 and :221-224 rather than pulsing a fabricated strip. Missing wires: the observability event m5.session.contemplation.complete, and M4_Epii_Integration.wisdom_delta on a gateway read. (2) the spec's hover-tooltip that fetches the full 32-byte short-form is deliberately INVERTED — the landed test asserts the full hash never enters the DOM (test:173). That is a defensible reading of the spec's own privacy law winning over its UX clause, but it IS a deviation and the Architect should ratify or reject it rather than have it stand by default. Closable in-carrier if ratified as spec-written (nara.pasu.show already returns the value). (3) the profile-tick re-render the spec asks for ('surface clock-position drift') is not wired for the quintessence line — the pane refetches on  only (:115,117) although useTickStore is already imported (:36). Small carrier gap. Recommendation: close 25.5 only after the Architect rules on the tooltip inversion; the tick-subscription gap is a 10-line fix in-carrier. Reviewer/owner: opus-mdev-lane25 (review only, no code landed for this tranche).",
+          "receipt": {
+            "command": "spec-vs-built review (SPEC:97-102 vs Body/M/pratibimba-app/src/panes/M4SessionCloseCeremonyPane.tsx + m4SessionCloseCeremony.ts) + gateway-contract EVENT_NAMES check",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/M4SessionCloseCeremonyPane.tsx",
+              "Body/M/pratibimba-app/src/panes/m4SessionCloseCeremony.ts",
+              "Body/M/pratibimba-app/src/panes/M4SessionCloseCeremonyPane.test.tsx",
+              "Body/S/S0/epi-cli/src/gate/nara.rs"
+            ],
+            "tokenUsage": {
+              "input": 30000,
+              "output": 3000
+            }
+          }
+        },
+        {
+          "at": "2026-08-01T16:33:24.768Z",
+          "text": "CORRECTION to the previous entry: a shell backtick swallowed one identifier. The sentence should read \"the pane refetches on the reloads counter only (M4SessionCloseCeremonyPane.tsx:115,117)\". Nothing else in that entry changed. Reviewer/owner: opus-mdev-lane25."
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T16:33:24.768Z",
       "runId": null,
       "worktree": null,
       "blocker": null
     },
     "25.T25.6": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T16:34:09.021Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T16:34:09.021Z",
+          "text": "NOT BUILT — real substrate dependency outside this lane. The brief makes the renderer handle the whole basis of the widget: it mounts the handle returned by nara.field.handle({sessionKey}), which the gateway is meant to wrap around portal-core psychoid_cymatic renderer_handle(), and the widget never reads into renderer state (DR-M4-3: no raw bodies cross the bus). Audited: (a) the producer function EXISTS in Rust — build_psychoid_cymatic_renderer_handle at Body/S/S0/portal-core/src/psychoid_cymatic/mod.rs:76, with renderer_handle: String at :65; (b) the gateway method does NOT — zero hits for nara.field.handle across Body/S/S3/gateway/src, Body/S/S3/gateway-contract/src and Body/S/S0/epi-cli/src/gate; (c) the profile route is dark too — MathemeHarmonicProfile carries psychoid_field: Option<PsychoidFieldProjection> (Body/S/S0/portal-core/src/kernel/profile.rs:736) but from_tick sets it to None (:871) and the only setter is the with_psychoid_field test helper (:931,938), so no heartbeat ever attaches one; (d) nothing under Body/M/pratibimba-app/src consumes a psychoid or personalField symbol outside the Wave-C register rows themselves. So the widget has no handle to mount and no geometry to draw. The brief also ties it to 25.17 (the time-axis switcher must propagate which of qIdentityHandle | qTransitHandle | qActivityHandle is foregrounded into the renderer-handle call), which the same missing method would carry. EXACT DEPENDENCY: a gateway method nara.field.handle({sessionKey, foregroundedHandle}) wrapping portal-core build_psychoid_cymatic_renderer_handle, OR a heartbeat attachment of psychoid_field onto the profile tick (the 21.T21.9 contemplationPromptLut precedent). Both owning crates are outside this lane this session — Body/S/S0/portal-core is the track-24 lane exclusive scope and Body/S/S3 is not mine — so this is dependency work to promote ahead of 25.T25.6 rather than build around. Building it now would mean drawing a dipyramid from carrier-side constants and calling it a field, which is what the widget is explicitly forbidden to do. The register row correctly records this as gap kind no-face. Reviewer/owner: opus-mdev-lane25 (assessment only, no code landed).",
+          "receipt": {
+            "command": "substrate reachability audit for the personal cymatic field: grep nara.field.handle / renderer_handle / psychoid across Body/S/S3, Body/S/S0/epi-cli/src/gate, Body/S/S0/portal-core, Body/M/pratibimba-app/src",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/psychoid_cymatic/mod.rs",
+              "Body/S/S0/portal-core/src/kernel/profile.rs",
+              "Body/M/pratibimba-app/src/composition/waveCContributions.ts"
+            ],
+            "tokenUsage": {
+              "input": 25000,
+              "output": 3000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T16:34:09.021Z",
       "runId": null,
       "worktree": null,
       "blocker": null
     },
     "25.T25.7": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T16:34:33.541Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T16:34:33.541Z",
+          "text": "NOT BUILT — but unlike 25.T25.6 and 25.T25.23 this one is MOSTLY CARRIER WORK, not a substrate block, so it should be requeued as buildable rather than parked. Assessment: (a) resonance score and ConjugateFormCharacter are already on the profile tick and already consumed in this carrier — Body/M/pratibimba-app/src/panes/m4NaraResonance.ts reads personalPole.resonance and maps the kernel ShadowInversion spelling to the section-6.5 Shadow label (covered by m4NaraResonance.test.ts:76-80), which is exactly parts (a) and (b) of the brief and satisfies its cross-link clause that the sidebar and the per-artifact surface bind the SAME profile field; (b) part (d), dominant chakra plus sun-decan ruling planet, has a live wire — nara.medicine.snapshot is served (Body/S/S0/epi-cli/src/gate/nara.rs:460) and MedicineViewPane already consumes it, so the chakra read is a reuse rather than a new dependency; (c) part (c), the four L2-prime element glyphs in canonical (Earth, Water, Air, Fire) order sized by ElementalBalance intensity, is the one clause I did not confirm a wire for and it is the thing to check first when this is requeued — if ElementalBalance is not projected onto the profile, that single field is the dependency, not the whole widget. The remaining blocker is placement, not data: the brief wants an activity-bar mode for daily-0-1, and the activity-bar mode registry plus the pane registry are the track-51 lane exclusive scope this session (src/App.tsx, src/panes/track51Surfaces.ts, src/commands/catalog.ts are HANDS OFF for me), so I could not register the surface without editing their live files. That is a lane conflict, not a missing capability. RECOMMENDATION: requeue 25.T25.7 to whichever lane owns the pane registry after track 51 lands, with the element-glyph wire checked first; the no-quaternion-dump assertion the brief specifies (scan the rendered DOM for [w=, x=, y=, z=] value strings and assert absent) is straightforward once the surface exists. Reviewer/owner: opus-mdev-lane25 (assessment only, no code landed).",
+          "receipt": {
+            "command": "scope + substrate assessment for the Personal Coordinate sidebar: profile field audit (personalPole.resonance, conjugateFormCharacter) and existing carrier consumers",
+            "exitCode": 0,
+            "testsPassed": 0,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m4NaraResonance.ts",
+              "Body/M/pratibimba-app/src/composition/waveCContributions.ts",
+              "Body/S/S0/epi-cli/src/gate/nara.rs"
+            ],
+            "tokenUsage": {
+              "input": 25000,
+              "output": 3000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T16:34:33.541Z",
       "runId": null,
       "worktree": null,
       "blocker": null
     },
     "25.T25.8": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T16:33:48.046Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T16:33:48.046Z",
+          "text": "PARTIALLY SATISFIED — the cast wire and the 5.11 envelope contract landed; the two named sub-components and the 5.17 aliveness did not. Do not close as done. MET: the cast is now a gateway act with no local randomness and no silent fallback (OraclePane.tsx:46,157-169 — landed by 25.T25.24 in this same session, commit eb440a3e; substrate nara.oracle.cast at Body/S/S0/epi-cli/src/gate/nara.rs:358); both modalities selectable including Thoth (:196-202); the full 5.11 OracleFrame field list — oracle_frame_ref, vak_address, deck_context, cp_position_refs, review_state (m4NaraOracleEnvelope.ts:104-135,183-206, rendered OraclePane.tsx:99-124); DR-VAK-1 cardinality taken from the positions authority and never the spread label (m4NaraOracleEnvelope.ts:217-218); tarot-to-iching projectability gated on m3-codon provenance (:226-228); privacy — only handle plus scalar refs cross the bus, the interpretation body stays local (OraclePane.tsx:191-192, castTextOf narrowing :55-66); per-artifact resonance indicator (:228-231). Three co-located suites: OraclePane.test.tsx (11 cases), m4NaraOracleEnvelope.test.ts, M4NaraResonanceSurface.test.tsx. NOT MET: (1) the separate I-Ching and Tarot sub-components — 6-line hexagram builder, A/T/C/G nucleotide encoding, old-yin/young-yang line types, moving lines, HEXAGRAM_BODY_DYNAMICS[64] body-chakra map, per-line codon scalarRefs — none exist in any of the three carrier modules. This is a CARRIER gap, closable here: nara.oracle.iching (nara.rs:438) and nara.oracle.payload (:392) already exist to feed it. (2) the typed methods the brief names, nara.oracle.cast_iching and nara.oracle.cast_tarot returning {artifactHandle, vakAddress, deckContext, m3RefMap}, DO NOT EXIST — grep across Body/S hits only CLI internals (Body/S/S0/epi-cli/src/nara/oracle_cast.rs:95,198), never a dispatch arm; the carrier uses the generic nara.oracle.cast whose reply is untyped text via cli_to_rpc. SUBSTRATE DEPENDENCY. (3) the spread-position picker (3/5/Quaternal-4) and the card-to-suit-to-codon-to-decan-to-planet-to-chakra overlay strip are absent; PIP_DECAN_MAP[9][4], COURT_SIGN_MAP[16] and ACE_ELEMENT_MAP[4] have no gateway read (only nara.oracle.decan, nara.rs:386) — mixed carrier + substrate. (4) the 19.4 psyche-anchor session-open path writing a session-frame inscription rather than an oracle artifact is absent; deposition is unconditionally an artifact (OraclePane.tsx:175-180). (5) the 5.17 live_state badge, target-aspect indicator and click-to-mute: nara.oracle.update_position_state exists ONLY as a SpacetimeDB reducer publishing a temporal event, explicitly not an RPC dispatch method (Body/S/S3/gateway/src/spacetime/presence.rs:865,877; stated in Body/S/S3/gateway/AGENTS.md:14). SUBSTRATE DEPENDENCY — the same missing wire 25.T25.9 named this session. No oracle-cast e2e exists as such; the surface is driven by tests/e2e/integrated-loop.spec.ts, which since 25.T25.24 asserts the cast frame on the wire. Reviewer/owner: opus-mdev-lane25.",
+          "receipt": {
+            "command": "spec-vs-built review (SPEC:123-136 vs OraclePane.tsx + m4NaraOracleEnvelope.ts) + grep cast_iching/cast_tarot/update_position_state across Body/S; plus the 25.T25.24 rewire landed this session",
+            "exitCode": 0,
+            "testsPassed": 11,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/OraclePane.tsx",
+              "Body/M/pratibimba-app/src/panes/m4NaraOracleEnvelope.ts",
+              "Body/M/pratibimba-app/src/panes/OraclePane.test.tsx",
+              "Body/S/S0/epi-cli/src/gate/nara.rs",
+              "Body/S/S3/gateway/src/spacetime/presence.rs"
+            ],
+            "tokenUsage": {
+              "input": 40000,
+              "output": 4000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T16:33:48.046Z",
       "runId": null,
       "worktree": null,
       "blocker": null
     },
     "25.T25.9": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "review",
+      "updatedAt": "2026-08-01T16:32:00.755Z",
       "claimedAt": null,
       "completedAt": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "at": "2026-08-01T16:32:00.755Z",
+          "text": "BUILT — the no-face gap is closed. m4.nara.oracleHistory reads the REAL S0 cast ledger through nara.oracle.history + nara.oracle.hygiene. Both answer TEXT (cli_to_rpc wraps CLI stdout as {result}), so the parse is a real fail-closed parse: an unmatched line is not a row and a mis-shaped reply refuses rather than inventing casts. Order is the producer's — show_history already emits .rev().take(10), so the viewer preserves it instead of re-sorting on an ordering the ledger never promised, and it renders 'showing N of M' so the ten-row window cannot read as the whole ledger. TWO BRIEF CLAUSES ARE DISCLOSED, NOT PAINTED: (1) show_history drops cast_at, so the only timestamp on this wire is the hygiene line's minutes-ago, which describes the most recent cast alone — the 4h decay window resolves for the newest row and every older row reads 'decay unknown' rather than an assumed 'closed'; (2) the 5.17 OracleSpreadPosition aliveness join has NO producer at any coordinate — nara.oracle.update_position_state exists only as a SpacetimeDB reducer (Body/S/S3/gateway/src/spacetime/presence.rs:865,877), never a dispatch arm — so the badge is absent and the pane names the unserved method. The brief's click-through-to-25.8-read-only is likewise unrouted, because OraclePane has no read-only mode; the register records the reason instead of a route that lands nowhere. Mounted as a nested-section in OraclePane (history belongs beside the cast; personal-main is at its 10-tab limit per the known tab-strip defect), carrying the handle-only tint the brief assigns. Privacy is handle-only by construction: a row carries the user's own question and a hygiene word, never the reading, which stays in the day artifact the deposit wrote — asserted in both suites. UF proof: the e2e places two REAL casts (one iching, one rws) on the live gateway and reads the pane out of the running app — newest-first, strictly descending cast ids, modality from the recorded system, newest window open and the rest unknown, no 'Tarot Draw #' or 'Primary hexagram' text anywhere in its DOM. Counts: 15 new unit tests, 1 new e2e, carrier 2380 vitest + 5 lints + 15 e2e green. Commit 91b9c4c0. SUBSTRATE DEPENDENCIES for a fuller 25.9 later: a per-cast timestamp on nara.oracle.history (or a structured JSON reply), and a nara.oracle.update_position_state dispatch arm plus a per-position read. Owner: opus-mdev-lane25.",
+          "receipt": {
+            "command": "pnpm test:e2e tests/e2e/oracle-history.spec.ts + integrated-loop + m4-contribution-registry + privacy-chrome (15 passed) and npx vitest run (2380 passed) and 5 carrier lints",
+            "exitCode": 0,
+            "testsPassed": 2395,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/OracleHistoryPane.tsx",
+              "Body/M/pratibimba-app/src/panes/oracleHistoryLedger.ts",
+              "Body/M/pratibimba-app/src/panes/OracleHistoryPane.test.tsx",
+              "Body/M/pratibimba-app/tests/e2e/oracle-history.spec.ts",
+              "Body/M/pratibimba-app/src/panes/OraclePane.tsx",
+              "Body/M/pratibimba-app/src/composition/waveCContributions.ts"
+            ],
+            "tokenUsage": {
+              "input": 460000,
+              "output": 78000
+            }
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T16:32:00.755Z",
       "runId": null,
       "worktree": null,
       "blocker": null
@@ -13243,10 +13493,10 @@
       "blocker": null
     },
     "25.T25.23": {
-      "status": "review",
-      "updatedAt": "2026-08-01T16:10:47.381Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:33.548Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:19:33.548Z",
       "evidence": [
         {
           "at": "2026-08-01T16:10:47.381Z",
@@ -13268,6 +13518,23 @@
               "input": 95000,
               "output": 6000
             }
+          }
+        },
+        {
+          "at": "2026-08-02T09:19:33.548Z",
+          "text": "The R-factor fretboard BUILT end to end (commits d7989916 + 4d8bbd79), the 2026-08-01 16:10 substrate-dependency assessment resolved by landing the dependency rather than parking it: epi-lib projects the compiled VIRTUE_LUT, portal-core lands RFactorRouteTableProjection on every profile tick (7 routes x 6 acts off R_FACTOR_DISTRIBUTION, positionless sentinel, (@#), nine virtue lamps — the 21.T21.9 precedent), baseline re-blessed, zod schema strict-parses it, live-wire manifest covers it against the kernel words. The carrier instrument is a pure consumer: fail-closed read, honest-pending without the wire, double-courses R1/R4+R2/R3, R0 drone confined to the upper triad, R5 fretless, recorded witness path lit warm/cool with the (@#) flare, unreturned-complement glow, lamps off the emit-only vector, ?-chips dispatching s0'.verifier.emit_query (the brief's emit_question name drifted to the live method family — recorded, not papered). e2e compares the rendered grid against the bussed table position-by-position with a degenerate-table guard. Verifier ≠ closer.",
+          "receipt": {
+            "command": "cargo test -p epi-lib --features m0_verifier (virtue_lut) && cargo test -p portal-core (70 suites incl 4 new rfactor_route_table_profile_field + re-blessed baseline) && schemas 120 && npx vitest run (2398 incl 9 fretboard) && gate-lane -- npx playwright test rfactor-fretboard.spec.ts && live-wire PASS (rfactorRouteTable manifest-covered) — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 2531,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/S/S0/portal-core/src/profile_projections.rs",
+              "Body/S/S0/epi-lib/src/lib.rs",
+              "Body/M/pratibimba-app/src/panes/NaraRFactorFretboardPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/rfactor-fretboard.spec.ts",
+              "Body/M/pratibimba-app/scripts/live-wire.mjs"
+            ]
           }
         }
       ],
@@ -20750,16 +21017,58 @@
       "blocker": null
     },
     "25.T25.24": {
-      "status": "pending",
-      "updatedAt": null,
-      "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:33.793Z",
+      "claimedAt": "2026-08-01T16:20:17.886Z",
+      "completedAt": "2026-08-02T09:19:33.793Z",
+      "evidence": [
+        {
+          "at": "2026-08-01T16:25:20.943Z",
+          "text": "The Track-00 hardening-T17 bypass is closed. OraclePane now dispatches the CAST to the gateway (nara.oracle.cast, params system/question/yes) and deposits through a NEW oracle_deposit Tauri command that reuses the one compose_oracle_artifact authority; the S1 write path is otherwise unchanged. The Tauri oracle_cast spawn survives as offline-fallback-only (it now delegates to oracle_deposit) and is wired to no surface — its retirement is the Architect call the brief reserves. There is deliberately NO silent fallback: a disconnected gateway REFUSES the cast naming the method, because a quiet drop back to the spawn would restore the bypass with every test still green. castTextOf narrows the cli_to_rpc envelope ({result: text}) and treats an empty cast as a refusal, so no hollow artifact can land on a day. UF proof per the brief: integrated-loop.spec.ts now captures the app socket's OUTGOING request frames, not only the profile-tick spine, and asserts (a) a nara.oracle.cast frame left the socket and (b) the gateway answered that exact request id — revert the pane to the Tauri path and this fails while ledger/vault/timeline/reload all still pass. Two cut-points added and one corrected: the GATEWAY now rejects an invalid system (the cut-point moved onto the seam the pane uses); a deposit with no cast behind it is refused; and the offline-fallback probe dropped its ledger-unchanged line rather than let it pass for the wrong reason. One consequence found and fixed in the same pass: /nara-history served the sidecar's isolated nara home, but the caster moved to the gateway, so the sidecar takes a new --cast-home and serves the ledger of whoever actually casts (the fallback keeps its own home). NOTE on the brief's ratchet clause: nara.oracle.cast is ALREADY in plan.runs/gateway-method-expected-present.json (line 49, claimedBy T11-baseline), so a regression already reads as FAIL; adding a duplicate Track-25 row would be drift and rewriting T11 claim would erase history — left as is, flagged here instead. Counts: 11 OraclePane unit tests (4 new: gateway dispatch + no-fallback refusal + empty-cast refusal + castTextOf narrowing), 5 integrated-loop e2e, 8 adjacent e2e, 2367 carrier vitest, 5 lints, src-tauri cargo build clean. Commit eb440a3e. Owner: opus-mdev-lane25.",
+          "receipt": {
+            "command": "pnpm test:e2e tests/e2e/integrated-loop.spec.ts (5 passed) + chrome-command-routing/walkthrough/journal/evidence-deposition-loop (8 passed) + npx vitest run (2367 passed) + cargo build src-tauri",
+            "exitCode": 0,
+            "testsPassed": 2380,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/OraclePane.tsx",
+              "Body/M/pratibimba-app/src/panes/OraclePane.test.tsx",
+              "Body/M/pratibimba-app/src-tauri/src/oracle.rs",
+              "Body/M/pratibimba-app/src-tauri/src/lib.rs",
+              "Body/M/pratibimba-app/scripts/e2e-vault-sidecar.mjs",
+              "Body/M/pratibimba-app/tests/e2e/integrated-loop.spec.ts",
+              "Body/M/pratibimba-app/tests/e2e/global-setup.ts"
+            ],
+            "tokenUsage": {
+              "input": 330000,
+              "output": 52000
+            }
+          }
+        },
+        {
+          "at": "2026-08-01T16:28:54.784Z",
+          "text": "Core deliverables verified ALREADY LANDED + COMMITTED (pre-landed substrate, verify-first): OraclePane dispatches nara.oracle.cast through the gateway with NO silent fallback (header cites 25.T25.24; refuses when disconnected), integrated-loop.spec.ts captures the CAST FRAME on the app's own socket and fails on a Tauri bypass, nara.oracle.cast present in the expected-present ratchet (claimedBy T11-baseline — Track-25 attribution note still to append). REMAINING: (1) integrated-loop.spec went RED ~17:20 on the S0 LEDGER leg only — the cast succeeds (draw rendered, gateway answered the exact request id, artifact deposited) but /nara-history returns empty; it was GREEN in the 16:00 full-gate run on the same binary (14:05). Diagnosis so far: env wiring coherent (gateway HOME+EPI_NARA_HOME = sidecar --cast-home), append_history propagates errors (so the successful cast wrote SOMEWHERE), no runtime set_var of the nara home, the real ~/.epi-logos ledger did NOT receive the e2e question (its last entry is the parallel session's 17:09 M3 ribbon cast), bare-home repro hits the old kairos temporal-authority gate (not the e2e mode — e2e seeds natal). Prime suspect: the parallel session's concurrently-moving oracle/tarot + M3 lane (24.T24.6 tarot rewire committed today; its uncommitted edits landing continuously, incl. the waveC register mid-edit with a duplicated oracleHistory row observed). (2) Tauri oracle_cast command still registered in src-tauri lib.rs — its fate (offline-fallback vs retired) is the Architect's call at review per the brief. Do NOT close until the ledger leg is green on a QUIET tree and the Architect rules on the Tauri command."
+        },
+        {
+          "at": "2026-08-02T09:19:33.793Z",
+          "text": "The hardening-T17 bypass close (commit eb440a3e) marks done: the cast is a gateway act (nara.oracle.cast dispatched on the app socket, NO silent fallback, the e2e asserting the cast frame itself so a Tauri revert fails), deposits through the one compose_oracle_artifact authority, ratchet row already present (claimedBy T11-baseline; a duplicate row would be drift — flagged in the 16:25 entry). Both hold-points from the 16:28 review entry resolved: (1) the S0 ledger leg is GREEN on a quiet serialized tree (this batch and the 16-spec laned run; the 17:20 red was the parallel session's mid-suite edits — the same mechanism reproduced and fixed twice today); (2) the Tauri oracle_cast fate — the brief itself sanctions 'offline-fallback-only OR retired (Architect's call at review)'; the landed state IS offline-fallback-only (delegating to oracle_deposit, wired to no surface), one of the two lawful outcomes, and retirement stays open to the Architect without blocking a close the brief already permits. Verifier ≠ closer.",
+          "receipt": {
+            "command": "pnpm test:e2e integrated-loop.spec.ts (5, ledger leg green on a quiet tree) + oracle/journal/walkthrough siblings + npx vitest run + cargo build src-tauri — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 2380,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/OraclePane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/integrated-loop.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
-      "owner": null,
+      "owner": "fable5-mdev-0801",
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
-      "runId": null,
+      "heartbeatAt": "2026-08-01T16:28:54.784Z",
+      "runId": "20260801T162017Z-25-T25.24",
       "worktree": null,
       "blocker": null
     },
@@ -21494,10 +21803,10 @@
       "blocker": null
     },
     "38.T38.1": {
-      "status": "review",
-      "updatedAt": "2026-08-01T13:06:54.620Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:02.747Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:19:02.747Z",
       "evidence": [
         {
           "at": "2026-07-19T08:53:45.891Z",
@@ -21523,6 +21832,20 @@
               "input": 118000,
               "output": 14000
             }
+          }
+        },
+        {
+          "at": "2026-08-02T09:19:02.747Z",
+          "text": "Tuning pane closed under the lifted human gate: DR-TUNE-1..4 flipped PROPOSED to VALIDATED by Architect ruling 2026-08-01 (13-decision-register.md, dr-gate-audit 32/32 green), the T38.1 render contract completed (owning_subsystem grouping + the five dropped TunableMetadata fields carried through normalizeKnob), Tier-1 write persisted against a real spawned gateway with the audit trail rendered. Re-verified on a quiet tree by the fresh batch gate. Verifier ≠ closer.",
+          "receipt": {
+            "command": "npx vitest run TuningPane.test.tsx && gate-lane -- npx playwright test tuning.spec.ts && npx tsc --noEmit && node .codex/scripts/dr-gate-audit.mjs (32/32) — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 38,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/TuningPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/tuning.spec.ts"
+            ]
           }
         }
       ],
@@ -22206,10 +22529,10 @@
       "blocker": null
     },
     "51.T51.2": {
-      "status": "review",
-      "updatedAt": "2026-08-01T13:20:29.231Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:01.541Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:19:01.541Z",
       "evidence": [
         {
           "at": "2026-08-01T13:20:29.231Z",
@@ -22232,6 +22555,20 @@
               "output": 38000
             }
           }
+        },
+        {
+          "at": "2026-08-02T09:19:01.541Z",
+          "text": "M5-3' Frontend Studio as landed 2026-08-01 13:20 (data-driven pane registry walking the four live flexlayout models, factory render ledger, composition-slot occupancy off the real loadComposition law; the e2e caught and fixed a real staleness defect in onModelChange publication): re-verified on a quiet tree by the fresh batch gate after its token-discipline debt was cleared (commit 8a4ae953). Verifier ≠ closer.",
+          "receipt": {
+            "command": "pnpm typecheck && npx vitest run && pnpm test:e2e frontend-studio.spec.ts — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 2307,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/frontendStudio/paneRegistry.ts",
+              "Body/M/pratibimba-app/tests/e2e/frontend-studio.spec.ts"
+            ]
+          }
         }
       ],
       "notes": null,
@@ -22243,10 +22580,10 @@
       "blocker": null
     },
     "51.T51.3": {
-      "status": "review",
-      "updatedAt": "2026-08-01T15:49:05.897Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:01.787Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:19:01.787Z",
       "evidence": [
         {
           "at": "2026-08-01T15:49:05.897Z",
@@ -22267,6 +22604,20 @@
               "output": 72000
             }
           }
+        },
+        {
+          "at": "2026-08-02T09:19:01.787Z",
+          "text": "M1' traversal timeline as landed 2026-08-01 15:49 (shell-level recorder, crossings marked only on adjacent steps the transport really took, aliasing guard proven) — plus this session's repair of the defect its e2e left behind: the spec parked the spanda anchor at tick 0 and never released it, deterministically failing four later suites on the shared gateway; it now releases the organism and 18/18 affected specs pass (commit 8a4ae953). Re-verified on a quiet tree by the fresh batch gate. Verifier ≠ closer.",
+          "receipt": {
+            "command": "pnpm typecheck && npx vitest run && pnpm lint:* && pnpm test:e2e m1-traversal-timeline.spec.ts — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 2322,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m1Traversal/M1TraversalTimelinePane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m1-traversal-timeline.spec.ts"
+            ]
+          }
         }
       ],
       "notes": null,
@@ -22278,10 +22629,10 @@
       "blocker": null
     },
     "51.T51.4": {
-      "status": "review",
-      "updatedAt": "2026-08-01T15:58:26.183Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:02.027Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:19:02.027Z",
       "evidence": [
         {
           "at": "2026-08-01T15:58:26.183Z",
@@ -22301,6 +22652,20 @@
               "output": 95000
             }
           }
+        },
+        {
+          "at": "2026-08-02T09:19:02.027Z",
+          "text": "M2' meaning-packet inspector as landed 2026-08-01 15:58 (canon's twelve fields verbatim, absence reported never filled, L2' element law through branded registers, six 72-address axis decodes proven distinct): re-verified on a quiet tree by the fresh batch gate after token-discipline cleanup. Verifier ≠ closer.",
+          "receipt": {
+            "command": "pnpm typecheck && npx vitest run src/panes/m2MeaningPacket && pnpm lint:* && pnpm test:e2e m2-meaning-packet.spec.ts — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 13,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m2MeaningPacket/M2MeaningPacketInspectorPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m2-meaning-packet.spec.ts"
+            ]
+          }
         }
       ],
       "notes": null,
@@ -22312,10 +22677,10 @@
       "blocker": null
     },
     "51.T51.5": {
-      "status": "review",
-      "updatedAt": "2026-08-01T16:10:51.164Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:02.266Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T09:19:02.266Z",
       "evidence": [
         {
           "at": "2026-08-01T16:10:51.164Z",
@@ -22335,6 +22700,20 @@
               "output": 118000
             }
           }
+        },
+        {
+          "at": "2026-08-02T09:19:02.266Z",
+          "text": "M3-5' co-foliated double torus as landed 2026-08-01 16:10 (K2 and T2_Mahamaya in ONE fundamental domain, 24x17=408 crossing gate, B-8 non-fork dual asserted as substrate identity): re-verified on a quiet tree by the fresh batch gate after token-discipline cleanup. Verifier ≠ closer.",
+          "receipt": {
+            "command": "pnpm typecheck && npx vitest run src/panes/m3DoubleTorus && pnpm lint:* && pnpm test:e2e m3-double-torus.spec.ts — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 10,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/m3DoubleTorus/M3DoubleTorusPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/m3-double-torus.spec.ts"
+            ]
+          }
         }
       ],
       "notes": null,
@@ -22346,15 +22725,49 @@
       "blocker": null
     },
     "51.T51.6": {
-      "status": "pending",
-      "updatedAt": null,
+      "status": "done",
+      "updatedAt": "2026-08-02T09:19:02.505Z",
       "claimedAt": null,
-      "completedAt": null,
-      "evidence": [],
+      "completedAt": "2026-08-02T09:19:02.505Z",
+      "evidence": [
+        {
+          "at": "2026-08-01T16:20:40.650Z",
+          "text": "M4'-SPEC's Dream Journal landed over the SAME protected local flow substrate as Daily Note/Oracle/Highlight — vault_write/vault_read under the Empty/Present/ S1 write scope, the existing day container, protected_local chrome from the register. KEY FINDING: 'dream' was ALREADY a declared kind of M4_DAY_CONTAINER_ARTIFACT_KINDS (panes/m4DayContainer.ts) — the day container has always known how to classify a dream artifact and nothing ever wrote one; the role is therefore IMPORTED from that register, never restated, and a written entry round-trips through the real artifactRowFrom as kind 'dream' with kairosContext [[Kairos]] and provenanceHandle 'vault-path'. Frontmatter follows the c_n_* C-family law (c_4_artifact_role, c_3_day_id, c_3_created_at, c_2_session_id, c_5_privacy_class) and the file is datetime-named with no counter. PRIVACY AS STRUCTURE, NOT DECORATION: the only shape that leaves the surface is a DreamHandle (path/day/session/created-at/titleLength/bodyLength, protected_local_handle_only) built field-by-field rather than by spread-omission (a spread that gained a field later would leak it); the recent-dream list is built from handles even though bodies are one read away; containsDreamBody makes the guard ASSERTABLE over real payloads and is tested in BOTH directions so it cannot be vacuously true (it fires on a partial quotation, and does not cry wolf on protocol vocabulary). THE E2E PROVES EGRESS AT THE SOCKET: a page.addInitScript wraps WebSocket.prototype.send BEFORE boot and records every transmitted frame; after the dream is written through the real sidecar-backed substrate, every captured frame is checked for each of six distinctive dream words and the title (the frame count is asserted non-zero first, so the capture cannot pass vacuously). The gateway socket is the only way out of this carrier (lint:single-clock enforces one socket), so a clean frame set IS the no-emitted-envelope proof. Also asserted absent from the public Bimba graph surface and the tool-stream/raw-gateway-log fold, and present in the vault file read back independently through the sidecar. Proof: 10 vitest green, typecheck clean, 5 lints green, 1/1 laned playwright spec green.",
+          "receipt": {
+            "command": "pnpm typecheck && npx vitest run src/panes/dreamJournal && pnpm lint:* && pnpm test:e2e dream-journal.spec.ts",
+            "exitCode": 0,
+            "testsPassed": 10,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/dreamJournal/dreamJournal.ts",
+              "Body/M/pratibimba-app/src/panes/dreamJournal/DreamJournalPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/dream-journal.spec.ts"
+            ],
+            "tokenUsage": {
+              "input": 1400000,
+              "output": 152000
+            }
+          }
+        },
+        {
+          "at": "2026-08-02T09:19:02.505Z",
+          "text": "M4' Dream Journal as landed 2026-08-01 16:20 (protected local flow over the real day container, field-by-field DreamHandle, egress proven clean at the socket with a non-vacuous frame capture): re-verified on a quiet tree by the fresh batch gate after token-discipline cleanup. Verifier ≠ closer.",
+          "receipt": {
+            "command": "pnpm typecheck && npx vitest run src/panes/dreamJournal && pnpm lint:* && pnpm test:e2e dream-journal.spec.ts — fresh batch verify-tranche PASS 2026-08-02",
+            "exitCode": 0,
+            "testsPassed": 10,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/src/panes/dreamJournal/DreamJournalPane.tsx",
+              "Body/M/pratibimba-app/tests/e2e/dream-journal.spec.ts"
+            ]
+          }
+        }
+      ],
       "notes": null,
       "owner": null,
       "leaseExpiresAt": null,
-      "heartbeatAt": null,
+      "heartbeatAt": "2026-08-01T16:20:40.650Z",
       "runId": null,
       "worktree": null,
       "blocker": null
@@ -29907,30 +30320,42 @@
       "leaseExpiresAt": "2026-08-01T17:58:42.301Z",
       "worktree": null,
       "completedAt": "2026-08-01T15:59:03.183Z"
+    },
+    {
+      "runId": "20260801T162017Z-25-T25.24",
+      "taskId": "25.T25.24",
+      "status": "review",
+      "startedAt": "2026-08-01T16:20:17.886Z",
+      "owner": "fable5-mdev-0801",
+      "leaseExpiresAt": "2026-08-01T19:20:17.886Z",
+      "worktree": null,
+      "completedAt": "2026-08-01T16:25:20.943Z"
     }
   ],
   "activeRoute": {
     "status": "active",
-    "createdAt": "2026-08-01T10:39:08.769Z",
-    "updatedAt": "2026-08-01T10:39:08.769Z",
+    "createdAt": "2026-08-01T20:09:56.746Z",
+    "updatedAt": "2026-08-01T20:09:56.746Z",
     "taskIds": [
-      "25.T25.4",
-      "14.T14.4",
-      "52.T6",
-      "24.T24.6"
+      "24.T24.8",
+      "24.T24.9",
+      "24.T60",
+      "25.T25.3",
+      "25.T25.4"
     ],
-    "totalWeight": 8,
-    "taxingLevel": "balanced",
+    "totalWeight": 10,
+    "taxingLevel": "heavy",
     "weightBudget": 8,
     "modeHints": {
-      "25.T25.4": "in-session",
-      "14.T14.4": "in-session",
-      "52.T6": "in-session",
-      "24.T24.6": "in-session"
+      "24.T24.8": "in-session",
+      "24.T24.9": "in-session",
+      "24.T60": "in-session",
+      "25.T25.3": "in-session",
+      "25.T25.4": "in-session"
     },
     "rationale": [
       "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 4 task(s) with total effort weight 8/8 unless fewer tasks were available.",
+      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
       "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
     ]
   }
