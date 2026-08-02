@@ -31,7 +31,7 @@
  * Contract: [[M4'-SPEC]] + rerun tranche [[25.T25.19]] (consumes 19.6 + 19.7).
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { gateway } from '../bridge/gatewayHolder';
 import { useProvenanceStore, useSessionStore, useTickStore } from '../state/stores';
 import { privacyChrome } from '../ui/privacyChrome';
@@ -86,10 +86,14 @@ export function M4SessionCloseCeremonyPane({
     // cancel-livelock law as 25.7: a per-generation dep would supersede the
     // in-flight read every second.
     const tick12 = tick12OfProfile(cachedProfile);
+    const previousTick12 = useRef<number | null>(null);
     useEffect(() => {
-        if (tick12 !== null) {
+        // Refetch only when the clock actually MOVES a stop — the mount-time
+        // value is what the initial load already read.
+        if (tick12 !== null && previousTick12.current !== null && tick12 !== previousTick12.current) {
             setReloads(count => count + 1);
         }
+        previousTick12.current = tick12;
     }, [tick12]);
 
     const seeds = contemplationSeedsFromProfile(cachedProfile);
