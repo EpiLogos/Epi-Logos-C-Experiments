@@ -59,6 +59,13 @@ export interface M4SessionCloseCeremonyPaneProps {
     sessionKey?: string | null;
 }
 
+function tick12OfProfile(cached: unknown): number | null {
+    const profile = (cached as { profile?: { harmonicProfile?: { tick12?: unknown } } } | null)?.profile;
+    const root = profile?.harmonicProfile ?? (profile as { tick12?: unknown } | undefined);
+    const tick12 = root?.tick12;
+    return typeof tick12 === 'number' && Number.isFinite(tick12) ? tick12 : null;
+}
+
 export function M4SessionCloseCeremonyPane({
     sessionKey = null
 }: M4SessionCloseCeremonyPaneProps = {}) {
@@ -73,6 +80,17 @@ export function M4SessionCloseCeremonyPane({
     const [contemplation, setContemplation] = useState<M4ContemplationRead | null>(null);
     const [quintessence, setQuintessence] = useState<M4QuintessenceHandleRead | null>(null);
     const [reloads, setReloads] = useState(0);
+    // 25.T25.5 (15-foundation principle 2): the quintessence read refetches
+    // when the CLOCK moves a tick12 stop, so a wisdom-delta-shifted clock
+    // position surfaces without a manual reload. Whole-stop key — the same
+    // cancel-livelock law as 25.7: a per-generation dep would supersede the
+    // in-flight read every second.
+    const tick12 = tick12OfProfile(cachedProfile);
+    useEffect(() => {
+        if (tick12 !== null) {
+            setReloads(count => count + 1);
+        }
+    }, [tick12]);
 
     const seeds = contemplationSeedsFromProfile(cachedProfile);
 
