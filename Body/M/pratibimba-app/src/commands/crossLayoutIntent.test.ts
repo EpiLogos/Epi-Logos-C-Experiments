@@ -24,7 +24,7 @@ const INTENT = {
 
 describe('cross-layout intent targets (31.T31.10)', () => {
     it('catalogues the M-family, ide-shell, and composition targets without collisions', () => {
-        expect(CROSS_LAYOUT_INTENT_TARGETS).toHaveLength(55);
+        expect(CROSS_LAYOUT_INTENT_TARGETS).toHaveLength(56);
         expect(new Set(CROSS_LAYOUT_INTENT_TARGETS.map(t => `${t.extensionId}/${t.contributionId}`)).size)
             .toBe(CROSS_LAYOUT_INTENT_TARGETS.length);
         expect(CROSS_LAYOUT_INTENT_TARGETS.filter(t => t.extensionId === 'ide-shell-m0-m5')).toHaveLength(8);
@@ -122,7 +122,7 @@ describe('cross-layout intent targets (31.T31.10)', () => {
             const count = (value: LayoutId | null) =>
                 CROSS_LAYOUT_INTENT_TARGETS.filter(t => t.preferredLayout === value).length;
             expect(count('ide-deep')).toBe(17);
-            expect(count('daily-0-1')).toBe(16);
+            expect(count('daily-0-1')).toBe(17);
             expect(count(null)).toBe(22);
             expect(count('ide-deep') + count('daily-0-1') + count(null)).toBe(
                 CROSS_LAYOUT_INTENT_TARGETS.length

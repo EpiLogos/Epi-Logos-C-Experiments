@@ -358,7 +358,7 @@ describe('25.T25.21 — every present row is real, read off the source', () => {
                 checked += 1;
             }
         }
-        expect(checked, 'no source citations were checked at all').toBeGreaterThan(10);
+        expect(checked, 'no source citations were checked at all').toBeGreaterThan(7);
     });
 
     it('every flexlayout row names the face whose model really carries it', () => {
@@ -620,7 +620,7 @@ describe('25.T25.21 — the three per-export seams are real (SPEC:288)', () => {
     const live = M4_WAVE_C_CONTRIBUTIONS.filter(row => row.carrier !== null && row.gap === null);
 
     it('carries all three seams exactly on the rows that render', () => {
-        expect(live.length, 'no live row at all would make every assertion below vacuous').toBe(18);
+        expect(live.length, 'no live row at all would make every assertion below vacuous').toBe(19);
         for (const row of M4_WAVE_C_CONTRIBUTIONS) {
             const shouldCarry = row.carrier !== null && row.gap === null;
             const carries = [row.currentStateSelector, row.selectionHandler, row.evidenceSerializer];
@@ -1031,7 +1031,6 @@ describe('25.T25.21 + 52.T4 — the layout law is DERIVED, for every row', () =>
         const kinds = new Set(M4_WAVE_C_CONTRIBUTIONS.map(row => row.mount.kind));
         // if a new mount kind appears, the derivation must grow to meet it
         expect([...kinds].sort()).toEqual([
-            'absent',
             'composition-slot',
             'cross-coordinate',
             'direct-jsx',
@@ -1144,6 +1143,7 @@ describe('25.T25.21 — NO DRIFT in the other direction', () => {
             'm4.nara.oracleCast',
             'm4.nara.oracleHistory',
             'm4.nara.pasuWizard',
+            'm4.nara.personalCoordinate',
             'm4.nara.pratibimbaCoordinate',
             'm4.nara.psycheAnchorCoherence',
             'm4.nara.quintessence',

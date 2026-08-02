@@ -411,6 +411,10 @@ export const DEEP_PANE_WITHDRAWALS: readonly DeepPaneWithdrawal[] = Object.freez
         why: 'The R-factor fretboard replays the SESSION traversal (25.T25.23) — a personal lived-flow record read beside the ceremony that asks whether it returned, not depth work.'
     }),
     Object.freeze({
+        surfaceId: 'personalCoordinate',
+        why: 'The live Q_personal current-state sidebar (25.T25.7) — the lived at-now reading of the personal pole; its depth home is the M4 subsystem page, not a scattered deep tab.'
+    }),
+    Object.freeze({
         surfaceId: 'pratibimbaCoordinate',
         why: "The protected personal-field surface (25.T25.14). :161 names the integrated 4/5/0 Jiva-is-Śiva path as deep material, but the landed 52.T3 layout audit declares this receiver `preferredLayout: 'daily-0-1'` — an intent to it pulls the user back to the daily shell, so mounting it in depth would contradict the ledger. 52.T5 owns the M4' subsystem page that gives the recognition path its deep home."
     })

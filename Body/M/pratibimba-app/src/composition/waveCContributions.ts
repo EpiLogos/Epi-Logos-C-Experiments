@@ -684,29 +684,18 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         frozenExport: 'M4PersonalCoordinateBadge',
         tranche: '25.T25.7',
         landedBy: null,
-        carrier: null,
-        testid: null,
-        mount: { kind: 'absent' },
-        layoutLaw: null,
+        carrier: { file: 'panes/M4PersonalCoordinatePane.tsx', symbol: 'M4PersonalCoordinatePane' },
+        testid: 'm4-personal-coordinate',
+        mount: { kind: 'flexlayout-tab', component: 'personalCoordinate', tabLabel: 'Personal', face: 1, region: 'personal-left-border' },
+        layoutLaw: 'daily-only',
         privacyClass: 'protected_local',
         miniModes: [],
         miniModeWarrant: null,
         warrant: `${SPEC}:119 — "View id: \`m4.nara.personalCoordinate\` (new)"`,
-        currentStateSelector: null,
-        selectionHandler: null,
-        evidenceSerializer: null,
-        gap: {
-            kind: 'no-face',
-            ownerTranche: '25.T25.7',
-            compositionBlocker: null,
-            evidence:
-                'crossLayoutIntent.ts routes the m4-nara/personalCoordinate INTENT to the pratibimbaCoordinate component, but that pane renders the handle panel, the consent editor and the proposals list — none of the four items 25.7 assigns (resonance score, ConjugateFormCharacter, four L2-ordered element glyphs, dominant chakra + sun-decan planet). The intent is real; the face is not. Enrolling this under the 25.14 row would close a pending tranche by adjacency.',
-            citations: [
-                { file: 'commands/crossLayoutIntent.ts', anchor: "target('m4-nara', 'personalCoordinate'" },
-                { file: 'panes/PratibimbaCoordinatePane.tsx', anchor: 'data-testid="consent-editor"' },
-                { file: 'panes/PratibimbaCoordinatePane.tsx', anchor: 'data-testid="personal-handle-panel"' }
-            ],
-        },
+        currentStateSelector: selector('m4.nara.personalCoordinate', 'tick-store', 'useTickStore', ['profile']),
+        selectionHandler: routed('m4.nara.personalCoordinate', 'm4-nara', 'personalCoordinate'),
+        evidenceSerializer: evidence('m4.nara.personalCoordinate', 'protected_local', 'data-resonance-state'),
+        gap: null,
         disposition: null
     },
     {
@@ -883,7 +872,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         currentStateSelector: selector('m4.nara.pratibimbaCoordinate', 'tick-store', 'useTickStore', [
             'profile'
         ]),
-        selectionHandler: routed('m4.nara.pratibimbaCoordinate', 'm4-nara', 'personalCoordinate'),
+        selectionHandler: routed('m4.nara.pratibimbaCoordinate', 'm4-nara', 'pratibimbaCoordinate'),
         evidenceSerializer: evidence(
             'm4.nara.pratibimbaCoordinate',
             'protected_local_handle_only',

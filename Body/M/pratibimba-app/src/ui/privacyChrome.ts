@@ -139,6 +139,12 @@ export const SPEC_ASSIGNED_SURFACES: readonly PrivacySurface[] = Object.freeze([
         warrant: `${SPEC}:335 — "View id: \`m4.nara.rfactorFretboard\` (new). Privacy chrome: \`mext-privacy-protected-local\` (a personal traversal record)"`
     },
     {
+        file: 'panes/M4PersonalCoordinatePane.tsx',
+        privacyClass: 'protected_local',
+        tranche: '25.7',
+        warrant: `${SPEC}:119 — "View id: \`m4.nara.personalCoordinate\` (new). Privacy chrome: \`mext-privacy-protected-local\`"`
+    },
+    {
         file: 'panes/PasuWizardPane.tsx',
         privacyClass: 'protected_local',
         tranche: '25.4',

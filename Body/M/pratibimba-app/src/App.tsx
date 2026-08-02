@@ -58,6 +58,7 @@ import { M4DialogicalArenaPane } from './panes/M4DialogicalArenaPane';
 import { M4PsycheAnchorCoherencePane } from './panes/M4PsycheAnchorCoherencePane';
 import { M4SessionCloseCeremonyPane } from './panes/M4SessionCloseCeremonyPane';
 import { NaraRFactorFretboardPane } from './panes/NaraRFactorFretboardPane';
+import { M4PersonalCoordinatePane } from './panes/M4PersonalCoordinatePane';
 import { CanonUpdateLedgerPane } from './panes/CanonUpdateLedgerPane';
 import { AgenticControlRoomPane } from './panes/acr/AgenticControlRoomPane';
 import { CoordinateTreePane } from './panes/coordinateTree/CoordinateTreePane';
@@ -262,6 +263,9 @@ function personalDefault(activeLayout: OmniPanelLayoutId) {
                 // 25.T25.23 — the R-factor fretboard reads the compiled route
                 // table + the emit-only witness; a reading surface, border law.
                 { type: 'tab', name: 'Fretboard', component: 'rfactorFretboard', enableClose: false },
+                // 25.T25.7 — the live Q_personal current-state sidebar; a
+                // reading surface (same border law as the ceremony row above).
+                { type: 'tab', name: 'Personal', component: 'personalCoordinate', enableClose: false },
                 // 28.T28.6 — CHROME-CONTRACT §2 designates the coordinate tree
                 // "face 1 left border", and `LEFT_SIDEBAR_MODES` makes it the
                 // default mode and cross-layout fallback in BOTH layouts. LAST
@@ -560,6 +564,8 @@ function factory(node: TabNode, activeLayout?: OmniPanelLayoutId) {
             return <M4PsycheAnchorCoherencePane />;
         case 'rfactorFretboard':
             return <NaraRFactorFretboardPane />;
+        case 'personalCoordinate':
+            return <M4PersonalCoordinatePane />;
         case 'mocBases':
             return <MocBaseReflectionPane />;
         case 'm2Correspondence':
