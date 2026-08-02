@@ -1,0 +1,46 @@
+/* 29.T29.16 — Inhabited Bimba overlay. Tokens only (Track 30 law). */
+
+.cosmic-engine-field {
+    position: relative;
+}
+
+.inhabited-bimba-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.inhabited-bimba-marker {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    margin: -5px 0 0 -5px;
+    border-radius: 999px;
+    pointer-events: auto;
+}
+
+/* the many render as many — plain marks, never clustered */
+.inhabited-law-many {
+    background: var(--ink-dim);
+}
+
+/* PotentiallyOne — a suggested shared contour, outline only */
+.inhabited-law-suggested-contour {
+    background: none;
+    border: 1px dashed var(--accent);
+}
+
+/* ActualisingOne — a warning / review candidate, never canon */
+.inhabited-law-review-warning {
+    background: var(--danger);
+}
+
+/* MonoPoly — a held many-in-one, only when verified */
+.inhabited-law-held-one {
+    background: var(--ring);
+}
+
+.inhabited-law-unresolved {
+    background: none;
+    border: 1px dotted var(--hairline);
+}

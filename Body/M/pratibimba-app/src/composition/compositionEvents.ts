@@ -32,7 +32,14 @@ export const COMPOSITION_EVENT_TYPES = [
     'composition.juxtaposition.rejected',
     'composition.slot.blocked',
     'composition.slot.recovered',
-    'composition.pentadic_trace.advance'
+    'composition.pentadic_trace.advance',
+    // 29.T29.16 — the Inhabited Bimba live entity field. Observed/projected
+    // mirror the CCT-21 producer's own chain; relation_edge and
+    // review_candidate carry counts and handles only (public-safe law).
+    'composition.being_pattern.observed',
+    'composition.being_pattern.projected',
+    'composition.being_pattern.relation_edge',
+    'composition.being_pattern.review_candidate'
 ] as const;
 
 export type CompositionEventType = (typeof COMPOSITION_EVENT_TYPES)[number];

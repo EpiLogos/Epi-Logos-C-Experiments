@@ -81,6 +81,7 @@ import {
 } from './solarSystem';
 import { PLANET_ORDER } from './cosmicMath';
 import { DiagnosticsDeepLink } from '../ui/InlineErrorSurface';
+import { InhabitedBimbaOverlay } from './InhabitedBimbaOverlay';
 import { accent } from '../ui/tokens';
 import {
     useCompositionLifecycleEvents,
@@ -1099,7 +1100,12 @@ export function CosmicEngine() {
                 compositionLoadResult.ok ? '' : compositionLoadResult.rejection.rejections[0].reason
             }
         >
-            <div ref={hostRef} className="cosmic-engine-canvas" />
+            <div className="cosmic-engine-field">
+                <div ref={hostRef} className="cosmic-engine-canvas" />
+                {/* 29.T29.16 — the live entity field over the clock; a LIVE
+                    region, hidden at screenshot time (visual-regression.hide.css). */}
+                <InhabitedBimbaOverlay />
+            </div>
             {selectedPlanet ? (
                 <aside className="planet-panel" data-testid="planet-panel">
                     <header>
