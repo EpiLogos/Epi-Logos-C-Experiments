@@ -983,6 +983,78 @@ fn show_pasu_record(peer_is_loopback: bool) -> Result<Value, (String, String)> {
     Ok(value)
 }
 
+// ─── 25.T25.6 — nara.field.handle ────────────────────────────────────────────
+
+/// The three foregroundable quaternion handles (25.17's time-axis law). An
+/// unknown name is refused — a typo'd foregrounding must not silently render
+/// the default axis while claiming another.
+const FIELD_FOREGROUND_HANDLES: &[&str] = &["qIdentityHandle", "qTransitHandle", "qActivityHandle"];
+
+/// `nara.field.handle` ({sessionKey?, foregroundedHandle?}): the OPAQUE
+/// psychoid-cymatic renderer handle (DR-IG-6 geometry law, DR-M4-3 strict
+/// invariant — no raw bodies cross the bus; the widget mounts the handle and
+/// never reads renderer state). The profile it digests is built from the ONE
+/// live spanda anchor — the same source the heartbeat samples — so the handle
+/// names the field of the tick the caller is actually living in.
+/// Protected-local-handle-only: loopback peer required.
+pub fn field_handle(
+    anchor: Option<portal_core::spanda_anchor::SpandaPhaseAnchor>,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.field.handle requires a loopback peer".to_owned(),
+        ));
+    }
+    let session_key = params
+        .get("sessionKey")
+        .and_then(Value::as_str)
+        .unwrap_or("agent:main:main")
+        .to_owned();
+    let foregrounded = match params.get("foregroundedHandle") {
+        None | Some(Value::Null) => None,
+        Some(Value::String(name)) if FIELD_FOREGROUND_HANDLES.contains(&name.as_str()) => {
+            Some(name.clone())
+        }
+        Some(other) => {
+            return Err((
+                "invalid-params".to_owned(),
+                format!(
+                    "foregroundedHandle must be one of {FIELD_FOREGROUND_HANDLES:?}, got {other}"
+                ),
+            ))
+        }
+    };
+    let Some(anchor) = anchor else {
+        return Err((
+            "nara-error".to_owned(),
+            "no live spanda anchor yet — the gateway heartbeat has not installed the clock".to_owned(),
+        ));
+    };
+    let now_ms = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as u64;
+    let projection =
+        portal_core::KernelTemporalProjection::from_phase_anchor(&anchor, now_ms, 0);
+    let handle = portal_core::psychoid_cymatic::build_psychoid_cymatic_renderer_handle(
+        &projection.harmonic_profile,
+        portal_core::psychoid_cymatic::PsychoidCymaticSolverStrategy::OptionF,
+    );
+    let mut value = serde_json::to_value(handle)
+        .map_err(|error| ("nara-error".to_owned(), error.to_string()))?;
+    if let Some(object) = value.as_object_mut() {
+        object.insert("sessionKey".to_owned(), json!(session_key));
+        object.insert(
+            "foregroundedHandle".to_owned(),
+            foregrounded.map_or(Value::Null, Value::String),
+        );
+    }
+    Ok(value)
+}
+
 // ─── 25.T25.3 — nara.journal.timeline ───────────────────────────────────────
 
 /// Sessions are datetime-prefixed by law (`{YYYYMMDD-HHmmss}-{suffix}`, no

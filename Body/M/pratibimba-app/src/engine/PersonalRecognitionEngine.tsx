@@ -39,6 +39,7 @@ import {
     useContemplationFlowDirective
 } from './contemplationFlowDirector';
 import { M0VirtueWitnessPanel } from '../panes/M0VirtueWitnessPanel';
+import { M4PersonalCymaticField } from '../panes/M4PersonalCymaticFieldPane';
 import { M5EbmObservatoryPane } from '../panes/M5EbmObservatoryPane';
 import { M5RecognitionLayer } from '../panes/M5RecognitionLayer';
 import { NowPane } from '../panes/NowPane';
@@ -266,6 +267,11 @@ export function PersonalRecognitionEngine() {
                             </span>
                         </p>
                     ) : null}
+                    {/* 25.T25.6 — the center-composition slot goes live: the
+                        DR-IG-6 personal cymatic field over the opaque
+                        nara.field.handle, inside the M4 recognition leg (the
+                        15.4 personal-side editor-center position). */}
+                    <M4PersonalCymaticField />
                 </div>
 
                 <div className="personal-recognition-leg" data-testid="personal-recognition-m5-score">

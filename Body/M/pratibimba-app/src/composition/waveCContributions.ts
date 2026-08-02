@@ -654,28 +654,21 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         frozenExport: 'M4PersonalCymaticField',
         tranche: '25.T25.6',
         landedBy: null,
-        carrier: null,
-        testid: null,
+        carrier: { file: 'panes/M4PersonalCymaticFieldPane.tsx', symbol: 'M4PersonalCymaticField' },
+        testid: 'm4-personal-cymatic-field',
         mount: { kind: 'composition-slot', slot: 'center-composition' },
         layoutLaw: 'daily-only',
         privacyClass: 'protected_local_handle_only',
         miniModes: [],
         miniModeWarrant: null,
         warrant: `${SPEC}:107 — "View id is the existing \`m4.nara.personalField\`"`,
-        currentStateSelector: null,
-        selectionHandler: null,
-        evidenceSerializer: null,
-        gap: {
-            kind: 'no-face',
-            ownerTranche: '25.T25.6',
-            compositionBlocker: 'pending-psychoid-cymatic-solver',
-            evidence:
-                'personalComposition.ts — the center-composition slot is owned by m4-nara and has no renderer; the blocker is already registered against the slot.',
-            citations: [
-                { file: 'composition/personalComposition.ts', anchor: "'center-composition': 'pending-psychoid-cymatic-solver'" },
-                { file: 'panes/M2CorrespondencePane.tsx', anchor: 'CymaticField' }
-            ],
-        },
+        currentStateSelector: selector('m4.nara.personalField', 'tick-store', 'useTickStore', ['profile']),
+        selectionHandler: unrouted(
+            'm4.nara.personalField',
+            'The field is a mounted renderer handle, not a selectable destination — the 25.17 time-axis mode is the only thing that travels into it, and that rides the composition state, not a selection.'
+        ),
+        evidenceSerializer: evidence('m4.nara.personalField', 'protected_local_handle_only', 'data-renderer-handle'),
+        gap: null,
         disposition: null
     },
     {
@@ -1208,11 +1201,11 @@ export const INTEGRATED_450_CONSUMER_LAYOUT: readonly WaveCConsumerSlot[] = Obje
         specViewId: 'm4.nara.personalField',
         carrierOwner: 'm4-nara',
         ownerAttribute: 'data-center-composition-owner',
-        carrier: null,
-        fate: 'blocked',
+        carrier: { file: 'panes/M4PersonalCymaticFieldPane.tsx', symbol: 'M4PersonalCymaticField' },
+        fate: 'as-specced',
         carriedAt: null,
         evidence:
-            'The one slot SPEC:290 and the carrier agree on, and it has no renderer: 25.T25.6 is pending and the slot carries the registered blocker `pending-psychoid-cymatic-solver` (personalComposition.ts). Owned and unbuilt, which is a different fact from unowned.'
+            '25.T25.6 landed the renderer: the DR-IG-6 field over the OPAQUE nara.field.handle (carrier fixture dipyramid + two Hopf-linked tori, 25.17 time-axis foregrounded). The blocker binding in personalComposition.ts lifted with it; the id stays registered vocabulary.'
     },
     {
         slot: 'right-composition',

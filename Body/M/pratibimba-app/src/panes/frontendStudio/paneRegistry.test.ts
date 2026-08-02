@@ -258,7 +258,9 @@ describe('51.T51.2 — composition slots and integrated plugins come from the re
         expect(byId.get('surface')!.owner).toBe('m1-paramasiva-played-torus');
         expect(byId.get('surface')!.compositionId).toBe('cosmic-engine.integrated');
         expect(byId.get('texture')!.owner).toBe('m2-parashakti');
-        expect(byId.get('center-composition')!.blockedBy).toBe('pending-psychoid-cymatic-solver');
+        // 25.T25.6 lifted the one personal blocker binding.
+        expect(byId.get('center-composition')!.blockedBy).toBeNull();
+        expect(byId.get('center-composition')!.owner).toBe('m4-nara');
     });
 
     it('runs BOTH integrated compositions through the real load and reports the outcome', () => {

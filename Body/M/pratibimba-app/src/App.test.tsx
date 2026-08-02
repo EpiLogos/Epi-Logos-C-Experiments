@@ -363,7 +363,7 @@ describe('App shell', () => {
             expect(receiver.dataset.requestedContributionId).toBe(target.contributionId);
         }
 
-        expect(CROSS_LAYOUT_INTENT_TARGETS).toHaveLength(55);
+        expect(CROSS_LAYOUT_INTENT_TARGETS).toHaveLength(56);
         expect(useCoordinateStore.getState().selected).toBe(
             `test:${CROSS_LAYOUT_INTENT_TARGETS.at(-1)?.extensionId}/${CROSS_LAYOUT_INTENT_TARGETS.at(-1)?.contributionId}`
         );

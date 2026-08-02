@@ -1804,6 +1804,14 @@ async fn legacy_dispatch_rpc(
             )
             .map(DispatchResult::immediate)
         }
+        // 25.T25.6 — the personal cymatic renderer handle. Explicit (above the
+        // prefix arm) because it samples the ONE live spanda anchor off the
+        // shared runtime — the same source the profile heartbeat reads — and
+        // the nara prefix dispatcher deliberately has no runtime access.
+        "nara.field.handle" => {
+            crate::gate::nara::field_handle(runtime.spanda_anchor(), peer_is_loopback, &frame.params)
+                .map(DispatchResult::immediate)
+        }
         method if method.starts_with("nara.") => crate::gate::nara::dispatch_nara_with_state_root(
             state_root,
             peer_is_loopback,

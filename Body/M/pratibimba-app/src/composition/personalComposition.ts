@@ -97,12 +97,17 @@ export interface PersonalSlotCarrier {
  * wraps the engine rather than sitting inside it (52.T5).
  */
 export const PERSONAL_SLOT_CARRIERS: Readonly<
-    Record<Exclude<PersonalGeometricSlotName, 'center-composition'>, PersonalSlotCarrier>
+    Record<PersonalGeometricSlotName, PersonalSlotCarrier>
 > = Object.freeze({
     'left-composition': Object.freeze({
         file: 'panes/NowPane.tsx',
         symbol: 'NaraCanvasEditor',
         note: 'the day canvas (11.10) under its ambient strip + tuning bar (11.12), mounted by NowPane inside the engine'
+    }),
+    'center-composition': Object.freeze({
+        file: 'panes/M4PersonalCymaticFieldPane.tsx',
+        symbol: 'M4PersonalCymaticField',
+        note: 'the DR-IG-6 personal cymatic field (25.6): mounts the OPAQUE nara.field.handle renderer handle — 12 fixture vertices + two Hopf-linked tori, time-axis foregrounded per 25.17'
     }),
     'right-composition': Object.freeze({
         file: 'engine/PersonalRecognitionEngine.tsx',
@@ -134,10 +139,11 @@ export const PERSONAL_SLOT_CARRIERS: Readonly<
  */
 export const PERSONAL_SLOT_BLOCKERS: Readonly<Partial<Record<PersonalGeometricSlotName, string>>> =
     Object.freeze({
-        // The id comes from the 29.5 registry, not from here. This shipped as
-        // `pending-psychoid-cymatic-renderer` — an id invented at the call site
-        // that named nothing; the ledger-parity law is what caught it.
-        'center-composition': 'pending-psychoid-cymatic-solver'
+        // 25.T25.6 landed the center-composition renderer (the DR-IG-6 field
+        // over the opaque `nara.field.handle`), so no personal slot is blocked
+        // today. The registry id `pending-psychoid-cymatic-solver` stays
+        // REGISTERED in `integratedReadinessEnvelope.ts` — a blocker id is a
+        // vocabulary entry; only this binding to a slot is what lifted.
     });
 
 /**
@@ -185,7 +191,7 @@ export const PERSONAL_COMPOSITION_CONTRIBUTORS: readonly CompositionContributor[
             priority: 1,
             handleClass: 'psychoid-renderer-handle',
             privacyClass: 'protected-local',
-            reason: 'the personal cymatic field renders from an opaque renderer handle (25.6, pending)'
+            reason: 'the personal cymatic field renders from the opaque nara.field.handle renderer handle (25.6)'
         })
     }),
     Object.freeze({

@@ -292,3 +292,11 @@ export function useCompositionState(): CompositionStateContextValue {
     if (!value) throw new Error('useCompositionState must be used inside CompositionStateProvider');
     return value;
 }
+
+/** 25.T25.6 — the tolerant read for widgets that are COMPOSED (the provider
+ *  always wraps the real app at main.tsx) but also mounted bare by sibling
+ *  test harnesses: outside the provider this answers null and the consumer
+ *  falls back to its declared default instead of unmounting the tree. */
+export function useOptionalCompositionState(): CompositionStateContextValue | null {
+    return useContext(CompositionStateContext);
+}

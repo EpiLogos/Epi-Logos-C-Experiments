@@ -84,7 +84,11 @@ describe('51.T51.2 — the M5-3′ Frontend Studio renders the live registry', (
         const surface = screen.getByTestId('frontend-studio-slot-surface');
         expect(surface.getAttribute('data-slot-owner')).toBe('m1-paramasiva-played-torus');
         expect(surface.getAttribute('data-slot-composition')).toBe('cosmic-engine.integrated');
+        // 25.T25.6: the center slot went LIVE — occupancy, not the blocker.
         expect(screen.getByTestId('frontend-studio-slot-center-composition').textContent).toContain(
+            'psychoid-renderer-handle'
+        );
+        expect(screen.getByTestId('frontend-studio-slot-center-composition').textContent).not.toContain(
             'pending-psychoid-cymatic-solver'
         );
     });

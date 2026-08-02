@@ -131,20 +131,17 @@ describe('PersonalRecognitionEngine', () => {
         expect(root.getAttribute('data-composition-rejection')).toBe('');
     });
 
-    it('reports the owned-but-unbuilt center slot as blocked rather than absent', () => {
-        // 25.T25.6 (personal cymatic field body) is pending: the slot has an
-        // owner and no renderer, and the surface says so instead of reading as
-        // if the composition had five slots.
+    it('reports the center slot LIVE — the 25.6 renderer landed and no slot is blocked', () => {
+        // 25.T25.6 landed the personal cymatic field: all six slots render,
+        // the blocked list is empty, and the center owner is still named.
         render(
             <CompositionProfileProvider>
                 <PersonalRecognitionEngine />
             </CompositionProfileProvider>
         );
         const root = screen.getByTestId('personal-recognition-engine');
-        expect(root.getAttribute('data-composition-blocked-slots')).toBe(
-            'center-composition:pending-psychoid-cymatic-solver'
-        );
-        // Blocked is not unclaimed — the owner is still named.
-        expect(root.getAttribute('data-center-composition-owner')).not.toBe('unclaimed');
+        expect(root.getAttribute('data-composition-blocked-slots')).toBe('');
+        expect(root.getAttribute('data-center-composition-owner')).toBe('m4-nara');
+        expect(screen.getByTestId('m4-personal-cymatic-field')).toBeTruthy();
     });
 });
