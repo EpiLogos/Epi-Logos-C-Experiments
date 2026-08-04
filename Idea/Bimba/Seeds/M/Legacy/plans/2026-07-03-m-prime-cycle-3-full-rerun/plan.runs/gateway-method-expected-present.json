@@ -54,12 +54,32 @@
       "claimedBy": "25.T25.10"
     },
     {
+      "method": "nara.field.handle",
+      "claimedBy": "25.T25.6 (protected-local psychoid-cymatic renderer handle)"
+    },
+    {
       "method": "nara.oracle.cast",
       "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
     },
     {
+      "method": "nara.oracle.cast_iching",
+      "claimedBy": "25.T25.8 (typed six-line I-Ching cast)"
+    },
+    {
+      "method": "nara.oracle.cast_tarot",
+      "claimedBy": "25.T25.8 (typed 3/4/5-card Tarot cast)"
+    },
+    {
+      "method": "nara.oracle.history.read",
+      "claimedBy": "25.T25.9 (timestamped structured cast history)"
+    },
+    {
       "method": "nara.oracle.hygiene",
       "claimedBy": "T11-baseline (present in the 2026-07-03 T5 audit table)"
+    },
+    {
+      "method": "nara.oracle.update_position_state",
+      "claimedBy": "25.T25.8/25.T25.9 (durable OracleSpreadPosition aliveness)"
     },
     {
       "method": "nara.pasu.set",

@@ -69,14 +69,7 @@ fn session_id_for(day_id: &str) -> Result<String, String> {
     let day = crate::vault::paths::parse_day_id(day_id)
         .map_err(|err| format!("invalid canonical day id {day_id:?}: {err}"))?;
     let instant = Utc
-        .with_ymd_and_hms(
-            day.year(),
-            day.month(),
-            day.day(),
-            0,
-            0,
-            0,
-        )
+        .with_ymd_and_hms(day.year(), day.month(), day.day(), 0, 0, 0)
         .single()
         .ok_or_else(|| format!("invalid canonical day id {day_id:?}"))?;
     // DELIBERATELY NOT `vault::paths::local_stamp`. Every other stamp in the

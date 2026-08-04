@@ -36,9 +36,9 @@ use super::method_envelope::{DispatchResult, PostResponseAction};
 use super::{
     agent_id_from_session_key, branch_session, inherit_nullable_string_field,
     inherit_nullable_value_field, internal_error, invalid_params_error, is_stop_command_text,
-    not_found_error, now_ms, nullable_string_field, optional_str,
-    publish_activity_surface, publish_presence_surfaces, publish_session_surface, required_str,
-    required_str_alias, session_identifier, session_tree, session_value_with_run_state,
+    not_found_error, now_ms, nullable_string_field, optional_str, publish_activity_surface,
+    publish_presence_surfaces, publish_session_surface, required_str, required_str_alias,
+    session_identifier, session_tree, session_value_with_run_state,
 };
 
 /// The context every registered handler receives.
@@ -136,8 +136,10 @@ fn router() -> &'static Router<GatewayCallContext> {
             .expect("s3' handlers register exactly once");
         epi_s5_epii_review_core::s5_handlers::register_s5_review_handlers(&mut registry)
             .expect("s5' review handlers register exactly once");
-        epi_s5_epii_autoresearch_core::s5_handlers::register_s5_autoresearch_handlers(&mut registry)
-            .expect("s5' improve/tune handlers register exactly once");
+        epi_s5_epii_autoresearch_core::s5_handlers::register_s5_autoresearch_handlers(
+            &mut registry,
+        )
+        .expect("s5' improve/tune handlers register exactly once");
         epi_s5_epii_agent_core::s5_handlers::register_s5_epii_handlers(&mut registry)
             .expect("s5' epii handlers register exactly once");
         registry
@@ -186,7 +188,9 @@ fn outcome_from_dispatch_result(result: DispatchResult) -> MethodOutcome {
     }
 }
 
-fn dispatch_result_from_outcome(outcome: MethodOutcome) -> Result<DispatchResult, (String, String)> {
+fn dispatch_result_from_outcome(
+    outcome: MethodOutcome,
+) -> Result<DispatchResult, (String, String)> {
     let Some(follow_up) = outcome.follow_up else {
         return Ok(DispatchResult::immediate(outcome.result));
     };
@@ -1452,10 +1456,12 @@ async fn legacy_dispatch_rpc(
         // epi_s2_graph_services::register_s2_handlers. Only the composite stays:
         // parashaktiCorrespondences needs S2 graph + M4 Nara medicine/oracle +
         // the S0 kernel bridge, and no single crate may hold all three.
-        "s2.parashaktiCorrespondences" => graph::dispatch_graph_method(&frame.method, &frame.params)
-            .await
-            .map(DispatchResult::immediate)
-            .map_err(internal_error),
+        "s2.parashaktiCorrespondences" => {
+            graph::dispatch_graph_method(&frame.method, &frame.params)
+                .await
+                .map(DispatchResult::immediate)
+                .map_err(internal_error)
+        }
         "cron.status" => cron::status(state_root)
             .map(DispatchResult::immediate)
             .map_err(internal_error),
@@ -1808,10 +1814,12 @@ async fn legacy_dispatch_rpc(
         // prefix arm) because it samples the ONE live spanda anchor off the
         // shared runtime — the same source the profile heartbeat reads — and
         // the nara prefix dispatcher deliberately has no runtime access.
-        "nara.field.handle" => {
-            crate::gate::nara::field_handle(runtime.spanda_anchor(), peer_is_loopback, &frame.params)
-                .map(DispatchResult::immediate)
-        }
+        "nara.field.handle" => crate::gate::nara::field_handle(
+            runtime.spanda_anchor(),
+            peer_is_loopback,
+            &frame.params,
+        )
+        .map(DispatchResult::immediate),
         method if method.starts_with("nara.") => crate::gate::nara::dispatch_nara_with_state_root(
             state_root,
             peer_is_loopback,
@@ -2159,7 +2167,10 @@ mod routing_seam_tests {
     fn an_unknown_follow_up_kind_is_refused() {
         let outcome = MethodOutcome::with_follow_up(
             Value::Null,
-            FollowUp::new("somethingElse", json!({"runId":"r","sessionKey":"s","message":"m"})),
+            FollowUp::new(
+                "somethingElse",
+                json!({"runId":"r","sessionKey":"s","message":"m"}),
+            ),
         );
         let (code, message) = dispatch_result_from_outcome(outcome).expect_err("must refuse");
         assert_eq!(code, "internal");
@@ -2189,7 +2200,12 @@ mod routing_seam_tests {
             "the drain scaffold must be the only namespace registration"
         );
         // Every still-unmoved method resolves through it.
-        for method in ["sessions.list", "cron.add", "s5'.improve.propose", "nara.pasu.show"] {
+        for method in [
+            "sessions.list",
+            "cron.add",
+            "s5.oracle.iching.cast",
+            "nara.pasu.show",
+        ] {
             assert!(
                 registry.contains(method),
                 "{method} must still resolve while the drain is in progress"

@@ -1,8 +1,8 @@
 ---
 coordinate: "M5'"
 status: "active-domain-spec"
-updated: "2026-06-09"
-cycle-3: pending
+updated: "2026-08-02"
+cycle-3: rerun-contract-reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-PORTAL-SPEC]]"
@@ -208,7 +208,18 @@ The §M5'.2 / §M5'.6 statements that "[[Theia]] is THE shell" are **superseded*
 
 M5' is Epii return/integration and agent-led developer/pedagogical IDE. It reviews, teaches, improves, and promotes; it does not bypass S5' review law or S1' residency law.
 
-Smart Connections carrier disposition (11.T11.4, 2026-07-16): the semantic substrate named above remains real at `s1'.semantic.*`, but no Smart Connections pane receiver exists in the active [[Body/M/pratibimba-app]] carrier. `src/ui/layoutClaims.ts` therefore retains `pratibimba.smart-connections-sidebar` as an explicit `ide-deep` `code-pending` claim, gated by 03.T6.5 and delivered by 28.T28.12, with the frozen `Body/M/epi-theia/extensions/MIGRATION-SOURCES.md` row used only as provenance. The layout host tolerates that state and exposes the pending claim diagnostically; it does not mount a stub or imply that semantic-neighbour UI has landed.
+Smart Connections carrier disposition (updated 2026-08-02): `s1'.semantic.suggest_links` remains the semantic authority, and [[Body/M/pratibimba-app]] now mounts the landed `pratibimba.smart-connections-sidebar` receiver in `ide-deep`. It reads explicit note-relative candidates/evidence/privacy/staleness and opens selections through the real vault seam; it does not build an index, derive similarity, or write canon. Frozen `Body/M/epi-theia/extensions/MIGRATION-SOURCES.md` remains provenance only.
+
+### Contemplation Delta Boundary — 2026-08-02
+
+The Cycle-3 session-close surface carries two deliberately different delta forms; neither may be documented as the other:
+
+- `M4_Epii_Integration.wisdom_delta` in [[Body/S/S0/epi-lib/include/m4.h]] is the C-kernel numeric `uint64_t` delta. It remains kernel evidence and is not projected onto the current gateway ceremony surface.
+- `ContemplationObject.wisdom_delta` is bounded reflective text. The S0 close bundle persists it as optional `wisdom_delta_text` under the full active-[[PASU]] protected-local scope (non-empty, at most 4096 UTF-8 bytes). The loopback-only contemplation reader may carry the protected text to the local carrier, but the view-model reduces only its first eight UTF-8 bytes to the displayed hexadecimal pulse; the prose itself never enters the DOM.
+- The pulse fires once per contemplation reference. It is a privacy-preserving witness that a textual delta was received, not the C numeric value, not an XOR computation, and not an interpretation.
+- The full quintessence hash is neither requested nor rendered by this surface; only its bounded handle preview is admitted.
+
+This is an additive protected-local reader contract. It does not change [[M5']] review authority, permit raw contemplation publication, or make the carrier an owner of kernel delta semantics.
 
 Bell-kernel review obligations, 2026-07-02 (per [[m123-modal-resonator-bell-kernel-spec]] §13): M5' review/evidence surfaces gain two standing obligations. (1) **Chime coherence** — `M123ChimeFrame.m3.worldClockBinding` mismatches (`tickMatchesProfile`/`degree720MatchesProfile` false) are reviewable incoherence evidence; consumers must have blocked readiness on them, and an M5' review that finds a surface rendering an incoherent chime as live flags it. (2) **Schema drift** — the Rust/Zod/consumer parity of `modalResonator` and `M123ChimeFrame` (lensMode order lens 0..11/mode 0..6, `m2Address72` derivation from `resonance72.lensAnchorIndex`, camelCase casing, additive optionality on profile schema v1) is drift-guarded by tests (`portal-core/tests/modal_resonator_profile_field.rs`, `epi-cli/tests/kernel_bridge_m123_chime_frame.rs`, `epi-cli/schemas/tests/kernel-bridge.test.ts`); review evidence for any bell-surface change must include those suites green plus a live wire capture parsing under the Zod contracts. M5' verifies; it does not own the audio bus.
 

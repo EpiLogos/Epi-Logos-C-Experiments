@@ -162,9 +162,11 @@ const DEFAULT_TONIC_CF: &str = "(00/00)";
 
 /// Build the audible half of a VAK evaluation response.
 fn audible_reading(params: &Value, evaluated_cf: &str) -> Result<Value, String> {
-    let tonic_cf = optional_str(params, "modeTonicCf").unwrap_or_else(|| DEFAULT_TONIC_CF.to_owned());
-    let tonic_ordinal = portal_core::cf_ordinal(&tonic_cf)
-        .ok_or_else(|| format!("modeTonicCf '{tonic_cf}' is not one of the seven context-frames"))?;
+    let tonic_cf =
+        optional_str(params, "modeTonicCf").unwrap_or_else(|| DEFAULT_TONIC_CF.to_owned());
+    let tonic_ordinal = portal_core::cf_ordinal(&tonic_cf).ok_or_else(|| {
+        format!("modeTonicCf '{tonic_cf}' is not one of the seven context-frames")
+    })?;
     let mode = tonic_ordinal - 1;
 
     // The degree is the CF's parent ordinal rotated onto the mode's ground.

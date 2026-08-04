@@ -81,22 +81,23 @@ test('a real readiness surface names its owning track to the user', async ({ pag
         .first();
     await expect(mark).toBeAttached({ timeout: 20_000 });
 
-    const readinessId = await mark.getAttribute('data-readiness');
+    const observed = await mark.evaluate(node => ({
+        readinessId: node.getAttribute('data-readiness'),
+        ownerTrack: node.getAttribute('data-owner-track'),
+        title: node.getAttribute('title'),
+        painted: getComputedStyle(node).getPropertyValue('--readiness-id-colour').trim()
+    }));
+    const { readinessId, ownerTrack, title, painted } = observed;
     expect(readinessId).not.toBeNull();
     expect(BRIDGE_READINESS_IDS).toContain(readinessId as BridgeReadinessId);
 
-    const ownerTrack = await mark.getAttribute('data-owner-track');
     expect(ownerTrack).toBe(readinessOwnerTrack(readinessId as BridgeReadinessId));
 
     // and the reader is told, in words, which axis is down and who owns it
-    const title = await mark.getAttribute('title');
     expect(title).toContain(readinessId as string);
     expect(title).toContain(`owner: track ${ownerTrack}`);
 
     // the per-id colour really painted — the custom property is set on the node
-    const painted = await mark.evaluate(node =>
-        getComputedStyle(node as Element).getPropertyValue('--readiness-id-colour').trim()
-    );
     expect(painted).not.toBe('');
 });
 

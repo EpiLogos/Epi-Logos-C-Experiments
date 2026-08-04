@@ -2,8 +2,11 @@
  * Coordinate: M' (one shell, two faces — now over a real pane system)
  * Residency: Body/M/pratibimba-app/src
  * Position (#n): active-carrier 0/1 shell composition root.
- * Actualises: the (0/1) shell as flexlayout root layouts over one state tree,
- *   with the application foundations underneath: command registry, palette,
+ * Actualises: the stable workbench around the (0/1) FlexLayout root layouts
+ *   over one state tree: persisted Home/M0-M5 workspace presets, activity
+ *   routing, editor/instrument host, adjacent agent membrane, operational
+ *   panel, and compact status; plus the native organism reveal gate. It keeps
+ *   the application foundations underneath: command registry, palette,
  *   vault panes, session binding, layout persistence, gateway liveness, and the
  *   persisted M0/M2 surface records. cmd-period IS the # inversion; the four
  *   stores are singletons so the faces cannot desynchronise.
@@ -24,7 +27,7 @@ import { GatewayClient } from './bridge/gatewayClient';
 import { extractBellRoles, isChimeCoherent, ModalResonatorBoundary } from './bridge/types';
 import { gateway, gatewayReady, setGateway } from './bridge/gatewayHolder';
 import { SessionClient } from './bridge/sessionClient';
-import { invokeCommand } from './bridge/tauri';
+import { inTauri, invokeCommand } from './bridge/tauri';
 import { wireSupervisorEvents } from './bridge/tauriEvents';
 import { registerAtelierCommands } from './commands/atelier';
 import { commands, usePaletteStore } from './commands/registry';
@@ -34,7 +37,10 @@ import {
     parseCrossLayoutIntent,
     registerCrossLayoutIntentCommand
 } from './commands/crossLayoutIntent';
-import { registerOmnipanelTabActivationCommands } from './commands/omnipanelTabChords';
+import {
+    activateOmnipanelTabByIndex,
+    registerOmnipanelTabActivationCommands
+} from './commands/omnipanelTabChords';
 import { useEventsStore } from './state/eventsStore';
 import { useReadinessStore } from './state/readinessStore';
 import { useCoordinateStore, useProvenanceStore, useSessionStore, useTickStore } from './state/stores';
@@ -165,6 +171,17 @@ import {
 } from './panes/omni/omnipanelIntentRouter';
 import { useCrossLayoutIntentLogStore } from './state/crossLayoutIntentLog';
 import { VaultEntry } from './panes/FileTreePane';
+import { NativeStartupGate } from './startup/NativeStartupGate';
+import { deriveNativeStartupState } from './startup/nativeStartup';
+import { WorkbenchFrame } from './workbench/WorkbenchFrame';
+import {
+    WORKBENCH_ACTIVITIES,
+    WORKBENCH_WORKSPACES,
+    isWorkbenchActivityId,
+    isWorkbenchWorkspaceId,
+    type WorkbenchActivityId,
+    type WorkbenchWorkspaceId
+} from './workbench/workbenchModel';
 import { MocBaseReflectionPane } from './bases/MocBaseReflectionPane';
 import { assertDailyReceiverBindings } from './ui/dailySurfaceOwnership';
 import { resolveLayoutClaims } from './ui/layoutClaims';
@@ -460,6 +477,8 @@ interface PersistedUiState {
     m0Surface?: unknown;
     m2Surface?: unknown;
     omniPanel?: unknown;
+    workbenchWorkspace?: unknown;
+    workbenchActivity?: unknown;
     /** LEGACY (pre-52.T3) home of the layout preference. Read once at boot so
      *  an existing install does not forget the layout it was left in; nothing
      *  writes it any more — `ui/layoutPreference.ts` owns the storage now. */
@@ -469,10 +488,18 @@ interface PersistedUiState {
 /** The right border is the sole `/` membrane. FlexLayout owns selection;
  * this adapter records the selected canonical fold in the shared 27.11 state
  * so it survives either face re-mount and persistence. */
+function bordersOf(model: Model): BorderNode[] {
+    const borders: BorderNode[] = [];
+    model.visitNodes(node => {
+        if (node instanceof BorderNode) {
+            borders.push(node);
+        }
+    });
+    return borders;
+}
+
 function syncOmniPanelSelection(model: Model): void {
-    const selected = model
-        .getBorderSet()
-        .getBorders()
+    const selected = bordersOf(model)
         .find(border => border.getLocation() === DockLocation.RIGHT)
         ?.getSelectedNode();
     const component = selected?.getComponent();
@@ -793,6 +820,8 @@ function safeModel(json: unknown, fallback: object): Model {
 export function App() {
     const [face, setFace] = useState<Face>(1);
     const [activeLayout, setActiveLayout] = useState<OmniPanelLayoutId>('daily-0-1');
+    const [workbenchWorkspace, setWorkbenchWorkspace] = useState<WorkbenchWorkspaceId>('home');
+    const [workbenchActivity, setWorkbenchActivity] = useState<WorkbenchActivityId>('explorer');
     const [routingRevision, setRoutingRevision] = useState(0);
     const [m0Surface, setM0Surface] = useState<M0SurfaceState>(DEFAULT_M0_SURFACE_STATE);
     const [m2Surface, setM2Surface] = useState<M2SurfaceState>(DEFAULT_M2_SURFACE_STATE);
@@ -836,10 +865,74 @@ export function App() {
     }, []);
     const activeLayoutRef = useRef<OmniPanelLayoutId>('daily-0-1');
     activeLayoutRef.current = activeLayout;
+    const workbenchWorkspaceRef = useRef<WorkbenchWorkspaceId>('home');
+    workbenchWorkspaceRef.current = workbenchWorkspace;
+    const workbenchActivityRef = useRef<WorkbenchActivityId>('explorer');
+    workbenchActivityRef.current = workbenchActivity;
     const crossLayoutIdentityReceiptRef = useRef<CrossLayoutIdentityReceipt | null>(null);
     const [models, setModels] = useState<ShellModels | null>(null);
     const faceRef = useRef<Face>(1);
     faceRef.current = face;
+    const nativeCarrier = inTauri();
+    const supervisor = useProvenanceStore(state => state.supervisor);
+    const gatewayConnected = useProvenanceStore(state => state.connection.connected);
+    const profileGeneration = useTickStore(state => state.generation);
+    const [vaultRoot, setVaultRoot] = useState<string | null>(nativeCarrier ? null : 'browser');
+    const probeVaultRoot = useCallback(() => {
+        if (!nativeCarrier) {
+            return;
+        }
+        void invokeCommand<string | null>('vault_root')
+            .then(setVaultRoot)
+            .catch(() => setVaultRoot(null));
+    }, [nativeCarrier]);
+    useEffect(probeVaultRoot, [probeVaultRoot]);
+    const nativeStartup = deriveNativeStartupState({
+        supervisor,
+        connected: gatewayConnected,
+        profileGeneration,
+        vaultRoot
+    });
+    const nativeBootReceiptSentRef = useRef(false);
+
+    useEffect(() => {
+        const hot = import.meta.hot;
+        if (
+            !models ||
+            !nativeStartup.ready ||
+            nativeBootReceiptSentRef.current ||
+            import.meta.env.VITE_TAURI_BOOT_SMOKE !== '1' ||
+            !inTauri() ||
+            !hot
+        ) {
+            return;
+        }
+
+        let secondFrame = 0;
+        const firstFrame = requestAnimationFrame(() => {
+            secondFrame = requestAnimationFrame(() => {
+                const shell = document.querySelector<HTMLElement>('[data-testid="shell"]');
+                const activeFace = shell?.querySelector<HTMLElement>('.face-active');
+                const layout = activeFace?.querySelector<HTMLElement>('.flexlayout__layout');
+                const bounds = layout?.getBoundingClientRect();
+                if (!shell || !layout || !bounds || bounds.width <= 0 || bounds.height <= 0) {
+                    throw new Error('tauri-boot-smoke: shell did not commit a visible FlexLayout');
+                }
+                nativeBootReceiptSentRef.current = true;
+                hot.send('pratibimba:tauri-shell-ready', {
+                    ...nativeStartup.receipt,
+                    face: shell.dataset.face,
+                    layout: shell.dataset.activeLayout,
+                    width: Math.round(bounds.width),
+                    height: Math.round(bounds.height)
+                });
+            });
+        });
+        return () => {
+            cancelAnimationFrame(firstFrame);
+            cancelAnimationFrame(secondFrame);
+        };
+    }, [activeLayout, face, models, nativeStartup]);
     const modelsRef = useRef<typeof models>(null);
     modelsRef.current = models;
     const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -904,6 +997,14 @@ export function App() {
                 if (state.face === 0 || state.face === 1) {
                     setFace(state.face);
                 }
+                if (isWorkbenchWorkspaceId(state.workbenchWorkspace)) {
+                    workbenchWorkspaceRef.current = state.workbenchWorkspace;
+                    setWorkbenchWorkspace(state.workbenchWorkspace);
+                }
+                if (isWorkbenchActivityId(state.workbenchActivity)) {
+                    workbenchActivityRef.current = state.workbenchActivity;
+                    setWorkbenchActivity(state.workbenchActivity);
+                }
                 if (state.coordinate) {
                     useCoordinateStore.getState().setSelected(state.coordinate);
                 }
@@ -957,7 +1058,9 @@ export function App() {
                 coordinate: useCoordinateStore.getState().selected,
                 m0Surface: serializeM0SurfaceState(m0SurfaceRef.current),
                 m2Surface: serializeM2SurfaceState(m2SurfaceRef.current),
-                omniPanel: readOmniPanelSessionState()
+                omniPanel: readOmniPanelSessionState(),
+                workbenchWorkspace: workbenchWorkspaceRef.current,
+                workbenchActivity: workbenchActivityRef.current
                 // 52.T3: the layout preference is NOT written here any more —
                 // `epi-logos.layout.active` has one writer (`applyLayout` →
                 // `ui/layoutPreference.ts`), so the Settings fold's register
@@ -1044,6 +1147,8 @@ export function App() {
             if (!current || !page) {
                 return;
             }
+            workbenchWorkspaceRef.current = pageId;
+            setWorkbenchWorkspace(pageId);
             if (activeLayoutRef.current !== 'ide-deep') {
                 switchLayout('ide-deep');
             }
@@ -1084,6 +1189,60 @@ export function App() {
             persist();
         },
         [switchLayout, persist]
+    );
+
+    const selectWorkbenchWorkspace = useCallback(
+        (workspaceId: WorkbenchWorkspaceId) => {
+            workbenchWorkspaceRef.current = workspaceId;
+            setWorkbenchWorkspace(workspaceId);
+            const workspace = WORKBENCH_WORKSPACES.find(candidate => candidate.id === workspaceId);
+            if (!workspace) {
+                return;
+            }
+            if (workspaceId === 'home') {
+                workbenchActivityRef.current = 'home';
+                setWorkbenchActivity('home');
+            }
+            void commands.execute(workspace.commandId);
+            persist();
+        },
+        [persist]
+    );
+
+    const selectWorkbenchActivity = useCallback(
+        (activityId: WorkbenchActivityId) => {
+            const activity = WORKBENCH_ACTIVITIES.find(candidate => candidate.id === activityId);
+            if (!activity) {
+                return;
+            }
+            workbenchActivityRef.current = activityId;
+            setWorkbenchActivity(activityId);
+            const target = activity.target;
+            if (target.kind === 'workspace') {
+                selectWorkbenchWorkspace(target.workspace);
+                return;
+            }
+            if (target.kind === 'left-sidebar') {
+                if (target.modeId === 'smart-connections' && activeLayoutRef.current !== 'ide-deep') {
+                    switchLayout('ide-deep');
+                }
+                void commands.execute(`leftSidebar.mode.${target.modeId}`);
+                persist();
+                return;
+            }
+            const tabIndex = OMNIPANEL_TABS.findIndex(tab => tab.id === target.tabId);
+            activateOmnipanelTabByIndex(tabIndex, {
+                activeModel: () => {
+                    const current = modelsRef.current;
+                    return current
+                        ? modelOf(current, faceRef.current, activeLayoutRef.current)
+                        : null;
+                },
+                activeLayout: () => activeLayoutRef.current,
+                persist
+            });
+        },
+        [persist, selectWorkbenchWorkspace, switchLayout]
     );
 
     // Track 51 — the entry gesture for the five specced-but-unplanned depth
@@ -1211,7 +1370,7 @@ export function App() {
             }
             const surfaceId = leftSidebarMode(modeId).surfaceId;
             const model = modelOf(current, faceRef.current, activeLayoutRef.current);
-            for (const border of model.getBorderSet().getBorders()) {
+            for (const border of bordersOf(model)) {
                 if (border.getLocation() !== DockLocation.LEFT) {
                     continue;
                 }
@@ -1875,6 +2034,20 @@ export function App() {
         return <div className="boot-splash">pratibimba…</div>;
     }
 
+    if (nativeCarrier && !nativeStartup.ready) {
+        return (
+            <NativeStartupGate
+                state={nativeStartup}
+                onRetry={() => {
+                    probeVaultRoot();
+                    if (nativeStartup.phase === 'blocked') {
+                        void invokeCommand('gateway_restart').catch(() => undefined);
+                    }
+                }}
+            />
+        );
+    }
+
     // 52.T3 — the switch rides the OmniPanel's OWN border strip (canon's named
     // mechanism, `M5'-SPEC` :159), not a shell overlay: the `right` slot stays
     // owned by the omnipanel exactly as `ui/shellSlotPolicy.ts` declares. Both
@@ -1939,14 +2112,24 @@ export function App() {
             data-layout-pane-set={[...activePaneSet].sort().join(' ')}
             data-omnipanel-active-tab={activeOmniTab}
             data-activity-bar-mode={activityBarMode}
+            data-workbench-workspace={workbenchWorkspace}
+            data-workbench-activity={workbenchActivity}
             data-cross-layout-identity-receipt={
                 crossLayoutIdentityReceiptRef.current
                     ? JSON.stringify(crossLayoutIdentityReceiptRef.current)
                     : undefined
             }
         >
-            <CoordinateBreadcrumb />
-            <FaceToggleChrome face={face} onToggle={() => void commands.execute('face.toggle')}>
+            <WorkbenchFrame
+                workspace={workbenchWorkspace}
+                activeActivity={workbenchActivity}
+                onWorkspaceChange={selectWorkbenchWorkspace}
+                onActivityChange={selectWorkbenchActivity}
+                status={<StatusStrip />}
+            >
+                <div className="workbench-editor-stack">
+                    <CoordinateBreadcrumb />
+                    <FaceToggleChrome face={face} onToggle={() => void commands.execute('face.toggle')}>
                 <div
                     className={`face-slot ${face === 0 ? 'face-active' : 'face-hidden'}`}
                     data-testid={routedHost?.face === 0 ? 'cross-layout-intent-receiver' : undefined}
@@ -2014,7 +2197,9 @@ export function App() {
                         }}
                     />
                 ) : null}
-            </FaceToggleChrome>
+                    </FaceToggleChrome>
+                </div>
+            </WorkbenchFrame>
                 {pasuWizardOpen ? (
                     <div className="pasu-wizard-overlay" data-testid="pasu-wizard-overlay">
                         <PasuWizardPane
@@ -2040,7 +2225,6 @@ export function App() {
                         />
                     </div>
                 ) : null}
-                <StatusStrip />
                 <CommandPalette />
             </div>
             </M2SurfaceProvider>

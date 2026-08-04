@@ -35,7 +35,15 @@ describe('StatusStrip', () => {
                 profile: {}
             });
             useSessionStore.getState().setSession({ dayNow: '02-07-2026' });
-            useProvenanceStore.getState().setSupervisor({ state: 'supervised', port: 18794, pid: 9, detail: 'ok' });
+            useProvenanceStore.getState().setSupervisor({
+                state: 'supervised',
+                port: 18794,
+                pid: 9,
+                detail: 'ok',
+                binaryPath: '/repo/target/debug/epi',
+                binarySource: 'repo-shared-target',
+                binaryIdentity: 'Usage: epi [OPTIONS] <COMMAND>'
+            });
         });
 
         expect(screen.getByTestId('status-tick').textContent).toContain('tick:1 gen:42');

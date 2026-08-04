@@ -8,15 +8,13 @@
  *   frozen widget's imagined payload; three of its four sections land on real
  *   reads and one does not, and this module states which is which rather than
  *   inventing the difference:
- *     (a) WISDOM DELTA — `nara.contemplate_session_close` composes one (a
- *         4'-5'-0' summary sentence, gateway `dispatch.rs::compose_wisdom_delta`),
- *         but the PERSISTED projection deliberately reduces bodies to counts
- *         (`NaraContemplationObjectProjection`, nara_close_bundle.rs) and drops
- *         it. So the read path carries the delta's HANDLE (`contemplation_ref`)
- *         and its triplet, never its text. The kernel's own 8-byte
- *         `M4_Epii_Integration.wisdom_delta` (m4.h:709) is projected NOWHERE on
- *         the wire — so the brief's "byte trail as hex strip" has no source, and
- *         a hex strip rendered from a prose sentence would be a fabrication.
+ *     (a) WISDOM DELTA — `nara.contemplate_session_close` composes a real
+ *         4'-5'-0' integration sentence. The protected persisted projection
+ *         retains that exact text as `wisdom_delta_text`; this reader reduces
+ *         it immediately to an eight-byte UTF-8 preview and never returns the
+ *         source text to a renderer. This is explicitly NOT the kernel's
+ *         separate `M4_Epii_Integration.wisdom_delta` u64 (m4.h:709), which is
+ *         still projected nowhere and remains unavailable for XOR animation.
  *     (b) XOR / Möbius return — PASU carries the derived `c_5_quintessence_hash`
  *         and `c_5_quintessence_clock` reflections. The ceremony shows the
  *         HANDLE FORM only (first 8 hex characters), per the brief's own privacy
@@ -101,6 +99,7 @@ const TOP_LEVEL_KEYS = new Set([
     'session_id',
     'close_ref',
     'contemplation_ref',
+    'wisdom_delta_text',
     'triplet',
     'provenance'
 ]);
@@ -167,6 +166,9 @@ export type M4ContemplationRead =
           readonly sessionId: string;
           readonly closeRef: string;
           readonly contemplationRef: string;
+          /** Eight protected bytes only; the source integration text is not
+           *  retained by this read model. Null means a pre-migration close. */
+          readonly wisdomDeltaPreview: string | null;
           readonly llm: {
               readonly position: string;
               readonly loadedAgentCount: number;
@@ -201,6 +203,18 @@ export type M4ContemplationRead =
 
 function blocked(reason: string): M4ContemplationRead {
     return { state: 'blocked', reason };
+}
+
+/**
+ * Reduce the real textual integration result to a stable eight-byte UTF-8
+ * preview. The source string never appears in the returned read model or DOM.
+ */
+export function wisdomDeltaHexPreview(value: string): string | null {
+    const bytes = new TextEncoder().encode(value);
+    if (bytes.length === 0) {
+        return null;
+    }
+    return Array.from(bytes.slice(0, 8), byte => byte.toString(16).padStart(2, '0')).join(' ');
 }
 
 function unknownKey(
@@ -292,6 +306,18 @@ export function readNaraContemplationObject(raw: unknown): M4ContemplationRead {
     ) {
         return blocked('contemplation_ref must be an opaque contemplation handle');
     }
+    if (
+        payload.wisdom_delta_text !== undefined &&
+        (typeof payload.wisdom_delta_text !== 'string' ||
+            payload.wisdom_delta_text.trim().length === 0 ||
+            new TextEncoder().encode(payload.wisdom_delta_text).length > 4096)
+    ) {
+        return blocked('wisdom_delta_text must be non-empty text of at most 4096 UTF-8 bytes');
+    }
+    const wisdomDeltaPreview =
+        typeof payload.wisdom_delta_text === 'string'
+            ? wisdomDeltaHexPreview(payload.wisdom_delta_text)
+            : null;
 
     const triplet = record(payload.triplet);
     if (!triplet) {
@@ -412,6 +438,7 @@ export function readNaraContemplationObject(raw: unknown): M4ContemplationRead {
         sessionId: payload.session_id,
         closeRef: payload.close_ref,
         contemplationRef: payload.contemplation_ref,
+        wisdomDeltaPreview,
         llm: {
             position: llm.position,
             loadedAgentCount: llm.loaded_agent_count as number,

@@ -33,15 +33,17 @@ pub(crate) use medicine_frame::canonical_from_m3_decan_element;
 // 24.T24.7 scalar-ref resolution (`s2.codon.scalar_ref.read`) reads the decan
 // facts through these; the dataset itself stays private to the module.
 pub(crate) use medicine_frame::{
-    ananda_harmonic_for_decan, body_zones_for_decan, herb_for_decan, mode_for_decan,
-    zodiac_decan,
+    ananda_harmonic_for_decan, body_zones_for_decan, herb_for_decan, mode_for_decan, zodiac_decan,
 };
 // 24.T24.6 tarot scalar-ref resolution: card → decan/court/ace facts route
 // through these accessors; the maps themselves stay private to their modules.
-pub(crate) use medicine_frame::{body_zones_for_chakra, canonical_from_m2_tattva, chakra_for_planet};
+pub(crate) use medicine_frame::{
+    body_zones_for_chakra, canonical_from_m2_tattva, chakra_for_planet,
+};
 mod medicine_route;
 pub mod oracle;
 mod oracle_cast;
+mod oracle_composite;
 mod oracle_engine;
 mod oracle_frame;
 mod oracle_identity;

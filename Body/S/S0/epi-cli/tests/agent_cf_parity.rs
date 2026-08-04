@@ -26,10 +26,13 @@ fn repo_root() -> PathBuf {
 }
 
 fn fixture() -> Value {
-    let path = repo_root()
-        .join("Body/S/S4/ta-onta/shared/agent_cf.parity.json");
-    let body = fs::read_to_string(&path)
-        .unwrap_or_else(|err| panic!("parity fixture at {} should be readable: {err}", path.display()));
+    let path = repo_root().join("Body/S/S4/ta-onta/shared/agent_cf.parity.json");
+    let body = fs::read_to_string(&path).unwrap_or_else(|err| {
+        panic!(
+            "parity fixture at {} should be readable: {err}",
+            path.display()
+        )
+    });
     serde_json::from_str(&body).expect("parity fixture should be valid JSON")
 }
 
@@ -95,7 +98,9 @@ fn every_moirai_host_cf_is_a_real_constitutional_frame() {
     let fixture = fixture();
     for (agent, entry) in bindings(&fixture["moiraiHost"]) {
         let cf = entry["cf"].as_str().expect("cf should be a string");
-        let host = entry["hostAgent"].as_str().expect("host should be a string");
+        let host = entry["hostAgent"]
+            .as_str()
+            .expect("host should be a string");
         assert_eq!(
             epi_logos::agent::vak::cf_to_agent(cf),
             host,
@@ -123,9 +128,7 @@ fn the_unknown_cf_fallback_is_the_pinned_divergence() {
     // be reachable ONLY through it.
     assert_eq!(pinned, "psyche");
     assert_eq!(
-        epi_logos::agent::vak::cf_to_agent(
-            fixture["constitutional"]["psyche"].as_str().unwrap()
-        ),
+        epi_logos::agent::vak::cf_to_agent(fixture["constitutional"]["psyche"].as_str().unwrap()),
         "psyche",
         "psyche must be reachable by its own CF, not only as the fallback"
     );

@@ -6,16 +6,19 @@
 use std::path::{Path, PathBuf};
 
 use chrono::Utc;
+use epi_s3_gateway::dispatch::{
+    contemplate_session_close, route_nara_session_close, route_nara_session_open,
+    ContemplationObject, NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest,
+    NARA_CONTEMPLATION_OBJECT_READ_METHOD, NARA_SESSION_CLOSE_READ_METHOD,
+};
+use epi_s3_gateway::spacetime::{CardKind, LiveState, OracleSpreadPosition};
 use portal_core::personal_identity::{
     detect_identity_augment_from_activity, IdentityAugmentProposal, IdentityAugmentProposalState,
     IdentityAugmentProposalView, IdentityAugmentReviewVerdict, PersonalIdentityProfile,
     IDENTITY_AUGMENT_DRIFT_THRESHOLD,
 };
-use portal_core::{CpfState, CsDirection, CsField, NaraPatternPacketStamp, VakAddress, VamaShaktiClass};
-use epi_s3_gateway::dispatch::{
-    contemplate_session_close, route_nara_session_close, route_nara_session_open,
-    ContemplationObject, NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest,
-    NARA_CONTEMPLATION_OBJECT_READ_METHOD, NARA_SESSION_CLOSE_READ_METHOD,
+use portal_core::{
+    CpfState, CsDirection, CsField, NaraPatternPacketStamp, VakAddress, VamaShaktiClass,
 };
 use serde_json::{json, Value};
 
@@ -97,6 +100,35 @@ fn opt_f32(params: &Value, key: &str) -> Option<f32> {
 
 fn deferred_stub(method: &str) -> Result<Value, (String, String)> {
     Ok(json!({"status": format!("{}: deferred to agent pipeline", method)}))
+}
+
+fn publish_oracle_spread(
+    receipt: &oracle::OracleCastReceipt,
+    session_key: &str,
+) -> Result<(), String> {
+    let positions = receipt
+        .positions
+        .iter()
+        .map(|position| {
+            let card_kind = match position.card_kind.as_str() {
+                "tarot-major" => CardKind::TarotMajor,
+                "tarot-pip" => CardKind::TarotPip,
+                "tarot-court" => CardKind::TarotCourt,
+                "hexagram" => CardKind::Hexagram,
+                other => return Err(format!("unknown oracle card kind {other}")),
+            };
+            Ok(OracleSpreadPosition::new(
+                receipt.spread_id.clone(),
+                position.position_index,
+                position.card_id,
+                card_kind,
+                receipt.cast_at,
+                session_key,
+                None,
+            ))
+        })
+        .collect::<Result<Vec<_>, String>>()?;
+    spacetime_client().record_oracle_spread(&receipt.spread_id, &positions)
 }
 
 fn nara_session_config_from_params(params: &Value) -> NaraSessionConfig {
@@ -355,6 +387,38 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
         }
 
         // ── Oracle ──────────────────────────────────────────────────────
+        "nara.oracle.cast_iching" => {
+            let question = required_param(params, "question")?;
+            let yes = opt_bool(params, "yes");
+            let receipt = oracle::cast_iching_typed(&question, yes)
+                .map_err(|error| ("nara-error".to_owned(), error))?;
+            let session_key = opt_str(params, "sessionKey")
+                .or_else(|| opt_str(params, "session_key"))
+                .unwrap_or_else(|| "oracle-unscoped".to_owned());
+            let spacetime_published = publish_oracle_spread(&receipt, &session_key).is_ok();
+            let mut value = serde_json::to_value(receipt)
+                .map_err(|error| ("nara-error".to_owned(), error.to_string()))?;
+            value["spacetimePublished"] = json!(spacetime_published);
+            Ok(value)
+        }
+        "nara.oracle.cast_tarot" => {
+            let system = required_param(params, "system")?;
+            let question = required_param(params, "question")?;
+            let spread_size = opt_u8(params, "spreadSize")
+                .or_else(|| opt_u8(params, "spread_size"))
+                .unwrap_or(3);
+            let yes = opt_bool(params, "yes");
+            let receipt = oracle::cast_tarot_typed(&system, &question, spread_size, yes)
+                .map_err(|error| ("nara-error".to_owned(), error))?;
+            let session_key = opt_str(params, "sessionKey")
+                .or_else(|| opt_str(params, "session_key"))
+                .unwrap_or_else(|| "oracle-unscoped".to_owned());
+            let spacetime_published = publish_oracle_spread(&receipt, &session_key).is_ok();
+            let mut value = serde_json::to_value(receipt)
+                .map_err(|error| ("nara-error".to_owned(), error.to_string()))?;
+            value["spacetimePublished"] = json!(spacetime_published);
+            Ok(value)
+        }
         "nara.oracle.cast" => {
             let system = required_param(params, "system")?;
             let question = required_param(params, "question")?;
@@ -389,6 +453,52 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
             Ok(json!({"decan": k.active_decan, "element": k.dominant_element}))
         }
         "nara.oracle.history" => cli_to_rpc(oracle::show_history()),
+        "nara.oracle.history.read" => {
+            let limit = opt_u64(params, "limit").unwrap_or(10) as usize;
+            let from_epoch = opt_u64(params, "fromEpoch").or_else(|| opt_u64(params, "from_epoch"));
+            let to_epoch = opt_u64(params, "toEpoch").or_else(|| opt_u64(params, "to_epoch"));
+            serde_json::to_value(
+                oracle::read_history_typed(limit, from_epoch, to_epoch)
+                    .map_err(|error| ("nara-error".to_owned(), error))?,
+            )
+            .map_err(|error| ("nara-error".to_owned(), error.to_string()))
+        }
+        "nara.oracle.update_position_state" => {
+            let spread_id = required_param(params, "spreadId")
+                .or_else(|_| required_param(params, "spread_id"))?;
+            let position_index = opt_u8(params, "positionIndex")
+                .or_else(|| opt_u8(params, "position_idx"))
+                .ok_or_else(|| {
+                    (
+                        "invalid-params".to_owned(),
+                        "missing required numeric param 'positionIndex'".to_owned(),
+                    )
+                })?;
+            let state_text = required_param(params, "liveState")
+                .or_else(|_| required_param(params, "live_state"))?;
+            let state = match state_text.as_str() {
+                "generating" => oracle::OracleLiveState::Generating,
+                "muting" => oracle::OracleLiveState::Muting,
+                "mute" => oracle::OracleLiveState::Mute,
+                _ => {
+                    return Err((
+                        "invalid-params".to_owned(),
+                        "liveState must be generating, muting, or mute".to_owned(),
+                    ))
+                }
+            };
+            let receipt = oracle::update_position_state(&spread_id, position_index, state)
+                .map_err(|error| ("nara-error".to_owned(), error))?;
+            let s3_state = LiveState::from_u8(state.as_s3_value())
+                .map_err(|error| ("nara-error".to_owned(), error))?;
+            let spacetime_published = spacetime_client()
+                .update_position_state(&spread_id, position_index, s3_state)
+                .is_ok();
+            let mut value = serde_json::to_value(receipt)
+                .map_err(|error| ("nara-error".to_owned(), error.to_string()))?;
+            value["spacetimePublished"] = json!(spacetime_published);
+            Ok(value)
+        }
         "nara.oracle.payload" => {
             // Perform a live I-Ching cast and return the full OraclePayload
             // (four faces + eval4 quaternionic charges) as structured JSON.
@@ -1030,15 +1140,15 @@ pub fn field_handle(
     let Some(anchor) = anchor else {
         return Err((
             "nara-error".to_owned(),
-            "no live spanda anchor yet — the gateway heartbeat has not installed the clock".to_owned(),
+            "no live spanda anchor yet — the gateway heartbeat has not installed the clock"
+                .to_owned(),
         ));
     };
     let now_ms = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap_or_default()
         .as_millis() as u64;
-    let projection =
-        portal_core::KernelTemporalProjection::from_phase_anchor(&anchor, now_ms, 0);
+    let projection = portal_core::KernelTemporalProjection::from_phase_anchor(&anchor, now_ms, 0);
     let handle = portal_core::psychoid_cymatic::build_psychoid_cymatic_renderer_handle(
         &projection.harmonic_profile,
         portal_core::psychoid_cymatic::PsychoidCymaticSolverStrategy::OptionF,
@@ -1087,9 +1197,7 @@ fn journal_timeline(peer_is_loopback: bool, params: &Value) -> Result<Value, (St
                 _ => {
                     return Err((
                         "nara-error".to_owned(),
-                        format!(
-                            "dayRange must be an integer 1..={JOURNAL_TIMELINE_MAX_DAY_RANGE}"
-                        ),
+                        format!("dayRange must be an integer 1..={JOURNAL_TIMELINE_MAX_DAY_RANGE}"),
                     ))
                 }
             }
@@ -1097,7 +1205,7 @@ fn journal_timeline(peer_is_loopback: bool, params: &Value) -> Result<Value, (St
     };
 
     let vault_root = crate::vault::resolve_vault_root();
-    let present = vault_root.join("Empty").join("Present");
+    let present = crate::vault::paths::present_root(&vault_root);
     let today = crate::vault::paths::day_of(Utc::now());
     let oldest = today - chrono::Duration::days(i64::from(day_range) - 1);
 
@@ -1108,7 +1216,8 @@ fn journal_timeline(peer_is_loopback: bool, params: &Value) -> Result<Value, (St
         .unwrap_or_default();
     for day_entry in day_entries {
         let day_name = day_entry.file_name().to_string_lossy().into_owned();
-        let Ok(day) = chrono::NaiveDate::parse_from_str(&day_name, crate::vault::paths::DAY_ID_FORMAT)
+        let Ok(day) =
+            chrono::NaiveDate::parse_from_str(&day_name, crate::vault::paths::DAY_ID_FORMAT)
         else {
             continue; // not a day folder (FLOW notes, stray files)
         };
@@ -1219,17 +1328,17 @@ fn artifact_role_of(path: &Path) -> Option<String> {
 /// `nara.pasu.consents.append` (DR-WC-M4-4): append a typed ConsentRecord to the
 /// PASU `c_4_atlas_sync_consents` array. Accepts the record either at the params
 /// root or under a `consent` key. Returns the full updated ledger.
-fn append_pasu_consent(
-    peer_is_loopback: bool,
-    params: &Value,
-) -> Result<Value, (String, String)> {
+fn append_pasu_consent(peer_is_loopback: bool, params: &Value) -> Result<Value, (String, String)> {
     if !peer_is_loopback {
         return Err((
             "nara-error".to_owned(),
             "protected-local nara.pasu.consents.append requires a loopback peer".to_owned(),
         ));
     }
-    let consent_value = params.get("consent").cloned().unwrap_or_else(|| params.clone());
+    let consent_value = params
+        .get("consent")
+        .cloned()
+        .unwrap_or_else(|| params.clone());
     let consent: crate::vault::pasu::ConsentRecord = serde_json::from_value(consent_value)
         .map_err(|err| {
             (
@@ -1496,8 +1605,8 @@ fn detect_identity_proposal_core(
 ) -> Result<Value, (String, String)> {
     // Accumulated Q_activity: an explicit param OVERRIDES; otherwise the
     // persisted per-user accumulator is the real driver.
-    let q_activity =
-        parse_quaternion_param(params, &["q_activity", "qActivity"]).unwrap_or(persisted_q_activity);
+    let q_activity = parse_quaternion_param(params, &["q_activity", "qActivity"])
+        .unwrap_or(persisted_q_activity);
     // q_transit is optional — default identity (no transit perturbation).
     let q_transit =
         parse_quaternion_param(params, &["q_transit", "qTransit"]).unwrap_or([1.0, 0.0, 0.0, 0.0]);
@@ -1559,10 +1668,9 @@ fn list_identity_proposals(
             "protected-local nara.identity.proposals.list requires a loopback peer".to_owned(),
         ));
     }
-    let views = crate::nara::identity_proposals::list_pending(&identity_proposal_store_path(
-        state_root,
-    ))
-    .map_err(|err| ("nara-error".to_owned(), err))?;
+    let views =
+        crate::nara::identity_proposals::list_pending(&identity_proposal_store_path(state_root))
+            .map_err(|err| ("nara-error".to_owned(), err))?;
     Ok(json!({ "proposals": views }))
 }
 
@@ -1687,8 +1795,9 @@ fn apply_identity_proposal_core(
     now: &str,
 ) -> Result<Value, (String, String)> {
     // (b) GOVERNED GATE: apply the ACCEPTED proposal (mutates q_identity).
-    let view = crate::nara::identity_proposals::apply_proposal(proposal_store, handle, now, profile)
-        .map_err(|err| ("nara-error".to_owned(), err))?;
+    let view =
+        crate::nara::identity_proposals::apply_proposal(proposal_store, handle, now, profile)
+            .map_err(|err| ("nara-error".to_owned(), err))?;
 
     // (c) Persist the NEW q_identity as the current applied identity — durable,
     // state-root local, never bused raw.
@@ -2111,8 +2220,9 @@ mod identity_augment_detect_tests {
             }
         }
 
-        let handle = produced_handle
-            .expect("a drifting session-close sequence must auto-submit a proposal within 15 turns");
+        let handle = produced_handle.expect(
+            "a drifting session-close sequence must auto-submit a proposal within 15 turns",
+        );
         // It surfaces in the SAME list panel (c) reads.
         let pending =
             crate::nara::identity_proposals::list_pending(&proposal_store).expect("list pending");
@@ -2213,13 +2323,9 @@ mod identity_augment_detect_tests {
 
         // ABSORBED: with the accumulator reset, detect against the augmented
         // baseline no longer proposes (the drift was absorbed into identity).
-        let absorbed = detect_identity_proposal_core(
-            &temp_store(),
-            &reloaded,
-            &json!({}),
-            reset.q_activity,
-        )
-        .expect("detect ok");
+        let absorbed =
+            detect_identity_proposal_core(&temp_store(), &reloaded, &json!({}), reset.q_activity)
+                .expect("detect ok");
         assert_eq!(absorbed["produced"], json!(false));
 
         // HANDLE-ONLY: the RPC response never surfaces the raw q_identity.
@@ -2292,7 +2398,10 @@ mod identity_augment_detect_tests {
         );
         assert!(degraded, "absent engaged coordinate must flag the degrade");
         assert_eq!(packet.vak_address.cp, "4.0");
-        assert_eq!(packet.packet_ref, "activity://session/sess-x/protein://sealed/x");
+        assert_eq!(
+            packet.packet_ref,
+            "activity://session/sess-x/protein://sealed/x"
+        );
 
         let (packet, degraded) = session_activity_packet(
             "sess-y",

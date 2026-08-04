@@ -5,6 +5,7 @@ substrate_residency_note: "Body/S/S3/graphiti-runtime/ physically lives under S3
 coordinate: "S3 / S3'"
 status: "canonical-architecture-spec"
 created: 2026-06-03
+updated: 2026-08-02
 authority_relation: "Domain authority for the S3 PAI gateway/temporal/runtime layer. [[S3-SPEC]] and [[S3'-SPEC]] cross-reference this document. Where they disagree, this document is authoritative for substrate file:line citations and for cleanup/modularisation scope; the SPECs remain authoritative for ontological law and prose framing."
 depends_on:
   - "[[S3-SPEC]]"
@@ -35,9 +36,11 @@ The S3 stack as it stands today (2026-06-03) has six landed crates plus one app-
 - `Body/S/S3/graphiti-runtime` (788 LOC in `lib.rs`) — episode envelope construction, provenance fire, deposit/search payload builders, kernel-resonance + kernel-profile-observation deposit law
 - `Body/S/S3/epi-spacetime-module` (820 LOC in `lib.rs`) — the SpaceTimeDB 2.x WASM module: 14 typed tables, 9 reducers (register_gateway, heartbeat_gateway, register_agent, register_client, bind_session_temporal_context, bind_kairos_surface, bind_global_temporal_surface, publish_temporal_event, advance_world_clock, bind_pratibimba_presence, publish_shared_archetype_event, detect_coincidences, publish_module_version)
 - `Body/S/S3/redis-context` (47 + 139 LOC) — Redis runtime residency, RedisVL bridge path contract, tiered cache (hot/warm/cold) primitives
-- `Body/S/S3/epi-app` (legacy electron carry-over; not the M' shell of record — that role moved to `Body/M/epi-theia` per the memory invariant; this stays for parity reference and will be migrated/decommissioned under a later tranche)
+- `Body/S/S3/epi-app` (legacy Electron carry-over; not the M' shell of record — active carrier authority is [[Body/M/pratibimba-app]]; this stays for parity reference pending disposition)
 
 This document gives the **total shape**: the six sub-coordinates verified against actual substrate layout, file:line citations for every load-bearing structure, the M' dependency map, the contract surface gap list, and a prioritised cleanup/modularisation programme. The seed specs at [[S3-SPEC]] (`Idea/Bimba/Seeds/S/S3/S3-SPEC.md:30-188`) and [[S3'-SPEC]] (`Idea/Bimba/Seeds/S/S3/S3'/S3'-SPEC.md`) defer to this file for code-level facts.
+
+**Cycle-3 contract additions (2026-08-02).** `gateway/src/spacetime/presence.rs` owns the `OracleSpreadPosition` shared-state projection and its `record_oracle_spread` / `update_position_state` reducer publications; the S0 host wraps those primitives behind typed `nara.oracle.*` RPCs while retaining the protected local history transaction. `gateway/src/{s3_handlers,being_pattern}.rs` owns the four CCT-21 `s3'.being_pattern.*` methods; the subscribe projection is public-safe, generation-stamped, read-only in the active carrier, and no review-candidate path mutates [[S2]]. These are additive to the architecture below.
 
 ---
 

@@ -63,6 +63,10 @@ impl TestGatewayClient {
         client
     }
 
+    pub fn home_dir(&self) -> &std::path::Path {
+        &self.env.home
+    }
+
     pub async fn connect(env: TestEnv, port: u16) -> Self {
         let server_lock = test_server_lock()
             .lock()
@@ -266,9 +270,9 @@ impl GatewayObserver {
             if !message.is_text() {
                 continue;
             }
-            let Ok(frame) = serde_json::from_str::<Value>(
-                message.to_text().expect("event should be text"),
-            ) else {
+            let Ok(frame) =
+                serde_json::from_str::<Value>(message.to_text().expect("event should be text"))
+            else {
                 continue;
             };
             assert_ne!(

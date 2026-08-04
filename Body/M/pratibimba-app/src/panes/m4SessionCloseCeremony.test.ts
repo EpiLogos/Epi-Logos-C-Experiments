@@ -16,7 +16,8 @@ import {
     M4_CONTEMPLATION_SEED_REGISTERS,
     QUINTESSENCE_HANDLE_LENGTH,
     readNaraContemplationObject,
-    readQuintessenceHandle
+    readQuintessenceHandle,
+    wisdomDeltaHexPreview
 } from './m4SessionCloseCeremony';
 
 function profileWithLut(lut: unknown): KernelBridgeCachedProfile {
@@ -30,6 +31,7 @@ function contemplationProjection(overrides: Record<string, unknown> = {}) {
         session_id: 'e2e-session',
         close_ref: 'close-1234',
         contemplation_ref: 'contemplation-abcd',
+        wisdom_delta_text: '4′-5′-0′ contemplation closed for q_Nara',
         triplet: {
             llm: {
                 position: "4'",
@@ -120,15 +122,32 @@ describe('25.T25.19 — the persisted contemplation projection', () => {
             true
         ]);
         expect(read.verifier.witnessCount).toBe(6);
+        expect(read.wisdomDeltaPreview).toBe('34 e2 80 b2 2d 35 e2 80');
     });
 
-    it('BLOCKS a payload that grew a field — a wider payload is a wider privacy boundary', () => {
+    it('BLOCKS the ambiguous raw delta field — the persisted contract names its textual register', () => {
         const grown = readNaraContemplationObject(
             contemplationProjection({ wisdom_delta: '4′-5′-0′ contemplation closed for q_Nara…' })
         );
         expect(grown.state).toBe('blocked');
         if (grown.state !== 'blocked') return;
         expect(grown.reason).toContain('wisdom_delta');
+    });
+
+    it('reads a pre-migration projection without inventing a delta preview', () => {
+        const old = contemplationProjection();
+        delete (old as Record<string, unknown>).wisdom_delta_text;
+        const read = readNaraContemplationObject(old);
+        expect(read.state).toBe('ready');
+        if (read.state !== 'ready') return;
+        expect(read.wisdomDeltaPreview).toBeNull();
+    });
+
+    it('encodes exactly the first eight UTF-8 bytes and never returns the source text', () => {
+        const text = '4′-5′-0′ contemplation closed';
+        const preview = wisdomDeltaHexPreview(text);
+        expect(preview).toBe('34 e2 80 b2 2d 35 e2 80');
+        expect(preview).not.toContain(text);
     });
 
     it('BLOCKS a session body that tried to ride along', () => {

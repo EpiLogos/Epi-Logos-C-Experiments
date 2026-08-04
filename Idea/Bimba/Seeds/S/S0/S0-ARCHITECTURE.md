@@ -3,6 +3,7 @@ title: "S0 Terminal — Total Shape, Substrate Map, Membrane Contract, M' Depend
 coordinate: "S0 / S0'"
 status: "canonical-architecture-spec"
 created: 2026-06-03
+updated: 2026-08-02
 authority_relation: "Domain authority for the S0 stack — the executable kernel membrane. `S0-SPEC.md` and `S0'-SPEC.md` are the canonical narrative seeds; this document supplies the load-bearing substrate map, modularisation findings, and M' dependency surface for cycle-3 architectural reconciliation. Where they disagree, the seed specs hold for prose intent; this doc is authoritative for code-grounded substrate claims and concrete refactor proposals."
 depends_on:
   - "[[S0-SPEC]]"
@@ -20,10 +21,8 @@ related_tranches:
   - "11-theia-shell-surface-hosting (kernel-bridge extension consumes S0)"
 m_prime_consumers:
   - "Every M' surface consumes S0"
-  - "Body/M/epi-theia/extensions/kernel-bridge (single typed boundary)"
-  - "Body/M/epi-theia/extensions/kernel-bridge-readiness (nine-state taxonomy)"
-  - "Body/M/epi-theia/extensions/m0-anuttara..m5-epii (read MathemeHarmonicProfile via bridge)"
-  - "Body/M/epi-tauri (deprecated; same KernelTemporalProjection contract)"
+  - "Body/M/pratibimba-app (active single typed gateway/bridge boundary)"
+  - "Body/M/epi-theia and Body/M/epi-tauri (frozen/deprecated carrier genealogy)"
 ---
 
 # S0 Architecture — The Executable Membrane Spine
@@ -35,6 +34,8 @@ m_prime_consumers:
 S0 is **not** the top-layer kernel owner. Kernel/profile bridge facts that span S0, S3, S5, and M' are jointly owned (S0-SPEC §"Canonical Source Lock", lines 561-574). S0 owns command executability, typed mirrors, approval-aware process execution, profile projection, and audit return. It does not own vault, graph, gateway, agent, or review domain law — those live in S1–S5.
 
 This document gives the total shape: substrate map per sub-coordinate, profile-bus + kernel-bridge contracts, M' dependency map, concrete modularisation findings (with file:line scope and refactor proposals), and the boundary contracts that hold the membrane together.
+
+**Cycle-3 Nara membrane additions (2026-08-02).** `epi-cli/src/nara/oracle_composite.rs` and `src/gate/nara.rs` expose typed I-Ching/Tarot cast, protected history read, and position-state mutation while preserving the existing Oracle engines/LUTs and treating [[S3]] publication as a separately reported best-effort consequence. `src/gate/nara_close_bundle.rs` additively retains bounded protected `wisdom_delta_text`; the carrier derives an eight-byte display witness without conflating it with the C `uint64_t wisdom_delta`. `nara.field.handle` is loopback-only and opaque. These are host adapters over M4/S3/M5 law, not new S0 ontology.
 
 **Anti-greenfield posture (binding):** `Body/S/S0/{epi-cli, portal-core, epi-lib}` and `Body/S/epi-kernel-contract` are all landed substrate. Every proposal below is phrased *consume as-is*, *audit/verify*, *extend a named field/contract*, or *refactor/modularise/cleanup with named scope*. First-build is only invoked for genuine integration blockers (klein_flip emit, ananda_vortex field, KleinFlipEvent enum) and for tightening the C/Rust FFI surface.
 

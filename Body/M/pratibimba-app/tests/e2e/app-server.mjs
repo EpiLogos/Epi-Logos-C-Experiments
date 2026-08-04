@@ -2,7 +2,7 @@
  * Coordinate: M' (e2e harness — the app web server Playwright launches)
  * Residency: Body/M/pratibimba-app/tests/e2e
  * Position (#n): #4 — the app origin every spec drives
- * Actualises: Playwright's `webServer` command, with the two fixes the plain
+ * Actualises: Playwright's `webServer` command, with the three fixes the plain
  *   `pnpm exec vite …` form could not carry:
  *
  *   1. IT SWEEPS FIRST. Playwright starts the web server BEFORE `globalSetup`
@@ -19,6 +19,16 @@
  *      spawned straight from `process.execPath`, and SIGTERM/SIGINT are
  *      forwarded to it, so the shutdown Playwright asks for is the shutdown
  *      that happens.
+ *
+ *   3. THE TESTS DRIVE A FRESH PRODUCTION BUNDLE. Vite's development graph
+ *      made Chromium fetch hundreds of source modules independently; a host
+ *      network transition could strand any subset as `ERR_NETWORK_CHANGED`
+ *      and leave a random spec staring at a white page. The launcher builds
+ *      with the exact E2E environment and serves that output through
+ *      `vite preview`, removing HMR and the app's source-module request
+ *      fan-out. The eight source authorities explicitly imported by E2E specs
+ *      are exposed as closed facades onto the running app's own singleton
+ *      modules; arbitrary source paths remain unavailable.
  *
  *   Run as `node tests/e2e/app-server.mjs` — deliberately outside Playwright's
  *   TypeScript transform, so its port comes from the environment rather than
@@ -54,26 +64,40 @@ if (!existsSync(viteBin)) {
     process.exit(1);
 }
 
-const vite = spawn(
-    process.execPath,
-    [viteBin, '--host', '127.0.0.1', '--port', String(port), '--strictPort'],
-    { cwd: APP_ROOT, stdio: 'inherit' }
-);
+let activeChild = spawn(process.execPath, [viteBin, 'build'], {
+    cwd: APP_ROOT,
+    stdio: 'inherit'
+});
 
 for (const signal of ['SIGTERM', 'SIGINT', 'SIGHUP']) {
     process.on(signal, () => {
         try {
-            vite.kill(signal);
+            activeChild?.kill(signal);
         } catch {
             /* already gone */
         }
     });
 }
 
-vite.on('exit', (code, signal) => {
-    process.exit(signal ? 1 : (code ?? 0));
+const buildResult = await new Promise(resolve => {
+    activeChild.once('error', error => resolve({ error }));
+    activeChild.once('exit', (code, signal) => resolve({ code, signal }));
 });
-vite.on('error', error => {
-    console.error(`[e2e-app-server] failed to start vite: ${error.message}`);
+if (buildResult.error || buildResult.signal || buildResult.code !== 0) {
+    const reason = buildResult.error?.message ?? buildResult.signal ?? `exit ${buildResult.code}`;
+    console.error(`[e2e-app-server] production build failed: ${reason}`);
     process.exit(1);
+}
+
+activeChild = spawn(
+    process.execPath,
+    [viteBin, 'preview', '--host', '127.0.0.1', '--port', String(port), '--strictPort'],
+    { cwd: APP_ROOT, stdio: 'inherit' }
+);
+activeChild.once('error', error => {
+    console.error(`[e2e-app-server] failed to start production preview: ${error.message}`);
+    process.exit(1);
+});
+activeChild.once('exit', (code, signal) => {
+    process.exit(signal ? 1 : (code ?? 0));
 });

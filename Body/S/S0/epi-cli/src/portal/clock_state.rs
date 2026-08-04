@@ -860,7 +860,10 @@ fn orbit_path() -> std::path::PathBuf {
 
 /// Persist micro-orbit degree history to disk as a JSON array of u16 values.
 pub fn save_micro_orbit(orbit: &[u16]) {
-    let path = orbit_path();
+    save_micro_orbit_at(&orbit_path(), orbit);
+}
+
+fn save_micro_orbit_at(path: &std::path::Path, orbit: &[u16]) {
     if let Some(parent) = path.parent() {
         let _ = std::fs::create_dir_all(parent);
     }
@@ -873,13 +876,16 @@ pub fn save_micro_orbit(orbit: &[u16]) {
             .collect::<Vec<_>>()
             .join(",")
     );
-    let _ = std::fs::write(&path, json);
+    let _ = std::fs::write(path, json);
 }
 
 /// Load micro-orbit degree history from disk. Returns empty vec if file missing or invalid.
 pub fn load_micro_orbit() -> Vec<u16> {
-    let path = orbit_path();
-    match std::fs::read_to_string(&path) {
+    load_micro_orbit_at(&orbit_path())
+}
+
+fn load_micro_orbit_at(path: &std::path::Path) -> Vec<u16> {
+    match std::fs::read_to_string(path) {
         Ok(content) => {
             // Parse JSON array of numbers
             let trimmed = content.trim();
@@ -914,6 +920,17 @@ pub fn update_kairos(state: &SharedClockState, kairos: KairosState) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn isolated_orbit_path(label: &str) -> std::path::PathBuf {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock must be after the Unix epoch")
+            .as_nanos();
+        std::env::temp_dir().join(format!(
+            "epi-micro-orbit-{label}-{}-{nonce}.json",
+            std::process::id()
+        ))
+    }
 
     #[test]
     fn quat_mul_identity() {
@@ -1106,23 +1123,21 @@ mod tests {
 
     #[test]
     fn micro_orbit_roundtrip() {
+        let path = isolated_orbit_path("roundtrip");
         let test_data: Vec<u16> = vec![10, 90, 180, 270, 359];
-        save_micro_orbit(&test_data);
-        let loaded = load_micro_orbit();
+        save_micro_orbit_at(&path, &test_data);
+        let loaded = load_micro_orbit_at(&path);
         assert_eq!(
             loaded, test_data,
             "micro-orbit should survive save/load roundtrip"
         );
-        // Clean up
-        let _ = std::fs::remove_file(orbit_path());
+        let _ = std::fs::remove_file(path);
     }
 
     #[test]
     fn micro_orbit_empty_on_missing_file() {
-        // Use a nonexistent path — load should return empty
-        let loaded = load_micro_orbit();
-        // We can't guarantee the file doesn't exist, but at least verify it returns a Vec
-        assert!(loaded.len() <= 360, "loaded orbit should be capped");
+        let path = isolated_orbit_path("missing");
+        assert_eq!(load_micro_orbit_at(&path), Vec::<u16>::new());
     }
 
     // ── Task 23: WalkType tests ─────────────────────────────────────────────

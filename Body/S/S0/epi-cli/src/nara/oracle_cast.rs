@@ -66,7 +66,7 @@ pub fn draw_tarot(system: TarotSystem, spread_size: u8) -> Vec<TarotCard> {
 
 // ─── I-Ching Cast ────────────────────────────────────────────────────────
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct IChingResult {
     pub lines: [u8; 6],
     pub primary_hexagram: u8,

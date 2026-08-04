@@ -1,10 +1,10 @@
 use clap::{Parser, Subcommand};
-use epi_s5_epii_autoresearch_core::resonance_corpus::{
-    EbmTrainingConfig, ResonanceCorpusStore, TrainEbmRequest,
-};
 use epi_logos::{
     agent, app, bimba, book, canon, code, core, entity, ffi, gate, graph, know, nara, notebook,
     portal, profile, sesh, settings, skill, slot, sync, techne, up, vault, vimarsa, world,
+};
+use epi_s5_epii_autoresearch_core::resonance_corpus::{
+    EbmTrainingConfig, ResonanceCorpusStore, TrainEbmRequest,
 };
 
 #[derive(Parser)]

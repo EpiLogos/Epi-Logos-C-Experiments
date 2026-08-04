@@ -185,9 +185,7 @@ pub fn enrich(params: &Value) -> Result<Value, String> {
         &["entityId", "entity_id", "id", "vectorId", "vector_id"],
     )?;
     let mut args = vec!["enrich".to_owned(), entity_id];
-    if let Some(coord) =
-        optional_str_alias(params, &["coordinate", "coord", "bimbaCoordinate"])
-    {
+    if let Some(coord) = optional_str_alias(params, &["coordinate", "coord", "bimbaCoordinate"]) {
         args.push("--coordinate".to_owned());
         args.push(coord);
     }
@@ -205,7 +203,7 @@ where
     let config = GnosisConfig::from_env();
     let mut command = Command::new(&config.python_bin);
     command.args(args);
-    for (key, value) in crate::techne::gnosis::config::neo4j_bridge_env() {
+    for (key, value) in crate::techne::gnosis::config::gnostic_bridge_env() {
         command.env(key, value);
     }
     let output = command

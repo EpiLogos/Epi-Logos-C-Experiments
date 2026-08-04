@@ -138,7 +138,10 @@ fn every_other_day_id_spelling_in_the_repo_is_month_first() {
     for (label, relative, expected) in OTHER_DAY_ID_SPELLINGS {
         let path = Path::new(env!("CARGO_MANIFEST_DIR")).join(relative);
         let body = std::fs::read_to_string(&path).unwrap_or_else(|err| {
-            panic!("{label}: cannot read {} ({err}) — update the path", path.display())
+            panic!(
+                "{label}: cannot read {} ({err}) — update the path",
+                path.display()
+            )
         });
         assert!(
             body.contains(expected),
@@ -298,7 +301,10 @@ fn only_the_authority_module_constructs_a_present_path() {
             .replace('\\', "/");
         if relative == AUTHORITY {
             authority_seen = true;
-        } else if !NON_DAY_FOLDER_USES.iter().any(|(path, _)| *path == relative) {
+        } else if !NON_DAY_FOLDER_USES
+            .iter()
+            .any(|(path, _)| *path == relative)
+        {
             offenders.push(relative);
         }
     }

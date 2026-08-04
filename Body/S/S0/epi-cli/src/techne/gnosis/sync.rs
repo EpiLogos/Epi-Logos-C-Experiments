@@ -51,7 +51,9 @@ pub fn source_paths(items: &[(String, Option<String>)]) -> Vec<String> {
     let mut seen = std::collections::BTreeSet::new();
     let mut paths = Vec::new();
     for (_, detail) in items {
-        let Some(path) = detail.as_deref() else { continue };
+        let Some(path) = detail.as_deref() else {
+            continue;
+        };
         let trimmed = path.trim();
         if trimmed.is_empty() {
             continue;
@@ -138,7 +140,10 @@ mod tests {
 
     #[test]
     fn an_explicit_notebook_names_the_pool() {
-        assert_eq!(pool_name_for("M3", Some("khora-session-abc")), "khora-session-abc");
+        assert_eq!(
+            pool_name_for("M3", Some("khora-session-abc")),
+            "khora-session-abc"
+        );
     }
 
     #[test]
@@ -150,7 +155,10 @@ mod tests {
     #[test]
     fn only_lines_carrying_a_path_become_sources() {
         let items = vec![
-            ("a bookmark line".to_owned(), Some("/docs/torus.md".to_owned())),
+            (
+                "a bookmark line".to_owned(),
+                Some("/docs/torus.md".to_owned()),
+            ),
             ("a hit with no file behind it".to_owned(), None),
             ("blank detail".to_owned(), Some("   ".to_owned())),
         ];

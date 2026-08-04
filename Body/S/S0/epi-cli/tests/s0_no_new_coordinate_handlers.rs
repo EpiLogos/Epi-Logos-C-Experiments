@@ -148,7 +148,10 @@ fn directly_dispatched() -> BTreeSet<String> {
 
 #[test]
 fn no_undeclared_coordinate_handler_lives_in_epi_cli() {
-    let declared: BTreeSet<String> = DIRECTLY_SERVED.iter().map(|(m, _)| (*m).to_owned()).collect();
+    let declared: BTreeSet<String> = DIRECTLY_SERVED
+        .iter()
+        .map(|(m, _)| (*m).to_owned())
+        .collect();
     let actual = directly_dispatched();
 
     let undeclared: Vec<&String> = actual.difference(&declared).collect();
@@ -186,9 +189,14 @@ fn the_declaration_does_not_rot_into_fiction() {
 #[test]
 fn every_entry_states_one_of_the_four_reasons() {
     for (method, reason) in DIRECTLY_SERVED {
-        let recognised = ["composite:", "S0-own:", "needs-CLI-state:", "not-yet-drained:"]
-            .iter()
-            .any(|prefix| reason.starts_with(prefix));
+        let recognised = [
+            "composite:",
+            "S0-own:",
+            "needs-CLI-state:",
+            "not-yet-drained:",
+        ]
+        .iter()
+        .any(|prefix| reason.starts_with(prefix));
         assert!(
             recognised,
             "{method} is declared with an unrecognised reason {reason:?} — it must begin with \

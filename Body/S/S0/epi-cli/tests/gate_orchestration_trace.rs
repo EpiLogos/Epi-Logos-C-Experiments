@@ -89,8 +89,8 @@ async fn a_run_trace_reaches_the_transcript_and_aeon_eval_reads_it() {
 
     // The gateway wrote a real file. Read it as `aeon_eval` does.
     let path = client.transcript_path(&response["canonicalKey"].as_str().unwrap().to_owned());
-    let ledger =
-        aeon_eval_ledger_from_transcript(&path, context()).expect("the reader parses the transcript");
+    let ledger = aeon_eval_ledger_from_transcript(&path, context())
+        .expect("the reader parses the transcript");
 
     assert_eq!(ledger.metrics.read_tool_observations, 4);
     assert_eq!(ledger.metrics.edit_tool_observations, 1);

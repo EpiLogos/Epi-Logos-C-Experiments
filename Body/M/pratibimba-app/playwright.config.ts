@@ -74,12 +74,13 @@ export default defineConfig({
         // `tests/e2e/app-server.mjs` sweeps a leftover listener off the app
         // port BEFORE binding (Playwright starts the web server ahead of
         // globalSetup, so global-setup's sweep is too late for this one) and
-        // keeps vite as a directly-signalable child rather than a grandchild
-        // behind `pnpm exec`.
+        // builds with this exact E2E environment, serves the production bundle
+        // without the dev/HMR module graph, and keeps vite as a directly-
+        // signalable child rather than a grandchild behind `pnpm exec`.
         command: 'node tests/e2e/app-server.mjs',
         port: E2E_APP_PORT,
         reuseExistingServer: false,
-        timeout: 60_000,
+        timeout: 120_000,
         env: {
             // the launcher runs outside the TS transform, so the one port
             // authority reaches it through the environment

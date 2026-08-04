@@ -139,6 +139,12 @@ export default async function globalSetup(): Promise<void> {
     //     gate that fails honestly when Neo4j is down.
     const gatewayStateRoot = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-gate-'));
     const gatewayHome = mkdtempSync(join(tmpdir(), 'pratibimba-e2e-home-'));
+    const uiStateFile = process.env.E2E_UI_STATE_FIXTURE
+        ? join(gatewayStateRoot, 'ui-state.json')
+        : null;
+    if (uiStateFile) {
+        copyFileSync(process.env.E2E_UI_STATE_FIXTURE!, uiStateFile);
+    }
 
     // 26.T26.14 — seed one real axiom-translation session into the epii store
     // (the exact shape `gate::epii_axiom` persists) so the inspector's read path
@@ -306,12 +312,13 @@ export default async function globalSetup(): Promise<void> {
             EPI_BIN,
             '--nara-home',
             naraHome,
-            // 25.T25.24: `/nara-history` must serve the ledger of whoever
-            // CASTS. The pane dispatches `nara.oracle.cast` to the gateway, so
+            // 25.T25.24/25.T25.8: `/nara-history` serves the ledger of whoever
+            // casts. The pane dispatches typed oracle methods to the gateway, so
             // that is the gateway's own nara home — the fallback spawn's
             // isolated home stays `--nara-home` and is a different ledger.
             '--cast-home',
-            join(gatewayHome, '.epi-logos', 'nara')
+            join(gatewayHome, '.epi-logos', 'nara'),
+            ...(uiStateFile ? ['--ui-state-file', uiStateFile] : [])
         ],
         { stdio: ['ignore', 'ignore', 'inherit'], detached: false }
     );

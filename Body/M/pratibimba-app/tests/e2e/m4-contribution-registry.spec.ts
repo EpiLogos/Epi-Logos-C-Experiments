@@ -265,17 +265,20 @@ test('25.T25.21: the integrated 4-5-0 consumer grants every slot the owner the r
         ).toHaveAttribute(slot.ownerAttribute, slot.carrierOwner);
     }
 
-    // A blocked slot paints nothing. SPEC:290 puts the cymatic field at centre
-    // and 25.T25.6 has not landed, so this is the assertion that keeps the
-    // register from reading as if it had.
+    // A blocked slot paints nothing. This remains a live invariant even though
+    // 25.T25.6 lifted the last current blocker; the center slot is now proven
+    // separately as an as-specced, mounted surface.
     const blocked = INTEGRATED_450_CONSUMER_LAYOUT.filter(slot => slot.fate === 'blocked');
-    expect(blocked.length, 'no blocked slot would make this assertion vacuous').toBeGreaterThan(0);
     for (const slot of blocked) {
         await expect(
             page.locator(`[data-view-id="${slot.specViewId}"]`),
             `${slot.slot} is on screen, but the register calls it blocked`
         ).toHaveCount(0);
     }
+
+    const center = INTEGRATED_450_CONSUMER_LAYOUT.find(slot => slot.slot === 'center-composition');
+    expect(center?.fate).toBe('as-specced');
+    await expect(page.locator('[data-view-id="m4.nara.personalField"]')).toBeVisible();
 });
 
 test('25.T25.21: each carried-elsewhere slot really reaches the user where the register says', async ({

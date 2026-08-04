@@ -62,7 +62,10 @@ async fn a_deposited_item_comes_back_out_of_the_list() {
     assert_eq!(entry["sourceCoordinate"], "S4-4'");
     assert_eq!(entry["sessionKey"], "session-a");
     assert_eq!(entry["requiresHuman"], false);
-    assert_eq!(entry["artifact"]["path"], "Idea/Empty/Present/first-deposit.md");
+    assert_eq!(
+        entry["artifact"]["path"],
+        "Idea/Empty/Present/first-deposit.md"
+    );
     // the review item id is what a reviewer resolves against — it has to survive
     assert!(entry["itemId"].as_str().is_some_and(|id| !id.is_empty()));
 }
@@ -92,7 +95,10 @@ async fn the_list_filters_by_deposit_type_and_by_session() {
     assert_eq!(by_type["deposits"][0]["title"], "a-improvement");
 
     let by_session = client
-        .request("s5'.epii.deposit.list", json!({ "sessionKey": "session-a" }))
+        .request(
+            "s5'.epii.deposit.list",
+            json!({ "sessionKey": "session-a" }),
+        )
         .await
         .expect("sessionKey filter should answer");
     assert_eq!(by_session["matched"], 2);

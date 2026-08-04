@@ -147,7 +147,10 @@ async fn a_run_trace_reaches_the_wire_as_a_line_in_its_mode_tonic_frame() {
     assert_eq!(steps[3]["cf"], "(4.0/1-4.4/5)");
     assert_eq!(steps[3]["degree"], 5, "the dispatch frame is the dominant");
     assert_eq!(steps[3]["conjugateFace"], "power");
-    assert_eq!(steps[3]["hopfFiber"], 1, "the fifth sits on the implicate sheet");
+    assert_eq!(
+        steps[3]["hopfFiber"], 1,
+        "the fifth sits on the implicate sheet"
+    );
     assert_eq!(steps[4]["degree"], 1, "the run returned to its ground");
 
     // The run-level evaluation.
@@ -206,7 +209,10 @@ async fn modal_rotation_is_observable_over_the_wire() {
         observer.next_event("portal.vak_eval").await["payload"]["tonalReading"].clone();
     assert_eq!(mixolydian["modeName"], "Mixolydian");
     assert_eq!(mixolydian["tonicNote"], "G");
-    assert_eq!(mixolydian["steps"][0]["degree"], 1, "Anima is now the ground");
+    assert_eq!(
+        mixolydian["steps"][0]["degree"], 1,
+        "Anima is now the ground"
+    );
     assert_eq!(
         mixolydian["steps"][1]["intervalFromTonic"], 10,
         "and the 7th is flat — the Mixolydian signature"

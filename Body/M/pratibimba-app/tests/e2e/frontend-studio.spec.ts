@@ -138,11 +138,13 @@ test('51.T51.2: composition slots and integrated plugins are read from the real 
     await expect(
         studio(page).getByTestId('frontend-studio-slot-surface')
     ).toHaveAttribute('data-slot-owner', 'm1-paramasiva-played-torus');
-    // An owned-but-unrenderable slot names its registered blocker rather than
-    // reading as empty.
-    await expect(studio(page).getByTestId('frontend-studio-slot-center-composition')).toContainText(
-        'pending-psychoid-cymatic-solver'
-    );
+    // 25.T25.6 made the center slot inhabitable through its opaque renderer
+    // handle. The studio must report the mounted surface, not the retired
+    // implementation blocker.
+    const centerComposition = studio(page).getByTestId('frontend-studio-slot-center-composition');
+    await expect(centerComposition).toHaveAttribute('data-slot-owner', 'm4-nara');
+    await expect(centerComposition).toContainText('psychoid-renderer-handle');
+    await expect(centerComposition).not.toContainText('pending-psychoid-cymatic-solver');
 
     await studio(page).getByTestId('frontend-studio-section-plugins').click();
     await expect(studio(page)).toHaveAttribute('data-studio-section', 'plugins');

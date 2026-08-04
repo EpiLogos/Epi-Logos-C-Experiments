@@ -704,7 +704,9 @@ impl M5QReviewPlugin {
         };
         // No cf signal exists on the temporal surface yet, so the pane loads
         // the full day queue and shows every candidate (active_cf = None).
-        let root = epi_s5_epii_autoresearch_core::s5_handlers::improve::improvement_store_path(home.join(".epi-logos"));
+        let root = epi_s5_epii_autoresearch_core::s5_handlers::improve::improvement_store_path(
+            home.join(".epi-logos"),
+        );
         if let Ok(Some(queue)) = QReviewStore::new(root).latest(&day_id, None) {
             self.queue = Some(queue);
         }

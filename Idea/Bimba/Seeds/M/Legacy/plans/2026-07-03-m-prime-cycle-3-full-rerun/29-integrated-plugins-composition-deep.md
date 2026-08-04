@@ -101,4 +101,4 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md` — Tranche 29.16 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `cargo test --offline --manifest-path Body/S/S3/gateway/Cargo.toml --test being_pattern_live_state`; `pnpm -C Body/M/pratibimba-app exec vitest run src/composition/inhabitedBimba.test.ts`; `pnpm -C Body/M/pratibimba-app exec playwright test tests/e2e/inhabited-bimba.spec.ts --workers=1`; verifier ≠ closer.

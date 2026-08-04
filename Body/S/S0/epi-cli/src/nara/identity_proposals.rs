@@ -60,8 +60,7 @@ fn save(store_path: &Path, proposals: &[PersistedProposal]) -> Result<(), String
     }
     let text = serde_json::to_string_pretty(proposals)
         .map_err(|e| format!("failed to serialize proposal store: {e}"))?;
-    std::fs::write(store_path, text)
-        .map_err(|e| format!("failed to write proposal store: {e}"))
+    std::fs::write(store_path, text).map_err(|e| format!("failed to write proposal store: {e}"))
 }
 
 /// Submit a new proposal into the store. Used by the producer path (and tests);
@@ -443,8 +442,13 @@ mod tests {
         .unwrap();
         assert_eq!(accepted_view.state, IdentityAugmentProposalState::Accepted);
 
-        let applied = apply_proposal(&path, "id://apply", "2026-07-23T09:06:00.000Z", &mut profile)
-            .expect("accepted proposal applies");
+        let applied = apply_proposal(
+            &path,
+            "id://apply",
+            "2026-07-23T09:06:00.000Z",
+            &mut profile,
+        )
+        .expect("accepted proposal applies");
         assert_eq!(applied.state, IdentityAugmentProposalState::Applied);
 
         // q_identity is now the candidate (REPLACED), no longer the natal baseline.
@@ -455,12 +459,21 @@ mod tests {
             .find(|r| r.proposal_handle == "id://apply")
             .unwrap();
         assert_eq!(record.state, IdentityAugmentProposalState::Applied);
-        assert_eq!(record.applied_at.as_deref(), Some("2026-07-23T09:06:00.000Z"));
+        assert_eq!(
+            record.applied_at.as_deref(),
+            Some("2026-07-23T09:06:00.000Z")
+        );
         // An Applied proposal never surfaces as pending.
         assert!(list_pending(&path).unwrap().is_empty());
         // Re-applying a terminal Applied proposal fails closed (identity unchanged).
         let after_identity = profile.q_identity;
-        assert!(apply_proposal(&path, "id://apply", "2026-07-23T09:07:00.000Z", &mut profile).is_err());
+        assert!(apply_proposal(
+            &path,
+            "id://apply",
+            "2026-07-23T09:07:00.000Z",
+            &mut profile
+        )
+        .is_err());
         assert_eq!(profile.q_identity, after_identity);
         std::fs::remove_file(&path).ok();
     }
@@ -562,7 +575,13 @@ mod tests {
     fn apply_unknown_handle_fails() {
         let path = store();
         let mut profile = fixture_profile();
-        assert!(apply_proposal(&path, "id://missing", "2026-07-23T09:06:00.000Z", &mut profile).is_err());
+        assert!(apply_proposal(
+            &path,
+            "id://missing",
+            "2026-07-23T09:06:00.000Z",
+            &mut profile
+        )
+        .is_err());
         std::fs::remove_file(&path).ok();
     }
 }

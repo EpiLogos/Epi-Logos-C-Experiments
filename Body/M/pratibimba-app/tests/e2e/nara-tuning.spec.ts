@@ -28,6 +28,15 @@ test('Nara tuning writes canonical keys into the real latest session NOW', async
     expect(write.ok()).toBeTruthy();
 
     await page.goto('/');
+    // The vault-backed bar can become ready before the first gateway profile
+    // arrives. That first frame settles the enclosing FlexLayout; pressing a
+    // control while it is still moving can lose the browser click between
+    // pointer-down and pointer-up. Interact only once the running app has
+    // crossed its shared connected + first-tick readiness boundary.
+    await expect(page.getByTestId('status-gateway')).toContainText('connected', {
+        timeout: 15_000
+    });
+    await expect(page.getByTestId('status-tick')).toHaveText(/\d+/, { timeout: 15_000 });
     const bar = page.getByTestId('nara-tuning-bar');
     await expect(bar).toHaveAttribute('data-status', 'ready', { timeout: 15_000 });
     await bar.getByRole('button', { name: 'rhythm' }).click();

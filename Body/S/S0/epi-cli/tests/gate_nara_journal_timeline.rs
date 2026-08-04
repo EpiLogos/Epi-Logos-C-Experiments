@@ -10,7 +10,7 @@
 
 mod support;
 
-use chrono::{Duration, Utc};
+use chrono::{Duration, Local};
 use serde_json::json;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -21,7 +21,11 @@ const DAY_ID_FORMAT: &str = "%m-%d-%Y";
 fn seed_session(day_dir: &Path, session_key: &str, artifacts: &[(&str, &str)]) {
     let session = day_dir.join(session_key);
     fs::create_dir_all(&session).unwrap();
-    fs::write(session.join("now.md"), "---\nc_4_artifact_role: now\n---\n# NOW\n").unwrap();
+    fs::write(
+        session.join("now.md"),
+        "---\nc_4_artifact_role: now\n---\n# NOW\n",
+    )
+    .unwrap();
     for (name, body) in artifacts {
         fs::write(session.join(name), body).unwrap();
     }
@@ -47,7 +51,10 @@ fn seed_vault(vault_root: &PathBuf) -> (String, String, String) {
                 "oracle-cast.md",
                 "---\nc_4_artifact_role: \"oracle\"\n---\nthe reading body must never cross\n",
             ),
-            ("dream-entry.md", "---\nc_4_artifact_role: dream\n---\nprivate\n"),
+            (
+                "dream-entry.md",
+                "---\nc_4_artifact_role: dream\n---\nprivate\n",
+            ),
         ],
     );
     seed_session(&today_dir, &format!("{stamp}-110000-bbbbbb"), &[]);
@@ -75,7 +82,7 @@ fn seed_vault(vault_root: &PathBuf) -> (String, String, String) {
 
 fn today() -> chrono::NaiveDate {
     // Mirrors the server's own day law (`vault::paths::day_of(Utc::now())`).
-    Utc::now().date_naive()
+    Local::now().date_naive()
 }
 
 #[tokio::test]
@@ -96,7 +103,11 @@ async fn journal_timeline_reads_the_real_now_inscriptions_newest_first() {
     assert_eq!(reply["dayRange"], 30);
     assert_eq!(reply["privacyClass"], "protected-local");
     let rows = reply["rows"].as_array().expect("rows must be a list");
-    assert_eq!(rows.len(), 3, "the 40-day-old session is outside the window");
+    assert_eq!(
+        rows.len(),
+        3,
+        "the 40-day-old session is outside the window"
+    );
 
     // Newest-first across days: today's 11:00, today's 09:00, yesterday's.
     assert_eq!(rows[0]["day"], today_id);
@@ -157,7 +168,11 @@ async fn journal_timeline_bounds_and_refusals() {
     assert!(!rows.iter().any(|r| r["day"] == yesterday_id));
 
     // Out-of-law ranges and non-integers are refused, not clamped silently.
-    for bad in [json!({ "dayRange": 0 }), json!({ "dayRange": 200 }), json!({ "dayRange": "x" })] {
+    for bad in [
+        json!({ "dayRange": 0 }),
+        json!({ "dayRange": 200 }),
+        json!({ "dayRange": "x" }),
+    ] {
         let refused = client.request("nara.journal.timeline", bad.clone()).await;
         assert!(refused.is_err(), "{bad} must be refused, got {refused:?}");
     }

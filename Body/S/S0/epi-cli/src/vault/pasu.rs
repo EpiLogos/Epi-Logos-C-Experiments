@@ -90,7 +90,9 @@ pub fn validate_consent_record(record: &ConsentRecord) -> Result<(), String> {
     }
     if let Some(revoked) = &record.revoked_at {
         if revoked.trim().is_empty() {
-            return Err("consent.revokedAt, when present, must be a non-empty timestamp".to_owned());
+            return Err(
+                "consent.revokedAt, when present, must be a non-empty timestamp".to_owned(),
+            );
         }
     }
     Ok(())
@@ -421,11 +423,7 @@ fn set_frontmatter_consents(content: &str, consents: &[ConsentRecord]) -> Result
 /// other lines exactly. The key's extent is its line plus any following
 /// whitespace-indented continuation lines (block-style values). When the key is
 /// absent the block is inserted before the closing `---`.
-fn replace_frontmatter_key_block(
-    content: &str,
-    key: &str,
-    block: &str,
-) -> Result<String, String> {
+fn replace_frontmatter_key_block(content: &str, key: &str, block: &str) -> Result<String, String> {
     let lines: Vec<&str> = content.lines().collect();
     let mut fm_start: Option<usize> = None;
     let mut fm_end: Option<usize> = None;

@@ -2,18 +2,10 @@
  * Coordinate: M' M4' (oracle history viewer e2e — rerun 25.T25.9)
  * Residency: Body/M/pratibimba-app/tests/e2e
  * Position (#n): real Chromium + spawned gateway acceptance boundary
- * Actualises: the viewer against the REAL S0 cast ledger. The spec places two
- *   casts through the live gateway (`nara.oracle.cast` — the same wire the
- *   pane uses since 25.T25.24, so this is the ledger the user's own casts
- *   write) and then asserts the pane lists exactly those, newest first, with
- *   the modality the CLI recorded and a decay window resolved for the newest.
- *
- *   IT ALSO PINS THE DISCLOSURES. `show_history` carries no per-cast
- *   timestamp, so older rows must read `decay unknown` and not an assumed
- *   `closed`; and the 5.17 aliveness join has no producer, so the pane must
- *   name the unserved method rather than paint a badge. A future substrate
- *   that lands either wire will fail these lines, which is correct — the
- *   disclosure has to move when the truth does.
+ * Actualises: the viewer against the REAL S0 cast and position-state ledgers.
+ *   The spec places typed I-Ching and Tarot casts through the live gateway,
+ *   advances one spread position, and proves newest-first timestamps, decay,
+ *   aliveness, privacy, and read-only click-through in the carrier.
  * Does NOT own: the ledger (epi-cli `nara/oracle_route.rs`), the cast, or the
  *   host pane's own flows (integrated-loop.spec.ts).
  */
@@ -21,15 +13,26 @@
 import { expect, test } from '@playwright/test';
 import { gatewayRpc } from './gateway-rpc';
 
-test('25.T25.9: the viewer lists the REAL cast ledger, newest first, and discloses what the wire cannot say', async ({
+test('25.T25.9: structured history carries real timestamps, aliveness, and read-only casts', async ({
     page
 }) => {
-    // Two real casts on the gateway's own ledger — an i-ching and a tarot, so
-    // the modality mapping is exercised rather than asserted.
     const tarotQuestion = `history spec tarot ${Date.now().toString(36)}`;
     const ichingQuestion = `history spec iching ${Date.now().toString(36)}`;
-    await gatewayRpc('nara.oracle.cast', { system: 'rws', question: tarotQuestion, yes: true });
-    await gatewayRpc('nara.oracle.cast', { system: 'iching', question: ichingQuestion, yes: true });
+    const tarot = await gatewayRpc('nara.oracle.cast_tarot', {
+        system: 'thoth',
+        question: tarotQuestion,
+        spreadSize: 4,
+        yes: true
+    }) as { castId: number; spreadId: string };
+    const iching = await gatewayRpc('nara.oracle.cast_iching', {
+        question: ichingQuestion,
+        yes: true
+    }) as { castId: number; spreadId: string };
+    await gatewayRpc('nara.oracle.update_position_state', {
+        spreadId: iching.spreadId,
+        positionIndex: 0,
+        liveState: 'muting'
+    });
 
     await page.goto('/');
     const shell = page.getByTestId('shell');
@@ -70,6 +73,8 @@ test('25.T25.9: the viewer lists the REAL cast ledger, newest first, and disclos
     expect(listed[0].text).toContain('history spec iching');
     expect(listed[1].modality).toBe('tarot');
     expect(listed[1].text).toContain('history spec tarot');
+    expect(listed[0].testid).toBe(`oracle-history-row-${iching.castId}`);
+    expect(listed[1].testid).toBe(`oracle-history-row-${tarot.castId}`);
 
     // cast ids strictly descend — the producer's order, preserved not re-sorted
     const ids = listed.map(row => Number(row.testid?.replace('oracle-history-row-', '')));
@@ -77,24 +82,21 @@ test('25.T25.9: the viewer lists the REAL cast ledger, newest first, and disclos
         expect(ids[i]).toBeLessThan(ids[i - 1]);
     }
 
-    // the newest cast happened seconds ago, so its 4h window is open…
+    // Both casts happened seconds ago, and the producer supplied each cast_at.
     expect(listed[0].decay).toBe('open');
-    // …and every older row is honestly unknown, because the wire drops cast_at
-    for (const row of listed.slice(1)) {
-        expect(row.decay).toBe('unknown');
-    }
+    expect(listed[1].decay).toBe('open');
 
-    // the hygiene line is the CLI's own counter, not a client tally
-    await expect(history.getByTestId('oracle-history-hygiene')).toContainText('casts today');
-    await expect(history.getByTestId('oracle-history-hygiene')).toContainText('last cast');
+    await expect(history.getByTestId(`oracle-history-live-${iching.castId}`)).toContainText('muting');
+    await expect(history.getByTestId(`oracle-history-live-${iching.castId}`)).toContainText('generating');
+    await expect(history.getByTestId('oracle-history-count')).toContainText('showing');
 
-    // the two unserved wires are NAMED, not silently omitted
-    await expect(history.getByTestId('oracle-history-seam')).toContainText(
-        'nara.oracle.update_position_state'
-    );
+    await history.getByRole('button', { name: `open cast ${iching.castId} read only` }).click();
+    const result = page.getByTestId('oracle-result');
+    await expect(result).toHaveAttribute('data-read-only', 'true');
+    await expect(result.getByTestId('oracle-iching-mode')).toBeVisible();
+    await expect(result.getByRole('button', { name: /advance position/ })).toHaveCount(0);
 
-    // privacy: the reading itself never reaches a row — it lives in the day
-    // artifact the deposit wrote
+    // Interpretation prose remains behind the protected-local artifact handle.
     const text = (await history.textContent()) ?? '';
     expect(text).not.toContain('Tarot Draw #');
     expect(text).not.toContain('Primary hexagram');

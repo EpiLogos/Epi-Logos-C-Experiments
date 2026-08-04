@@ -72,7 +72,9 @@ fn root_of(state: &State<'_, VaultState>) -> Result<PathBuf, String> {
         .lock()
         .expect("vault root poisoned")
         .clone()
-        .ok_or_else(|| "vault root unresolved (set EPILOGOS_VAULT or ~/.epi/app/config.json)".to_owned())
+        .ok_or_else(|| {
+            "vault root unresolved (set EPILOGOS_VAULT or ~/.epi/app/config.json)".to_owned()
+        })
 }
 
 /// Canonical containment check — rejects traversal out of the root.
@@ -116,10 +118,17 @@ pub fn vault_root(state: State<'_, VaultState>) -> Option<String> {
 }
 
 #[tauri::command]
-pub fn vault_list(state: State<'_, VaultState>, path: Option<String>) -> Result<Vec<VaultEntry>, String> {
+pub fn vault_list(
+    state: State<'_, VaultState>,
+    path: Option<String>,
+) -> Result<Vec<VaultEntry>, String> {
     let root = root_of(&state)?;
     let rel = path.unwrap_or_default();
-    let dir = if rel.is_empty() { root.clone() } else { resolve_within(&root, &rel)? };
+    let dir = if rel.is_empty() {
+        root.clone()
+    } else {
+        resolve_within(&root, &rel)?
+    };
     let mut entries = Vec::new();
     for item in fs::read_dir(&dir).map_err(|err| err.to_string())? {
         let item = item.map_err(|err| err.to_string())?;
@@ -128,10 +137,22 @@ pub fn vault_list(state: State<'_, VaultState>, path: Option<String>) -> Result<
             continue;
         }
         let is_dir = item.file_type().map_err(|err| err.to_string())?.is_dir();
-        let child_rel = if rel.is_empty() { name.clone() } else { format!("{rel}/{name}") };
-        entries.push(VaultEntry { name, path: child_rel, is_dir });
+        let child_rel = if rel.is_empty() {
+            name.clone()
+        } else {
+            format!("{rel}/{name}")
+        };
+        entries.push(VaultEntry {
+            name,
+            path: child_rel,
+            is_dir,
+        });
     }
-    entries.sort_by(|a, b| (b.is_dir, a.name.to_lowercase()).partial_cmp(&(a.is_dir, b.name.to_lowercase())).unwrap());
+    entries.sort_by(|a, b| {
+        (b.is_dir, a.name.to_lowercase())
+            .partial_cmp(&(a.is_dir, b.name.to_lowercase()))
+            .unwrap()
+    });
     Ok(entries)
 }
 
@@ -140,11 +161,19 @@ pub fn vault_read(state: State<'_, VaultState>, path: String) -> Result<VaultFil
     let root = root_of(&state)?;
     let full = resolve_within(&root, &path)?;
     let content = fs::read_to_string(&full).map_err(|err| format!("read {path}: {err}"))?;
-    Ok(VaultFile { read_only: !in_write_scope(&path), path, content })
+    Ok(VaultFile {
+        read_only: !in_write_scope(&path),
+        path,
+        content,
+    })
 }
 
 #[tauri::command]
-pub fn vault_write(state: State<'_, VaultState>, path: String, content: String) -> Result<(), String> {
+pub fn vault_write(
+    state: State<'_, VaultState>,
+    path: String,
+    content: String,
+) -> Result<(), String> {
     if !in_write_scope(&path) {
         return Err(format!(
             "S1 scope: this surface writes only under {WRITE_SCOPE_PREFIX} (got {path})"
@@ -252,7 +281,9 @@ pub fn start_vault_watcher(app: AppHandle, root: PathBuf) {
             absorb(first);
             // debounce window: fold the burst
             let deadline = std::time::Instant::now() + Duration::from_millis(400);
-            while let Ok(evt) = rx.recv_timeout(deadline.saturating_duration_since(std::time::Instant::now())) {
+            while let Ok(evt) =
+                rx.recv_timeout(deadline.saturating_duration_since(std::time::Instant::now()))
+            {
                 absorb(evt);
             }
             if !paths.is_empty() {
@@ -292,7 +323,10 @@ mod tests {
         fs::create_dir_all(root.join("Empty/Present")).unwrap();
         let first = begin_day(root, "07-02-2026", "2026-07-02T09:00:00+00:00").expect("create");
         assert!(first.created);
-        assert_eq!(first.daily_note_path, "Empty/Present/07-02-2026/daily-note.md");
+        assert_eq!(
+            first.daily_note_path,
+            "Empty/Present/07-02-2026/daily-note.md"
+        );
         let body = fs::read_to_string(root.join(&first.daily_note_path)).unwrap();
         assert!(body.contains("c_3_day_id: \"07-02-2026\""));
         assert!(body.contains("c_4_artifact_role: \"daily-note\""));
@@ -300,13 +334,30 @@ mod tests {
         // exemplar key-set guard (verifier finding 2026-07-02): the full
         // canonical frontmatter key sequence, p5 tail included
         for key in [
-            "coordinate:", "c_1_ct_type:", "c_3_ctx_frame:", "c_4_invocation_profile:",
-            "c_3_created_at:", "c_0_source_coordinates:", "c_5_reflection_complete:",
-            "p0_grounds:", "p0_adjacencies:", "p1_tasks_defined:", "p1_intentions:",
-            "p2_sessions:", "p2_operations:", "p2_manual_activity:", "p3_patterns:",
-            "p3_observations:", "p3_connections:", "p4_temporals:", "p4_files_touched:",
-            "p4_people_mentioned:", "p4_concepts_engaged:", "p5_learnings:",
-            "p5_synthesis:", "p5_tomorrow_focus:",
+            "coordinate:",
+            "c_1_ct_type:",
+            "c_3_ctx_frame:",
+            "c_4_invocation_profile:",
+            "c_3_created_at:",
+            "c_0_source_coordinates:",
+            "c_5_reflection_complete:",
+            "p0_grounds:",
+            "p0_adjacencies:",
+            "p1_tasks_defined:",
+            "p1_intentions:",
+            "p2_sessions:",
+            "p2_operations:",
+            "p2_manual_activity:",
+            "p3_patterns:",
+            "p3_observations:",
+            "p3_connections:",
+            "p4_temporals:",
+            "p4_files_touched:",
+            "p4_people_mentioned:",
+            "p4_concepts_engaged:",
+            "p5_learnings:",
+            "p5_synthesis:",
+            "p5_tomorrow_focus:",
         ] {
             assert!(body.contains(key), "missing exemplar key: {key}");
         }

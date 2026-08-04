@@ -33,31 +33,32 @@ Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-0
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md` — Tranche 25.5 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_nara_session_close_live`; `pnpm -C Body/M/pratibimba-app exec vitest run src/panes/m4SessionCloseCeremony.test.ts src/panes/M4SessionCloseCeremonyPane.test.tsx`; `pnpm -C Body/M/pratibimba-app exec playwright test tests/e2e/m4-session-close-ceremony.spec.ts --workers=1`; verifier ≠ closer.
 
 6. **T25.6 — Personal cymatic field widget body *(spec-ahead-integration; closes `m4.nara.personalField` ORPHAN; DR-WC-M4-2; first-build under M4-ARCHITECTURE §5.3.1 + DR-IG-6)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md` — Tranche 25.6 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_nara_field_handle`; `pnpm -C Body/M/pratibimba-app exec vitest run src/panes/m4PersonalCymaticField.test.tsx`; `pnpm -C Body/M/pratibimba-app exec playwright test tests/e2e/personal-cymatic-field.spec.ts --workers=1`; verifier ≠ closer.
 
 7. **T25.7 — Personal Coordinate activity-bar widget *(no-orphan-fill; spec-ahead-integration; closes 15.3 ORPHAN; complements Tranche 5.1)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md` — Tranche 25.7 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `pnpm -C Body/M/pratibimba-app exec vitest run src/panes/M4PersonalCoordinatePane.test.tsx`; `pnpm -C Body/M/pratibimba-app exec playwright test tests/e2e/personal-coordinate.spec.ts --workers=1`; verifier ≠ closer.
 
 8. **T25.8 — Composite Oracle cast widget *(spec-ahead-integration; consumes 19.4 + 5.11 + 5.17)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md` — Tranche 25.8 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_nara_oracle_composite`; `pnpm -C Body/M/pratibimba-app exec vitest run src/panes/oracleCastReceipt.test.ts src/panes/OraclePane.test.tsx`; `pnpm -C Body/M/pratibimba-app exec playwright test tests/e2e/oracle-history.spec.ts --workers=1`; verifier ≠ closer.
 
 9. **T25.9 — Oracle history viewer *(spec-ahead-integration; depends on 25.8, 5.17, 5.11)***
 
    Brief: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md` — Tranche 25.9 in full (that section IS the spec; owning Mn'/Sn specs are law above it). Retarget per `CHARTER.md` (substrate work unchanged; Theia surfaces → carrier panes/engine carriers; epi-theia frozen).
+   Landed wire: `nara.oracle.history.read` returns timestamped typed draw facts and durable spread-position state; it replaces the earlier text-only `nara.oracle.history` carrier read without removing that legacy CLI surface.
    Original ledger status: audit_required — verify or rebuild; never build on it unverified.
-   Verify: real behavioral/live-wire proof per Track 00 (verify-all green, honesty-lint clean; bus/gateway claims via live-wire harness); verifier ≠ closer; evidence = fresh command output.
+   Verify: `cargo test --offline --manifest-path Body/S/S0/epi-cli/Cargo.toml --test gate_nara_oracle_composite`; `pnpm -C Body/M/pratibimba-app exec vitest run src/panes/OracleHistoryPane.test.tsx src/panes/oracleCastReceipt.test.ts`; `pnpm -C Body/M/pratibimba-app exec playwright test tests/e2e/oracle-history.spec.ts --workers=1`; verifier ≠ closer.
 
 10. **T25.10 — Medicine view *(spec-ahead-integration; depends on 5.16 + 19.12)***
 

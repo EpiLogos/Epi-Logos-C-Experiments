@@ -4,6 +4,7 @@
 //! historical `crate::nara::oracle::*` API through public re-exports.
 
 pub use super::oracle_cast::*;
+pub use super::oracle_composite::*;
 pub use super::oracle_engine::*;
 pub use super::oracle_frame::*;
 pub use super::oracle_identity::*;

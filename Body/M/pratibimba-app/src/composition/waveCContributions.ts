@@ -722,7 +722,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         mount: {
             kind: 'nested-section',
             hostComponent: 'oracle',
-            note: 'History belongs beside the cast that makes it, and `personal-main` is at its tab-strip limit, so the viewer nests in the Oracle pane rather than claiming an eleventh tab — the same discipline the day container uses (25.2). It reads the REAL S0 cast ledger through `nara.oracle.history` + `nara.oracle.hygiene`. TWO BRIEF CLAUSES ARE DISCLOSED RATHER THAN PAINTED: `show_history` drops `cast_at`, so only the newest row\u2019s 4h decay window is computable (from the hygiene line\u2019s minutes-ago) and older rows read `decay unknown` instead of an assumed `closed`; and the 5.17 spread-position aliveness join has no producer at any coordinate (`nara.oracle.update_position_state` is unserved), so the badge is absent and the pane names the missing wire.'
+            note: 'History belongs beside the cast that makes it, and `personal-main` is at its tab-strip limit, so the viewer nests in the Oracle pane rather than claiming an eleventh tab. It reads the real structured S0 ledger through `nara.oracle.history.read`: each row carries its producer timestamp, typed draw facts, four-hour decay state, and the durable `OracleSpreadPosition` aliveness projection. Row selection opens the same cast surface read-only; interpretation prose remains behind its protected-local artifact handle.'
         },
         layoutLaw: 'daily-only',
         privacyClass: 'protected_local_handle_only',
@@ -734,7 +734,7 @@ export const M4_WAVE_C_CONTRIBUTIONS: readonly WaveCContribution[] = Object.free
         ]),
         selectionHandler: unrouted(
             'm4.nara.oracleHistory',
-            'A read-only record of casts already lived — a selection never travels INTO it, and its rows carry handles rather than routes because the brief\u2019s click-through target (25.8 read-only mode) is a mode the cast surface does not have. No intent target is registered rather than one that lands nowhere.'
+            'History is a nested section of the Oracle pane, not an independent cross-layout target. Its rows open the host cast surface read-only through local carrier state, so no global intent route is needed.'
         ),
         evidenceSerializer: evidence('m4.nara.oracleHistory', 'protected_local_handle_only', 'data-decay'),
         gap: null,

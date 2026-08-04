@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const invokeCommand = vi.fn();
 vi.mock('./bridge/tauri', () => ({
+    inTauri: () => false,
     invokeCommand: (command: string, args?: Record<string, unknown>) => invokeCommand(command, args)
 }));
 
@@ -14,6 +15,7 @@ import { useCoordinateStore, useSessionStore, useTickStore } from './state/store
 import { useOmniPanelSessionStore } from './panes/omni/omnipanelSessionState';
 import { OMNIPANEL_TABS } from './panes/omni/omnipanelRuntime';
 import { PREFERENCE_KEYS } from './ui/preferences';
+import { useLeftSidebarModeStore } from './ui/leftSidebarModes';
 import { publishProfileTick, resetProfileTicks } from './composition/profileTickSubscription';
 
 class InertSocket {
@@ -46,6 +48,7 @@ describe('App shell', () => {
         }
         useCoordinateStore.setState({ selected: null });
         useSessionStore.setState({ sessionKey: null, dayNow: null, privacyClass: null });
+        useLeftSidebarModeStore.setState({ activeModeId: 'coordinate-tree', layout: 'daily-0-1' });
         resetProfileTicks();
         useOmniPanelSessionStore.getState().hydrate(null);
         // 52.T3: the layout switch persists `epi-logos.layout.active` to
@@ -159,6 +162,31 @@ describe('App shell', () => {
         expect((await screen.findAllByText('Cosmic Engine')).length).toBeGreaterThan(0);
         expect((await screen.findAllByText('Now')).length).toBeGreaterThan(0);
         expect((await screen.findAllByText('Vault')).length).toBeGreaterThan(0);
+    });
+
+    it('routes workbench workspace and activity gestures into the live shell controllers', async () => {
+        render(<App />);
+        const shell = await screen.findByTestId('shell');
+
+        fireEvent.change(screen.getByLabelText('Workspace'), { target: { value: 'm5' } });
+        await waitFor(() => {
+            expect(shell.dataset.workbenchWorkspace).toBe('m5');
+            expect(shell.dataset.activeLayout).toBe('ide-deep');
+        });
+
+        fireEvent.click(screen.getByRole('button', { name: 'Changes and review' }));
+        await waitFor(() => {
+            expect(shell.dataset.workbenchActivity).toBe('changes-review');
+            expect(shell.dataset.omnipanelActiveTab).toBe('review');
+        });
+
+        fireEvent.change(screen.getByLabelText('Workspace'), { target: { value: 'home' } });
+        await waitFor(() => expect(shell.dataset.activeLayout).toBe('daily-0-1'));
+        fireEvent.click(screen.getByRole('button', { name: 'Search' }));
+        await waitFor(() => {
+            expect(shell.dataset.activeLayout).toBe('ide-deep');
+            expect(useLeftSidebarModeStore.getState().activeModeId).toBe('smart-connections');
+        });
     });
 
     it('opens the M0 compact card from the daily cosmic face into the ide-deep Bimba graph', async () => {

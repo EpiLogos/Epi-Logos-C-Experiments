@@ -90,7 +90,11 @@ impl ScoreStore {
         fs::create_dir_all(&dir).expect("score store dir should be creatable");
         let previous = std::env::var_os("EPI_SCORES_DIR");
         std::env::set_var("EPI_SCORES_DIR", &dir);
-        Self { dir, previous, _guard: guard }
+        Self {
+            dir,
+            previous,
+            _guard: guard,
+        }
     }
 
     fn write_score(&self, id: &str, score: &serde_json::Value) {
@@ -108,8 +112,12 @@ impl ScoreStore {
             .append(true)
             .open(self.dir.join(format!("{id}.runs.jsonl")))
             .expect("run log should be appendable");
-        writeln!(file, "{}", serde_json::to_string(run).expect("run should serialise"))
-            .expect("run should be writable");
+        writeln!(
+            file,
+            "{}",
+            serde_json::to_string(run).expect("run should serialise")
+        )
+        .expect("run should be writable");
     }
 }
 
@@ -152,7 +160,10 @@ async fn orchestration_score_returns_the_persisted_program_and_its_runs() {
 
     let mut client = TestGatewayClient::connected_with_temp_store(18901).await;
     let response = client
-        .request("s4'.orchestration.score", json!({ "scoreId": "nightly-sweep" }))
+        .request(
+            "s4'.orchestration.score",
+            json!({ "scoreId": "nightly-sweep" }),
+        )
         .await
         .expect("s4'.orchestration.score should be gateway-callable");
 
@@ -169,13 +180,18 @@ async fn orchestration_score_returns_the_persisted_program_and_its_runs() {
     assert_eq!(response["score"]["provenance"]["origination"], "(00/00)");
 
     // The run history is append-only and comes back in order.
-    let runs = response["runs"].as_array().expect("runs should be an array");
-    assert_eq!(runs.len(), 2, "both recorded runs should be served: {runs:?}");
+    let runs = response["runs"]
+        .as_array()
+        .expect("runs should be an array");
+    assert_eq!(
+        runs.len(),
+        2,
+        "both recorded runs should be served: {runs:?}"
+    );
     assert_eq!(runs[0]["outcome"], "completed");
     assert_eq!(runs[1]["outcome"], "checkpoint-review");
     assert_eq!(
-        runs[1]["detail"]["checkpoint_review"]["wantedCheckpoint"],
-        true,
+        runs[1]["detail"]["checkpoint_review"]["wantedCheckpoint"], true,
         "the 50.T50.09 learned-checkpoint evidence must survive the round trip"
     );
 
@@ -196,14 +212,20 @@ async fn orchestration_score_reports_absence_instead_of_fabricating_a_score() {
 
     let mut client = TestGatewayClient::connected_with_temp_store(18902).await;
     let response = client
-        .request("s4'.orchestration.score", json!({ "scoreId": "never-persisted" }))
+        .request(
+            "s4'.orchestration.score",
+            json!({ "scoreId": "never-persisted" }),
+        )
         .await
         .expect("an absent score is an answer, not a transport failure");
 
     assert_eq!(response["present"], false);
     assert_eq!(response["score"], serde_json::Value::Null);
     assert_eq!(
-        response["runs"].as_array().expect("runs should be an array").len(),
+        response["runs"]
+            .as_array()
+            .expect("runs should be an array")
+            .len(),
         0
     );
     assert!(
@@ -259,7 +281,11 @@ async fn orchestration_score_lists_the_store_when_no_id_is_given() {
         .iter()
         .map(|value| value.as_str().expect("each id should be a string"))
         .collect();
-    assert_eq!(scores, vec!["alpha-run", "beta-run"], "sorted ids, run logs excluded");
+    assert_eq!(
+        scores,
+        vec!["alpha-run", "beta-run"],
+        "sorted ids, run logs excluded"
+    );
 }
 
 #[tokio::test]

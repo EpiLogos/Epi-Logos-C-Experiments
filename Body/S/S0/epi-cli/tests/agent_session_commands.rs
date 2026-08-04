@@ -83,7 +83,8 @@ fn init_status_continuation_and_close_manage_session_state() {
         &env,
     );
     assert!(
-        init.stdout.contains(&format!("EPI_SESSION_ID={session_id}")),
+        init.stdout
+            .contains(&format!("EPI_SESSION_ID={session_id}")),
         "init stdout missing EPI_SESSION_ID={session_id}:\n{}",
         init.stdout
     );

@@ -56,8 +56,7 @@ pub fn store(store_path: &Path, applied: &AppliedIdentity) -> Result<(), String>
     }
     let text = serde_json::to_string_pretty(applied)
         .map_err(|e| format!("failed to serialize applied identity: {e}"))?;
-    std::fs::write(store_path, text)
-        .map_err(|e| format!("failed to write applied identity: {e}"))
+    std::fs::write(store_path, text).map_err(|e| format!("failed to write applied identity: {e}"))
 }
 
 #[cfg(test)]

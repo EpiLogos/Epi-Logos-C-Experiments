@@ -1,7 +1,7 @@
 {
   "version": 1,
   "createdAt": "2026-07-03T09:08:25.883Z",
-  "updatedAt": "2026-08-02T09:19:52.334Z",
+  "updatedAt": "2026-08-03T04:12:06.911Z",
   "tasks": {
     "00.T0.1": {
       "status": "blocked",
@@ -12799,10 +12799,10 @@
       "blocker": null
     },
     "25.T25.5": {
-      "status": "review",
-      "updatedAt": "2026-08-01T16:33:24.768Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T23:05:08.134Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T23:05:08.134Z",
       "evidence": [
         {
           "at": "2026-08-01T16:33:03.271Z",
@@ -12827,6 +12827,21 @@
         {
           "at": "2026-08-01T16:33:24.768Z",
           "text": "CORRECTION to the previous entry: a shell backtick swallowed one identifier. The sentence should read \"the pane refetches on the reloads counter only (M4SessionCloseCeremonyPane.tsx:115,117)\". Nothing else in that entry changed. Reviewer/owner: opus-mdev-lane25."
+        },
+        {
+          "at": "2026-08-02T23:05:08.134Z",
+          "text": "Independent class-scoped verification passed with real backend, gateway, build, smoke, and browser execution.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 25.T25.5 25.T25.6 25.T25.7 25.T25.8 25.T25.9 29.T29.16 --owner codex-cycle3-verifier",
+            "exitCode": 0,
+            "testsPassed": 17,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/m4-session-close-ceremony.spec.ts",
+              "app-ui-flow/playwright",
+              "plan.runs/verifications/25.T25.5.md"
+            ]
+          }
         }
       ],
       "notes": null,
@@ -12838,10 +12853,10 @@
       "blocker": null
     },
     "25.T25.6": {
-      "status": "review",
-      "updatedAt": "2026-08-01T16:34:09.021Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T23:05:08.408Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T23:05:08.408Z",
       "evidence": [
         {
           "at": "2026-08-01T16:34:09.021Z",
@@ -12861,6 +12876,21 @@
               "output": 3000
             }
           }
+        },
+        {
+          "at": "2026-08-02T23:05:08.408Z",
+          "text": "Independent class-scoped verification passed with real backend, gateway, build, smoke, and browser execution.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 25.T25.5 25.T25.6 25.T25.7 25.T25.8 25.T25.9 29.T29.16 --owner codex-cycle3-verifier",
+            "exitCode": 0,
+            "testsPassed": 17,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/personal-cymatic-field.spec.ts",
+              "app-ui-flow/playwright",
+              "plan.runs/verifications/25.T25.6.md"
+            ]
+          }
         }
       ],
       "notes": null,
@@ -12872,10 +12902,10 @@
       "blocker": null
     },
     "25.T25.7": {
-      "status": "review",
-      "updatedAt": "2026-08-01T16:34:33.541Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T23:05:08.670Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T23:05:08.670Z",
       "evidence": [
         {
           "at": "2026-08-01T16:34:33.541Z",
@@ -12895,6 +12925,21 @@
               "output": 3000
             }
           }
+        },
+        {
+          "at": "2026-08-02T23:05:08.670Z",
+          "text": "Independent class-scoped verification passed with real backend, gateway, build, smoke, and browser execution.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 25.T25.5 25.T25.6 25.T25.7 25.T25.8 25.T25.9 29.T29.16 --owner codex-cycle3-verifier",
+            "exitCode": 0,
+            "testsPassed": 17,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/personal-coordinate.spec.ts",
+              "app-ui-flow/playwright",
+              "plan.runs/verifications/25.T25.7.md"
+            ]
+          }
         }
       ],
       "notes": null,
@@ -12906,10 +12951,10 @@
       "blocker": null
     },
     "25.T25.8": {
-      "status": "review",
-      "updatedAt": "2026-08-01T16:33:48.046Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T23:05:08.919Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T23:05:08.919Z",
       "evidence": [
         {
           "at": "2026-08-01T16:33:48.046Z",
@@ -12931,6 +12976,21 @@
               "output": 4000
             }
           }
+        },
+        {
+          "at": "2026-08-02T23:05:08.919Z",
+          "text": "Independent class-scoped verification passed with real backend, gateway, build, smoke, and browser execution.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 25.T25.5 25.T25.6 25.T25.7 25.T25.8 25.T25.9 29.T29.16 --owner codex-cycle3-verifier",
+            "exitCode": 0,
+            "testsPassed": 17,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/oracle-history.spec.ts",
+              "app-ui-flow/playwright",
+              "plan.runs/verifications/25.T25.8.md"
+            ]
+          }
         }
       ],
       "notes": null,
@@ -12942,10 +13002,10 @@
       "blocker": null
     },
     "25.T25.9": {
-      "status": "review",
-      "updatedAt": "2026-08-01T16:32:00.755Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T23:05:09.169Z",
       "claimedAt": null,
-      "completedAt": null,
+      "completedAt": "2026-08-02T23:05:09.169Z",
       "evidence": [
         {
           "at": "2026-08-01T16:32:00.755Z",
@@ -12967,6 +13027,21 @@
               "input": 460000,
               "output": 78000
             }
+          }
+        },
+        {
+          "at": "2026-08-02T23:05:09.169Z",
+          "text": "Independent class-scoped verification passed with real backend, gateway, build, smoke, and browser execution.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 25.T25.5 25.T25.6 25.T25.7 25.T25.8 25.T25.9 29.T29.16 --owner codex-cycle3-verifier",
+            "exitCode": 0,
+            "testsPassed": 17,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/oracle-history.spec.ts",
+              "app-ui-flow/playwright",
+              "plan.runs/verifications/25.T25.9.md"
+            ]
           }
         }
       ],
@@ -16040,10 +16115,10 @@
       "blocker": null
     },
     "29.T29.16": {
-      "status": "pending",
-      "updatedAt": "2026-08-01T13:14:51.485Z",
+      "status": "done",
+      "updatedAt": "2026-08-02T23:05:09.452Z",
       "claimedAt": "2026-07-25T12:54:11.198Z",
-      "completedAt": null,
+      "completedAt": "2026-08-02T23:05:09.452Z",
       "evidence": [
         {
           "at": "2026-07-25T12:55:11.609Z",
@@ -16052,12 +16127,31 @@
         {
           "at": "2026-08-01T13:14:51.485Z",
           "text": "RECLASSIFIED blocked(environment) -> pending by opus-mdev-bp, 2026-08-01. The 2026-07-25 blocker was wrong on two counts. (1) MISCLASSIFICATION: blocker.kind was 'environment', but the named dependency — 's3'.being_pattern.subscribe/.observe/.project/.review_candidate are unimplemented' — was a REPOSITORY-OWNED missing method. Per the m-dev subagent brief's standing law, 'a repository-owned missing method, adapter, service, producer, receiver, route, or test harness is dependency work, not an external blocker'; 'not implemented yet inside this repository never qualifies' for blocked. The correct disposition at the time was review-with-named-dependency so the orchestrator could promote CCT-21 ahead of this tranche — which is exactly what has now happened. The technical FINDING in that evidence was accurate and well-evidenced (source read + live probe); only its classification was wrong. (2) NO LONGER TRUE: the producer stream is built and live. 16.T16.21 landed at commit 373709f0 (Body/S/S3/gateway/src/being_pattern.rs, registered via S3's own s3_handlers table per Track 53). A fresh probe of a REAL spawned gateway (plan.runs/gateway-method-audit.json, generatedAt 2026-08-01T13:07:11Z, 284 methods) now records all four s3'.being_pattern.* rows exists:true — the four values the old blocker cited as exists:false/unimplemented. Direct live-wire over 'epi gate start' drove the full nine-event chain end to end: EntityObserved -> BeingPatternProjected -> PerspectiveRoleResolved -> MonoPolyOperatorResolved -> ClockAddressUpdated -> AspectEdgeComputed -> ElementalResonanceChanged -> PatternPacketFormed -> ReviewCandidateEmitted, with two entities (FirstPerson/Mono + ThirdPerson/Poly) sharing one generation, 22/22 checks green. The subscribe response carries entities, relationEdges, reviewCandidates, generation, streamDeltaKey and eventChain — the surface this tranche's composition subscription consumes — and honestly reports an empty roster when nothing has been observed, so the overlay can render absence instead of synthesising a feed. PENDING, NOT READY: this tranche also consumes 25.22, which is in_progress right now (owner fable5-mdev-0801, claimed 2026-08-01T12:16:38Z). Its other consumed work is landed (10.PASU track done, 18.T18.10 done, formal dependsOn 29.T29.15 done). I deliberately did NOT build the overlay: implementing the M4 aural/perspective consumer's sibling against an unlanded 25.22 would repeat the very build-against-an-unfinished-dependency pattern this rerun exists to stop. FOR THE NEXT AGENT: the carrier work is now subscribe -> drop stale generations per 18.10 -> render InhabitedBimbaEntityState, plus the four composition.being_pattern.* events, the four readiness blockers, and the graphiti-source-guard. Note Body/M/pratibimba-app still has zero occurrences of being_pattern/BeingPattern, and Body/M/pratibimba-app/src/panes/beingPattern/ is currently owned by the 25.22 lane — coordinate before writing there. The CCT-21 replay fixture the brief's verification demands is available on the wire: call s3'.being_pattern.subscribe with includeAcceptanceReplay:true; it returns source:'acceptance-replay-fixture' (never mislabelled as live) with m4ConsumerGeneration == clockOverlayGeneration and s2MutationAttempted:false."
+        },
+        {
+          "at": "2026-08-02T21:59:31.467Z",
+          "text": "BUILT AND LIVE-OBSERVED 2026-08-02 — CCT-21 s3'.being_pattern.subscribe now crosses the real gateway into the active pratibimba-app carrier. The UI rejects stale generations, renders public-safe entity handles in both composition contexts, remains read-only over S2, and the real Chromium acceptance path passed against a freshly spawned gateway. Focused evidence: cargo being_pattern_live_state 8/8; Playwright inhabited-bimba.spec.ts 1/1. Canon and DOX were reconciled to the landed carrier."
+        },
+        {
+          "at": "2026-08-02T23:05:09.452Z",
+          "text": "Independent class-scoped verification passed with real backend, gateway, build, smoke, and browser execution.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 25.T25.5 25.T25.6 25.T25.7 25.T25.8 25.T25.9 29.T29.16 --owner codex-cycle3-verifier",
+            "exitCode": 0,
+            "testsPassed": 17,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Body/M/pratibimba-app/tests/e2e/inhabited-bimba.spec.ts",
+              "app-ui-flow/playwright",
+              "plan.runs/verifications/29.T29.16.md"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 11 dirty files.",
       "owner": "opus-mdev-frontend-uf",
       "leaseExpiresAt": null,
-      "heartbeatAt": "2026-07-25T12:54:11.198Z",
+      "heartbeatAt": "2026-08-02T21:59:31.467Z",
       "runId": "20260725T125411Z-29-T29.16",
       "worktree": null,
       "blocker": null
@@ -21305,10 +21399,10 @@
       "blocker": null
     },
     "14.T14.4": {
-      "status": "review",
-      "updatedAt": "2026-08-01T08:39:31.202Z",
+      "status": "done",
+      "updatedAt": "2026-08-03T04:09:04.648Z",
       "claimedAt": "2026-07-20T17:04:04.021Z",
-      "completedAt": "2026-07-21T12:52:05.567Z",
+      "completedAt": "2026-08-03T04:09:04.648Z",
       "evidence": [
         {
           "at": "2026-07-10T15:31:44.665Z",
@@ -21347,6 +21441,21 @@
         {
           "at": "2026-08-01T08:39:31.202Z",
           "text": "ARCHITECT RULING 2026-08-01: seal HELD at review until the executable tail drains (tracks 24/25/51/52 pending tranches). 12/12 gates + 0 orphans is met but the seal asserts cycle-3 closed, which includes the tail; close it as the true final act. Do not close on gate count alone."
+        },
+        {
+          "at": "2026-08-03T04:09:04.648Z",
+          "text": "Independent full verification PASS at 2026-08-03T04:08:10.412Z: release gates 12/12 CLOSED, decision gate 32/32, all 28 executable suites green, app UI 177/177, live-wire/graph/method/boundary/honesty/kernel-truth green.",
+          "receipt": {
+            "command": "node .codex/scripts/verify-tranche.mjs 14.T14.4 --owner codex-cycle3-final-verifier --full",
+            "exitCode": 0,
+            "testsPassed": 15085,
+            "testsFailed": 0,
+            "keyPaths": [
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/verifications/14.T14.4.md",
+              "Body/M/pratibimba-app/playwright.config.ts",
+              "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/wire-captures"
+            ]
+          }
         }
       ],
       "notes": "claimed with --allow-dirty over 77 dirty files.",
@@ -30333,30 +30442,16 @@
     }
   ],
   "activeRoute": {
-    "status": "active",
-    "createdAt": "2026-08-01T20:09:56.746Z",
-    "updatedAt": "2026-08-01T20:09:56.746Z",
-    "taskIds": [
-      "24.T24.8",
-      "24.T24.9",
-      "24.T60",
-      "25.T25.3",
-      "25.T25.4"
-    ],
-    "totalWeight": 10,
-    "taxingLevel": "heavy",
+    "status": "empty",
+    "createdAt": "2026-08-03T04:11:53.966Z",
+    "updatedAt": "2026-08-03T04:11:53.966Z",
+    "taskIds": [],
+    "totalWeight": 0,
+    "taxingLevel": "light",
     "weightBudget": 8,
-    "modeHints": {
-      "24.T24.8": "in-session",
-      "24.T24.9": "in-session",
-      "24.T60": "in-session",
-      "25.T25.3": "in-session",
-      "25.T25.4": "in-session"
-    },
+    "modeHints": {},
     "rationale": [
-      "Simulated each selected task as done before choosing the next task, so downstream dependencies can enter the route.",
-      "Capped the route at 5 task(s) with total effort weight 10/8 unless fewer tasks were available.",
-      "Placed active in-progress/review task(s) at the front so the route resumes before claiming fresh work."
+      "No pending task is dependency-ready under the current ledger."
     ]
   }
 }

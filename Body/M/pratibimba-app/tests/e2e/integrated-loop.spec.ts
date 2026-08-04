@@ -7,11 +7,11 @@
  *                 WebSocket; generations strictly advance; the DOM tick value
  *                 must be one the wire actually carried (wire↔store↔DOM
  *                 congruence — a store mocked without the wire fails it) — AND
- *                 (25.T25.24) the `nara.oracle.cast` REQUEST FRAME itself,
+ *                 (25.T25.24/25.T25.8) the typed cast REQUEST FRAME itself,
  *                 answered by the gateway on the same request id
  *     UI          OraclePane cast button → rendered draw output `Tarot Draw #N`
- *     S0 (CLI)    the gateway runs the REAL `epi nara oracle cast` under
- *                 `nara.oracle.cast` (isolated nara home); its own cast ledger
+ *     S0 (CLI)    the gateway runs the real governed Tarot cast under
+ *                 `nara.oracle.cast_tarot` (isolated nara home); its ledger
  *                 gains EXACTLY one line whose cast_id is the same N the UI
  *                 rendered
  *     S1 (vault)  the deposited day artifact's raw disk bytes carry the same
@@ -121,6 +121,8 @@ test('integrated loop: cast crosses UI → CLI ledger → vault bytes → timeli
 
     // ── UI layer: cast through the pane
     await page.locator('.face-active .flexlayout__border_button', { hasText: 'Oracle' }).click();
+    await page.getByTestId('oracle-mode-tarot').click();
+    await page.getByTestId('oracle-deck').selectOption('rws');
     await page.getByTestId('oracle-question').fill(question);
     await page.getByTestId('oracle-cast').click();
     const result = page.getByTestId('oracle-result');
@@ -141,7 +143,7 @@ test('integrated loop: cast crosses UI → CLI ledger → vault bytes → timeli
             (window as unknown as { __e2eSentFrames?: { method: string; id: unknown }[] })
                 .__e2eSentFrames ?? []
     );
-    const castFrame = castFrames.find(frame => frame.method === 'nara.oracle.cast');
+    const castFrame = castFrames.find(frame => frame.method === 'nara.oracle.cast_tarot');
     expect(
         castFrame,
         `the cast never crossed the app's own socket — methods sent: ${castFrames
@@ -192,6 +194,9 @@ test('integrated loop: cast crosses UI → CLI ledger → vault bytes → timeli
     expect(bytes).toContain('c_4_artifact_role: "oracle-cast"');
     expect(bytes).toContain('c_2_oracle_system: "rws"');
     expect(bytes).toContain(`c_3_day_id: "${dayId}"`);
+    expect(bytes).toContain(`c_3_oracle_cast_id: ${castId}`);
+    expect(bytes).toContain(`c_3_oracle_spread_id: "oracle-spread-${castId}"`);
+    expect(bytes).toContain(`oracle-frame://cast/${castId}`);
 
     // ── UI store layer: the deposit handle surfaces in the day container.
     // (25.T25.3 made the Journal border tab the NOW-inscription timeline —
@@ -249,7 +254,12 @@ test('cut-point: replacing the real CLI with a canned success cannot stand — t
     // select only offers valid systems, so the probe goes at the wire: the REAL
     // epi binary, under the gateway, must be the judge of what a system is.
     await expect(
-        gatewayRpc('nara.oracle.cast', { system: 'tarot', question: 'cut-point probe', yes: true })
+        gatewayRpc('nara.oracle.cast_tarot', {
+            system: 'tarot',
+            question: 'cut-point probe',
+            spreadSize: 3,
+            yes: true
+        })
     ).rejects.toThrow(/Unknown tarot system/);
     // and the failed cast mutated NOTHING: the S0 ledger is byte-identical
     expect(await ledgerText(request)).toBe(ledgerBefore);

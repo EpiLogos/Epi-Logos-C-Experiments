@@ -151,7 +151,10 @@ async fn scalar_ref_read_names_the_owner_of_a_kind_that_cannot_resolve_yet() {
 
         // An unlanded producer is a STATE the caller can render, not a fault.
         assert_eq!(response["resolved"], false, "{kind} must not claim a value");
-        assert_eq!(response["ownerTranche"], owner, "{kind} must name its owner");
+        assert_eq!(
+            response["ownerTranche"], owner,
+            "{kind} must name its owner"
+        );
         assert!(
             response["reason"].as_str().is_some_and(|r| !r.is_empty()),
             "{kind} must say why"
@@ -189,9 +192,15 @@ async fn scalar_ref_read_resolves_a_pip_card_to_its_full_decan_chain() {
     assert_eq!(detail["rulingPlanet"], 7); // Mars (kairos Planet_Id order)
     assert_eq!(detail["elementId"], 4); // Fire in the L2' alchemical register
     assert_eq!(detail["chakraId"], 3); // Mars → Manipura
-    assert!(detail["bodyZones"].as_array().is_some_and(|z| !z.is_empty()));
-    assert!(detail["decanBodyPart"].as_str().is_some_and(|s| !s.is_empty()));
-    assert!(detail["decanHerbs"].as_array().is_some_and(|h| !h.is_empty()));
+    assert!(detail["bodyZones"]
+        .as_array()
+        .is_some_and(|z| !z.is_empty()));
+    assert!(detail["decanBodyPart"]
+        .as_str()
+        .is_some_and(|s| !s.is_empty()));
+    assert!(detail["decanHerbs"]
+        .as_array()
+        .is_some_and(|h| !h.is_empty()));
     // The primary-codon cover is exact over 56 cards; a pip always has one.
     assert!(detail["codonId"].as_u64().is_some_and(|c| c < 64));
 
@@ -226,7 +235,10 @@ async fn scalar_ref_read_resolves_aces_courts_and_majors_without_inventing_decan
     assert_eq!(ace["kind"], "ace");
     assert_eq!(ace["detail"]["elementId"], 4); // Agni → Fire (alchemical)
     assert_eq!(ace["detail"]["elementName"], "Agni");
-    assert!(ace["detail"].get("decanIndex").is_none(), "aces have no decan");
+    assert!(
+        ace["detail"].get("decanIndex").is_none(),
+        "aces have no decan"
+    );
 
     // Queen of Wands — Pisces/Aries cusp band per COURT_SIGN_MAP.
     let queen = client
@@ -239,7 +251,10 @@ async fn scalar_ref_read_resolves_aces_courts_and_majors_without_inventing_decan
     assert_eq!(queen["kind"], "court");
     assert_eq!(queen["detail"]["signA"], 11); // Pisces
     assert_eq!(queen["detail"]["signB"], 0); // Aries
-    assert!(queen["detail"].get("decanIndex").is_none(), "courts have no decan");
+    assert!(
+        queen["detail"].get("decanIndex").is_none(),
+        "courts have no decan"
+    );
 
     // Atu 0 — kernel-bound: the codon set comes off `major_arcana` and is
     // non-empty with a name; Atu 10 is the amino-acid STOP hole and answers
@@ -252,8 +267,12 @@ async fn scalar_ref_read_resolves_aces_courts_and_majors_without_inventing_decan
         .await
         .expect("major should resolve");
     assert_eq!(fool["kind"], "major");
-    assert!(fool["detail"]["name"].as_str().is_some_and(|n| !n.is_empty()));
-    assert!(fool["detail"]["codons"].as_array().is_some_and(|c| !c.is_empty()));
+    assert!(fool["detail"]["name"]
+        .as_str()
+        .is_some_and(|n| !n.is_empty()));
+    assert!(fool["detail"]["codons"]
+        .as_array()
+        .is_some_and(|c| !c.is_empty()));
 
     let wheel = client
         .request(
@@ -263,7 +282,9 @@ async fn scalar_ref_read_resolves_aces_courts_and_majors_without_inventing_decan
         .await
         .expect("the STOP-hole major should still answer");
     assert_eq!(wheel["detail"]["codons"], json!([]));
-    assert!(wheel["detail"]["note"].as_str().is_some_and(|n| !n.is_empty()));
+    assert!(wheel["detail"]["note"]
+        .as_str()
+        .is_some_and(|n| !n.is_empty()));
 
     // Out-of-deck refusals stay refusals.
     for bad in ["wands:11", "swords:emperor", "major:22", "spoons:02"] {

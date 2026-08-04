@@ -3,7 +3,7 @@ title: "M5' Epii Architecture — Total Shape of the Agentic-Pedagogical IDE (Li
 coordinate: "M5 / M5'"
 status: "canonical-architecture-spec"
 created: 2026-06-02
-updated: "2026-06-09"
+updated: "2026-08-02"
 cycle-3: reconciled
 authority_relation: "Domain authority for the M5' Epii surface. [[M5'-SPEC]] cross-references this document. Where they disagree on M5' sub-coordinate shape, this document is authoritative; M5'-SPEC remains authoritative for review/improve law and §M5'.x canon deltas."
 depends_on:
@@ -37,6 +37,10 @@ related_tranches:
 # M5' Epii Architecture
 
 ## 0. Frame
+
+**Operative carrier correction (2026-08-02).** The single shell is [[Body/M/pratibimba-app]], with `daily-0-1` and `ide-deep` layouts in one Tauri v2 process. Every Theia extension/package/path below is frozen design genealogy unless a paragraph explicitly points to an active-carrier module. Carrier-independent M5 sub-coordinate, review, provenance, privacy, and agent-as-IDE laws remain binding.
+
+**Session-close delta correction.** The active M5 review/ceremony read distinguishes the C-kernel numeric `uint64_t wisdom_delta` from bounded protected contemplation text persisted as `wisdom_delta_text`. Only the first eight UTF-8 bytes of the text become the local hex pulse; the text itself and full quintessence hash do not render. See [[M5'-SPEC#Contemplation Delta Boundary — 2026-08-02]].
 
 **M5' is Epii / Anuttara-return — the AI-agent-led developer and pedagogical IDE of Epi-Logos.** Position #5 (Integration / Pratibimba / Möbius return) of the M-family. The Epii IDE is **not six unrelated apps**; it is **one Theia shell at `/pratibimba/system` (now `Body/M/epi-theia/`)** carrying one kernel-bridge contract, one autoresearch spine, and **six summonable surfaces** the conversational agent (Anima → Aletheia/Pi/Sophia/specialists) opens on demand:
 

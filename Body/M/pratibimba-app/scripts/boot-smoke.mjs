@@ -82,9 +82,15 @@ async function main() {
 
     const done = new Promise((resolveDone, rejectDone) => {
         const timeout = setTimeout(
-            () => rejectDone(new Error('no advancing profile tick within 20s')),
+            () => rejectDone(new Error('no advancing profile tick and health response within 20s')),
             20000
         );
+        const maybeResolve = () => {
+            if (healthResolved && generations.length >= 3) {
+                clearTimeout(timeout);
+                resolveDone();
+            }
+        };
         ws.on('open', () => {
             log('websocket connects', true);
             ws.send(JSON.stringify({ type: 'req', id: 1, method: 'connect', params: {} }));
@@ -104,6 +110,7 @@ async function main() {
             if (frame.type === 'res' && frame.id === 2 && !healthResolved) {
                 healthResolved = true;
                 log('health round-trips post-connect', !frame.error, JSON.stringify(frame.error ?? 'ok'));
+                maybeResolve();
             }
             const eventName = frame.event ?? frame.method ?? null;
             if (eventName === 'profile.update' || eventName === 'profile' || eventName === 'tick') {
@@ -115,8 +122,7 @@ async function main() {
                         log('live profile tick arrives', true, `generation ${generation}, tick12 ${tick12}`);
                     }
                     if (generations.length >= 3) {
-                        clearTimeout(timeout);
-                        resolveDone();
+                        maybeResolve();
                     }
                 }
             }

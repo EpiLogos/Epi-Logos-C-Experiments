@@ -195,9 +195,7 @@ fn cursor(dir: &Path, date: &str) -> (Vec<u8>, u8) {
             completed.push(i);
         }
     }
-    let next = (0..6u8)
-        .find(|i| !completed.contains(i))
-        .unwrap_or(6);
+    let next = (0..6u8).find(|i| !completed.contains(i)).unwrap_or(6);
     (completed, next)
 }
 
@@ -205,7 +203,13 @@ fn cursor(dir: &Path, date: &str) -> (Vec<u8>, u8) {
 /// / `stage_to` record the cursor movement (-1 = the pre-cycle ground); a
 /// regression additionally carries the explicit `c_4_regression: true` flag so a
 /// backward move is never mistaken for forward integration.
-fn stage_artifact(stage_idx: u8, stage_from: i16, stage_to: i16, created: &str, regression: bool) -> String {
+fn stage_artifact(
+    stage_idx: u8,
+    stage_from: i16,
+    stage_to: i16,
+    created: &str,
+    regression: bool,
+) -> String {
     let stage_def = &LOGOS_STAGES[stage_idx as usize];
     let mut front = format!(
         "---\nc_3_created_at: \"{}\"\nc_3_stage_from: {}\nc_3_stage_to: {}\nc_4_artifact_role: \"logos-transition\"\n",
@@ -221,7 +225,14 @@ fn stage_artifact(stage_idx: u8, stage_from: i16, stage_to: i16, created: &str, 
     )
 }
 
-fn transition_json(date: &str, dir: &Path, transitioned: u8, direction: &str, regression: bool, artifact: &Path) -> String {
+fn transition_json(
+    date: &str,
+    dir: &Path,
+    transitioned: u8,
+    direction: &str,
+    regression: bool,
+    artifact: &Path,
+) -> String {
     let (completed, next) = cursor(dir, date);
     serde_json::json!({
         "date": date,
@@ -244,10 +255,15 @@ fn advance_in(dir: &Path, date: &str, created: &str, json: bool) -> Result<Strin
     }
     let stage_from = next as i16 - 1; // -1 = pre-cycle ground when entering stage 0
     let artifact = dir.join(format!("{}-stage-{}.md", date, next));
-    std::fs::write(&artifact, stage_artifact(next, stage_from, next as i16, created, false))
-        .map_err(|e| e.to_string())?;
+    std::fs::write(
+        &artifact,
+        stage_artifact(next, stage_from, next as i16, created, false),
+    )
+    .map_err(|e| e.to_string())?;
     if json {
-        Ok(transition_json(date, dir, next, "advance", false, &artifact))
+        Ok(transition_json(
+            date, dir, next, "advance", false, &artifact,
+        ))
     } else {
         Ok(format!(
             "Logos advanced to stage {} ({}) — {}",
@@ -352,7 +368,8 @@ mod tests {
     const DATE: &str = "2026-07-21";
 
     fn test_dir(tag: &str) -> PathBuf {
-        let dir = std::env::temp_dir().join(format!("epi-logos-test-{}-{}", tag, std::process::id()));
+        let dir =
+            std::env::temp_dir().join(format!("epi-logos-test-{}-{}", tag, std::process::id()));
         let _ = std::fs::remove_dir_all(&dir);
         dir
     }
@@ -380,13 +397,22 @@ mod tests {
         advance_in(&dir, DATE, CREATED, true).unwrap(); // stage 0
         advance_in(&dir, DATE, CREATED, true).unwrap(); // stage 1
         let stage0 = std::fs::read_to_string(dir.join(format!("{}-stage-0.md", DATE))).unwrap();
-        assert!(stage0.contains("c_3_stage_from: -1"), "stage 0 comes from the pre-cycle ground");
+        assert!(
+            stage0.contains("c_3_stage_from: -1"),
+            "stage 0 comes from the pre-cycle ground"
+        );
         assert!(stage0.contains("c_3_stage_to: 0"));
         let stage1 = std::fs::read_to_string(dir.join(format!("{}-stage-1.md", DATE))).unwrap();
         assert!(stage1.contains("c_3_stage_from: 0"));
         assert!(stage1.contains("c_3_stage_to: 1"));
-        assert!(!stage0.contains("c_4_regression"), "advance never writes the regression flag");
-        assert!(!stage1.contains("c_4_regression"), "advance never writes the regression flag");
+        assert!(
+            !stage0.contains("c_4_regression"),
+            "advance never writes the regression flag"
+        );
+        assert!(
+            !stage1.contains("c_4_regression"),
+            "advance never writes the regression flag"
+        );
         let _ = std::fs::remove_dir_all(&dir);
     }
 
@@ -402,10 +428,21 @@ mod tests {
         assert_eq!(v["direction"].as_str().unwrap(), "regress");
         assert!(v["regression"].as_bool().unwrap());
         assert_eq!(v["transitioned_stage"].as_u64().unwrap(), 2);
-        assert_eq!(v["next_stage"].as_u64().unwrap(), 2, "cursor stepped back to 2");
-        assert!(!dir.join(format!("{}-stage-2.md", DATE)).exists(), "the top stage file is removed");
-        let regressed = std::fs::read_to_string(dir.join(format!("{}-regress-2.md", DATE))).unwrap();
-        assert!(regressed.contains("c_4_regression: true"), "regress writes the explicit flag");
+        assert_eq!(
+            v["next_stage"].as_u64().unwrap(),
+            2,
+            "cursor stepped back to 2"
+        );
+        assert!(
+            !dir.join(format!("{}-stage-2.md", DATE)).exists(),
+            "the top stage file is removed"
+        );
+        let regressed =
+            std::fs::read_to_string(dir.join(format!("{}-regress-2.md", DATE))).unwrap();
+        assert!(
+            regressed.contains("c_4_regression: true"),
+            "regress writes the explicit flag"
+        );
         assert!(regressed.contains("c_3_stage_from: 2"));
         assert!(regressed.contains("c_3_stage_to: 1"));
         let _ = std::fs::remove_dir_all(&dir);

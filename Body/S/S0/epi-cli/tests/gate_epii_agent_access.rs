@@ -595,7 +595,6 @@ async fn live_graphiti_runtime_round_trips_session_memory_through_gateway() {
 
     // Delete exactly what this test created.
     purge_graphiti_group(&session_key).await;
-
 }
 
 #[tokio::test]

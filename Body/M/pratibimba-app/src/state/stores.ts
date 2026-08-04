@@ -4,7 +4,9 @@
  * Actualises: the four state threads that survive every transition —
  *   tick, coordinate, session, provenance (THEIA-SHELL-INVOCATION §3.4 contract,
  *   here as the whole state architecture).
- * Public surface: useTickStore, useCoordinateStore, useSessionStore, useProvenanceStore.
+ * Public surface: TickState, CoordinateState, SessionState, SupervisorStatus,
+ *   ProvenanceState, useTickStore, useCoordinateStore, useSessionStore,
+ *   useProvenanceStore.
  * Does NOT own: any timer (the kernel tick is the only clock), any gateway I/O,
  *   any private journal/identity body.
  */
@@ -83,6 +85,9 @@ export interface SupervisorStatus {
     port: number;
     pid: number | null;
     detail: string;
+    binaryPath: string | null;
+    binarySource: string | null;
+    binaryIdentity: string | null;
 }
 
 export interface ProvenanceState {
@@ -98,7 +103,15 @@ export interface ProvenanceState {
 
 export const useProvenanceStore = create<ProvenanceState>(set => ({
     connection: DEFAULT_CONNECTION_STATUS,
-    supervisor: { state: 'probing', port: 18794, pid: null, detail: 'not yet probed' },
+    supervisor: {
+        state: 'probing',
+        port: 18794,
+        pid: null,
+        detail: 'not yet probed',
+        binaryPath: null,
+        binarySource: null,
+        binaryIdentity: null
+    },
     stale: false,
     setConnection: connection => set({ connection }),
     setSupervisor: supervisor => set({ supervisor }),

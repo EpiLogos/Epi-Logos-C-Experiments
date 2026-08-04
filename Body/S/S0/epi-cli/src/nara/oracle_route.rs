@@ -103,13 +103,13 @@ pub struct HistoryEntry {
     pub hygiene: String,
 }
 
-fn history_path() -> PathBuf {
+pub(crate) fn history_path() -> PathBuf {
     super::identity::nara_home()
         .join("oracle")
         .join("history.jsonl")
 }
 
-fn load_history(path: &Path) -> Result<Vec<HistoryEntry>, String> {
+pub(crate) fn load_history(path: &Path) -> Result<Vec<HistoryEntry>, String> {
     if !path.exists() {
         return Ok(vec![]);
     }

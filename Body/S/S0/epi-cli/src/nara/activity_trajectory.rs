@@ -89,7 +89,8 @@ fn save(store_path: &Path, trajectory: &PersistedActivityTrajectory) -> Result<(
     }
     let text = serde_json::to_string_pretty(trajectory)
         .map_err(|e| format!("failed to serialize activity trajectory: {e}"))?;
-    std::fs::write(store_path, text).map_err(|e| format!("failed to write activity trajectory: {e}"))
+    std::fs::write(store_path, text)
+        .map_err(|e| format!("failed to write activity trajectory: {e}"))
 }
 
 /// Fold `packets` into the persisted Q_activity via the pure portal-core chain

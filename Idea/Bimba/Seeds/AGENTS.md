@@ -18,7 +18,9 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] (S work) / [[M'-SYSTE
 - Umbrella + bridge indexes: [[ARCHITECTURE-DIAGRAM-PACK]], [[S-SYSTEM-INDEX]], [[M-SYSTEM-INDEX]],
   [[S-SOURCE-TRACEABILITY-INDEX]], `LEGACY-DOCS-MIGRATION-INDEX`.
 - Cycle plan sets: `M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/` (numbered
-  tranches `NN-*.md`, registered in `plan.index.json`/`plan.state.json`). New design tranches land here.
+  tranches `NN-*.md`, registered in `plan.index.json`/`plan.state.json`). New implementation tranches
+  land there. Evidence-backed design audits that are not executable tranches live under `M/plans/`;
+  the current carrier audit is `M/plans/2026-08-04-pratibimba-ide-audit/`.
 - `Seeds-Provenance-Ledger.base` — zone-level `base-view` reflection for Seed/spec/traceability
   provenance by coordinate, source links, and artifact role.
 - Does NOT own crystallised Forms (`World/`), the graph reflection (`Map/`), or behaviour (`Body/`).
@@ -34,6 +36,9 @@ Canon: [[ARCHITECTURE-DIAGRAM-PACK]] -> [[S-SYSTEM-INDEX]] (S work) / [[M'-SYSTE
 - `[[wikilink]]` every coordinate / spec / flow / decision reference by basename (verify it exists here).
 - Spec/Form writes use coordinate-prefixed `c_n_*` frontmatter; unknown keys are ERRORS. Plan tranches
   are exempt (plain markdown) but must be registered in the plan index.
+- Research and audit sets under `M/plans/` are plain markdown, keep source/image provenance and any
+  machine-readable traceability snapshots beside the audit, and do not enter `plan.index.json` until
+  converted into executable tranches.
 - A change to a **contract surface** (public API, method, envelope field) also flags the owning
   `[[Sn-ARCHITECTURE]]` / `[[Sn-SPEC]]` / `[[Mn'-SPEC]]` for canon update.
 

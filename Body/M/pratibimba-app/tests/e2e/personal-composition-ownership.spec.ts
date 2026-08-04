@@ -53,12 +53,10 @@ test('the personal composition names an owner for every geometric slot in the li
     await expect(engine).toHaveAttribute('data-composition-ambient-owner', 'm4-nara');
     await expect(engine).toHaveAttribute('data-composition-status-owner', 'm4-nara');
 
-    // The one owned-but-unbuilt slot says so (25.T25.6 pending) rather than
-    // reading as if the composition had five slots.
-    await expect(engine).toHaveAttribute(
-        'data-composition-blocked-slots',
-        'center-composition:pending-psychoid-cymatic-solver'
-    );
+    // 25.T25.6 lifted the center-slot blocker by mounting the opaque personal
+    // field renderer. A fully inhabited six-slot composition has no blockers.
+    await expect(engine).toHaveAttribute('data-composition-blocked-slots', '');
+    await expect(page.locator('[data-view-id="m4.nara.personalField"]')).toBeVisible();
 
     // Each slot whose owner is declared is mounted by a surface that is really
     // on this face: the M0 grounding under-layer and the M5 recognition layer

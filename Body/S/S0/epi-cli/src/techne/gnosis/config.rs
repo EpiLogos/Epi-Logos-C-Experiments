@@ -115,12 +115,7 @@ fn gnostic_venv_bin() -> Option<String> {
     if !dir.exists() {
         return None;
     }
-    Some(
-        dir.canonicalize()
-            .unwrap_or(dir)
-            .display()
-            .to_string(),
-    )
+    Some(dir.canonicalize().unwrap_or(dir).display().to_string())
 }
 
 /// Every environment adjustment a spawned gnostic bridge needs.
@@ -171,11 +166,7 @@ fn resolve_gnostic_bin_from(explicit: Option<String>, manifest_dir: &Path) -> St
         .join("bin")
         .join("epi-gnostic");
     if venv.exists() {
-        return venv
-            .canonicalize()
-            .unwrap_or(venv)
-            .display()
-            .to_string();
+        return venv.canonicalize().unwrap_or(venv).display().to_string();
     }
 
     "epi-gnostic".to_owned()
@@ -226,7 +217,10 @@ mod neo4j_bridge_env_tests {
     #[test]
     fn nothing_is_invented_when_the_canonical_names_are_absent() {
         let bridged = neo4j_bridge_env_from(&|_| None);
-        assert!(bridged.is_empty(), "expected no synthesised env: {bridged:?}");
+        assert!(
+            bridged.is_empty(),
+            "expected no synthesised env: {bridged:?}"
+        );
     }
 }
 
@@ -247,8 +241,10 @@ mod tests {
 
     #[test]
     fn blank_override_is_ignored() {
-        let resolved =
-            resolve_gnostic_bin_from(Some("   ".to_owned()), Path::new(env!("CARGO_MANIFEST_DIR")));
+        let resolved = resolve_gnostic_bin_from(
+            Some("   ".to_owned()),
+            Path::new(env!("CARGO_MANIFEST_DIR")),
+        );
         assert_ne!(
             resolved, "   ",
             "a blank EPI_GNOSTIC_PYTHON must not be spawned as the bridge"
@@ -259,8 +255,7 @@ mod tests {
     /// must be the real venv console script, not the bare PATH name.
     #[test]
     fn default_resolves_to_the_repo_venv_console_script() {
-        let resolved =
-            resolve_gnostic_bin_from(None, Path::new(env!("CARGO_MANIFEST_DIR")));
+        let resolved = resolve_gnostic_bin_from(None, Path::new(env!("CARGO_MANIFEST_DIR")));
         assert_ne!(
             resolved, "epi-gnostic",
             "the bare PATH name is the broken default that darkens the S4<->S5 seam; \

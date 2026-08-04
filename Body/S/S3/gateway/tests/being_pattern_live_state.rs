@@ -285,7 +285,10 @@ async fn the_acceptance_scenario_dispatches_end_to_end_through_the_registry() {
         &registry,
         &env,
         BEING_PATTERN_SUBSCRIBE_METHOD,
-        json!({ "includeAcceptanceReplay": true }),
+        json!({
+            "entityIds": ["user-being", "school-of-thought-being"],
+            "includeAcceptanceReplay": true,
+        }),
     )
     .await;
     assert_eq!(subscribed["generation"], json!(generation));
@@ -344,11 +347,12 @@ async fn the_acceptance_scenario_dispatches_end_to_end_through_the_registry() {
 async fn review_candidate_refuses_every_operator_but_actualising_one() {
     let env = env("review-refusal");
     let registry = registry();
+    let entity_id = "review-refusal-user-being";
     call(
         &registry,
         &env,
         BEING_PATTERN_OBSERVE_METHOD,
-        json!({"entityId": "user-being"}),
+        json!({"entityId": entity_id}),
     )
     .await;
 
@@ -360,7 +364,7 @@ async fn review_candidate_refuses_every_operator_but_actualising_one() {
                     BEING_PATTERN_REVIEW_CANDIDATE_METHOD,
                     json!({
                         "candidateId": "candidate:refused",
-                        "entityIds": ["user-being"],
+                        "entityIds": [entity_id],
                         "monopolyOperator": operator,
                     }),
                 ),

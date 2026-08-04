@@ -60,7 +60,15 @@ describe('stores', () => {
     });
 
     it('provenance store carries connection and supervisor threads independently', () => {
-        useProvenanceStore.getState().setSupervisor({ state: 'supervised', port: 18794, pid: 7, detail: 'ok' });
+        useProvenanceStore.getState().setSupervisor({
+            state: 'supervised',
+            port: 18794,
+            pid: 7,
+            detail: 'ok',
+            binaryPath: '/repo/target/debug/epi',
+            binarySource: 'repo-shared-target',
+            binaryIdentity: 'Usage: epi [OPTIONS] <COMMAND>'
+        });
         expect(useProvenanceStore.getState().supervisor.state).toBe('supervised');
         expect(useProvenanceStore.getState().connection.state).toBe('disconnected');
     });

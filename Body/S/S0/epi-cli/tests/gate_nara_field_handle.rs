@@ -25,18 +25,34 @@ async fn field_handle_serves_the_opaque_dr_ig_6_handle_off_the_live_anchor() {
     assert_eq!(reply["sessionKey"], "agent:main:main");
     assert_eq!(reply["foregroundedHandle"], serde_json::Value::Null);
 
-    let renderer = reply["rendererHandle"].as_str().expect("rendererHandle string");
+    let renderer = reply["rendererHandle"]
+        .as_str()
+        .expect("rendererHandle string");
     assert!(
         renderer.starts_with("psychoid-cymatic://renderer/dr-ig-6/option-f/"),
         "opaque scheme, got {renderer}"
     );
-    let geometry = reply["geometryHandle"].as_str().expect("geometryHandle string");
+    let geometry = reply["geometryHandle"]
+        .as_str()
+        .expect("geometryHandle string");
     assert!(geometry.starts_with("psychoid-cymatic://geometry/dr-ig-6/"));
 
     // Handle-only law: digests cross, bodies do not. No key of the reply may
     // carry vertex arrays, quaternion components, or field bodies.
-    let keys: Vec<&str> = reply.as_object().unwrap().keys().map(String::as_str).collect();
-    for forbidden in ["vertices", "loci", "field", "qPersonal", "quaternion", "body"] {
+    let keys: Vec<&str> = reply
+        .as_object()
+        .unwrap()
+        .keys()
+        .map(String::as_str)
+        .collect();
+    for forbidden in [
+        "vertices",
+        "loci",
+        "field",
+        "qPersonal",
+        "quaternion",
+        "body",
+    ] {
         assert!(
             !keys.iter().any(|k| k.eq_ignore_ascii_case(forbidden)),
             "reply must not carry '{forbidden}' — the handle is opaque"
@@ -59,7 +75,13 @@ async fn field_handle_honours_and_polices_the_foregrounded_handle() {
     }
 
     let refused = client
-        .request("nara.field.handle", json!({ "foregroundedHandle": "qShadowHandle" }))
+        .request(
+            "nara.field.handle",
+            json!({ "foregroundedHandle": "qShadowHandle" }),
+        )
         .await;
-    assert!(refused.is_err(), "an undeclared axis must be refused, got {refused:?}");
+    assert!(
+        refused.is_err(),
+        "an undeclared axis must be refused, got {refused:?}"
+    );
 }

@@ -362,8 +362,8 @@ fn resolve_tarot_card(scalar_ref_text: &str, key: &str) -> Result<Value, String>
     }
 
     // Pip 2..=10 — the full decan chain.
-    let pip = pip_decan_lookup(suit, rank_in_deck)
-        .ok_or_else(|| "pip lookup out of range".to_owned())?;
+    let pip =
+        pip_decan_lookup(suit, rank_in_deck).ok_or_else(|| "pip lookup out of range".to_owned())?;
     let decan_index = pip.zodiac_sign * 3 + pip.decan;
     let decan = zodiac_decan(decan_index)
         .ok_or_else(|| "pip decan address is outside the 36-decan table".to_owned())?;

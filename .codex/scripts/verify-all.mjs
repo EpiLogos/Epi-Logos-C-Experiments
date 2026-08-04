@@ -222,8 +222,8 @@ export const SUITES = [
     cwd: join(REPO_ROOT, "Body", "M", "pratibimba-app"),
     commands: [["pnpm", "build"]],
   },
-  // Track-00 hardening: the behavioral boot gate (real spawned gateway on
-  // 18797 + live GatewayClient wire smoke) promoted into the repo gate.
+  // Track-00 hardening: the behavioral boot gate (real Tauri/WKWebView shell
+  // receipt + real spawned gateway on 18797 + live GatewayClient wire smoke).
   {
     id: "app-smoke",
     label: "pratibimba-app pnpm smoke (boot gate)",
@@ -233,7 +233,7 @@ export const SUITES = [
   // Track-00 hardening: real-UI drivable-loop specs — Playwright drives the
   // Vite face in Chromium against a REAL `epi gate start` (e2e port 18933)
   // and a real-filesystem vault sidecar (18934). tauri-driver has no macOS
-  // support, so the Tauri shell itself stays covered by app-smoke.
+  // support, so the real Tauri/WKWebView boot remains covered by app-smoke.
   {
     id: "app-ui-flow",
     label: "pratibimba-app pnpm test:e2e (Playwright real-UI flow)",

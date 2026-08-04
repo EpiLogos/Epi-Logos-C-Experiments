@@ -31,6 +31,7 @@ import { ProvenanceBadge } from '../ui/primitives';
 import { M3HexagramBodyDynamicsViewer } from '../components/M3HexagramBodyDynamicsViewer';
 import {
     HEXAGRAM_BODY_PENDING,
+    isResolvedHexagramBody,
     type HexagramBodyEntry,
     type HexagramBodyPending
 } from '../services/m3/HexagramBodyDynamicsService';
@@ -110,6 +111,16 @@ export function M3HexagramBrowser({ lookupBody, bodyHalo = null }: M3HexagramBro
             live = false;
         };
     }, [lookupBody, activeKingWen]);
+
+    // A profile tick can change the active King Wen key one render before this
+    // effect clears or replaces the prior read. Never present that old resolved
+    // row under the new identity, even for a single frame.
+    const visibleBodyEntry =
+        bodyEntry !== null &&
+        isResolvedHexagramBody(bodyEntry) &&
+        bodyEntry.hexagramId !== activeKingWen
+            ? null
+            : bodyEntry;
 
     if (!m || activeHexagramId === null) {
         return (
@@ -248,7 +259,7 @@ export function M3HexagramBrowser({ lookupBody, bodyHalo = null }: M3HexagramBro
             {lookupBody !== undefined ? (
                 <M3HexagramBodyDynamicsViewer
                     hexagramId={activeKingWen}
-                    entry={bodyEntry}
+                    entry={visibleBodyEntry}
                     halo={bodyHalo}
                 />
             ) : null}

@@ -57,6 +57,12 @@ pub fn parse_day_id(day_id: &str) -> Result<NaiveDate, String> {
         .map_err(|err| format!("invalid dayId {day_id:?}: {err}"))
 }
 
+/// THE Present-root constructor. Day discovery and day creation must share the
+/// same authority so a reader cannot silently drift from the writer's root.
+pub(crate) fn present_root(vault_root: &Path) -> PathBuf {
+    vault_root.join("Empty").join("Present")
+}
+
 /// THE day-folder constructor. Present is FLAT: `Empty/Present/{MM-DD-YYYY}`.
 ///
 /// This is the only function in this crate permitted to build a Present day
@@ -70,10 +76,7 @@ pub fn parse_day_id(day_id: &str) -> Result<NaiveDate, String> {
 ///
 /// The rolling Present is flat by law; only History nests.
 pub fn day_folder_for_date(vault_root: &Path, day: NaiveDate) -> PathBuf {
-    vault_root
-        .join("Empty")
-        .join("Present")
-        .join(format_day_id_for_date(day))
+    present_root(vault_root).join(format_day_id_for_date(day))
 }
 
 pub fn day_folder(vault_root: &Path, now: DateTime<Utc>) -> PathBuf {

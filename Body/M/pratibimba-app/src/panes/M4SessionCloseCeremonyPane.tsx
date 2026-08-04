@@ -13,11 +13,10 @@
  *   makes the TAB the surface — the ceremony is a personal-face pane the reader
  *   opens, and it can be left open across closes. (2) NOT EVENT-MOUNTED. The
  *   brief mounts it on an `m5.session.contemplation.complete` observability
- *   event; EVENT_NAMES (gateway-contract protocol.rs) carries agent/chat/tick/
- *   health/heartbeat and no such event exists, so the pane reads the LATEST
- *   persisted close for the active session and refreshes on demand. Inventing a
- *   subscription to an event no gateway emits would render a ceremony that
- *   never fires.
+ *   event; the carrier instead reads the LATEST persisted close for the active
+ *   session. A newly observed contemplation handle keys the delta preview, so
+ *   its CSS pulse runs once when that close arrives and does not replay on an
+ *   unchanged refresh.
  *
  *   Reads, all protected-local and loopback-only: `nara.session_close.read`
  *   (the aggregate bundle — parsed by the EXISTING M1 reader, not a second
@@ -180,6 +179,16 @@ export function M4SessionCloseCeremonyPane({
                         <p className="ceremony-handle" data-testid="ceremony-contemplation-ref">
                             {contemplation.contemplationRef}
                         </p>
+                        {contemplation.wisdomDeltaPreview ? (
+                            <output
+                                key={contemplation.contemplationRef}
+                                className="ceremony-delta-preview"
+                                data-testid="ceremony-delta-preview"
+                                data-pulse="once"
+                            >
+                                {contemplation.wisdomDeltaPreview}
+                            </output>
+                        ) : null}
                         <dl className="ceremony-triplet" data-testid="ceremony-triplet">
                             <dt>{`LLM ${contemplation.llm.position}`}</dt>
                             <dd data-testid="ceremony-triplet-llm">
@@ -206,12 +215,10 @@ export function M4SessionCloseCeremonyPane({
                                 }`}
                             </dd>
                         </dl>
-                        {/* The composed delta TEXT is deliberately not persisted:
-                            the projection reduces bodies to counts. Saying so is
-                            the honest alternative to a fabricated hex strip. */}
                         <p className="ceremony-note" data-testid="ceremony-delta-note">
-                            The composed 4′-5′-0′ delta text stays at the close-time RPC; the
-                            persisted projection carries its handle and reduced readings only.
+                            {contemplation.wisdomDeltaPreview
+                                ? 'Eight-byte preview of the persisted 4′-5′-0′ integration text; the source text is not rendered.'
+                                : 'This close predates the persisted wisdom-delta preview.'}
                         </p>
                     </>
                 ) : (

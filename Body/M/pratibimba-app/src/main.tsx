@@ -43,6 +43,8 @@ async function bootstrap(): Promise<void> {
     if (import.meta.env.VITE_E2E_TAURI_SHIM === '1') {
         const { installE2eTauriShim } = await import('./bridge/e2eShim');
         await installE2eTauriShim(import.meta.env.VITE_E2E_SIDECAR_URL ?? 'http://127.0.0.1:18934');
+        const { installE2eAuthorities } = await import('./bridge/e2eAuthorities');
+        installE2eAuthorities();
     }
     createRoot(container!).render(
         <React.StrictMode>

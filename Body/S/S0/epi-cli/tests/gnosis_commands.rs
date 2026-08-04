@@ -243,7 +243,8 @@ fn gnosis_enrich_dispatches_the_enrich_subcommand_not_ingest() {
         "the Bimba coordinate must reach the enricher; observed argv: {argv:?}"
     );
     assert!(
-        argv.windows(2).any(|pair| pair[0] == "--family" && pair[1] == "M"),
+        argv.windows(2)
+            .any(|pair| pair[0] == "--family" && pair[1] == "M"),
         "the coordinate family must reach the enricher; observed argv: {argv:?}"
     );
 }

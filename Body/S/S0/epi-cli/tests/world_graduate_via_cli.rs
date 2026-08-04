@@ -7,8 +7,8 @@ use std::fs;
 use std::path::PathBuf;
 
 // T53.04: the s1'.* handlers live at their coordinate now.
-use epi_s1_hen_compiler_core::s1_handlers as s1_hen;
 use epi_logos::world::{dispatch as world_dispatch, WorldCmd};
+use epi_s1_hen_compiler_core::s1_handlers as s1_hen;
 use serde_json::{json, Value};
 
 fn fixture_vault() -> PathBuf {

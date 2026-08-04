@@ -45,8 +45,8 @@ importers:
         specifier: ^6.0.2
         version: 6.0.2
       flexlayout-react:
-        specifier: ^0.9.2
-        version: 0.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^0.10.2
+        version: 0.10.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       force-graph:
         specifier: ^1.51.4
         version: 1.51.4
@@ -896,8 +896,9 @@ packages:
   fflate@0.8.3:
     resolution: {integrity: sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==}
 
-  flexlayout-react@0.9.2:
-    resolution: {integrity: sha512-oz04nO1VbEbVlQMDjEY9E+Q2p3wC6rnC/Y0ebc0bNGBHPY5RiXoFl4dOz6dlxedIt8dm28aEaC1KnJrqLlrUJw==}
+  flexlayout-react@0.10.2:
+    resolution: {integrity: sha512-9BOuiSqq5z9Z9NFobB3koNdDsKFkP9q7+ZKSiMi54NkFv6zDbCVYd2LcdbtMsWcteSzZBWmEPUsWAc5VVu9E/Q==}
+    engines: {node: '>=20'}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -2189,7 +2190,7 @@ snapshots:
 
   fflate@0.8.3: {}
 
-  flexlayout-react@0.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  flexlayout-react@0.10.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)

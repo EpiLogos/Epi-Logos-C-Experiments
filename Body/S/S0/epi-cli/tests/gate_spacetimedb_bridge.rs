@@ -2587,8 +2587,6 @@ async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconne
 /// arc carry ONLY the namespace_ref/session_arc_id references (no episode
 /// body fields).
 #[tokio::test]
-
-
 #[ignore = "requires the live Graphiti runtime at http://127.0.0.1:37778. Graphiti — unlike SpaceTimeDB — IS a compose service: `docker compose -f docker-compose.epi-s2.yml up -d graphiti` (needs GEMINI_API_KEY; pulls neo4j + redis via depends_on)."]
 async fn graphiti_live_round_trip_carries_only_safe_references_into_spacetimedb() {
     use epi_logos::gate::graphiti;
@@ -2679,7 +2677,6 @@ async fn graphiti_live_round_trip_carries_only_safe_references_into_spacetimedb(
 
     // Delete exactly what this test created.
     purge_graphiti_group(&session_key).await;
-
 }
 
 #[test]

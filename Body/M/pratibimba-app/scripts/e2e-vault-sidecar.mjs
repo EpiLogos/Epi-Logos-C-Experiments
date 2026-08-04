@@ -38,6 +38,7 @@ const GATEWAY_PORT = Number(arg('gateway-port', '18933'));
 // the cast ledger/hygiene state never touches the developer's ~/.epi-logos
 const EPI_BIN = arg('epi-bin');
 const NARA_HOME = arg('nara-home');
+const UI_STATE_FILE = arg('ui-state-file');
 // 25.T25.24: the cast is a GATEWAY act now, so the S0 cast ledger the
 // integrated loop reads belongs to the gateway's nara home, not to the
 // fallback spawn's. Two different homes because there are two different
@@ -171,8 +172,17 @@ const commands = {
     gateway_restart: () => {
         throw new Error('e2e shim: gateway_restart is owned by the Tauri supervisor, not the browser harness');
     },
-    ui_state_load: () => null, // deterministic boots: every page load starts from defaults
-    ui_state_save: () => null,
+    ui_state_load: () =>
+        UI_STATE_FILE && existsSync(UI_STATE_FILE)
+            ? readFileSync(UI_STATE_FILE, 'utf8')
+            : null,
+    ui_state_save: args => {
+        if (UI_STATE_FILE) {
+            mkdirSync(dirname(UI_STATE_FILE), { recursive: true });
+            writeFileSync(UI_STATE_FILE, String(args?.json ?? ''));
+        }
+        return null;
+    },
     // integrated composition state (29.T29.10) — same deterministic-boot posture
     // as ui_state: every page load starts from defaults so tests never leak a
     // persisted mode across the shared per-run vault. save is accepted (so the
@@ -183,13 +193,14 @@ const commands = {
     natal_sky: () => null, // no natal chart configured in the e2e vault
     // Mirrors src-tauri/src/oracle.rs oracle_deposit (25.T25.24): composes +
     // deposits an ALREADY-CAST result with compose_oracle_artifact's exact
-    // template. It does not cast — the cast now dispatches to the gateway
-    // (`nara.oracle.cast`), which is the whole point of the rewire.
+    // template. It does not cast — typed I-Ching/Tarot casts dispatch to the
+    // gateway, which is the whole point of the rewire.
     oracle_deposit: args => {
         const system = String(args?.system ?? '');
         const question = String(args?.question ?? '');
         const dayId = String(args?.dayId ?? '');
         const output = String(args?.output ?? '').trim();
+        const metadata = args?.metadata && typeof args.metadata === 'object' ? args.metadata : null;
         if (!output) {
             throw new Error('e2e sidecar: oracle_deposit refuses to deposit an empty cast');
         }
@@ -202,6 +213,25 @@ const commands = {
             .join('');
         const rel = `${WRITE_SCOPE_PREFIX}${dayId}/oracle-${stamp}-${system}.md`;
         const questionEscaped = question.replace(/"/g, '\\"');
+        const envelope = metadata?.envelope && typeof metadata.envelope === 'object'
+            ? metadata.envelope
+            : null;
+        const metadataFrontmatter = metadata
+            ? `c_3_oracle_cast_id: ${Number(metadata.castId)}
+c_3_oracle_spread_id: ${JSON.stringify(String(metadata.spreadId))}
+c_3_oracle_frame_ref: ${JSON.stringify(envelope?.oracle_frame_ref ?? null)}
+c_3_scalar_refs: ${JSON.stringify(Array.isArray(envelope?.scalar_refs) ? envelope.scalar_refs : [])}
+`
+            : '';
+        const metadataBody = metadata
+            ? `
+## Cast frame
+
+\`\`\`json
+${JSON.stringify({ castId: metadata.castId, spreadId: metadata.spreadId, draw: metadata.draw, envelope }, null, 2)}
+\`\`\`
+`
+            : '';
         const content = `---
 coordinate: ""
 c_4_artifact_role: "oracle-cast"
@@ -211,7 +241,7 @@ c_3_created_at: "${now.toISOString()}"
 c_2_oracle_system: "${system}"
 c_2_oracle_question: "${questionEscaped}"
 c_4_invocation_kind: "app"
-c_0_source_coordinates: []
+${metadataFrontmatter}c_0_source_coordinates: []
 ---
 
 # Oracle — ${system}
@@ -221,9 +251,10 @@ c_0_source_coordinates: []
 \`\`\`text
 ${output}
 \`\`\`
+${metadataBody}
 `;
         commands.vault_write({ path: rel, content });
-        return { artifactPath: rel, output, system };
+        return { artifactPath: rel, output, system, ...(envelope ? { envelope } : {}) };
     },
     // OFFLINE FALLBACK ONLY, mirroring src-tauri/src/oracle.rs oracle_cast:
     // spawn the REAL consent-gated `epi nara oracle cast` under the isolated

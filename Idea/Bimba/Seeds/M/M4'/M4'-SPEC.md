@@ -1,8 +1,8 @@
 ---
 coordinate: "M4'"
 status: "active-domain-spec"
-updated: "2026-06-09"
-cycle-3: pending
+updated: "2026-08-02"
+cycle-3: rerun-contract-reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-PORTAL-SPEC]]"
@@ -40,7 +40,7 @@ The LLM reads two operational-capacity files as substrate context:
 
 ## Canonical Substrate Anchors
 
-[[M4']] should keep its protected-local substrate visible in the prose itself: [[Body/S/S0/epi-lib/include/m4.h]] (772 LOC [[Nara]] header — personal-identity, day-as-episode, [[Q_identity]] / [[Q_transit]] / [[Q_activity]] / [[Q_composed]] declarations), [[Body/S/S0/epi-lib/src/m4.c]] (673 LOC C implementation), [[Body/S/S0/portal-core/src/nara_journal.rs]] (466 LOC Rust journal/day-container/artifact runtime), [[Body/S/S0/portal-core/src/personal_identity.rs]] (403 LOC — [[M4-4-4-4]] personal-quaternion store, [[Kerykeion]] natal-chart binding, elemental balance), [[Body/S/S0/portal-core/src/transcription.rs]] (transcription handles into [[Mahāmāyā]] codon evidence), [[Body/S/S3/graphiti-runtime/src/lib.rs]] (the [[Graphiti]] episodic memory the [[M4]] personal-field consumes from with privacy gates), and [[Body/M/epi-tauri/src/domains/M4_Nara]] (existing [[Nara]] rendering surface — migration source per Track 05 recast). The protected-local boundary is enforced by [[Body/S/S0/portal-core/src/personal_identity.rs]] and the [[Graphiti]] privacy classes; [[M4']] is the lived surface over them.
+[[M4']] should keep its protected-local substrate visible in the prose itself: [[Body/S/S0/epi-lib/include/m4.h]] ([[Nara]] C declarations), [[Body/S/S0/epi-lib/src/m4.c]] (C implementation), [[Body/S/S0/portal-core/src/nara_journal.rs]] (journal/day-container/artifact runtime), [[Body/S/S0/portal-core/src/personal_identity.rs]] ([[M4-4-4-4]] personal-quaternion store, [[Kerykeion]] natal-chart binding, elemental balance), [[Body/S/S0/portal-core/src/transcription.rs]] (transcription handles into [[Mahāmāyā]] codon evidence), [[Body/S/S0/epi-cli/src/nara/oracle_composite.rs]] (typed Oracle receipt/history/aliveness composition), [[Body/S/S3/gateway/src/spacetime/presence.rs]] (shared Oracle position projection), [[Body/S/S3/graphiti-runtime/src/lib.rs]] (the [[Graphiti]] episodic memory consumed with privacy gates), and the active carrier [[Body/M/pratibimba-app]]. [[Body/M/epi-tauri]] and [[Body/M/epi-theia]] are migration/genealogy sources only. The protected-local boundary is enforced by the S0 personal/oracle state stores, the scoped vault seam, and the [[Graphiti]] privacy classes; [[M4']] is the lived surface over them.
 
 ## Companion Spec
 
@@ -56,7 +56,7 @@ The LLM reads two operational-capacity files as substrate context:
 
 ## Backend Contract Consumed
 
-- [[S3]] / [[Khora]] owns [[DAY/NOW]]/session path and write authority.
+- [[S3]] / [[Khora]] owns session and [[NOW]] identity; the active carrier may explicitly create/adopt the flat day parent and writes only through the scoped [[S1]] vault seam.
 - [[Graphiti]] stores episodic [[Nara]] memory under protected-local namespace rules, implemented at [[Body/S/S3/graphiti-runtime/src/lib.rs]].
 - [[S0]] / [[S3]] profile projection provides safe public-current harmonic context — the [[Nara]] runtime side lives at [[Body/S/S0/portal-core/src/nara_journal.rs]] and [[Body/S/S0/portal-core/src/personal_identity.rs]].
 - [[S2]] pointer anchor links public coordinate law without absorbing journal bodies.
@@ -96,7 +96,7 @@ M4' content is canonically organised as **day-as-episode-container with NOW-stam
 
 Each artifact carries a common envelope: `episode_id`, `episode_type`, `day_id`, `now_path`, `session_key`, `privacy_class`, provenance, `vault_path`, scalar `bimba_coordinate_refs`, optional `q_composed_at_now`, and a discriminated payload. [[Quaternal Tarot]] and [[Quaternal I-Ching]] artifacts are first-class M4' artifact kinds, not informal logs; they cross-reference [[M3]] [[Tarot]]/[[I-Ching]] coordinates as scalar refs, preserve protected-local interpretation bodies, and may update [[Q_activity]] only with explicit decay, weight, provenance, and privacy class.
 
-Surface placement follows [[m5-prime-system-shape-and-tauri-ide-canon]]: the lightweight 0/1 surface is the daily-use [[Nara]] entry point for flow writing, highlight tagging, today-view, quick Nara/[[Anima]] chat, and a lightweight personal-field view; the `m4-nara` IDE extension is the deep engagement surface for full psychoid rendering, identity inspection, [[Graphiti]] browsing, oracle inspectors, [[Vāma Śaktis|Vāma]] contemplation, and temporal-reading protocols; the integrated 4/5/0 plugin composes [[M4]] + [[M5]] + [[M0]] as the [[Jiva-is-Śiva]] recognition surface. Both daily and IDE surfaces consume the same protected canonical store through the kernel-bridge / Nara vault service; neither duplicates storage law.
+Surface placement follows [[M'-SYSTEM-SPEC#Carrier Decision - 2026-07-02]]: one [[Body/M/pratibimba-app]] process carries the `daily-0-1` and `ide-deep` layouts. The daily layout is the [[Nara]] entry point for flow writing, highlight tagging, today-view, Oracle casting/history, and the lightweight personal field; the deep layout exposes the same registered M4 contributions at greater working depth. The integrated 4/5/0 composition joins [[M4]] + [[M5]] + [[M0]] as the [[Jiva-is-Śiva]] recognition surface. Both layouts consume one protected store and one typed gateway/bridge; no frozen extension is a second runtime or storage authority.
 
 ## §6.7 — Cross-M Interface Seams And Promotion Law
 
@@ -194,6 +194,16 @@ Additional user context activates modulation, not arbitrary reinterpretation. Jo
 - whether M4-3 treats a recurrence as motif, perturbation, bifurcation candidate, or review-worthy trajectory.
 
 These modulators update `Q_activity`, trajectory, and PatternPacket evidence. They do not rewrite the packet chain after the fact and do not mutate `Q_identity` without review.
+
+### Operative Cycle-3 Oracle Contract — 2026-08-02
+
+The active [[M4']] carrier executes Oracle work through four typed gateway methods: `nara.oracle.cast_iching`, `nara.oracle.cast_tarot`, `nara.oracle.history.read`, and `nara.oracle.update_position_state`. The legacy generic `nara.oracle.cast` / `nara.oracle.history` routes remain compatibility surfaces; they are not the active carrier contract.
+
+- I-Ching receipts preserve six cast lines and the exact nucleotide law `6 -> A`, `9 -> T`, `7 -> C`, `8 -> G`; they expose primary, relating, and nuclear hexagram ids, body projection, moving-line facts, and scalar `m3-codon://` references without interpretation prose.
+- Tarot receipts admit only 3-, 4-, or 5-card spreads and derive card/codon/element chains from the existing kernel and [[portal-core]] lookup authorities. The codon-to-Major-Arcana relation is partial: when a valid Major card has an empty kernel codon set, the receipt carries `codonRef: null` with `codonBinding: unbound`; absence is rendered explicitly and never invalidates the cast or invents a binding. Minor Arcana remains the kernel's exact 56-card primary-codon cover. The carrier does not maintain a second Tarot table.
+- Cast history is append-only under the protected local Nara state root (`EPI_NARA_HOME` when explicitly isolated, otherwise `~/.epi-logos/nara`), and `history.read` returns newest-first typed entries with real cast timestamps, hygiene, draw facts, and current position aliveness.
+- Position aliveness is journalled independently as `generating -> muting`, `muting -> mute|generating`, and `mute -> generating`. [[S0]] owns this protected local composition and attempts the corresponding [[S3]] / [[SpaceTimeDB]] projection best-effort; the receipt reports `spacetimePublished` honestly, so a failed shared projection never masquerades as a lost local cast.
+- A deposited cast is a first-class flat day artifact at `Idea/Empty/Present/{MM-DD-YYYY}/oracle-{HHMMSS}-{system}.md`. Its typed cast/spread ids, frame ref, scalar refs, draw, and envelope survive deposition; the interpretation remains a protected-local handle.
 
 ## §7 — The Personal-Quaternion at M4-4-4-4
 
@@ -394,7 +404,7 @@ DR-M4-2 closes the former contradiction register for this section. The five rati
 - Tests prove sendoff envelopes include DAY/NOW/session/profile handles and preserve selected text inside the protected invocation payload.
 - Tests prove Daily Note, Dream Journal, Oracle, and Highlights persist/retrieve real modality data.
 - Tests prove DayContainer creation, artifact-child linking, `:HAS_DAY`, `:CONTAINS_DAILY_NOTE`, `:PART_OF_DAY`, and `:NEXT_IN_ARC` relationships operate on real Graphiti episodes and preserve privacy class.
-- Tests prove canonical Quaternal Tarot and Quaternal I-Ching artifacts write real frontmatter/payloads, link to DayContainer, retain scalar M3 refs, and update `Q_activity` only when decay/provenance policy permits.
+- Tests prove typed Quaternal Tarot and Quaternal I-Ching casts traverse a real gateway, persist append-only history, deposit real flat-day frontmatter/payloads, retain scalar M3 refs, reload in the carrier, and enforce the per-position aliveness transition law.
 - Tests prove M4-0-0 birthdate/name encoding preserves raw totals, mod6/inverse vectors, mod12 anchors, MEF matrices, L2' elemental extraction, caps, evidence paths, and warnings; no test may pass by asserting a mocked root-number summary.
 - Tests prove M4-0-5 integrates only available real layer outputs, preserves unresolved polarities, and never fabricates Jungian/Gene Keys/Human Design evidence when the user has not supplied or computed those layers.
 - Tests prove `Q_composed = Q_identity · Q_transit · Q_activity` is the protected local source of personal field state and that `(q_b, q_p)` is derived from it rather than accepted as unrelated input.
@@ -404,7 +414,7 @@ DR-M4-2 closes the former contradiction register for this section. The five rati
 - Tests prove parser absence returns `pending-parser` / `unknown`, not fabricated element weights, and that parser and dialogic voice inference paths use distinct model-selection and output contracts.
 - Tests prove M5' voice-tuning corpus inclusion requires explicit consent records, PII stripping, Anima admission, adapter provenance, and rollback-capable deployment state before any Nara dialogue adapter is used.
 - Tests prove Nara distinguishes raw service connectivity from actual bounded agent access.
-- Readiness is blocked until S3 deposition shape includes profile observation anchors and Graphiti privacy class.
+- Readiness must report optional [[S3]] publication separately from protected local cast persistence; missing shared publication is degraded evidence, never permission to fabricate it or discard the local receipt.
 
 ## Canonical Source Lock - 2026-06-02
 
@@ -432,9 +442,10 @@ Bell-kernel boundary, 2026-07-02 (per [[m123-modal-resonator-bell-kernel-spec]] 
 - **Journal/canvas surface**: an anchored day IS the daily-note editor. Rerun `11.T11.10` replaces the initial CodeMirror foothold with the official Tiptap 3 Markdown canvas in `Body/M/pratibimba-app/src/panes/NaraCanvasEditor.tsx`: C-family frontmatter is byte-preserved, body edits round-trip as Markdown through the scoped vault service, user selections carry four protected-local highlight categories, and the component-local `HighlightService` adds no fifth carrier store. The journal timeline still reads real Present day containers from the substrate (no gateway `nara.journal.timeline` method exists yet — when S3 grows one, the pane swaps sources without shape change).
 - **Agent inscription register**: rerun `11.T11.11` binds six programmatic categories (`recognition`, `prospective-surfacing`, `retrospective-surfacing`, `kairos-touch`, `somatic-mark`, `live-spread`) to distinct visual-register tokens and left-border/tint accents. `HighlightService.inscribeAgentMark` wraps an existing Tiptap range, never replaces the user's text, and records `sourceFacet`, `agent-chat`, and `protected_local`. The existing portal-core `NaraActivityKind::Highlight` category field carries all ten user+agent categories; `FileReentry` and `TrancheComplete` remain distinct activity variants.
 - **Ambient/tuning chrome**: rerun `11.T11.12` mounts a compact strip and tuning bar above the canvas. Ambient values are strict optional reads from kernel Medicine balance and oracle spread-state projections; absent fields stay explicitly pending. Tuning writes the three canonical session-NOW keys (`c_3_tranche_mode`, `c_3_response_orbit`, `c_3_klein_weighting`) through the scoped vault seam using structured YAML mutation; the NOW body is preserved and a missing session NOW blocks rather than redirecting the write to the day note.
-- **Oracle modality**: casts run the real consent-gated `epi nara oracle cast` (hygiene limits honoured; typed invocation, no slash-strings) and deposit as first-class day artifacts `oracle-{HHMMSS}-{system}.md` with `c_4_artifact_role: "oracle-cast"` frontmatter — the timeline surfaces them immediately.
+- **Oracle modality**: the carrier calls the typed consent-gated gateway routes `nara.oracle.cast_iching` / `nara.oracle.cast_tarot`, then deposits the returned typed receipt as `oracle-{HHMMSS}-{system}.md` with `c_4_artifact_role: "oracle-cast"` frontmatter. `nara.oracle.history.read` rehydrates real persisted timestamps/draws/aliveness after reload; interpretation stays handle-only.
 - **Quintessence handle on the shared profile (Sprint-8 E6, 2026-07-02)**: `MathemeHarmonicProfile.quintessence: Option<QuintessenceProjection>` — the DR-M4-3 opaque-handle law made kernel contract. What crosses the bus: `natalDegree` (the `(natal_hash[0]|natal_hash[1]<<8)%360` clock address), `natalTick12`, `quintessenceWeight` (1−variance, HARD-REQUIREMENT-capped: >0.5 only with ≥4/5 layers), `layerCount`/`partial` (enrichment-arc honesty), 8-hex `hashPreview`, and the quintessence quaternion (elemental-balance class — public-safe per §7.13). What NEVER crosses: the 32-byte hash, natal chart, birth data, per-layer profiles (serde test forbids the field names). The natal 10-planet distribution renders from a LOCAL read on the personal pole (`src-tauri identity::natal_sky` ← kairos natal cache) — two readable rings without an identity body on the wire. **DR-M4-2 axis order settled in code**: `clock_state::quintessence_quaternion_from_profiles` (the ONE quaternion authority, now pure and shared by TUI + heartbeat) implements `[w=Earth, x=Fire, y=Water, z=Air]` — the §7.13 order; M4-ARCHITECTURE §5.3.4's `[w=Earth, x=Water, y=Air, z=Fire]` reading does NOT match the kernel and should be corrected on its next pass. Personal↔cosmic resonance is surfaced from the kernel's `resonance` scalar only — no renderer recomputes `|q_personal·q_cosmic|`.
-- Open after the canvas foothold: psychoid-cymatic field renderer, Dream Journal modality, agent-selection runtime dispatch/deposition, Graphiti episode deposition, session-NOW integration.
+- **Personal field and coordinate**: `nara.field.handle` supplies the loopback-only opaque field handle consumed by the mounted centre-field renderer; the Personal Coordinate sidebar reads safe resonance/element/chakra state and keeps raw field/quaternion bodies out of the renderer.
+- Open beyond this rerun foothold: Dream Journal modality, remaining agent-selection deposition, full Option-F field physics, and any still-unlanded Graphiti/day-container automation. Those are named future work, not implied by the flat vault artifact or typed Oracle receipt.
 
 ## Implementation Foothold — local Nara LoRA and E4, 2026-07-15
 

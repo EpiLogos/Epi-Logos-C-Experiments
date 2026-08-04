@@ -198,10 +198,9 @@ fn anima_s4_modules_are_real_pi_vs_claude_code_ports() {
     assert!(agent_team.contains("seam: \"agent-team\""));
     assert!(!agent_team.contains("spawn(\"pi\""));
 
-    let executor = fs::read_to_string(
-        root.join("Body/S/S4/ta-onta/S4-4p-anima/lib/child-pi-executor.ts"),
-    )
-    .unwrap();
+    let executor =
+        fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/lib/child-pi-executor.ts"))
+            .unwrap();
     assert!(executor.contains("childPiRuntimeArgs()"));
     assert!(executor.contains("spawn(CHILD_PI_BINARY"));
     assert!(executor.contains("guardVamaShaktiDispatch"));

@@ -44,6 +44,7 @@ function contemplationObject(sessionId: string) {
         session_id: sessionId,
         close_ref: 'close-e2e-1',
         contemplation_ref: 'contemplation-e2e-1',
+        wisdom_delta_text: '4′-5′-0′ contemplation closed for q_Nara',
         triplet: {
             llm: {
                 position: "4'",
@@ -152,10 +153,14 @@ describe('25.T25.19 — the session-close ceremony pane', () => {
         render(<M4SessionCloseCeremonyPane />);
 
         await waitFor(() => expect(screen.getByTestId('ceremony-contemplation-ref')).toBeTruthy());
-        // (a) the delta's handle and the triplet, not a fabricated hex strip
+        // (a) the exact persisted delta rendered only as its eight-byte preview
         expect(screen.getByTestId('ceremony-contemplation-ref').textContent).toBe(
             'contemplation-e2e-1'
         );
+        expect(screen.getByTestId('ceremony-delta-preview').textContent).toBe(
+            '34 e2 80 b2 2d 35 e2 80'
+        );
+        expect(screen.getByTestId('ceremony-delta-preview').getAttribute('data-pulse')).toBe('once');
         expect(screen.getByTestId('ceremony-triplet-verifier').textContent).toContain('arch-9 whole');
         // (b) the Möbius section carries the handle and the M1 closure
         expect(screen.getByTestId('ceremony-quintessence-handle').textContent).toContain('01234567');
@@ -176,6 +181,7 @@ describe('25.T25.19 — the session-close ceremony pane', () => {
         await waitFor(() => expect(screen.getByTestId('ceremony-quintessence-handle')).toBeTruthy());
         expect(container.innerHTML).not.toContain(FULL_HASH);
         expect(container.innerHTML).toContain('01234567');
+        expect(container.textContent).not.toContain('contemplation closed for q_Nara');
     });
 
     it('renders an honest absence when the session never closed', async () => {

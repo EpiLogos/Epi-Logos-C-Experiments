@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { M3HexagramBrowser } from './M3HexagramBrowser';
 
@@ -126,5 +126,64 @@ describe('M3HexagramBrowser', () => {
         fireEvent.click(screen.getByTestId('m3-hexagram-line-2'));
         expect(screen.getByTestId('m3-hexagram-line-2').getAttribute('data-changing')).toBe('true');
         expect(screen.getByTestId('m3-hexagram-derived-pending').textContent).toContain('pending-line-change-graph');
+    });
+
+    it('never renders a resolved body row under a newer active King Wen number', async () => {
+        let resolveNext!: (entry: {
+            readonly hexagramId: number;
+            readonly primaryChakraId: number;
+            readonly secondaryChakraIds: readonly number[];
+            readonly bodyZones: readonly string[];
+            readonly dynamic: string;
+        }) => void;
+        const nextEntry = new Promise<{
+            readonly hexagramId: number;
+            readonly primaryChakraId: number;
+            readonly secondaryChakraIds: readonly number[];
+            readonly bodyZones: readonly string[];
+            readonly dynamic: string;
+        }>(resolve => {
+            resolveNext = resolve;
+        });
+        const lookupBody = (kingWen: number) => {
+            if (kingWen === KING_WEN_OF_42) {
+                return Promise.resolve({
+                    hexagramId: KING_WEN_OF_42,
+                    primaryChakraId: 3,
+                    secondaryChakraIds: [3],
+                    bodyZones: ['old row'],
+                    dynamic: 'old dynamic'
+                });
+            }
+            return nextEntry;
+        };
+
+        publishProfileTick(profileFixture(FUXI_ADDRESS_42, KING_WEN_OF_42, 7));
+        render(
+            <M3ProfileTickProvider>
+                <M3HexagramBrowser lookupBody={lookupBody} />
+            </M3ProfileTickProvider>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('m3-hexagram-body-dynamics').getAttribute('data-state')).toBe('ready');
+        });
+
+        await act(async () => {
+            publishProfileTick(profileFixture(7, 23, 8));
+        });
+
+        const body = screen.getByTestId('m3-hexagram-body-dynamics');
+        expect(body.getAttribute('data-hexagram-id')).toBe('23');
+        expect(body.getAttribute('data-state')).not.toBe('ready');
+        expect(body.getAttribute('data-secondary-chakra')).toBe('pending');
+
+        resolveNext({
+            hexagramId: 23,
+            primaryChakraId: 3,
+            secondaryChakraIds: [1],
+            bodyZones: ['new row'],
+            dynamic: 'new dynamic'
+        });
     });
 });

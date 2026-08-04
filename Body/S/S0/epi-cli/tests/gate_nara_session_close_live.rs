@@ -179,6 +179,12 @@ async fn nara_session_close_persists_aggregate_bundle_and_reads_it_back() {
             .is_some_and(|reference| reference.starts_with("contemplation-")),
         "viewer readback must use an opaque contemplation reference"
     );
+    assert!(
+        contemplation["wisdom_delta_text"]
+            .as_str()
+            .is_some_and(|delta| delta.starts_with("4'-5'-0' contemplation closed")),
+        "the live protected projection must retain the real close-time integration result"
+    );
     assert_eq!(contemplation["triplet"]["llm"]["loaded_agent_count"], 4);
     assert_eq!(contemplation["triplet"]["ebm"]["gauge_trio_coherent"], true);
     assert_eq!(
@@ -205,7 +211,10 @@ async fn nara_session_close_persists_aggregate_bundle_and_reads_it_back() {
         contemplation["triplet"]["llm"]["psyche_anchor_coherent"], false,
         "one unmatched anchor codon refuses the verdict"
     );
-    assert_eq!(contemplation["triplet"]["llm"]["matched_anchor_codon_count"], 1);
+    assert_eq!(
+        contemplation["triplet"]["llm"]["matched_anchor_codon_count"],
+        1
+    );
 
     for forbidden in [
         "q_nara",

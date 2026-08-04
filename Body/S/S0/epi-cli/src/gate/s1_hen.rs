@@ -42,7 +42,10 @@ pub async fn q_articulation_accept(
 ) -> Result<Value, String> {
     let request: QArticulationAcceptParams =
         serde_json::from_value(params.clone()).map_err(|error| error.to_string())?;
-    epi_s5_epii_review_core::s5_handlers::require_human_approval(state_root, &request.accepted_review_ref)?;
+    epi_s5_epii_review_core::s5_handlers::require_human_approval(
+        state_root,
+        &request.accepted_review_ref,
+    )?;
     let vault_root = resolve_vault_root(params)?;
     let client = epi_s2_graph_services::Neo4jClient::connect(
         &epi_s2_graph_services::Neo4jConfig::from_env(),
