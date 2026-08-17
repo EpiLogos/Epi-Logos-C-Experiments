@@ -18,6 +18,8 @@
     "lint": "tsc --noEmit",
     "test": "vitest run",
     "test:run": "vitest run",
+    "test:legacy": "npm run build && node tests/legacy-client.mjs",
+    "test:conformance": "npm run typecheck && npm run build && npm run test:run && node tests/legacy-client.mjs",
     "test:inspector": "npm run build && npx @modelcontextprotocol/inspector node dist/legacy.js --test tests/inspector-tests.json",
     "test:inspector:ui": "npm run build && npx @modelcontextprotocol/inspector node dist/legacy.js"
   },
