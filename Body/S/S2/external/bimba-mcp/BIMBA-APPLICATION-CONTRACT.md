@@ -42,7 +42,8 @@ The implementation was audited against the final official MCP 2026-07-28 specifi
 - Pinned protocol-version documentation evidence: `faa7e2b47090219060c0699bfe49ebe011516bce`
 - Modern server package: `@modelcontextprotocol/server@2.0.0`
 - Modern client conformance package: `@modelcontextprotocol/client@2.0.0`
-- Existing legacy SDK resolved by the repository before this change: `@modelcontextprotocol/sdk@1.25.3`; it is now pinned rather than left behind `^1.0.0`.
+- Pre-change legacy lock: `@modelcontextprotocol/sdk@1.25.3`.
+- Current explicit legacy dependency: `@modelcontextprotocol/sdk@1.30.0`, retained on the v1 API line but beyond the upstream `GHSA-345p-7cg4-v4c7` shared-server/transport data-leak fix boundary. The real v1 fixture proves the existing tool contract still holds on this patched line.
 
 Protocol consequences applied here:
 
@@ -60,7 +61,7 @@ Protocol consequences applied here:
 
 The live project-level client fixture is root `.mcp.json`. Before RECON-R3 it launched `dist/index.js` over stdio with Neo4j environment settings. No repository callers naming Bimba MCP tools were found, so this checked-in launch configuration plus the server's advertised catalog is the concrete compatibility contract.
 
-The pre-change package resolved `@modelcontextprotocol/sdk@1.25.3`. A real pinned-v1 client launched against the explicit legacy adapter proves the preserved server advertises these **20** legacy tools:
+A real v1 client launched against the explicit legacy adapter proves the preserved server advertises these **20** legacy tools:
 
 ```text
 resolve_coordinate
@@ -85,7 +86,7 @@ telegram_reply
 graph_admin
 ```
 
-`tests/legacy-client.mjs` launches the explicit legacy adapter with the pinned v1 client and proves that exact catalog. This provider-level fixture corrected the initial source-search audit, which had missed `graph_disclosure`; the executable behavior is the compatibility truth.
+`tests/legacy-client.mjs` launches the explicit legacy adapter with the v1 client and proves that exact catalog. This provider-level fixture corrected the initial source-search audit, which had missed `graph_disclosure`; the executable behavior is the compatibility truth.
 
 Root `.mcp.json` now launches `dist/legacy.js`. It gives the historical project-local client an explicit principal and explicit read/write/admin grant, preserving the formerly unrestricted local behavior as an authorization decision rather than as an accidental property of being connected.
 
@@ -211,7 +212,7 @@ other legacy tools                  -> bimba:read
 
 This preserves discoverability without equating discoverability with authorization.
 
-## 7. Security invariants
+## 7. Security invariants and dependency evidence
 
 The implementation and tests preserve:
 
@@ -225,6 +226,8 @@ modern protocol != legacy protocol
 ```
 
 The adapters also avoid reflecting backend/provider exceptions across the modern MCP tool surface because such exceptions may contain connection/provider detail. Neo4j's connection manager exposes a password-free configuration view; protocol errors do not serialize environment credentials.
+
+The production dependency audit is recorded as evidence rather than used as the protocol oracle. After moving legacy MCP from vulnerable v1.25.3 to patched v1.30.0, the MCP-specific cross-client leak advisory disappeared. The current production audit still reports transitive/general-library findings in Hono/LangChain/AJV/UUID-related packages; none is critical. Those findings are not treated as evidence that the protocol boundary itself is conformant, nor are they hidden by the conformance gate.
 
 ## 8. Future direct integrations
 
@@ -262,6 +265,6 @@ Automated tests cover:
 - malformed modern request does not dispatch Bimba;
 - legacy era detection and modern/legacy isolation policy;
 - mutation/tool substitution classification;
-- exact 20-tool legacy fixture via the pinned v1 SDK client.
+- exact 20-tool legacy fixture via the v1 SDK client.
 
 The root repository CI workflow `bimba-mcp-conformance.yml` is the release gate for this work. Issue #5 should remain open unless the receipt-bearing branch head passes that workflow.
