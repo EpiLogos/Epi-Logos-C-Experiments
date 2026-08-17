@@ -132,6 +132,7 @@ describe('MCP 2026-07-28 Bimba adapter', () => {
         'content-type': 'application/json',
         accept: 'application/json, text/event-stream',
         'MCP-Protocol-Version': '2025-11-25',
+        'Mcp-Method': 'tools/list',
       },
       body: JSON.stringify({
         jsonrpc: '2.0',
@@ -161,6 +162,7 @@ describe('MCP 2026-07-28 Bimba adapter', () => {
         'content-type': 'application/json',
         accept: 'application/json, text/event-stream',
         'MCP-Protocol-Version': '2026-07-28',
+        'Mcp-Method': 'tools/list',
       },
       body: JSON.stringify({
         jsonrpc: '2.0',
