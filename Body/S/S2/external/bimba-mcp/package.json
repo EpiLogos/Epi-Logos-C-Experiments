@@ -37,7 +37,8 @@
     "@modelcontextprotocol/server": "2.0.0",
     "langchain": "^1.2.15",
     "neo4j-driver": "^5.28.0",
-    "zod": "^4.2.0"
+    "zod": "^3.25.0",
+    "zod4": "npm:zod@4.2.0"
   },
   "devDependencies": {
     "@modelcontextprotocol/client": "2.0.0",
