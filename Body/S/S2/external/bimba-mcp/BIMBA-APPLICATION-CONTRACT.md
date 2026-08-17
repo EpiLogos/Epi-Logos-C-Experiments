@@ -2,7 +2,7 @@
 
 Status: implementation contract for RECON-R3 / issue #5  
 Bimba semantic implementation: `src/api/graph.ts` + existing coordinate/schema modules  
-Application boundary: `src/application/`  
+Application authority/provenance seam: `src/application/`  
 Modern adapter: `src/modern.ts` + `src/mcp/modern-server.ts`  
 Legacy adapter: `src/legacy.ts` -> preserved v1 implementation in `src/index.ts`
 
@@ -11,13 +11,20 @@ Legacy adapter: `src/legacy.ts` -> preserved v1 implementation in `src/index.ts`
 Bimba is a domain/application service. MCP is one projection of it.
 
 ```text
-Bimba identity / query / mutation / provenance
-                  |
-        BimbaApplicationService
-           /                 \
-MCP 2026-07-28           explicit legacy MCP
-  curated tools         deployed 2025-era catalog
+             Bimba semantic operations
+                src/api/graph.ts
+                 /            \
+                /              \
+ BimbaApplicationService      preserved v1 handlers
+ authority + provenance       exact legacy result shapes
+              |                       |
+      MCP 2026-07-28              legacy MCP
+       curated tools          deployed 2025-era catalog
+              |
+ future direct AIKit / Pi / DeepSeek / O:I adapters
 ```
+
+The transport-neutral graph API is the shared Bimba semantic implementation used by both protocol eras. `BimbaApplicationService` is the canonical authority/provenance application boundary for new/direct integrations and the modern adapter. The legacy adapter deliberately preserves the existing v1 handler/result contract while those handlers continue to invoke the same `src/api/graph.ts` Bimba implementation; its perimeter enforces the same read/write/admin authority vocabulary before dispatch. This avoids changing legacy result semantics merely to make the class topology look uniform.
 
 The application contract contains no JSON-RPC request id, MCP session id, tool name, HTTP route, or client runtime identifier. Future AIKit, Pi, DeepSeek Harness, and O:I/Cradle integrations should call this seam directly (or a language-neutral projection of it) rather than instantiate an internal MCP client.
 
@@ -42,17 +49,18 @@ Protocol consequences applied here:
 1. `2024-10-07` through `2025-11-25` are the initialize/session-era family (the SDK calls it `legacy`).
 2. `2026-07-28` is the stateless/self-contained era (the SDK calls it `modern`).
 3. Modern requests carry protocol version and client capabilities in per-request `_meta`; no prior request is authority for the next one.
-4. `server/discover` is the modern discovery surface. It is optional for clients but is the normal SDK negotiation probe.
+4. `server/discover` is the modern discovery surface.
 5. `serveStdio(factory)` is the v2 stdio entrypoint for the modern era. This server uses `{ legacy: 'reject' }` deliberately.
-6. An unsupported modern protocol revision is `-32022`; HTTP header/body routing disagreement is `-32020` and HTTP 400.
-7. Client identity metadata is self-reported and is not an authorization primitive.
-8. Extensions are opt-in through per-request capability declarations and server discovery. This adapter declares no extensions.
+6. Modern HTTP routing uses `Mcp-Method` (and method-specific routing headers where applicable); an HTTP header/body version disagreement is `-32020` with HTTP 400.
+7. An unsupported modern protocol revision is `-32022`.
+8. Client identity metadata is self-reported and is not an authorization primitive.
+9. Extensions are opt-in through per-request capability declarations and server discovery. This adapter declares no extensions.
 
 ## 3. Actual legacy contract found in this repository
 
 The live project-level client fixture is root `.mcp.json`. Before RECON-R3 it launched `dist/index.js` over stdio with Neo4j environment settings. No repository callers naming Bimba MCP tools were found, so this checked-in launch configuration plus the server's advertised catalog is the concrete compatibility contract.
 
-The pre-change package resolved `@modelcontextprotocol/sdk@1.25.3`. The preserved server advertises these 19 legacy tools:
+The pre-change package resolved `@modelcontextprotocol/sdk@1.25.3`. A real pinned-v1 client launched against the explicit legacy adapter proves the preserved server advertises these **20** legacy tools:
 
 ```text
 resolve_coordinate
@@ -63,6 +71,7 @@ graph_query
 graph_traverse
 graph_traverse_positions
 graph_context
+graph_disclosure
 spec_retrieve
 graph_search
 graph_embed
@@ -76,7 +85,7 @@ telegram_reply
 graph_admin
 ```
 
-`tests/legacy-client.mjs` launches the explicit legacy adapter with the pinned v1 client and proves that exact catalog.
+`tests/legacy-client.mjs` launches the explicit legacy adapter with the pinned v1 client and proves that exact catalog. This provider-level fixture corrected the initial source-search audit, which had missed `graph_disclosure`; the executable behavior is the compatibility truth.
 
 Root `.mcp.json` now launches `dist/legacy.js`. It gives the historical project-local client an explicit principal and explicit read/write/admin grant, preserving the formerly unrestricted local behavior as an authorization decision rather than as an accidental property of being connected.
 
@@ -113,7 +122,7 @@ Agent identity does not grant permissions
 
 ### Query
 
-Current canonical operations exposed by the seam:
+Current canonical operations exposed by the application service:
 
 ```text
 get(BimbaRef.coordinate, query options, authority)
@@ -124,7 +133,7 @@ Both require `bimba:read`.
 
 ### Mutation
 
-The first mutation admitted through the seam is deliberately narrow:
+The first mutation admitted through the application service is deliberately narrow:
 
 ```text
 storeEmbedding(BimbaRef.uuid, text/task/dimensions, authority)
@@ -136,7 +145,7 @@ Administrative graph operations are not automatically promoted to canonical appl
 
 ### Provenance
 
-Every application result carries:
+Every application-service result carries:
 
 ```text
 source = bimba
@@ -179,7 +188,7 @@ The legacy executable is:
 dist/legacy.js
 ```
 
-It is a protocol/authorization adapter in front of the preserved v1 implementation (`dist/index.js`). The old server code and its 19 tool definitions remain intact.
+It is a protocol/authorization adapter in front of the preserved v1 implementation (`dist/index.js`). The old server code and its provider-proven 20-tool catalog remain intact.
 
 The adapter rejects:
 
@@ -215,7 +224,7 @@ returned Bimba material != AIKit Context/canon
 modern protocol != legacy protocol
 ```
 
-The adapters also avoid reflecting backend/provider exceptions across the modern MCP tool surface because such exceptions may contain connection/provider detail. Neo4j's connection manager already exposes a password-free configuration view; protocol errors do not serialize environment credentials.
+The adapters also avoid reflecting backend/provider exceptions across the modern MCP tool surface because such exceptions may contain connection/provider detail. Neo4j's connection manager exposes a password-free configuration view; protocol errors do not serialize environment credentials.
 
 ## 8. Future direct integrations
 
@@ -253,6 +262,6 @@ Automated tests cover:
 - malformed modern request does not dispatch Bimba;
 - legacy era detection and modern/legacy isolation policy;
 - mutation/tool substitution classification;
-- exact 19-tool legacy fixture via the pinned v1 SDK client.
+- exact 20-tool legacy fixture via the pinned v1 SDK client.
 
 The root repository CI workflow `bimba-mcp-conformance.yml` is the release gate for this work. Issue #5 should remain open unless the receipt-bearing branch head passes that workflow.
