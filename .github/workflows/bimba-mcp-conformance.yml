@@ -57,5 +57,9 @@ jobs:
       - name: Install exact dependency graph
         run: npm ci
 
+      - name: Production dependency audit (evidence)
+        continue-on-error: true
+        run: npm audit --omit=dev
+
       - name: Typecheck, build, domain tests, modern protocol tests, legacy fixture
         run: npm run test:conformance
