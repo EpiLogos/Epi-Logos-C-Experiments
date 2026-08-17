@@ -11,6 +11,7 @@ const expectedTools = [
   'graph_traverse',
   'graph_traverse_positions',
   'graph_context',
+  'graph_disclosure',
   'spec_retrieve',
   'graph_search',
   'graph_embed',
