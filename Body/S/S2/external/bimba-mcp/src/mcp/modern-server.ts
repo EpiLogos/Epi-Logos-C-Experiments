@@ -1,5 +1,5 @@
 import { McpServer } from '@modelcontextprotocol/server';
-import * as z from 'zod/v4';
+import * as z from 'zod4';
 import {
   BimbaAuthorizationError,
   BimbaRequestError,
@@ -29,8 +29,6 @@ function safeFailure(error: unknown): {
     };
   }
 
-  // Backend/provider errors may contain connection strings or provider details.
-  // Keep the protocol surface deliberately non-reflective.
   return {
     content: [{ type: 'text', text: 'Bimba operation failed' }],
     isError: true,
