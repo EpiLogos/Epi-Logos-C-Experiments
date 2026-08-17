@@ -1,23 +1,25 @@
 {
   "name": "bimba-mcp",
-  "version": "0.1.0",
-  "description": "MCP server for Bimba coordinate system and Neo4j knowledge graph access",
+  "version": "0.2.0",
+  "description": "Transport adapters for the Bimba application service: MCP 2026-07-28 plus explicit legacy compatibility",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/legacy.js",
   "bin": {
-    "bimba-mcp": "dist/index.js"
+    "bimba-mcp": "dist/legacy.js",
+    "bimba-mcp-modern": "dist/modern.js"
   },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "start": "node dist/index.js",
+    "start": "node dist/legacy.js",
+    "start:legacy": "node dist/legacy.js",
+    "start:modern": "node dist/modern.js",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit",
-    "test": "vitest",
+    "test": "vitest run",
     "test:run": "vitest run",
-    "test:ui": "vitest --ui",
-    "test:inspector": "npm run build && npx @modelcontextprotocol/inspector node dist/index.js --test tests/inspector-tests.json",
-    "test:inspector:ui": "npm run build && npx @modelcontextprotocol/inspector node dist/index.js"
+    "test:inspector": "npm run build && npx @modelcontextprotocol/inspector node dist/legacy.js --test tests/inspector-tests.json",
+    "test:inspector:ui": "npm run build && npx @modelcontextprotocol/inspector node dist/legacy.js"
   },
   "keywords": [
     "mcp",
@@ -29,12 +31,14 @@
   "author": "epi-logos",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@modelcontextprotocol/sdk": "1.25.3",
+    "@modelcontextprotocol/server": "2.0.0",
     "langchain": "^1.2.15",
     "neo4j-driver": "^5.28.0",
-    "zod": "^3.25.0"
+    "zod": "^4.2.0"
   },
   "devDependencies": {
+    "@modelcontextprotocol/client": "2.0.0",
     "@types/node": "^22.0.0",
     "@vitest/ui": "^4.0.18",
     "typescript": "^5.7.0",
