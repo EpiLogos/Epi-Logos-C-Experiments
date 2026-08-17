@@ -171,7 +171,7 @@ describe('MCP 2026-07-28 Bimba adapter', () => {
             'io.modelcontextprotocol/protocolVersion': '2026-07-28',
             'io.modelcontextprotocol/clientInfo': { name: 'extension-client', version: '1' },
             'io.modelcontextprotocol/clientCapabilities': {
-              extensions: { 'com.example/spoof': { enabled: true } },
+              extensions: { 'io.modelcontextprotocol/oauth-client-credentials': {} },
             },
           },
         },
