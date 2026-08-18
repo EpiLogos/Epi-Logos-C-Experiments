@@ -11,7 +11,7 @@ pub const NARA_SELECTION_SCHEMA: &str = "epi.nara-selection/v1";
 pub const NARA_SENDOFF_ACTION_REF: &str = "epi.action.nara.selection.sendoff";
 pub const NARA_SENDOFF_CAPABILITY_REF: &str = "epi.capability.nara.selected-context";
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NaraEpisodeRecord {
     pub schema: String,
@@ -116,14 +116,10 @@ pub struct NaraSelection {
     pub provenance: NaraExplain,
 }
 
-pub fn read_daily_surface(
-    vault_root: &Path,
-    snapshot: &EpiPrimitiveSnapshot,
-) -> Result<NaraDailySurface, String> {
+pub fn read_daily_surface(vault_root: &Path, snapshot: &EpiPrimitiveSnapshot) -> Result<NaraDailySurface, String> {
     let context = required_context(snapshot)?;
     let paths = NaraPaths::new(vault_root, context)?;
     ensure_day_dir(&paths.day_dir)?;
-
     let (body, revision, source_class) = if paths.body_path.exists() {
         let body = fs::read_to_string(&paths.body_path)
             .map_err(|error| format!("read protected Nara daily note: {error}"))?;
@@ -133,7 +129,6 @@ pub fn read_daily_surface(
     } else {
         (String::new(), 0, "human-authored".to_owned())
     };
-
     Ok(surface(snapshot, context, &paths, body, revision, source_class))
 }
 
@@ -150,21 +145,18 @@ pub fn write_daily_surface(
     if body.trim().is_empty() {
         return Err("Nara daily note body must not be empty".to_owned());
     }
-
-    let current_revision = if paths.record_path.exists() {
+    let revision = if paths.record_path.exists() {
         let record = read_record(&paths.record_path)?;
         validate_record(&record, &paths, context)?;
-        record.revision
+        record.revision.checked_add(1)
     } else {
-        0
-    };
-    let revision = current_revision
-        .checked_add(1)
-        .ok_or_else(|| "Nara episode revision overflow".to_owned())?;
+        Some(1)
+    }
+    .ok_or_else(|| "Nara episode revision overflow".to_owned())?;
+
     let raw_body_handle = paths.body_path.to_string_lossy().into_owned();
-    let event_id = format!("{}:r{}", paths.episode_ref, revision);
     let activity = NaraJournalParser::parse(NaraJournalParseInput {
-        event_id,
+        event_id: format!("{}:r{revision}", paths.episode_ref),
         kind: NaraActivityKind::DailyNote,
         coordinate: snapshot.current_address.canonical_ref.clone(),
         day_id: context.day_id.clone(),
@@ -201,20 +193,14 @@ pub fn write_daily_surface(
     };
 
     atomic_write(&paths.body_path, body.as_bytes())?;
-    let record_bytes = serde_json::to_vec_pretty(&record)
-        .map_err(|error| format!("serialize Nara episode record: {error}"))?;
-    atomic_write(&paths.record_path, &record_bytes)?;
+    atomic_write(
+        &paths.record_path,
+        &serde_json::to_vec_pretty(&record)
+            .map_err(|error| format!("serialize Nara episode record: {error}"))?,
+    )?;
     protect_file(&paths.body_path)?;
     protect_file(&paths.record_path)?;
-
-    Ok(surface(
-        snapshot,
-        context,
-        &paths,
-        body,
-        revision,
-        record.source_class,
-    ))
+    Ok(surface(snapshot, context, &paths, body, revision, record.source_class))
 }
 
 pub fn resolve_selection(
@@ -232,28 +218,22 @@ pub fn resolve_selection(
     if request.start_byte >= request.end_byte || request.end_byte > surface.body.len() {
         return Err("selection byte range is empty or outside the current episode".to_owned());
     }
-    if !surface.body.is_char_boundary(request.start_byte)
-        || !surface.body.is_char_boundary(request.end_byte)
-    {
+    if !surface.body.is_char_boundary(request.start_byte) || !surface.body.is_char_boundary(request.end_byte) {
         return Err("selection byte range must align to UTF-8 character boundaries".to_owned());
     }
     let selected_text = surface.body[request.start_byte..request.end_byte].to_owned();
     if selected_text.trim().is_empty() {
         return Err("selection must contain non-whitespace text".to_owned());
     }
-    let selection_ref = format!(
-        "epi:nara:selection:{}:r{}:{}-{}",
-        stable_part(&surface.episode_ref),
-        surface.episode_revision,
-        request.start_byte,
-        request.end_byte
-    );
     Ok(NaraSelection {
         schema: NARA_SELECTION_SCHEMA.to_owned(),
         action_ref: NARA_SENDOFF_ACTION_REF.to_owned(),
         capability_ref: NARA_SENDOFF_CAPABILITY_REF.to_owned(),
-        episode_ref: surface.episode_ref,
-        selection_ref,
+        episode_ref: surface.episode_ref.clone(),
+        selection_ref: format!(
+            "epi:nara:selection:{}:r{}:{}-{}",
+            stable_part(&surface.episode_ref), surface.episode_revision, request.start_byte, request.end_byte
+        ),
         episode_revision: surface.episode_revision,
         start_byte: request.start_byte,
         end_byte: request.end_byte,
@@ -316,48 +296,39 @@ fn surface(
             vak_status: format!("{:?}", snapshot.vak.current_state.status),
         },
         identity_orientation: "protected personal context · local only".to_owned(),
-        explain: explain(snapshot),
-    }
-}
-
-fn explain(snapshot: &EpiPrimitiveSnapshot) -> NaraExplain {
-    NaraExplain {
-        source_revision: EPI_SOURCE_REVISION.to_owned(),
-        ql_provider_revision: QL_PROVIDER_REVISION.to_owned(),
-        provider_contract: NARA_DAILY_PROVIDER_CONTRACT.to_owned(),
-        computation: vec![
-            "epi-lib::kernel_tick_from_epogdoon through primitive_bridge ABI".to_owned(),
-            "portal-core::kernel_tick_from_epogdoon parity witness".to_owned(),
-            "portal-core::MathemeHarmonicProfile".to_owned(),
-            "portal-core::NaraJournalParser".to_owned(),
-        ],
-        semantic_sources: vec![
-            "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md".to_owned(),
-            "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md".to_owned(),
-        ],
-        readiness: vec![
-            format!("kernel:{:?}", snapshot.kernel.status),
-            format!("ql:{:?}", snapshot.ql.status),
-            format!("vak:{:?}", snapshot.vak.current_state.status),
-            format!("day-now:{:?}", snapshot.time.day_now.status),
-            format!("mahamaya:{:?}", snapshot.mahamaya.status),
-        ],
+        explain: NaraExplain {
+            source_revision: EPI_SOURCE_REVISION.to_owned(),
+            ql_provider_revision: QL_PROVIDER_REVISION.to_owned(),
+            provider_contract: NARA_DAILY_PROVIDER_CONTRACT.to_owned(),
+            computation: vec![
+                "epi-lib::kernel_tick_from_epogdoon through primitive_bridge ABI".to_owned(),
+                "portal-core::kernel_tick_from_epogdoon parity witness".to_owned(),
+                "portal-core::MathemeHarmonicProfile".to_owned(),
+                "portal-core::NaraJournalParser".to_owned(),
+            ],
+            semantic_sources: vec![
+                "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md".to_owned(),
+                "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md".to_owned(),
+            ],
+            readiness: vec![
+                format!("kernel:{:?}", snapshot.kernel.status),
+                format!("ql:{:?}", snapshot.ql.status),
+                format!("vak:{:?}", snapshot.vak.current_state.status),
+                format!("day-now:{:?}", snapshot.time.day_now.status),
+                format!("mahamaya:{:?}", snapshot.mahamaya.status),
+            ],
+        },
     }
 }
 
 fn profile_ref(snapshot: &EpiPrimitiveSnapshot) -> String {
-    format!(
-        "epi:matheme-harmonic-profile:{}:{}",
-        snapshot.source_revision, snapshot.kernel.harmonic_profile.tick
-    )
+    format!("epi:matheme-harmonic-profile:{}:{}", snapshot.source_revision, snapshot.kernel.harmonic_profile.tick)
 }
 
 fn required_context(snapshot: &EpiPrimitiveSnapshot) -> Result<&NaraProtectedContext, String> {
-    snapshot
-        .nara
-        .context
-        .as_ref()
-        .ok_or_else(|| "Nara daily store requires the protected Prompt-A Nara context handoff".to_owned())
+    snapshot.nara.context.as_ref().ok_or_else(|| {
+        "Nara daily store requires the protected Prompt-A Nara context handoff".to_owned()
+    })
 }
 
 struct NaraPaths {
@@ -372,10 +343,9 @@ impl NaraPaths {
     fn new(vault_root: &Path, context: &NaraProtectedContext) -> Result<Self, String> {
         validate_segment(&context.day_id, "day_id")?;
         let day_ref = format!("epi:nara:day:{}", context.day_id);
-        let episode_ref = context
-            .episode_ref
-            .clone()
-            .unwrap_or_else(|| format!("epi:nara:episode:{}:daily-note", context.day_id));
+        let episode_ref = context.episode_ref.clone().unwrap_or_else(|| {
+            format!("epi:nara:episode:{}:daily-note", context.day_id)
+        });
         let day_dir = vault_root.join("Pratibimba").join("Nara").join(&context.day_id);
         Ok(Self {
             body_path: day_dir.join("daily-note.md"),
@@ -388,15 +358,11 @@ impl NaraPaths {
 }
 
 fn read_record(path: &Path) -> Result<NaraEpisodeRecord, String> {
-    let bytes = fs::read(path).map_err(|error| format!("read Nara episode record: {error}"))?;
-    serde_json::from_slice(&bytes).map_err(|error| format!("parse Nara episode record: {error}"))
+    serde_json::from_slice(&fs::read(path).map_err(|error| format!("read Nara episode record: {error}"))?)
+        .map_err(|error| format!("parse Nara episode record: {error}"))
 }
 
-fn validate_record(
-    record: &NaraEpisodeRecord,
-    paths: &NaraPaths,
-    context: &NaraProtectedContext,
-) -> Result<(), String> {
+fn validate_record(record: &NaraEpisodeRecord, paths: &NaraPaths, context: &NaraProtectedContext) -> Result<(), String> {
     if record.schema != "epi.nara-episode-record/v1"
         || record.episode_ref != paths.episode_ref
         || record.day_ref != paths.day_ref
@@ -421,12 +387,9 @@ fn ensure_day_dir(path: &Path) -> Result<(), String> {
 fn atomic_write(path: &Path, bytes: &[u8]) -> Result<(), String> {
     let tmp = path.with_extension("tmp");
     {
-        let mut file = fs::File::create(&tmp)
-            .map_err(|error| format!("create protected Nara temp file: {error}"))?;
-        file.write_all(bytes)
-            .map_err(|error| format!("write protected Nara temp file: {error}"))?;
-        file.sync_all()
-            .map_err(|error| format!("sync protected Nara temp file: {error}"))?;
+        let mut file = fs::File::create(&tmp).map_err(|error| format!("create protected Nara temp file: {error}"))?;
+        file.write_all(bytes).map_err(|error| format!("write protected Nara temp file: {error}"))?;
+        file.sync_all().map_err(|error| format!("sync protected Nara temp file: {error}"))?;
     }
     protect_file(&tmp)?;
     fs::rename(&tmp, path).map_err(|error| format!("commit protected Nara file: {error}"))
@@ -438,11 +401,8 @@ fn protect_dir(path: &Path) -> Result<(), String> {
     fs::set_permissions(path, fs::Permissions::from_mode(0o700))
         .map_err(|error| format!("protect Nara directory permissions: {error}"))
 }
-
 #[cfg(not(unix))]
-fn protect_dir(_path: &Path) -> Result<(), String> {
-    Ok(())
-}
+fn protect_dir(_path: &Path) -> Result<(), String> { Ok(()) }
 
 #[cfg(unix)]
 fn protect_file(path: &Path) -> Result<(), String> {
@@ -450,27 +410,16 @@ fn protect_file(path: &Path) -> Result<(), String> {
     fs::set_permissions(path, fs::Permissions::from_mode(0o600))
         .map_err(|error| format!("protect Nara file permissions: {error}"))
 }
-
 #[cfg(not(unix))]
-fn protect_file(_path: &Path) -> Result<(), String> {
-    Ok(())
-}
+fn protect_file(_path: &Path) -> Result<(), String> { Ok(()) }
 
 fn validate_segment(value: &str, field: &str) -> Result<(), String> {
-    if value.trim().is_empty()
-        || value.contains('/')
-        || value.contains('\\')
-        || value == "."
-        || value == ".."
-    {
+    if value.trim().is_empty() || value.contains('/') || value.contains('\\') || value == "." || value == ".." {
         return Err(format!("Nara {field} is not a safe path segment"));
     }
     Ok(())
 }
 
 fn stable_part(value: &str) -> String {
-    value
-        .chars()
-        .map(|ch| if ch.is_ascii_alphanumeric() { ch } else { '-' })
-        .collect()
+    value.chars().map(|ch| if ch.is_ascii_alphanumeric() { ch } else { '-' }).collect()
 }
