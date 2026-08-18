@@ -1,0 +1,17 @@
+[package]
+name = "epi-pratibimba-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Typed Epi-owned primitive bridge over epi-lib and portal-core"
+license = "MIT OR Apache-2.0"
+build = "build.rs"
+
+[dependencies]
+portal-core = { path = "../portal-core" }
+ql-core = { git = "https://github.com/EpiLogos/QL-MEF", rev = "d0e012b9a2080b75b9583d5fcc672775cce3a7ca" }
+ql-mef = { git = "https://github.com/EpiLogos/QL-MEF", rev = "d0e012b9a2080b75b9583d5fcc672775cce3a7ca" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+serde_json = "1"

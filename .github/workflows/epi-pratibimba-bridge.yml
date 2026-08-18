@@ -1,0 +1,31 @@
+name: Epi Pratibimba primitive bridge
+
+on:
+  pull_request:
+    paths:
+      - 'Body/S/S0/epi-lib/include/primitive_bridge.h'
+      - 'Body/S/S0/epi-lib/src/primitive_bridge.c'
+      - 'Body/S/S0/epi-lib/include/kernel.h'
+      - 'Body/S/S0/epi-lib/src/kernel.c'
+      - 'Body/S/S0/portal-core/**'
+      - 'Body/S/S0/pratibimba-bridge/**'
+      - '.github/workflows/epi-pratibimba-bridge.yml'
+  workflow_dispatch:
+
+jobs:
+  primitive-bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Select stable Rust
+        run: rustup default stable
+      - name: Verify C + portal-core + QL primitive bridge
+        run: cargo test --manifest-path Body/S/S0/pratibimba-bridge/Cargo.toml
+      - name: Prove one-shot headless read model
+        run: |
+          cargo run --quiet --manifest-path Body/S/S0/pratibimba-bridge/Cargo.toml -- --timestamp-ms 0 --generation 1 > /tmp/epi-primitives.json
+          grep -q '"parity": true' /tmp/epi-primitives.json
+          grep -q '"canonicalRef": "epi:bimba:#-4/M4'\''"' /tmp/epi-primitives.json
+          grep -q '"providerContract": "epi.pratibimba-primitive-provider/v1"' /tmp/epi-primitives.json
