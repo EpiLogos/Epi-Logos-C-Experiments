@@ -1,0 +1,65 @@
+name: Bimba MCP conformance
+
+on:
+  push:
+    branches:
+      - recon-r3-mcp-2026-07-28
+    paths:
+      - '.mcp.json'
+      - 'Body/S/S2/external/bimba-mcp/**'
+      - '.github/workflows/bimba-mcp-conformance.yml'
+  pull_request:
+    paths:
+      - '.mcp.json'
+      - 'Body/S/S2/external/bimba-mcp/**'
+      - '.github/workflows/bimba-mcp-conformance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  protocol-conformance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: Body/S/S2/external/bimba-mcp
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: Body/S/S2/external/bimba-mcp/package-lock.json
+
+      - name: Resolve and pin dependency graph
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Commit refreshed lock on implementation branch
+        if: github.event_name == 'push' && github.ref_name == 'recon-r3-mcp-2026-07-28'
+        working-directory: .
+        run: |
+          if git diff --quiet -- Body/S/S2/external/bimba-mcp/package-lock.json; then
+            echo 'package-lock.json already current'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Body/S/S2/external/bimba-mcp/package-lock.json
+          git commit -m 'build(bimba): refresh MCP dependency lock'
+          git push origin HEAD:${GITHUB_REF_NAME}
+
+      - name: Install exact dependency graph
+        run: npm ci
+
+      - name: Production dependency audit (evidence)
+        continue-on-error: true
+        run: npm audit --omit=dev
+
+      - name: Typecheck, build, domain tests, modern protocol tests, legacy fixture
+        run: npm run test:conformance
