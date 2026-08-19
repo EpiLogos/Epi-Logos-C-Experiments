@@ -61,34 +61,36 @@ Every bounded Epii, Anuttara and proposal operation re-resolves that exact curre
 
 ## M4 / M5 / M0 `.0/.5` parent expression
 
+The product-scale eightfold authority defines the parent boundary as `M#.0 ↔ M#.5`. The differentiated deep instrument below that parent is the whole `M#′` field. C therefore uses the parent coordinate spelling directly and does **not** misname the boundary nodes as deep-prime coordinates.
+
 The parent preserves the operative boundary relation without flattening `.1-.4` into fields.
 
 ### M4 / Nara
 
-- `.0` — `M4-0'`: protected identity/quintessence ground. At C scale the current protected episode is the bounded lived subject; deep identity internals remain unopened.
-- `.5` — `M4-5'`: Epii/Sophia review and recognition gate. C can form a return proposal, never silently rewrite identity or human source.
-- `.1-.4`: summon only when the current lived activity crosses somatic/oracle/transformation/semantic depth. The complete psychoid/quaternion/chakra/sushumna/Hopf/cymatic instrument belongs to `epi.deep.m4`.
+- `.0` — `M4.0`: authoritative protected identity / identity-class ground. At C scale the current protected episode is the bounded lived subject; deep identity internals remain unopened.
+- `.5` — `M4.5`: integration / return seam, currently encountered through Epii/Sophia review and recognition. C can form a return proposal, never silently rewrite identity or human source.
+- `.1-.4`: summon only when the current lived activity crosses somatic/oracle/transformation/semantic depth. The complete psychoid/quaternion/chakra/sushumna/Hopf/cymatic instrument belongs to `epi.deep.m4` / the whole `M4′` field.
 
 ### M5 / Epii
 
-- `.0` — `M5-0'`: Bimba/Gnosis/library ground from which Epii can teach, review and traverse source.
-- `.5` — `M5-5'`: Logos/return seam. At C scale this is governed proposal/recognition, not the complete Logos Atelier.
-- `.1-.4`: summonable capacities/contexts only. The complete M5 IDE sixfold belongs to `epi.deep.m5`.
+- `.0` — `M5.0`: canonical Epii identity/source, with Bimba/Gnosis/library as the source ground from which Epii can teach, review and traverse.
+- `.5` — `M5.5`: whole-agent / Logos return seam. At C scale this is governed proposal/recognition, not the complete Logos Atelier.
+- `.1-.4`: summonable capacities/contexts only. The complete M5 IDE sixfold belongs to `epi.deep.m5` / the whole `M5′` field.
 
 ### M0 / Anuttara-Bimba
 
-- `.0` — `M0-0'`: source-provenanced Anuttara/Bimba language and canonical world-ground.
-- `.5` — `M0-5'`: pedagogy route back through Epii without transferring graph/canon authority to a renderer/provider.
-- `.1-.4`: shared source/Knowledge relations when crossed. The complete playable Bimba graph belongs to `epi.deep.m0`.
+- `.0` — `M0.0`: invariant/source/canon ground — source-provenanced Anuttara/Bimba language and canonical world-ground.
+- `.5` — `M0.5`: totalised source / return seam, including pedagogy back through Epii without transferring graph/canon authority to a renderer/provider.
+- `.1-.4`: shared source/Knowledge relations when crossed. The complete playable Bimba graph belongs to `epi.deep.m0` / the whole `M0′` field.
 
 ## Deep-open and D binding
 
 The application publishes stable descriptors for:
 
 ```text
-epi.deep.m0 → M0'
-epi.deep.m4 → M4'
-epi.deep.m5 → M5'
+epi.deep.m0 → M0′
+epi.deep.m4 → M4′
+epi.deep.m5 → M5′
 ```
 
 Each descriptor carries the same Personal `subjectRef`, states that subject identity must be preserved, and leaves `surfaceRef` absent while no deep body is current. C does not fabricate a deep renderer to make the link appear ready.
