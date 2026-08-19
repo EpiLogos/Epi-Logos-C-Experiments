@@ -1,6 +1,7 @@
 export * from './bridge-api';
 export * from './contribution-contracts';
 export * from './coordinate-context';
+export * from './deep-products';
 export * from './observability';
 export * from './profile';
 export * from './readiness';
