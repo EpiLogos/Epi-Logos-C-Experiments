@@ -92,8 +92,8 @@ pub fn current(snapshot: &EpiPrimitiveSnapshot) -> Result<CosmicCurrent, String>
         ],
         semantic_sources: vec![
             "Idea/Bimba/Seeds/M/INTEGRATED-1-2-3-COSMIC-ENGINE-ARCHITECTURE.md".to_owned(),
-            "Idea/Bimba/Map/nodes/nodes_paramasiva.json".to_owned(),
-            "Idea/Bimba/Map/relations/relations_paramasiva.json".to_owned(),
+            "Idea/Bimba/Map/datasets/low-detail/nodes_paramasiva.json".to_owned(),
+            "Idea/Bimba/Map/datasets/low-detail/relations_paramasiva.json".to_owned(),
         ],
         implementation_sources: vec![
             "Body/S/S0/epi-lib/src/kernel.c".to_owned(),
@@ -129,8 +129,8 @@ pub fn current(snapshot: &EpiPrimitiveSnapshot) -> Result<CosmicCurrent, String>
         ],
         semantic_sources: vec![
             "Idea/Bimba/Seeds/M/INTEGRATED-1-2-3-COSMIC-ENGINE-ARCHITECTURE.md".to_owned(),
-            "Idea/Bimba/Map/nodes/nodes_parashakti.json".to_owned(),
-            "Idea/Bimba/Map/relations/relations_parashakti.json".to_owned(),
+            "Idea/Bimba/Map/datasets/low-detail/nodes_parashakti.json".to_owned(),
+            "Idea/Bimba/Map/datasets/low-detail/relations_parashakti.json".to_owned(),
         ],
         implementation_sources: vec![
             "Body/S/S0/portal-core/src/kernel.rs".to_owned(),
@@ -162,8 +162,8 @@ pub fn current(snapshot: &EpiPrimitiveSnapshot) -> Result<CosmicCurrent, String>
         ],
         semantic_sources: vec![
             "Idea/Bimba/Seeds/M/INTEGRATED-1-2-3-COSMIC-ENGINE-ARCHITECTURE.md".to_owned(),
-            "Idea/Bimba/Map/nodes/nodes_mahamaya.json".to_owned(),
-            "Idea/Bimba/Map/relations/relations_mahamaya.json".to_owned(),
+            "Idea/Bimba/Map/datasets/low-detail/nodes_mahamaya.json".to_owned(),
+            "Idea/Bimba/Map/datasets/low-detail/relations_mahamaya.json".to_owned(),
             "Idea/Bimba/Map/datasets/mahamaya-deep/rotational_state_protocol.txt".to_owned(),
         ],
         implementation_sources: vec![
@@ -309,13 +309,9 @@ fn deep_workspaces() -> Vec<DeepWorkspaceEntry> {
         position,
         name: name.to_owned(),
         coordinate: coordinate.to_owned(),
-        workspace_ref: format!("epi:bimba:#-{position}/{coordinate}"),
+        workspace_ref: format!("epi:bimba:#-{position}/M{position}'"),
         bimba_ref: format!("#-{position}"),
-        status: match position {
-            0 | 4 | 5 => PrimitiveStatus::Partial,
-            1 | 2 | 3 => PrimitiveStatus::Partial,
-            _ => PrimitiveStatus::Stub,
-        },
+        status: PrimitiveStatus::Partial,
     })
     .collect()
 }
