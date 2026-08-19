@@ -1,4 +1,5 @@
 mod ffi;
+pub mod cosmic;
 
 use portal_core::{
     canonical_cf_position, kernel_tick_from_epogdoon, KernelTick, MathemeHarmonicProfile, VakAddress,
@@ -9,12 +10,13 @@ use ql_mef::{
 };
 use serde::{Deserialize, Serialize};
 
+pub use cosmic::*;
 pub use ffi::{kernel_tick as call_epi_lib_kernel_tick, EpiLibKernelWitness};
 
 pub const SNAPSHOT_SCHEMA: &str = "epi.pratibimba-primitive-snapshot/v1";
 pub const PROVIDER_CONTRACT: &str = "epi.pratibimba-primitive-provider/v1";
 pub const NATIVE_OWNER: &str = "epi";
-pub const QL_PROVIDER_REVISION: &str = "d0e012b9a2080b75b9583d5fcc672775cce3a7ca";
+pub const QL_PROVIDER_REVISION: &str = "d418abfff6f9e001c8c5ff083206329b298eddcf";
 pub const EPI_SOURCE_REVISION: &str = env!("EPI_SOURCE_REVISION");
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
