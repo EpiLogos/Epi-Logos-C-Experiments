@@ -8,8 +8,8 @@ build = "build.rs"
 
 [dependencies]
 portal-core = { path = "../portal-core" }
-ql-core = { git = "https://github.com/EpiLogos/QL-MEF", rev = "d0e012b9a2080b75b9583d5fcc672775cce3a7ca" }
-ql-mef = { git = "https://github.com/EpiLogos/QL-MEF", rev = "d0e012b9a2080b75b9583d5fcc672775cce3a7ca" }
+ql-core = { git = "https://github.com/EpiLogos/QL-MEF", rev = "d418abfff6f9e001c8c5ff083206329b298eddcf" }
+ql-mef = { git = "https://github.com/EpiLogos/QL-MEF", rev = "d418abfff6f9e001c8c5ff083206329b298eddcf" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
