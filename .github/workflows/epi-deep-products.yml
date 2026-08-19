@@ -1,0 +1,54 @@
+name: Epi deep product contracts
+
+on:
+  push:
+    branches:
+      - agent/epi-pratibimba-e-deep-contracts
+      - design/epi-eightfold-product-architecture
+    paths:
+      - 'Body/M/epi-theia/extensions/m-extension-runtime/**'
+      - 'Body/M/epi-theia/extensions/test/deep-product-contract.test.mjs'
+      - 'Body/M/epi-theia/package.json'
+      - '.github/workflows/epi-deep-products.yml'
+  pull_request:
+    paths:
+      - 'Body/M/epi-theia/extensions/m-extension-runtime/**'
+      - 'Body/M/epi-theia/extensions/test/deep-product-contract.test.mjs'
+      - 'Body/M/epi-theia/package.json'
+      - '.github/workflows/epi-deep-products.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deep-contract:
+    name: deep-open identity + boundary law
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: Body/M/epi-theia
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Activate pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.25.0 --activate
+          pnpm --version
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared M-extension runtime
+        run: pnpm --filter @pratibimba/m-extension-runtime build
+
+      - name: Prove six deep product contracts
+        run: node --test extensions/test/deep-product-contract.test.mjs
