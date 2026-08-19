@@ -4,6 +4,7 @@ pub use epi_pratibimba_bridge::{
 
 mod nara;
 mod personal;
+mod personal_application;
 
 // EpiiReviewMode is a two-variant value object. Keeping it Copy lets the bridge
 // choose explanatory wording and then preserve the exact requested mode in the
@@ -19,6 +20,7 @@ use personal::{
     form_proposal, orient_ground, review_selection, EpiiReviewRequest, PersonalGroundRequest,
     PersonalProposalRequest,
 };
+use personal_application::personal_application;
 use portal_core::VakAddress;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -37,6 +39,7 @@ enum Operation {
     EpiiReview,
     PersonalGround,
     PersonalProposal,
+    PersonalApplication,
 }
 
 fn main() {
@@ -83,12 +86,13 @@ fn run() -> Result<(), String> {
                     "epii-review" => Operation::EpiiReview,
                     "personal-ground" => Operation::PersonalGround,
                     "personal-proposal" => Operation::PersonalProposal,
+                    "personal-application" => Operation::PersonalApplication,
                     other => return Err(format!("unknown operation `{other}`")),
                 }
             }
             "--help" | "-h" => {
                 println!(
-                    "Usage: epi-pratibimba-bridge [--operation snapshot|nara-read|nara-write|nara-select|epii-review|personal-ground|personal-proposal] [--timestamp-ms N] [--generation N] [--vak-file PATH] [--nara-context PATH] [--vault-root PATH]\n\nThe default snapshot operation emits the Prompt-A primitive reading. Protected Nara and Personal 4/5/0 operations require the protected Nara context and vault root. Requests are accepted on stdin so private text is never placed in process arguments. Personal operations re-resolve the exact current Nara selection before emitting Epi-specific review, ground or proposal packets. The process remains one-shot; it is not a daemon, chat runtime, EpiiRuntime or SessionSpace."
+                    "Usage: epi-pratibimba-bridge [--operation snapshot|nara-read|nara-write|nara-select|epii-review|personal-ground|personal-proposal|personal-application] [--timestamp-ms N] [--generation N] [--vak-file PATH] [--nara-context PATH] [--vault-root PATH]\n\nThe default snapshot operation emits the primitive reading. Protected Nara and Personal 4/5/0 operations require the protected Nara context and vault root. Requests are accepted on stdin so private text is never placed in process arguments. Personal review/ground/proposal operations re-resolve the exact current Nara selection. personal-application emits a body-free epi.personal.450 application descriptor over the current governed episode, including activity readiness, .0/.5 boundary expression, deep-open descriptors and the D eventRef binding socket. The process remains one-shot; it is not a daemon, chat runtime, EpiiRuntime or SessionSpace."
                 );
                 return Ok(());
             }
@@ -136,6 +140,10 @@ fn run() -> Result<(), String> {
             let vault_root = required_vault_root(vault_root.as_ref())?;
             let request: PersonalProposalRequest = read_stdin_json()?;
             emit(&form_proposal(vault_root, &observation, request)?)
+        }
+        Operation::PersonalApplication => {
+            let vault_root = required_vault_root(vault_root.as_ref())?;
+            emit(&personal_application(vault_root, &observation)?)
         }
     }
 }
