@@ -1,0 +1,137 @@
+{
+  "schema": "epi.deep-subsystem-capability-matrix/v1",
+  "status": "research-human-ratification-required",
+  "subsystem": {
+    "coordinate": "M4",
+    "identity": "Nara",
+    "deep_product": "epi.deep.m4",
+    "cross_register_projection_status": "NOT-YET-MAPPED"
+  },
+  "method": {
+    "protocol": "EpiLogos/QL-MEF:docs/integrations/epi-logos/EPI-DEEP-SUBSYSTEM-CAPABILITY-MATRIX-PROTOCOL.md",
+    "principles": [
+      "chronology-is-not-semantic-precedence",
+      "recover-subsystem-before-embodiment",
+      "union-with-provenance",
+      "preserve-unresolved-technical-decisions",
+      "current-code-is-implementation-fact-not-retroactive-intent"
+    ]
+  },
+  "source_sets": {
+    "foundational_signal": [
+      "Idea/Bimba/Seeds/M/M4'/Legacy/specs/M/M4-nara-personal-interface.md",
+      "Idea/Bimba/Seeds/M/M4'/Legacy/specs/M/M4-nara-subtle-body-map.md",
+      "Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/**"
+    ],
+    "current_domain_and_research": [
+      "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+      "Idea/Bimba/Seeds/M/M4'/M4-ARCHITECTURE.md",
+      "Idea/Bimba/Seeds/M/M4'/m4-prime-nara-activity-graphiti-instrument.md",
+      "Idea/Bimba/Seeds/M/M4'/m4-prime-nara-day-episodes-and-oracle-artifacts.md",
+      "Idea/Bimba/Seeds/M/M4'/m4-prime-nara-integration-research.md",
+      "Idea/Bimba/Seeds/M/M4'/m4-prime-psychoid-cymatic-field-engine.md",
+      "Idea/Bimba/Seeds/M/M4'/nara-m4-0-identity-branch-integration-map.md",
+      "Idea/Bimba/Seeds/M/M4'/nara-m4-0-0-birthdate-encoding-spec.md"
+    ],
+    "implementation_fact": [
+      "Body/S/S0/epi-lib/include/m4.h",
+      "Body/S/S0/epi-lib/src/m4.c",
+      "Body/S/S0/portal-core/src/personal_identity.rs",
+      "Body/S/S0/portal-core/src/nara_journal.rs",
+      "Body/S/S0/portal-core/src/transcription.rs",
+      "Body/S/S3/graphiti-runtime/src/lib.rs"
+    ]
+  },
+  "outer_field": [
+    {"coordinate":"M4.0","name":"Mahamaya Identity Matrix","role":"stable personal identity evidence and synthesis field","decision_state":"SEMANTIC-ROLE-STRONG_TECH-OPEN"},
+    {"coordinate":"M4.1","name":"Sympathetic Medicine","role":"embodied elemental subtle-body materia timing and safety field","decision_state":"FEATURE-FIELD-STRONG_TECH-OPEN"},
+    {"coordinate":"M4.2","name":"Divinatory Frameworks","role":"symbolic/oracular consultation and interpretation field","decision_state":"FEATURE-FIELD-STRONG_TECH-OPEN"},
+    {"coordinate":"M4.3","name":"Mediating Transformation","role":"transformation cycle process protocol and phase-history field","decision_state":"FEATURE-FIELD-STRONG_TECH-OPEN"},
+    {"coordinate":"M4.4","name":"Context and Lenses","role":"sole canonical cross-M contextual conduit and lived convergence field","decision_state":"SEMANTIC-ROLE-STRONG_TECH-OPEN"},
+    {"coordinate":"M4.5","name":"Epii Integration","role":"review pedagogy integration and governed return field","decision_state":"SEMANTIC-ROLE-STRONG_BOUNDARY-TO-M5-REQUIRES-CARE"}
+  ],
+  "recursive_coordinates": [
+    {"coordinate":"M4.0.0","name":"Birthdate Encoding","parent":"M4.0","role":"numeric/date/name-derived identity evidence with preserved derivation"},
+    {"coordinate":"M4.0.1","name":"Decanic Astrology / Parashakti Chart","parent":"M4.0","role":"natal/celestial/decanic identity evidence"},
+    {"coordinate":"M4.0.2","name":"Jungian Phenomenal / Type Layer","parent":"M4.0","role":"psychological function and compensatory polarity evidence"},
+    {"coordinate":"M4.0.3","name":"Gene Keys / Mahamaya 64-Code Bridge","parent":"M4.0","role":"64-code contemplative identity evidence"},
+    {"coordinate":"M4.0.4","name":"Human Design / BodyGraph Mechanics","parent":"M4.0","role":"bodygraph centres gates channels authority and polarity evidence"},
+    {"coordinate":"M4.0.5","name":"Identity Quintessence","parent":"M4.0","role":"traceable synthesis preserving contradictions provenance confidence and evidence"},
+
+    {"coordinate":"M4.1.0","name":"Elemental Ground","parent":"M4.1","role":"personal/current elemental condition and balance"},
+    {"coordinate":"M4.1.1","name":"Energy-Body Architecture","parent":"M4.1","role":"chakras nadis subtle-body topology and flow"},
+    {"coordinate":"M4.1.2","name":"Materia and Reagents","parent":"M4.1","role":"correspondential materia pharmacopeia and signatures"},
+    {"coordinate":"M4.1.3","name":"Operations and Techne","parent":"M4.1","role":"alchemical ritual and transformation operations"},
+    {"coordinate":"M4.1.4","name":"Temporal Astrological Intelligence","parent":"M4.1","role":"current/natal timing planetary decanic and kairotic condition"},
+    {"coordinate":"M4.1.5","name":"Safety and Feedback","parent":"M4.1","role":"contraindication consent feedback confidence and adjustment gate"},
+
+    {"coordinate":"M4.2.0","name":"Common Symbol Substrate","parent":"M4.2","role":"cross-tradition canonical translation and tag substrate"},
+    {"coordinate":"M4.2.1","name":"Tarot Engines","parent":"M4.2","role":"multi-traditional Tarot operation and mappings"},
+    {"coordinate":"M4.2.2","name":"I-Ching Integration","parent":"M4.2","role":"hexagram line-change consultation tied to M3 symbolic authority"},
+    {"coordinate":"M4.2.3","name":"Casting and Randomness","parent":"M4.2","role":"consent-gated entropy/casting portal"},
+    {"coordinate":"M4.2.4","name":"Interpretation Layer","parent":"M4.2","role":"rule/source-backed and bounded generative synthesis"},
+    {"coordinate":"M4.2.5","name":"Divinatory Hygiene and Pedagogy","parent":"M4.2","role":"bias uncertainty limits transparency and educational scaffolding"},
+
+    {"coordinate":"M4.3.0","name":"Cycle Engine","parent":"M4.3","role":"locate activity in transformation cycle"},
+    {"coordinate":"M4.3.1","name":"Operational Grammar / Alchemy","parent":"M4.3","role":"name and enact transformation operations"},
+    {"coordinate":"M4.3.2","name":"Dialogical and Inquiry Containers","parent":"M4.3","role":"hold dialogical and inquiry practices as transformation contexts"},
+    {"coordinate":"M4.3.3","name":"Control / Chaos and Safety","parent":"M4.3","role":"bound intensity perturbation consent and risk"},
+    {"coordinate":"M4.3.4","name":"Protocol Library / Storey Packets","parent":"M4.3","role":"reusable transformation and practice protocols with provenance"},
+    {"coordinate":"M4.3.5","name":"Telemetry and Phase History","parent":"M4.3","role":"process trajectory phase transitions and review evidence"},
+
+    {"coordinate":"M4.4.0","name":"Gebser Lens","parent":"M4.4","role":"structures and mutations of consciousness reading"},
+    {"coordinate":"M4.4.1","name":"Ontological Lens","parent":"M4.4","role":"being/world disclosure reading"},
+    {"coordinate":"M4.4.2","name":"Epistemological Lens","parent":"M4.4","role":"knowledge standing and method reading"},
+    {"coordinate":"M4.4.3","name":"Jungian Depth Psychology Lens","parent":"M4.4","role":"complex shadow archetypal and psychological interpretation"},
+    {"coordinate":"M4.4.4","name":"Phenomenological Lens","parent":"M4.4","role":"first-person lived disclosure and recursive personal convergence"},
+    {"coordinate":"M4.4.4.4","name":"Personal Pratibimba","parent":"M4.4.4","role":"protected convergence of identity current universal condition activity and contextual interpretation"},
+    {"coordinate":"M4.4.5","name":"Trika / Kashmir Saivism Lens","parent":"M4.4","role":"recognition contraction Siva-Shakti and Pratyabhijna reading"},
+
+    {"coordinate":"M4.5.0","name":"Curriculum Map","parent":"M4.5","role":"organise learnable development from lived evidence"},
+    {"coordinate":"M4.5.1","name":"Core Epi-Logos Voice","parent":"M4.5","role":"dialogic and pedagogical articulation of Nara material"},
+    {"coordinate":"M4.5.2","name":"Method Transparency Lab","parent":"M4.5","role":"expose method evidence reasoning and limits"},
+    {"coordinate":"M4.5.3","name":"Integration Lab","parent":"M4.5","role":"synthesise patterns without unreviewed identity promotion"},
+    {"coordinate":"M4.5.4","name":"Pedagogy Lab","parent":"M4.5","role":"turn reviewed experience into teachable usable learning"},
+    {"coordinate":"M4.5.5","name":"Logos Cycle Engine","parent":"M4.5","role":"complete recognition/return and handoff toward M5/renewed ground"}
+  ],
+  "experience_families": [
+    "lived-flow",
+    "personal-identity-exploration",
+    "subtle-personal-field",
+    "oracle",
+    "somatic-medicinal-orientation",
+    "transformation",
+    "context-lens-exploration",
+    "trajectory-temporal-reading",
+    "dialogic-nara",
+    "recognition-return"
+  ],
+  "open_decisions": [
+    {"id":"NARA-D01","question":"What exactly is Q_identity relative to the full M4.0 identity evidence field?","status":"OPEN"},
+    {"id":"NARA-D02","question":"Is BLAKE3 a semantic identity, integrity/privacy address, or one replaceable representation?","status":"OPEN"},
+    {"id":"NARA-D03","question":"Which M4.0 identity layers are mandatory versus optional and how do they contribute?","status":"OPEN"},
+    {"id":"NARA-D04","question":"What is the canonical quaternion/element axis ordering and normalization law?","status":"OPEN"},
+    {"id":"NARA-D05","question":"How do q_personal, q_Nara and Q_identity differ or coincide?","status":"OPEN"},
+    {"id":"NARA-D06","question":"What evidence composes Q_transit?","status":"OPEN"},
+    {"id":"NARA-D07","question":"What is the final Q_activity reducer/representation while preserving decay confidence and provenance?","status":"OPEN"},
+    {"id":"NARA-D08","question":"What is the final formal semantics of Q_identity * Q_transit * Q_activity -> Q_composed?","status":"OPEN"},
+    {"id":"NARA-D09","question":"What are the canonical roles of bioquaternion Hopf projection and psychoid/cymatic rendering?","status":"OPEN"}
+  ],
+  "technology_decisions": [
+    {"concern":"BLAKE3","status":"OPEN"},
+    {"concern":"Graphiti episodic store","status":"IMPLEMENTED/HISTORICAL-EVIDENCE"},
+    {"concern":"Kerykeion astrology provider","status":"CURRENT/CANDIDATE"},
+    {"concern":"Theia/Tauri/O:I Canvas","status":"HOST-OR-PRESENTATION-NOT-NARA-IDENTITY"},
+    {"concern":"Three.js/SVG/cymatic rendering","status":"HISTORICAL-OR-RESEARCH-CANDIDATE"},
+    {"concern":"MBTI as canonical Jungian representation","status":"OPEN"},
+    {"concern":"Gene Keys/Human Design weighting","status":"OPEN"},
+    {"concern":"local LLM symbolic parser","status":"CANDIDATE"}
+  ],
+  "cross_register_constitutional_row": {
+    "m":"M4 Nara",
+    "s":"S4 Workcell",
+    "s_prime":"S4' Anima",
+    "m_prime":"epi.deep.m4",
+    "status":"RATIFIED-SPINE_CAPABILITY-MAPPING-DEFERRED"
+  }
+}
