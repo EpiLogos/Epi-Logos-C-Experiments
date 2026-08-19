@@ -2,6 +2,7 @@ pub use epi_pratibimba_bridge::{
     EpiPrimitiveSnapshot, NaraProtectedContext, EPI_SOURCE_REVISION, QL_PROVIDER_REVISION,
 };
 
+mod cosmic;
 mod nara;
 mod personal;
 
@@ -10,6 +11,7 @@ mod personal;
 // returned packet without introducing a second runtime/state object.
 impl Copy for personal::EpiiReviewMode {}
 
+use cosmic::current as cosmic_current;
 use epi_pratibimba_bridge::snapshot;
 use nara::{
     read_daily_surface, resolve_selection, write_daily_surface, NaraSelectionRequest,
@@ -31,6 +33,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Operation {
     Snapshot,
+    CosmicCurrent,
     NaraRead,
     NaraWrite,
     NaraSelect,
@@ -77,6 +80,7 @@ fn run() -> Result<(), String> {
             "--operation" => {
                 operation = match args.next().ok_or("--operation requires a value")?.as_str() {
                     "snapshot" => Operation::Snapshot,
+                    "cosmic-current" => Operation::CosmicCurrent,
                     "nara-read" => Operation::NaraRead,
                     "nara-write" => Operation::NaraWrite,
                     "nara-select" => Operation::NaraSelect,
@@ -88,7 +92,7 @@ fn run() -> Result<(), String> {
             }
             "--help" | "-h" => {
                 println!(
-                    "Usage: epi-pratibimba-bridge [--operation snapshot|nara-read|nara-write|nara-select|epii-review|personal-ground|personal-proposal] [--timestamp-ms N] [--generation N] [--vak-file PATH] [--nara-context PATH] [--vault-root PATH]\n\nThe default snapshot operation emits the Prompt-A primitive reading. Protected Nara and Personal 4/5/0 operations require the protected Nara context and vault root. Requests are accepted on stdin so private text is never placed in process arguments. Personal operations re-resolve the exact current Nara selection before emitting Epi-specific review, ground or proposal packets. The process remains one-shot; it is not a daemon, chat runtime, EpiiRuntime or SessionSpace."
+                    "Usage: epi-pratibimba-bridge [--operation snapshot|cosmic-current|nara-read|nara-write|nara-select|epii-review|personal-ground|personal-proposal] [--timestamp-ms N] [--generation N] [--vak-file PATH] [--nara-context PATH] [--vault-root PATH]\n\nThe default snapshot operation emits the Prompt-A primitive reading. cosmic-current composes M1'/M2'/M3' from the same snapshot-owned MathemeHarmonicProfile and creates no second state store. Protected Nara and Personal 4/5/0 operations require the protected Nara context and vault root. Requests are accepted on stdin so private text is never placed in process arguments. Personal operations re-resolve the exact current Nara selection before emitting Epi-specific review, ground or proposal packets. The process remains one-shot; it is not a daemon, chat runtime, EpiiRuntime or SessionSpace."
                 );
                 return Ok(());
             }
@@ -103,6 +107,7 @@ fn run() -> Result<(), String> {
 
     match operation {
         Operation::Snapshot => emit(&observation),
+        Operation::CosmicCurrent => emit(&cosmic_current(&observation)?),
         Operation::NaraRead => {
             let vault_root = required_vault_root(vault_root.as_ref())?;
             emit(&read_daily_surface(vault_root, &observation)?)
