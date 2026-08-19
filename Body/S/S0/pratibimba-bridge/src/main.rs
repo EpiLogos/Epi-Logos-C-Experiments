@@ -2,14 +2,17 @@ pub use epi_pratibimba_bridge::{
     EpiPrimitiveSnapshot, NaraProtectedContext, EPI_SOURCE_REVISION, QL_PROVIDER_REVISION,
 };
 
+mod current_situated_binding;
 mod nara;
 mod personal;
+mod personal_application;
 
 // EpiiReviewMode is a two-variant value object. Keeping it Copy lets the bridge
 // choose explanatory wording and then preserve the exact requested mode in the
 // returned packet without introducing a second runtime/state object.
 impl Copy for personal::EpiiReviewMode {}
 
+use current_situated_binding::bind_personal_parent;
 use epi_pratibimba_bridge::{current_situated, snapshot, CurrentSituatedRequest};
 use nara::{
     read_daily_surface, resolve_selection, write_daily_surface, NaraSelectionRequest,
@@ -19,6 +22,7 @@ use personal::{
     form_proposal, orient_ground, review_selection, EpiiReviewRequest, PersonalGroundRequest,
     PersonalProposalRequest,
 };
+use personal_application::personal_application;
 use portal_core::VakAddress;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -37,6 +41,7 @@ enum Operation {
     EpiiReview,
     PersonalGround,
     PersonalProposal,
+    PersonalApplication,
     CosmicCurrent,
 }
 
@@ -84,13 +89,14 @@ fn run() -> Result<(), String> {
                     "epii-review" => Operation::EpiiReview,
                     "personal-ground" => Operation::PersonalGround,
                     "personal-proposal" => Operation::PersonalProposal,
+                    "personal-application" => Operation::PersonalApplication,
                     "cosmic-current" => Operation::CosmicCurrent,
                     other => return Err(format!("unknown operation `{other}`")),
                 }
             }
             "--help" | "-h" => {
                 println!(
-                    "Usage: epi-pratibimba-bridge [--operation snapshot|nara-read|nara-write|nara-select|epii-review|personal-ground|personal-proposal|cosmic-current] [--timestamp-ms N] [--generation N] [--vak-file PATH] [--nara-context PATH] [--vault-root PATH]\n\nThe default snapshot operation emits the primitive reading. Protected Nara and Personal 4/5/0 operations require the protected Nara context and vault root. cosmic-current reads one CurrentSituatedRequest from stdin, uses its eventAtUnixMs as the single M1/M2/M3 event time, requires the existing protected Nara subject/episode, and emits the Epi-owned Current Situated Matheme plus epi.cosmic.123. A --timestamp-ms supplied with cosmic-current must equal eventAtUnixMs. Requests are accepted on stdin so protected identity/activity material is never placed in process arguments. The process remains one-shot; it is not a daemon, chat runtime, EpiiRuntime or SessionSpace."
+                    "Usage: epi-pratibimba-bridge [--operation snapshot|nara-read|nara-write|nara-select|epii-review|personal-ground|personal-proposal|personal-application|cosmic-current] [--timestamp-ms N] [--generation N] [--vak-file PATH] [--nara-context PATH] [--vault-root PATH]\n\nThe default snapshot operation emits the primitive reading. Protected Nara and Personal 4/5/0 operations require the protected Nara context and vault root. personal-application emits corrected C's body-free epi.personal.450 parent and unbound D socket. cosmic-current reads one CurrentSituatedRequest from stdin, uses eventAtUnixMs as the single M1/M2/M3 event time, resolves the corrected C parent from the same protected Nara episode/vault, binds that exact unbound socket to the D eventRef, and emits the Epi-owned Current Situated Matheme plus epi.cosmic.123. D never mints a parallel PersonalEvent. A --timestamp-ms supplied with cosmic-current must equal eventAtUnixMs. Requests are accepted on stdin so protected identity/activity material is never placed in process arguments. The process remains one-shot; it is not a daemon, chat runtime, EpiiRuntime or SessionSpace."
                 );
                 return Ok(());
             }
@@ -111,8 +117,26 @@ fn run() -> Result<(), String> {
                 ));
             }
         }
+        let vault_root = required_vault_root(vault_root.as_ref())?;
         let observation = snapshot(request.event_at_unix_ms, generation, vak, nara_context)?;
-        return emit(&current_situated(&observation, request)?);
+        let nara_identity_ref = observation
+            .nara
+            .context
+            .as_ref()
+            .map(|context| context.identity_ref.clone())
+            .ok_or_else(|| {
+                "cosmic-current requires the existing protected Nara context; D does not mint Personal identity"
+                    .to_owned()
+            })?;
+        let corrected_c = personal_application(vault_root, &observation)?;
+        let corrected_c_value = serde_json::to_value(&corrected_c)
+            .map_err(|error| format!("serialize corrected C Personal application: {error}"))?;
+        let d = current_situated(&observation, request)?;
+        return emit(&bind_personal_parent(
+            d,
+            &corrected_c_value,
+            &nara_identity_ref,
+        )?);
     }
 
     let timestamp_ms = timestamp_ms.unwrap_or(system_time_ms()?);
@@ -153,6 +177,10 @@ fn run() -> Result<(), String> {
             let vault_root = required_vault_root(vault_root.as_ref())?;
             let request: PersonalProposalRequest = read_stdin_json()?;
             emit(&form_proposal(vault_root, &observation, request)?)
+        }
+        Operation::PersonalApplication => {
+            let vault_root = required_vault_root(vault_root.as_ref())?;
+            emit(&personal_application(vault_root, &observation)?)
         }
         Operation::CosmicCurrent => unreachable!("handled before ordinary snapshot path"),
     }
