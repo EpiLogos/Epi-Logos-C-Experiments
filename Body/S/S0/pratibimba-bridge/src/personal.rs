@@ -1,6 +1,4 @@
-use crate::nara::{
-    resolve_selection, NaraCoordinateBinding, NaraSelection, NaraSelectionRequest,
-};
+use crate::nara::{resolve_selection, NaraSelection, NaraSelectionRequest};
 use crate::{EpiPrimitiveSnapshot, EPI_SOURCE_REVISION, QL_PROVIDER_REVISION};
 use serde::{Deserialize, Serialize};
 use std::path::Path;
@@ -15,13 +13,6 @@ pub const ANUTTARA_GROUND_ACTION_REF: &str = "epi.action.anuttara.ground";
 pub const ANUTTARA_GROUND_CAPABILITY_REF: &str = "epi.capability.bimba.ground-read";
 pub const PERSONAL_PROPOSAL_ACTION_REF: &str = "epi.action.personal.proposal";
 pub const PERSONAL_PROPOSAL_CAPABILITY_REF: &str = "epi.capability.personal.proposal";
-
-/// Exact Bimba Map source body proven by QL-MEF PRE-D conformance.
-///
-/// This is source provenance, not a claim that the current Epi bridge owns the
-/// whole Map or that every structurally present coordinate has an implementation.
-pub const BIMBA_MAP_SOURCE_REPOSITORY: &str = "EpiLogos/Epi-Logos-C-Experiments";
-pub const BIMBA_MAP_SOURCE_REVISION: &str = "daa660cbc1b8c5da83828698665a753852cb0287";
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -71,8 +62,6 @@ pub struct PersonalSubject {
     pub ql_address: String,
     pub coordinate_ref: String,
     pub profile_ref: String,
-    /// Exact source-conformant M4/M4′ binding carried by the selected lived object.
-    pub coordinate_binding: NaraCoordinateBinding,
     pub privacy_class: String,
 }
 
@@ -99,28 +88,10 @@ pub struct EpistemicStanding {
     pub research: Vec<String>,
 }
 
-/// Source-derived structural ground for one M domain.
-///
-/// QL-MEF owns the general source normalization/reflection machinery. The Epi
-/// bridge carries these refs so a Personal packet can point into that same
-/// structural field without becoming another coordinate library.
-#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct MapDomainGround {
-    pub source_repository: String,
-    pub source_revision: String,
-    pub source_ref: String,
-    pub bimba_coordinate_ref: String,
-    pub pratibimba_coordinate_ref: String,
-    pub readiness_state: String,
-    pub source_relation_asserted: bool,
-}
-
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PersonalProvenance {
     pub epi_source_revision: String,
-    pub bimba_map_source_revision: String,
     pub ql_provider_revision: String,
     pub semantic_sources: Vec<String>,
     pub result_class: String,
@@ -137,8 +108,6 @@ pub struct EpiiReview {
     pub mode: EpiiReviewMode,
     pub subject: PersonalSubject,
     pub agent: CanonicalEpiAgent,
-    /// Actual M5/M5′ structural root; this does not imply a fully implemented M5 workspace.
-    pub map_ground: MapDomainGround,
     pub standing: EpistemicStanding,
     pub explanation: Vec<String>,
     pub review_questions: Vec<String>,
@@ -153,9 +122,6 @@ pub struct GroundRelation {
     pub from_ref: String,
     pub via_ref: String,
     pub to_ref: String,
-    /// This describes the packet/runtime flow, not a relation asserted by Bimba Map.
-    pub relation_class: String,
-    pub bimba_source_relation_asserted: bool,
     pub reason: Vec<String>,
 }
 
@@ -179,8 +145,6 @@ pub struct PersonalGroundOrientation {
     pub ground_ref: String,
     pub subject: PersonalSubject,
     pub agent: CanonicalEpiAgent,
-    /// Actual M0/M0′ structural root; source/canon authority remains source-owned.
-    pub map_ground: MapDomainGround,
     pub relation: GroundRelation,
     pub bimba: BimbaOrientation,
     pub source_anchors: Vec<String>,
@@ -207,8 +171,6 @@ pub struct PersonalProposal {
     pub capability_ref: String,
     pub proposal_ref: String,
     pub subject: PersonalSubject,
-    /// Proposal is an M5′/Epii return operation and therefore points at M5 ground.
-    pub map_ground: MapDomainGround,
     pub proposed_content: String,
     pub source_class: String,
     pub adoption_state: String,
@@ -227,12 +189,7 @@ pub fn review_selection(
 ) -> Result<EpiiReview, String> {
     let selection = resolve_selection(vault_root, snapshot, request.selection)?;
     let subject = subject(&selection);
-    let agent = agent(
-        snapshot,
-        5,
-        "epi:agent:epii",
-        "recursive pedagogy / review / proposal / return",
-    )?;
+    let agent = agent(snapshot, 5, "epi:agent:epii", "recursive pedagogy / review / proposal / return")?;
     let mode_label = match request.mode {
         EpiiReviewMode::Explain => "explain",
         EpiiReviewMode::Review => "review",
@@ -250,7 +207,6 @@ pub fn review_selection(
         mode: request.mode,
         subject,
         agent,
-        map_ground: map_domain_ground(5, "personal-review-implemented; whole-M5-workspace-not-assessed"),
         standing: EpistemicStanding {
             authored: vec![
                 "the selected words are a bounded excerpt of the current human-authored protected Nara episode".into(),
@@ -268,7 +224,6 @@ pub fn review_selection(
             ],
             formal: vec![
                 "QL/MEF refs are formal orientation supplied by the pinned QL provider and do not amend canon".into(),
-                "the M5/M5′ Map root is structural ground; its existence does not claim a complete M5 implementation".into(),
             ],
             research: vec![
                 "psychoid or flourishing conclusions require evidence beyond a successful formal computation".into(),
@@ -277,10 +232,7 @@ pub fn review_selection(
         explanation: vec![
             format!(
                 "The current lived object is {} at revision {}, range {}–{}.",
-                selection.episode_ref,
-                selection.episode_revision,
-                selection.start_byte,
-                selection.end_byte
+                selection.episode_ref, selection.episode_revision, selection.start_byte, selection.end_byte
             ),
             format!(
                 "Its encounter is situated at {} / {} with profile {}.",
@@ -289,11 +241,6 @@ pub fn review_selection(
             format!(
                 "The current formal orientation is {} and the Epi coordinate is {}.",
                 selection.ql_address, selection.coordinate_ref
-            ),
-            format!(
-                "Its exact lived Map lineage is {} -> {}.",
-                selection.coordinate_binding.bimba_source_ref,
-                selection.coordinate_binding.pratibimba_coordinate_ref
             ),
             "Those coordinates explain where the passage is being encountered; they do not convert the human's words into a computed or canonical claim.".into(),
         ],
@@ -312,14 +259,9 @@ pub fn review_selection(
         return_law: vec![
             "formal-model return != operative software return".into(),
             "Epi theory/canon return != human personal return".into(),
-            "packet-flow relation != Bimba source relation".into(),
             "proposal != recognised durable mutation".into(),
         ],
         provenance: provenance(vec![
-            "Idea/Bimba/Map/datasets/low-detail/nodes_nara.json",
-            "Idea/Bimba/Map/datasets/nara-deep/nodes-full-detail.json",
-            "Idea/Bimba/Map/datasets/low-detail/nodes_epii.json",
-            "Idea/Bimba/Map/datasets/epii-deep/nodes-full-details.json",
             "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md",
             "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
             "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
@@ -334,12 +276,7 @@ pub fn orient_ground(
 ) -> Result<PersonalGroundOrientation, String> {
     let selection = resolve_selection(vault_root, snapshot, request.selection)?;
     let subject = subject(&selection);
-    let agent = agent(
-        snapshot,
-        0,
-        "epi:agent:anuttara",
-        "source-ground / coordinate / provenance orientation",
-    )?;
+    let agent = agent(snapshot, 0, "epi:agent:anuttara", "source-ground / coordinate / provenance orientation")?;
     let review_ref = request
         .review_ref
         .unwrap_or_else(|| format!("epi:epii:review:{}", stable_part(&selection.selection_ref)));
@@ -353,31 +290,16 @@ pub fn orient_ground(
         ground_ref,
         subject,
         agent,
-        map_ground: map_domain_ground(0, "ground-orientation-implemented; whole-M0-workspace-not-assessed"),
         relation: GroundRelation {
             from_ref: selection.selection_ref.clone(),
             via_ref: review_ref,
             to_ref: bimba_ref.clone(),
-            relation_class: "implementation-flow".into(),
-            bimba_source_relation_asserted: false,
             reason: vec![
                 "the selected object is a protected M4′/Nara lived episode range".into(),
                 "M5′/Epii review asks for source/canon orientation without changing the lived object".into(),
-                "M0′/Anuttara supplies the relevant standing ground, source and coordinate orientation".into(),
-                "this packet path is an implementation-flow relation; any Bimba source relation must be resolved separately from the Map relation index".into(),
-                format!(
-                    "the selection carries source-conformant Nara lineage {} / {}",
-                    selection.coordinate_binding.bimba_source_ref,
-                    selection.coordinate_binding.pratibimba_coordinate_ref
-                ),
-                format!(
-                    "the selection already carries canonical Epi coordinate {}",
-                    selection.coordinate_ref
-                ),
-                format!(
-                    "the selection already carries formal orientation {}",
-                    selection.ql_address
-                ),
+                "M0′/Anuttara supplies the relevant standing ground, source and coordinate relation".into(),
+                format!("the selection already carries canonical Epi coordinate {}", selection.coordinate_ref),
+                format!("the selection already carries formal orientation {}", selection.ql_address),
             ],
         },
         bimba: BimbaOrientation {
@@ -389,12 +311,6 @@ pub fn orient_ground(
             promotion: "none".into(),
         },
         source_anchors: vec![
-            "Idea/Bimba/Map/datasets/low-detail/nodes_nara.json".into(),
-            "Idea/Bimba/Map/datasets/nara-deep/nodes-full-detail.json".into(),
-            "Idea/Bimba/Map/datasets/low-detail/nodes_epii.json".into(),
-            "Idea/Bimba/Map/datasets/epii-deep/nodes-full-details.json".into(),
-            "Idea/Bimba/Map/datasets/low-detail/nodes_anuttara.json".into(),
-            "Idea/Bimba/Map/datasets/anuttara-deep/nodes-full-data.json".into(),
             "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md".into(),
             "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md".into(),
             "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md".into(),
@@ -404,16 +320,9 @@ pub fn orient_ground(
         ql_orientation: vec![
             selection.ql_address.clone(),
             format!("QL provider revision {QL_PROVIDER_REVISION}"),
-            "QL-MEF PRE-D source normalization proves the Map structural field separately from current implementation readiness".into(),
             "QL/refraction is formal/advisory orientation here; this operation performs no QL or Epi canon mutation".into(),
         ],
         provenance: provenance(vec![
-            "Idea/Bimba/Map/datasets/low-detail/nodes_nara.json",
-            "Idea/Bimba/Map/datasets/nara-deep/nodes-full-detail.json",
-            "Idea/Bimba/Map/datasets/low-detail/nodes_epii.json",
-            "Idea/Bimba/Map/datasets/epii-deep/nodes-full-details.json",
-            "Idea/Bimba/Map/datasets/low-detail/nodes_anuttara.json",
-            "Idea/Bimba/Map/datasets/anuttara-deep/nodes-full-data.json",
             "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md",
             "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
             "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
@@ -445,7 +354,6 @@ pub fn form_proposal(
         capability_ref: PERSONAL_PROPOSAL_CAPABILITY_REF.into(),
         proposal_ref,
         subject: subject(&selection),
-        map_ground: map_domain_ground(5, "personal-proposal-implemented; whole-M5-workspace-not-assessed"),
         proposed_content,
         source_class: "proposal".into(),
         adoption_state: "unreviewed".into(),
@@ -466,10 +374,6 @@ pub fn form_proposal(
             durable_promotion_action_ref: "projectcentral.now.promote".into(),
         },
         provenance: provenance(vec![
-            "Idea/Bimba/Map/datasets/low-detail/nodes_nara.json",
-            "Idea/Bimba/Map/datasets/nara-deep/nodes-full-detail.json",
-            "Idea/Bimba/Map/datasets/low-detail/nodes_epii.json",
-            "Idea/Bimba/Map/datasets/epii-deep/nodes-full-details.json",
             "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md",
             "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
             "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
@@ -490,21 +394,7 @@ fn subject(selection: &NaraSelection) -> PersonalSubject {
         ql_address: selection.ql_address.clone(),
         coordinate_ref: selection.coordinate_ref.clone(),
         profile_ref: selection.profile_ref.clone(),
-        coordinate_binding: selection.coordinate_binding.clone(),
         privacy_class: selection.privacy_class.clone(),
-    }
-}
-
-fn map_domain_ground(root: u8, readiness_state: &str) -> MapDomainGround {
-    debug_assert!(root <= 5);
-    MapDomainGround {
-        source_repository: BIMBA_MAP_SOURCE_REPOSITORY.into(),
-        source_revision: BIMBA_MAP_SOURCE_REVISION.into(),
-        source_ref: format!("#{root}"),
-        bimba_coordinate_ref: format!("ql:m-coordinate:bimba:M{root}"),
-        pratibimba_coordinate_ref: format!("ql:m-coordinate:pratibimba:M{root}"),
-        readiness_state: readiness_state.into(),
-        source_relation_asserted: false,
     }
 }
 
@@ -518,9 +408,7 @@ fn agent(
         .agents
         .iter()
         .find(|agent| agent.position == position)
-        .ok_or_else(|| {
-            format!("primitive snapshot is missing canonical Epi Agent at position {position}")
-        })?;
+        .ok_or_else(|| format!("primitive snapshot is missing canonical Epi Agent at position {position}"))?;
     Ok(CanonicalEpiAgent {
         canonical_agent_ref: canonical_agent_ref.into(),
         bimba_ref: identity.bimba_ref.clone(),
@@ -535,7 +423,6 @@ fn agent(
 fn provenance(sources: Vec<&str>) -> PersonalProvenance {
     PersonalProvenance {
         epi_source_revision: EPI_SOURCE_REVISION.into(),
-        bimba_map_source_revision: BIMBA_MAP_SOURCE_REVISION.into(),
         ql_provider_revision: QL_PROVIDER_REVISION.into(),
         semantic_sources: sources.into_iter().map(str::to_owned).collect(),
         result_class: "generated-epi-semantic-orientation".into(),
