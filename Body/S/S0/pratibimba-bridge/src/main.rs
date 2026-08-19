@@ -5,6 +5,11 @@ pub use epi_pratibimba_bridge::{
 mod nara;
 mod personal;
 
+// EpiiReviewMode is a two-variant value object. Keeping it Copy lets the bridge
+// choose explanatory wording and then preserve the exact requested mode in the
+// returned packet without introducing a second runtime/state object.
+impl Copy for personal::EpiiReviewMode {}
+
 use epi_pratibimba_bridge::snapshot;
 use nara::{
     read_daily_surface, resolve_selection, write_daily_surface, NaraSelectionRequest,
