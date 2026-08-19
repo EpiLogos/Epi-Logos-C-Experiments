@@ -3,11 +3,21 @@ pub use epi_pratibimba_bridge::{
 };
 
 mod nara;
+mod personal;
+
+// EpiiReviewMode is a two-variant value object. Keeping it Copy lets the bridge
+// choose explanatory wording and then preserve the exact requested mode in the
+// returned packet without introducing a second runtime/state object.
+impl Copy for personal::EpiiReviewMode {}
 
 use epi_pratibimba_bridge::snapshot;
 use nara::{
     read_daily_surface, resolve_selection, write_daily_surface, NaraSelectionRequest,
     NaraWriteRequest,
+};
+use personal::{
+    form_proposal, orient_ground, review_selection, EpiiReviewRequest, PersonalGroundRequest,
+    PersonalProposalRequest,
 };
 use portal_core::VakAddress;
 use serde::de::DeserializeOwned;
@@ -24,6 +34,9 @@ enum Operation {
     NaraRead,
     NaraWrite,
     NaraSelect,
+    EpiiReview,
+    PersonalGround,
+    PersonalProposal,
 }
 
 fn main() {
@@ -67,12 +80,15 @@ fn run() -> Result<(), String> {
                     "nara-read" => Operation::NaraRead,
                     "nara-write" => Operation::NaraWrite,
                     "nara-select" => Operation::NaraSelect,
+                    "epii-review" => Operation::EpiiReview,
+                    "personal-ground" => Operation::PersonalGround,
+                    "personal-proposal" => Operation::PersonalProposal,
                     other => return Err(format!("unknown operation `{other}`")),
                 }
             }
             "--help" | "-h" => {
                 println!(
-                    "Usage: epi-pratibimba-bridge [--operation snapshot|nara-read|nara-write|nara-select] [--timestamp-ms N] [--generation N] [--vak-file PATH] [--nara-context PATH] [--vault-root PATH]\n\nThe default snapshot operation emits the Prompt-A primitive reading. Nara operations require the protected Nara context and vault root. nara-write and nara-select accept their JSON request on stdin so private text is never placed in process arguments. The process remains one-shot; it is not a daemon or session runtime."
+                    "Usage: epi-pratibimba-bridge [--operation snapshot|nara-read|nara-write|nara-select|epii-review|personal-ground|personal-proposal] [--timestamp-ms N] [--generation N] [--vak-file PATH] [--nara-context PATH] [--vault-root PATH]\n\nThe default snapshot operation emits the Prompt-A primitive reading. Protected Nara and Personal 4/5/0 operations require the protected Nara context and vault root. Requests are accepted on stdin so private text is never placed in process arguments. Personal operations re-resolve the exact current Nara selection before emitting Epi-specific review, ground or proposal packets. The process remains one-shot; it is not a daemon, chat runtime, EpiiRuntime or SessionSpace."
                 );
                 return Ok(());
             }
@@ -106,13 +122,28 @@ fn run() -> Result<(), String> {
             let request: NaraSelectionRequest = read_stdin_json()?;
             emit(&resolve_selection(vault_root, &observation, request)?)
         }
+        Operation::EpiiReview => {
+            let vault_root = required_vault_root(vault_root.as_ref())?;
+            let request: EpiiReviewRequest = read_stdin_json()?;
+            emit(&review_selection(vault_root, &observation, request)?)
+        }
+        Operation::PersonalGround => {
+            let vault_root = required_vault_root(vault_root.as_ref())?;
+            let request: PersonalGroundRequest = read_stdin_json()?;
+            emit(&orient_ground(vault_root, &observation, request)?)
+        }
+        Operation::PersonalProposal => {
+            let vault_root = required_vault_root(vault_root.as_ref())?;
+            let request: PersonalProposalRequest = read_stdin_json()?;
+            emit(&form_proposal(vault_root, &observation, request)?)
+        }
     }
 }
 
 fn required_vault_root(value: Option<&PathBuf>) -> Result<&std::path::Path, String> {
     value
         .map(PathBuf::as_path)
-        .ok_or_else(|| "Nara operation requires --vault-root".to_owned())
+        .ok_or_else(|| "Nara/Personal operation requires --vault-root".to_owned())
 }
 
 fn emit<T: Serialize>(value: &T) -> Result<(), String> {
