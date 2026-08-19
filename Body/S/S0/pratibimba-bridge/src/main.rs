@@ -1,5 +1,6 @@
 pub use epi_pratibimba_bridge::{
-    EpiPrimitiveSnapshot, NaraProtectedContext, EPI_SOURCE_REVISION, QL_PROVIDER_REVISION,
+    EpiPrimitiveSnapshot, NaraProtectedContext, PrimitiveStatus, EPI_SOURCE_REVISION,
+    QL_PROVIDER_REVISION,
 };
 
 mod cosmic;
