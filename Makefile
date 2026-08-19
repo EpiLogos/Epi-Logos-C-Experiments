@@ -3,7 +3,13 @@ S0_ROOT ?= Body/S/S0
 EPI_LIB = $(S0_ROOT)/epi-lib
 EPI_CLI = $(S0_ROOT)/epi-cli
 S0_VENDOR = $(S0_ROOT)/vendor
-CFLAGS  = -std=c11 -Wall -Wextra -Werror -pedantic -I$(EPI_LIB)/include -I$(S0_VENDOR)/blake3
+QL_MEF_C_PREFIX ?= $(HOME)/.local/ql-mef-c
+QL_MEF_C_REVISION := a3c33a2944fb2d90111afdf18f2afd6e871043e0
+QL_MEF_C_API_VERSION := 0.1.0
+QL_MEF_C_INCLUDE := $(QL_MEF_C_PREFIX)/include
+QL_MEF_C_LIB := $(QL_MEF_C_PREFIX)/lib/libql-mef-c.a
+QL_MEF_C_META := $(QL_MEF_C_PREFIX)/share/ql-mef-c
+CFLAGS  = -std=c11 -Wall -Wextra -Werror -pedantic -I$(EPI_LIB)/include -I$(S0_VENDOR)/blake3 -I$(QL_MEF_C_INCLUDE)
 # Vendored BLAKE3 in this repo is the portable C subset only, so SIMD backends
 # must be disabled explicitly on every architecture, including arm64/NEON.
 BLAKE3  = -DBLAKE3_NO_SSE2 -DBLAKE3_NO_SSE41 -DBLAKE3_NO_AVX2 -DBLAKE3_NO_AVX512 -DBLAKE3_USE_NEON=0
@@ -18,23 +24,33 @@ RUST_TEST_ARGS ?=
 PILLAR_SRC = $(EPI_LIB)/src/psychoid_numbers.c $(EPI_LIB)/src/engine.c $(EPI_LIB)/src/arena.c $(EPI_LIB)/src/families.c $(EPI_LIB)/src/pointer_web.c
 M_SRC      = $(EPI_LIB)/src/m0.c $(EPI_LIB)/src/m1.c $(EPI_LIB)/src/m2.c $(EPI_LIB)/src/m3.c $(EPI_LIB)/src/m3_clock_lut.c $(EPI_LIB)/src/m4.c $(EPI_LIB)/src/m5.c $(EPI_LIB)/src/kernel.c
 BLAKE3_SRC = $(S0_VENDOR)/blake3/blake3.c $(S0_VENDOR)/blake3/blake3_dispatch.c $(S0_VENDOR)/blake3/blake3_portable.c
-LIB_SRC    = $(PILLAR_SRC) $(M_SRC) $(BLAKE3_SRC)
+LIB_SRC    = $(PILLAR_SRC) $(M_SRC) $(BLAKE3_SRC) $(QL_MEF_C_LIB)
 ALL_SRC    = $(LIB_SRC) $(EPI_LIB)/src/main.c
 
 BIN = epi-logos
 
 # Test suites
-TESTS = test_m0_init test_m0_rfactor test_m0_tick12 test_m1 test_m1_ananda test_m2 test_m2_planets test_m2_aspects test_m3 test_m3_clock_lut test_m3_codon_class test_m4 test_m4_hash32 test_m4_oracle_faces test_m5 test_pillar1 test_vak test_engine_walk_mode test_kernel test_pointer_web
+TESTS = test_m0_init test_m0_rfactor test_m0_tick12 test_m1 test_m1_ql_inversion test_m1_ananda test_m2 test_m2_planets test_m2_aspects test_m3 test_m3_clock_lut test_m3_codon_class test_m4 test_m4_hash32 test_m4_oracle_faces test_m5 test_pillar1 test_vak test_engine_walk_mode test_kernel test_pointer_web
 TEST_BIN_DIR = $(EPI_LIB)/test/bin
 
-.PHONY: all lib test test-artifact-paths debug clean rust-test rust-clean rust-target-size verify-graphiti-live lut $(TESTS) test_m1_ananda test_m2_planets test_m2_aspects test_m3_codon_class test_m4_hash32 test_m4_oracle_faces test_engine_walk_mode test_kernel test_pointer_web
+.PHONY: all lib test test-artifact-paths debug clean rust-test rust-clean rust-target-size verify-graphiti-live verify-ql-c lut $(TESTS) test_m1_ananda test_m2_planets test_m2_aspects test_m3_codon_class test_m4_hash32 test_m4_oracle_faces test_engine_walk_mode test_kernel test_pointer_web
 
-all: $(BIN)
+all: verify-ql-c $(BIN)
+
+verify-ql-c:
+	@test -f "$(QL_MEF_C_INCLUDE)/ql/primitive.h"
+	@test -f "$(QL_MEF_C_LIB)"
+	@test -f "$(QL_MEF_C_META)/api-version.txt"
+	@test -f "$(QL_MEF_C_META)/source-revision.txt"
+	@test "$$(cat "$(QL_MEF_C_META)/api-version.txt")" = "$(QL_MEF_C_API_VERSION)"
+	@test "$$(cat "$(QL_MEF_C_META)/source-revision.txt")" = "$(QL_MEF_C_REVISION)"
+	@nm "$(QL_MEF_C_LIB)" | grep -Eq '[[:space:]]ql_position_invert$$'
+	@printf 'QL native C dependency verified: ql-c/primitive %s @ %s\n' "$(QL_MEF_C_API_VERSION)" "$(QL_MEF_C_REVISION)"
 
 $(BIN): $(ALL_SRC)
 	$(CC) $(CFLAGS) $(BLAKE3) -O2 -o $@ $^ $(LDFLAGS)
 
-lib: libepilogos.a
+lib: verify-ql-c libepilogos.a
 
 libepilogos.a: $(LIB_SRC)
 	$(CC) $(CFLAGS) $(BLAKE3) -O2 -c $(PILLAR_SRC) $(M_SRC)
@@ -59,6 +75,9 @@ $(TEST_BIN_DIR)/test_m0_tick12: $(LIB_SRC) $(EPI_LIB)/test/m0/test_m0_tick12.c |
 	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^
 
 $(TEST_BIN_DIR)/test_m1: $(LIB_SRC) $(EPI_LIB)/test/m1/test_m1.c | $(TEST_BIN_DIR)
+	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^ -lm
+
+$(TEST_BIN_DIR)/test_m1_ql_inversion: $(LIB_SRC) $(EPI_LIB)/test/m1/test_m1_ql_inversion.c | $(TEST_BIN_DIR)
 	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^ -lm
 
 $(TEST_BIN_DIR)/test_m1_ananda: $(LIB_SRC) $(EPI_LIB)/test/m1/test_m1_ananda.c | $(TEST_BIN_DIR)
@@ -121,6 +140,9 @@ test_m0_tick12: $(TEST_BIN_DIR)/test_m0_tick12
 test_m1: $(TEST_BIN_DIR)/test_m1
 	./$<
 
+test_m1_ql_inversion: $(TEST_BIN_DIR)/test_m1_ql_inversion verify-ql-c
+	./$<
+
 test_m1_ananda: $(TEST_BIN_DIR)/test_m1_ananda
 	./$<
 
@@ -176,7 +198,7 @@ lut: ## Regenerate CLOCK_DEGREE_LUT from Neo4j dataset (requires NEO4J_URI + NEO
 test-artifact-paths:
 	sh $(EPI_LIB)/test/test_artifact_paths.sh
 
-test: $(TESTS) test-artifact-paths
+test: verify-ql-c $(TESTS) test-artifact-paths
 	@echo ""
 	@echo "=== All test suites passed ==="
 

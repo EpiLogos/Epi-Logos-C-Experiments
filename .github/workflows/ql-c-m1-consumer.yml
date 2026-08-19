@@ -1,0 +1,47 @@
+name: QL native C M1 consumer
+
+on:
+  pull_request:
+    paths:
+      - 'Makefile'
+      - 'Body/S/S0/epi-lib/src/m1.c'
+      - 'Body/S/S0/epi-lib/test/m1/test_m1_ql_inversion.c'
+      - 'Body/S/S0/epi-lib/DEPENDENCIES.md'
+      - '.github/workflows/ql-c-m1-consumer.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  m1-inversion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Epi
+        uses: actions/checkout@v4
+      - name: Checkout pinned QL-MEF source artifact producer
+        uses: actions/checkout@v4
+        with:
+          repository: EpiLogos/QL-MEF
+          ref: a3c33a2944fb2d90111afdf18f2afd6e871043e0
+          path: .ql-source
+      - name: Materialise pinned QL native-C install prefix
+        run: |
+          PREFIX="$PWD/.deps/ql-mef-c"
+          make -C .ql-source/c clean all SOURCE_REVISION=a3c33a2944fb2d90111afdf18f2afd6e871043e0
+          make -C .ql-source/c install PREFIX="$PREFIX" SOURCE_REVISION=a3c33a2944fb2d90111afdf18f2afd6e871043e0
+          rm -rf .ql-source
+      - name: Verify pinned dependency and M1 inversion parity
+        run: |
+          PREFIX="$PWD/.deps/ql-mef-c"
+          make verify-ql-c QL_MEF_C_PREFIX="$PREFIX"
+          make test_m1_ql_inversion QL_MEF_C_PREFIX="$PREFIX"
+          make test_m1 QL_MEF_C_PREFIX="$PREFIX"
+      - name: Prove M1 object has unresolved QL call and final binary resolves it
+        run: |
+          PREFIX="$PWD/.deps/ql-mef-c"
+          clang -std=c11 -Wall -Wextra -Werror -pedantic \
+            -IBody/S/S0/epi-lib/include -I"$PREFIX/include" \
+            -c Body/S/S0/epi-lib/src/m1.c -o /tmp/m1-r4.o
+          nm /tmp/m1-r4.o | grep -Eq '[[:space:]]U[[:space:]]+ql_position_invert$'
+          nm "$PREFIX/lib/libql-mef-c.a" | grep -Eq '[[:space:]]T[[:space:]]+ql_position_invert$'

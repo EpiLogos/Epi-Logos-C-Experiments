@@ -7,6 +7,7 @@
 
 #include "m1.h"
 #include "psychoid_numbers.h"
+#include <ql/primitive.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -297,7 +298,6 @@ void m1_teardown(M1_Root* root) {
 static uint8_t _ananda_core[6][10][10];
 static uint8_t _ananda_dr[6][10][10];
 static int _ananda_initialized = 0;
-
 static uint8_t _ananda_digital_root(uint8_t n) {
     if (n == 0) return 0;
     uint8_t r = n % 9;
@@ -427,7 +427,7 @@ int m1_cli_dispatch(int argc, char** argv, M1_Root* root) {
         for (int i = 0; i < 6; i++)
             printf("[m1]  [%d] %-12s  next=%u inv=%u  %s\n",
                    QL_FLOWERING[i].stage, QL_FLOWERING[i].name,
-                   QL_FLOWERING[i].next, QL_FLOWERING[i].inverse,
+                   QL_FLOWERING[i].next, ql_position_invert(QL_FLOWERING[i].stage),
                    QL_FLOWERING[i].formulation);
         return 0;
     }
