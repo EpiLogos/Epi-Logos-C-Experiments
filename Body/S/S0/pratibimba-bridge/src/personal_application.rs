@@ -268,10 +268,10 @@ pub fn personal_application(
     let boundaries = vec![
         BoundaryExpression {
             domain: "M4 / Nara".into(),
-            ground_coordinate: "M4-0'".into(),
+            ground_coordinate: "M4.0".into(),
             ground_meaning: "protected identity/quintessence ground; the parent uses the current protected episode as its bounded lived subject without exposing deep identity internals".into(),
             ground_ref: subject_ref.clone(),
-            return_coordinate: "M4-5'".into(),
+            return_coordinate: "M4.5".into(),
             return_meaning: "Epii/Sophia review gate; activity may return a proposal but cannot silently become identity or human source".into(),
             return_ref: EPII_REVIEW_ACTION_REF.into(),
             source_anchor: "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md".into(),
@@ -279,10 +279,10 @@ pub fn personal_application(
         },
         BoundaryExpression {
             domain: "M5 / Epii".into(),
-            ground_coordinate: "M5-0'".into(),
+            ground_coordinate: "M5.0".into(),
             ground_meaning: "Bimba/Gnostic/library ground from which Epii can teach, review and traverse source".into(),
             ground_ref: anuttara_bimba_ref.clone(),
-            return_coordinate: "M5-5'".into(),
+            return_coordinate: "M5.5".into(),
             return_meaning: "Logos/return seam expressed at parent scale as governed proposal and recognition, not the complete deep Logos Atelier".into(),
             return_ref: PERSONAL_PROPOSAL_ACTION_REF.into(),
             source_anchor: "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md".into(),
@@ -290,10 +290,10 @@ pub fn personal_application(
         },
         BoundaryExpression {
             domain: "M0 / Anuttara-Bimba".into(),
-            ground_coordinate: "M0-0'".into(),
+            ground_coordinate: "M0.0".into(),
             ground_meaning: "source-provenanced Anuttara/Bimba language and canonical world-ground".into(),
             ground_ref: anuttara_bimba_ref,
-            return_coordinate: "M0-5'".into(),
+            return_coordinate: "M0.5".into(),
             return_meaning: "pedagogy route back through Epii; no graph/provider becomes canon owner".into(),
             return_ref: "epi:agent:epii".into(),
             source_anchor: "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md".into(),

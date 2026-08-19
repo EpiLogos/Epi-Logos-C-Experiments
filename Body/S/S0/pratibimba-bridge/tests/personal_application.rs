@@ -139,15 +139,15 @@ fn personal_450_is_one_body_free_subject_with_native_activity_and_deep_open_cont
     let boundaries = app["boundaries"].as_array().unwrap();
     assert_eq!(boundaries.len(), 3);
     assert!(boundaries.iter().any(|boundary| {
-        boundary["groundCoordinate"] == "M4-0'"
-            && boundary["returnCoordinate"] == "M4-5'"
+        boundary["groundCoordinate"] == "M4.0"
+            && boundary["returnCoordinate"] == "M4.5"
             && boundary["groundRef"] == written["episodeRef"]
     }));
     assert!(boundaries.iter().any(|boundary| {
-        boundary["groundCoordinate"] == "M5-0'" && boundary["returnCoordinate"] == "M5-5'"
+        boundary["groundCoordinate"] == "M5.0" && boundary["returnCoordinate"] == "M5.5"
     }));
     assert!(boundaries.iter().any(|boundary| {
-        boundary["groundCoordinate"] == "M0-0'" && boundary["returnCoordinate"] == "M0-5'"
+        boundary["groundCoordinate"] == "M0.0" && boundary["returnCoordinate"] == "M0.5"
     }));
 
     let deep = app["deepOpen"].as_array().unwrap();
