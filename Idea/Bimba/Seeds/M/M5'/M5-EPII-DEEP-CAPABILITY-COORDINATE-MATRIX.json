@@ -1,0 +1,371 @@
+{
+  "schema": "epi.deep-subsystem-capability-matrix/v1",
+  "status": "research-current-human-review-incorporated",
+  "subsystem": {
+    "coordinate": "M5",
+    "identity": "Epii",
+    "guardian_identity": "Epii",
+    "deep_product": "epi.deep.m5",
+    "cross_register_projection_status": "PARTIAL"
+  },
+  "method": {
+    "protocol": "EpiLogos/QL-MEF:docs/integrations/epi-logos/EPI-DEEP-SUBSYSTEM-CAPABILITY-MATRIX-PROTOCOL.md",
+    "principles": [
+      "chronology-is-not-semantic-precedence",
+      "recover-subsystem-before-embodiment",
+      "union-with-provenance",
+      "capability-matrix-not-forced-pipeline",
+      "preserve-many-to-many-relations",
+      "preserve-unresolved-technical-decisions",
+      "current-code-is-implementation-fact-not-retroactive-intent"
+    ]
+  },
+  "source_sets": {
+    "foundational_signal": [
+      "Idea/Bimba/Seeds/M/M5'/Legacy/specs/M/M5-epii-holographic-integration.md",
+      "Idea/Bimba/Seeds/M/M5'/Legacy/plans/2026-03-07-m5-epii-design.md"
+    ],
+    "current_domain_and_research": [
+      "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+      "Idea/Bimba/Seeds/M/M5'/M5-ARCHITECTURE.md",
+      "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/**",
+      "EpiLogos/QL-MEF#42",
+      "EpiLogos/QL-MEF#74",
+      "EpiLogos/QL-MEF#75",
+      "EpiLogos/ai-kit#108"
+    ],
+    "implementation_fact": [
+      "Body/S/S5/epii-review-core/src/lib.rs",
+      "Body/S/S5/epii-autoresearch-core/src/lib.rs",
+      "Body/S/S5/epii-autoresearch-core/src/capacity_workflows.rs",
+      "Body/S/S5/epii-autoresearch-core/src/inbox.rs",
+      "Body/S/S5/epii-autoresearch-core/src/recompose.rs",
+      "Body/S/S5/epii-autoresearch-core/src/spine.rs",
+      "Body/S/S5/epii-agent-core/**",
+      "Body/S/S4/plugins/pleroma/capability-matrix.json",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/**"
+    ],
+    "cross_family_feature_evidence": [
+      "Idea/Bimba/Seeds/L/**",
+      "current T Thought routing contracts",
+      "current QL Context-Frame/VAK maps"
+    ]
+  },
+  "subsystem_meaning": {
+    "purpose": "holographic self-articulation, active self-relation, recognition and governed return of the Epi-Logos whole",
+    "boundary_relation": "M5 is the 5/0 implicate-return pole; recognised difference may return toward M0 ground without automatic source mutation",
+    "guardian_law": "Epii is the M5 canonical Guardian; M->S relates it to the Quaternal Logic product world; S-prime identities are operative Ta-Onta forms, not Guardians",
+    "whole_world_relation": "Epii may be situated as a whole Epi/O:I world-bound metagentic Agency composing the other canonical Guardians without creating a seventh coordinate"
+  },
+  "outer_field": [
+    {"coordinate":"M5.0","name":"Holographic Identity / Self-Model","role":"system identity theoretics and multi-resolution self-knowledge","decision_state":"SEMANTIC-ROLE-STRONG_REPRESENTATION-OPEN"},
+    {"coordinate":"M5.1","name":"Epi-Logos Philosophical Self-Articulation","role":"why the system exists; worldview, canon, argument and source-ground","decision_state":"FEATURE-FIELD-STRONG_BODY-REPLACEABLE"},
+    {"coordinate":"M5.2","name":"Standing Technological / Product Self-Reflection","role":"inspect S standing product bodies, owners, code, contracts and current reality","decision_state":"SEMANTIC-ROLE-STRONG_OLD-S-MAP-SUPERSEDED"},
+    {"coordinate":"M5.3","name":"Deep Compositional / Experiential Self-Reflection","role":"inspect/enter M-prime deep instruments as experienced/composed system faces","decision_state":"SEMANTIC-ROLE-STRONG_HOST-OPEN"},
+    {"coordinate":"M5.4","name":"Operative Whole / Agency","role":"active self-relation, Guardian composition, S-prime activity, Agency and recursive Epii-on-Epii","decision_state":"FEATURE-FIELD-STRONG_OLD-MPRIME-AGENT-SHORTCUT-SUPERSEDED"},
+    {"coordinate":"M5.5","name":"Logos / Recognition / Return","role":"articulation, reflexive recognition, proportional synthesis and return","decision_state":"SEMANTIC-FIELD-STRONG_EXACT-RUNTIME-LAW-OPEN"}
+  ],
+  "recursive_coordinates": [
+    {"coordinate":"M5.0.0","name":"Transcendent Foundation","parent":"M5.0","role":"whole-system identity ground across all six positions"},
+    {"coordinate":"M5.0.1","name":"Egoic Identity","parent":"M5.0","role":"system self-narrative relation into M5.1"},
+    {"coordinate":"M5.0.2","name":"Collective Identity","parent":"M5.0","role":"shared material/technical body relation into M5.2"},
+    {"coordinate":"M5.0.3","name":"Soul Identity","parent":"M5.0","role":"lived/experiential/deep system face relation into M5.3"},
+    {"coordinate":"M5.0.4","name":"Self Identity","parent":"M5.0","role":"active operative whole relation into M5.4"},
+    {"coordinate":"M5.0.5","name":"Integral Identity","parent":"M5.0","role":"identity understood through recognition/return relation into M5.5"},
+
+    {"coordinate":"M5.1.0","name":"Vision and Crisis of Consciousness","parent":"M5.1","role":"diagnosis/problem field giving the project its reason"},
+    {"coordinate":"M5.1.1","name":"Dual Approach — Sophia / Logos","parent":"M5.1","role":"differentiated conjunction of wisdom and rational articulation"},
+    {"coordinate":"M5.1.2","name":"TechnoScience, Power and Praxis","parent":"M5.1","role":"limits, power, embodiment and practice critique"},
+    {"coordinate":"M5.1.3","name":"Coming Leap and Symbolic Integration","parent":"M5.1","role":"transformative threshold / synthetic proposition"},
+    {"coordinate":"M5.1.4","name":"Historical Embodiment — Para Vak","parent":"M5.1","role":"historical/metaphysical precedent grounding"},
+    {"coordinate":"M5.1.5","name":"Epi-logos as Future Technology","parent":"M5.1","role":"system as experimental embodiment of its argument"},
+
+    {"coordinate":"M5.4.0","name":"Anuttara Active","parent":"M5.4","role":"M0 active Guardian/Agency/operative relation"},
+    {"coordinate":"M5.4.1","name":"Paramasiva Active","parent":"M5.4","role":"M1 active Guardian/Agency/operative relation"},
+    {"coordinate":"M5.4.2","name":"Parashakti Active","parent":"M5.4","role":"M2 active Guardian/Agency/operative relation"},
+    {"coordinate":"M5.4.3","name":"Mahamaya Active","parent":"M5.4","role":"M3 active Guardian/Agency/operative relation"},
+    {"coordinate":"M5.4.4","name":"Nara Active","parent":"M5.4","role":"M4 active Guardian/Agency/operative relation"},
+    {"coordinate":"M5.4.5","name":"Epii Active on Itself","parent":"M5.4","role":"recursive self-operation, review, metagency and self-improvement"},
+
+    {"coordinate":"M5.5.0","name":"A-logos","parent":"M5.5","role":"pregnant unarticulated potential / receptive ground"},
+    {"coordinate":"M5.5.1","name":"Pro-logos","parent":"M5.5","role":"first differentiation, naming and question-forming"},
+    {"coordinate":"M5.5.2","name":"Dia-logos","parent":"M5.5","role":"relational meaning through dialogue and contrast"},
+    {"coordinate":"M5.5.3","name":"Logos","parent":"M5.5","role":"determinate articulation and intelligibility"},
+    {"coordinate":"M5.5.4","name":"Epi-logos","parent":"M5.5","role":"reflexive/contextual turn over articulation and framing"},
+    {"coordinate":"M5.5.5","name":"An-a-logos","parent":"M5.5","role":"analogical/proportional recognition and enriched return"}
+  ],
+  "intentional_absences": [
+    {"coordinate":"M5.2","claim":"no source-backed M5.2.0..5 child tree in the 31-node foundational dataset; S0-S5 are cross-capability reflections, not invented children"},
+    {"coordinate":"M5.3","claim":"no source-backed M5.3.0..5 child tree in the 31-node foundational dataset; M0-prime..M5-prime are cross-capability deep-instrument relations, not invented children"}
+  ],
+  "capabilities": [
+    {
+      "capability_ref":"M5-C01-self-model",
+      "coordinate":"M5.0",
+      "name":"Holographic self-model",
+      "meaning":{"purpose":"make the system structurally available to itself at multiple resolutions","subsystem_role":"identity theoretics and self-description","whole_system_role":"stable orientation across heterogeneous products, coordinates and bodies"},
+      "experience":{"human_affordances":["lookup","compare","trace source","change explanatory register","open deeper relation"],"agent_affordances":["resolve coordinate meaning","retrieve provenance","route to owner"],"summonable_depth":["pithy","authored prose","graph relations","code/test evidence","historical source"]},
+      "functional_contract":{"inputs":["coordinate/ref","requested register","source horizon"],"outputs":["self-description","source refs","standing","related capabilities"],"state_effects":[],"invariants":["summary != canon","current code != authored purpose","representation != identity"],"deterministic_steps":[],"inferential_steps":["generated explanation/register where allowed"]},
+      "relations":{"upstream":["M0-M5 source corpus"],"downstream":["pedagogy","agent context","product/deep navigation","review"],"sibling_relations":["M5.1","M5.2","M5.3","M5.4","M5.5"],"boundary_relation_0_5":"self-knowledge participates in recognised 5->0 return"},
+      "protection":{"authority":["native source owners retain mutation authority"],"consent":[],"review_promotion":["refinement proposals retain provenance/standing"]},
+      "source_evidence":[{"ref":"Legacy/specs/M/M5-epii-holographic-integration.md","role":"FOUNDATIONAL-SIGNAL","claim":"M5.0 is the identity blueprint/self-model"},{"ref":"Legacy/plans/2026-03-07-m5-epii-design.md","role":"HISTORICAL-IMPLEMENTATION-EVIDENCE","claim":"quintessential views and multi-register self-API preserve useful feature signal"}],
+      "implementation":{"current_bodies":["Bimba/Gnosis/kbase/spec corpus","graph services","M5-prime library surfaces"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[{"question":"canonical representation of self-model/quintessential views","status":"OPEN","options_or_evidence":["authored prose","graph","derived multi-register views","mixed representation"]}],
+      "cross_register_projection":{"status":"PARTIAL","m_prime":"epi.deep.m5","s_product":"S5 Quaternal Logic","s_prime":"S5-prime Aletheia","cross_coordinate_dependencies":["S2 graph","S1 source","native product Explain/History"]}
+    },
+    {
+      "capability_ref":"M5-C02-philosophical-canon",
+      "coordinate":"M5.1",
+      "name":"Philosophical canon and self-articulation",
+      "meaning":{"purpose":"preserve and develop why Epi-Logos exists and what it claims","subsystem_role":"philosophical self-narration","whole_system_role":"authorial/theoretical ground for implementation and pedagogy"},
+      "experience":{"human_affordances":["read","author","compare","review","trace sources","recognise change"],"agent_affordances":["retrieve canon","surface contradiction","prepare proposal","teach with standing"],"summonable_depth":["argument","source","history","implementation consequence"]},
+      "functional_contract":{"inputs":["authored sources","research","returned implementation/evidence"],"outputs":["canon reading","proposal","recognised revision"],"state_effects":["possible source mutation only through authority"],"invariants":["agent inference != human authorship","editor body != canon identity"],"deterministic_steps":[],"inferential_steps":["argument comparison","proposal drafting"]},
+      "relations":{"upstream":["M5.0","human-authored source"],"downstream":["M5.5","pedagogy","design/implementation"],"sibling_relations":["M5.0","M5.5"]},
+      "protection":{"authority":["human/source authority"],"consent":[],"review_promotion":["canon changes require appropriate Recognition"]},
+      "source_evidence":[{"ref":"Legacy/specs/M/M5-epii-holographic-integration.md","role":"FOUNDATIONAL-SIGNAL","claim":"M5.1 is the self-performing Epi-Logos worldview"},{"ref":"M5'-SPEC.md","role":"CURRENT-DOMAIN-SPEC","claim":"Canon Studio is one current surface expression"}],
+      "implementation":{"current_bodies":["source corpus","current editor/knowledge surfaces"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[{"question":"final editor/store/rendering bodies","status":"OPEN","options_or_evidence":["O:I native workbench","current Theia sources","other native surfaces"]}],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["Central authored ground","S1 source","M5-prime pedagogy"]}
+    },
+    {
+      "capability_ref":"M5-C03-product-introspection",
+      "coordinate":"M5.2",
+      "name":"Standing product introspection",
+      "meaning":{"purpose":"understand current technical/product reality without treating it as semantic authority","subsystem_role":"standing technical self-reflection","whole_system_role":"make six native product worlds and ownership legible to Epii"},
+      "experience":{"human_affordances":["inspect product purpose","inspect current code/evidence","open native owner action"],"agent_affordances":["resolve owner","explain current capability","route maintenance/proposal"],"summonable_depth":["product intent","contracts","code","tests","open work"]},
+      "functional_contract":{"inputs":["product/ref","current repository state","public readings/actions"],"outputs":["standing technical reading","owner/ref","readiness","action routes"],"state_effects":[],"invariants":["native owner retains mutation authority","old S technology mapping superseded"],"deterministic_steps":[],"inferential_steps":["cross-product implication analysis"]},
+      "relations":{"upstream":["M5.0"],"downstream":["M5.4","M5.3","review"],"sibling_relations":["M5.3","M5.4"]},
+      "protection":{"authority":["native product authority"],"consent":[],"review_promotion":[]},
+      "source_evidence":[{"ref":"Legacy/specs/M/M5-epii-holographic-integration.md","role":"FOUNDATIONAL-SIGNAL","claim":"M5.2 is material/backend/system self-reflection"},{"ref":"EpiLogos/QL-MEF#74","role":"CURRENT-AUTHORED-POSITION","claim":"S0-S5 are Central/Actuation/AIKit/Factory/Workcell/QL-MEF"}],
+      "implementation":{"current_bodies":["six product repositories and public contracts"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[{"question":"cross-product Explain/History/current-state aggregation contract","status":"OPEN","options_or_evidence":[]}],
+      "cross_register_projection":{"status":"RATIFIED","s_product":"S0-S5 cross-view; same-index spine at S5","cross_coordinate_dependencies":[]}
+    },
+    {
+      "capability_ref":"M5-C04-deep-experience-introspection",
+      "coordinate":"M5.3",
+      "name":"Deep instrument experience introspection",
+      "meaning":{"purpose":"make the six deep compositional/experiential M-prime worlds accessible as part of system self-knowledge","subsystem_role":"experiential self-reflection","whole_system_role":"preserve experiential parity across deep subsystem instruments"},
+      "experience":{"human_affordances":["open deep instrument","compare experience and source","retain current subject/event"],"agent_affordances":["address deep refs","open/focus surfaces","inspect readiness/provenance"],"summonable_depth":["M0-prime","M1-prime","M2-prime","M3-prime","M4-prime","M5-prime"]},
+      "functional_contract":{"inputs":["M-prime ref","subject/event ref","provider readiness"],"outputs":["native surface/reading/action refs"],"state_effects":["presentation/workbench changes without semantic identity change"],"invariants":["M-prime != M identity","host technology != subsystem meaning"],"deterministic_steps":[],"inferential_steps":[]},
+      "relations":{"upstream":["M5.0","M5.2"],"downstream":["human/agent experience","review/evidence"],"sibling_relations":["M5.2","M5.4"]},
+      "protection":{"authority":["native M-prime owner/privacy"],"consent":["especially M4-prime protected disclosure"],"review_promotion":[]},
+      "source_evidence":[{"ref":"Legacy/plans/2026-03-07-m5-epii-design.md","role":"HISTORICAL-IMPLEMENTATION-EVIDENCE","claim":"distinguishes system knowing itself from system presenting/experiencing itself"},{"ref":"M5'-SPEC.md","role":"CURRENT-DOMAIN-SPEC","claim":"current M5-prime surface hosts deep system access"}],
+      "implementation":{"current_bodies":["current M-prime specs/surfaces"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[{"question":"final heterogeneous deep-instrument hosting contract","status":"OPEN","options_or_evidence":["O:I Canvas","alternate native surfaces","TUI/headless"]}],
+      "cross_register_projection":{"status":"PARTIAL","m_prime":"M0-prime..M5-prime cross-view","cross_coordinate_dependencies":["O:I workbench"]}
+    },
+    {
+      "capability_ref":"M5-C05-guardian-metagency",
+      "coordinate":"M5.4",
+      "name":"Guardian metagency",
+      "meaning":{"purpose":"let Epii inhabit the whole Epi/O:I projection and compose differentiated Guardians/Agencies without erasing ownership","subsystem_role":"active self-relation","whole_system_role":"route, compose and reintegrate work across the correct stewardship loci"},
+      "experience":{"human_affordances":["address whole-system Epii","inspect delegated relation","inspect return/evidence"],"agent_affordances":["resolve guardian","compose bounded agency","delegate","compare returns","recurse"],"summonable_depth":["Guardian","Agency","Method/Context","Execution","Return"]},
+      "functional_contract":{"inputs":["world intent/focus","coordinate/product refs","bounds","Context/Method candidates"],"outputs":["situated Agency composition","delegated refs","returned evidence/proposals"],"state_effects":["possible bounded work/actuation"],"invariants":["no seventh coordinate","Guardian != S-prime","Guardian != model/harness/session","delegation preserves provenance/authority"],"deterministic_steps":[],"inferential_steps":["composition/routing judgement"]},
+      "relations":{"upstream":["M5.0","QL Context Frames","Actuation WorldBinding"],"downstream":["six Guardians","AIKit Method/Context","Workcell","Factory evidence","review"],"sibling_relations":["M5.2","M5.3","M5.5"]},
+      "protection":{"authority":["Actuation bounds","native product write authority","human authored constraints"],"consent":[],"review_promotion":["returned work != accepted work"]},
+      "source_evidence":[{"ref":"Legacy/specs/M/M5-epii-holographic-integration.md","role":"FOUNDATIONAL-SIGNAL","claim":"M5.4 is active/agentic whole with Epii-on-Epii recursion"},{"ref":"EpiLogos/QL-MEF#42","role":"CURRENT-AUTHORED-POSITION","claim":"six canonical Guardians are enduring M identities stewarding six products"},{"ref":"EpiLogos/QL-MEF#74","role":"CURRENT-AUTHORED-POSITION","claim":"M/S/S-prime/M-prime typed fourfold"}],
+      "implementation":{"current_bodies":["QL guardian maps","Actuation/AIKit generic machinery","O:I AgentSession/workbench lines"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[{"question":"default Epii whole-world Agency/Profile/Method composition","status":"OPEN","options_or_evidence":[]}],
+      "cross_register_projection":{"status":"PARTIAL","s_product":"S5 Quaternal Logic","s_prime":"S5-prime Aletheia same-index plus cross-coordinate S-prime activity","cross_coordinate_dependencies":["Actuation","AIKit","Workcell","Factory"]}
+    },
+    {
+      "capability_ref":"M5-C06-operative-sprime-reading",
+      "coordinate":"M5.4",
+      "name":"Operative S-prime reflection",
+      "meaning":{"purpose":"understand/use Ta-Onta activity forms as operative reflections without confusing them with Guardians","subsystem_role":"operative technology self-knowledge","whole_system_role":"connect active labour/activity to deep composition and return"},
+      "experience":{"human_affordances":["inspect active module/agency","see why it participates"],"agent_affordances":["resolve Ta-Onta activity","request bounded operation"],"summonable_depth":["Khora","Hen","Pleroma","Chronos","Anima","Aletheia"]},
+      "functional_contract":{"inputs":["activity requirement","coordinate/context"],"outputs":["operative module/Agency refs","evidence"],"state_effects":[],"invariants":["S-prime != Guardian identity","implementation residency != coordinate identity"],"deterministic_steps":[],"inferential_steps":[]},
+      "relations":{"upstream":["M5.4","fourfold map"],"downstream":["Agency/Execution","M-prime composition"],"sibling_relations":["M5-C05-guardian-metagency"]},
+      "protection":{"authority":["module/native owner","Agency bounds"],"consent":[],"review_promotion":[]},
+      "source_evidence":[{"ref":"EpiLogos/QL-MEF#74","role":"CURRENT-AUTHORED-POSITION","claim":"S0-prime..S5-prime = Khora/Hen/Pleroma/Chronos/Anima/Aletheia"}],
+      "implementation":{"current_bodies":["Ta-Onta source/runtime bodies"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[],
+      "cross_register_projection":{"status":"RATIFIED","s_prime":"Khora/Hen/Pleroma/Chronos/Anima/Aletheia","cross_coordinate_dependencies":[]}
+    },
+    {
+      "capability_ref":"M5-C07-thought-objectification",
+      "coordinate":"M5.5 + T",
+      "name":"Thought objectification",
+      "meaning":{"purpose":"preserve cognitively significant session material as objective revisitable artifacts","subsystem_role":"supply durable cognitive material for self-reflection/return","whole_system_role":"make session cognition part of objective internality without equating artifact with cognition"},
+      "experience":{"human_affordances":["revisit thought","inspect T position/provenance","relate to session/day"],"agent_affordances":["route/retrieve Thought","use as evidence/context","propose crystallisation"],"summonable_depth":["T0 Questions","T1 Traces","T2 Challenges","T3 Patterns","T4 Discovery","T5 Insight"]},
+      "functional_contract":{"inputs":["session thinking","Sophia review/distillation","DAY/NOW/session refs"],"outputs":["thought artifacts","T routing","Gnosis/archive refs"],"state_effects":["durable derived cognitive artifact"],"invariants":["Thought artifact != cognition itself","creation != promotion"],"deterministic_steps":["artifact routing where rule-based"],"inferential_steps":["classification/distillation"]},
+      "relations":{"upstream":["session thinking","Sophia"],"downstream":["Aletheia","Gnosis","M5.5 Logos readings","L/L-prime","AIKit Method fitness"],"sibling_relations":["M5-C08-logos-refraction","M5-C09-situated-praxis-adaptation"]},
+      "protection":{"privacy":"session/personal provenance can be sensitive","authority":["promotion remains separate"],"consent":[],"review_promotion":["canon/source promotion requires review"]},
+      "source_evidence":[{"ref":"Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md","role":"IMPLEMENTATION-FACT","claim":"thinking -> Sophia thoughts -> Aletheia T0-T5 routing/crystallisation"}],
+      "implementation":{"current_bodies":["Aletheia thought tools/contracts","Gnosis"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[{"question":"full T/T-prime parity and cross-feature indexing","status":"OPEN","options_or_evidence":[]}],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["S-prime Aletheia","AIKit Context"]}
+    },
+    {
+      "capability_ref":"M5-C08-logos-refraction",
+      "coordinate":"M5.5",
+      "name":"Logos refraction",
+      "meaning":{"purpose":"articulate and reflexively read material through Logos positions while retaining other lens/context possibilities","subsystem_role":"recognition/return grammar","whole_system_role":"semantic enrichment and proportional recognition across domains"},
+      "experience":{"human_affordances":["follow articulation","change lens","trace etymology","inspect context-frame relation"],"agent_affordances":["apply bounded Logos reading","compare lens readings","surface analogical relation"],"summonable_depth":["A-logos","Pro-logos","Dia-logos","Logos","Epi-logos","An-a-logos","L/L-prime","CF/VAK"]},
+      "functional_contract":{"inputs":["Thought/source/claim/experience/term"],"outputs":["articulation","reflexive reading","analogical relation","return proposal"],"state_effects":[],"invariants":["T position != Logos stage","lens reading != mutation authority","etymology != proof"],"deterministic_steps":[],"inferential_steps":["semantic/analogical interpretation"]},
+      "relations":{"upstream":["M5.5 source","raw positions","Context Frames","lenses"],"downstream":["pedagogy","review","Method pressure","M0 return"],"sibling_relations":["M5-C07-thought-objectification","M5-C09-situated-praxis-adaptation","M5-C13-etymological-archaeology"]},
+      "protection":{"authority":["interpretive result does not authorize source/action"],"consent":[],"review_promotion":["canon-worthy output requires review"]},
+      "source_evidence":[{"ref":"Legacy/specs/M/M5-epii-holographic-integration.md","role":"FOUNDATIONAL-SIGNAL","claim":"A-logos through An-a-logos; raw-position, Context-Frame and lens relations"},{"ref":"mef-12-lenses-sublens-reference.md","role":"CURRENT-DOMAIN-SPEC","claim":"L5 Para Vak and L5-prime Divine Logos provide exact #5 lens content including Sophia"}],
+      "implementation":{"current_bodies":["M5-prime Logos Atelier/Gnosis relations","QL lens/CF data"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[{"question":"universal 12-tick FSM vs reference grammar/contextual implementations","status":"OPEN","options_or_evidence":["foundational C FSM","distributed current product ownership"]}],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["L/L-prime","T/T-prime","QL Context Frames","M0"]}
+    },
+    {
+      "capability_ref":"M5-C09-situated-praxis-adaptation",
+      "coordinate":"cross M5.4/M5.5; AIKit operational owner",
+      "name":"Situated praxis adaptation",
+      "meaning":{"purpose":"allow recognised cognitive/contextual difference to alter how stable Skills are composed/used without rewriting them","subsystem_role":"connect self-reflection to flexible practice","whole_system_role":"live granular adaptation around praxis while preserving provenance/authority"},
+      "experience":{"human_affordances":["inspect Method/overlay in force","revise situated praxis","keep stable Skill source"],"agent_affordances":["compose Method","apply UsageOverlay","resolve ContextSources/Actions around Focus"],"summonable_depth":["Skill","Method","UsageOverlay","SkillSet","Profile/ContextResolution","Focus"]},
+      "functional_contract":{"inputs":["Focus","SkillRefs","ContextSources","Actions","UsageOverlays","Thought/lens/CF/evidence pressure"],"outputs":["resolved Method/praxis condition"],"state_effects":["changes operative composition, not Skill source"],"invariants":["Logos != Method","Thought != Skill","UsageOverlay != Skill mutation","QL affinity != activation authority","Method relation != action authority"],"deterministic_steps":["AIKit resolution where rules apply"],"inferential_steps":["Method composition/fitness judgement"]},
+      "relations":{"upstream":["Thought","Logos/lens/CF readings","Guardian stewardship","AIKit resources"],"downstream":["situated Agency","execution","returned evidence"],"sibling_relations":["M5-C05-guardian-metagency","M5-C07-thought-objectification","M5-C08-logos-refraction"]},
+      "protection":{"authority":["AIKit ContextResolution operational owner","Action authority remains separate"],"consent":[],"review_promotion":["Method fitness evidence may return via Factory/native review"]},
+      "source_evidence":[{"ref":"EpiLogos/ai-kit#108","role":"DESIGN-COMMITMENT","claim":"Method composes Skills + Actions + ContextSources + UsageOverlays around Focus; UsageOverlay does not mutate Skill source"}],
+      "implementation":{"current_bodies":["AIKit Method/praxis machinery"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[{"question":"which Epii recurring compositions deserve Methods vs ad-hoc resolution","status":"OPEN","options_or_evidence":[]}],
+      "cross_register_projection":{"status":"PARTIAL","s_product":"S2 AIKit cross-coordinate dependency","cross_coordinate_dependencies":["Actuation","Factory"]}
+    },
+    {
+      "capability_ref":"M5-C10-review-recognition",
+      "coordinate":"M5.4/M5.5",
+      "name":"Review and recognition governance",
+      "meaning":{"purpose":"keep proposal/evidence/review/recognition/promotion/return distinct","subsystem_role":"govern self-change and canon return","whole_system_role":"allow learning without authority collapse"},
+      "experience":{"human_affordances":["review","approve","reject","revise","defer","inspect provenance"],"agent_affordances":["submit candidate","attach evidence","route gate","explain decision state"],"summonable_depth":["source","candidate","evidence","gate","decision","promotion target"]},
+      "functional_contract":{"inputs":["candidate","evidence","coordinate context","governance profile"],"outputs":["decision","stage records","promotion plan/ref"],"state_effects":["possible gated promotion"],"invariants":["human-required cannot be silently resolved by Agent","review decision != source mutation until owner action"],"deterministic_steps":["gate enforcement"],"inferential_steps":["review judgement"]},
+      "relations":{"upstream":["Nara","Aletheia","autoresearch","Factory evidence"],"downstream":["canon","deployment","source owner","M0 return"],"sibling_relations":["M5-C11-autoresearch","M5-C14-return-to-ground"]},
+      "protection":{"authority":["human/deployment/publication/recursive gates"],"consent":[],"review_promotion":["explicit"]},
+      "source_evidence":[{"ref":"Body/S/S5/epii-review-core/src/lib.rs","role":"IMPLEMENTATION-FACT","claim":"typed review categories, governance levels, human-required/deployment/publication/recursive gates"}],
+      "implementation":{"current_bodies":["epii-review-core"],"observed_evidence":[],"readiness":"operative"},
+      "technical_decisions":[],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["native source owners","Factory"]}
+    },
+    {
+      "capability_ref":"M5-C11-autoresearch",
+      "coordinate":"M5.4.5",
+      "name":"Recursive autoresearch/self-improvement",
+      "meaning":{"purpose":"surface/evaluate improvement candidates including Epii on itself","subsystem_role":"recursive self-operation","whole_system_role":"turn observed gaps into governed improvement pressure"},
+      "experience":{"human_affordances":["inspect baseline/challenger/evidence","review candidate","keep/discard"],"agent_affordances":["propose","evaluate","attach evidence","route to review"],"summonable_depth":["candidate","target subsystem","evaluation evidence","trajectory","promotion destination"]},
+      "functional_contract":{"inputs":["baseline","challenger","target","evidence sources"],"outputs":["evaluation","candidate","review record"],"state_effects":["none on canon without promotion"],"invariants":["evaluation != promotion","kernel evidence advisory only","recursive modification may require human gate"],"deterministic_steps":["typed validation/scoring mechanics where implemented"],"inferential_steps":["hypothesis/evaluation interpretation"]},
+      "relations":{"upstream":["current implementation/evidence","Thought","product gaps"],"downstream":["review-core","native owner","Factory evidence"],"sibling_relations":["M5-C10-review-recognition"]},
+      "protection":{"authority":["review/promotion gates"],"consent":[],"review_promotion":["mandatory according to governance level"]},
+      "source_evidence":[{"ref":"Body/S/S5/epii-autoresearch-core/src/lib.rs","role":"IMPLEMENTATION-FACT","claim":"baseline/challenger evaluation, evidence, target subsystem and loop state machinery"}],
+      "implementation":{"current_bodies":["epii-autoresearch-core"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[{"question":"which target-specific model/training paradigms are ratified","status":"OPEN","options_or_evidence":["language construction","CPT/RAG","graph-relational ML","process-reward RL","QLoRA","self-referential autoresearch"]}],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["S5 review","S0-S5 owners"]}
+    },
+    {
+      "capability_ref":"M5-C12-pedagogy-disclosure",
+      "coordinate":"M5.0/M5.1/M5.5",
+      "name":"Pedagogy and disclosure",
+      "meaning":{"purpose":"teach system meaning at suitable depth while preserving why distinctions exist","subsystem_role":"self-knowledge made intelligible","whole_system_role":"human/Agent orientation across the coordinate field"},
+      "experience":{"human_affordances":["ask what/why/how","change depth","follow source/relations"],"agent_affordances":["retrieve bounded teaching packet","explain provenance/standing"],"summonable_depth":["pithy","conceptual","technical","source","relational"]},
+      "functional_contract":{"inputs":["subject/ref","learner context","desired depth"],"outputs":["grounded explanation","routes","source refs"],"state_effects":[],"invariants":["pedagogy preserves truth standing","explanation != source authority"],"deterministic_steps":[],"inferential_steps":["adaptive explanation"]},
+      "relations":{"upstream":["self-model","canon","Logos/lenses"],"downstream":["human/agent understanding","deep navigation"],"sibling_relations":["M5-C01-self-model","M5-C13-etymological-archaeology"]},
+      "protection":{"authority":["source standing"],"consent":[],"review_promotion":[]},
+      "source_evidence":[{"ref":"M5'-SPEC.md","role":"CURRENT-DOMAIN-SPEC","claim":"M5-prime is pedagogical/self-articulating and exposes Bimba/Gnosis/Atelier depth"}],
+      "implementation":{"current_bodies":["Gnosis","Bimba pedagogy","M5-prime conversational surfaces"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":[]}
+    },
+    {
+      "capability_ref":"M5-C13-etymological-archaeology",
+      "coordinate":"M5.5",
+      "name":"Etymological / pros-hen archaeology",
+      "meaning":{"purpose":"trace roots, cognates and semantic drift to surface proportional relations","subsystem_role":"one concrete Logos method","whole_system_role":"semantic enrichment and source-following across domains"},
+      "experience":{"human_affordances":["trace word","compare cognates","inspect semantic drift","crystallise candidate relation"],"agent_affordances":["research root/cognate field","relate to coordinates","prepare evidence-backed proposal"],"summonable_depth":["source","root","cognate","drift","coordinate relation","review"]},
+      "functional_contract":{"inputs":["term","source corpus"],"outputs":["etymological trace","candidate constellation","crystallisation proposal"],"state_effects":[],"invariants":["word relation != proof","source traceability required"],"deterministic_steps":[],"inferential_steps":["semantic relation/analogy"]},
+      "relations":{"upstream":["M5.5","L5/L5-prime"],"downstream":["Bimba/Gnosis","pedagogy","review"],"sibling_relations":["M5-C08-logos-refraction"]},
+      "protection":{"authority":["claim standing explicit"],"consent":[],"review_promotion":["canon proposal gated"]},
+      "source_evidence":[{"ref":"Legacy/specs/M/M5-epii-holographic-integration.md","role":"FOUNDATIONAL-SIGNAL","claim":"pros-hen / etymological archaeology is a Logos enrichment mechanism"},{"ref":"M5'-SPEC.md","role":"CURRENT-DOMAIN-SPEC","claim":"Logos Atelier is a current product expression"}],
+      "implementation":{"current_bodies":["M5-prime Logos Atelier/Gnosis/graph relations"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["S2 graph","S5 Gnosis"]}
+    },
+    {
+      "capability_ref":"M5-C14-return-to-ground",
+      "coordinate":"M5.5 -> M0",
+      "name":"Governed return to ground",
+      "meaning":{"purpose":"carry reviewed difference back toward authored/canonical ground without destroying provenance/history","subsystem_role":"M5 closure/reopening","whole_system_role":"make learning recursive while preserving source authority"},
+      "experience":{"human_affordances":["inspect returned difference","recognise/reject/revise","see changed ground"],"agent_affordances":["prepare return proposal","link evidence","route to owner"],"summonable_depth":["source before","returned evidence","proposal","decision","source after"]},
+      "functional_contract":{"inputs":["recognised result","evidence","target ground/source"],"outputs":["proposal/accepted mutation/retained derived state/rejection"],"state_effects":["possible native source change through owner"],"invariants":["direct automatic canon mutation forbidden","recognition != raw computation","history/provenance retained"],"deterministic_steps":[],"inferential_steps":["recognition/judgement"]},
+      "relations":{"upstream":["M5-C10-review-recognition","M5-C11-autoresearch","M5.5"],"downstream":["M0 Anuttara","Central authored source","renewed cycle"],"sibling_relations":["M5-C01-self-model"]},
+      "protection":{"authority":["human/source owner","native product mutation contract"],"consent":[],"review_promotion":["explicit"]},
+      "source_evidence":[{"ref":"Legacy/specs/M/M5-epii-holographic-integration.md","role":"FOUNDATIONAL-SIGNAL","claim":"5->0 Mobius return is central M5 relation"},{"ref":"Body/S/S5/epii-review-core/src/lib.rs","role":"IMPLEMENTATION-FACT","claim":"typed promotion/review governance exists"}],
+      "implementation":{"current_bodies":["review/autoresearch governance","Central/native proposal mechanisms"],"observed_evidence":[],"readiness":"partial"},
+      "technical_decisions":[{"question":"exact distributed return handoff across native owners","status":"OPEN","options_or_evidence":[]}],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["M0","Central","native product owners"]}
+    }
+  ],
+  "cross_feature_considerations": [
+    {
+      "id":"EPII-X01",
+      "subject":"L5/L5-prime Logos lenses",
+      "relation":"M5.5 has strong semantic overlap/correspondence pressure with Para Vak / Divine Logos, but is not reducible to either lens",
+      "details":["L5: Anuttara, Para Vak, Pasyanti, Madhyama, Vaikhari, Matrka","L5-prime: Arche, Apokalypsis, Dynamis, Sophia, Parousia, Epi-Logos"]
+    },
+    {
+      "id":"EPII-X02",
+      "subject":"Thought family",
+      "relation":"T artifacts remain their own cognitive/artifact coordinates and may be multiply refracted by M5.5 and L/L-prime",
+      "details":["T0 Questions","T1 Traces","T2 Challenges","T3 Patterns","T4 Discovery","T5 Insight"]
+    },
+    {
+      "id":"EPII-X03",
+      "subject":"AIKit Method",
+      "relation":"Thought/lens/CF/Guardian/evidence may exert situated praxis pressure through Method/UsageOverlay without becoming Skills or activation authority",
+      "details":["Method composes SkillRefs + Actions + ContextSources + UsageOverlays around Focus","AIKit ContextResolution owns operational resolution"]
+    },
+    {
+      "id":"EPII-X04",
+      "subject":"Sophia/Aletheia",
+      "relation":"Sophia review/distillation and Aletheia unconcealment/crystallisation are operative cognitive/return capabilities inside the wider matrix, not definitions of M5 Guardian identity",
+      "details":["Sophia is also L5-prime.3 lens content","Aletheia is S5-prime operative reflection"]
+    }
+  ],
+  "implementation_reality": [
+    {"capability":"holographic-self-knowledge","status":"partial","current_body":"Bimba/Gnosis/kbase/spec corpus","gap":"no ratified cross-product self-model/register contract"},
+    {"capability":"philosophical-canon","status":"partial","current_body":"source corpus + editor/knowledge bodies","gap":"host/body convergence + provenance UX"},
+    {"capability":"product-introspection","status":"partial","current_body":"six repos/public contracts","gap":"whole-world Epii co-reference/explainability"},
+    {"capability":"deep-M-prime-experience","status":"partial","current_body":"M-prime specs/current bodies","gap":"Prompt E incomplete"},
+    {"capability":"guardian-metagency","status":"partial","current_body":"QL maps + generic Actuation/AIKit/O:I machinery","gap":"six Guardian + Epii whole-field acceptance"},
+    {"capability":"thought-objectification","status":"partial","current_body":"Sophia/Aletheia/Gnosis contracts","gap":"full T/T-prime parity and cross-feature use"},
+    {"capability":"review-recognition","status":"operative","current_body":"epii-review-core","gap":"whole-product integration"},
+    {"capability":"autoresearch","status":"partial","current_body":"epii-autoresearch-core","gap":"target-specific quality/evals and distributed owner return"},
+    {"capability":"logos-pedagogy-archaeology","status":"partial","current_body":"M5-prime/Gnosis/Atelier specs+bodies","gap":"accepted runtime/Method/Thought relations"}
+  ],
+  "drift_register": [
+    {"id":"EPII-DRIFT-01","claim_a":"foundational M5.2=S, M5.3=S-prime, M5.4=M-prime agents","claim_b":"current fourfold M=semantic+Guardian, S=O:I product, S-prime=Ta-Onta, M-prime=deep instrument","current_interpretation":"preserve branch capabilities but supersede old family/technology identity; M5.2 standing technical self-reflection, M5.3 deep experiential self-reflection, M5.4 operative active whole","decision_needed":"no"},
+    {"id":"EPII-DRIFT-02","claim_a":"QL tickets describe 0/1 whole-field Guardian composition","claim_b":"current human review specifies Epii as canonical Guardian over the complete Epi/QL projection","current_interpretation":"Epii M5 Agent occupies whole-world/root/metagentic Agency relation; no P6/second canonical Guardian","decision_needed":"encode into later guardian specs"},
+    {"id":"EPII-DRIFT-03","claim_a":"foundational C spec universal branchless 12-tick Logos FSM","claim_b":"current distributed products own formal/runtime/praxis/material/evidence responsibilities","current_interpretation":"retain Logos semantics/correspondences; exact universal runtime implementation OPEN","decision_needed":"yes"},
+    {"id":"EPII-DRIFT-04","claim_a":"older design permits continuously refined quintessential views","claim_b":"current provenance/human-authority law forbids inference silently replacing canon","current_interpretation":"derived/Agent knowledge may evolve; authored/canonical promotion remains explicit","decision_needed":"exact self-model update contract"}
+  ],
+  "open_decisions": [
+    {"id":"EPII-D01","question":"Canonical durable representation of Epii's holographic self-model/quintessential views?","status":"OPEN"},
+    {"id":"EPII-D02","question":"Which explanatory registers are first-class vs generated?","status":"OPEN"},
+    {"id":"EPII-D03","question":"How does technical self-knowledge consume six native product Explain/History/current-state APIs?","status":"OPEN"},
+    {"id":"EPII-D04","question":"Accepted cross-product contract for six deep M-prime experiences/parity?","status":"OPEN"},
+    {"id":"EPII-D05","question":"Exact Actuation WorldBinding/Agency for Epii as whole Epi/O:I Guardian?","status":"OPEN"},
+    {"id":"EPII-D06","question":"Which recurring Guardian/CF compositions deserve AIKit Methods vs ad-hoc ContextResolution?","status":"OPEN"},
+    {"id":"EPII-D07","question":"How relate T/T-prime, L/L-prime, Logos and Method fitness without forced pipeline?","status":"OPEN"},
+    {"id":"EPII-D08","question":"Universal Logos FSM, reference grammar, or context-dependent executable forms?","status":"OPEN"},
+    {"id":"EPII-D09","question":"Which target-specific ML/CPT/RAG/RL/QLoRA proposals, if any, are ratified?","status":"RESEARCH-PROPOSITION"},
+    {"id":"EPII-D10","question":"Which current graph/RAG/editor/runtime bodies survive final refactor?","status":"OPEN"},
+    {"id":"EPII-D11","question":"Which Epii-generated knowledge may auto-update Agent Wiki/derived state vs require human canon Recognition?","status":"PARTLY-RATIFIED-DETAIL-OPEN"},
+    {"id":"EPII-D12","question":"How should autoresearch/Thought/Method evidence return to native product owners and Factory without parallel evaluation ontology?","status":"OPEN"}
+  ],
+  "technology_decisions": [
+    {"concern":"Theia/Tauri/Electron","status":"HOST-OR-PRESENTATION_NOT-EPII-IDENTITY"},
+    {"concern":"Neo4j/Graphiti/Gnosis","status":"IMPLEMENTED-CURRENTLY_OR-CANDIDATE_NOT-ONE-SEMANTIC-SELF-MODEL"},
+    {"concern":"branchless 12-tick Logos FSM","status":"HISTORICAL-CANDIDATE_RESEARCH-PROPOSITION"},
+    {"concern":"direct mutable C Mobius write-back","status":"REPLACED-AS-GOVERNANCE-AUTHORITY"},
+    {"concern":"target-specific ML paradigms","status":"RESEARCH-PROPOSITION"},
+    {"concern":"AIKit Method/UsageOverlay","status":"CURRENT-NATIVE-PRAXIS-SEAM"}
+  ],
+  "cross_register_constitutional_row": {
+    "m":"M5 Epii — subsystem + canonical Guardian",
+    "s":"S5 Quaternal Logic / QL-MEF",
+    "s_prime":"S5' Aletheia",
+    "m_prime":"epi.deep.m5",
+    "status":"RATIFIED-SPINE_CAPABILITY-MAPPING-PARTIAL"
+  }
+}
