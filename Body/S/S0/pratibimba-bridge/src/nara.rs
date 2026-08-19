@@ -368,7 +368,7 @@ fn nara_daily_coordinate_binding() -> Result<NaraCoordinateBinding, String> {
         .resolve_source_ref("#4.5")
         .ok_or_else(|| "Nara coordinate manifest is missing #4.5 Epii Integration".to_owned())?;
     Ok(NaraCoordinateBinding {
-        manifest_ref: manifest.manifest_ref,
+        manifest_ref: manifest.manifest_ref.clone(),
         bimba_source_ref: daily.source_ref.clone(),
         bimba_coordinate_ref: daily.bimba_ref.clone(),
         pratibimba_coordinate_ref: daily.pratibimba_ref.clone(),
