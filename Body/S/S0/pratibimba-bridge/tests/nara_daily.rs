@@ -100,11 +100,23 @@ fn protected_daily_episode_survives_restart_with_real_profile_and_stable_identit
         .starts_with("epi:matheme-harmonic-profile:"));
     assert_eq!(written["livedContext"]["coordinateRef"], "epi:bimba:#-4/M4'");
 
+    // The coarse world address remains for compatibility, but the lived artifact
+    // now declares exactly where it sits in the authored M4/M4' relation.
+    assert_eq!(written["coordinateBinding"]["manifestRef"], "epi:m-coordinate-manifest:nara-m4:v1");
+    assert_eq!(written["coordinateBinding"]["bimbaSourceRef"], "#4.4");
+    assert_eq!(written["coordinateBinding"]["bimbaCoordinateRef"], "epi:m-coordinate:M4-4");
+    assert_eq!(written["coordinateBinding"]["pratibimbaCoordinateRef"], "epi:m-coordinate:M4-4'");
+    assert_eq!(written["coordinateBinding"]["carrierSourceRef"], "#4.4.4.4");
+    assert_eq!(written["coordinateBinding"]["carrierPratibimbaCoordinateRef"], "epi:m-coordinate:M4-4-4-4'");
+    assert_eq!(written["coordinateBinding"]["reviewSourceRef"], "#4.5");
+    assert_eq!(written["coordinateBinding"]["reviewPratibimbaCoordinateRef"], "epi:m-coordinate:M4-5'");
+
     let reread = parse_ok(run(&root, Some(&context), "nara-read", None));
     assert_eq!(reread["episodeRef"], written["episodeRef"]);
     assert_eq!(reread["dayRef"], written["dayRef"]);
     assert_eq!(reread["episodeRevision"], 1);
     assert_eq!(reread["body"], "Morning α note about L4 and #-4.");
+    assert_eq!(reread["coordinateBinding"], written["coordinateBinding"]);
 
     let record_path = root
         .join("Pratibimba")
@@ -115,6 +127,8 @@ fn protected_daily_episode_survives_restart_with_real_profile_and_stable_identit
     assert!(!record.contains("Morning α note"));
     assert!(record.contains("protected-local-body"));
     assert!(record.contains("protected-local-derived"));
+    assert!(record.contains("epi:m-coordinate-manifest:nara-m4:v1"));
+    assert!(record.contains("epi:m-coordinate:M4-4-4-4'"));
 
     #[cfg(unix)]
     {
@@ -161,12 +175,16 @@ fn selection_is_revision_bound_and_discloses_only_the_selected_context_packet() 
     assert_eq!(selection["actionRef"], "epi.action.nara.selection.sendoff");
     assert_eq!(selection["selectedText"], "α");
     assert_eq!(selection["privacyClass"], "protected-local-selected-disclosure");
+    assert_eq!(selection["coordinateBinding"]["bimbaSourceRef"], "#4.4");
+    assert_eq!(selection["coordinateBinding"]["carrierSourceRef"], "#4.4.4.4");
+    assert_eq!(selection["coordinateBinding"]["reviewSourceRef"], "#4.5");
     let encoded = serde_json::to_string(&selection).unwrap();
     assert!(!encoded.contains("local-test\""));
     assert!(!encoded.contains("Before α after"));
     assert!(encoded.contains("selected-text"));
     assert!(encoded.contains("episode-ref"));
     assert!(encoded.contains("harmonic-profile-ref"));
+    assert!(encoded.contains("m-coordinate-binding"));
 
     let stale = run(
         &root,
