@@ -10,7 +10,7 @@ mod personal;
 // returned packet without introducing a second runtime/state object.
 impl Copy for personal::EpiiReviewMode {}
 
-use epi_pratibimba_bridge::snapshot;
+use epi_pratibimba_bridge::{current_situated, snapshot, CurrentSituatedRequest};
 use nara::{
     read_daily_surface, resolve_selection, write_daily_surface, NaraSelectionRequest,
     NaraWriteRequest,
@@ -37,6 +37,7 @@ enum Operation {
     EpiiReview,
     PersonalGround,
     PersonalProposal,
+    CosmicCurrent,
 }
 
 fn main() {
@@ -83,12 +84,13 @@ fn run() -> Result<(), String> {
                     "epii-review" => Operation::EpiiReview,
                     "personal-ground" => Operation::PersonalGround,
                     "personal-proposal" => Operation::PersonalProposal,
+                    "cosmic-current" => Operation::CosmicCurrent,
                     other => return Err(format!("unknown operation `{other}`")),
                 }
             }
             "--help" | "-h" => {
                 println!(
-                    "Usage: epi-pratibimba-bridge [--operation snapshot|nara-read|nara-write|nara-select|epii-review|personal-ground|personal-proposal] [--timestamp-ms N] [--generation N] [--vak-file PATH] [--nara-context PATH] [--vault-root PATH]\n\nThe default snapshot operation emits the Prompt-A primitive reading. Protected Nara and Personal 4/5/0 operations require the protected Nara context and vault root. Requests are accepted on stdin so private text is never placed in process arguments. Personal operations re-resolve the exact current Nara selection before emitting Epi-specific review, ground or proposal packets. The process remains one-shot; it is not a daemon, chat runtime, EpiiRuntime or SessionSpace."
+                    "Usage: epi-pratibimba-bridge [--operation snapshot|nara-read|nara-write|nara-select|epii-review|personal-ground|personal-proposal|cosmic-current] [--timestamp-ms N] [--generation N] [--vak-file PATH] [--nara-context PATH] [--vault-root PATH]\n\nThe default snapshot operation emits the primitive reading. Protected Nara and Personal 4/5/0 operations require the protected Nara context and vault root. cosmic-current reads one CurrentSituatedRequest from stdin, uses its eventAtUnixMs as the single M1/M2/M3 event time, requires the existing protected Nara subject/episode, and emits the Epi-owned Current Situated Matheme plus epi.cosmic.123. A --timestamp-ms supplied with cosmic-current must equal eventAtUnixMs. Requests are accepted on stdin so protected identity/activity material is never placed in process arguments. The process remains one-shot; it is not a daemon, chat runtime, EpiiRuntime or SessionSpace."
                 );
                 return Ok(());
             }
@@ -96,9 +98,24 @@ fn run() -> Result<(), String> {
         }
     }
 
-    let timestamp_ms = timestamp_ms.unwrap_or(system_time_ms()?);
     let vak = read_optional_json::<VakAddress>(vak_file.as_deref())?;
     let nara_context = read_optional_json::<NaraProtectedContext>(nara_context_file.as_deref())?;
+
+    if operation == Operation::CosmicCurrent {
+        let request: CurrentSituatedRequest = read_stdin_json()?;
+        if let Some(cli_timestamp) = timestamp_ms {
+            if cli_timestamp != request.event_at_unix_ms {
+                return Err(format!(
+                    "--timestamp-ms {cli_timestamp} must equal cosmic-current eventAtUnixMs {}",
+                    request.event_at_unix_ms
+                ));
+            }
+        }
+        let observation = snapshot(request.event_at_unix_ms, generation, vak, nara_context)?;
+        return emit(&current_situated(&observation, request)?);
+    }
+
+    let timestamp_ms = timestamp_ms.unwrap_or(system_time_ms()?);
     let observation = snapshot(timestamp_ms, generation, vak, nara_context)?;
 
     match operation {
@@ -137,6 +154,7 @@ fn run() -> Result<(), String> {
             let request: PersonalProposalRequest = read_stdin_json()?;
             emit(&form_proposal(vault_root, &observation, request)?)
         }
+        Operation::CosmicCurrent => unreachable!("handled before ordinary snapshot path"),
     }
 }
 
