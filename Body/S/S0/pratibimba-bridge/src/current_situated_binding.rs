@@ -4,13 +4,8 @@ use serde_json::{json, Value};
 pub const PERSONAL_PARENT_SCHEMA: &str = "epi.personal-450-application/v1";
 
 /// Bind the D Current Situated event to the exact corrected-C Personal parent
-/// socket. The C application remains the source of Personal subject identity;
-/// D contributes the eventRef and situated quaternion/world relation only.
-///
-/// This adapter returns the wire reading as JSON because corrected C is a
-/// body-free Epi application Reading owned by the bridge binary rather than a
-/// portal-core semantic type. The binding still happens inside Epi, before O:I
-/// sees the contribution.
+/// socket. C remains owner of Personal subject identity; D contributes the
+/// eventRef and situated quaternion/world relation only.
 pub fn bind_personal_parent(
     mut response: CurrentSituatedResponse,
     personal_application: &Value,
@@ -19,18 +14,12 @@ pub fn bind_personal_parent(
     expect_string(personal_application, "/schema", PERSONAL_PARENT_SCHEMA)?;
     expect_string(personal_application, "/productId", PERSONAL_PRODUCT_ID)?;
     expect_string(personal_application, "/nativeOwner", "epi")?;
-    expect_bool(
-        personal_application,
-        "/subject/protectedBodyDisclosed",
-        false,
-    )?;
+    expect_bool(personal_application, "/subject/protectedBodyDisclosed", false)?;
 
     let subject_ref = required_string(personal_application, "/subject/subjectRef")?;
     let episode_ref = required_string(personal_application, "/subject/episodeRef")?;
     if subject_ref != episode_ref {
-        return Err(
-            "corrected C Personal subject must remain the governed episode subject".to_owned(),
-        );
+        return Err("corrected C Personal subject must remain the governed episode subject".to_owned());
     }
     let episode_revision = personal_application
         .pointer("/subject/episodeRevision")
@@ -42,21 +31,10 @@ pub fn bind_personal_parent(
         return Err("corrected C event-binding socket drifted from Personal subject".to_owned());
     }
     if personal_application.pointer("/eventBinding/eventRef").is_some() {
-        return Err(
-            "corrected C must arrive with an unbound eventRef socket; D may not overwrite a pre-existing Personal event"
-                .to_owned(),
-        );
+        return Err("corrected C must arrive with an unbound eventRef socket; D may not overwrite a pre-existing Personal event".to_owned());
     }
-    expect_bool(
-        personal_application,
-        "/eventBinding/bindableToEventRef",
-        true,
-    )?;
-    expect_bool(
-        personal_application,
-        "/eventBinding/parallelPersonalEventState",
-        false,
-    )?;
+    expect_bool(personal_application, "/eventBinding/bindableToEventRef", true)?;
+    expect_bool(personal_application, "/eventBinding/parallelPersonalEventState", false)?;
 
     if response.event.personal.episode_ref != episode_ref {
         return Err(format!(
@@ -65,26 +43,15 @@ pub fn bind_personal_parent(
         ));
     }
     if response.event.personal.subject_ref != nara_identity_ref {
-        return Err(
-            "pre-binding D identity must still be the protected Nara identity handle; corrected C subject replacement is explicit"
-                .to_owned(),
-        );
+        return Err("pre-binding D identity must still be the protected Nara identity handle; corrected C subject replacement is explicit".to_owned());
     }
 
-    // C owns the Personal subject. Nara's protected identity handle remains a
-    // separate relation and is retained below for the quaternionic proof.
     response.event.personal.subject_ref = subject_ref.clone();
     response.cosmic.subject_ref = subject_ref.clone();
 
     let event_ref = response.event.event_ref.clone();
-    let c_source_revision = required_string(
-        personal_application,
-        "/provenance/epiSourceRevision",
-    )?;
-    let c_ql_revision = required_string(
-        personal_application,
-        "/provenance/qlProviderRevision",
-    )?;
+    let c_source_revision = required_string(personal_application, "/provenance/epiSourceRevision")?;
+    let c_ql_revision = required_string(personal_application, "/provenance/qlProviderRevision")?;
 
     let mut reading = serde_json::to_value(response)
         .map_err(|error| format!("serialize C-bound Current Situated response: {error}"))?;
@@ -93,18 +60,9 @@ pub fn bind_personal_parent(
         .pointer_mut("/event/personal")
         .and_then(Value::as_object_mut)
         .ok_or_else(|| "Current Situated response lost event.personal object".to_owned())?;
-    personal.insert(
-        "naraIdentityRef".to_owned(),
-        Value::String(nara_identity_ref.to_owned()),
-    );
-    personal.insert(
-        "personalParentApplicationSchema".to_owned(),
-        Value::String(PERSONAL_PARENT_SCHEMA.to_owned()),
-    );
-    personal.insert(
-        "personalParentSourceRevision".to_owned(),
-        Value::String(c_source_revision.clone()),
-    );
+    personal.insert("naraIdentityRef".to_owned(), Value::String(nara_identity_ref.to_owned()));
+    personal.insert("personalParentApplicationSchema".to_owned(), Value::String(PERSONAL_PARENT_SCHEMA.to_owned()));
+    personal.insert("personalParentSourceRevision".to_owned(), Value::String(c_source_revision.clone()));
 
     let event = reading
         .pointer_mut("/event")
@@ -139,7 +97,7 @@ pub fn bind_personal_parent(
             "applicationSchema": PERSONAL_PARENT_SCHEMA,
             "subjectRef": required_string(personal_application, "/subject/subjectRef")?,
             "episodeRef": required_string(personal_application, "/subject/episodeRef")?,
-            "eventRef": required_string(&reading, "/event/eventRef")?,
+            "eventRef": event_ref,
             "naraIdentityRef": nara_identity_ref,
             "proof": [
                 "same corrected-C subject/episode",
@@ -169,9 +127,7 @@ fn expect_string(value: &Value, pointer: &str, expected: &str) -> Result<(), Str
     if observed == expected {
         Ok(())
     } else {
-        Err(format!(
-            "corrected C Personal `{pointer}` expected `{expected}`, got `{observed}`"
-        ))
+        Err(format!("corrected C Personal `{pointer}` expected `{expected}`, got `{observed}`"))
     }
 }
 
@@ -183,9 +139,7 @@ fn expect_bool(value: &Value, pointer: &str, expected: bool) -> Result<(), Strin
     if observed == expected {
         Ok(())
     } else {
-        Err(format!(
-            "corrected C Personal `{pointer}` expected `{expected}`, got `{observed}`"
-        ))
+        Err(format!("corrected C Personal `{pointer}` expected `{expected}`, got `{observed}`"))
     }
 }
 
@@ -221,12 +175,7 @@ mod tests {
             personal_identity: PersonalIdentityProfile {
                 q_personal: [1.0, 0.0, 0.0, 0.0],
                 natal_chart_handle: "protected:natal:test".to_owned(),
-                elemental_balance: ElementalBalance {
-                    earth: 0.25,
-                    fire: 0.25,
-                    water: 0.25,
-                    air: 0.25,
-                },
+                elemental_balance: ElementalBalance { earth: 0.25, fire: 0.25, water: 0.25, air: 0.25 },
                 identity_hash: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef".to_owned(),
                 privacy_class: ProfilePrivacyClass::ProtectedLocalDerived,
             },
@@ -245,22 +194,8 @@ mod tests {
                 observer_ref: "observer:earth:test".to_owned(),
                 q_transit: [0.0, 1.0, 0.0, 0.0],
                 q_transit_source_ref: "fixture:q-transit:test".to_owned(),
-                solar: Some(CelestialBodyObservation {
-                    body: "Sun".to_owned(),
-                    longitude_degrees: 156.0,
-                    retrograde: false,
-                    sign: Some("Virgo".to_owned()),
-                    decan: Some(15),
-                    source_ref: None,
-                }),
-                planets: vec![CelestialBodyObservation {
-                    body: "Moon".to_owned(),
-                    longitude_degrees: 90.0,
-                    retrograde: false,
-                    sign: Some("Cancer".to_owned()),
-                    decan: Some(9),
-                    source_ref: None,
-                }],
+                solar: Some(CelestialBodyObservation { body: "Sun".to_owned(), longitude_degrees: 156.0, retrograde: false, sign: Some("Virgo".to_owned()), decan: Some(15), source_ref: None }),
+                planets: vec![CelestialBodyObservation { body: "Moon".to_owned(), longitude_degrees: 90.0, retrograde: false, sign: Some("Cancer".to_owned()), decan: Some(9), source_ref: None }],
                 correspondence_refs: vec![],
             },
         }
@@ -271,21 +206,9 @@ mod tests {
             "schema": PERSONAL_PARENT_SCHEMA,
             "productId": PERSONAL_PRODUCT_ID,
             "nativeOwner": "epi",
-            "subject": {
-                "subjectRef": "epi:episode:test",
-                "episodeRef": "epi:episode:test",
-                "episodeRevision": 4,
-                "protectedBodyDisclosed": false
-            },
-            "eventBinding": {
-                "subjectRef": "epi:episode:test",
-                "bindableToEventRef": true,
-                "parallelPersonalEventState": false
-            },
-            "provenance": {
-                "epiSourceRevision": "c-rev",
-                "qlProviderRevision": "ql-rev"
-            }
+            "subject": { "subjectRef": "epi:episode:test", "episodeRef": "epi:episode:test", "episodeRevision": 4, "protectedBodyDisclosed": false },
+            "eventBinding": { "subjectRef": "epi:episode:test", "bindableToEventRef": true, "parallelPersonalEventState": false },
+            "provenance": { "epiSourceRevision": "c-rev", "qlProviderRevision": "ql-rev" }
         })
     }
 
@@ -293,34 +216,15 @@ mod tests {
     fn binds_corrected_c_subject_without_collapsing_nara_identity() {
         let snapshot = snapshot(NOW, 0, None, Some(nara_context())).unwrap();
         let response = current_situated(&snapshot, request()).unwrap();
-        let value = bind_personal_parent(
-            response,
-            &personal_application(),
-            "epi:nara:identity:test",
-        )
-        .unwrap();
-        assert_eq!(
-            value.pointer("/event/personal/subjectRef").and_then(Value::as_str),
-            Some("epi:episode:test")
-        );
-        assert_eq!(
-            value.pointer("/event/personal/naraIdentityRef").and_then(Value::as_str),
-            Some("epi:nara:identity:test")
-        );
-        assert_eq!(
-            value
-                .pointer("/event/personalParentBinding/parallelPersonalEventState")
-                .and_then(Value::as_bool),
-            Some(false)
-        );
-        assert_eq!(
-            value.pointer("/event/eventRef"),
-            value.pointer("/event/personalParentBinding/boundEventRef")
-        );
+        let value = bind_personal_parent(response, &personal_application(), "epi:nara:identity:test").unwrap();
+        assert_eq!(value.pointer("/event/personal/subjectRef").and_then(Value::as_str), Some("epi:episode:test"));
+        assert_eq!(value.pointer("/event/personal/naraIdentityRef").and_then(Value::as_str), Some("epi:nara:identity:test"));
+        assert_eq!(value.pointer("/event/personalParentBinding/parallelPersonalEventState").and_then(Value::as_bool), Some(false));
+        assert_eq!(value.pointer("/event/eventRef"), value.pointer("/event/personalParentBinding/boundEventRef"));
     }
 
     #[test]
-    fn refuses_parallel_or_prebound_c_personal_event_state() {
+    fn refuses_parallel_c_personal_event_state() {
         let snapshot = snapshot(NOW, 0, None, Some(nara_context())).unwrap();
         let response = current_situated(&snapshot, request()).unwrap();
         let mut c = personal_application();
