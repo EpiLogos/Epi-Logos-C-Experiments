@@ -1,5 +1,8 @@
 use crate::{EpiPrimitiveSnapshot, NaraProtectedContext, EPI_SOURCE_REVISION, QL_PROVIDER_REVISION};
-use portal_core::{NaraActivityKind, NaraJournalParseInput, NaraJournalParser, NaraParsedActivity};
+use portal_core::{
+    nara_m4_coordinate_manifest, NaraActivityKind, NaraJournalParseInput, NaraJournalParser,
+    NaraParsedActivity, NARA_M4_MANIFEST_REF,
+};
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::Write;
@@ -10,6 +13,20 @@ pub const NARA_DAILY_PROVIDER_CONTRACT: &str = "epi.nara-daily-provider/v1";
 pub const NARA_SELECTION_SCHEMA: &str = "epi.nara-selection/v1";
 pub const NARA_SENDOFF_ACTION_REF: &str = "epi.action.nara.selection.sendoff";
 pub const NARA_SENDOFF_CAPABILITY_REF: &str = "epi.capability.nara.selected-context";
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NaraCoordinateBinding {
+    pub manifest_ref: String,
+    pub bimba_source_ref: String,
+    pub bimba_coordinate_ref: String,
+    pub pratibimba_coordinate_ref: String,
+    pub carrier_source_ref: String,
+    pub carrier_bimba_coordinate_ref: String,
+    pub carrier_pratibimba_coordinate_ref: String,
+    pub review_source_ref: String,
+    pub review_pratibimba_coordinate_ref: String,
+}
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -26,6 +43,7 @@ pub struct NaraEpisodeRecord {
     pub source_class: String,
     pub body_handle: String,
     pub updated_at_unix_ms: u64,
+    pub coordinate_binding: NaraCoordinateBinding,
     pub activity: NaraParsedActivity,
 }
 
@@ -56,6 +74,7 @@ pub struct NaraExplain {
     pub source_revision: String,
     pub ql_provider_revision: String,
     pub provider_contract: String,
+    pub coordinate_manifest_ref: String,
     pub computation: Vec<String>,
     pub semantic_sources: Vec<String>,
     pub readiness: Vec<String>,
@@ -74,6 +93,7 @@ pub struct NaraDailySurface {
     pub privacy_class: String,
     pub source_class: String,
     pub body: String,
+    pub coordinate_binding: NaraCoordinateBinding,
     pub lived_context: NaraLivedContext,
     pub identity_orientation: String,
     pub explain: NaraExplain,
@@ -111,6 +131,7 @@ pub struct NaraSelection {
     pub ql_address: String,
     pub coordinate_ref: String,
     pub profile_ref: String,
+    pub coordinate_binding: NaraCoordinateBinding,
     pub privacy_class: String,
     pub disclosure_scope: Vec<String>,
     pub provenance: NaraExplain,
@@ -154,11 +175,12 @@ pub fn write_daily_surface(
     }
     .ok_or_else(|| "Nara episode revision overflow".to_owned())?;
 
+    let coordinate_binding = nara_daily_coordinate_binding()?;
     let raw_body_handle = paths.body_path.to_string_lossy().into_owned();
     let activity = NaraJournalParser::parse(NaraJournalParseInput {
         event_id: format!("{}:r{revision}", paths.episode_ref),
         kind: NaraActivityKind::DailyNote,
-        coordinate: snapshot.current_address.canonical_ref.clone(),
+        coordinate: coordinate_binding.pratibimba_coordinate_ref.clone(),
         day_id: context.day_id.clone(),
         now_path: context.now_path.clone(),
         session_key: context.session_key.clone(),
@@ -168,10 +190,12 @@ pub fn write_daily_surface(
         body: body.clone(),
         source_ref: context.source_ref.clone(),
         kairos_snapshot: Some(format!(
-            "tick:{};ql:{};cf:{}",
+            "tick:{};ql:{};cf:{};m:{};carrier:{}",
             snapshot.kernel.harmonic_profile.tick,
             snapshot.ql.ql_address,
-            snapshot.ql.context_frame.as_deref().unwrap_or("unavailable")
+            snapshot.ql.context_frame.as_deref().unwrap_or("unavailable"),
+            coordinate_binding.pratibimba_coordinate_ref,
+            coordinate_binding.carrier_pratibimba_coordinate_ref,
         )),
     })
     .map_err(|error| format!("parse protected Nara daily note: {error}"))?;
@@ -189,6 +213,7 @@ pub fn write_daily_surface(
         source_class: "human-authored".to_owned(),
         body_handle: raw_body_handle,
         updated_at_unix_ms: timestamp_ms,
+        coordinate_binding,
         activity,
     };
 
@@ -243,6 +268,7 @@ pub fn resolve_selection(
         ql_address: surface.lived_context.ql_address,
         coordinate_ref: surface.lived_context.coordinate_ref,
         profile_ref: surface.lived_context.profile_ref,
+        coordinate_binding: surface.coordinate_binding.clone(),
         privacy_class: "protected-local-selected-disclosure".to_owned(),
         disclosure_scope: vec![
             "selected-text".to_owned(),
@@ -252,6 +278,7 @@ pub fn resolve_selection(
             "ql-address".to_owned(),
             "coordinate-ref".to_owned(),
             "harmonic-profile-ref".to_owned(),
+            "m-coordinate-binding".to_owned(),
         ],
         provenance: surface.explain,
     })
@@ -266,6 +293,8 @@ fn surface(
     source_class: String,
 ) -> NaraDailySurface {
     let profile = &snapshot.kernel.harmonic_profile;
+    let coordinate_binding = nara_daily_coordinate_binding()
+        .expect("checked-in Nara M-coordinate manifest must validate");
     NaraDailySurface {
         schema: NARA_DAILY_SCHEMA.to_owned(),
         provider_contract: NARA_DAILY_PROVIDER_CONTRACT.to_owned(),
@@ -277,6 +306,7 @@ fn surface(
         privacy_class: "protected-local-body".to_owned(),
         source_class,
         body,
+        coordinate_binding,
         lived_context: NaraLivedContext {
             day_id: context.day_id.clone(),
             now_path: context.now_path.clone(),
@@ -300,15 +330,19 @@ fn surface(
             source_revision: EPI_SOURCE_REVISION.to_owned(),
             ql_provider_revision: QL_PROVIDER_REVISION.to_owned(),
             provider_contract: NARA_DAILY_PROVIDER_CONTRACT.to_owned(),
+            coordinate_manifest_ref: NARA_M4_MANIFEST_REF.to_owned(),
             computation: vec![
                 "epi-lib::kernel_tick_from_epogdoon through primitive_bridge ABI".to_owned(),
                 "portal-core::kernel_tick_from_epogdoon parity witness".to_owned(),
                 "portal-core::MathemeHarmonicProfile".to_owned(),
                 "portal-core::NaraJournalParser".to_owned(),
+                "portal-core::nara_m4_coordinate_manifest".to_owned(),
             ],
             semantic_sources: vec![
                 "Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md".to_owned(),
                 "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md".to_owned(),
+                "Idea/Bimba/Seeds/M/M4'/M4-ARCHITECTURE.md".to_owned(),
+                "Idea/Bimba/Seeds/M/M4'/m4-prime-nara-activity-graphiti-instrument.md".to_owned(),
             ],
             readiness: vec![
                 format!("kernel:{:?}", snapshot.kernel.status),
@@ -316,9 +350,34 @@ fn surface(
                 format!("vak:{:?}", snapshot.vak.current_state.status),
                 format!("day-now:{:?}", snapshot.time.day_now.status),
                 format!("mahamaya:{:?}", snapshot.mahamaya.status),
+                "m-coordinate-parity:structural-floor".to_owned(),
             ],
         },
     }
+}
+
+fn nara_daily_coordinate_binding() -> Result<NaraCoordinateBinding, String> {
+    let manifest = nara_m4_coordinate_manifest()?;
+    let daily = manifest
+        .resolve_source_ref("#4.4")
+        .ok_or_else(|| "Nara coordinate manifest is missing #4.4 Context & Lenses".to_owned())?;
+    let carrier = manifest
+        .resolve_source_ref("#4.4.4.4")
+        .ok_or_else(|| "Nara coordinate manifest is missing #4.4.4.4 Personal Pratibimba".to_owned())?;
+    let review = manifest
+        .resolve_source_ref("#4.5")
+        .ok_or_else(|| "Nara coordinate manifest is missing #4.5 Epii Integration".to_owned())?;
+    Ok(NaraCoordinateBinding {
+        manifest_ref: manifest.manifest_ref,
+        bimba_source_ref: daily.source_ref.clone(),
+        bimba_coordinate_ref: daily.bimba_ref.clone(),
+        pratibimba_coordinate_ref: daily.pratibimba_ref.clone(),
+        carrier_source_ref: carrier.source_ref.clone(),
+        carrier_bimba_coordinate_ref: carrier.bimba_ref.clone(),
+        carrier_pratibimba_coordinate_ref: carrier.pratibimba_ref.clone(),
+        review_source_ref: review.source_ref.clone(),
+        review_pratibimba_coordinate_ref: review.pratibimba_ref.clone(),
+    })
 }
 
 fn profile_ref(snapshot: &EpiPrimitiveSnapshot) -> String {
@@ -363,14 +422,16 @@ fn read_record(path: &Path) -> Result<NaraEpisodeRecord, String> {
 }
 
 fn validate_record(record: &NaraEpisodeRecord, paths: &NaraPaths, context: &NaraProtectedContext) -> Result<(), String> {
+    let expected_binding = nara_daily_coordinate_binding()?;
     if record.schema != "epi.nara-episode-record/v1"
         || record.episode_ref != paths.episode_ref
         || record.day_ref != paths.day_ref
         || record.day_id != context.day_id
         || record.session_key != context.session_key
         || record.privacy_class != "protected-local-body"
+        || record.coordinate_binding != expected_binding
     {
-        return Err("Nara episode record identity/privacy invariant failed".to_owned());
+        return Err("Nara episode record identity/privacy/coordinate invariant failed".to_owned());
     }
     Ok(())
 }
