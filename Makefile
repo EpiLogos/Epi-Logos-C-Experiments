@@ -26,6 +26,8 @@ M_SRC      = $(EPI_LIB)/src/m0.c $(EPI_LIB)/src/m1.c $(EPI_LIB)/src/m2.c $(EPI_L
 BLAKE3_SRC = $(S0_VENDOR)/blake3/blake3.c $(S0_VENDOR)/blake3/blake3_dispatch.c $(S0_VENDOR)/blake3/blake3_portable.c
 LIB_SRC    = $(PILLAR_SRC) $(M_SRC) $(BLAKE3_SRC) $(QL_MEF_C_LIB)
 ALL_SRC    = $(LIB_SRC) $(EPI_LIB)/src/main.c
+# Focused M1 seam deliberately excludes known unrelated M3/M4 strict-C11 barriers.
+M1_TEST_SRC = $(EPI_LIB)/src/psychoid_numbers.c $(EPI_LIB)/src/arena.c $(EPI_LIB)/src/m1.c $(QL_MEF_C_LIB)
 
 BIN = epi-logos
 
@@ -74,10 +76,10 @@ $(TEST_BIN_DIR)/test_m0_rfactor: $(LIB_SRC) $(EPI_LIB)/test/m0/test_m0_rfactor.c
 $(TEST_BIN_DIR)/test_m0_tick12: $(LIB_SRC) $(EPI_LIB)/test/m0/test_m0_tick12.c | $(TEST_BIN_DIR)
 	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^
 
-$(TEST_BIN_DIR)/test_m1: $(LIB_SRC) $(EPI_LIB)/test/m1/test_m1.c | $(TEST_BIN_DIR)
+$(TEST_BIN_DIR)/test_m1: $(M1_TEST_SRC) $(EPI_LIB)/test/m1/test_m1.c | $(TEST_BIN_DIR)
 	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^ -lm
 
-$(TEST_BIN_DIR)/test_m1_ql_inversion: $(LIB_SRC) $(EPI_LIB)/test/m1/test_m1_ql_inversion.c | $(TEST_BIN_DIR)
+$(TEST_BIN_DIR)/test_m1_ql_inversion: $(M1_TEST_SRC) $(EPI_LIB)/test/m1/test_m1_ql_inversion.c | $(TEST_BIN_DIR)
 	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^ -lm
 
 $(TEST_BIN_DIR)/test_m1_ananda: $(LIB_SRC) $(EPI_LIB)/test/m1/test_m1_ananda.c | $(TEST_BIN_DIR)
