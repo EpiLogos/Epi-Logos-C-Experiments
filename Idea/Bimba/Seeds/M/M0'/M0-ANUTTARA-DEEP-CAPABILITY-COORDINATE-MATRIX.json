@@ -1,0 +1,96 @@
+{
+  "schema": "epi.deep-subsystem-capability-matrix.v2",
+  "status": "research-matrix-human-review-incorporated",
+  "subsystem": {
+    "index": 0,
+    "m_identity": "Anuttara",
+    "core_purpose": "Developing pre-matheme compiler of Epi-Logos computational process ontology and psychoid metaphysics: a generative Para Vak language in which distinction, relation, number, value, action, context, manifestation and return can be formally articulated, tested through downstream operation, and refined with provenance.",
+    "standing_reflection": {"coordinate": "S0", "identity": "Central"},
+    "operative_reflection": {"coordinate": "S0'", "identity": "Khora"},
+    "deep_instrument": {"coordinate": "M0'", "identity": "epi.deep.m0", "current_surface": "O:I native wiki/graph/world dynamics"}
+  },
+  "source_sets": [
+    {"ref": "Idea/Bimba/Map/datasets/anuttara-deep/anuttara-language-map.md", "role": "CANONICAL-FEATURE-MATRIX", "claim": "Verbatim seven-property formal-language map for all 109 Anuttara nodes."},
+    {"ref": "Idea/Bimba/Seeds/M/M0'/M0-ARCHITECTURE.md", "role": "CURRENT-DOMAIN-SPEC", "claim": "Integrated M0/M0' architecture, current kernel and graph substrate evidence, Cycle-3 interaction semantics."},
+    {"ref": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md", "role": "CURRENT-DOMAIN-SPEC", "claim": "Broader Anuttara deep-surface law and governed bridge semantics."},
+    {"ref": "Idea/Bimba/Seeds/M/M0'/the-matheme-of-the-field-differential.md", "role": "RESEARCH-PROPOSITION", "claim": "Formal/matheme development and cross-domain derivation research."},
+    {"ref": "Body/S/S0/epi-lib/include/m0.h", "role": "IMPLEMENTATION-FACT", "claim": "C LUT/algebra/kernel projection of parts of the M0 language."},
+    {"ref": "Body/S/S0/epi-lib/src/m0.c", "role": "IMPLEMENTATION-FACT", "claim": "Current C implementation counterpart."},
+    {"ref": "QL-MEF#75", "role": "CURRENT-AUTHORED-POSITION", "claim": "Canonical fourfold M0/S0/S0'/M0' = Anuttara/Central/Khora/epi.deep.m0."}
+  ],
+  "outer_coordinates": [
+    {"coordinate": "M0-0", "name": "Transcendent Void - 4-Fold Zero Unity", "role": "Foundational metacomputation: transcendent mystery and immanent concrescence before differentiated form."},
+    {"coordinate": "M0-1", "name": "Emergence of Non-Duality", "role": "Brimming Void / 0/1 self-relation and womb of subsequent principles."},
+    {"coordinate": "M0-2", "name": "8-fold Zero-Zero", "role": "Quaternal threshold containing 9=(00+00), Paramesvara and ninefold virtue/Reality ground."},
+    {"coordinate": "M0-3", "name": "Archetypal Number Language", "role": "Complete proto-mathematical-linguistic system — Para Vak."},
+    {"coordinate": "M0-4", "name": "Holographic Matrix of Context", "role": "Pre-matheme contextual grammars that holographically contain differentiated downstream possibility."},
+    {"coordinate": "M0-5", "name": "Siva-Shakti Unity", "role": "Recursive return and computational process ontology integration."}
+  ],
+  "exact_notation_invariants": [
+    {"symbol": "()", "meaning": "Frame / Actuality Container / 0D foundation"},
+    {"symbol": "-", "meaning": "Operator / Transcendence Principle / 1D foundation"},
+    {"symbol": "(-)", "meaning": "Mirror / Contained Transcendence / Vimarsa apparatus"}
+  ],
+  "m0_3_language": {
+    "coordinate": "M0-3",
+    "designation": "The Complete Proto-Mathematical-Linguistic System - Para Vak",
+    "core_archetypes": [
+      ["M0-3-(0/1)", "(-)", "Mirror"],
+      ["M0-3-2", "0", "Self as Potential / Sat"],
+      ["M0-3-3", "1", "Self as Agency"],
+      ["M0-3-4", "0/1", "Non-Dual Self / Rosetta Stone"],
+      ["M0-3-5", "2", "Sunyata / relational field"],
+      ["M0-3-6", "3", "Vak/Cit / first word"],
+      ["M0-3-7", "4", "Purnata / quaternion / first form"],
+      ["M0-3-8", "5", "Siva-Sakti / MonoPoly"],
+      ["M0-3-9", "6", "Synthetic emptiness / solve"],
+      ["M0-3-10", "7", "Divine Action / cosmic verbs"],
+      ["M0-3-11", "8", "Structural reflection"]
+    ],
+    "vak_teeth": ["!", "?", "!-", "-?", "!?", "?-", "-!", "?!", "-!/!-", "-?/?-", "!?/?!", "?!/!?"],
+    "monopoly": ["Mono", "Poly", "Poly-", "-Mono", "Mono-", "-Poly", "MonoPoly"],
+    "divine_actions": ["Svatantrya", "Srishti", "Sthiti", "Samhara", "Tirodhana", "Anugraha", "Samavesa"]
+  },
+  "virtue_ground": ["Love/Peace", "Truth", "Openness/Creativity", "Joy/Play", "Goodness", "Beauty", "Life/Nature", "Wisdom", "Reality/Completion"],
+  "contextual_grammars": [
+    {"symbol": "O#", "domain": "Paramasiva", "reading": "Prakasa / Zero Logic / pre-matheme Paramaśiva grammar"},
+    {"symbol": "X#", "domain": "Parashakti", "reading": "cosmic imagination / possibility field"},
+    {"symbol": "N#", "domain": "Spanda", "reading": "number / rhythmic manifestation"},
+    {"symbol": "M#", "domain": "Mahamaya", "reading": "relational-pronominal world grammar"},
+    {"symbol": "#", "domain": "Nara", "reading": "sentient psycho-physical polarity field"}
+  ],
+  "capabilities": [
+    {"ref": "M0-C01-metaphysical-compiler", "semantic_home": "M0", "purpose": "Develop, run, test and refine the project's native process metaphysics as a formal language.", "status": "FOUNDATIONAL-SIGNAL+CURRENT-AUTHORED-POSITION"},
+    {"ref": "M0-C02-formal-language", "semantic_home": "M0", "purpose": "Address the full 109-node Para Vak syntax with exact formulation/provenance.", "status": "OPERATIVE-DATA"},
+    {"ref": "M0-C03-primitive-distinction", "semantic_home": "M0-3-(0/1)", "purpose": "Preserve exact Frame/Transcendence/Mirror distinctions.", "status": "STRONG"},
+    {"ref": "M0-C04-recursive-algebra", "semantic_home": "M0-3", "purpose": "Open formal positions recursively into number, speech, relation, action and return.", "status": "STRONG-WITH-PER-CLAIM-PROOF-STATUS"},
+    {"ref": "M0-C05-vak-speech", "semantic_home": "M0-3-6", "purpose": "Formalise assertion/query/self/other/reflexivity through twelve speech teeth.", "status": "SOURCE-BACKED"},
+    {"ref": "M0-C06-monopoly-relation", "semantic_home": "M0-3-8", "purpose": "Model one/many coherence, plural opening and suppressive-unity shadow.", "status": "SOURCE-BACKED"},
+    {"ref": "M0-C07-divine-action", "semantic_home": "M0-3-10", "purpose": "Model process through freedom, creation, sustenance, dissolution, veiling, grace and absorption.", "status": "SOURCE-BACKED"},
+    {"ref": "M0-C08-virtue-ground", "semantic_home": "M0-2-9", "purpose": "Give qualitative/axiological articulation formal ground without conflating value with observed fact.", "status": "FOUNDATIONAL-SIGNAL"},
+    {"ref": "M0-C09-contextual-grammars", "semantic_home": "M0-4", "purpose": "Pre-articulate differentiated downstream domains as holographically contained contextual possibility.", "status": "SOURCE-BACKED"},
+    {"ref": "M0-C10-languification", "semantic_home": "M0", "purpose": "Fold downstream results against Anuttara and generate provenance-bearing symbolic/contextual articulation.", "status": "DESIGN-COMMITMENT-DEVELOPMENTAL"},
+    {"ref": "M0-C11-pre-matheme-bridge", "semantic_home": "M0->M1", "purpose": "Test where pre-matheme formal language acquires genuine mathematical/topological force as Paramaśiva matheme.", "status": "ACTIVE-RESEARCH-SEAM"},
+    {"ref": "M0-C12-ground-clearing", "semantic_home": "M0->S0'", "purpose": "Re-open actual source-ground before preserving inherited framing.", "status": "PARTIALLY-IMPLEMENTED"},
+    {"ref": "M0-C13-work-grammar", "semantic_home": "M0->S'", "purpose": "Let VAK/Context Frame structure participate in live work and capability composition.", "status": "PARTIALLY-OPERATIVE"},
+    {"ref": "M0-C14-ground-persistence", "semantic_home": "M0->S0/S0'", "purpose": "Preserve authored/situated ground, continuation and authority.", "status": "CURRENT-ARCHITECTURE"},
+    {"ref": "M0-C15-relational-memory", "semantic_home": "cross-coordinate", "purpose": "Preserve relation/transition/provenance rather than flat labels.", "status": "PARTIAL"},
+    {"ref": "M0-C16-wisdom-return", "semantic_home": "M5->M0", "purpose": "Return reviewed/crystallised evidence or wisdom to later ground without self-promoting inference.", "status": "CAPABILITY-STRONG-SCHEMA-OPEN"},
+    {"ref": "M0-C17-playable-world", "semantic_home": "M0'", "purpose": "Make the language/graph/formulations/relations inspectable and playable through the native O:I wiki/graph world.", "status": "CURRENT-AUTHORED-POSITION"},
+    {"ref": "M0-C18-governed-language-evolution", "semantic_home": "M0<->M5", "purpose": "Allow proposal/testing/refinement of Anuttara while preserving authored/canonical promotion authority.", "status": "STRONG-AUTHORITY-REQUIREMENT"}
+  ],
+  "coordinate_family_refraction": {
+    "status": "RATIFIED-FOURFOLD-WITH-DEEP-CAPABILITY-REFRACTION",
+    "m": {"coordinate": "M0", "identity_or_law": "Anuttara — root formal/metaphysical language and psychoid/process-ontological ground"},
+    "s": {"coordinate": "S0", "product": "Central", "preserved_relation": "standing durable Ground", "changed_question": "how the ground is materially/authored and owned in O:I"},
+    "s_prime": {"coordinate": "S0'", "operative_identity": "Khora", "preserved_relation": "grounding", "changed_question": "how a situated session is bootstrapped, authorised and continued"},
+    "m_prime": {"coordinate": "M0'", "instrument": "epi.deep.m0 / O:I wiki-graph world", "preserved_relation": "formal ground made encounterable", "changed_question": "how the language and graph are inspected, traversed and played"},
+    "non_substitution_notes": ["Anuttara is not Central", "Central is not M0'", "Khora is not the Anuttara Guardian identity", "M0' is not the whole M0 subsystem", "cross-coordinate runtime dependencies remain legal"]
+  },
+  "open_questions": [
+    "Which M0 metaphysical/formal equations have current mathematical proof, computational experiment, or only authored/research standing?",
+    "What exact governed authoring workflow should mutate Anuttara canon in the current O:I wiki/graph application?",
+    "What is the current canonical WisdomPacket/context-return schema, if one is promoted beyond the broader Aletheia capability?",
+    "Which pre-matheme M0 relations are genuinely realised as the M1 Paramaśiva matheme?"
+  ]
+}
