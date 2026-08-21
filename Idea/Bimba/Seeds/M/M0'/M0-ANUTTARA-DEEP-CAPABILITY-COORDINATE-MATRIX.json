@@ -1,96 +1,133 @@
 {
-  "schema": "epi.deep-subsystem-capability-matrix.v2",
+  "schema": "epi.deep-subsystem-capability-matrix/v2",
   "status": "research-matrix-human-review-incorporated",
   "subsystem": {
     "index": 0,
     "m_identity": "Anuttara",
-    "core_purpose": "Developing pre-matheme compiler of Epi-Logos computational process ontology and psychoid metaphysics: a generative Para Vak language in which distinction, relation, number, value, action, context, manifestation and return can be formally articulated, tested through downstream operation, and refined with provenance.",
+    "core_purpose": "Prior generative Epi-Logos ground-language: a recursively articulated symbolic and process-metaphysical field in which distinction, number, value, speech, relation, context, action, manifestation and recognition are holographically implicated and increasingly given genuine computational state.",
     "standing_reflection": {"coordinate": "S0", "identity": "Central"},
     "operative_reflection": {"coordinate": "S0'", "identity": "Khora"},
-    "deep_instrument": {"coordinate": "M0'", "identity": "epi.deep.m0", "current_surface": "O:I native wiki/graph/world dynamics"}
+    "deep_instrument": {"coordinate": "M0'", "identity": "epi.deep.m0"}
   },
-  "source_sets": [
-    {"ref": "Idea/Bimba/Map/datasets/anuttara-deep/anuttara-language-map.md", "role": "CANONICAL-FEATURE-MATRIX", "claim": "Verbatim seven-property formal-language map for all 109 Anuttara nodes."},
-    {"ref": "Idea/Bimba/Seeds/M/M0'/M0-ARCHITECTURE.md", "role": "CURRENT-DOMAIN-SPEC", "claim": "Integrated M0/M0' architecture, current kernel and graph substrate evidence, Cycle-3 interaction semantics."},
-    {"ref": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md", "role": "CURRENT-DOMAIN-SPEC", "claim": "Broader Anuttara deep-surface law and governed bridge semantics."},
-    {"ref": "Idea/Bimba/Seeds/M/M0'/the-matheme-of-the-field-differential.md", "role": "RESEARCH-PROPOSITION", "claim": "Formal/matheme development and cross-domain derivation research."},
-    {"ref": "Body/S/S0/epi-lib/include/m0.h", "role": "IMPLEMENTATION-FACT", "claim": "C LUT/algebra/kernel projection of parts of the M0 language."},
-    {"ref": "Body/S/S0/epi-lib/src/m0.c", "role": "IMPLEMENTATION-FACT", "claim": "Current C implementation counterpart."},
-    {"ref": "QL-MEF#75", "role": "CURRENT-AUTHORED-POSITION", "claim": "Canonical fourfold M0/S0/S0'/M0' = Anuttara/Central/Khora/epi.deep.m0."}
+  "notation": {
+    "ordinary_branch_separator": "-",
+    "dot_usage": "reserved for source-defined position-4 nesting/folding and other explicit canonical cases",
+    "examples": ["M0-2", "M0-3-10", "M0-2-9-7", "#0-4.0/1", "#4.4.4.4"],
+    "formal_distinctions": [
+      {"symbol": "()", "meaning": "Frame"},
+      {"symbol": "-", "meaning": "Operator / transcendence"},
+      {"symbol": "(-)", "meaning": "Mirror / contained transcendence"}
+    ]
+  },
+  "structural_counts": {
+    "current_anuttara_dataset_nodes": 109,
+    "law": "counts describe current datasets or legitimate structural reads and are not hard-coded subsystem invariants unless a capability explicitly depends on the count"
+  },
+  "method_principles": [
+    "chronology-is-not-semantic-precedence",
+    "recover-subsystem-before-embodiment",
+    "union-with-provenance",
+    "multiple-structural-reads-can-be-simultaneously-valid",
+    "missing-current-body-is-a-coverage-gap-before-it-is-a-semantic-ambiguity",
+    "current-code-is-implementation-fact-not-retroactive-intent"
   ],
-  "outer_coordinates": [
-    {"coordinate": "M0-0", "name": "Transcendent Void - 4-Fold Zero Unity", "role": "Foundational metacomputation: transcendent mystery and immanent concrescence before differentiated form."},
-    {"coordinate": "M0-1", "name": "Emergence of Non-Duality", "role": "Brimming Void / 0/1 self-relation and womb of subsequent principles."},
-    {"coordinate": "M0-2", "name": "8-fold Zero-Zero", "role": "Quaternal threshold containing 9=(00+00), Paramesvara and ninefold virtue/Reality ground."},
-    {"coordinate": "M0-3", "name": "Archetypal Number Language", "role": "Complete proto-mathematical-linguistic system — Para Vak."},
-    {"coordinate": "M0-4", "name": "Holographic Matrix of Context", "role": "Pre-matheme contextual grammars that holographically contain differentiated downstream possibility."},
-    {"coordinate": "M0-5", "name": "Siva-Shakti Unity", "role": "Recursive return and computational process ontology integration."}
-  ],
-  "exact_notation_invariants": [
-    {"symbol": "()", "meaning": "Frame / Actuality Container / 0D foundation"},
-    {"symbol": "-", "meaning": "Operator / Transcendence Principle / 1D foundation"},
-    {"symbol": "(-)", "meaning": "Mirror / Contained Transcendence / Vimarsa apparatus"}
-  ],
-  "m0_3_language": {
-    "coordinate": "M0-3",
-    "designation": "The Complete Proto-Mathematical-Linguistic System - Para Vak",
-    "core_archetypes": [
-      ["M0-3-(0/1)", "(-)", "Mirror"],
-      ["M0-3-2", "0", "Self as Potential / Sat"],
-      ["M0-3-3", "1", "Self as Agency"],
-      ["M0-3-4", "0/1", "Non-Dual Self / Rosetta Stone"],
-      ["M0-3-5", "2", "Sunyata / relational field"],
-      ["M0-3-6", "3", "Vak/Cit / first word"],
-      ["M0-3-7", "4", "Purnata / quaternion / first form"],
-      ["M0-3-8", "5", "Siva-Sakti / MonoPoly"],
-      ["M0-3-9", "6", "Synthetic emptiness / solve"],
-      ["M0-3-10", "7", "Divine Action / cosmic verbs"],
-      ["M0-3-11", "8", "Structural reflection"]
+  "source_sets": {
+    "foundational_signal": [
+      "Idea/Bimba/Map/datasets/anuttara-deep/anuttara-language-map.md",
+      "Idea/Bimba/Seeds/M/M0'/Legacy/specs/M/M0-anuttara-language-architecture.md",
+      "Idea/Bimba/Seeds/M/M0'/Legacy/plans/CLOCK-AND-NARA-SPECS/12-anuttara-m0-languification.md",
+      "Idea/Bimba/Seeds/M/M0'/Legacy/plans/2026-03-12-m0-relational-depth-and-archetype-completeness.md"
     ],
-    "vak_teeth": ["!", "?", "!-", "-?", "!?", "?-", "-!", "?!", "-!/!-", "-?/?-", "!?/?!", "?!/!?"],
-    "monopoly": ["Mono", "Poly", "Poly-", "-Mono", "Mono-", "-Poly", "MonoPoly"],
-    "divine_actions": ["Svatantrya", "Srishti", "Sthiti", "Samhara", "Tirodhana", "Anugraha", "Samavesa"]
+    "current_domain_and_design": [
+      "Idea/Bimba/Seeds/M/M0'/M0-ARCHITECTURE.md",
+      "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+      "Idea/Bimba/Seeds/M/M0'/m0-prime-anuttara-research.md",
+      "Idea/Bimba/Seeds/M/M0'/the-matheme-of-the-field-differential.md",
+      "Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md"
+    ],
+    "implementation_fact": [
+      "Body/S/S0/epi-lib/include/m0.h",
+      "Body/S/S0/epi-lib/src/m0.c",
+      "Body/S/S0/epi-lib/include/ontology.h",
+      "current S2 Anuttara graph/schema/service projections",
+      "current M0' graph/inspector/world bodies and tests"
+    ]
   },
-  "virtue_ground": ["Love/Peace", "Truth", "Openness/Creativity", "Joy/Play", "Goodness", "Beauty", "Life/Nature", "Wisdom", "Reality/Completion"],
-  "contextual_grammars": [
-    {"symbol": "O#", "domain": "Paramasiva", "reading": "Prakasa / Zero Logic / pre-matheme Paramaśiva grammar"},
-    {"symbol": "X#", "domain": "Parashakti", "reading": "cosmic imagination / possibility field"},
-    {"symbol": "N#", "domain": "Spanda", "reading": "number / rhythmic manifestation"},
-    {"symbol": "M#", "domain": "Mahamaya", "reading": "relational-pronominal world grammar"},
-    {"symbol": "#", "domain": "Nara", "reading": "sentient psycho-physical polarity field"}
+  "outer_field": [
+    {"coordinate":"M0-0","name":"Transcendent Void — 4-Fold Zero Unity","role":"ground before differentiated form; primitive Vimarsa and concrescence conditions"},
+    {"coordinate":"M0-1","name":"Emergence of Non-Duality","role":"0/1 differentiation internal to unity; discrimination, Spanda and relational propagation"},
+    {"coordinate":"M0-2","name":"8-Fold Zero-Zero","role":"foundational void operations, wholeness, Paramesvara and virtue/Reality ground"},
+    {"coordinate":"M0-3","name":"Archetypal Number Language / Para Vak","role":"nested proto-mathematical-linguistic field of number, speech, relation and action"},
+    {"coordinate":"M0-4","name":"Holographic Matrix of Context","role":"O#/X#/N#/M#/# generative contextual grammars and languification"},
+    {"coordinate":"M0-5","name":"Siva-Shakti Unity","role":"stable defining medium and dynamic articulation in recursive recognition/return"}
   ],
-  "capabilities": [
-    {"ref": "M0-C01-metaphysical-compiler", "semantic_home": "M0", "purpose": "Develop, run, test and refine the project's native process metaphysics as a formal language.", "status": "FOUNDATIONAL-SIGNAL+CURRENT-AUTHORED-POSITION"},
-    {"ref": "M0-C02-formal-language", "semantic_home": "M0", "purpose": "Address the full 109-node Para Vak syntax with exact formulation/provenance.", "status": "OPERATIVE-DATA"},
-    {"ref": "M0-C03-primitive-distinction", "semantic_home": "M0-3-(0/1)", "purpose": "Preserve exact Frame/Transcendence/Mirror distinctions.", "status": "STRONG"},
-    {"ref": "M0-C04-recursive-algebra", "semantic_home": "M0-3", "purpose": "Open formal positions recursively into number, speech, relation, action and return.", "status": "STRONG-WITH-PER-CLAIM-PROOF-STATUS"},
-    {"ref": "M0-C05-vak-speech", "semantic_home": "M0-3-6", "purpose": "Formalise assertion/query/self/other/reflexivity through twelve speech teeth.", "status": "SOURCE-BACKED"},
-    {"ref": "M0-C06-monopoly-relation", "semantic_home": "M0-3-8", "purpose": "Model one/many coherence, plural opening and suppressive-unity shadow.", "status": "SOURCE-BACKED"},
-    {"ref": "M0-C07-divine-action", "semantic_home": "M0-3-10", "purpose": "Model process through freedom, creation, sustenance, dissolution, veiling, grace and absorption.", "status": "SOURCE-BACKED"},
-    {"ref": "M0-C08-virtue-ground", "semantic_home": "M0-2-9", "purpose": "Give qualitative/axiological articulation formal ground without conflating value with observed fact.", "status": "FOUNDATIONAL-SIGNAL"},
-    {"ref": "M0-C09-contextual-grammars", "semantic_home": "M0-4", "purpose": "Pre-articulate differentiated downstream domains as holographically contained contextual possibility.", "status": "SOURCE-BACKED"},
-    {"ref": "M0-C10-languification", "semantic_home": "M0", "purpose": "Fold downstream results against Anuttara and generate provenance-bearing symbolic/contextual articulation.", "status": "DESIGN-COMMITMENT-DEVELOPMENTAL"},
-    {"ref": "M0-C11-pre-matheme-bridge", "semantic_home": "M0->M1", "purpose": "Test where pre-matheme formal language acquires genuine mathematical/topological force as Paramaśiva matheme.", "status": "ACTIVE-RESEARCH-SEAM"},
-    {"ref": "M0-C12-ground-clearing", "semantic_home": "M0->S0'", "purpose": "Re-open actual source-ground before preserving inherited framing.", "status": "PARTIALLY-IMPLEMENTED"},
-    {"ref": "M0-C13-work-grammar", "semantic_home": "M0->S'", "purpose": "Let VAK/Context Frame structure participate in live work and capability composition.", "status": "PARTIALLY-OPERATIVE"},
-    {"ref": "M0-C14-ground-persistence", "semantic_home": "M0->S0/S0'", "purpose": "Preserve authored/situated ground, continuation and authority.", "status": "CURRENT-ARCHITECTURE"},
-    {"ref": "M0-C15-relational-memory", "semantic_home": "cross-coordinate", "purpose": "Preserve relation/transition/provenance rather than flat labels.", "status": "PARTIAL"},
-    {"ref": "M0-C16-wisdom-return", "semantic_home": "M5->M0", "purpose": "Return reviewed/crystallised evidence or wisdom to later ground without self-promoting inference.", "status": "CAPABILITY-STRONG-SCHEMA-OPEN"},
-    {"ref": "M0-C17-playable-world", "semantic_home": "M0'", "purpose": "Make the language/graph/formulations/relations inspectable and playable through the native O:I wiki/graph world.", "status": "CURRENT-AUTHORED-POSITION"},
-    {"ref": "M0-C18-governed-language-evolution", "semantic_home": "M0<->M5", "purpose": "Allow proposal/testing/refinement of Anuttara while preserving authored/canonical promotion authority.", "status": "STRONG-AUTHORITY-REQUIREMENT"}
+  "recursive_highlights": [
+    {"coordinate":"M0-0-0","name":"Ultimate Mystery"},
+    {"coordinate":"M0-0-1","name":"Svabhava"},
+    {"coordinate":"M0-1-0/1","name":"Brimming Void / Non-Dual Binary"},
+    {"coordinate":"M0-2-9","name":"Paramesvara","children":["Love/Peace","Truth","Openness/Creativity","Joy/Play","Goodness","Beauty","Life/Nature","Wisdom","Reality/Completion"]},
+    {"coordinate":"#0-3-0/1","name":"Mirror","children":["#0-3-0/1-0 Frame ()","#0-3-0/1-1 Operator -"]},
+    {"coordinate":"M0-3","name":"Archetypal Number Language / Para Vak","subgrammars":["Vak twelvefold speech/reflexivity grammar","MonoPoly one/many grammar","Divine Action process grammar"]},
+    {"coordinate":"#0-4.0/1","name":"O# / Paramasiva / Zero Logic"},
+    {"coordinate":"#0-4.0/1/2","name":"X# / Parashakti / Cosmic Imagination"},
+    {"coordinate":"#0-4.0/1/2/3","name":"N# / Spanda"},
+    {"coordinate":"#0-4.4.0-4.4/5","name":"M# / Mahamaya"},
+    {"coordinate":"#0-4.5/0","name":"# / Nara"},
+    {"coordinate":"#0-5-0/1","name":"Siva","roles":["potential/in-pression","negation","affirmation","dialogue","dialectic","expression"]},
+    {"coordinate":"#0-5-5/0","name":"Shakti","roles":["Library/implicit memory","Bimba/original architecture","Pratibimba/generated meaning","Language/symbol","Stories/worlds","R#/Techne/freedom-power"]}
   ],
-  "coordinate_family_refraction": {
-    "status": "RATIFIED-FOURFOLD-WITH-DEEP-CAPABILITY-REFRACTION",
-    "m": {"coordinate": "M0", "identity_or_law": "Anuttara — root formal/metaphysical language and psychoid/process-ontological ground"},
-    "s": {"coordinate": "S0", "product": "Central", "preserved_relation": "standing durable Ground", "changed_question": "how the ground is materially/authored and owned in O:I"},
-    "s_prime": {"coordinate": "S0'", "operative_identity": "Khora", "preserved_relation": "grounding", "changed_question": "how a situated session is bootstrapped, authorised and continued"},
-    "m_prime": {"coordinate": "M0'", "instrument": "epi.deep.m0 / O:I wiki-graph world", "preserved_relation": "formal ground made encounterable", "changed_question": "how the language and graph are inspected, traversed and played"},
-    "non_substitution_notes": ["Anuttara is not Central", "Central is not M0'", "Khora is not the Anuttara Guardian identity", "M0' is not the whole M0 subsystem", "cross-coordinate runtime dependencies remain legal"]
+  "vak_grammar": ["!","?","!-","-?","!?","?-","-!","?!","-! / !-","-? / ?-","!? / ?!","?! / !?"],
+  "monopoly": ["Mono","Poly","Poly-","-Mono","Mono-","-Poly","MonoPoly"],
+  "divine_actions": ["Svatantrya","Srishti","Sthiti","Samhara","Tirodhana","Anugraha","Samavesa"],
+  "capability_matrix": [
+    {"ref":"M0-C01","name":"primitive symbolic distinction","primary_locus":"M0-0","relations":["Mirror","M0-1","Siva","later coordinate families"],"current_evidence":["source formulations","executable operator identities"]},
+    {"ref":"M0-C02","name":"non-dual discrimination","primary_locus":"M0-1","relations":["R-factor weave","M0-4","later relational architectures"],"current_evidence":["source relations","current discrimination representation"]},
+    {"ref":"M0-C03","name":"void operation and wholeness","primary_locus":"M0-2","relations":["M0-0","M0-5","number/cosmic/Logos correspondences"],"current_evidence":["source language","executable void operations"]},
+    {"ref":"M0-C04","name":"virtue and Reality ground","primary_locus":"M0-2-9","relations":["R-factors","Divine Acts","kairotic and symbolic interpretation"],"current_evidence":["source virtue field","current table/graph state"]},
+    {"ref":"M0-C05","name":"archetypal number","primary_locus":"M0-3","relations":["L0'","harmonic/cosmic relations","T/Logos relations"],"current_evidence":["source language","archetype/subgrammar implementations"]},
+    {"ref":"M0-C06","name":"Frame Operator Mirror","primary_locus":"#0-3-0/1","relations":["M0-0","M0-1","Context Frames","inversion/reflection"],"current_evidence":["source language","mirror structures"]},
+    {"ref":"M0-C07","name":"Vak symbolic speech","primary_locus":"M0-3 Vak branch","relations":["L5 Para Vak","element/zodiac/modality","M5 Logos"],"current_evidence":["Vak source","graph/C representations"]},
+    {"ref":"M0-C08","name":"MonoPoly relation","primary_locus":"M0-3 Dynamic Harmony","relations":["individual/collective","social/shared-field relations"],"current_evidence":["source grammar","current relational models"]},
+    {"ref":"M0-C09","name":"Divine Action","primary_locus":"M0-3 Divine Action","relations":["R-factors","transformation","Logos"],"current_evidence":["source grammar","executable relation tables"]},
+    {"ref":"M0-C10","name":"contextual logical grammar","primary_locus":"M0-4","relations":["M1-M4 holographic implication","QL Context Frames"],"current_evidence":["source coordinate grammar","graph/C structures"]},
+    {"ref":"M0-C11","name":"languification","primary_locus":"M0-3/M0-4 distributed","relations":["all differentiated domains","provenance-preserving interpretation"],"current_evidence":["source formulations","current graph/language projections"]},
+    {"ref":"M0-C12","name":"Siva-Shakti process ontology","primary_locus":"M0-5","relations":["M5 recognition/return","stable/dynamic polarities"],"current_evidence":["source field","kernel experiments"]},
+    {"ref":"M0-C13","name":"executable Anuttara language","primary_locus":"distributed","relations":["S0/S2/M0' bodies","Agent access"],"current_evidence":["m0.h","m0.c","tests","S2 projections"]},
+    {"ref":"M0-C14","name":"playable inspectable ground","primary_locus":"M0' refraction","relations":["whole M0 field","O:I wiki/graph/world"],"current_evidence":["deep M0' architecture/planning"]},
+    {"ref":"M0-C15","name":"governed language development","primary_locus":"M0<->M5","relations":["Epii review/autoresearch/canon-return"],"current_evidence":["current review/governance bodies","source-development programme"]}
+  ],
+  "experience_affordances": [
+    "address exact source coordinates and recover formulation/provenance",
+    "traverse structural and correspondential relations without collapse",
+    "follow primitive operators into implicated forms and later domains",
+    "navigate archetypal numbers as nested language fields",
+    "move among Vak virtues MonoPoly Divine Acts and Context Frames without forcing one taxonomy",
+    "see multiple valid structural reads where source-backed",
+    "distinguish authored language inference executable representation observation and current state",
+    "inspect or execute portions of Anuttara already possessing computational state",
+    "fold downstream results against Anuttara with visible derivation/provenance",
+    "use the full deep M0' graph/world design including structural/correspondential relations temporal/community overlays protected routes pedagogy harmonic/visual/audio and agent-addressable operations"
+  ],
+  "current_reality": {
+    "dataset":"109 current Anuttara nodes plus wider relation/formulation corpus",
+    "executable_language":"substantial portions have C representations and executable behaviour",
+    "graph_projection":"S2 projects Anuttara properties and relations into graph/service bodies",
+    "deep_product":"M0' architecture already specifies a deep six-layer graph/world engagement surface",
+    "parity_law":"missing current embodiment is a coverage gap first, not evidence of semantic ambiguity"
   },
-  "open_questions": [
-    "Which M0 metaphysical/formal equations have current mathematical proof, computational experiment, or only authored/research standing?",
-    "What exact governed authoring workflow should mutate Anuttara canon in the current O:I wiki/graph application?",
-    "What is the current canonical WisdomPacket/context-return schema, if one is promoted beyond the broader Aletheia capability?",
-    "Which pre-matheme M0 relations are genuinely realised as the M1 Paramaśiva matheme?"
+  "cross_register_constitutional_row": {
+    "m":"M0 Anuttara",
+    "s":"S0 Central",
+    "s_prime":"S0' Khora",
+    "m_prime":"epi.deep.m0",
+    "guardian_relation":"M0 Anuttara is the canonical Guardian identity for the Central product/world through M->S",
+    "status":"RATIFIED-SPINE_CAPABILITY-REFRACTION-IN-PROGRESS"
+  },
+  "depth_recovery_continuation": [
+    "recover complete recursive inventory beneath major M0-3 subgrammars from source data",
+    "carry full established R-factor relations into capability rows",
+    "expand source-defined L/P/C/T cross-family relations",
+    "verify current implementation coverage against source language/property map",
+    "preserve full current M0' graph/world design as experiential projection during embodiment work"
   ]
 }
