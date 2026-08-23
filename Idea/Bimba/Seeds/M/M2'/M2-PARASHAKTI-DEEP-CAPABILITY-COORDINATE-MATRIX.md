@@ -5,7 +5,8 @@ Subsystem: `M2 Paraśakti`
 Standing reflection: `S2 AIKit`  
 Operative reflection: `S2′ Pleroma`  
 Deep instrument: `M2′ / epi.deep.m2`  
-Method: `EpiLogos/QL-MEF` `EPI-DEEP-SUBSYSTEM-CAPABILITY-MATRIX-PROTOCOL.md`
+Method: `EpiLogos/QL-MEF` `EPI-DEEP-SUBSYSTEM-CAPABILITY-MATRIX-PROTOCOL.md`  
+Mark / Figure companion: `M2-PARASHAKTI-MARK-AND-ALFONSINE-FIGURE.md`
 
 ## 0. Position
 
@@ -25,6 +26,36 @@ M2′  epi.deep.m2 deep/playable Paraśakti instrument
 ### M0-4 generative prefiguration
 
 M2's local architecture is prefigured in Anuttara's `M0-4` five-level meta-logic. `X#` is Paraśakti already expressed algebraically inside the prior language: the imaginal/potentiating grammar from which the full M2 subsystem later explicates its own mathematical, epistemic, vibrational and symbolic field. This relation must be carried explicitly rather than rediscovered independently inside every M2 branch.
+
+### Mark / Aim ground
+
+The current human-reviewed matrix can now state its Whole explicitly:
+
+> **Paraśakti is the differentiated Power/world-condition field through which M1 formal-harmonic possibility becomes epistemically, ontologically, temporally, symbolically, musically, cosmically and bodily determinate enough for M3 inscription and M4 situated lived composition.**
+
+The larger Whole is the Epi relation in which Cosmic `1/2/3` and Personal `4/5/0` remain two compositions of one lived application/current event.
+
+The recovery is held through:
+
+```text
+SOURCE-GROUND
+      0
+      /
+MARK
+      1
+
+MARK
+      0
+      /
+AIM
+      1
+```
+
+The present Aim is to recover Paraśakti deeply enough that later provider, body, renderer and UX work remains answerable to this Whole rather than allowing one convenient representation to become the subsystem.
+
+The Mark-reading is a current human-reviewed research/design articulation over the actual Bimba/Seed, architecture, implementation and returned review ground. It does not replace those sources.
+
+The full Source/Mark/Aim and historical-Figure treatment is in `M2-PARASHAKTI-MARK-AND-ALFONSINE-FIGURE.md` and the QL-MEF integration reference `EPI-LOGOS-ALFONSINE-ORIENTING-FIGURE.md`.
 
 ---
 
@@ -52,6 +83,25 @@ M2's local architecture is prefigured in Anuttara's `M0-4` five-level meta-logic
 - `Body/S/S0/epi-lib/src/m2.c`
 - `Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs`
 - current harmonic/profile, Kerykeion/Kairos and M2→M3 projection paths where landed
+
+### Orienting historical Figure
+
+The Alfonsine Tables / wider medieval `zīj` tradition are retained as an `ORIENTING-FIGURE`, not as Epi source authority.
+
+```text
+ILLUMINATES
+    a developed account of world-relations becoming an operable
+    computational instrument through which a situated practitioner
+    determines a present relation; especially useful for apprehending
+    M2 world-condition → M3 inscription → M4 situated composition.
+
+BOUNDARY
+    the historical precedent does not validate Epi metaphysics,
+    astrological/correspondential claims, QL/MEF propositions,
+    72→64 interpretation, bioquaternionic identity or implementation.
+```
+
+Historical Evidence establishes what the Figure was and how it was used. Epi source, derivation, implementation and observation remain responsible for Epi Claims.
 
 ### Current authored/design refinement
 
@@ -292,7 +342,7 @@ A simple Chladni plate remains a useful diagnostic/calibration projection. The t
 |---|---|---|---|---|
 | X# imaginal prefiguration | M0-4→M2 | Anuttara, QL meta-logic | trace Paraśakti's algebraic prior into its developed subsystem | established source relation |
 | Pentadic/φ self-proportion | M2-0 | M1 topology, recursive form | inspect generative self-proportion as Power ground | Bimba/source theory |
-| Spinorial 36→72 field | M2-0 | M1 SU(2), Third Spanda, M3 | hold doubled traversal / 72 differentiation | source + later matheme development |
+| Spinorial 36→72 field | M2-0 | M1 SU2, Third Spanda, M3 | hold doubled traversal / 72 differentiation | source + later matheme development |
 | Third-Spanda Paraśakti term | M2-0 | M1 +1, M3 64, 137 | inspect the M2 contribution to Cosmic 1-2-3 | developed theory |
 | 12×6 MEF | M2-1 | L/L′, P4 nesting, CF, all M | re-ground one subject through a different complete epistemic lens | locked QL/MEF canon |
 | Vimarśā active reading | M2-1/M2′ | M1 audio/topology, lens/mode | hear/inspect how a formal substrate changes under active epistemic mode | theory + current code evidence |
@@ -373,3 +423,5 @@ M4 / Nara
 ```
 
 This composition is the matrix centre: Paraśakti is the power by which a formal universe becomes qualitatively, epistemically, ontologically, temporally, musically and bodily determinate enough to become a world that can be inscribed by Mahāmāyā and inhabited by Nara.
+
+The Alfonsine/zīj Figure clarifies the **kind of instrument-making** this composition participates in: a developed account of world-relations becoming calculationally operative in a situated present. Epi carries the relation further into a computationally situated Nara. The historical precedent illuminates that Mark while leaving every Epi formal, metaphysical and implementation Claim answerable to its own source and evidence.
