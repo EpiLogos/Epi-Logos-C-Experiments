@@ -1,22 +1,17 @@
 {
-  "matrix_version": "2026-08-20",
+  "schema": "epi.deep-subsystem-capability-matrix.v2",
   "status": "research-matrix-current-human-review-incorporated",
   "subsystem": {
-    "coordinate": "M1",
-    "guardian_identity": "Paramaśiva",
-    "standing_reflection": "S1 Actuation",
-    "operative_reflection": "S1' Hen",
-    "deep_instrument": "M1' / epi.deep.m1"
-  },
-  "core_position": {
-    "statement": "Paramaśiva is the psychoid symbolic-mathematical research domain in which Anuttara's pre-matheme language becomes self-determining formal process and in which QL itself continues to be developed.",
-    "m0_m1_relation": "two-in-name-one-in-nature; Anuttara supplies primitive generative language, Paramaśiva develops manifest formal capacity, and returned formal results can revise both registers",
-    "source_parent_boundary": "# is prior to exclusive M1/M2 attribution and is read in current matheme work as Paramaśiva + Paraśakti / Prakāśa + Vimarśa simultaneously",
-    "register": "psychoid-symbolic-mathematical"
+    "index": 1,
+    "m_identity": "Paramaśiva",
+    "core_purpose": "Psychoid symbolic-mathematical field in which Anuttara's generative language becomes determinate living matheme: identity/inversion/difference, Spanda, Ananda, QL, topology, harmonic and musical theory.",
+    "standing_reflection": {"coordinate": "S1", "identity": "Actuation"},
+    "operative_reflection": {"coordinate": "S1'", "identity": "Hen"},
+    "deep_instrument": {"coordinate": "M1'", "identity": "epi.deep.m1"}
   },
   "coordinate_tree": {
-    "M1-0": {"name": "Bimba / Original", "role": "formal identity / invariant source"},
-    "M1-1": {"name": "Pratibimba / Reflection", "role": "determinate reflection and self-difference"},
+    "M1-0": {"name": "Bimba / Original", "role": "self-identity / invariant source-form"},
+    "M1-1": {"name": "Pratibimba / Reflection", "role": "self-inversion / source-traceable difference"},
     "M1-2": {
       "name": "Ananda / harmonic relational field",
       "children": {
@@ -25,104 +20,113 @@
         "M1-2-2": "Sum",
         "M1-2-3": "Difference A",
         "M1-2-4": "Difference B",
-        "M1-2-5": "Quintessence / non-dual integration"
+        "M1-2-5": "Quintessence / non-dual combination"
       }
     },
     "M1-3": {
       "name": "Spanda / generative oscillatory logic",
       "children": {
-        "M1-3-0": "Seed",
-        "M1-3-1": "Original Pole",
-        "M1-3-2": "Reflection Pole",
-        "M1-3-3": "Trika Synthesis",
-        "M1-3-4": "Contextual Flowering",
-        "M1-3-5": "Meta-Reflection"
-      },
-      "note": "M1-3-4 contains the six-stage internal flowering that generates/feeds the QL stages"
+        "M1-3-0": "Seed / fused potential",
+        "M1-3-1": "original-directed pole",
+        "M1-3-2": "reciprocal/reflected pole",
+        "M1-3-3": "Trika",
+        "M1-3-4": "contextual flowering",
+        "M1-3-5": "meta-reflection / return"
+      }
     },
     "M1-4": {
       "name": "Quaternal Logic Flowering",
-      "children": {
-        "M1-4-0": "foundational encoding",
-        "M1-4-1": "explicate / implicate differentiation",
-        "M1-4-2": "inversion",
-        "M1-4-3": "bidirectional / conjugate synthesis",
-        "M1-4-4": "contextual flowering / variable fold structure",
-        "M1-4-5": "harmonic meta-frame / return"
-      },
-      "research_role": "principal ongoing deep QL development region"
+      "role": "full formal grammar of the generated matheme: 4+2, complement, conjugacy, states, nesting, Context Frames, MEF and musical determination"
     },
     "M1-5": {
-      "name": "Toroidal Recognition / formal self-recognition",
+      "name": "Toroidal Recognition",
       "children": {
         "M1-5-0": "Toroidal-Quaternionic Ground",
         "M1-5-1": "Torus in quaternionic space",
         "M1-5-2": "4pi / 720-degree cycle",
-        "M1-5-3": "shadow / phase-shift relation",
+        "M1-5-3": "shadow as phase relation",
         "M1-5-4": "bridge toward Paraśakti",
-        "M1-5-5": "recognition / necessity claim"
+        "M1-5-5": "recognition of completed circulation"
       }
     }
   },
+  "spanda_equations": [
+    {
+      "name": "First Spanda",
+      "form": "0=(0/0) -> ((0/1)/(1/0)) -> [T0] -> [T1] -> (1/0+0/1) -> 1/1=1=100%",
+      "structural_read": "3:3 emanative/bimba/Prakasa and reversionary/pratibimba/Vimarsa movement",
+      "capability": "generated self-relation across identity, reciprocal difference, mediation and return"
+    },
+    {
+      "name": "Second Spanda",
+      "form": "100%=2^6+6^2=64+36; 64/36=2^6/(2^2*3^2) -> /4 -> 2^4/3^2=16/9=(4/3)^2",
+      "structural_read": "4:2 structural body cross-read with First Spanda 3:3",
+      "capability": "generate the QL/harmonic ratio field from the matheme's complementary structural readings"
+    },
+    {
+      "name": "Third Spanda",
+      "form": "137=[8(8+9)-9]+1+9=(2^7-1)+1+9=2^7+9=8(8+9)+1=64+2(36)+1=64+72+1",
+      "structural_read": "M3 64-field + M2 doubled 36/72-field + M1 recognising +1 across the 1-2-3 cosmic relation",
+      "capability": "cross-domain composition without subsystem collapse"
+    }
+  ],
+  "m1_4_formal_field": {
+    "identity_triad": ["self-identity", "self-inversion", "self-difference"],
+    "complement": "X+Y=5 -> (0,5)(1,4)(2,3)",
+    "positional_quaternity": ["X", "Y", "X'", "Y'"],
+    "state_quaternity": ["10", "01", "11", "00"],
+    "state_field": ["2^6=4^3=64", "64+64'=128", "64*64'=4096=16^3"],
+    "context_frames": ["(00/00)", "(0/1)", "(0/1/2)", "(0/1/2/3)", "(4.0/1-4.4/5)", "(4.5/0)", "(5/0)"],
+    "notation_law": "ordinary structural descent uses '-'; '.' is reserved for position-4 flowering/nesting and other explicitly defined uses",
+    "determinate_oscillation": "later authored theory treats balance as active polar determination and develops eight determinations from four two-sided categories; exact source vocabulary remains source-owned rather than reconstructed here"
+  },
+  "musical_theory": {
+    "role": "audible topology of the matheme and formal-harmonic prior to Paraśakti's active correspondential/modal application",
+    "ratios": ["1/1", "4/3", "3/4", "3/2", "2/3", "16/9", "9/8", "2/1"],
+    "derived_relations": ["(4:2)/(3:3)->4/3,2/3", "(4/3)(3/2)=2/1", "(3/2)/(4/3)=9/8", "(2/1)/(16/9)=9/8", "72/64=9/8", "(16/9)(9/8)=2/1", "(4/3)(9/8)(4/3)=2/1"],
+    "traversal_bases": ["epogdoon/chromatic", "fifths"],
+    "pairing_families": ["A adjacent identity", "B offset transition", "C converse X+Y=5 mirror", "D1 same-position cross-face", "D2 cross-position cross-face", "D3 pratibimba-internal / helix-invariant"],
+    "mef_grains": ["6+6", "8-fold", "7-fold CF cut"],
+    "mode_tonic_landscape": "12 lens tonics x 7 Context Frame modes = 84"
+  },
+  "symbolon_relation": {
+    "status": "later-authored-theory",
+    "dia_ballein": "throwing-apart / separation; polar cancellation is a pathological possibility",
+    "sym_ballein": "throwing-together / re-cognition; separated halves become mutually intelligible",
+    "m1_use": "deepens self-identity/self-difference/conjugacy as a theory of relation and recognition"
+  },
   "capabilities": [
-    {"id":"M1P-SVATANTRYA","coordinate":"M1","name":"formal self-determination","standing":"FOUNDATIONAL-SIGNAL"},
-    {"id":"M1P-PREMATHEME-MATHEME","coordinate":"M0<->M1","name":"pre-matheme to matheme translation","standing":"CURRENT-AUTHORED-POSITION"},
-    {"id":"M1P-IDENTITY-CONJUGACY","coordinate":"M1-0/1","name":"self-identity / self-inversion / self-difference","standing":"FOUNDATIONAL-SIGNAL+LATER-MATHEME-REFINEMENT"},
-    {"id":"M1P-ANANDA","coordinate":"M1-2","name":"harmonic relational field","standing":"FOUNDATIONAL-SIGNAL+PARTIAL-IMPLEMENTATION"},
-    {"id":"M1P-SPANDA","coordinate":"M1-3","name":"generative oscillatory logic","standing":"FOUNDATIONAL-SIGNAL+PARTIAL-IMPLEMENTATION"},
-    {"id":"M1P-QL-FLOWERING","coordinate":"M1-4","name":"continuous QL positional/recursive grammar development","standing":"CORE-RESEARCH-CAPABILITY"},
-    {"id":"M1P-FOLD-RESEARCH","coordinate":"M1-4.4","name":"variable fold / granularity research","standing":"RESEARCH-PROPOSITION-EVOLVING-THEORY"},
-    {"id":"M1P-RATIO-DERIVATION","coordinate":"M1-2/3/4","name":"ratio derivation and proof-status tracking","standing":"MIXED"},
-    {"id":"M1P-MUSIC-THEORETICS","coordinate":"M1-current-post-Bimba","name":"full QL musical derivation as harmonic flowering","standing":"CURRENT-AUTHORED-POSITION-ACTIVE-THEORY"},
-    {"id":"M1P-MEF-HARMONIC","coordinate":"M1<->L","name":"MEF harmonic refraction","standing":"ACTIVE-THEORY"},
-    {"id":"M1P-TOPO-RECOGNITION","coordinate":"M1-5","name":"formal topology / invariant recognition","standing":"MIXED"},
-    {"id":"M1P-TDA","coordinate":"M1-5/M1'","name":"topological / invariant analysis of trajectories and representations","standing":"RESEARCH-DIRECTION"},
-    {"id":"M1P-PROOF-PROVENANCE","coordinate":"M1","name":"claim and derivation provenance","standing":"REQUIRED-PROTOCOL-CAPABILITY"},
-    {"id":"M1P-PLAYABLE-MATHEME","coordinate":"M1'","name":"playable / audible / visible / teachable matheme","standing":"DESIGN-COMMITMENT"},
-    {"id":"M1P-QL-FIELD-APPLICATION","coordinate":"M1->O:I","name":"optional QL formal intelligence across products","standing":"CURRENT-AUTHORED-POSITION"},
-    {"id":"M1P-RETURNED-REVISION","coordinate":"M1->M0/M1","name":"returned reality revises matheme","standing":"REQUIRED-RESEARCH-LAW"}
+    {"id":"M1-C01","name":"formal self-identity","relations":["M1-0","M1-1","Symbolon","S1"]},
+    {"id":"M1-C02","name":"self-inversion and source-traceable reflection","relations":["M1-1","#","M2","conjugacy"]},
+    {"id":"M1-C03","name":"self-difference","relations":["M1-0/1","Ananda differences","Symbolon","Return"]},
+    {"id":"M1-C04","name":"Ananda harmonic field","relations":["M1-2","M1-3","M1-5","M2","music"]},
+    {"id":"M1-C05","name":"Spanda generation","relations":["M1-3","M1-4","Context Frames","1-2-3"]},
+    {"id":"M1-C06","name":"First/Second/Third Spanda multi-read","relations":["3:3","4:2","64","36","72","137"]},
+    {"id":"M1-C07","name":"QL positional and recursive grammar","relations":["M1-4","P","Context Frames","MEF"]},
+    {"id":"M1-C08","name":"complement and conjugacy","relations":["X+Y=5","Klein","music","state"]},
+    {"id":"M1-C09","name":"state and relation fields","relations":["36","64","64'","128","4096","L2"]},
+    {"id":"M1-C10","name":"determinate oscillation","relations":["balance","excess/deficiency","eight determinations"]},
+    {"id":"M1-C11","name":"Context Frame relational activation","relations":["M1-4","P4 nesting","VAK","Agency"]},
+    {"id":"M1-C12","name":"MEF refraction","relations":["L/L'","72 reservoir","music"]},
+    {"id":"M1-C13","name":"QL musical derivation","relations":["M1-2","M1-3","M1-4","M1-5","M2"]},
+    {"id":"M1-C14","name":"topological recognition","relations":["M1-5","Torus","Klein","SU(2)","Hopf","quaternion"]},
+    {"id":"M1-C15","name":"TDA / invariant shape of activity","relations":["M1-5","M1'","representation trajectories"]},
+    {"id":"M1-C16","name":"playable matheme","relations":["M1'","graph","audio","topology","pedagogy"]},
+    {"id":"M1-C17","name":"determinate Agency refraction","relations":["M1","S1 Actuation","Determination","Return"]},
+    {"id":"M1-C18","name":"operative relational persistence","relations":["M1","S1' Hen"]},
+    {"id":"M1-C19","name":"formal return and theory revision","relations":["M1","M0","M5","evidence"]}
   ],
-  "musical_derivation": {
-    "status": "active M1 theory ahead of older Bimba/runtime representation",
-    "role": "music-theoretical prior to Paraśakti music-symbolic/correspondential systems",
-    "key_relations": [
-      "0/1 + 1/0 = 1/1 ~= 100%",
-      "100% = 64 + 36",
-      "64/36 = 16/9 = (4/3)^2",
-      "16/9 = 2^4/3^2 -> 4+2 (symbolic-mathematical reading)",
-      "(4:2)/(3:3) -> 4/3 and 2/3",
-      "(4/3)*(3/2) = 2/1",
-      "(3/2)/(4/3) = 9/8",
-      "(2/1)/(16/9) = 9/8",
-      "72/64 = 9/8",
-      "(16/9)*(9/8) = 2/1",
-      "(4/3)*(9/8)*(4/3) = 2/1"
-    ]
+  "m_prime_experience": {
+    "M1-0'": "canonical/source form",
+    "M1-1'": "living instance/reflection",
+    "M1-2'": "harmonic/Ananda engine",
+    "M1-3'": "Spanda pulse",
+    "M1-4'": "QL positional/lens/CF navigation",
+    "M1-5'": "topology/shape recognition",
+    "whole": "walk, strike, hear, see and inspect the same formal relation through multiple concomitant registers"
   },
-  "claim_status_examples": [
-    {"claim":"16/9 = 4^2/3^2","status":"MATHEMATICAL-FACT"},
-    {"claim":"(4/3)*(3/2) = 2/1","status":"MATHEMATICAL-FACT"},
-    {"claim":"100% -> 64+36","status":"QL-PSYCHOID-DERIVATION"},
-    {"claim":"16/9 = 2^4/3^2 -> 4+2","status":"SYMBOLIC-MATHEMATICAL-READING"},
-    {"claim":"4+2 <-> genus-one","status":"EPI-LOGOS-TOPOLOGICAL-MODEL"},
-    {"claim":"genus-one is uniquely healthy self-reference","status":"RESEARCH-METAPHYSICAL-PROPOSITION"}
-  ],
-  "refraction": {
-    "M1": "Svātantrya / psychoid symbolic-mathematical matheme and QL development",
-    "S1": "Actuation: technological capacity constituted as determinate bounded Agency with Return",
-    "S1_prime": "Hen: determination becoming stable/addressable operative form; old vault-specific body is historical implementation",
-    "M1_prime": "deep current O:I instrument where matheme becomes playable, inspectable and teachable"
-  },
-  "open_questions": [
-    "proof/premises of 100% -> 64+36 -> 16/9",
-    "formal bridge from 16/9 prime-factor reading to 4+2",
-    "reconcile historical higher-genus formulas by what each counts",
-    "exact maps among torus, Klein, SU(2), Hopf and Cl(4,2)",
-    "separate topological model from ontological assertion",
-    "promote Symbolon/self-identity corpus into Bimba with provenance",
-    "incorporate full musical derivation without confusing M1 formal-harmonic prior with M2 correspondence",
-    "select real ML/TDA experiments",
-    "resolve current M1' O:I renderer/body without reviving obsolete shell authority"
-  ],
-  "m2_handoff": "Recover Paraśakti independently as Power/Vimarśa field. Do not let M1's harmonic richness predefine M2; verify the distinction between M1 music-theoretical prior and M2 music-symbolic/correspondential expression against the full M2 corpus."
+  "m2_handoff": {
+    "m1_provides": ["formal harmonic possibility-space", "ratio", "interval", "pulse", "complement", "conjugacy", "Context Frame grammar", "MEF-addressable structure", "topology", "chromatic/fifths traversal"],
+    "next_recovery_question": "how Paraśakti as Power/Vimarsa actively reads, differentiates, colours and applies this field through its 72-fold, modal/scalar, elemental, planetary, decanic, sacred-sonic, cymatic and correspondential domains"
+  }
 }
