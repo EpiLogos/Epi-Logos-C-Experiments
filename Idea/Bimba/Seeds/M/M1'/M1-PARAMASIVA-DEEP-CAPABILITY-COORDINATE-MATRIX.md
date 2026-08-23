@@ -4,270 +4,90 @@ Status: research matrix / current human review incorporated
 Subsystem: `M1 Paramaśiva`  
 Standing reflection: `S1 Actuation`  
 Operative reflection: `S1′ Hen`  
-Deep instrument: `M1′ / epi.deep.m1` — playable / inspectable / teachable matheme inside the current O:I application  
-Method: `EpiLogos/QL-MEF` `EPI-DEEP-SUBSYSTEM-CAPABILITY-MATRIX-PROTOCOL.md`  
-Coordinates with: QL-MEF #74/#75 and current O:I product field
+Deep instrument: `M1′ / epi.deep.m1`  
+Method: `EpiLogos/QL-MEF` `EPI-DEEP-SUBSYSTEM-CAPABILITY-MATRIX-PROTOCOL.md`
 
-## 0. Why this document exists
+## 0. Position
 
-This document recovers **Paramaśiva as the psychoid symbolic-mathematical research domain in which Anuttara's generative metaphysical language becomes self-determining formal process** before treating any C constants, 12-state ring, torus renderer, old Theia extension, ML method, or current O:I product as the definition of M1.
+Paramaśiva is the psychoid symbolic-mathematical field in which Anuttara's generative language becomes determinate, relational, harmonic and topological **matheme**. Its work includes the continuing development of Quaternal Logic itself: non-dual identity and inversion, Spanda, Ananda, the 4+2 form, conjugacy, Context Frames, topology, state algebra, musical derivation, and the formal intelligence these make available to the wider Epi-Logos/O:I field.
 
-The current human correction incorporated here is load-bearing:
+The capability matrix deliberately refuses a single pipeline reading. A capability may participate simultaneously in M1-0/1 identity, M1-2 harmonic relation, M1-3 generative process, M1-4 QL structure, M1-5 topology, MEF lenses, Context Frames, musical theory, M′ experience, S/S′ embodiment and downstream M2/M3 relations.
 
-> **Paramaśiva is where the symbolic mathematics of the psychoid register is continuously developed: the `0/1 ↔ 1/0` identity structure, Spanda oscillatory logic, Quaternal Logic flowering, ratio and harmonic derivation, topology, recursion, and the increasingly flexible/granular dynamics by which QL can structure relation, epistemics, orchestration qua Vāk, and the wider software field.**
+The current implementation body is evidence that portions of the matheme can run; it does not define the extent of Paramaśiva. Likewise, later theory extends the M1 research field without erasing the older Bimba-map architecture.
 
-The mathematical programme is not outside the metaphysics. It is where the metaphysics risks exact determination. Paramaśiva receives its primitive language from Anuttara, develops the capacity of that language to become manifest formal operation, and returns new formal structure that Anuttara can in turn articulate and refine.
+### Constitutional refraction
 
-M0 and M1 are therefore **two in name and one in nature** in a specifically `0/1` sense: distinguishable registers of one generative movement, not detachable products. Anuttara is the pre-matheme language of possible articulation; Paramaśiva is the matheme developing the invariant dynamics by which articulation can actually take form and run.
+```text
+M1   Paramaśiva   subsystem + canonical Guardian identity
+S1   Actuation    standing O:I product reflection
+S1′  Hen          operative Ta-Onta reflection
+M1′  epi.deep.m1  deep/playable Paramaśiva instrument
+```
 
-Paramaśiva must therefore **not** be reduced to:
-
-- a frozen `16/9` numerology;
-- a 43-node Bimba branch;
-- the current `m1.h` body;
-- the old 1–12-fold topology account;
-- a music engine;
-- a torus / Hopf / quaternion visualisation;
-- CPT/RAG or any other particular ML recipe;
-- Actuation;
-- the old M1′ Theia shell.
-
-Those are formal claims, research episodes, bodies, candidate methods, or coordinate-family refractions of a deeper developmental field.
+The same-coordinate relation is constitutional rather than exclusive ownership. Cross-coordinate capability embodiment remains legal.
 
 ---
 
-## 1. Source set and epistemic standing
+## 1. Source/provenance field
 
-### FOUNDATIONAL-SIGNAL / CANONICAL FEATURE DATA
+### Foundational / Bimba-source signal
 
-- `Idea/Bimba/Map/datasets/paramasiva-deep/nodes-full-detail.json` and `relations.json` — recovered M1 tree and detailed theory/data claims.
-- `Idea/Bimba/Map/datasets/paramasiva-deep/Spanda_Genesis_100_Percent.md`
-- `Idea/Bimba/Map/datasets/paramasiva-deep/Quaternal_Logic_Geometric_Epistemology_v2.md`
-- `Idea/Bimba/Map/datasets/paramasiva-deep/Quaternal_Logic_Lived_Topology.md`
-- `Idea/Bimba/Map/datasets/paramasiva-deep/Paramasiva's 3 - (0-1-2-3) - (0-1) Dynamic Logic - Spanda Subsystem Development - Spanda Seed.md`
-- `Idea/Bimba/Map/datasets/paramasiva-deep/Paramasiva's  4 - deeper reflections.md`
-- `Idea/Bimba/Map/datasets/paramasiva-deep/QL Essay.md`
-- original and recovered Vortex Modulae / Ananda matrix material.
-
-### CANONICAL DOMAIN / ARCHITECTURE SIGNAL
-
+- `Idea/Bimba/Map/datasets/paramasiva-deep/**`
+- `Spanda_Genesis_100_Percent.md`
+- `Paramasiva's 3 - (0-1-2-3) - (0-1) Dynamic Logic - Spanda Subsystem Development - Spanda Seed.md`
+- `Paramasiva's 4 - deeper reflections.md`
+- `Quaternal_Logic_Geometric_Epistemology_v2.md`
+- `QL Essay.md`
+- Vortex Modulae / Ananda source material
 - `Idea/Bimba/Seeds/M/M1'/Legacy/specs/M/M1-paramasiva-mathematical-dna.md`
-- `Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md`
-- `Idea/Bimba/Seeds/M/M1'/M1-ARCHITECTURE.md`
-- `Idea/Bimba/Seeds/M/M1'/M1-2-ANANDA-VORTEX-ARCHITECTURE.md`
-- `Idea/Bimba/Seeds/M/M1'/m1-prime-paramasiva-instrument.md`
-- `Idea/Bimba/Seeds/M/M1'/m1-prime-audio-generative-research.md`
-- `Idea/Pratibimba/System/Subsystems/Paramasiva/paramasiva-ux-full-m1-branch.md`
-- Cycle-3 M1 reconciliation material.
 
-### CURRENT-AUTHORED-POSITION / LATER MATHEME DEVELOPMENT
+### Later authored/developed matheme signal
 
-- current human corrections captured in this matrix;
-- current QL musical derivation v3: the matheme's ratio/harmonic flowering, including the six-layers-of-self-determination account, `#` as Paramaśiva+Paraśakti prior to their differentiated readings, the self-identity / self-inversion / self-difference triad, `4:2 / 3:3`, and the music-theoretical synthesis;
-- Antykathera / Symbolon essay line where `0/1` is developed as a philosophical object;
-- Epi-Logos plugin resource line on non-dual binary, self-identity, self-inversion and self-difference, where `0/1` and `1/0` are developed as metaphysical identity structure.
+- current `ql-musical-derivation-v3.md`
+- current MEF 12-lens / sublens reference
+- current coordinate-system reference
+- later non-dual binary / self-identity work
+- Symbolon / dia-ballein–sym-ballein essay-development line
+- later 36/64/64′/128/4096 relation-state work
+- later determinate-oscillation / eight-determination work deriving determinations around the poles of four two-sided categories
+- current Context Frame development and relation grammar
 
-These later sources are important **because they continue the same M1 research problem**, not because recency automatically makes them canonical.
+These are M1-relevant because they continue the same matheme research, not because later date grants authority.
 
-### IMPLEMENTATION-FACT / HISTORICAL-IMPLEMENTATION-EVIDENCE
+### Current design / M′ instrument signal
+
+- `M1'-SPEC.md`
+- `M1-ARCHITECTURE.md`
+- `M1-2-ANANDA-VORTEX-ARCHITECTURE.md`
+- `m1-prime-paramasiva-instrument.md`
+- `m1-prime-audio-generative-research.md`
+- current Prompt-E / `epi.deep.m1` programme
+
+### Implementation fact
 
 - `Body/S/S0/epi-lib/include/m1.h`
 - `Body/S/S0/epi-lib/src/m1.c`
-- current portal-core harmonic/quaternion/Hopf/Spanda/profile material;
-- old M1′ / Theia instrument surfaces as interaction evidence;
-- current O:I / Actuation product state as the standing S1 refraction.
+- portal-core Spanda / Hopf / quaternion / harmonic-profile code
+- current QL-MEF kernel/parity work
 
-### RESEARCH-PROPOSITION
-
-- `Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md` and related model-development proposals.
-
-These may be valuable, but they do not define M1.
+Specific ML proposals such as CPT/RAG remain research propositions about possible M1-related capabilities; they are not subsystem semantics.
 
 ---
 
-## 2. Recovered subsystem meaning
+## 2. Recursive coordinate architecture
 
-### 2.1 Paramaśiva as Svātantrya becoming matheme
+| Coordinate | Recovered role | Deep capability field |
+|---|---|---|
+| `M1-0` | **Bimba / Original** | self-identity, source-form, invariant recognisability, canonical target |
+| `M1-1` | **Pratibimba / Reflection** | self-inversion, reflected manifestation, live difference, source-traceable variation |
+| `M1-2` | **Ananda / harmonic relational field** | ratio, interval, recurrence, digital-root reflection, constructive/destructive relation, vortex dynamics |
+| `M1-3` | **Spanda / generative oscillatory logic** | non-dual differentiation, reciprocal pole generation, Trika, contextual flowering, equations of becoming |
+| `M1-4` | **Quaternal Logic flowering** | 4+2 positional structure, complement, conjugacy, state fields, nesting, Context Frames, lenses, flexible relational grammar |
+| `M1-5` | **Toroidal recognition** | topology of circulation and self-reference; Torus/Klein/SU(2)/Hopf/quaternionic and TDA-style shape recognition |
 
-Anuttara supplies the possibility of coherent generative articulation. Paramaśiva asks what happens when that possibility **freely determines itself as invariant form**.
+`M1-0` and `M1-1` are elemental poles. `M1-2` through `M1-5` carry the denser recursive explication already present in the source. The matrix preserves this asymmetry.
 
-The root question is therefore not merely “what mathematics does QL use?” but:
-
-> **How can self-grounded possibility become coherent formal determination without importing an arbitrary external law?**
-
-This is the psychoid register throughout. The mathematics is never meant to become a merely physical or abstract layer detached from psyche, meaning and metaphysics. It is symbolic mathematics in the strong Epi-Logos sense: formal structure is investigated as the exactable face of metaphysical/psychological process, while still being held accountable to mathematical and computational reality.
-
-The phrase **mathematical DNA** remains useful for M1's developed formal body. It is not the deepest semantic definition. Paramaśiva is the developmental field in which that DNA is continuously discovered, criticised, recomposed and tested.
-
-### 2.2 `#` precedes the differentiated M1/M2 split
-
-Current matheme work sharpens a distinction that later product/spec writing can blur:
-
-```text
-#
-  generative parent / inversion as such
-  Paramaśiva + Paraśakti simultaneously
-  Prakāśa + Vimarśa as one self-identifying act
-
-M1
-  that act contemplated as Name / self-luminous formal determination
-  the 0/1 / bimba direction and its matheme
-
-M2
-  that act contemplated as Power / self-recognitive creative operation
-  the 1/0 / pratibimba direction and its field
-```
-
-Therefore `# != M1` as an exclusive identity. M1 is one differentiated contemplation of the source relation. This boundary is especially important before M2 recovery.
-
-### 2.3 M0 ↔ M1 — two in name, one in nature
-
-The M0/M1 seam is reciprocal:
-
-```text
-Anuttara / M0
-pre-matheme language
-metaphysical possibility of distinction and relation
-        ↓ gives primitives / grammar
-Paramaśiva / M1
-matheme
-formal self-determination, ratio, process, topology
-        ↓ generates formal capacity
-later differentiated operation
-        ↓ returned consequence
-M1 formal research can revise itself
-        ↺
-M0 can deepen the language by which the result is articulated
-```
-
-Anuttara bootstraps Paramaśiva by giving it the primitive language in which `0/1`, inversion, frame, mirror, Vāk, action, one/many and contextual relation become sayable. Paramaśiva generates the **capacity to manifest** which Anuttara itself needs in order for its generative speech to become operational rather than purely declarative.
-
-This relation is itself a core `0/1` relation: not identity-by-collapse, not separation-by-domain.
-
-### 2.4 QL development is itself an M1 capability
-
-QL is not a settled six-position taxonomy consumed by the rest of the software stack. **Developing QL is one of Paramaśiva's central activities.**
-
-The subsystem continually asks how the matheme can become:
-
-- more exact without becoming brittle;
-- more granular without losing the sixfold invariant;
-- more flexible across 1-fold through higher-fold structures;
-- better at representing nested and conjugate relation;
-- more explicit about epistemic stance and context;
-- more useful for orchestration qua Vāk without becoming a workflow ontology;
-- better able to structure or inspect healthy relation;
-- better able to describe software/product/agent dynamics without forcing every native product into QL vocabulary;
-- mathematically clearer about which correspondences are proofs, constructions, symbolic readings or speculative bridges.
-
-Every O:I product can therefore carry some QL form/structure/logic while preserving its native software ontology. The point is not that all software *is* M1; the point is that M1 develops a reusable formal intelligence for relation and articulation across the field.
-
----
-
-## 3. Source evolution — preserve the research trajectory without freezing obsolete formulations
-
-### 3.1 Early 1–12-fold / genus work
-
-The earlier Paramaśiva corpus attempted to make the developing QL dynamics explicit through 1-fold to 12-fold structures, genus transitions, intermediate cardinalities and several formulas relating `4+2`, surface construction and recurrence.
-
-This work is important **research provenance**. It shows the actual questions being investigated: how a non-dual binary gives rise to differentiated circulation; how cardinality changes with recursion; how implicate/explicate relations survive expansion; how topology may model self-reference.
-
-Some detailed formulations are now superseded or contradicted by later matheme work. The matrix therefore preserves the capability and question while not freezing every old formula as canon.
-
-Example unresolved historical divergence:
-
-```text
-older line: genus-g extension as (4g + 2)
-later line: genus-g extension as (4g + 2g) = 6g
-```
-
-The right resolution is not “newer wins”. The research task is to reconstruct **what each formula is counting**, and retain only what can be justified.
-
-### 3.2 Symbolon / non-dual binary / self-identity refinement
-
-Later matheme work deepens the source object itself rather than merely adding more topology.
-
-`0/1` is developed simultaneously as:
-
-- a philosophical Symbolon / object of contemplation;
-- a metaphysical identity structure;
-- a bimba direction of Self leaning into manifestation;
-- part of a conjugate relation with `1/0` as return/transcendence direction;
-- the parent of the `4+2` architectural child;
-- the live tensional pivot whose difference prevents self-recognition from becoming tautological.
-
-The current musical derivation makes the identity triad explicit:
-
-```text
-self-identity   = bimba / canonical target
-self-inversion  = conjugation / slash-flip
-self-difference = the live non-identity between bimba and pratibimba
-```
-
-This is a deeper formal-philosophical basis for M1 than treating `0/1` as only a binary notation or matrix seed.
-
-### 3.3 The musical derivation is current QL theory, not downstream decoration
-
-The full musical derivation is a major M1 development that is **not yet fully reflected in the older Bimba branch**.
-
-It is the direct harmonic flowering of the ratio derivation. The key claim is not “QL can be mapped to music”; it is that the matheme's own ratio relations can be developed into a genuine music-theoretical structure and then recognised as musical intervals after derivation.
-
-Current load-bearing relations include:
-
-```text
-0/1 + 1/0 = 1/1 ≡ 100%             source / standing identity
-100% = 64 + 36                      internal accounting
-64/36 = 16/9 = (4/3)^2             ratio face of totality
-16/9 = 2^4 / 3^2 -> 4+2            current symbolic prime-factor reading
-
-4:2                                      vertical / Second-Spanda reading
-3:3                                      horizontal / First-Spanda reading
-(4:2)/(3:3) -> 4/3 and 2/3              cross-reading
-inverse / complement -> 3/2 and 3/4
-(4/3)(3/2) = 2/1                        octave
-(3/2)/(4/3) = 9/8                       epogdoon
-(2/1)/(16/9) = 9/8                      octave residue
-(72/64) = 9/8                           double-cover reading
-(16/9)(9/8) = 2/1                       totality + tick = octave
-(4/3)(9/8)(4/3) = 2/1                  two fourths + epogdoon bridge
-```
-
-Some lines above are elementary arithmetic once the ratios are granted. The **choice and interpretation of the ratios and the transitions into QL structure remain psychoid symbolic-mathematical research claims** and must retain their proof status.
-
-The current derivation further develops:
-
-- chromatic and fifths bases;
-- the 12-position conjugate/double-cover field;
-- the 8+4 architectural partition;
-- 12 MEF lens-scale anchorings;
-- Context Frame musical structure;
-- six pairing families;
-- relation-as-interval / traversal-as-phrase;
-- the matheme as self-theoretic recognition through music.
-
-This is **M1's music-theoretical prior**. Paraśakti's later music-symbolic/correspondential systems must receive and transform this harmonic field rather than retroactively owning its derivation.
-
----
-
-## 4. Recursive coordinate recovery — one genesis, not six modules
-
-The canonical M1 branch is asymmetrical: `M1-0` and `M1-1` are elemental poles while `M1-2` through `M1-5` contain the richer recursive development. Do not invent symmetric children where the source does not supply them.
-
-### M1-0 — Bimba / Original
-
-**Meaning:** formal identity insofar as it stands as itself; the invariant/source face.
-
-Current C realises this as immutable `.rodata`, but immutability in C is an embodiment of a deeper requirement: a form must have enough self-identity to be recognisable through transformation.
-
-### M1-1 — Pratibimba / Reflection
-
-**Meaning:** identity encountered through determinate reflection/difference. The reflection is not an unrelated second object; it remains traceable to the source.
-
-Current Ananda work often renders the difference as the `+1` relation. That is one computational articulation, not the whole metaphysics of Pratibimba.
-
-### M1-2 — Ananda / harmonic relational field
-
-The canonical sixfold:
+### M1-2 Ananda sixfold
 
 ```text
 M1-2-0  Bimba / #X+0
@@ -275,262 +95,333 @@ M1-2-1  Pratibimba / #X+1
 M1-2-2  Sum
 M1-2-3  Difference A
 M1-2-4  Difference B
-M1-2-5  Quintessence / non-dual integration
+M1-2-5  Quintessence / non-dual combination
 ```
 
-Each primary matrix also carries a digital-root reflection in the recovered data, producing the important 12-element field.
+The raw/no-digital-root and digital-root faces are concomitant readings of the harmonic field. The recurring Mahāmāyā doubling track and Paraśakti 3-6-9 track are part of the source field and become important again in the cross-system 64/72 work.
 
-**Subsystem role:** establish a structured field in which original, reflection, constructive relation, difference and integration can be compared harmonically rather than merely named.
-
-The dual recurring DR tracks:
+### M1-3 Spanda sixfold
 
 ```text
-Mahāmāyā     {1,2,4,8,7,5}
-Paraśakti    {3,6,9,3,6,9}
+M1-3-0  Seed / fused non-dual potential
+M1-3-1  original-directed pole
+M1-3-2  reciprocal/reflected pole
+M1-3-3  Trika / relation-of-relations
+M1-3-4  contextual flowering
+M1-3-5  meta-reflection / return
 ```
 
-are strong source facts inside the current harmonic research, but symbolic interpretations of them must remain separately evidenced.
+M1-3-4 contains the further sixfold generative explication which couples Spanda into M1-4. This is not merely a software compiler metaphor: it is the theory's account of how an initially non-dual relation differentiates enough structure for QL to become determinate.
 
-### M1-3 — Spanda / generative oscillatory logic
+### M1-4 QL flowering
 
-Canonical outer stages:
+The M1-4 field is where Spanda's generated relation becomes the full formal grammar of QL. Its continuing development includes the invariant sixfold, 4+2, complement, conjugacy, 3:3, relation/state planes, recursive position-4 nesting, Context Frames and the later musical/MEF determinations. `.` is reserved for the position-4 flowering/nesting grammar and other explicitly defined uses; ordinary structural descent remains `-`.
 
-```text
-M1-3-0  Seed
-M1-3-1  Original Pole
-M1-3-2  Reflection Pole
-M1-3-3  Trika Synthesis
-M1-3-4  Contextual Flowering
-M1-3-5  Meta-Reflection
-```
-
-`M1-3-4` contains a six-stage internal flowering that feeds the QL stages.
-
-**Subsystem role:** move from harmonic relation to generative transformation. Spanda is not merely a tick or animation clock. It is the symbolic-mathematical attempt to make the `0/1 ↔ 1/0` tension *do work* — differentiation, mediation, recursive contextualisation and return.
-
-The current C body names six `SPANDA_COMPILER_PASSES`. The implementation is replaceable; the enduring capability is that **QL should be generated from an explicit process relation rather than declared as an unexplained category list**.
-
-### M1-4 — Quaternal Logic Flowering
-
-Canonical sixfold:
-
-```text
-M1-4-0  foundational encoding
-M1-4-1  explicate / implicate differentiation
-M1-4-2  inversion
-M1-4-3  bidirectional / conjugate synthesis
-M1-4-4  contextual flowering / variable fold structure
-M1-4-5  harmonic meta-frame / return
-```
-
-**Subsystem role:** turn Spanda's generative process into a reusable positional, recursive, contextual and relational grammar.
-
-This is the principal ongoing **deep QL research region**. The exact old cardinality constructions are not all canon. The capability is the continued development of QL's dynamics so they can become more precise, granular and practically useful for epistemic mapping, relational structure, orchestration, software conformance and philosophical analysis.
-
-### M1-5 — Toroidal Recognition / formal self-recognition
-
-Canonical sixfold:
+### M1-5 toroidal recognition sixfold
 
 ```text
 M1-5-0  Toroidal-Quaternionic Ground
 M1-5-1  Torus in quaternionic space
 M1-5-2  4π / 720° cycle
-M1-5-3  shadow / phase-shift relation
+M1-5-3  shadow as phase relation
 M1-5-4  bridge toward Paraśakti
-M1-5-5  recognition / necessity claim
+M1-5-5  recognition of the topology of the completed circulation
 ```
 
-**Subsystem role:** ask what mathematical/topological form the generated circulation actually has.
-
-This branch must distinguish:
-
-- ordinary mathematical facts (`T²=S¹×S¹`, `π₁(T²)=Z⊕Z`, SU(2) double cover of SO(3), quaternion algebra);
-- Epi-Logos constructions (QL positions mapped onto toroidal/conjugate structure, 12-state walk, K² musical surfaces, Cl(4,2) position reading);
-- stronger research propositions (genus-one as uniquely healthy self-reference, `16/9` necessitating `4+2`, 137 architecture as fundamental physical/metaphysical invariant).
+The important capability is formal **shape-recognition of the matheme and of activity traversing it**. Current torus, SU(2), Hopf and quaternion machinery are computational realisations of this field; later topological-data/representation-learning work belongs here insofar as it investigates invariant shape rather than because M1 is assigned one ML recipe.
 
 ---
 
-## 5. Deep capability matrix
+## 3. Spanda equations as generative M1 theory
 
-| Capability ref | Coordinate | Purpose / subsystem role | Human / agent consequence | Epistemic standing |
+The later matheme work makes the internal relation of M1-3 and M1-4 substantially clearer. The equations are not three isolated numerological identities; they are complementary structural reads of how the matheme differentiates, totalises and relates the 1-2-3 cosmic field.
+
+### 3.1 First Spanda — 3:3 movement
+
+Current authored form:
+
+```text
+0 = (0/0)
+  → ((0/1)/(1/0))
+  → [T0]
+  → [T1]
+  → (1/0 + 0/1)
+  → 1/1 = 1 = 100%
+```
+
+This gives a 3:3 articulation:
+
+```text
+emanative / bimba / Prakāśa
+  (0/0)
+  ((0/1)/(1/0))
+  [T0]
+
+reversionary / pratibimba / Vimarśa
+  [T1]
+  (1/0 + 0/1)
+  1/1
+```
+
+Its capability is **generated self-relation**: identity differentiates, retains the reciprocal reading, acquires temporal/tensional mediation, and reaches a standing whole which can itself recur.
+
+An earlier authored eight-state rendering also carries anticipatory and memory/return insertions around the six operative positions. It should be read as a finer process-grain of the same Spanda problem, not as a competing cardinality.
+
+### 3.2 Second Spanda — 4:2 structural body
+
+```text
+100% = 2^6 + 6^2
+     = 64 + 36
+
+64/36
+= 2^6 / 6^2
+= 2^6 / (2^2 · 3^2)
+→ /4
+= 2^4 / 3^2
+= 16/9
+= (4/3)^2
+```
+
+The key M1 relation is the cross-reading of the Second Spanda's **4:2** with the First Spanda's **3:3**:
+
+```text
+(4:2)/(3:3) → (4/3, 2/3)
+```
+
+with conjugate/inverse relations giving `3/4` and `3/2`. From the same field follow the internally important harmonic relations:
+
+```text
+(4/3)(3/2) = 2/1
+(3/2)/(4/3) = 9/8
+(2/1)/(16/9) = 9/8
+(16/9)(9/8) = 2/1
+(4/3)(9/8)(4/3) = 2/1
+```
+
+The arithmetic identities are mathematical facts; the claim that these are the proper psychoid/matheme readings of the system is authored QL theory. The matrix preserves both levels rather than conflating them.
+
+### 3.3 Third Spanda — 64 / 72 / +1 cosmic articulation
+
+The later authored third equation develops the same field across the 1-2-3 physical/cosmic relation:
+
+```text
+137 = [8(8+9)-9] + 1 + 9
+    = (2^7 - 1) + 1 + 9
+    = 2^7 + 9
+    = 8(8+9) + 1
+    = 64 + 2(36) + 1
+    = 64 + 72 + 1
+```
+
+The capability significance is cross-domain composition: Mahāmāyā's 64-field, Paraśakti's doubled 36/72-field and Paramaśiva's recognising `+1` can be read together without collapsing the three subsystem identities. This is part of the theory field that leads naturally from M1 into M2 and M3.
+
+---
+
+## 4. M1-4 as the expanded formal grammar
+
+The later work considerably expands what belongs to QL flowering beyond a six-stage constant cascade.
+
+### 4.1 Self-identity, inversion and self-difference
+
+```text
+self-identity   = bimba / standing target
+self-inversion  = conjugate/reflected reading
+self-difference = the living difference retained between them
+```
+
+The non-dual binary is therefore not sameness. Its intelligence comes from identity capable of generating a real reciprocal difference and recognising itself through it.
+
+The Symbolon line develops the same problem semantically: `dia-ballein` names throwing-apart/separation and its pathological polar/cancellation possibilities; `sym-ballein` names throwing-together/re-cognition, the separated halves becoming mutually intelligible again. This belongs in M1 as a developed theory of relation/recognition, while the essay remains its richer philosophical provenance.
+
+### 4.2 Complement and conjugacy
+
+The canonical complementary relation:
+
+```text
+X + Y = 5
+
+(0,5) (1,4) (2,3)
+```
+
+organises the sixfold into three dyads. Conjugation then opens the positional Klein quaternity:
+
+```text
+{X, Y, X′, Y′}
+```
+
+This is categorically distinct from the state quaternity of a binary complementary relation:
+
+```text
+{10, 01, 11, 00}
+```
+
+The latter may receive the L2 Catuṣkoṭi reading `IS / IS-NOT / BOTH / NEITHER`. Keeping the positional and state quaternities distinct lets geometry and state algebra compose without collapsing into one vocabulary.
+
+The developed state field follows:
+
+```text
+2^6 = 4^3 = 64
+64 + 64′ = 128        phase-labelled additive whole
+64 × 64′ = 4096       simultaneous paired-state field
+          = 16^3
+```
+
+These are capabilities for representing complementary state, conjugate position, and joint bimba/pratibimba configuration at several grains.
+
+### 4.3 Context Frames are relational activation of the matheme
+
+The current CF progression is a developed M1 formal relation:
+
+```text
+(00/00)
+(0/1)
+(0/1/2)
+(0/1/2/3)
+(4.0/1-4.4/5)
+(4.5/0)
+(5/0)
+```
+
+The first four progressively activate positional relation. Position 4 changes the grammar by recursively internalising the sixfold; CF6 is the `.5` bridge; CF7 is total synthesis/return. Each active CF can hold normal and inverse/conjugate forms of its positions together. Context Frames are therefore **dynamic relational configurations of the matheme**, not labels attached to workflows.
+
+### 4.4 Determination and balance
+
+The later theory of determinate oscillation treats balance as an active relation between poles rather than static midpoint. The authored four two-sided categories yield eight determinations, with excess/deficiency structure participating in this account. The exact eightfold belongs in the later theory source itself; this matrix records its capability relation without reconstructing missing names from memory: **QL can articulate the determinate mode of a polarity, not merely the presence of two poles.**
+
+### 4.5 Six layers of determination
+
+The later musical/MEF work makes clear that the bare positions acquire richer determinations through multiple simultaneous layers rather than one universal label-set. Current theory includes six self-determining layers spanning the structural, ontological/Name, Power, lens/MEF, Context-Frame and musical-synthetic registers. This is precisely why the capability matrix is many-to-many: a position can remain the same QL address while its determination changes through lens, face, context and harmonic reading.
+
+---
+
+## 5. Music is the audible topology of the matheme
+
+The musical work belongs deeply to M1 because it is derived from the matheme's own ratios, complement/conjugacy and topology. It is not a decorative mapping added after QL.
+
+### Foundational ratio field
+
+```text
+1/1    standing identity
+4/3    manifestation fourth
+3/4    recognition/inverse fourth
+3/2    aspirational/luring fifth
+2/3    contextual/grounding inverse fifth
+16/9   QL totality ratio
+9/8    epogdoon / generative interval / tick relation
+2/1    octave closure-and-reopening
+```
+
+### Two complete traversal bases
+
+The current derivation supports both:
+
+- an epogdoon/chromatic traversal basis generated through `9/8`;
+- a fifths traversal basis generated through `3/2`.
+
+They are two paths through the same complete pitch field rather than rival theories.
+
+### Pairing grammar
+
+The musical derivation currently carries six pairing families, themselves readable as a 3:3:
+
+```text
+A   adjacent identity
+B   offset transition
+C   converse / X+Y=5 mirror
+D1  same-position cross-face
+D2  cross-position cross-face transformation / requirement / completion
+D3  pratibimba-internal / helix-invariant relation
+```
+
+The musical system therefore gives relation a directly perceivable intervallic character. In M1′, graph movement can genuinely become melody because position, complement, conjugacy and relation already have harmonic structure.
+
+### MEF and Context Frame musicality
+
+The current MEF account exposes a pre-lens 72-field (`6² × 2`) which twelve lenses read as tonic/epistemic re-groundings. Each lens can be heard at concomitant grains:
+
+```text
+6+6   two whole-tone / Name+Power total field
+8     four Name + four Power sounding positions, four implicate anchors held
+7     Context-Frame cut / diatonic perspective
+```
+
+Six rotations × two faces give twelve lenses; seven CF modal cuts over twelve lens-tonics yield the 84 mode-tonic landscape. Lens modulation is therefore epistemic-mode modulation as well as musical modulation.
+
+The capability consequence is strong: **topological/relational theory is itself the musical-theoretic foundation**. M1 establishes ratio, interval, pulse, complement, conjugacy, traversal and modal possibility before M2 dynamically clothes those possibilities in its richer Power/Vimarśā, elemental, planetary, decanic and correspondential fields.
+
+---
+
+## 6. Capability matrix
+
+| Capability | Primary M relation | Cross-relations | Human / Agent affordance | Provenance / current state |
 |---|---|---|---|---|
-| `M1P-SVATANTRYA` | `M1` | Formal self-determination: possibility becoming coherent form from its own generative ground. | Develop or inspect why a formal rule exists rather than merely consuming it. | FOUNDATIONAL-SIGNAL / CURRENT-AUTHORED-POSITION |
-| `M1P-PREMATHEME-MATHEME` | `M0↔M1` | Translate Anuttara possibility into testable formal relation and return results to the language. | Trace any derivation back to the metaphysical primitive it formalises. | CURRENT-AUTHORED-POSITION |
-| `M1P-IDENTITY-CONJUGACY` | `M1-0/1` | Hold self-identity, reflection, inversion and live difference as one non-collapsed relation. | Compare source and reflection while preserving provenance and non-identity. | FOUNDATIONAL-SIGNAL + later matheme refinement |
-| `M1P-ANANDA` | `M1-2` | Build a harmonic relational field from original/reflection/sum/difference/integration. | Inspect matrices, ratios, reflections, recurrent tracks and their source evidence. | FOUNDATIONAL-SIGNAL / IMPLEMENTATION-FACT in part |
-| `M1P-SPANDA` | `M1-3` | Turn identity-difference into generative oscillatory transformation. | Run, replay and inspect the process by which a relation produces a next form. | FOUNDATIONAL-SIGNAL / partial IMPLEMENTATION-FACT |
-| `M1P-QL-FLOWERING` | `M1-4` | Generate and continuously refine the QL positional/recursive grammar. | Use QL at variable depth for mapping, epistemics, relation and orchestration; inspect why a chosen fold is appropriate. | CORE RESEARCH CAPABILITY |
-| `M1P-FOLD-RESEARCH` | `M1-4.4` | Investigate 1-fold through higher-fold structures without treating historical formulas as final. | Select or derive sufficient structural resolution rather than force mod-6 literally everywhere. | RESEARCH-PROPOSITION / evolving authored theory |
-| `M1P-RATIO-DERIVATION` | `M1-4 ↔ M1-2/3` | Develop the ratio chain around 100%, 64/36, 16/9, 4/3, 3/2, 9/8 and 2/1. | See exact arithmetic separately from psychoid interpretation and contested transitions. | MIXED: arithmetic fact + QL derivation |
-| `M1P-MUSIC-THEORETICS` | `M1` / current post-Bimba flowering | Develop the matheme's harmonic content into genuine music theory before Paraśakti correspondence. | Hear and manipulate QL relations as interval, scale, pairing and phrase. | CURRENT-AUTHORED-POSITION / active theory |
-| `M1P-MEF-HARMONIC` | cross `M1 ↔ L` | Relate the matheme's harmonic field to MEF lens anchorings without reducing epistemic lenses to pitches. | Inspect how one formal relation changes under epistemic refraction. | ACTIVE THEORY / requires continuing validation |
-| `M1P-TOPO-RECOGNITION` | `M1-5` | Determine what topology/invariant genuinely describes the generated circulation. | Compare formal walks, loops, conjugacies and returns; detect overclaimed topology. | MIXED mathematical fact / Epi construction / research proposition |
-| `M1P-TDA` | `M1-5 / M1′` | Investigate topology/invariants of active relational trajectories and learned representations. | Agents can compare shape/persistence rather than only labels; users can inspect the shape of a walk. | RESEARCH DIRECTION, not fixed algorithm |
-| `M1P-PROOF-PROVENANCE` | whole M1 | Separate theorem, arithmetic identity, construction, symbolic correspondence, metaphysical proposition, implementation fact and observed result. | Prevent beautiful correspondences from becoming accidental canon. | REQUIRED PROTOCOL CAPABILITY |
-| `M1P-PLAYABLE-MATHEME` | `M1′` | Make QL walkable, audible, visible and teachable. | Learn by performing relations; summon proof/source/context from any rendered state. | DESIGN-COMMITMENT; old shell historical |
-| `M1P-QL-FIELD-APPLICATION` | whole M1 | Supply optional formal intelligence to every O:I product without stealing native ownership. | Products/Agents can request QL structure for orchestration, relation or analysis and retain native semantics. | CURRENT-AUTHORED-POSITION |
-| `M1P-RETURNED-REVISION` | `M1 -> M0/M1` | Let failed derivation, computation and downstream reality revise the matheme. | A developer can demote or rewrite an attractive formal claim when evidence resists it. | REQUIRED RESEARCH LAW |
+| Formal self-identity | M1-0 | M1-1, Symbolon, S1 determination | distinguish standing form from its situated reflections | foundational + implemented partially through Bimba law |
+| Self-inversion / reflected identity | M1-1 | `#`, conjugacy, M2, S/S′ | generate/inspect reciprocal readings without losing source | foundational + later theoretical refinement |
+| Self-difference | M1-0/1 | Symbolon, Ananda differences, Return | preserve productive non-identity rather than collapse reflection into sameness | later authored theory |
+| Ananda harmonic relation | M1-2 | M1-3, M1-5, M2, music | inspect raw/reduced ratios, interval families and vortex trajectories | source-rich; significant C body present |
+| Spanda generation | M1-3 | M1-4, CF, T, Logos, 1-2-3 | model and execute differentiation/return as structured movement | source-rich; partial executable body |
+| First Spanda / 3:3 | M1-3 | bimba/pratibimba, 1-2-3 / 4-5-0 | read a process as emanation and reversion within one whole | current authored theory |
+| Second Spanda / 4:2 | M1-3/4 | 64,36,16/9, ratios | expose structural body generated by the oscillation | authored symbolic-mathematical derivation |
+| Third Spanda / 64+72+1 | M1→M2/M3 | cosmic 1-2-3, 137 | compose the three differentiated mathematical fields without collapsing them | later authored theory |
+| QL sixfold / 4+2 | M1-4 | P, all lenses/CFs/products | address whole-form responsibilities while allowing non-linear traversal | constitutional/core theory |
+| Complement `X+Y=5` | M1-4 | three dyads, music, Klein | discover counterpart/complement relations | developed theory + implementations/parity |
+| Positional Klein quaternity | M1-4/5 | `{X,Y,X′,Y′}` | inspect complement × conjugation as geometry | developed theory |
+| State quaternity | M1-4 | `{10,01,11,00}`, L2 | sustain IS/IS-NOT/BOTH/NEITHER or raw state reading | developed theory |
+| 64 / 64′ / 128 / 4096 fields | M1-4 | M3, conjugacy, state algebra | inspect single-face and simultaneous joint-state spaces | developed theory / implementation sockets vary |
+| Context Frame grammar | M1-4 | P4 nesting, Vāk, AIKit/Agency | activate different relational wholes without renaming the underlying positions | current formal canon |
+| Determinate oscillation | M1-3/4 | balance, excess/deficiency, later eight determinations | classify how polarity is held or deformed, not merely that poles exist | later authored theory; exact source vocabulary remains source-owned |
+| MEF refraction | M1-4↔L | 12 lenses, 72 reservoir, music | preserve subject identity while changing epistemic ground | current QL canon |
+| Harmonic/musical derivation | M1-2/3/4/5 | ratios, CF, MEF, M2 | hear formal relation and use it as a navigable/teachable structure | current authored theory, partially embodied |
+| Toroidal / SU(2) recognition | M1-5 | Torus, Klein, Hopf, quaternion | inspect circulation, phase and topological invariants | developed theory + substantial implementation |
+| TDA / shape of activity | M1-5/M1′ | trajectories, representation learning | identify recurrent/invariant structure in walks or state trajectories | current design/research direction |
+| Playable matheme | M1′ | all M1 strata, graph, audio, renderer | walk, strike, hear, see and inspect the same formal relations | current deep-product commitment |
+| Determinate Agency | M1→S1 | Actuation Agency/Determination/Return | give an identity a bounded operative form and receive evidence-bearing Return | current O:I reflection |
+| Relational operative persistence | M1→S1′ | Hen | preserve addressable relation/state across operation | current O:I reflection |
+| Formal return/revision | M1→M0/M5 | evidence, canon, autoresearch | let returned reality deepen later theory without automatic canon mutation | protocol + current architecture |
+
+This table is not exclusive assignment. Each row can be re-read through other coordinate families, lenses, Context Frames, Agents and product embodiments.
 
 ---
 
-## 6. Formal claim-status ledger
+## 7. M1′ experience
 
-A future M1 workbench must expose claim status at the point of use.
+The strongest current M1′ line is already consonant with the recovered M1 field: **Paramaśiva becomes something walked, struck, heard, seen and inspected.**
 
-Examples:
+Its six strata remain useful reflections:
 
 ```text
-16/9 = 4²/3²                         MATHEMATICAL FACT
-(4/3)(3/2) = 2/1                    MATHEMATICAL FACT
-(3/2)/(4/3) = 9/8                   MATHEMATICAL FACT
-(2/1)/(16/9) = 9/8                  MATHEMATICAL FACT
-
-100% -> 64+36                       QL / PSYCHOID DERIVATION
-16/9 = 2^4/3^2 -> 4+2              SYMBOLIC-MATHEMATICAL READING
-4+2 ↔ genus-one construction        EPI-LOGOS TOPOLOGICAL MODEL
-12 ↔ conjugate/double-cover walk    EPI-LOGOS CONSTRUCTION with mathematical anchors
-genus-one uniquely healthy          RESEARCH / METAPHYSICAL PROPOSITION
-137 = 64+72+1 as physical invariant RESEARCH PROPOSITION unless externally evidenced
+M1-0′  canonical/source form
+M1-1′  living instance/reflection
+M1-2′  harmonic/Ananda engine
+M1-3′  Spanda pulse
+M1-4′  QL positional/lens/CF navigation
+M1-5′  topology/shape recognition
 ```
 
-The purpose is not sceptical flattening. It is to let the strongest parts of the matheme become stronger by making the exact bridge visible.
+The resulting experience can compose several capabilities at once: a user or Agent traverses a graph relation; the relation has positional/conjugate structure; its harmonic interval is audible; its Spanda phase changes; its lens/CF re-grounds meaning; and its accumulated trajectory acquires inspectable topological form.
+
+Current implementation distributes some of this across M1, M2-1′ Vimarśā and shared profile machinery. That body distribution does not change the M1 capability provenance: M1 supplies the formal-harmonic/topological prior; M2 can be the active reader/modulator of the shared field.
 
 ---
 
-## 7. Experience / UX / developer activity
+## 8. M1 → M2 handoff
 
-A mature M1 experience is a **matheme research and performance workbench**, not just a visual lesson.
+The M1 recovery now gives a much sharper starting point for Paraśakti.
 
-A human developer should be able to:
-
-- open a QL proposition and see its Anuttara language ancestry;
-- inspect exact equations, transforms, matrix cells and coordinate relations;
-- distinguish authored interpretation from mathematical fact;
-- run a derivation or symbolic experiment;
-- compare competing old/new formulations;
-- mark a claim as retained, weakened, superseded or unresolved with reasons;
-- see which products, lenses or subsystem claims depend on it;
-- play the same relation as interval, traversal, pulse or topology where a genuine mapping exists;
-- inspect the complete musical derivation and its ratio provenance;
-- ask an Agent to test a derivation without giving that Agent authority to promote canon;
-- return evidence into M1 and, where appropriate, into Anuttara's language development.
-
-An Agent should be able to:
-
-- retrieve the smallest sufficient formal context for a relation;
-- ask for a QL fold/coordinate structure as an optional modelling method;
-- emit provenance-rich derivation traces;
-- test internal consistency and downstream dependency impact;
-- compare topological/relational trajectories;
-- propose refinements while preserving human authored authority.
-
----
-
-## 8. Coordinate-family refraction in current O:I
-
-### `M1 Paramaśiva`
-
-Semantic/ontological identity: Svātantrya as formal self-determination; psychoid symbolic mathematics; the developing matheme and QL dynamics.
-
-### `S1 Actuation`
-
-Standing technological reflection: the constitution of technological Agency — identity, determination, purpose, bounds, delegation/federation, action, consequence and Return.
-
-The relation is strong but not substitutive:
-
-> **Paramaśiva asks how freedom becomes coherent formal determination; Actuation asks how technological capacity becomes a determinate, bounded, attributable Agency capable of acting and receiving consequence.**
-
-Actuation remains number-neutral as generic software ontology. QL may analyse/refract it without becoming its owner.
-
-### `S1′ Hen`
-
-Operative reflection: definition/form/content crystallisation and addressable formation. Historical Hen implementations include vault/schema/template authority, but the same-coordinate semantic value is broader than Obsidian: **determination becoming stable, addressable operative form**.
-
-### `M1′`
-
-Deep compositional instrument: the matheme made playable/inspectable/teachable in the current O:I application. Historical Theia/Bevy/Tauri bodies are implementation evidence, not current product authority.
-
-Current deep experience should preserve:
-
-- relation-as-interval / traversal-as-phrase;
-- Ananda source/proof views;
-- Spanda/tick/process inspection;
-- QL fold/lens/context exploration;
-- toroidal/conjugate/Hopf inspection where mathematically warranted;
-- musical derivation and harmonic performance;
-- derivation/provenance status;
-- source → theory → code → evidence traversal.
-
----
-
-## 9. Current implementation reality
-
-Current code materially implements portions of the old M1 formal body:
-
-- Ananda matrix structures and lookup/verification;
-- Bimba/Pratibimba implementation distinctions;
-- Spanda stage machinery / compiler-pass pattern;
-- QL constants / rings / position logic;
-- quaternion and Hopf utilities;
-- 12-state / 720° traversal structures;
-- harmonic profile and old M1′ surface models.
-
-These are **implementation facts**, not proof that the stronger metaphysical/topological derivations are true.
-
-The full current musical derivation is ahead of the older Bimba/code representation. It must be treated as active M1 theory awaiting disciplined incorporation rather than silently back-projected as already-implemented substrate.
-
----
-
-## 10. ML / learning research
-
-ML is strategically powerful for M1 precisely because QL form is expected to appear across the software ecosystem.
-
-But the native M1 research question is broader than “train a QL model”:
-
-> **Can learning recognise, preserve, compare and act upon the relational invariants / topology / harmonic structure of a field rather than merely fit its surface labels?**
-
-Promising directions include:
-
-- topological data analysis of trajectories / relation fields;
-- persistence/invariance under transformation;
-- geometric analysis of learned representations;
-- QL-aware structural evaluation;
-- learning when a particular fold/context is useful;
-- model/Agent assistance with proof search and contradiction discovery;
-- corpus fluency over the evolving matheme.
-
-Specific CPT/RAG/GDS/QLoRA/etc. recipes remain `CANDIDATE` or `RESEARCH-PROPOSITION` unless separately ratified. Material model-bearing implementation may live in Actuation/AIKit/Workcell according to native product ownership while still serving M1 research.
-
----
-
-## 11. Unresolved decisions / contradictions
-
-1. Exact proof status and premises of `100% -> 64+36 -> 16/9`.
-2. Exact formal bridge from `16/9 = 2^4/3^2` to the `4+2` QL architecture.
-3. Reconciliation of historical higher-genus formulas and what each cardinality counts.
-4. Exact maps among torus, Klein extension, SU(2), Hopf and `Cl(4,2)` where the project currently uses neighbouring true mathematical structures as one composite picture.
-5. Which topological claims are formal models versus ontological assertions.
-6. How the Symbolon / self-identity corpus should be promoted into canonical Bimba without losing essay/philosophical provenance.
-7. How the full musical derivation is incorporated into the M1 source graph and runtime without handing M1's later music-symbolic interpretation to Paraśakti prematurely.
-8. Which ML/TDA methods are worth real experiments.
-9. The exact current O:I M1′ renderer/body; old Theia/Tauri/Bevy choices do not decide it.
-
----
-
-## 12. Boundary toward M2 recovery
-
-Do not let Paramaśiva's growing harmonic richness swallow Paraśakti.
-
-Current matheme work says the generative parent `#` is Paramaśiva and Paraśakti simultaneously. M1 develops the **Name / self-luminous / formal and harmonic matheme**; M2 must now be recovered as the differentiated **Power / Vimarśa / creative-operational field** in its own right.
-
-Likewise:
+M1 establishes the **formal harmonic possibility-space**:
 
 ```text
-M1 music-theoretical derivation
-    = harmonic/formal prior
-
-M2 music-symbolic / correspondential expression
-    = downstream differentiated Power-field
+identity / inversion / difference
+Spanda generation
+4+2 and 3:3
+Ananda ratios and vortex tracks
+complement and conjugacy
+Context Frames
+MEF-addressable structure
+torus / double-cover / phase
+interval, pulse, chromatic and fifths traversal
 ```
 
-That relation is a hypothesis to verify against the full M2 corpus, not a licence to predefine M2 from M1.
+The emerging M2 question is not “how do we add music?” M1 is already intrinsically musical. The M2 question is how **Power / Vimarśā actively reads, differentiates, colours and applies that formal field** through the 72-fold MEF potential and the symbolic-correspondential worlds that Paraśakti owns: modes/scales as active epistemic refractions, elemental and planetary fields, decans, sacred-sonic correspondences, cymatic/material expression, and the transformation of a formal interval field into a dynamically situated vibrational world.
+
+That relation should now be recovered from M2's own source corpus rather than projected outward from M1.
