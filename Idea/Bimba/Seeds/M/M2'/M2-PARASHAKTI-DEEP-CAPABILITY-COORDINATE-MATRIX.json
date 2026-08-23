@@ -10,6 +10,32 @@
     "deep_instrument": {"coordinate":"M2'","identity":"epi.deep.m2"},
     "m0_4_prefiguration": "X# imaginal/potentiating meta-logic in Anuttara"
   },
+  "mark_ground": {
+    "mark": "Paraśakti is the differentiated Power/world-condition field through which M1 formal-harmonic possibility becomes epistemically, ontologically, temporally, symbolically, musically, cosmically and bodily determinate enough for M3 inscription and M4 situated lived composition.",
+    "larger_whole": "Epi Cosmic 1-2-3 and Personal 4-5-0 relation through one Current Situated Matheme",
+    "source_signals": [
+      "Idea/Bimba/Map/datasets/parashakti-deep/**",
+      "Idea/Bimba/Seeds/M/M2'/Legacy/specs/M/M2-parashakti-vibrational-architecture.md",
+      "M0-4 / X# source in Anuttara",
+      "M1 Spanda / Ananda / musical derivation sources",
+      "current integrated 1-2-3 Cosmic architecture",
+      "current reviewed Paraśakti deep capability matrix"
+    ],
+    "mark_reading_standing": "current human-reviewed research/design articulation over authored/source ground",
+    "aim": "recover Paraśakti as a whole capability/coordinate field and preserve its actual M2->M3 determination and M2->M4 world-conditioning relations before implementation decomposition",
+    "recognition": "a human or Agent can explain, inspect and eventually operate Paraśakti as a differentiated Power/world-condition instrument whose relations into Mahāmāyā and Nara remain source- and provenance-visible"
+  },
+  "orienting_figures": [
+    {
+      "id": "alfonsine-zij-computational-instrument",
+      "role": "ORIENTING-FIGURE",
+      "canonical_treatment": "EpiLogos/QL-MEF docs/integrations/epi-logos/EPI-LOGOS-ALFONSINE-ORIENTING-FIGURE.md",
+      "figure": "Alfonsine Tables and wider zij practice as world-account rendered into tables + canons for situated calculation",
+      "illuminates": "the kind of technical move in which a structured account of world-relations becomes an operable computational instrument yielding a situated determination; especially useful for apprehending M2 world-condition -> M3 inscription -> M4 situated relation",
+      "boundary": "historical analogy does not validate Epi correspondences, astrology, QL/MEF metaphysics, 72->64 interpretations, bioquaternionic identity, or any specific implementation",
+      "secondary_matrix_lesson": "structured inspectable state plus procedures/canons, derivational provenance and revision history can inform instrument/matrix design without defining generic response-matrix ontology"
+    }
+  ],
   "coordinate_tree": {
     "M2-0": {"name":"Archetypal numerical / potentiation ground","roles":["pentadic phi self-proportion","36->72 spinorial differentiation","Third Spanda Paraśakti term"]},
     "M2-1": {"name":"MEF / Vimarśā epistemic refraction","roles":["12 actual L/L' lenses","six sublenses per lens","active lens/mode reading","M2' audio genesis"]},
