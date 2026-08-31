@@ -1,6 +1,6 @@
 # M0 / Anuttara Deep Capability & Coordinate Matrix
 
-Status: research matrix / current human review incorporated  
+Status: research matrix / current human review and O:I operationalisation determination incorporated  
 Subsystem: `M0 Anuttara`  
 Standing reflection: `S0 Central`  
 Operative reflection: `S0′ Khora`  
@@ -13,7 +13,7 @@ This document recovers **Anuttara as a deep coordinate/capability field**. It do
 
 Anuttara is the prior generative language of Epi-Logos: a process-metaphysical and symbolic syntax in which distinction, relation, number, value, speech, context, manifestation, action and return are articulated before and throughout their differentiation across M1–M5.
 
-The important computational signal in the current body is therefore straightforward: **substantial parts of the Anuttara language and symbolic syntax already possess genuine executable/computational state.** The task is to deepen that condition while preserving the authored language, its relations and provenance.
+The important computational signal in the current body is therefore straightforward: **substantial parts of the Anuttara language and symbolic syntax already possess genuine executable/computational state.** The current O:I Agent-Native architecture now supplies a mature generic host in which this can become addressable and operable without making O:I the owner of Anuttara semantics.
 
 M0 has two simultaneous source-backed modes:
 
@@ -21,6 +21,37 @@ M0 has two simultaneous source-backed modes:
 - **M0 as depth/horizon** — later M domains differentiate within Anuttara's generative horizon rather than outside it.
 
 These are not competing descriptions.
+
+### Current operational determination
+
+The current human-ratified cross-architecture determination is:
+
+```text
+Anuttara / Vāk source language
+        ↓ exact source-provenanced semantic identity
+addressable Vāk field
+        ↓ where a language element has executable consequence
+binding to canonical native ActionRef(s)
+        ↓
+Invocation / Activity / Evidence / Return
+        ↓
+M5 recognition / governed return
+```
+
+This does **not** identify a Vāk language element with an O:I Action. It establishes a typed relation between the two where the actual language semantics and native product capability warrant it.
+
+The governing non-identity laws are:
+
+```text
+VākRef != ActionRef
+addressability != executability
+executability != current availability
+availability != authority
+invocation != Activity
+source formulation != generated interpretation
+```
+
+A Vāk entry may bind zero, one or several native Actions; a native Action may participate in several source-backed Vāk relations. Native product owners retain Action identity, handler, authority and result lineage.
 
 ### Coordinate notation
 
@@ -36,7 +67,9 @@ Likewise preserve the formal distinction among:
 
 ### Structural counts
 
-The current Anuttara language dataset contains 109 nodes. The corpus also supports several legitimate cardinality/readings inside particular substructures. These counts describe structural views; they are not to be turned into an artificial ontology conflict. The matrix records the named structures and their relations rather than privileging one count where the source intentionally supports several.
+The current Anuttara language dataset contains **109 nodes**. This is now also the concrete registry/parity target for the first source-faithful Vāk runtime projection: all 109 entries must remain addressable with their exact coordinate/formulation/provenance even when only a subset has executable bindings.
+
+The corpus also supports several legitimate cardinality/readings inside particular substructures. These counts describe structural views; they are not to be turned into an artificial ontology conflict. The matrix records the named structures and their relations rather than privileging one count where the source intentionally supports several.
 
 ---
 
@@ -59,6 +92,17 @@ The current Anuttara language dataset contains 109 nodes. The corpus also suppor
 - `Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md`
 - current M0′ deep Bimba graph/world planning.
 
+### CURRENT O:I / QL ARCHITECTURE EVIDENCE
+
+- `EpiLogos/O-I#26` — native contribution host; canonical `ActionRef + typed input -> native owner dispatcher -> result/evidence` lineage.
+- `EpiLogos/O-I#105` — universal Search/Command over native Reading/Action descriptors; Action visibility remains distinct from authority.
+- `EpiLogos/O-I#111` — whole-application parity; one canonical Action identity/handler/result lineage across human, TUI/CLI and Agent projections.
+- `EpiLogos/O-I#154` — Agency Gateway/session ecology; presence, reachability, invocation mode and authority remain distinct.
+- `EpiLogos/O-I#155` — `To:` / `@` as one participant-addressing grammar across dialogue, SharedField, Journey, Run, Wiki/Knowledge, Flow and Contribution; membership/addressing/invocation/authority/attention explicitly separated.
+- `EpiLogos/QL-MEF#69` — Epi/Pratibimba human and Agent co-reference over the same event/coordinate/Surface/Action refs.
+
+These are current generic host/interaction determinations. They do not transfer Anuttara semantic ownership into O:I, AIKit, Actuation or a renderer.
+
 ### IMPLEMENTATION FACT
 
 - `Body/S/S0/epi-lib/include/m0.h`
@@ -80,7 +124,7 @@ Current executable layouts, LUTs, bit-fields, tables and functions are evidence 
 | `M0-2` | 8-Fold Zero-Zero | Foundational void operations, wholeness and the Parameśvara virtue/Reality field. | transcend / reflect / generate / synthesize; reflective duals; qualitative ground | relate formal operation and qualitative articulation without conflating either with downstream observation |
 | `M0-3` | Archetypal Number Language / Para Vāk | Dense proto-mathematical-linguistic field where number opens into mirror, speech, relation, action and recursive symbolic structure. | archetypal number; Vāk grammar; MonoPoly; Divine Acts; nested formal language | enter an archetypal position as a relational language field rather than a scalar label |
 | `M0-4` | Holographic Matrix of Context | The downstream contextual grammars are already present as generative possibility inside Anuttara. | O#/X#/N#/M#/# contextual grammar; holographic implication; languification | inspect how differentiated results acquire source-traceable contextual/symbolic articulation |
-| `M0-5` | Śiva-Śakti Unity | Stable defining medium and dynamic articulation interpenetrate; recognition/return makes differentiated process available to renewed ground. | operator/activity unity; Library→Bimba→Pratibimba→Language→Stories→Techne; return | inspect formal definition and dynamic manifestation together without reducing one to the other |
+| `M0-5` | Śiva-Śakti Unity | Stable defining/operative syntax and dynamic internal articulation interpenetrate; recognition/return makes differentiated process available to renewed ground. | Śiva operative grammar; Śakti `@` internal field; R#/Techne; return | address what is internally available and operate on it through source-provenanced syntax without collapsing language into generic actions |
 
 This is a relational field, not a six-step workflow. `M0-0` and `M0-5` articulate the implicate ground/return relation while `M0-1`–`M0-4` differentiate multiple dimensions within it.
 
@@ -255,7 +299,23 @@ I → You → You-and-I → They → We → We-I
 
 ### `#0-4.5/0` — # / Nara
 
-The sentient/family polarity grammar: primordial matrix through differentiated receptive/assertive/creative/integrative relations toward dynamic harmony.
+The sentient/family polarity grammar: primordial matrix through differentiated receptive/assertive/creative/integrative relations toward dynamic harmony. Its ground `## = 0/1` is the Primordial Matrix/universal template from which the particular sentient matrix is articulated.
+
+### R# — distributed freedom / relation weave
+
+R# is not merely a sixth content bucket. The established R-factor weave traverses the contextual systems:
+
+```text
+R1: O#(0) → X#(1) → N#(2) → M#(3) → #(4) → Śiva(5)
+R4: O#(5) → X#(4) → N#(3) → M#(2) → #(1) → Śiva(0)
+
+R2: X#(0) → N#(1) → M#(2) → #(3) → Śiva(4) → Śakti(5)
+R3: X#(5) → N#(4) → M#(3) → #(2) → Śiva(1) → Śakti(0)
+
+R0: seed factor through the first O#/X#/N# trika, then withdraws.
+```
+
+This matters operationally because `@5 = R# = Techne`: the internal field of powers/tools is the point at which the distributed freedom/relation grammar becomes available for situated operation. Availability remains distinct from authority to invoke a concrete native Action.
 
 ### Languification
 
@@ -272,30 +332,64 @@ This is a cross-feature capability, not one privileged pipeline.
 
 ---
 
-## 8. M0-5 — Śiva-Śakti / computational process ontology
+## 8. M0-5 — Śiva-Śakti / operative internal language
 
-### `#0-5-0/1` — Śiva
+M0-5 is now recovered at the level needed for agent-native operationalisation. Its two sixfolds are not generic labels: they articulate the relation between **operative syntax** and the **internally available field** on which that syntax can work.
 
-The stable/defining pole includes potential/in-pression, negation, affirmation, dialogue, dialectic and expression.
+### `#0-5-0/1` — Śiva: operative syntax
 
-### `#0-5-5/0` — Śakti
+| Position | Source formulation | Operative language role |
+|---|---|---|
+| `0` | `(0) = (@#)` | Potential / In-pression — hold or open a possible determination. |
+| `1` | `(1) = (-)` | Negation — distinguish, withhold, strike-through, say not/between. |
+| `2` | `(2) = (+) = (-)x(-)` | Affirmation / re-negation — assert, conjoin, establish positive determination. |
+| `3` | `(3) = (x)` | Dialogic — relate by/as/where/if-is; one thing through another. |
+| `4` | `(4) = (/)` | Dialectic / context — hold and/or, alternatives, complement and contextual relation. |
+| `5` | `(5) = (=)` | Expression — determine/declare equivalence, then/same/is. |
 
-The dynamic psyche/duration pole carries:
+The historical C architecture's function-pointer table is implementation evidence for the deeper intention: **these are meant to be executable language operations**, not decorative semantic tags. The durable capability is an operative grammar whose concrete runtime embodiment may change.
+
+### `#0-5-5/0` — Śakti: internal `@` field / Agent self-structure
+
+| Position | Exact relation | Source domain | Agent-native capability reading |
+|---|---|---|---|
+| `@0` | `@0 = ##` | Library | embodied/implicit memory and available ground; what is held/known, without implying all of it is loaded into current Context |
+| `@1` | `@1 = O#` | Bimba | original architecture, systems and number-sets; canonical/formal structure available for reference |
+| `@2` | `@2 = X#` | Pratibimba | generated/reflected meanings and interpretations, kept distinguishable from original source |
+| `@3` | `@3 = N#` | Language | symbols, characters and forms through which material is articulated |
+| `@4` | `@4 = M#` | Stories | worlds, views, narratives and contextual sense-playgrounds in which an internality is situated |
+| `@5` | `@5 = R#` | Techne | freedoms, powers, instruments, tools and Actions available for situated co-creation |
+
+This gives `@` a much deeper meaning than a social mention glyph. The current O:I participant-addressing grammar is one mature surface expression of the same general **addressing aperture**: an internality can address a person, Agent, AgentSet, World, source, knowledge object, Action or Vāk form while preserving the target's actual typed identity.
+
+The current synthesis does **not** replace O:I's established participant semantics. It generalises through typed resolution:
 
 ```text
-@0  Library      embodied / implicit memory
-@1  Bimba        original architecture
-@2  Pratibimba   generated meanings
-@3  Language     symbols / characters / forms
-@4  Stories      worlds / views
-@5  R# / Techne  freedoms / powers / tools
+@ person / Agent / AgentSet     participant addressing
+@ World / source / knowledge   semantic addressing
+@ Vāk form                     Anuttara language addressing
+@ Action                       native capability addressing
 ```
 
-The central structural claim is interpenetration: the dynamic field is held within the stable ground while itself containing differentiated worlds of activity and articulation.
+The relation membership → addressing → invocation → authority → attention remains explicit. `@0..@5` additionally gives an Agent a source-grounded top-level internal self-structure over what kind of thing is being addressed/used.
 
-**Recovered capability:** make the process ontology computationally expressible as the relation of stable formal possibility and dynamic manifestation, with recognition/return making completed differentiation available to renewed ground.
+### Śiva × Śakti
 
-Historical hardware/software language and pointer/function-table experiments are implementation/theoretical evidence for this ambition. The durable target is the computational expressibility of the Śiva-Śakti process relation itself.
+The two sixfolds compose rather than line up as a simplistic 1:1 table:
+
+```text
+internally addressable field (@ / Śakti)
+        ×
+operative relation / syntax (Śiva)
+        ↓
+source-provenanced articulation or operation
+        ↓ where execution is real
+canonical native ActionRef / Invocation
+```
+
+A dialogic or dialectic Vāk operation may work over Library, Bimba, Pratibimba, Language, Stories or Techne. Likewise one `@` domain can participate in several Śiva operations. This many-to-many relation is the operative internal language.
+
+**Recovered capability:** make the process ontology computationally expressible as the relation of stable/operative formal syntax and dynamic internal manifestation, with recognition/return making completed differentiation available to renewed ground.
 
 ---
 
@@ -303,23 +397,28 @@ Historical hardware/software language and pointer/function-table experiments are
 
 Rows are recoverable capabilities; columns expose several simultaneous relations. This is deliberately not a causal pipeline.
 
-| Capability | Primary locus | Other Anuttara participation | Wider relations / refractions | Human / Agent affordance | Current evidence |
+| Capability ref | Capability | Primary locus | Other participation / wider relation | Human / Agent affordance | Current evidence / standing |
 |---|---|---|---|---|---|
-| Primitive symbolic distinction | `M0-0` | Mirror, `M0-1`, Śiva | underlies later P/L/C/T/M articulations | inspect/invoke exact symbols and source formulations | source formulations + executable operator identities |
-| Non-dual discrimination | `M0-1` | `M0-0`, `M0-4` | R-factor weave; later relational architectures | trace difference through the field without losing whole-relation | source relations + current discrimination representation |
-| Void operation / wholeness | `M0-2` | `M0-0`, `M0-5` | number, cosmic and Logos correspondences | compare formal operation with its wider semantic relations | source language + executable void operations |
-| Virtue / Reality ground | `M0-2-9` | `M0-3`, `M0-4` | kairotic/symbolic/Agent interpretation | expose qualitative provenance independently of observation | source virtue field + current table/graph state |
-| Archetypal number | `M0-3` | `M0-2`, `M0-4` | L0′, harmonic/cosmic, T/Logos relations | navigate number as a nested semantic field | source language + archetype/subgrammar implementations |
-| Frame / Operator / Mirror | `#0-3-0/1` | `M0-0`, `M0-1`, `M0-4` | Context Frames, inversion/reflection | distinguish framing, transcendence and reflection exactly | source language + mirror structures |
-| Vāk symbolic speech | Vāk branch | `M0-3`, `M0-4`, `M0-5` | L5 Para Vāk; element/zodiac/modality; Logos | inspect and compose speech/reflexivity forms | Vāk source + graph/C representations |
-| MonoPoly relation | Dynamic Harmony | `M0-3`, `M0-4` | individual/collective/social/shared-field relations | inspect one/many coherence and pathological collapse | source grammar + current relational models |
-| Divine Action | Divine Action branch | `M0-2-9`, `M0-5` | R-factors, transformation, Logos | inspect processes through freedom/creation/sustenance/dissolution/veiling/grace/absorption | source grammar + executable relation tables |
-| Contextual logical grammar | `M0-4` | earlier M0 branches | M1–M4 holographic implication; QL Context Frames | read the same result under its actual contextual/formal designation | source coordinate grammar + graph/C structures |
-| Languification | distributed through `M0-3`/`M0-4` | whole M0 field | consumes results from all differentiated domains | ask how a result speaks in Anuttara with provenance intact | source formulations + current graph/language projections |
-| Śiva-Śakti process ontology | `M0-5` | whole M0 field | M5 recognition/return and wider stable/dynamic polarities | inspect formal possibility and dynamic manifestation together | source field + kernel experiments |
-| Executable Anuttara language | distributed | all formal branches | S0/S2/M0′ bodies; Agent access | move between source language, graph semantics, executable state and evidence | `m0.h`, `m0.c`, tests, S2 projections |
-| Playable/inspectable ground | `M0′` refraction | all above | current O:I wiki/graph/world | traverse, edit under governance, explain, sound/visualise and route through deep graph relations | current deep M0′ architecture/planning |
-| Governed language development | M0↔M5 relation | all branches | Epii review/autoresearch/canon-return | develop the language itself without confusing proposal with authored canon | current review/governance bodies + source-development programme |
+| `M0-C01` | Primitive symbolic distinction | `M0-0` | Mirror, `M0-1`, Śiva; later P/L/C/T/M articulations | inspect/invoke exact symbols and source formulations | source formulations + executable operator identities |
+| `M0-C02` | Non-dual discrimination | `M0-1` | R-factor weave; `M0-4`; later relational architectures | trace difference through the field without losing whole-relation | source relations + current discrimination representation |
+| `M0-C03` | Void operation / wholeness | `M0-2` | `M0-0`, `M0-5`; number/cosmic/Logos correspondences | compare formal operation with its wider semantic relations | source language + executable void operations |
+| `M0-C04` | Virtue / Reality ground | `M0-2-9` | R-factors, Divine Acts, kairotic/symbolic interpretation | expose qualitative provenance independently of observation | source virtue field + current table/graph state |
+| `M0-C05` | Archetypal number | `M0-3` | L0′, harmonic/cosmic, T/Logos relations | navigate number as a nested semantic field | source language + archetype/subgrammar implementations |
+| `M0-C06` | Frame / Operator / Mirror | `#0-3-0/1` | Context Frames, inversion/reflection | distinguish framing, transcendence and reflection exactly | source language + mirror structures |
+| `M0-C07` | Vāk symbolic speech | Vāk branch | L5 Para Vāk; element/zodiac/modality; Logos | inspect and compose speech/reflexivity forms | Vāk source + graph/C representations |
+| `M0-C08` | MonoPoly relation | Dynamic Harmony | individual/collective/social/shared-field relations | inspect one/many coherence and pathological collapse | source grammar + current relational models |
+| `M0-C09` | Divine Action | Divine Action branch | R-factors, transformation, Logos | inspect processes through freedom/creation/sustenance/dissolution/veiling/grace/absorption | source grammar + executable relation tables |
+| `M0-C10` | Contextual logical grammar | `M0-4` | M1–M4 holographic implication; QL Context Frames | read the same result under its actual contextual/formal designation | source coordinate grammar + graph/C structures |
+| `M0-C11` | Languification | `M0-3`/`M0-4` distributed | all differentiated domains; provenance-preserving interpretation | ask how a result speaks in Anuttara with derivation intact | source formulations + current graph/language projections |
+| `M0-C12` | Śiva-Śakti process ontology | `M0-5` | whole M0 field; M5 recognition/return | inspect formal operation and internal manifestation together | source field + kernel experiments |
+| `M0-C13` | Executable Anuttara language | distributed | S0/S2/M0′ bodies; Agent access | move between source language, graph semantics, executable state and evidence | `m0.h`, `m0.c`, tests, S2 projections |
+| `M0-C14` | Playable/inspectable ground | `M0′` refraction | current O:I wiki/graph/world | traverse, edit under governance, explain, sound/visualise and route through deep graph relations | current deep M0′ architecture/planning |
+| `M0-C15` | Governed language development | M0↔M5 | Epii review/autoresearch/canon-return | develop the language without confusing proposal with authored canon | current review/governance bodies + source-development programme |
+| `M0-C16` | Śiva operative syntax | `#0-5-0/1` | potential, negation, affirmation, dialogic, dialectic, expression; Vāk/Logos/action composition | invoke or inspect the source language operation by stable semantic ref; understand what relation it performs | **SOURCE-BACKED** exact sixfold; executable-table body is historical implementation evidence; current QL runtime projection pending |
+| `M0-C17` | Śakti `@` internal self-structure | `#0-5-5/0` | `@0=##`, `@1=O#`, `@2=X#`, `@3=N#`, `@4=M#`, `@5=R#`; AIKit Context/Knowledge; O:I typed addressing | navigate internal ground → original → reflection → language → world/story → capability without treating the sequence as a mandatory pipeline | **SOURCE-BACKED** exact sixfold; **CURRENT-HUMAN-RATIFIED** Agent-UX interpretation |
+| `M0-C18` | 109-element addressable Vāk registry | whole Anuttara language dataset | M0′, M5 self-knowledge, QL-MEF registry/service, O:I Search/Command/Agent projection | resolve any Anuttara entry by stable ref/coordinate and retrieve exact formulation, relations, standing and provenance | **SOURCE-BACKED target + CURRENT-AUTHORED DEVELOPMENT DETERMINATION**; package implementation pending |
+| `M0-C19` | Vāk ↔ canonical ActionRef binding | distributed executable Vāk | O:I native Actions; AIKit capabilities/Methods; Actuation Invocation/Activity/Return; product-native handlers | address a Vāk form and, where a real executable relation exists, discover/invoke the same canonical native Action available to other Surfaces | **CURRENT-AUTHORED SYNTHESIS grounded in mature O:I architecture**; binding layer not yet implemented in QL-MEF |
+| `M0-C20` | R#/Techne availability-authority relation | `@5 = R#` plus R-factor weave | capability ecology, bounds, authority, materialisation, Activity/Evidence/Return | inspect available powers separately from granted authority; invoke only through native bounds and retain result lineage | R-factor/Techne semantics **SOURCE-BACKED**; availability/authority/action separation **CURRENT O:I DESIGN COMMITMENT** |
 
 ---
 
@@ -329,7 +428,7 @@ The deep M0 experience must preserve the complexity already planned for M0′ wh
 
 A person or Agent should be able to:
 
-- address any source coordinate in its exact notation and recover its formulation/provenance;
+- address any of the 109 source entries in its exact notation and recover formulation/provenance;
 - traverse structural and correspondential relations without collapsing them;
 - follow a primitive operator into the forms, numbers, speech grammars, contextual structures and later domains in which it participates;
 - enter an archetypal number as a nested language field;
@@ -337,11 +436,14 @@ A person or Agent should be able to:
 - see multiple valid structural reads where the source supports them;
 - distinguish authored language, inferred relation, executable representation, observation and current development state;
 - inspect or execute the portions of Anuttara that already possess computational state;
+- use the Śakti `@0..@5` field as an internal orientation over ground, original structure, reflected meaning, language, worlds/stories and Techne while keeping actual Context disclosure bounded;
+- use Śiva's six operative relations over addressable material without reducing them to six generic software buttons;
+- discover a canonical native Action from a Vāk relation where one has been explicitly bound, while seeing availability and authority separately;
 - fold a downstream result against Anuttara and see exactly how its symbolic/contextual articulation was obtained;
 - develop or propose changes to the language through explicit provenance/review rather than silent graph mutation;
 - summon the considerable M0′ graph/world depth already planned: source/spec/code/test anchors, structural/correspondential relation fields, temporal/community overlays, protected personal routes, pedagogy, harmonic/visual/audio affordances and agent-addressable graph operations.
 
-The target is therefore a **playable, inspectable and increasingly executable metaphysical language/world**, not a simplified doctrine browser.
+The target is therefore a **playable, inspectable, addressable and increasingly executable metaphysical language/world**, not a simplified doctrine browser.
 
 ---
 
@@ -353,11 +455,26 @@ The target is therefore a **playable, inspectable and increasingly executable me
 - substantial portions of the formal language possess C representations and executable behaviour;
 - current S2 work projects Anuttara properties and relations into a graph/service substrate;
 - current M0′ architecture contains deep six-layer graph/world engagement rather than a shallow viewer;
-- tests and kernel projections prove parts of the formal substrate are actually operative.
+- tests and kernel projections prove parts of the formal substrate are actually operative;
+- O:I now has a mature Agent-Native architecture for stable typed refs, canonical native Action lineage, shared Search/Command/Surface projections and `@` participant addressing, with addressing/invocation/authority kept distinct.
+
+### Current development gap
+
+What does **not** yet exist as an accepted QL-MEF package body is the full source-faithful Vāk registry/action bridge defined by `M0-C18..C20`:
+
+```text
+109 source entries
+  → stable Vāk semantic refs + exact provenance
+  → relation/query/service API
+  → typed O:I/Agent projection
+  → explicit 0..n native ActionRef bindings where warranted
+```
+
+This is now a concrete package-development target rather than an open semantic question.
 
 ### What parity review means
 
-Parity review asks whether the current bodies expose the source-backed capability field with enough fidelity: which formulations, relations, recursive branches and affordances are executable/inspectable now and which remain source-only or only partially surfaced.
+Parity review asks whether the current bodies expose the source-backed capability field with enough fidelity: which formulations, relations, recursive branches and affordances are executable/inspectable/addressable now and which remain source-only or only partially surfaced.
 
 A missing current body is a **coverage gap first**, not grounds for inventing a semantic ambiguity or proposing a new constitutional line.
 
@@ -380,22 +497,35 @@ M0′  epi.deep.m0
 - `S0′ Khora` is the operative technological reflection around situated grounding/bootstrap/authority.
 - `M0′` is the deep compositional/experiential Anuttara instrument.
 
+The new Vāk registry/runtime work is expected to live substantially in `S5 / QL-MEF` as a cross-coordinate technological embodiment because QL-MEF owns generalized QL/Vāk semantic registry/refraction machinery. That residency does **not** alter the constitutional `M0 -> S0` same-index relation or transfer Anuttara semantic authority out of M0/Epi source.
+
 This fourfold is a projection/refraction of recovered capability, not a tool for redefining M0.
 
 ---
 
-## 13. Depth-recovery continuation
+## 13. Depth-recovery / implementation continuation
 
-The next research pass should deepen source-backed relation coverage rather than author new positions. In particular:
+Two kinds of work now remain distinct.
+
+### Source-depth continuation
 
 - recover the complete recursive branch inventory beneath the major M0-3 subgrammars from source data;
-- carry full R-factor relations into matrix rows from their existing canonical definitions;
+- carry the full established R-factor relations into all affected matrix/source rows;
 - expand explicit L/P/C/T cross-family relations where already source-defined;
-- verify exact current implementation coverage against the source language/property map;
-- preserve the full current M0′ graph/world design as the experiential projection during later embodiment work.
+- preserve the full current M0′ graph/world design as the experiential projection.
 
-These are research-depth tasks, not requests to reopen the settled structure.
+### Ratified package-development continuation
+
+- materialise a QL-MEF Vāk registry from the exact 109-entry source dataset with source revision/provenance and deterministic identity;
+- encode the exact Śiva and Śakti sixfolds and the O#/X#/N#/M#/#/##/R# relation indexes as queryable semantic law;
+- expose address/read/relate/refraction operations through existing QL-MEF semantic/service layers rather than creating a parallel runtime product;
+- contribute Vāk refs into O:I's existing typed Search/Command/`@` address field without replacing its participant grammar;
+- bind only source- and implementation-warranted executable Vāk relations to canonical native `ActionRef`s; preserve entries with no Action as fully addressable semantic objects;
+- test `VākRef != ActionRef`, addressability/availability/authority separation, human/Agent co-reference and native Action result lineage;
+- use the same bridge from M5/Epii self-knowledge and Guardian operation rather than creating an M5-only copy of the language.
+
+These are implementation/conformance tasks generated by the recovered field, not requests to reopen the settled structure.
 
 ## 14. Compact subsystem statement
 
-> **Anuttara is Epi-Logos's prior generative ground-language: a recursively articulated symbolic and process-metaphysical field in which primitive distinction, number, value, speech, relation, context, action, manifestation and recognition are already holographically implicated, and whose language is being made increasingly executable, inspectable and playable across the differentiated system while retaining source provenance and semantic depth.**
+> **Anuttara is Epi-Logos's prior generative ground-language: a recursively articulated 109-entry symbolic and process-metaphysical field in which primitive distinction, number, value, speech, relation, context, action, manifestation and recognition are already holographically implicated. Its Śiva pole supplies operative syntax and its Śakti `@` pole supplies the internally addressable field from Library/ground through Bimba, Pratibimba, Language and Stories to R#/Techne. The current development task is to make that source language addressable and increasingly executable through QL-MEF while binding real operations to the mature O:I Agent-Native Action architecture without confusing semantic identity, invocation, availability, authority or source provenance.**

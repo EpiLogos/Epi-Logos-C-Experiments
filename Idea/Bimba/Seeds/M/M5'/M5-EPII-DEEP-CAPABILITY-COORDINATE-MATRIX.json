@@ -1,6 +1,6 @@
 {
   "schema": "epi.deep-subsystem-capability-matrix/v1",
-  "status": "research-current-human-review-incorporated",
+  "status": "research-current-human-review-and-m0-vak-inheritance-incorporated",
   "subsystem": {
     "coordinate": "M5",
     "identity": "Epii",
@@ -17,22 +17,33 @@
       "capability-matrix-not-forced-pipeline",
       "preserve-many-to-many-relations",
       "preserve-unresolved-technical-decisions",
-      "current-code-is-implementation-fact-not-retroactive-intent"
+      "current-code-is-implementation-fact-not-retroactive-intent",
+      "vak-is-prior-operative-language-not-identical-to-m5-logos",
+      "vakref-is-not-actionref",
+      "addressability-availability-authority-invocation-activity-return-remain-distinct"
     ]
   },
   "source_sets": {
     "foundational_signal": [
       "Idea/Bimba/Seeds/M/M5'/Legacy/specs/M/M5-epii-holographic-integration.md",
-      "Idea/Bimba/Seeds/M/M5'/Legacy/plans/2026-03-07-m5-epii-design.md"
+      "Idea/Bimba/Seeds/M/M5'/Legacy/plans/2026-03-07-m5-epii-design.md",
+      "Idea/Bimba/Map/datasets/anuttara-deep/anuttara-language-map.md",
+      "Idea/Bimba/Seeds/M/M0'/Legacy/specs/M/M0-anuttara-language-architecture.md"
     ],
     "current_domain_and_research": [
       "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
       "Idea/Bimba/Seeds/M/M5'/M5-ARCHITECTURE.md",
       "Idea/Bimba/Seeds/M/M5'/epii-operational-capacities/**",
       "EpiLogos/QL-MEF#42",
+      "EpiLogos/QL-MEF#69",
       "EpiLogos/QL-MEF#74",
       "EpiLogos/QL-MEF#75",
-      "EpiLogos/ai-kit#108"
+      "EpiLogos/ai-kit#108",
+      "EpiLogos/O-I#26",
+      "EpiLogos/O-I#105",
+      "EpiLogos/O-I#111",
+      "EpiLogos/O-I#154",
+      "EpiLogos/O-I#155"
     ],
     "implementation_fact": [
       "Body/S/S5/epii-review-core/src/lib.rs",
@@ -55,15 +66,44 @@
     "purpose": "holographic self-articulation, active self-relation, recognition and governed return of the Epi-Logos whole",
     "boundary_relation": "M5 is the 5/0 implicate-return pole; recognised difference may return toward M0 ground without automatic source mutation",
     "guardian_law": "Epii is the M5 canonical Guardian; M->S relates it to the Quaternal Logic product world; S-prime identities are operative Ta-Onta forms, not Guardians",
-    "whole_world_relation": "Epii may be situated as a whole Epi/O:I world-bound metagentic Agency composing the other canonical Guardians without creating a seventh coordinate"
+    "whole_world_relation": "Epii may be situated as a whole Epi/O:I world-bound metagentic Agency composing the other canonical Guardians without creating a seventh coordinate",
+    "m0_vak_inheritance": "Epii knows, addresses and operates on the whole through the prior Anuttara/Vak language; M5 Logos adds reflexive articulation/recognition and governed return without replacing Vak identity"
+  },
+  "operational_non_identity_laws": [
+    "VakRef != ActionRef",
+    "Vak != Logos",
+    "@ addressing != automatic Context disclosure",
+    "addressability != availability",
+    "availability != authority",
+    "Action != Invocation != Activity != Return",
+    "M5 Recognition != automatic M0 source mutation"
+  ],
+  "m0_to_m5_vak_inheritance": {
+    "status": "CURRENT-HUMAN-RATIFIED-CROSS-ARCHITECTURE-DETERMINATION",
+    "source_language": {
+      "registry_target": "109 exact Anuttara source entries",
+      "siva_operative_syntax": ["potential/in-pression","negation","affirmation","dialogic","dialectic/context","expression"],
+      "shakti_internal_field": ["@0 Library = ##","@1 Bimba = O#","@2 Pratibimba = X#","@3 Language = N#","@4 Stories = M#","@5 Techne = R#"]
+    },
+    "relation": "M0 exact language -> M5 self-model/product/deep/Guardian addressability -> M5 Logos/Thought/lens/CF articulation -> native ActionRef/Invocation/Activity/Evidence/Return where applicable -> Recognition -> governed M0/source return",
+    "ownership": {
+      "vak_semantic_identity_and_refraction": "M0 source + QL-MEF generalized package runtime",
+      "generic_application_address_and_surface": "O:I",
+      "context_capability_method_resolution": "AIKit",
+      "agency_invocation_stream_return": "Actuation",
+      "native_action_handler_authority_result": "native product owner",
+      "material_execution": "Workcell",
+      "developmental_evidence": "Software Factory where applicable",
+      "recognition_and_whole_self_relation": "M5 Epii"
+    }
   },
   "outer_field": [
-    {"coordinate":"M5.0","name":"Holographic Identity / Self-Model","role":"system identity theoretics and multi-resolution self-knowledge","decision_state":"SEMANTIC-ROLE-STRONG_REPRESENTATION-OPEN"},
+    {"coordinate":"M5.0","name":"Holographic Identity / Self-Model","role":"system identity theoretics and multi-resolution self-knowledge including exact Vak/source addressability","decision_state":"SEMANTIC-ROLE-STRONG_REPRESENTATION-OPEN_VAK-ADDRESSABILITY-RATIFIED-DIRECTION"},
     {"coordinate":"M5.1","name":"Epi-Logos Philosophical Self-Articulation","role":"why the system exists; worldview, canon, argument and source-ground","decision_state":"FEATURE-FIELD-STRONG_BODY-REPLACEABLE"},
-    {"coordinate":"M5.2","name":"Standing Technological / Product Self-Reflection","role":"inspect S standing product bodies, owners, code, contracts and current reality","decision_state":"SEMANTIC-ROLE-STRONG_OLD-S-MAP-SUPERSEDED"},
-    {"coordinate":"M5.3","name":"Deep Compositional / Experiential Self-Reflection","role":"inspect/enter M-prime deep instruments as experienced/composed system faces","decision_state":"SEMANTIC-ROLE-STRONG_HOST-OPEN"},
-    {"coordinate":"M5.4","name":"Operative Whole / Agency","role":"active self-relation, Guardian composition, S-prime activity, Agency and recursive Epii-on-Epii","decision_state":"FEATURE-FIELD-STRONG_OLD-MPRIME-AGENT-SHORTCUT-SUPERSEDED"},
-    {"coordinate":"M5.5","name":"Logos / Recognition / Return","role":"articulation, reflexive recognition, proportional synthesis and return","decision_state":"SEMANTIC-FIELD-STRONG_EXACT-RUNTIME-LAW-OPEN"}
+    {"coordinate":"M5.2","name":"Standing Technological / Product Self-Reflection","role":"inspect S standing product bodies, owners, code, contracts, semantic refs and native Actions","decision_state":"SEMANTIC-ROLE-STRONG_OLD-S-MAP-SUPERSEDED"},
+    {"coordinate":"M5.3","name":"Deep Compositional / Experiential Self-Reflection","role":"inspect/enter M-prime deep instruments as experienced/composed system faces while retaining same subject/Vak/Action refs","decision_state":"SEMANTIC-ROLE-STRONG_HOST-OPEN"},
+    {"coordinate":"M5.4","name":"Operative Whole / Agency","role":"active self-relation, Guardian composition, S-prime activity, Shakti @ internal ecology, Siva operative syntax, Agency and recursive Epii-on-Epii","decision_state":"FEATURE-FIELD-STRONG_VAK-ACTION-BRIDGE-DETERMINED-PACKAGE-PENDING"},
+    {"coordinate":"M5.5","name":"Logos / Recognition / Return","role":"articulation, reflexive recognition, proportional synthesis and return over the prior Vak-addressable field","decision_state":"SEMANTIC-FIELD-STRONG_EXACT-RUNTIME-LAW-OPEN"}
   ],
   "recursive_coordinates": [
     {"coordinate":"M5.0.0","name":"Transcendent Foundation","parent":"M5.0","role":"whole-system identity ground across all six positions"},
@@ -72,21 +112,18 @@
     {"coordinate":"M5.0.3","name":"Soul Identity","parent":"M5.0","role":"lived/experiential/deep system face relation into M5.3"},
     {"coordinate":"M5.0.4","name":"Self Identity","parent":"M5.0","role":"active operative whole relation into M5.4"},
     {"coordinate":"M5.0.5","name":"Integral Identity","parent":"M5.0","role":"identity understood through recognition/return relation into M5.5"},
-
     {"coordinate":"M5.1.0","name":"Vision and Crisis of Consciousness","parent":"M5.1","role":"diagnosis/problem field giving the project its reason"},
     {"coordinate":"M5.1.1","name":"Dual Approach — Sophia / Logos","parent":"M5.1","role":"differentiated conjunction of wisdom and rational articulation"},
     {"coordinate":"M5.1.2","name":"TechnoScience, Power and Praxis","parent":"M5.1","role":"limits, power, embodiment and practice critique"},
     {"coordinate":"M5.1.3","name":"Coming Leap and Symbolic Integration","parent":"M5.1","role":"transformative threshold / synthetic proposition"},
     {"coordinate":"M5.1.4","name":"Historical Embodiment — Para Vak","parent":"M5.1","role":"historical/metaphysical precedent grounding"},
     {"coordinate":"M5.1.5","name":"Epi-logos as Future Technology","parent":"M5.1","role":"system as experimental embodiment of its argument"},
-
-    {"coordinate":"M5.4.0","name":"Anuttara Active","parent":"M5.4","role":"M0 active Guardian/Agency/operative relation"},
+    {"coordinate":"M5.4.0","name":"Anuttara Active","parent":"M5.4","role":"M0 active Guardian/Agency/operative language relation"},
     {"coordinate":"M5.4.1","name":"Paramasiva Active","parent":"M5.4","role":"M1 active Guardian/Agency/operative relation"},
     {"coordinate":"M5.4.2","name":"Parashakti Active","parent":"M5.4","role":"M2 active Guardian/Agency/operative relation"},
     {"coordinate":"M5.4.3","name":"Mahamaya Active","parent":"M5.4","role":"M3 active Guardian/Agency/operative relation"},
     {"coordinate":"M5.4.4","name":"Nara Active","parent":"M5.4","role":"M4 active Guardian/Agency/operative relation"},
     {"coordinate":"M5.4.5","name":"Epii Active on Itself","parent":"M5.4","role":"recursive self-operation, review, metagency and self-improvement"},
-
     {"coordinate":"M5.5.0","name":"A-logos","parent":"M5.5","role":"pregnant unarticulated potential / receptive ground"},
     {"coordinate":"M5.5.1","name":"Pro-logos","parent":"M5.5","role":"first differentiation, naming and question-forming"},
     {"coordinate":"M5.5.2","name":"Dia-logos","parent":"M5.5","role":"relational meaning through dialogue and contrast"},
@@ -131,10 +168,10 @@
       "capability_ref":"M5-C03-product-introspection",
       "coordinate":"M5.2",
       "name":"Standing product introspection",
-      "meaning":{"purpose":"understand current technical/product reality without treating it as semantic authority","subsystem_role":"standing technical self-reflection","whole_system_role":"make six native product worlds and ownership legible to Epii"},
+      "meaning":{"purpose":"understand current technical/product reality without treating it as semantic authority","subsystem_role":"standing technical self-reflection","whole_system_role":"make six native product worlds, refs, Actions and ownership legible to Epii"},
       "experience":{"human_affordances":["inspect product purpose","inspect current code/evidence","open native owner action"],"agent_affordances":["resolve owner","explain current capability","route maintenance/proposal"],"summonable_depth":["product intent","contracts","code","tests","open work"]},
-      "functional_contract":{"inputs":["product/ref","current repository state","public readings/actions"],"outputs":["standing technical reading","owner/ref","readiness","action routes"],"state_effects":[],"invariants":["native owner retains mutation authority","old S technology mapping superseded"],"deterministic_steps":[],"inferential_steps":["cross-product implication analysis"]},
-      "relations":{"upstream":["M5.0"],"downstream":["M5.4","M5.3","review"],"sibling_relations":["M5.3","M5.4"]},
+      "functional_contract":{"inputs":["product/ref","current repository state","public readings/actions"],"outputs":["standing technical reading","owner/ref","readiness","action routes"],"state_effects":[],"invariants":["native owner retains mutation and Action authority","old S technology mapping superseded"],"deterministic_steps":[],"inferential_steps":["cross-product implication analysis"]},
+      "relations":{"upstream":["M5.0"],"downstream":["M5.4","M5.3","review"],"sibling_relations":["M5.3","M5.4"],"vak_relation":"explicit Vak bindings may point to native ActionRefs without replacing native product identity"},
       "protection":{"authority":["native product authority"],"consent":[],"review_promotion":[]},
       "source_evidence":[{"ref":"Legacy/specs/M/M5-epii-holographic-integration.md","role":"FOUNDATIONAL-SIGNAL","claim":"M5.2 is material/backend/system self-reflection"},{"ref":"EpiLogos/QL-MEF#74","role":"CURRENT-AUTHORED-POSITION","claim":"S0-S5 are Central/Actuation/AIKit/Factory/Workcell/QL-MEF"}],
       "implementation":{"current_bodies":["six product repositories and public contracts"],"observed_evidence":[],"readiness":"partial"},
@@ -147,7 +184,7 @@
       "name":"Deep instrument experience introspection",
       "meaning":{"purpose":"make the six deep compositional/experiential M-prime worlds accessible as part of system self-knowledge","subsystem_role":"experiential self-reflection","whole_system_role":"preserve experiential parity across deep subsystem instruments"},
       "experience":{"human_affordances":["open deep instrument","compare experience and source","retain current subject/event"],"agent_affordances":["address deep refs","open/focus surfaces","inspect readiness/provenance"],"summonable_depth":["M0-prime","M1-prime","M2-prime","M3-prime","M4-prime","M5-prime"]},
-      "functional_contract":{"inputs":["M-prime ref","subject/event ref","provider readiness"],"outputs":["native surface/reading/action refs"],"state_effects":["presentation/workbench changes without semantic identity change"],"invariants":["M-prime != M identity","host technology != subsystem meaning"],"deterministic_steps":[],"inferential_steps":[]},
+      "functional_contract":{"inputs":["M-prime ref","subject/event/Vak ref","provider readiness"],"outputs":["native surface/reading/action refs"],"state_effects":["presentation/workbench changes without semantic identity change"],"invariants":["M-prime != M identity","host technology != subsystem meaning","same subject/Vak/Action lineage across projections"],"deterministic_steps":[],"inferential_steps":[]},
       "relations":{"upstream":["M5.0","M5.2"],"downstream":["human/agent experience","review/evidence"],"sibling_relations":["M5.2","M5.4"]},
       "protection":{"authority":["native M-prime owner/privacy"],"consent":["especially M4-prime protected disclosure"],"review_promotion":[]},
       "source_evidence":[{"ref":"Legacy/plans/2026-03-07-m5-epii-design.md","role":"HISTORICAL-IMPLEMENTATION-EVIDENCE","claim":"distinguishes system knowing itself from system presenting/experiencing itself"},{"ref":"M5'-SPEC.md","role":"CURRENT-DOMAIN-SPEC","claim":"current M5-prime surface hosts deep system access"}],
@@ -160,9 +197,9 @@
       "coordinate":"M5.4",
       "name":"Guardian metagency",
       "meaning":{"purpose":"let Epii inhabit the whole Epi/O:I projection and compose differentiated Guardians/Agencies without erasing ownership","subsystem_role":"active self-relation","whole_system_role":"route, compose and reintegrate work across the correct stewardship loci"},
-      "experience":{"human_affordances":["address whole-system Epii","inspect delegated relation","inspect return/evidence"],"agent_affordances":["resolve guardian","compose bounded agency","delegate","compare returns","recurse"],"summonable_depth":["Guardian","Agency","Method/Context","Execution","Return"]},
-      "functional_contract":{"inputs":["world intent/focus","coordinate/product refs","bounds","Context/Method candidates"],"outputs":["situated Agency composition","delegated refs","returned evidence/proposals"],"state_effects":["possible bounded work/actuation"],"invariants":["no seventh coordinate","Guardian != S-prime","Guardian != model/harness/session","delegation preserves provenance/authority"],"deterministic_steps":[],"inferential_steps":["composition/routing judgement"]},
-      "relations":{"upstream":["M5.0","QL Context Frames","Actuation WorldBinding"],"downstream":["six Guardians","AIKit Method/Context","Workcell","Factory evidence","review"],"sibling_relations":["M5.2","M5.3","M5.5"]},
+      "experience":{"human_affordances":["address whole-system Epii","inspect delegated relation","inspect return/evidence"],"agent_affordances":["resolve guardian","compose bounded agency","delegate","compare returns","recurse"],"summonable_depth":["Guardian","Agency","Method/Context","Execution","Return","Shakti @ field","Siva operative relation"]},
+      "functional_contract":{"inputs":["world intent/focus","coordinate/product refs","bounds","Context/Method candidates"],"outputs":["situated Agency composition","delegated refs","returned evidence/proposals"],"state_effects":["possible bounded work/actuation"],"invariants":["no seventh coordinate","Guardian != S-prime","Guardian != model/harness/session","delegation preserves provenance/authority","@ horizon != loaded Context"],"deterministic_steps":[],"inferential_steps":["composition/routing judgement"]},
+      "relations":{"upstream":["M5.0","QL Context Frames","Actuation WorldBinding","M0 Siva/Shakti language"],"downstream":["six Guardians","AIKit Method/Context","Workcell","Factory evidence","review"],"sibling_relations":["M5.2","M5.3","M5.5"]},
       "protection":{"authority":["Actuation bounds","native product write authority","human authored constraints"],"consent":[],"review_promotion":["returned work != accepted work"]},
       "source_evidence":[{"ref":"Legacy/specs/M/M5-epii-holographic-integration.md","role":"FOUNDATIONAL-SIGNAL","claim":"M5.4 is active/agentic whole with Epii-on-Epii recursion"},{"ref":"EpiLogos/QL-MEF#42","role":"CURRENT-AUTHORED-POSITION","claim":"six canonical Guardians are enduring M identities stewarding six products"},{"ref":"EpiLogos/QL-MEF#74","role":"CURRENT-AUTHORED-POSITION","claim":"M/S/S-prime/M-prime typed fourfold"}],
       "implementation":{"current_bodies":["QL guardian maps","Actuation/AIKit generic machinery","O:I AgentSession/workbench lines"],"observed_evidence":[],"readiness":"partial"},
@@ -203,8 +240,8 @@
       "name":"Logos refraction",
       "meaning":{"purpose":"articulate and reflexively read material through Logos positions while retaining other lens/context possibilities","subsystem_role":"recognition/return grammar","whole_system_role":"semantic enrichment and proportional recognition across domains"},
       "experience":{"human_affordances":["follow articulation","change lens","trace etymology","inspect context-frame relation"],"agent_affordances":["apply bounded Logos reading","compare lens readings","surface analogical relation"],"summonable_depth":["A-logos","Pro-logos","Dia-logos","Logos","Epi-logos","An-a-logos","L/L-prime","CF/VAK"]},
-      "functional_contract":{"inputs":["Thought/source/claim/experience/term"],"outputs":["articulation","reflexive reading","analogical relation","return proposal"],"state_effects":[],"invariants":["T position != Logos stage","lens reading != mutation authority","etymology != proof"],"deterministic_steps":[],"inferential_steps":["semantic/analogical interpretation"]},
-      "relations":{"upstream":["M5.5 source","raw positions","Context Frames","lenses"],"downstream":["pedagogy","review","Method pressure","M0 return"],"sibling_relations":["M5-C07-thought-objectification","M5-C09-situated-praxis-adaptation","M5-C13-etymological-archaeology"]},
+      "functional_contract":{"inputs":["Thought/source/claim/experience/term/Vak-addressed subject"],"outputs":["articulation","reflexive reading","analogical relation","return proposal"],"state_effects":[],"invariants":["T position != Logos stage","Vak != Logos","lens reading != mutation authority","etymology != proof"],"deterministic_steps":[],"inferential_steps":["semantic/analogical interpretation"]},
+      "relations":{"upstream":["M5.5 source","M0 Vak","raw positions","Context Frames","lenses"],"downstream":["pedagogy","review","Method pressure","M0 return"],"sibling_relations":["M5-C07-thought-objectification","M5-C09-situated-praxis-adaptation","M5-C13-etymological-archaeology","M5-C19-vak-logos-return-recursion"]},
       "protection":{"authority":["interpretive result does not authorize source/action"],"consent":[],"review_promotion":["canon-worthy output requires review"]},
       "source_evidence":[{"ref":"Legacy/specs/M/M5-epii-holographic-integration.md","role":"FOUNDATIONAL-SIGNAL","claim":"A-logos through An-a-logos; raw-position, Context-Frame and lens relations"},{"ref":"mef-12-lenses-sublens-reference.md","role":"CURRENT-DOMAIN-SPEC","claim":"L5 Para Vak and L5-prime Divine Logos provide exact #5 lens content including Sophia"}],
       "implementation":{"current_bodies":["M5-prime Logos Atelier/Gnosis relations","QL lens/CF data"],"observed_evidence":[],"readiness":"partial"},
@@ -217,10 +254,10 @@
       "name":"Situated praxis adaptation",
       "meaning":{"purpose":"allow recognised cognitive/contextual difference to alter how stable Skills are composed/used without rewriting them","subsystem_role":"connect self-reflection to flexible practice","whole_system_role":"live granular adaptation around praxis while preserving provenance/authority"},
       "experience":{"human_affordances":["inspect Method/overlay in force","revise situated praxis","keep stable Skill source"],"agent_affordances":["compose Method","apply UsageOverlay","resolve ContextSources/Actions around Focus"],"summonable_depth":["Skill","Method","UsageOverlay","SkillSet","Profile/ContextResolution","Focus"]},
-      "functional_contract":{"inputs":["Focus","SkillRefs","ContextSources","Actions","UsageOverlays","Thought/lens/CF/evidence pressure"],"outputs":["resolved Method/praxis condition"],"state_effects":["changes operative composition, not Skill source"],"invariants":["Logos != Method","Thought != Skill","UsageOverlay != Skill mutation","QL affinity != activation authority","Method relation != action authority"],"deterministic_steps":["AIKit resolution where rules apply"],"inferential_steps":["Method composition/fitness judgement"]},
-      "relations":{"upstream":["Thought","Logos/lens/CF readings","Guardian stewardship","AIKit resources"],"downstream":["situated Agency","execution","returned evidence"],"sibling_relations":["M5-C05-guardian-metagency","M5-C07-thought-objectification","M5-C08-logos-refraction"]},
+      "functional_contract":{"inputs":["Focus","SkillRefs","ContextSources","Actions","UsageOverlays","Thought/lens/CF/Vak/evidence pressure"],"outputs":["resolved Method/praxis condition"],"state_effects":["changes operative composition, not Skill source"],"invariants":["Logos != Method","Thought != Skill","UsageOverlay != Skill mutation","QL affinity != activation authority","Method relation != action authority","VakRef != ActionRef"],"deterministic_steps":["AIKit resolution where rules apply"],"inferential_steps":["Method composition/fitness judgement"]},
+      "relations":{"upstream":["Thought","Logos/lens/CF/Vak readings","Guardian stewardship","AIKit resources"],"downstream":["situated Agency","execution","returned evidence"],"sibling_relations":["M5-C05-guardian-metagency","M5-C07-thought-objectification","M5-C08-logos-refraction"]},
       "protection":{"authority":["AIKit ContextResolution operational owner","Action authority remains separate"],"consent":[],"review_promotion":["Method fitness evidence may return via Factory/native review"]},
-      "source_evidence":[{"ref":"EpiLogos/ai-kit#108","role":"DESIGN-COMMITMENT","claim":"Method composes Skills + Actions + ContextSources + UsageOverlays around Focus; UsageOverlay does not mutate Skill source"}],
+      "source_evidence":[{"ref":"EpiLogos/ai-kit#108","role":"DESIGN-COMMITMENT","claim":"Method composes SkillRefs + Actions + ContextSources + UsageOverlays around Focus; UsageOverlay does not mutate Skill source"}],
       "implementation":{"current_bodies":["AIKit Method/praxis machinery"],"observed_evidence":[],"readiness":"partial"},
       "technical_decisions":[{"question":"which Epii recurring compositions deserve Methods vs ad-hoc resolution","status":"OPEN","options_or_evidence":[]}],
       "cross_register_projection":{"status":"PARTIAL","s_product":"S2 AIKit cross-coordinate dependency","cross_coordinate_dependencies":["Actuation","Factory"]}
@@ -232,7 +269,7 @@
       "meaning":{"purpose":"keep proposal/evidence/review/recognition/promotion/return distinct","subsystem_role":"govern self-change and canon return","whole_system_role":"allow learning without authority collapse"},
       "experience":{"human_affordances":["review","approve","reject","revise","defer","inspect provenance"],"agent_affordances":["submit candidate","attach evidence","route gate","explain decision state"],"summonable_depth":["source","candidate","evidence","gate","decision","promotion target"]},
       "functional_contract":{"inputs":["candidate","evidence","coordinate context","governance profile"],"outputs":["decision","stage records","promotion plan/ref"],"state_effects":["possible gated promotion"],"invariants":["human-required cannot be silently resolved by Agent","review decision != source mutation until owner action"],"deterministic_steps":["gate enforcement"],"inferential_steps":["review judgement"]},
-      "relations":{"upstream":["Nara","Aletheia","autoresearch","Factory evidence"],"downstream":["canon","deployment","source owner","M0 return"],"sibling_relations":["M5-C11-autoresearch","M5-C14-return-to-ground"]},
+      "relations":{"upstream":["Nara","Aletheia","autoresearch","Factory evidence"],"downstream":["canon","deployment","source owner","M0 return"],"sibling_relations":["M5-C11-autoresearch","M5-C14-return-to-ground","M5-C19-vak-logos-return-recursion"]},
       "protection":{"authority":["human/deployment/publication/recursive gates"],"consent":[],"review_promotion":["explicit"]},
       "source_evidence":[{"ref":"Body/S/S5/epii-review-core/src/lib.rs","role":"IMPLEMENTATION-FACT","claim":"typed review categories, governance levels, human-required/deployment/publication/recursive gates"}],
       "implementation":{"current_bodies":["epii-review-core"],"observed_evidence":[],"readiness":"operative"},
@@ -260,7 +297,7 @@
       "meaning":{"purpose":"teach system meaning at suitable depth while preserving why distinctions exist","subsystem_role":"self-knowledge made intelligible","whole_system_role":"human/Agent orientation across the coordinate field"},
       "experience":{"human_affordances":["ask what/why/how","change depth","follow source/relations"],"agent_affordances":["retrieve bounded teaching packet","explain provenance/standing"],"summonable_depth":["pithy","conceptual","technical","source","relational"]},
       "functional_contract":{"inputs":["subject/ref","learner context","desired depth"],"outputs":["grounded explanation","routes","source refs"],"state_effects":[],"invariants":["pedagogy preserves truth standing","explanation != source authority"],"deterministic_steps":[],"inferential_steps":["adaptive explanation"]},
-      "relations":{"upstream":["self-model","canon","Logos/lenses"],"downstream":["human/agent understanding","deep navigation"],"sibling_relations":["M5-C01-self-model","M5-C13-etymological-archaeology"]},
+      "relations":{"upstream":["self-model","canon","Logos/lenses","M0 Vak"],"downstream":["human/agent understanding","deep navigation"],"sibling_relations":["M5-C01-self-model","M5-C13-etymological-archaeology"]},
       "protection":{"authority":["source standing"],"consent":[],"review_promotion":[]},
       "source_evidence":[{"ref":"M5'-SPEC.md","role":"CURRENT-DOMAIN-SPEC","claim":"M5-prime is pedagogical/self-articulating and exposes Bimba/Gnosis/Atelier depth"}],
       "implementation":{"current_bodies":["Gnosis","Bimba pedagogy","M5-prime conversational surfaces"],"observed_evidence":[],"readiness":"partial"},
@@ -287,40 +324,92 @@
       "name":"Governed return to ground",
       "meaning":{"purpose":"carry reviewed difference back toward authored/canonical ground without destroying provenance/history","subsystem_role":"M5 closure/reopening","whole_system_role":"make learning recursive while preserving source authority"},
       "experience":{"human_affordances":["inspect returned difference","recognise/reject/revise","see changed ground"],"agent_affordances":["prepare return proposal","link evidence","route to owner"],"summonable_depth":["source before","returned evidence","proposal","decision","source after"]},
-      "functional_contract":{"inputs":["recognised result","evidence","target ground/source"],"outputs":["proposal/accepted mutation/retained derived state/rejection"],"state_effects":["possible native source change through owner"],"invariants":["direct automatic canon mutation forbidden","recognition != raw computation","history/provenance retained"],"deterministic_steps":[],"inferential_steps":["recognition/judgement"]},
-      "relations":{"upstream":["M5-C10-review-recognition","M5-C11-autoresearch","M5.5"],"downstream":["M0 Anuttara","Central authored source","renewed cycle"],"sibling_relations":["M5-C01-self-model"]},
+      "functional_contract":{"inputs":["recognised result","evidence","target ground/source/standing"],"outputs":["proposal/accepted mutation/retained derived state/rejection"],"state_effects":["possible native source change through owner"],"invariants":["direct automatic canon mutation forbidden","recognition != raw computation","history/provenance retained","derived-layer change does not imply Bimba/canon change"],"deterministic_steps":[],"inferential_steps":["recognition/judgement"]},
+      "relations":{"upstream":["M5-C10-review-recognition","M5-C11-autoresearch","M5.5"],"downstream":["M0 Anuttara","Central authored source","renewed cycle"],"sibling_relations":["M5-C01-self-model","M5-C19-vak-logos-return-recursion"]},
       "protection":{"authority":["human/source owner","native product mutation contract"],"consent":[],"review_promotion":["explicit"]},
       "source_evidence":[{"ref":"Legacy/specs/M/M5-epii-holographic-integration.md","role":"FOUNDATIONAL-SIGNAL","claim":"5->0 Mobius return is central M5 relation"},{"ref":"Body/S/S5/epii-review-core/src/lib.rs","role":"IMPLEMENTATION-FACT","claim":"typed promotion/review governance exists"}],
       "implementation":{"current_bodies":["review/autoresearch governance","Central/native proposal mechanisms"],"observed_evidence":[],"readiness":"partial"},
-      "technical_decisions":[{"question":"exact distributed return handoff across native owners","status":"OPEN","options_or_evidence":[]}],
+      "technical_decisions":[{"question":"exact distributed return handoff across native owners and Shakti standing layers","status":"OPEN","options_or_evidence":[]}],
       "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["M0","Central","native product owners"]}
+    },
+    {
+      "capability_ref":"M5-C15-vak-addressable-self-knowledge",
+      "coordinate":"M5.0 distributed",
+      "name":"Vak-addressable self-knowledge",
+      "meaning":{"purpose":"make Epii self-knowledge resolvable through the same exact source-provenanced Anuttara/Vak language rather than a separate M5 taxonomy","subsystem_role":"root-language identity access","whole_system_role":"co-reference self-model, source, product, deep instrument and Guardian through stable semantic refs"},
+      "experience":{"human_affordances":["address exact Vak/source entry","open self-model/product/deep/Guardian relations"],"agent_affordances":["resolve VakRef","retrieve exact formulation/provenance","route to related capability"],"summonable_depth":["source entry","relations","standing","product/deep/Guardian projections"]},
+      "functional_contract":{"inputs":["VakRef","coordinate","typed semantic ref"],"outputs":["source identity","formulation","relations","standing","related refs"],"state_effects":[],"invariants":["Vak registry != self-model","Vak address != Action authority"],"deterministic_steps":["registry lookup"],"inferential_steps":["generated explanation only where standing permits"]},
+      "relations":{"upstream":["M0-C18 addressable Vak registry"],"downstream":["M5.2","M5.3","M5.4","M5.5"],"sibling_relations":["M5-C16-shakti-agent-internal-ecology","M5-C17-vak-actionref-operation"]},
+      "protection":{"authority":["M0/source owner"],"consent":[],"review_promotion":[]},
+      "source_evidence":[{"ref":"Idea/Bimba/Map/datasets/anuttara-deep/anuttara-language-map.md","role":"FOUNDATIONAL-SIGNAL","claim":"109 exact formal language entries"},{"ref":"current human review","role":"CURRENT-AUTHORED-POSITION","claim":"M0 language is operative substrate for M5 self-knowledge"}],
+      "implementation":{"current_bodies":["QL-MEF registry/provenance/service substrate"],"observed_evidence":[],"readiness":"determined-package-body-pending"},
+      "technical_decisions":[{"question":"exact stable VakRef/registry schema","status":"OPEN-DEVELOPMENT","options_or_evidence":[]}],
+      "cross_register_projection":{"status":"PARTIAL","s_product":"S5 QL-MEF generalized runtime","cross_coordinate_dependencies":["M0 source","O:I"]}
+    },
+    {
+      "capability_ref":"M5-C16-shakti-agent-internal-ecology",
+      "coordinate":"M5.4 with M0-5 inheritance",
+      "name":"Shakti @ Agent internal ecology",
+      "meaning":{"purpose":"expose the exact @0 Library / @1 Bimba / @2 Pratibimba / @3 Language / @4 Stories / @5 Techne field as top-level source-grounded internal self-structure","subsystem_role":"Agent/Guardian internal orientation","whole_system_role":"relate what is available internally without collapsing ground, derived meaning, context or capability"},
+      "experience":{"human_affordances":["inspect Agent internal horizon by source role","see original vs derived vs capability"],"agent_affordances":["address held ground","resolve original structure","inspect derived meaning","navigate language/world/capability"],"summonable_depth":["@0","@1","@2","@3","@4","@5"]},
+      "functional_contract":{"inputs":["World/Agent horizon","typed refs","current Context/capability ecology"],"outputs":["bounded typed addressable field by Shakti relation"],"state_effects":[],"invariants":["@ horizon != loaded Context","@2 != @1 source","@5 availability != authority"],"deterministic_steps":["typed classification where exact mapping exists"],"inferential_steps":["none for exact source mapping; relevance remains owner/runtime concern"]},
+      "relations":{"upstream":["M0 #0-5-5/0"],"downstream":["AIKit Context","O:I World-relative Knowledge","Guardian agency","Techne"],"sibling_relations":["M5-C05-guardian-metagency","M5-C17-vak-actionref-operation"]},
+      "protection":{"authority":["AIKit disclosure/Context bounds","native source/capability owners"],"consent":[],"review_promotion":[]},
+      "source_evidence":[{"ref":"Idea/Bimba/Map/datasets/anuttara-deep/anuttara-language-map.md","role":"FOUNDATIONAL-SIGNAL","claim":"@0=##, @1=O#, @2=X#, @3=N#, @4=M#, @5=R#"},{"ref":"EpiLogos/O-I#155","role":"CURRENT-DESIGN-COMMITMENT","claim":"typed @ participant addressing with membership/addressing/invocation/authority/attention distinguished"}],
+      "implementation":{"current_bodies":["O:I typed address architecture","AIKit Context/capability ecology"],"observed_evidence":[],"readiness":"source-law-ratified-integration-pending"},
+      "technical_decisions":[],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["M0","AIKit","O:I"]}
+    },
+    {
+      "capability_ref":"M5-C17-vak-actionref-operation",
+      "coordinate":"M5.2/M5.4",
+      "name":"Vak to native Action operation",
+      "meaning":{"purpose":"relate source-provenanced Vak semantics to real canonical native Actions and invoke through existing owner/runtime paths","subsystem_role":"operative self-relation","whole_system_role":"make symbolic language consequential without duplicating Action ontology"},
+      "experience":{"human_affordances":["discover related Action","see native owner/meaning/effect/availability/authority","invoke where authorised"],"agent_affordances":["resolve explicit Action binding","invoke same canonical ActionRef","retain result lineage"],"summonable_depth":["VakRef","ActionRef","native owner","availability","authority","Invocation","result/evidence"]},
+      "functional_contract":{"inputs":["VakRef","subject ref","explicit Action binding","typed input"],"outputs":["canonical ActionRef/Reading","availability","authority status","Invocation/result lineage"],"state_effects":["native owner-defined effects only"],"invariants":["VakRef != ActionRef","zero-to-many bindings","addressability != executability","availability != authority","native owner retains handler/authority/result"],"deterministic_steps":["binding lookup and native dispatch where authorised"],"inferential_steps":["none required for binding identity"]},
+      "relations":{"upstream":["M0-C19","M5-C03-product-introspection","M5-C16-shakti-agent-internal-ecology"],"downstream":["Actuation Invocation","Activity","Evidence/Return","Recognition"],"sibling_relations":["M5-C18-self-observable-activity-return"]},
+      "protection":{"authority":["native Action owner","AIKit capability grant","Actuation bounds"],"consent":[],"review_promotion":[]},
+      "source_evidence":[{"ref":"EpiLogos/O-I#26","role":"CURRENT-DESIGN-COMMITMENT","claim":"canonical ActionRef lineage through native dispatcher/result"},{"ref":"EpiLogos/O-I#105","role":"CURRENT-DESIGN-COMMITMENT","claim":"Search/Command presents native Action descriptors while authority remains separate"},{"ref":"current human review","role":"CURRENT-AUTHORED-POSITION","claim":"Vāk should become 1:1-capable with real Actions where semantics warrant, without identity collapse"}],
+      "implementation":{"current_bodies":["O:I canonical Action architecture","QL-MEF semantic registry/service substrate"],"observed_evidence":[],"readiness":"generic-host-real-binding-layer-pending"},
+      "technical_decisions":[{"question":"cross-repository portable ActionRef binding representation","status":"OPEN-DEVELOPMENT","options_or_evidence":["consume portable O:I schema","opaque native ref through adapter"]}],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["O:I","AIKit","Actuation","native product owners"]}
+    },
+    {
+      "capability_ref":"M5-C18-self-observable-activity-return",
+      "coordinate":"M5.4/M5.5",
+      "name":"Self-observable Activity and Return",
+      "meaning":{"purpose":"make actuality legible to Epii from addressed operation through Invocation/Activity/Evidence/Return without conflating those objects","subsystem_role":"operative self-observation","whole_system_role":"feed real returned difference into recognition rather than introspecting only intended Actions"},
+      "experience":{"human_affordances":["follow same Action/session/stream through Activity","inspect evidence/return","open Recognition"],"agent_affordances":["observe authorised semantic Activity","correlate result/evidence/return","prepare recognition candidate"],"summonable_depth":["ActionRef?","InvocationRef?","ActivityRef","AgentSession","ActuationStream","evidence","Return"]},
+      "functional_contract":{"inputs":["ActionRef?","InvocationRef?","AgentSession/ActuationStream refs","native trace"],"outputs":["semantic Activity reading","result/evidence refs","Return","recognition candidate"],"state_effects":[],"invariants":["Action != Activity","provider event without Action remains honestly generic","no fabricated hidden chain-of-thought"],"deterministic_steps":["correlation where native refs exist"],"inferential_steps":["semantic summary/salience only with standing"]},
+      "relations":{"upstream":["M5-C17-vak-actionref-operation","O:I#154","O:I#155"],"downstream":["M5-C10-review-recognition","M5-C19-vak-logos-return-recursion","Thought/History"],"sibling_relations":["M5-C05-guardian-metagency"]},
+      "protection":{"authority":["native trace/disclosure bounds"],"consent":[],"review_promotion":[]},
+      "source_evidence":[{"ref":"EpiLogos/O-I#155","role":"CURRENT-DESIGN-COMMITMENT","claim":"Activity is first-class Agent-Native observability distinct from Action and Return"},{"ref":"EpiLogos/O-I#154","role":"CURRENT-DESIGN-COMMITMENT","claim":"canonical ActuationStream/AgentSession/Gateway continuity"}],
+      "implementation":{"current_bodies":["O:I/Actuation stream/activity architecture"],"observed_evidence":[],"readiness":"oi-architecture-real-epii-composition-pending"},
+      "technical_decisions":[],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["Actuation","O:I","M5 review"]}
+    },
+    {
+      "capability_ref":"M5-C19-vak-logos-return-recursion",
+      "coordinate":"M5.5 -> M0",
+      "name":"Vak-Logos governed return recursion",
+      "meaning":{"purpose":"use Logos to qualify/recognise returned actuality expressed in the prior Vak field and return warranted difference to the correct source/derived/capability layer","subsystem_role":"language-aware recursive return","whole_system_role":"let learning renew the field without confusing derived understanding with canonical source"},
+      "experience":{"human_affordances":["see addressed source/derived layer","inspect Logos reading","recognise where return should land"],"agent_affordances":["prepare layer-specific return proposal","retain source-before/result/proposal/decision lineage"],"summonable_depth":["@0 Library","@1 Bimba","@2 Pratibimba","@3 Language","@4 Stories","@5 Techne","M5 Logos"]},
+      "functional_contract":{"inputs":["Vak-addressed subject","Activity/Evidence/Return","Logos/lens/CF reading","target standing"],"outputs":["derived update","proposal","accepted native mutation","retained rejection/history"],"state_effects":["layer-appropriate change through native authority"],"invariants":["Logos != Vak","recognition != automatic source mutation","derived/Techne change does not imply Bimba/canon change"],"deterministic_steps":[],"inferential_steps":["recognition and layer/owner judgement"]},
+      "relations":{"upstream":["M5-C18-self-observable-activity-return","M5-C08-logos-refraction","M5-C10-review-recognition"],"downstream":["M0","Central/source owner","Agent-derived knowledge","capability evolution"],"sibling_relations":["M5-C14-return-to-ground"]},
+      "protection":{"authority":["source/native owner","human Recognition where required"],"consent":[],"review_promotion":["explicit"]},
+      "source_evidence":[{"ref":"M0/M5 source relation","role":"FOUNDATIONAL-SIGNAL","claim":"M0 language and M5 5->0 return are mutually implicated"},{"ref":"current human review","role":"CURRENT-AUTHORED-POSITION","claim":"5->0 return can deepen Library/Bimba/Pratibimba/Language/Stories/Techne with standing explicit"}],
+      "implementation":{"current_bodies":["M5 review/autoresearch governance","native source proposal mechanisms"],"observed_evidence":[],"readiness":"governance-present-distributed-handoff-open"},
+      "technical_decisions":[{"question":"exact distributed layer-specific return contract","status":"OPEN-DEVELOPMENT","options_or_evidence":[]}],
+      "cross_register_projection":{"status":"PARTIAL","cross_coordinate_dependencies":["M0","Central","AIKit","native owners"]}
     }
   ],
   "cross_feature_considerations": [
-    {
-      "id":"EPII-X01",
-      "subject":"L5/L5-prime Logos lenses",
-      "relation":"M5.5 has strong semantic overlap/correspondence pressure with Para Vak / Divine Logos, but is not reducible to either lens",
-      "details":["L5: Anuttara, Para Vak, Pasyanti, Madhyama, Vaikhari, Matrka","L5-prime: Arche, Apokalypsis, Dynamis, Sophia, Parousia, Epi-Logos"]
-    },
-    {
-      "id":"EPII-X02",
-      "subject":"Thought family",
-      "relation":"T artifacts remain their own cognitive/artifact coordinates and may be multiply refracted by M5.5 and L/L-prime",
-      "details":["T0 Questions","T1 Traces","T2 Challenges","T3 Patterns","T4 Discovery","T5 Insight"]
-    },
-    {
-      "id":"EPII-X03",
-      "subject":"AIKit Method",
-      "relation":"Thought/lens/CF/Guardian/evidence may exert situated praxis pressure through Method/UsageOverlay without becoming Skills or activation authority",
-      "details":["Method composes SkillRefs + Actions + ContextSources + UsageOverlays around Focus","AIKit ContextResolution owns operational resolution"]
-    },
-    {
-      "id":"EPII-X04",
-      "subject":"Sophia/Aletheia",
-      "relation":"Sophia review/distillation and Aletheia unconcealment/crystallisation are operative cognitive/return capabilities inside the wider matrix, not definitions of M5 Guardian identity",
-      "details":["Sophia is also L5-prime.3 lens content","Aletheia is S5-prime operative reflection"]
-    }
+    {"id":"EPII-X01","subject":"L5/L5-prime Logos lenses","relation":"M5.5 has strong semantic overlap/correspondence pressure with Para Vak / Divine Logos, but is not reducible to either lens","details":["L5: Anuttara, Para Vak, Pasyanti, Madhyama, Vaikhari, Matrka","L5-prime: Arche, Apokalypsis, Dynamis, Sophia, Parousia, Epi-Logos"]},
+    {"id":"EPII-X02","subject":"Thought family","relation":"T artifacts remain their own cognitive/artifact coordinates and may be multiply refracted by M5.5 and L/L-prime","details":["T0 Questions","T1 Traces","T2 Challenges","T3 Patterns","T4 Discovery","T5 Insight"]},
+    {"id":"EPII-X03","subject":"AIKit Method","relation":"Thought/lens/CF/Vak/Guardian/evidence may exert situated praxis pressure through Method/UsageOverlay without becoming Skills or activation authority","details":["Method composes SkillRefs + Actions + ContextSources + UsageOverlays around Focus","AIKit ContextResolution owns operational resolution"]},
+    {"id":"EPII-X04","subject":"Sophia/Aletheia","relation":"Sophia review/distillation and Aletheia unconcealment/crystallisation are operative cognitive/return capabilities inside the wider matrix, not definitions of M5 Guardian identity","details":["Sophia is also L5-prime.3 lens content","Aletheia is S5-prime operative reflection"]},
+    {"id":"EPII-X05","subject":"M0 Anuttara/Vak","relation":"M0 supplies the prior source language inherited by M5 self-knowledge and operation; M5 Logos articulates/recognises over it rather than replacing it","details":["109 source entries","Siva operative sixfold","Shakti @0..@5","O#/X#/N#/M#/#/##/R# relation field"]},
+    {"id":"EPII-X06","subject":"O:I Agent-Native Action/address field","relation":"mature generic host for typed addressing and canonical native Action lineage; QL-MEF contributes Vak semantics/bindings without duplicating the host ontology","details":["@ participant addressing","Search/Command native descriptors","ActionRef native owner lineage","Activity distinct from Action","availability distinct from authority"]}
   ],
   "implementation_reality": [
     {"capability":"holographic-self-knowledge","status":"partial","current_body":"Bimba/Gnosis/kbase/spec corpus","gap":"no ratified cross-product self-model/register contract"},
@@ -331,13 +420,18 @@
     {"capability":"thought-objectification","status":"partial","current_body":"Sophia/Aletheia/Gnosis contracts","gap":"full T/T-prime parity and cross-feature use"},
     {"capability":"review-recognition","status":"operative","current_body":"epii-review-core","gap":"whole-product integration"},
     {"capability":"autoresearch","status":"partial","current_body":"epii-autoresearch-core","gap":"target-specific quality/evals and distributed owner return"},
-    {"capability":"logos-pedagogy-archaeology","status":"partial","current_body":"M5-prime/Gnosis/Atelier specs+bodies","gap":"accepted runtime/Method/Thought relations"}
+    {"capability":"logos-pedagogy-archaeology","status":"partial","current_body":"M5-prime/Gnosis/Atelier specs+bodies","gap":"accepted runtime/Method/Thought relations"},
+    {"capability":"vak-addressable-self-knowledge","status":"determined-not-implemented","current_body":"M0 109-entry source + QL-MEF registry/provenance/service substrate","gap":"source-faithful Vak registry with stable refs"},
+    {"capability":"shakti-agent-internal-ecology","status":"semantic-strong-integration-open","current_body":"M0 @0..@5 source + O:I/AIKit address/context systems","gap":"source-grounded typed projection without duplicating Context/Knowledge"},
+    {"capability":"vak-actionref-operation","status":"determined-not-implemented","current_body":"O:I canonical Action architecture","gap":"explicit typed zero-to-many bindings and conformance"},
+    {"capability":"self-observable-activity-return","status":"generic-architecture-active","current_body":"O:I#154/#155 + ActuationStream","gap":"Epii Recognition composition over same refs/streams"}
   ],
   "drift_register": [
     {"id":"EPII-DRIFT-01","claim_a":"foundational M5.2=S, M5.3=S-prime, M5.4=M-prime agents","claim_b":"current fourfold M=semantic+Guardian, S=O:I product, S-prime=Ta-Onta, M-prime=deep instrument","current_interpretation":"preserve branch capabilities but supersede old family/technology identity; M5.2 standing technical self-reflection, M5.3 deep experiential self-reflection, M5.4 operative active whole","decision_needed":"no"},
     {"id":"EPII-DRIFT-02","claim_a":"QL tickets describe 0/1 whole-field Guardian composition","claim_b":"current human review specifies Epii as canonical Guardian over the complete Epi/QL projection","current_interpretation":"Epii M5 Agent occupies whole-world/root/metagentic Agency relation; no P6/second canonical Guardian","decision_needed":"encode into later guardian specs"},
     {"id":"EPII-DRIFT-03","claim_a":"foundational C spec universal branchless 12-tick Logos FSM","claim_b":"current distributed products own formal/runtime/praxis/material/evidence responsibilities","current_interpretation":"retain Logos semantics/correspondences; exact universal runtime implementation OPEN","decision_needed":"yes"},
-    {"id":"EPII-DRIFT-04","claim_a":"older design permits continuously refined quintessential views","claim_b":"current provenance/human-authority law forbids inference silently replacing canon","current_interpretation":"derived/Agent knowledge may evolve; authored/canonical promotion remains explicit","decision_needed":"exact self-model update contract"}
+    {"id":"EPII-DRIFT-04","claim_a":"older design permits continuously refined quintessential views","claim_b":"current provenance/human-authority law forbids inference silently replacing canon","current_interpretation":"derived/Agent knowledge may evolve; authored/canonical promotion remains explicit","decision_needed":"exact self-model update contract"},
+    {"id":"EPII-DRIFT-05","claim_a":"later technical surfaces can treat QL/VAK primarily as descriptive metadata","claim_b":"M0 source contains executable/operator/process language and current O:I supplies typed addressing plus canonical Action/Invocation/Activity architecture","current_interpretation":"Vak is addressable/increasingly executable semantic substrate; QL-MEF owns registry/refraction and explicit bindings while O:I/native owners retain generic Action ontology","decision_needed":"implement/conform exact package bridge"}
   ],
   "open_decisions": [
     {"id":"EPII-D01","question":"Canonical durable representation of Epii's holographic self-model/quintessential views?","status":"OPEN"},
@@ -351,7 +445,11 @@
     {"id":"EPII-D09","question":"Which target-specific ML/CPT/RAG/RL/QLoRA proposals, if any, are ratified?","status":"RESEARCH-PROPOSITION"},
     {"id":"EPII-D10","question":"Which current graph/RAG/editor/runtime bodies survive final refactor?","status":"OPEN"},
     {"id":"EPII-D11","question":"Which Epii-generated knowledge may auto-update Agent Wiki/derived state vs require human canon Recognition?","status":"PARTLY-RATIFIED-DETAIL-OPEN"},
-    {"id":"EPII-D12","question":"How should autoresearch/Thought/Method evidence return to native product owners and Factory without parallel evaluation ontology?","status":"OPEN"}
+    {"id":"EPII-D12","question":"How should autoresearch/Thought/Method evidence return to native product owners and Factory without parallel evaluation ontology?","status":"OPEN"},
+    {"id":"EPII-D13","question":"What exact stable VakRef/entry/registry schema should QL-MEF expose for the 109-entry source language?","status":"DEVELOPMENT-TARGET-API-OPEN"},
+    {"id":"EPII-D14","question":"How should QL-MEF represent Vak-to-native Action bindings across repository/language boundaries without duplicating ActionRef ownership?","status":"DEVELOPMENT-TARGET-ADAPTER-OPEN"},
+    {"id":"EPII-D15","question":"Which first source-backed Vak entries receive real native Action bindings for conformance?","status":"OPEN-EVIDENCE-LED"},
+    {"id":"EPII-D16","question":"How should Recognition target @0/@1/@2/@3/@4/@5 standing so derived learning/narrative/Techne can evolve without implying canon mutation?","status":"PARTLY-DETERMINED-DISTRIBUTED-RETURN-OPEN"}
   ],
   "technology_decisions": [
     {"concern":"Theia/Tauri/Electron","status":"HOST-OR-PRESENTATION_NOT-EPII-IDENTITY"},
@@ -359,13 +457,16 @@
     {"concern":"branchless 12-tick Logos FSM","status":"HISTORICAL-CANDIDATE_RESEARCH-PROPOSITION"},
     {"concern":"direct mutable C Mobius write-back","status":"REPLACED-AS-GOVERNANCE-AUTHORITY"},
     {"concern":"target-specific ML paradigms","status":"RESEARCH-PROPOSITION"},
-    {"concern":"AIKit Method/UsageOverlay","status":"CURRENT-NATIVE-PRAXIS-SEAM"}
+    {"concern":"AIKit Method/UsageOverlay","status":"CURRENT-NATIVE-PRAXIS-SEAM"},
+    {"concern":"QL-MEF Vak registry/refraction","status":"RATIFIED-PACKAGE-DEVELOPMENT-TARGET"},
+    {"concern":"O:I ActionRef/Search/@ host","status":"CURRENT-GENERIC-HOST-CONSUME-DONT-DUPLICATE"}
   ],
   "cross_register_constitutional_row": {
     "m":"M5 Epii — subsystem + canonical Guardian",
     "s":"S5 Quaternal Logic / QL-MEF",
     "s_prime":"S5' Aletheia",
     "m_prime":"epi.deep.m5",
+    "vak_runtime_relation":"S5 QL-MEF is the natural generalized technological home for Vak registry/refraction used by M5 and other coordinates; this does not make M0 semantic identity a child of S5 or alter M0->S0",
     "status":"RATIFIED-SPINE_CAPABILITY-MAPPING-PARTIAL"
   }
 }

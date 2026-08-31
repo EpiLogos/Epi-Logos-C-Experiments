@@ -1,6 +1,6 @@
 {
   "schema": "epi.deep-subsystem-capability-matrix/v2",
-  "status": "research-matrix-human-review-incorporated",
+  "status": "research-matrix-human-review-and-oi-operationalisation-incorporated",
   "subsystem": {
     "index": 0,
     "m_identity": "Anuttara",
@@ -21,7 +21,8 @@
   },
   "structural_counts": {
     "current_anuttara_dataset_nodes": 109,
-    "law": "counts describe current datasets or legitimate structural reads and are not hard-coded subsystem invariants unless a capability explicitly depends on the count"
+    "registry_parity_target": 109,
+    "law": "all 109 source entries remain addressable with exact identity/provenance even when only a subset has executable Action bindings; structural counts inside subgrammars remain legitimate source reads rather than competing ontologies"
   },
   "method_principles": [
     "chronology-is-not-semantic-precedence",
@@ -29,7 +30,9 @@
     "union-with-provenance",
     "multiple-structural-reads-can-be-simultaneously-valid",
     "missing-current-body-is-a-coverage-gap-before-it-is-a-semantic-ambiguity",
-    "current-code-is-implementation-fact-not-retroactive-intent"
+    "current-code-is-implementation-fact-not-retroactive-intent",
+    "vak-semantic-identity-is-not-native-action-identity",
+    "addressability-availability-authority-and-invocation-remain-distinct"
   ],
   "source_sets": {
     "foundational_signal": [
@@ -45,6 +48,14 @@
       "Idea/Bimba/Seeds/M/M0'/the-matheme-of-the-field-differential.md",
       "Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md"
     ],
+    "current_oi_ql_architecture": [
+      "EpiLogos/O-I#26",
+      "EpiLogos/O-I#105",
+      "EpiLogos/O-I#111",
+      "EpiLogos/O-I#154",
+      "EpiLogos/O-I#155",
+      "EpiLogos/QL-MEF#69"
+    ],
     "implementation_fact": [
       "Body/S/S0/epi-lib/include/m0.h",
       "Body/S/S0/epi-lib/src/m0.c",
@@ -53,13 +64,35 @@
       "current M0' graph/inspector/world bodies and tests"
     ]
   },
+  "current_operational_determination": {
+    "status": "CURRENT-HUMAN-RATIFIED-CROSS-ARCHITECTURE-DETERMINATION",
+    "relation": "Anuttara/Vak source identity -> addressable Vak field -> optional canonical native ActionRef bindings where executable consequence is real -> Invocation/Activity/Evidence/Return -> M5 Recognition/governed return",
+    "non_identity_laws": [
+      "VakRef != ActionRef",
+      "addressability != executability",
+      "executability != current availability",
+      "availability != authority",
+      "invocation != Activity",
+      "source formulation != generated interpretation"
+    ],
+    "ownership": {
+      "anuttara_semantics": "M0 / Epi source",
+      "vak_registry_refraction": "QL-MEF package development target",
+      "native_action_identity_handler_authority_result": "native product owner",
+      "generic_search_address_surface_composition": "O:I",
+      "context_capability_method_resolution": "AIKit",
+      "agency_invocation_stream_return": "Actuation",
+      "material_execution": "Workcell",
+      "developmental_evidence_where_applicable": "Software Factory"
+    }
+  },
   "outer_field": [
     {"coordinate":"M0-0","name":"Transcendent Void — 4-Fold Zero Unity","role":"ground before differentiated form; primitive Vimarsa and concrescence conditions"},
     {"coordinate":"M0-1","name":"Emergence of Non-Duality","role":"0/1 differentiation internal to unity; discrimination, Spanda and relational propagation"},
     {"coordinate":"M0-2","name":"8-Fold Zero-Zero","role":"foundational void operations, wholeness, Paramesvara and virtue/Reality ground"},
     {"coordinate":"M0-3","name":"Archetypal Number Language / Para Vak","role":"nested proto-mathematical-linguistic field of number, speech, relation and action"},
-    {"coordinate":"M0-4","name":"Holographic Matrix of Context","role":"O#/X#/N#/M#/# generative contextual grammars and languification"},
-    {"coordinate":"M0-5","name":"Siva-Shakti Unity","role":"stable defining medium and dynamic articulation in recursive recognition/return"}
+    {"coordinate":"M0-4","name":"Holographic Matrix of Context","role":"O#/X#/N#/M#/# generative contextual grammars, R-factor weave and languification"},
+    {"coordinate":"M0-5","name":"Siva-Shakti Unity","role":"Siva operative syntax and Shakti internally addressable @ field in recursive recognition/return"}
   ],
   "recursive_highlights": [
     {"coordinate":"M0-0-0","name":"Ultimate Mystery"},
@@ -71,11 +104,35 @@
     {"coordinate":"#0-4.0/1","name":"O# / Paramasiva / Zero Logic"},
     {"coordinate":"#0-4.0/1/2","name":"X# / Parashakti / Cosmic Imagination"},
     {"coordinate":"#0-4.0/1/2/3","name":"N# / Spanda"},
-    {"coordinate":"#0-4.4.0-4.4/5","name":"M# / Mahamaya"},
-    {"coordinate":"#0-4.5/0","name":"# / Nara"},
-    {"coordinate":"#0-5-0/1","name":"Siva","roles":["potential/in-pression","negation","affirmation","dialogue","dialectic","expression"]},
-    {"coordinate":"#0-5-5/0","name":"Shakti","roles":["Library/implicit memory","Bimba/original architecture","Pratibimba/generated meaning","Language/symbol","Stories/worlds","R#/Techne/freedom-power"]}
+    {"coordinate":"#0-4.4.0-4.4/5","name":"M# / Mahamaya","grammar":["I","You","You-and-I","They","We","We-I"]},
+    {"coordinate":"#0-4.5/0","name":"# / Nara","ground":"## = 0/1 Primordial Matrix"},
+    {"coordinate":"#0-5-0/1","name":"Siva","roles":["potential/in-pression","negation","affirmation","dialogic","dialectic/context","expression"]},
+    {"coordinate":"#0-5-5/0","name":"Shakti","roles":["@0 Library/implicit ground","@1 Bimba/original architecture","@2 Pratibimba/reflected meaning","@3 Language/symbol/form","@4 Stories/worlds/views","@5 R#/Techne/freedom-power-instruments"]}
   ],
+  "siva_operative_syntax": [
+    {"position":0,"source":"(0) = (@#)","role":"Potential / In-pression"},
+    {"position":1,"source":"(1) = (-)","role":"Negation / distinction / withholding"},
+    {"position":2,"source":"(2) = (+) = (-)x(-)","role":"Affirmation / re-negation / conjunction"},
+    {"position":3,"source":"(3) = (x)","role":"Dialogic relation — by/as/where/if-is"},
+    {"position":4,"source":"(4) = (/)","role":"Dialectic/context — and/or/complement"},
+    {"position":5,"source":"(5) = (=)","role":"Expression — then/same/is"}
+  ],
+  "shakti_internal_address_field": [
+    {"position":0,"symbol":"@0","relation":"@0 = ##","name":"Library","source_role":"Being/Knowing embodied/implicit memory","agent_native_reading":"available held/implicit ground; not equivalent to all-loaded Context"},
+    {"position":1,"symbol":"@1","relation":"@1 = O#","name":"Bimba","source_role":"systems architecture and number-sets","agent_native_reading":"original/canonical/formal structure"},
+    {"position":2,"symbol":"@2","relation":"@2 = X#","name":"Pratibimba","source_role":"Logi / meanings / reflection","agent_native_reading":"derived/reflected meanings kept distinct from original"},
+    {"position":3,"symbol":"@3","relation":"@3 = N#","name":"Language","source_role":"symbols / characters / forms","agent_native_reading":"articulated symbolic forms"},
+    {"position":4,"symbol":"@4","relation":"@4 = M#","name":"Stories","source_role":"worlds / views / sense playground","agent_native_reading":"situated worlds, views, narratives and context"},
+    {"position":5,"symbol":"@5","relation":"@5 = R#","name":"Techne","source_role":"freedoms / powers / instruments / tools","agent_native_reading":"available capabilities/actions with authority resolved separately"}
+  ],
+  "r_factor_weave": {
+    "R1":["O#(0)","X#(1)","N#(2)","M#(3)","#(4)","Siva(5)"],
+    "R4":["O#(5)","X#(4)","N#(3)","M#(2)","#(1)","Siva(0)"],
+    "R2":["X#(0)","N#(1)","M#(2)","#(3)","Siva(4)","Shakti(5)"],
+    "R3":["X#(5)","N#(4)","M#(3)","#(2)","Siva(1)","Shakti(0)"],
+    "R0":"seed factor through O#/X#/N# trika then withdraws",
+    "operational_consequence":"@5 = R# = Techne places available powers/tools at the culmination of the distributed relation/freedom field; concrete Action authority remains native-owner resolved"
+  },
   "vak_grammar": ["!","?","!-","-?","!?","?-","-!","?!","-! / !-","-? / ?-","!? / ?!","?! / !?"],
   "monopoly": ["Mono","Poly","Poly-","-Mono","Mono-","-Poly","MonoPoly"],
   "divine_actions": ["Svatantrya","Srishti","Sthiti","Samhara","Tirodhana","Anugraha","Samavesa"],
@@ -91,13 +148,18 @@
     {"ref":"M0-C09","name":"Divine Action","primary_locus":"M0-3 Divine Action","relations":["R-factors","transformation","Logos"],"current_evidence":["source grammar","executable relation tables"]},
     {"ref":"M0-C10","name":"contextual logical grammar","primary_locus":"M0-4","relations":["M1-M4 holographic implication","QL Context Frames"],"current_evidence":["source coordinate grammar","graph/C structures"]},
     {"ref":"M0-C11","name":"languification","primary_locus":"M0-3/M0-4 distributed","relations":["all differentiated domains","provenance-preserving interpretation"],"current_evidence":["source formulations","current graph/language projections"]},
-    {"ref":"M0-C12","name":"Siva-Shakti process ontology","primary_locus":"M0-5","relations":["M5 recognition/return","stable/dynamic polarities"],"current_evidence":["source field","kernel experiments"]},
+    {"ref":"M0-C12","name":"Siva-Shakti process ontology","primary_locus":"M0-5","relations":["M5 recognition/return","stable-operative syntax and dynamic internal field"],"current_evidence":["source field","kernel experiments"]},
     {"ref":"M0-C13","name":"executable Anuttara language","primary_locus":"distributed","relations":["S0/S2/M0' bodies","Agent access"],"current_evidence":["m0.h","m0.c","tests","S2 projections"]},
     {"ref":"M0-C14","name":"playable inspectable ground","primary_locus":"M0' refraction","relations":["whole M0 field","O:I wiki/graph/world"],"current_evidence":["deep M0' architecture/planning"]},
-    {"ref":"M0-C15","name":"governed language development","primary_locus":"M0<->M5","relations":["Epii review/autoresearch/canon-return"],"current_evidence":["current review/governance bodies","source-development programme"]}
+    {"ref":"M0-C15","name":"governed language development","primary_locus":"M0<->M5","relations":["Epii review/autoresearch/canon-return"],"current_evidence":["current review/governance bodies","source-development programme"]},
+    {"ref":"M0-C16","name":"Siva operative syntax","primary_locus":"#0-5-0/1","relations":["Vak","Logos","Action composition","Shakti address field"],"standing":"SOURCE-BACKED exact sixfold; current QL runtime projection pending","current_evidence":["anuttara-language-map","M0-anuttara-language-architecture historical executable table design"]},
+    {"ref":"M0-C17","name":"Shakti @ internal self-structure","primary_locus":"#0-5-5/0","relations":["@0=##","@1=O#","@2=X#","@3=N#","@4=M#","@5=R#","AIKit Context/Knowledge","O:I typed addressing"],"standing":"SOURCE-BACKED exact sixfold plus CURRENT-HUMAN-RATIFIED Agent-UX interpretation","current_evidence":["anuttara-language-map","O-I#155"]},
+    {"ref":"M0-C18","name":"109-element addressable Vak registry","primary_locus":"whole Anuttara dataset","relations":["M0'","M5 self-knowledge","QL-MEF registry/service","O:I Search/Command/Agent projection"],"standing":"CURRENT-AUTHORED DEVELOPMENT DETERMINATION over SOURCE-BACKED target","current_evidence":["109-node source map","QL-MEF existing registry/provenance/service layers"]},
+    {"ref":"M0-C19","name":"Vak to canonical ActionRef binding","primary_locus":"distributed executable Vak","relations":["O:I native Actions","AIKit capabilities/Methods","Actuation Invocation/Activity/Return","product-native handlers"],"standing":"CURRENT-HUMAN-RATIFIED CROSS-ARCHITECTURE SYNTHESIS","invariants":["VakRef != ActionRef","zero-to-many Action bindings","native owner retains handler/authority/result lineage"],"current_evidence":["O-I#26","O-I#105","O-I#111","O-I#154","O-I#155","QL-MEF#69"]},
+    {"ref":"M0-C20","name":"R#/Techne availability-authority relation","primary_locus":"@5 = R# plus R-factor weave","relations":["capability ecology","bounds","authority","materialisation","Activity/Evidence/Return"],"standing":"SOURCE-BACKED Techne/R-factor semantics plus CURRENT O:I design commitment for capability/authority separation","current_evidence":["R-factor source architecture","O-I#154","O-I#155"]}
   ],
   "experience_affordances": [
-    "address exact source coordinates and recover formulation/provenance",
+    "address all 109 source entries and recover exact formulation/provenance",
     "traverse structural and correspondential relations without collapse",
     "follow primitive operators into implicated forms and later domains",
     "navigate archetypal numbers as nested language fields",
@@ -105,6 +167,9 @@
     "see multiple valid structural reads where source-backed",
     "distinguish authored language inference executable representation observation and current state",
     "inspect or execute portions of Anuttara already possessing computational state",
+    "use @0..@5 as an internal orientation over ground original reflection language worlds and Techne without equating the field with loaded Context",
+    "apply Siva operative relations across addressable material without reducing them to six generic software actions",
+    "discover canonical native Actions only where an explicit binding exists and inspect availability separately from authority",
     "fold downstream results against Anuttara with visible derivation/provenance",
     "use the full deep M0' graph/world design including structural/correspondential relations temporal/community overlays protected routes pedagogy harmonic/visual/audio and agent-addressable operations"
   ],
@@ -113,6 +178,8 @@
     "executable_language":"substantial portions have C representations and executable behaviour",
     "graph_projection":"S2 projects Anuttara properties and relations into graph/service bodies",
     "deep_product":"M0' architecture already specifies a deep six-layer graph/world engagement surface",
+    "oi_host":"mature Agent-Native architecture exists for typed refs, canonical Action lineage, Search/Command/Surface parity and participant @ addressing with addressing/invocation/authority distinctions",
+    "vak_runtime_gap":"full source-faithful 109-entry QL-MEF registry plus typed O:I projection and explicit canonical ActionRef bindings is determined but not yet accepted in package code",
     "parity_law":"missing current embodiment is a coverage gap first, not evidence of semantic ambiguity"
   },
   "cross_register_constitutional_row": {
@@ -121,13 +188,19 @@
     "s_prime":"S0' Khora",
     "m_prime":"epi.deep.m0",
     "guardian_relation":"M0 Anuttara is the canonical Guardian identity for the Central product/world through M->S",
+    "cross_coordinate_runtime_refraction":"S5 / QL-MEF may host generalized Vak registry/refraction machinery without becoming M0 semantic owner or changing the same-index spine",
     "status":"RATIFIED-SPINE_CAPABILITY-REFRACTION-IN-PROGRESS"
   },
   "depth_recovery_continuation": [
     "recover complete recursive inventory beneath major M0-3 subgrammars from source data",
-    "carry full established R-factor relations into capability rows",
+    "carry full established R-factor relations into all affected source/matrix rows",
     "expand source-defined L/P/C/T cross-family relations",
-    "verify current implementation coverage against source language/property map",
-    "preserve full current M0' graph/world design as experiential projection during embodiment work"
+    "preserve full current M0' graph/world design as experiential projection",
+    "materialise QL-MEF Vak registry from exact 109-entry source dataset with deterministic identity and provenance",
+    "encode exact Siva/Shakti sixfolds plus O#/X#/N#/M#/#/##/R# relation indexes as queryable law",
+    "expose address/read/relate/refraction through existing QL-MEF semantic/service layers",
+    "contribute typed Vak refs into existing O:I Search/Command/@ address field rather than creating a parallel global registry",
+    "bind only warranted executable relations to canonical native ActionRefs and retain semantic entries with no Action",
+    "conformance-test VakRef != ActionRef plus addressability/availability/authority separation and human/Agent co-reference"
   ]
 }
