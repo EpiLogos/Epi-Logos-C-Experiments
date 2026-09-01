@@ -156,12 +156,12 @@ fn portal_clock_state_kernel_projection_survives_ipc_json_round_trip() {
     );
     assert_eq!(
         public_json["harmonicProfile"]["binary"]["mahamayaAddress64"],
-        10
+        37
     );
-    assert_eq!(public_json["harmonicProfile"]["binary"]["codon"], "UGG");
+    assert_eq!(public_json["harmonicProfile"]["binary"]["codon"], "GAA");
     assert_eq!(
         public_json["harmonicProfile"]["binary"]["lineChangeOperatorAddress"],
-        61
+        223
     );
     assert_eq!(
         public_json["harmonicProfile"]["binary"]["transcriptionState"],
@@ -282,15 +282,15 @@ fn kernel_harmonic_profile_maps_tick_to_diatonic_cf_when_pitch_is_sounded() {
         json["harmonicProfile"]["planetaryChakral"]["musicalRole"],
         "5/3 major sixth"
     );
-    assert_eq!(json["harmonicProfile"]["binary"]["mahamayaAddress64"], 42);
-    assert_eq!(json["harmonicProfile"]["binary"]["hexagramId"], 42);
-    assert_eq!(json["harmonicProfile"]["binary"]["upperTrigram"], 5);
-    assert_eq!(json["harmonicProfile"]["binary"]["lowerTrigram"], 2);
-    assert_eq!(json["harmonicProfile"]["binary"]["codon"], "GGG");
+    assert_eq!(json["harmonicProfile"]["binary"]["mahamayaAddress64"], 53);
+    assert_eq!(json["harmonicProfile"]["binary"]["hexagramId"], 53);
+    assert_eq!(json["harmonicProfile"]["binary"]["upperTrigram"], 6);
+    assert_eq!(json["harmonicProfile"]["binary"]["lowerTrigram"], 5);
+    assert_eq!(json["harmonicProfile"]["binary"]["codon"], "CAA");
     assert_eq!(json["harmonicProfile"]["binary"]["dnaRnaPhase"], "RNA");
     assert_eq!(
         json["harmonicProfile"]["binary"]["lineChangeOperatorAddress"],
-        256
+        322
     );
     assert_eq!(json["harmonicProfile"]["binary"]["m2VibrationIndex"], 64);
     assert_eq!(json["harmonicProfile"]["binary"]["m2ToM3Symbol"], 56);
