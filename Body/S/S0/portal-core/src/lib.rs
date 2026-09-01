@@ -1,3 +1,4 @@
+pub mod ananda_vortex;
 pub mod aspect;
 pub mod codon;
 pub mod codon_rotation_projection;
@@ -18,6 +19,7 @@ pub mod transcription;
 pub mod types;
 pub mod vak_address;
 
+pub use ananda_vortex::*;
 pub use aspect::compute_aspects;
 pub use codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodon};
 pub use codon_rotation_projection::*;
