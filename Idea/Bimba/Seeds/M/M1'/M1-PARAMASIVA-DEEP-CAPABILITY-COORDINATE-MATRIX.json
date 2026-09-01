@@ -131,6 +131,15 @@
     "sym_ballein": "throwing-together / re-cognition; separated halves become mutually intelligible",
     "m1_use": "deepens self-identity/self-difference/conjugacy as a theory of relation and recognition"
   },
+  "physical_pole_geometric_transduction": {
+    "status": "current-human-authored-cross-coordinate-synthesis",
+    "m1_carrier_law": ["100=36+64", "36=4*9", "64=4*16", "100=4*(3^2+4^2)=4*5^2", "100/5=20"],
+    "m2_fibre": {"shape": "4*18=72", "angle_per_state_degrees": 20},
+    "m3_fibre": {"shape": "4*16=64", "angle_per_state_degrees": 22.5},
+    "epogdoon": ["18*(8/9)=16", "20*(9/8)=22.5", "9*20=8*22.5=180"],
+    "carrier": "four material elemental fibres remain co-referent across M2 vibrational differentiation and M3 determinate form; M1 supplies the ratio/topology/quaternionic grammar of the passage",
+    "instrument_consequence": "one active relation can be followed as number, interval, topology, angular aperture and physical/form transformation in the integrated 1-2-3 object"
+  },
   "capabilities": [
     {"id":"M1-C01","name":"formal self-identity","relations":["M1-0","M1-1","Symbolon","S1"]},
     {"id":"M1-C02","name":"self-inversion and source-traceable reflection","relations":["M1-1","#","M2","conjugacy"]},
@@ -150,7 +159,8 @@
     {"id":"M1-C16","name":"playable matheme","relations":["M1'","graph","audio","topology","Jankó projection","pedagogy"]},
     {"id":"M1-C17","name":"determinate Agency refraction","relations":["M1","S1 Actuation","Determination","Return"]},
     {"id":"M1-C18","name":"operative relational persistence","relations":["M1","S1' Hen"]},
-    {"id":"M1-C19","name":"formal return and theory revision","relations":["M1","M0","M5","evidence"]}
+    {"id":"M1-C19","name":"formal return and theory revision","relations":["M1","M0","M5","evidence"]},
+    {"id":"M1-C20","name":"physical-pole geometric carrier / transduction grammar","relations":["M1-2/3/4/5","100=36+64","3^2+4^2=5^2","100/5=20","9/8","20deg->22.5deg","K2","SU2","four elemental fibres","M2","M3","integrated 1-2-3"]}
   ],
   "m_prime_experience": {
     "M1-0'": "canonical/source form",
