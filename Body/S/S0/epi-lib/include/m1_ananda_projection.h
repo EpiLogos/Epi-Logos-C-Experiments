@@ -3,6 +3,7 @@
  *
  * Wayfinder: Epi-Logos-C-Experiments #32, W1
  * Authority: M1-2-ANANDA-VORTEX-ARCHITECTURE.md + canonical Vortex Modulae CSV.
+ * Phase lock: M1-SPANDA-ANANDA-MUSICAL-DERIVATION-LOCK.md.
  *
  * This module sits beside the legacy m1_ananda_get()/m1_ananda_dr_get() API.
  * It keeps the canonical raw 12x12 arithmetic, true DR12 residue and legacy
@@ -20,6 +21,8 @@
     "Idea/Bimba/Map/datasets/(0_1) Vortex Modulae - (0_1) x 12Fold and 8_9fold (mod12 and mod10) Archetypal Number Identities - Sheet1.csv"
 #define M1_ANANDA_DERIVATION_REF \
     "Idea/Bimba/Seeds/M/M1'/M1-2-ANANDA-EXECUTABLE-SUBSTRATE-CONTRACT.md"
+#define M1_ANANDA_PHASE_REF \
+    "Idea/Bimba/Seeds/M/M1'/M1-SPANDA-ANANDA-MUSICAL-DERIVATION-LOCK.md"
 
 typedef enum {
     M1_ANANDA_DIRECT_PHASE = 0,
@@ -27,15 +30,29 @@ typedef enum {
 } M1_Ananda_Direct_Prime_Phase;
 
 /*
- * The oscillatory address is supplied by the canonical Spanda/ring state.
- * This module deliberately does not infer the 12-walk ordering from tick12:
- * the active phase, position and conjugate co-state remain first-class input.
+ * One temporal address into the generated bi-phase field.
+ *
+ * The correction lock fixes the 12-walk as six positions x direct/prime:
+ *   ticks 0..5  -> direct positions 0..5
+ *   ticks 6..11 -> prime  positions 0'..5'
+ *
+ * The conjugate co-state is synchronically present on the opposite face at
+ * the same sixfold position, therefore it is addressable explicitly rather
+ * than reconstructed by a downstream consumer.
+ *
+ * Hopf/SU(2)/degree720 remains a neighbouring state relation. It is not
+ * folded into this address until the existing C/Rust degree-per-tick
+ * discrepancy is resolved by the native owner rather than guessed here.
  */
 typedef struct {
     uint8_t tick12;
     uint8_t position6;
-    uint8_t conjugate_position6;
     M1_Ananda_Direct_Prime_Phase phase;
+
+    uint8_t conjugate_tick12;
+    uint8_t conjugate_position6;
+    M1_Ananda_Direct_Prime_Phase conjugate_phase;
+
     Spanda_Stage spanda_stage;
 } M1_Ananda_Oscillatory_Address;
 
@@ -85,6 +102,7 @@ typedef struct {
     M1_Ananda_Oscillatory_Address oscillatory;
     const char* source_ref;
     const char* derivation_ref;
+    const char* phase_ref;
 } M1_Ananda_Cell_Projection;
 
 /* True recursive digit root for the non-negative raw source register. */
@@ -92,6 +110,14 @@ uint8_t m1_ananda_true_digit_root(uint16_t value);
 
 /* Normalised decimal/mod-10 aperture, including signed source values. */
 uint8_t m1_ananda_decimal_mod10(int16_t value);
+
+/*
+ * Generate the deterministic direct/prime + conjugate address fixed by the
+ * native M1 correction lock. Returns 1 on success, 0 for invalid tick/output.
+ */
+int m1_ananda_oscillatory_address_from_tick12(
+        uint8_t tick12,
+        M1_Ananda_Oscillatory_Address* out);
 
 /*
  * Project one canonical 12x12 source cell into its typed runtime views.
