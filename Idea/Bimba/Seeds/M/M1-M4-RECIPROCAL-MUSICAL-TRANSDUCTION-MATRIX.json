@@ -1,0 +1,49 @@
+{
+  "schema": "epi.deep.reciprocal-transduction/v1",
+  "status": "current-human-reviewed-companion",
+  "systems": ["M1","M2","M3","M4"],
+  "deep_surfaces": ["M1-prime","M2-prime","M3-prime","M4-prime"],
+  "forward_path": ["M1","M2","M3","M4"],
+  "return_path": ["M4","M3","M2","M1"],
+  "load_bearing_hinge": {
+    "coordinate": "M2-5",
+    "relation": "planetary-chakral-elemental-situated-power",
+    "source_side": ["M4 identity","M4 body","M4 element","M4 chakra"],
+    "world_side": ["planetary shakti","celestial condition","element","chakra"],
+    "temporal_target": "M3 clock"
+  },
+  "m2_72_apertures": {
+    "MEF": "12x6",
+    "tattva": "36x2",
+    "decan": "36x2",
+    "Shem": "8x9",
+    "maqam": "72 total modes",
+    "DET": "72->64"
+  },
+  "native_cardinality_rule": "Do not force all M2 systems into 72; preserve 100-fold, planetary/cosmic and other native spaces and relate them through typed transductions.",
+  "event_trace": [
+    "M1 bi-phase / Ananda",
+    "M1 harmonic relation",
+    "M2 multi-axis refraction",
+    "M2-5 planetary-chakral situation",
+    "M3 transcription / clock",
+    "M4 lived event",
+    "M3 returned score",
+    "M2 72/native-cardinality playback",
+    "M1 exact harmonic performance",
+    "returned evidence"
+  ],
+  "capabilities": [
+    {"id":"XM-01","source":"M1","relation":"exact harmonic derivation","target":"M2"},
+    {"id":"XM-02","source":"M1","relation":"Vimarsha multi-axis refraction","target":"M2 relation plan"},
+    {"id":"XM-03","source":"M2 relation plan","relation":"played-event transcription","target":"M3 score"},
+    {"id":"XM-04","source":"M3 score","relation":"enactment/duree","target":"M4 lived event"},
+    {"id":"XM-05","source":"M4 entity/event/narrative","relation":"transcription","target":"M3 replayable score"},
+    {"id":"XM-06","source":"M3 score","relation":"multi-axis opening","target":"M2 vibrational relation plan"},
+    {"id":"XM-07","source":"M4 elemental/chakral identity","relation":"identity-matrix relation","target":"M2-5 planetary-chakral field"},
+    {"id":"XM-08","source":"M2-5 situated Power","relation":"temporal/celestial inscription","target":"M3 clock"},
+    {"id":"XM-09","source":"M2 musical/symbolic plan","relation":"exact-ratio resolution","target":"M1/M1-prime performance"},
+    {"id":"XM-10","source":"M1-prime performance","relation":"returned observation","target":"M3/M4 evidence"}
+  ],
+  "provenance_requirement": ["authored_position","design_commitment","research_proposition","implementation_fact","observed_return"]
+}
