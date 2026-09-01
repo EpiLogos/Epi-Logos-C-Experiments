@@ -1,4 +1,4 @@
-name: W1 clock repair
+name: W1 profile integration
 
 on:
   push:
@@ -11,19 +11,19 @@ permissions:
   contents: write
 
 jobs:
-  repair:
-    if: "github.event.head_commit.message == 'chore(w1): push clock repair source'"
+  integrate:
+    if: "github.event.head_commit.message == 'chore(w1): execute Ananda profile wire'"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: work/w1-ananda-substrate
-      - name: Repair Hopf clock ownership and acceptance
-        run: python .github/scripts/w1_clock_repair.py
-      - name: Commit repaired source
+      - name: Wire canonical Ananda projection into profile bus
+        run: python .github/scripts/w1_profile_wire.py
+      - name: Commit profile integration
         run: |
           git config user.name "EpiLogos W1 CI"
           git config user.email "actions@users.noreply.github.com"
           git add Body/S/S0/portal-core
-          git commit -m "fix(m1): separate Hopf fibre from direct-prime walk"
+          git commit -m "feat(m1): publish canonical Ananda vortex on profile bus"
           git push origin HEAD:work/w1-ananda-substrate
