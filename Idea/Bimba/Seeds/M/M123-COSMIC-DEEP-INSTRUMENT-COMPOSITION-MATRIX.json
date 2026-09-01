@@ -1,0 +1,78 @@
+{
+  "schema": "epi.cross-subsystem-composition-matrix.v1",
+  "status": "focused-composition-lock",
+  "wayfinder": "EpiLogos/Epi-Logos-C-Experiments#32",
+  "authorities": {
+    "pre_m_music": "EpiLogos/QL-MEF#31 PR#81",
+    "cross_return": "Idea/Bimba/Seeds/M/M1-M4-HARMONIC-TRANSDUCTION-RETURN-MATRIX.md",
+    "m1_lock": "Idea/Bimba/Seeds/M/M1'/M1-SPANDA-ANANDA-MUSICAL-DERIVATION-LOCK.md",
+    "m2_lock": "Idea/Bimba/Seeds/M/M2'/M2-5-SITUATED-RETURN-PLAYBACK-LOCK.md",
+    "m3_lock": "Idea/Bimba/Seeds/M/M3'/M3-RECIPROCAL-SCORE-HINGE-LOCK.md"
+  },
+  "compositions": {
+    "integrated_cosmic_123": {
+      "meaning": "one current cosmic event/world-state composed from M1 Paramaśiva, M2 Paraśakti and M3 Mahāmāyā",
+      "sequence": ["M1", "M2", "M3"]
+    },
+    "deep_instruments": [
+      {"coordinate":"M1'","identity":"epi.deep.m1","role":"formal-harmonic-topological and Spanda/Ananda playable instrument"},
+      {"coordinate":"M2'","identity":"epi.deep.m2","role":"differentiated Power / sonorous-resonant / correspondence-routing instrument"},
+      {"coordinate":"M3'","identity":"epi.deep.m3","role":"determinate transcription / symbolic-genetic / Tarot-clock instrument"}
+    ],
+    "law": "the integrated surface composes the three fields as one event; the deep instruments expose the same event at three independently inspectable/playable depths"
+  },
+  "theorem_to_instrument": [
+    "First Spanda co-arising direct/prime phase",
+    "doubled sixfold <-> 12-walk",
+    "Second Spanda 100=64+36",
+    "64/36=16/9=(4/3)^2",
+    "4/3,3/4,3/2,2/3,9/8",
+    "3-4-5 geometry: area6 perimeter12",
+    "A/B/C relation + D1->D3 conjugate completion",
+    "M1' harmonic realization",
+    "36->72 Paraśakti differentiation",
+    "M2' vibrational/symbolic/material realization",
+    "72:64=9:8",
+    "M3' determinate score/clock/transcription"
+  ],
+  "janko_figure": {
+    "standing": "instrument-controller-figure-not-derivational-authority",
+    "historical_facts": [
+      "six-row isomorphic surface",
+      "two interleaved whole-tone row families",
+      "three repeated touch-points per sounding note",
+      "traditional alternating row colour counts 4:white/2:black and 3:white/3:black"
+    ],
+    "project_reading": [
+      "QL 4:2 <-> Janko 4:white/2:black row family",
+      "QL 3:3 <-> Janko 3:white/3:black row family",
+      "QL two whole-tone helices <-> two interleaved whole-tone row families",
+      "QL cross-face semitone <-> diagonal/cross-row semitone move"
+    ]
+  },
+  "forward_trace": ["M1 harmonic/topological event", "M2 differentiated Power/world-condition", "M3 score/transcription", "M4 lived entity/event/narrative"],
+  "return_trace": ["M4 entity/event/narrative", "M3 re-inscription/score", "M2 vibrational relation plan", "M1 harmonic realization", "M1'/M2' performance"],
+  "runtime_invariants": [
+    "M1 tick12, position6, direct/prime phase, conjugate state",
+    "Spanda stage and Hopf/SU2 where active",
+    "Ananda family + raw12 + true DR12 + explicit decimal10 where valid",
+    "accepted QL A/B/C relation + D completion + exact ratio",
+    "M2 native decoded views + relation-plan provenance",
+    "M2-5 planetary/chakral/elemental situated state",
+    "M3 address64 + transformation + Tarot + clock score",
+    "M4 identity/event/narrative reference on return",
+    "observed-return and source provenance"
+  ],
+  "landed": [
+    "QL-MEF pre-M music object through A/B/C+D and basis/lens realization",
+    "Janko instrument Figure documentation",
+    "typed M1 Ananda raw12/DR12/decimal10 projection with exhaustive source-parity tests"
+  ],
+  "open_frontier": [
+    "canonical Spanda/Hopf runtime -> typed Ananda projection wiring",
+    "general Ananda projection -> A/B/C+D+exact-ratio derivation",
+    "complete M2 per-axis decoders and bounded relation compiler",
+    "canonical M3 Q_entity/Q_composed -> primary address64 law",
+    "full forward and reciprocal integration trace"
+  ]
+}
