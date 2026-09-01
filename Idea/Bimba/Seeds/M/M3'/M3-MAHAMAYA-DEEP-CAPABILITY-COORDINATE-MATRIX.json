@@ -17,7 +17,7 @@
     "recognition": "one person/entity/event/current world-state can be followed through elemental/bioquaternionic constitution, nucleotide articulation, 64-address, charge, transformation, rotation, RNA expression, Tarot narrative and 360/720 clock placement with source and readiness intact"
   },
   "current_human_ratification": {
-    "date": "2026-08-23",
+    "date": "2026-09-01",
     "positions": [
       "M3 is one integrated deterministic form-transcription system, not a set of adjacent symbolic cross-references.",
       "The computational relation permits Nara->Mahamaya re-entry: M4 can supply the situated entity/event/narrative that M3 computes.",
@@ -27,13 +27,16 @@
       "Nara sessions are intended to retain full Tarot-deck shuffle/draw trajectories and I-Ching throws for transformation tracking.",
       "The 22+2 governance relation uses The Fool and The World as start/finish 0/1 boundary cards with additional start/stop roles, not two extra physical deck identities.",
       "The original 16 static clock lenses are relatively settled; Fibonacci/Pisano is pre-lensic/base, not a seventeenth static lens.",
-      "Exact Spanda tick/pulse/two-phase-superposition semantics and later walk terminology remain open."
+      "Exact Spanda tick/pulse/two-phase-superposition semantics and later walk terminology remain open.",
+      "The four material elemental carriers continue through M2 4x18 vibration into M3 4x16 form; the 72->64 epogdoon can be read fibrewise as 18->16 while angular aperture expands 20deg->22.5deg.",
+      "M3's polarity x mobility binary can be given direct spatial form as a fold/crease state grammar, allowing three two-bit sites to realise the same 64-state, six-bit Mahamaya address field.",
+      "M3' should be able to render Mahamaya as living rupa: 64 canonical form motifs, 384 one-bit transformations and 472 expressive orientations over the same state, with the wheel/annulus retained as an inspector/projection rather than the sole form."
     ]
   },
   "coordinate_tree": {
     "M3-0": {"name": "Quaternionic Reception / Parashakti Integration Ground", "roles": ["M1 quaternion/topology reception", "M2 cymatic/vibrational evidence", "72->64 threshold", "generative seed for M3 branches"]},
     "M3-1": {"name": "I-Ching / 64-fold Change Grammar", "roles": ["64 hexagrams", "8 trigrams", "384 line changes", "complement/movement/nuclear structure", "transformation tracking"]},
-    "M3-2": {"name": "Genetic Code / 4-state Material Alphabet", "roles": ["A/T/C/G polarity x mobility", "16 dinucleotide S/D field", "64 codons", "four-charge quaternion", "amino/protein inscription"]},
+    "M3-2": {"name": "Genetic Code / 4-state Material Alphabet", "roles": ["A/T/C/G polarity x mobility", "16 dinucleotide S/D field", "64 codons", "four-charge quaternion", "amino/protein inscription", "direct six-bit fold/rupa grammar"]},
     "M3-3": {
       "name": "Universal Transcription Engine",
       "children": {
@@ -44,10 +47,10 @@
         "M3-3-4": "Amino Acids / functional outputs",
         "M3-3-5": "Karyotype / chromosome-level integration"
       },
-      "roles": ["40/24 classification", "472 rotational surface", "environment-conditioned orientation", "DNA/RNA/transcription integration"]
+      "roles": ["40/24 classification", "472 rotational surface", "environment-conditioned orientation", "DNA/RNA/transcription integration", "i/j/k spatial-form transforms"]
     },
-    "M3-4": {"name": "Tarot / Phase / Expressional Field", "roles": ["56 Minor exact-cover of 64 codons", "22 Major functional layer", "Fool/World boundary governance", "7/8-fold Tarot orientation", "narrative/developmental transcription"]},
-    "M3-5": {"name": "360/720 Mythic Synthesis World-Clock", "roles": ["360 charge closure", "720 SU2 double cover", "24 backbone", "16 static apertures", "Fibonacci pre-lensic ground", "K2 x T2_Mahamaya world-clock"]}
+    "M3-4": {"name": "Tarot / Phase / Expressional Field", "roles": ["56 Minor exact-cover of 64 codons", "22 Major functional layer", "Fool/World boundary governance", "7/8-fold Tarot orientation", "narrative/developmental transcription", "archetypal form/pose expression"]},
+    "M3-5": {"name": "360/720 Mythic Synthesis World-Clock", "roles": ["360 charge closure", "720 SU2 double cover", "24 backbone", "16 static apertures", "Fibonacci pre-lensic ground", "K2 x T2_Mahamaya world-clock", "16+1 fold-aperture form field"]}
   },
   "integrated_computation": {
     "target_circuit": [
@@ -60,8 +63,9 @@
       "16 pair S/D + three matrix axes",
       "pp/mm/mp/pm charge quaternion",
       "64 codon/hexagram address",
+      "six-bit fold/rupa motif",
       "I-Ching transformations + resonance/admissibility",
-      "7/8 oriented rotational state",
+      "7/8 oriented rotational state / form pose",
       "DNA->RNA expression",
       "Tarot archetypal/narrative form",
       "360/720 lensic world-clock",
@@ -96,6 +100,26 @@
     "epogdoon": {"map": "floor(index72*8/9)", "source_count": 72, "target_count": 64, "target_collisions": 8, "source_roundtrip_nonclosures": 9},
     "tarot": {"minor": 56, "minor_cover": "48 single-codon + 8 dual-codon courts covering 64 codons", "major": 22, "governance": "Fool/World start-finish 0/1 roles"},
     "clock": {"degree": 360, "double_cover": 720, "backbone": 24, "static_lenses": 16}
+  },
+  "elemental_fibre_form_transduction": {
+    "source": {"m2":"72=4*18","material_carriers":["Earth","Fire","Water","Air"],"angle_per_state_degrees":20},
+    "target": {"m3":"64=4*16","material_carriers":["Earth","Fire","Water","Air"],"angle_per_state_degrees":22.5},
+    "transform": ["T72->64=I4 tensor T18->16", "18*(8/9)=16", "20deg*(9/8)=22.5deg", "9*20deg=8*22.5deg=180deg"],
+    "meaning": "M3 receives the same elemental carriers M2 has vibrationally differentiated and resolves each eighteen-state modal fibre into a sixteen-state form fibre; the carrier identity survives while its determinate organisation changes"
+  },
+  "fold_rupa_grammar": {
+    "status": "current-human-authored-instrument-and-form-synthesis",
+    "site_state": {
+      "bit_0": "polarity; signed crease orientation / valley-vs-mountain convention bound to the same yin/yang bit as the nucleotide",
+      "bit_1": "mobility; moving-vs-resting derived from fold motion / active hinge state",
+      "four_states": ["A=Water=yin/moving", "T=Fire=yang/moving", "C=Earth=yin/resting", "G=Air=yang/resting"]
+    },
+    "motif": "three two-bit articulated sites = six-bit address = 4^3 = 2^6 = 64 canonical fold/rupa motifs",
+    "change": "one bit flip in one site is the spatial-form enactment of one M3/I-Ching line-change; 64*6=384 adjacency operations",
+    "pair_geometry": "each ordered dinucleotide pair belongs to the 4x4=16 pair field and may carry a 22.5-degree angular address; XYZ is formed from overlapping XY and YZ relations sharing Y as hinge/mediator",
+    "matrix_geometry": "the three existing M3 pair/operator families already bound to quaternion axes i/j/k become three orthogonal transformations of the same symbolic-spatial form",
+    "orientation": "the 40x7 + 24x8 = 472 rotational surface becomes the finite expressive pose field of the resolved form as well as Tarot orientation data",
+    "instrument": "M3' can render a living fold-body whose form, change, matrix operation, rotation, codon, hexagram and Tarot refs remain co-referent"
   },
   "rotational_system": {
     "raw_generation": {
@@ -138,6 +162,7 @@
     "lenses": ["1x360", "2x180", "4x90", "8x45", "9x40", "10x36", "12x30", "15x24", "24x15", "30x12", "36x10", "40x9", "45x8", "90x4", "180x2", "360x1"],
     "lens_reciprocals": ["0<->15", "1<->14", "2<->13", "3<->12", "4<->11", "5<->10", "6<->9", "7<->8"],
     "fibonacci_ground": {"status": "developed-research/design-needs-deeper-spec", "shape": "60 positions x 6 degrees = 360", "relation": "pre-lensic/base, not 17th static lens"},
+    "fold_aperture_composition": {"meta_orientation":"16 static apertures may be oriented over a 16-position 22.5-degree meta-ring while retaining their own divisor geometries","reciprocity":"eight reciprocal aperture pairs occupy opposed meta-orientations and can be expressed as conjugate folds across the same form","synchronisation":["lcm(6deg,20deg)=60deg -> 6 closures", "lcm(6deg,22.5deg)=90deg -> 4 closures", "lcm(20deg,22.5deg)=180deg -> 2 closures", "M3-touching closure exposes the 4+2 relation inside the shared 6/4/2 synchronisation field"]},
     "spanda_open": {
       "evidence": ["tick12", "12-fold double-cover/traversal implementations"],
       "current_authored_question": "diachronic 12-fold traversal versus synchronic two-phase superposition of sixfold state, itself readable as two superposed four-beat runs held by two start/finish poles",
@@ -145,26 +170,29 @@
     }
   },
   "m_prime_experience": {
-    "identity": "professional symbolic-genetic clock/transcription instrument",
+    "identity": "professional symbolic-genetic clock/transcription and living-rupa instrument",
     "human_affordances": [
       "inspect current or selected entity/event inscription with provenance",
       "inspect codon/hexagram and pp/mm/mp/pm charge",
       "inspect deterministic 7/8 rotational orientation",
+      "see the same state as a canonical fold/rupa motif and its live pose",
+      "follow the six one-bit fold/line-change neighbours of the current form",
       "follow moving-line transformations",
       "follow DNA/RNA/amino/transcription state",
       "read Tarot archetypal form and session trajectory",
       "inspect decan/planet/body-zone/medicine/backbone relations from canonical data",
-      "inspect 360/720 clock and active aperture",
-      "switch among flat/debug, lens-annulus, toroidal/world-clock and Hopf/identity views over the same state"
+      "inspect 360/720 clock, Fibonacci ground and active aperture",
+      "switch among living-rupa, flat/debug, lens-annulus, toroidal/world-clock and Hopf/identity views over the same state"
     ],
     "agent_affordances": [
       "resolve the same M3 refs and deterministic operations as the human surface",
+      "resolve address64 <-> fold motif <-> six-bit state without renderer-local symbolic forks",
       "explain derivation/provenance/readiness",
       "traverse Tarot/I-Ching/codon/RNA/clock relations",
       "consume protected Nara trajectory handles under capability/privacy rules",
       "preserve source-role and decision status in generated interpretations"
     ],
-    "profile_bus_gaps": ["M3 16-lens + Fibonacci-ground aperture projection absent", "full typed TranscriptionalClockPacket absent", "canonical entity quaternion -> primary address operation absent"]
+    "profile_bus_gaps": ["M3 16-lens + Fibonacci-ground aperture projection absent", "full typed TranscriptionalClockPacket absent", "canonical entity quaternion -> primary address operation absent", "typed fold/rupa form-state projection absent"]
   },
   "capabilities": [
     {"id":"M3-C01","name":"quaternionic/cymatic reception","coordinate":"M3-0","state":"partial-current"},
@@ -201,13 +229,18 @@
     {"id":"M3-C32","name":"symbolic-protein/ORF sequence","coordinate":"M3-3","state":"current-primitive-broader-semantics-partial"},
     {"id":"M3-C33","name":"Clifford/Pauli pattern-weave","coordinate":"M3-2/M3-3/M3-5","state":"computational-research"},
     {"id":"M3-C34","name":"137/alpha psychoid bridge","coordinate":"M3 in 1-2-3","state":"active-research"},
-    {"id":"M3-C35","name":"constitutional M/S/S'/M' refraction","coordinate":"M3","state":"current-canonical"}
+    {"id":"M3-C35","name":"constitutional M/S/S'/M' refraction","coordinate":"M3","state":"current-canonical"},
+    {"id":"M3-C36","name":"element-preserving 4x18 -> 4x16 epogdoon transduction","coordinate":"M3-0","state":"current-authored-cross-coordinate-synthesis"},
+    {"id":"M3-C37","name":"six-bit fold/rupa grammar","coordinate":"M3-1/M3-2","state":"current-authored-instrument-form-synthesis"},
+    {"id":"M3-C38","name":"matrix-axis spatial form transformation","coordinate":"M3-2/M3-3","state":"current-authored-over-implemented-i/j/k-axis-law"},
+    {"id":"M3-C39","name":"16+1 fold-aperture world-clock","coordinate":"M3-5","state":"current-authored-design-synthesis"},
+    {"id":"M3-C40","name":"nama-to-rupa modal inscription","coordinate":"M2-4/M2-5->M3","state":"current-authored-cross-coordinate-synthesis"}
   ],
   "provenance_register": {
     "current_canonical": ["M3 universal transcription identity", "64 address-space", "A/T/C/G bits and 6/9/7/8 values", "384 line changes", "current 16-pair field", "three matrix axes", "pp/mm/mp/pm charge equations", "1440/4=360 integral", "40/24 -> 472", "56 Minor exact-cover", "22 Major core table", "360/720 clock", "M3/S3/S3'/M3' fourfold"],
-    "current_authored_position": ["integrated deterministic form-transcription", "Nara->M3 re-entry", "L2' elemental route", "rotations as granular Tarot orientation", "Tarot narrative/development transcription", "full-deck Nara session trajectory and I-Ching transformation throws", "Fool/World additional start-stop governance roles", "16 lenses static; Fibonacci pre-lensic", "Spanda walk ontology open"],
+    "current_authored_position": ["integrated deterministic form-transcription", "Nara->M3 re-entry", "L2' elemental route", "rotations as granular Tarot orientation", "Tarot narrative/development transcription", "full-deck Nara session trajectory and I-Ching transformation throws", "Fool/World additional start-stop governance roles", "16 lenses static; Fibonacci pre-lensic", "Spanda walk ontology open", "four elemental carriers continue through M2 4x18 into M3 4x16", "polarity x mobility can be spatially embodied as direct fold/rupa state", "64/384/472 can be rendered as motif/change/pose faces of one M3 state"],
     "implementation_fact": ["C DET active mask and environment-conditioned rotation", "C/Rust charge/codon/rotation primitives", "Rust q_cosmic from selected codon", "Rust degree->address", "Rust proportional 12x7->472 mapping", "Nara CardDraw only upright|reversed", "current profile lacks M3 lens stack", "current Rust RNA phase flips polarity globally"],
-    "research_proposition": ["T->U 37/27/101 full RNA bridge", "Clifford involution mapping to three M3 operators", "Cl(4,2)/Pauli deeper identity", "137=64+72+1 psychoid cross-register bridge", "full K2 x T2 material/visual world clock", "complete entity-level deterministic inscription"]
+    "research_proposition": ["T->U 37/27/101 full RNA bridge", "Clifford involution mapping to three M3 operators", "Cl(4,2)/Pauli deeper identity", "137=64+72+1 psychoid cross-register bridge", "full K2 x T2 material/visual world clock", "complete entity-level deterministic inscription", "specific geometric solver/mesh implementation of the fold/rupa grammar beyond the now-defined state semantics"]
   },
   "unresolved": [
     "canonical Q_entity/Q_composed -> primary address64/codon transcriber",
@@ -219,7 +252,8 @@
     "M3 16-lens + Fibonacci-ground profile-bus field",
     "semantic authority of current proportional 12x7 lens-mode -> 472 projection",
     "Spanda tick/pulse/two-phase superposition and walk terminology",
-    "deeper 16+1/Fibonacci derivation",
+    "typed fold/rupa form-state on the shared profile bus",
+    "exact fold geometry/mesh family realising the six-bit grammar while preserving M3 transformations",
     "karyotype/chromosome relation to Major Arcana/amino outputs",
     "verified live astronomical provider for live-now cosmic inscription",
     "full Tarot session shuffle/trajectory + 7/8 orientation payload",
@@ -229,6 +263,6 @@
   "implementation_state": {
     "operative": ["64 codec", "384 line-change", "pair S/D LUT", "three matrix axes/operators", "four-charge quaternion", "360 integral", "40/24 classification", "472 rotation generation/profile", "environment-conditioned rotation for active codons", "56 Minor exact-cover", "substantial 360/720 clock substrate"],
     "partial": ["22 Major deeper function/governance", "RNA/transcription", "amino/protein/backbone rigor", "Nara Tarot/I-Ching artifacts", "16 lenses", "K2 x T2 world surface", "current cosmic-provider integration"],
-    "absent_or_open": ["canonical arbitrary entity quaternion -> primary M3 address", "full M3 lens-stack profile projection", "full typed TranscriptionalClockPacket", "Nara full-session Tarot rotational trajectory", "ratified Spanda pulse/walk model"]
+    "absent_or_open": ["canonical arbitrary entity quaternion -> primary M3 address", "full M3 lens-stack profile projection", "full typed TranscriptionalClockPacket", "typed fold/rupa form-state projection and renderer", "Nara full-session Tarot rotational trajectory", "ratified Spanda pulse/walk model"]
   }
 }
