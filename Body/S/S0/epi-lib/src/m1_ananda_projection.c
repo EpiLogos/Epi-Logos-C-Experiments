@@ -19,19 +19,28 @@ uint8_t m1_ananda_decimal_mod10(int16_t value) {
     return (uint8_t)rem;
 }
 
-int m1_ananda_oscillatory_address_from_tick12(
+int m1_ananda_oscillatory_address_from_clock(
+        uint64_t cycle,
         uint8_t tick12,
         M1_Ananda_Oscillatory_Address* out)
 {
     uint8_t position6;
+    uint8_t fiber;
+    uint16_t degree360;
     M1_Ananda_Direct_Prime_Phase phase;
 
     if (!out || tick12 >= 12u) return 0;
 
     position6 = (uint8_t)(tick12 % 6u);
     phase = tick12 < 6u ? M1_ANANDA_DIRECT_PHASE : M1_ANANDA_PRIME_PHASE;
+    degree360 = (uint16_t)((uint16_t)tick12 * (uint16_t)DEGREE_PER_TICK);
+    fiber = (uint8_t)(cycle & 1u);
 
+    out->cycle = cycle;
     out->tick12 = tick12;
+    out->degree360 = degree360;
+    out->hopf_fiber = fiber;
+    out->degree720 = (uint16_t)(degree360 + ((uint16_t)fiber * (uint16_t)FULL_CYCLE_DEG));
     out->position6 = position6;
     out->phase = phase;
 
@@ -44,6 +53,13 @@ int m1_ananda_oscillatory_address_from_tick12(
     /* Ananda family position and Spanda stage are a compile-time 1:1 track. */
     out->spanda_stage = ANANDA_TO_SPANDA_STAGE((Ananda_Matrix_Op)position6);
     return 1;
+}
+
+int m1_ananda_oscillatory_address_from_tick12(
+        uint8_t tick12,
+        M1_Ananda_Oscillatory_Address* out)
+{
+    return m1_ananda_oscillatory_address_from_clock(0u, tick12, out);
 }
 
 static int16_t _m1_ananda_raw(
@@ -78,9 +94,14 @@ static int _m1_ananda_address_valid(const M1_Ananda_Oscillatory_Address* osc) {
     M1_Ananda_Oscillatory_Address expected;
 
     if (!osc) return 0;
-    if (!m1_ananda_oscillatory_address_from_tick12(osc->tick12, &expected)) return 0;
+    if (!m1_ananda_oscillatory_address_from_clock(
+            osc->cycle, osc->tick12, &expected)) return 0;
 
-    return osc->position6 == expected.position6
+    return osc->cycle == expected.cycle
+        && osc->degree360 == expected.degree360
+        && osc->hopf_fiber == expected.hopf_fiber
+        && osc->degree720 == expected.degree720
+        && osc->position6 == expected.position6
         && osc->phase == expected.phase
         && osc->conjugate_tick12 == expected.conjugate_tick12
         && osc->conjugate_position6 == expected.conjugate_position6

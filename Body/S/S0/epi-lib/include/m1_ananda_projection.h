@@ -40,12 +40,19 @@ typedef enum {
  * the same sixfold position, therefore it is addressable explicitly rather
  * than reconstructed by a downstream consumer.
  *
- * Hopf/SU(2)/degree720 remains a neighbouring state relation. It is not
- * folded into this address until the existing C/Rust degree-per-tick
- * discrepancy is resolved by the native owner rather than guessed here.
+ * Hopf/SU(2) is an independent coordinate over the same 12-step base walk:
+ *   degree360 = tick12 * 30
+ *   hopf_fiber = cycle parity
+ *   degree720 = degree360 + hopf_fiber * 360
+ * Direct/prime therefore remains a relation of tick12 while Hopf fibre is a
+ * relation of cycle; all four combinations are first-class.
  */
 typedef struct {
+    uint64_t cycle;
     uint8_t tick12;
+    uint16_t degree360;
+    uint8_t hopf_fiber;
+    uint16_t degree720;
     uint8_t position6;
     M1_Ananda_Direct_Prime_Phase phase;
 
@@ -112,8 +119,17 @@ uint8_t m1_ananda_true_digit_root(uint16_t value);
 uint8_t m1_ananda_decimal_mod10(int16_t value);
 
 /*
- * Generate the deterministic direct/prime + conjugate address fixed by the
- * native M1 correction lock. Returns 1 on success, 0 for invalid tick/output.
+ * Generate the complete temporal address. `tick12` owns the 30-degree base
+ * traversal and direct/prime phase; `cycle` parity owns Hopf fibre.
+ */
+int m1_ananda_oscillatory_address_from_clock(
+        uint64_t cycle,
+        uint8_t tick12,
+        M1_Ananda_Oscillatory_Address* out);
+
+/*
+ * Compatibility constructor for callers that only possess tick12. It is the
+ * explicit cycle-0 / first-Hopf-layer projection, never an inference of fibre.
  */
 int m1_ananda_oscillatory_address_from_tick12(
         uint8_t tick12,

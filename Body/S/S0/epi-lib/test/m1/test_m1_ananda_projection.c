@@ -213,6 +213,49 @@ static void test_generated_biphase_address_exhaustive(void) {
     }
 }
 
+static void test_hopf_clock_is_independent_from_direct_prime_phase(void) {
+    for (uint64_t cycle = 0u; cycle < 2u; ++cycle) {
+        for (uint8_t tick = 0u; tick < 12u; ++tick) {
+            M1_Ananda_Oscillatory_Address a;
+            uint16_t degree360 = (uint16_t)((uint16_t)tick * (uint16_t)DEGREE_PER_TICK);
+            uint8_t fiber = (uint8_t)(cycle & 1u);
+
+            ASSERT_TRUE(m1_ananda_oscillatory_address_from_clock(cycle, tick, &a));
+            ASSERT_EQ_INT((int)cycle, (int)a.cycle);
+            ASSERT_EQ_INT(degree360, a.degree360);
+            ASSERT_EQ_INT(fiber, a.hopf_fiber);
+            ASSERT_EQ_INT(degree360 + (uint16_t)(fiber * FULL_CYCLE_DEG), a.degree720);
+            ASSERT_EQ_INT(tick < 6u ? M1_ANANDA_DIRECT_PHASE : M1_ANANDA_PRIME_PHASE,
+                          a.phase);
+        }
+    }
+
+    /* Prime can live on the first Hopf layer; direct can live on the second. */
+    {
+        M1_Ananda_Oscillatory_Address prime_first;
+        M1_Ananda_Oscillatory_Address direct_second;
+        ASSERT_TRUE(m1_ananda_oscillatory_address_from_clock(0u, 7u, &prime_first));
+        ASSERT_EQ_INT(M1_ANANDA_PRIME_PHASE, prime_first.phase);
+        ASSERT_EQ_INT(0, prime_first.hopf_fiber);
+        ASSERT_EQ_INT(210, prime_first.degree720);
+
+        ASSERT_TRUE(m1_ananda_oscillatory_address_from_clock(1u, 0u, &direct_second));
+        ASSERT_EQ_INT(M1_ANANDA_DIRECT_PHASE, direct_second.phase);
+        ASSERT_EQ_INT(1, direct_second.hopf_fiber);
+        ASSERT_EQ_INT(360, direct_second.degree720);
+    }
+
+    /* Legacy tick12 constructor is explicitly the cycle-0 projection. */
+    {
+        M1_Ananda_Oscillatory_Address legacy;
+        ASSERT_TRUE(m1_ananda_oscillatory_address_from_tick12(11u, &legacy));
+        ASSERT_EQ_INT(0, legacy.cycle);
+        ASSERT_EQ_INT(0, legacy.hopf_fiber);
+        ASSERT_EQ_INT(330, legacy.degree360);
+        ASSERT_EQ_INT(330, legacy.degree720);
+    }
+}
+
 static void test_projection_carries_generated_conjugate_state(void) {
     M1_Ananda_Cell_Projection p = project(MATRIX_SUM, 2u, 11u);
     ASSERT_EQ_INT(7, p.oscillatory.tick12);
@@ -239,6 +282,10 @@ static void test_inconsistent_or_invalid_addresses_rejected(void) {
     ASSERT_TRUE(m1_ananda_oscillatory_address_from_tick12(7u, &a));
     a.conjugate_phase = M1_ANANDA_PRIME_PHASE;
     ASSERT_TRUE(!m1_ananda_project_cell(MATRIX_BIMBA, 0u, 0u, &a, &p));
+
+    ASSERT_TRUE(m1_ananda_oscillatory_address_from_clock(1u, 7u, &a));
+    a.hopf_fiber = 0u;
+    ASSERT_TRUE(!m1_ananda_project_cell(MATRIX_BIMBA, 0u, 0u, &a, &p));
 }
 
 int main(void) {
@@ -251,6 +298,7 @@ int main(void) {
     RUN_TEST(test_decimal10_is_explicit_legacy_aperture);
     RUN_TEST(test_quintessence_preserves_source_tuple);
     RUN_TEST(test_generated_biphase_address_exhaustive);
+    RUN_TEST(test_hopf_clock_is_independent_from_direct_prime_phase);
     RUN_TEST(test_projection_carries_generated_conjugate_state);
     RUN_TEST(test_inconsistent_or_invalid_addresses_rejected);
     printf("\n%d passed, %d failed, %d total\n",
