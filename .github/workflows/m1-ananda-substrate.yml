@@ -38,7 +38,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build executable with typed Ananda substrate
-        run: make all CFLAGS="$M1_CFLAGS"
-      - name: Run M1 regression suites
+      - name: Run M1 regression suites with typed Ananda source compiled
         run: make test_m1 test_m1_ananda test_m1_ananda_projection CFLAGS="$M1_CFLAGS"
