@@ -45,7 +45,9 @@ typedef enum {
  *   hopf_fiber = cycle parity
  *   degree720 = degree360 + hopf_fiber * 360
  * Direct/prime therefore remains a relation of tick12 while Hopf fibre is a
- * relation of cycle; all four combinations are first-class.
+ * relation of cycle; all four combinations are first-class. The complete
+ * SU(2) return is consequently 24 absolute kernel ticks: two 12-tick base
+ * traversals, one on each Hopf fibre.
  */
 typedef struct {
     uint64_t cycle;
