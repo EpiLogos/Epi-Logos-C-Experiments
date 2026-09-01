@@ -1,0 +1,36 @@
+name: M1 Ananda substrate
+
+on:
+  push:
+    branches:
+      - work/w1-ananda-substrate
+    paths:
+      - 'Makefile'
+      - 'Body/S/S0/epi-lib/include/m1.h'
+      - 'Body/S/S0/epi-lib/include/m1_ananda_projection.h'
+      - 'Body/S/S0/epi-lib/src/m1.c'
+      - 'Body/S/S0/epi-lib/src/m1_ananda_projection.c'
+      - 'Body/S/S0/epi-lib/test/m1/**'
+      - '.github/workflows/m1-ananda-substrate.yml'
+  pull_request:
+    paths:
+      - 'Makefile'
+      - 'Body/S/S0/epi-lib/include/m1.h'
+      - 'Body/S/S0/epi-lib/include/m1_ananda_projection.h'
+      - 'Body/S/S0/epi-lib/src/m1.c'
+      - 'Body/S/S0/epi-lib/src/m1_ananda_projection.c'
+      - 'Body/S/S0/epi-lib/test/m1/**'
+      - '.github/workflows/m1-ananda-substrate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  c-substrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build executable with typed Ananda substrate
+        run: make all
+      - name: Run M1 regression suites
+        run: make test_m1 test_m1_ananda test_m1_ananda_projection
