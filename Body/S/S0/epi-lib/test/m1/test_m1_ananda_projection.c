@@ -103,6 +103,42 @@ static void test_source_spots_expose_36_64_72(void) {
     ASSERT_EQ_INT(9, b89.digit_root12_value);
 }
 
+static void test_source_rows_10_11_are_full_raw12_not_shadow_rows(void) {
+    /*
+     * Canonical CSV source rows 10 and 11 continue the affine raw field:
+     *   10X+0 col11=110, 10X+1 col11=111, sum=221
+     *   11X+0 col11=121, 11X+1 col11=122, sum=243
+     * The packed DR table may recur mod 9, but raw12 identity must not.
+     */
+    M1_Ananda_Cell_Projection b10 = project(MATRIX_BIMBA, 10u, 11u);
+    M1_Ananda_Cell_Projection p10 = project(MATRIX_PRATIBIMBA, 10u, 11u);
+    M1_Ananda_Cell_Projection s10 = project(MATRIX_SUM, 10u, 11u);
+    M1_Ananda_Cell_Projection b11 = project(MATRIX_BIMBA, 11u, 11u);
+    M1_Ananda_Cell_Projection p11 = project(MATRIX_PRATIBIMBA, 11u, 11u);
+    M1_Ananda_Cell_Projection s11 = project(MATRIX_SUM, 11u, 11u);
+
+    ASSERT_EQ_INT(110, b10.raw12_value);
+    ASSERT_EQ_INT(111, p10.raw12_value);
+    ASSERT_EQ_INT(221, s10.raw12_value);
+    ASSERT_EQ_INT(2, b10.digit_root12_value);
+    ASSERT_EQ_INT(3, p10.digit_root12_value);
+    ASSERT_EQ_INT(5, s10.digit_root12_value);
+
+    ASSERT_EQ_INT(121, b11.raw12_value);
+    ASSERT_EQ_INT(122, p11.raw12_value);
+    ASSERT_EQ_INT(243, s11.raw12_value);
+    ASSERT_EQ_INT(4, b11.digit_root12_value);
+    ASSERT_EQ_INT(5, p11.digit_root12_value);
+    ASSERT_EQ_INT(9, s11.digit_root12_value);
+
+    ASSERT_TRUE(!b10.decimal10_valid);
+    ASSERT_TRUE(!p10.decimal10_valid);
+    ASSERT_TRUE(!s10.decimal10_valid);
+    ASSERT_TRUE(!b11.decimal10_valid);
+    ASSERT_TRUE(!p11.decimal10_valid);
+    ASSERT_TRUE(!s11.decimal10_valid);
+}
+
 static void test_decimal10_is_explicit_legacy_aperture(void) {
     M1_Ananda_Oscillatory_Address a = address_fixture();
 
@@ -180,6 +216,7 @@ int main(void) {
     RUN_TEST(test_dr12_luts_match_canonical_formula);
     RUN_TEST(test_raw12_affine_families_exhaustive);
     RUN_TEST(test_source_spots_expose_36_64_72);
+    RUN_TEST(test_source_rows_10_11_are_full_raw12_not_shadow_rows);
     RUN_TEST(test_decimal10_is_explicit_legacy_aperture);
     RUN_TEST(test_quintessence_preserves_source_tuple);
     RUN_TEST(test_oscillatory_address_is_carried_not_inferred);
