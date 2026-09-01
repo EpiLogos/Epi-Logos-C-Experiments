@@ -425,3 +425,114 @@ M4 / Nara
 This composition is the matrix centre: Paraśakti is the power by which a formal universe becomes qualitatively, epistemically, ontologically, temporally, musically and bodily determinate enough to become a world that can be inscribed by Mahāmāyā and inhabited by Nara.
 
 The Alfonsine/zīj Figure clarifies the **kind of instrument-making** this composition participates in: a developed account of world-relations becoming calculationally operative in a situated present. Epi carries the relation further into a computationally situated Nara. The historical precedent illuminates that Mark while leaving every Epi formal, metaphysical and implementation Claim answerable to its own source and evidence.
+
+---
+
+## 12. Pentadic elemental aperture, vibrational templateure and the M2→M3 form seam
+
+The recovered M1/M2/M3 relation makes the material-element throughline more exact. Paraśakti carries both the fivefold/quintessential ground and the fourfold material carrier through which differentiated vibration becomes M3-ready form.
+
+### 12.1 Fivefold ground, fourfold material carrier
+
+The M2 kernel already distinguishes the five-element throughline from the four-element decanic array. Ākāśa / quintessence belongs to the fivefold spine, while the 72 decanic field is materially organised as:
+
+```text
+4 elements × 3 signs × 3 decans × 2 faces
+= 4 × 18
+= 72
+```
+
+M1's totality relation sharpens the pentadic aperture:
+
+```text
+100 = 36 + 64
+    = 4×9 + 4×16
+    = 4(3²+4²)
+    = 4×5²
+
+100/5 = 20
+```
+
+The same `20` is the angular quantum of one M2 elemental fibre:
+
+```text
+360° / 18 = 20°
+```
+
+Thus the pentadic ground and material quaternity are not competing counts. The fifth names the potentiating/quintessential whole through which the four material carriers differentiate.
+
+### 12.2 Element-preserving epogdoon
+
+The 72→64 handoff can now be read carrier-wise:
+
+```text
+M2: 72 = 4 × 18
+M3: 64 = 4 × 16
+
+4 × 18  --8/9-->  4 × 16
+18      --8/9-->  16
+```
+
+The conjugate angular relation is:
+
+```text
+360°/18 = 20°
+360°/16 = 22.5°
+
+20° × 9/8 = 22.5°
+9×20° = 8×22.5° = 180°
+```
+
+The **elemental carrier is retained**. Paraśakti changes the differentiated modal/vibrational condition within Earth, Fire, Water and Air; Mahāmāyā resolves those same carriers into its four-state / sixteen-per-carrier form grammar.
+
+### 12.3 Vibrational templateure
+
+This gives a precise role to the archetypal/modal storehouse implicit in M2's resonant architecture. Before a single M3 address is selected, the active world condition can be represented as a distributed elemental-modal field:
+
+```text
+V72
+=
+V18(Earth) ⊕ V18(Fire) ⊕ V18(Water) ⊕ V18(Air)
+```
+
+with the form-facing transduction:
+
+```text
+T72→64 = I4 ⊗ T18→16
+```
+
+and destination:
+
+```text
+R64
+=
+R16(Earth) ⊕ R16(Fire) ⊕ R16(Water) ⊕ R16(Air)
+```
+
+The existing integer DET remains the discrete address projection of this seam. The richer M2′ bell/cymatic body can additionally carry amplitudes, mode strengths, nodal organisation and spectral disposition across the same fibres so that Mahāmāyā receives a **form potential**, not merely an integer label.
+
+This is Paraśakti's vibrational templateure: lawful modal possibility differentiated enough to support determinate rūpa while still remaining a field of Power.
+
+### 12.4 Nāma → rūpa continuity
+
+M2-4 already makes name, phoneme, mantra, mode, quality and timbre operative forms of Power. The same Power is carried physically by M2's resonant/modal body and determinatively by M3's form grammar:
+
+```text
+M2 nāma
+name · sound · mode · quality · vibration
+        ↓
+elemental-modal carrier
+        ↓ 9:8
+M3 rūpa
+determinate symbolic / spatial form
+```
+
+The integrated instrument should therefore let the same event be heard as differentiated Power and seen as its determinate form rather than presenting sound and symbol as unrelated widgets.
+
+### Capability delta
+
+| ID | Capability | Primary M relation | Cross-relations | Human / Agent affordance | Provenance / state |
+|---|---|---|---|---|---|
+| `M2-C23` | Pentadic elemental aperture | M2-0/M2-3 | `100/5=20`, 5-element spine, 4 material elements, `4×18=72`, Fibonacci/Pisano ground | inspect how quintessence/pentadic potentiation differentiates into four material eighteen-state fibres | current human-authored synthesis over established M1 and M2 structures |
+| `M2-C24` | Element-preserving 18→16 epogdoon transduction | M2-5→M3-0 | `4×18→4×16`, `20°→22.5°`, `9/8`, DET, M3 nucleotide/element families | follow one elemental carrier continuously from vibrational condition into determinate form | current human-authored cross-coordinate synthesis; discrete DET implemented |
+| `M2-C25` | Vibrational templateure / modal form-potential | M2-0/M2′→M3 | bell eigenmodes, cymatics, `V72`, `I4⊗T18→16`, nāma→rūpa | inspect and manipulate a distributed resonant archetypal field before or alongside M3 address crystallisation | current product/research synthesis grounded in existing resonant and 72→64 architecture |
