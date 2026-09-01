@@ -1,4 +1,4 @@
-name: W1 profile integration
+name: W1 acceptance fixture repair
 
 on:
   push:
@@ -11,19 +11,19 @@ permissions:
   contents: write
 
 jobs:
-  integrate:
-    if: "github.event.head_commit.message == 'chore(w1): execute Ananda profile wire'"
+  repair:
+    if: "github.event.head_commit.message == 'chore(w1): execute downstream clock fixture repair'"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: work/w1-ananda-substrate
-      - name: Wire canonical Ananda projection into profile bus
-        run: python .github/scripts/w1_profile_wire.py
-      - name: Commit profile integration
+      - name: Update Mahamaya fixtures from corrected clock
+        run: python .github/scripts/w1_clock_repair.py
+      - name: Commit corrected acceptance fixtures
         run: |
           git config user.name "EpiLogos W1 CI"
           git config user.email "actions@users.noreply.github.com"
-          git add Body/S/S0/portal-core
-          git commit -m "feat(m1): publish canonical Ananda vortex on profile bus"
+          git add Body/S/S0/portal-core/tests/kernel_clock_projection.rs
+          git commit -m "test(m1): align Mahamaya fixtures with corrected Hopf clock"
           git push origin HEAD:work/w1-ananda-substrate
