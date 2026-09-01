@@ -8,6 +8,7 @@
 #include "../../include/m1_ananda_projection.h"
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 static int suite_pass = 0;
 static int suite_fail = 0;
@@ -221,7 +222,7 @@ static void test_projection_carries_generated_conjugate_state(void) {
     ASSERT_EQ_INT(1, p.oscillatory.conjugate_position6);
     ASSERT_EQ_INT(M1_ANANDA_DIRECT_PHASE, p.oscillatory.conjugate_phase);
     ASSERT_EQ_INT(SPANDA_POLE_A, p.oscillatory.spanda_stage);
-    ASSERT_TRUE(p.phase_ref == M1_ANANDA_PHASE_REF);
+    ASSERT_TRUE(strcmp(p.phase_ref, M1_ANANDA_PHASE_REF) == 0);
 }
 
 static void test_inconsistent_or_invalid_addresses_rejected(void) {
