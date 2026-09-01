@@ -139,6 +139,12 @@ The August 23, 2026 review establishes the following current authored positions 
 8. The original 16 clock lenses remain the relatively settled static aperture matrix; the Fibonacci/Pisano field is a pre-lensic/base ground, not a seventeenth static lens.
 9. The exact relation between `tick`, `pulse`, two-phase sixfold superposition and later agent-introduced `walk` language remains open for further specification.
 
+The September 1, 2026 physical-pole integration sharpens the same recovered system:
+
+10. The four material elemental carriers continue through the M2→M3 handoff: `72=4×18` becomes `64=4×16`; the epogdoon is therefore readable fibrewise as `18→16` while angular aperture expands `20°→22.5°`.
+11. M3's existing polarity×mobility binary can be given direct spatial form as a crease/fold state grammar. Three two-bit articulated sites therefore realise the same six-bit/64-state address field already shared by codon and hexagram.
+12. The 64 / 384 / 472 structures can be expressed as **motif / elementary form-change / expressive pose** faces of one Mahāmāyā state. The clock-wheel and codon annulus remain important inspectors, but they need not be the sole rūpa of the system.
+
 ---
 
 ## 2. Recursive coordinate architecture
@@ -308,6 +314,50 @@ symbolic address + charge + orientation
 
 The M2 cymatic and M3 clock are therefore successive expressions of one 1-2-3 computation.
 
+### Element-preserving fibre law
+
+The M2 implementation already admits a four-material-element factorisation of the 72 field through its decan organisation:
+
+```text
+72 = 4 × 18
+```
+
+Mahāmāyā's own material alphabet gives:
+
+```text
+64 = 4 × 16
+```
+
+so the epogdoon can be followed inside each material carrier:
+
+```text
+4 × 18  --8/9-->  4 × 16
+18      --8/9-->  16
+```
+
+The conjugate angular read is:
+
+```text
+360°/18 = 20°
+360°/16 = 22.5°
+20° × 9/8 = 22.5°
+9×20° = 8×22.5° = 180°
+```
+
+Earth, Fire, Water and Air therefore need not be reintroduced at M3 as a second symbolism. They are the material carriers through which the M2 vibrational field is rendered determinate in M3.
+
+At distributed-field grain the same relation can be represented as:
+
+```text
+V72 = V18(E) ⊕ V18(F) ⊕ V18(W) ⊕ V18(A)
+
+T72→64 = I4 ⊗ T18→16
+
+R64 = R16(E) ⊕ R16(F) ⊕ R16(W) ⊕ R16(A)
+```
+
+The existing integer DET is the current discrete-address form of this passage. A richer M2 modal/cymatic state can preserve amplitudes and modal disposition into M3 form potential before a primary address is resolved.
+
 ---
 
 ## 5. M3-1 — I-Ching as transformation grammar
@@ -428,6 +478,41 @@ Resonance       → 56 admitted states + 8 gaps
 ```
 
 The later Clifford work proposes a deeper relation to the three Clifford involutions. That mapping remains a research proposition requiring exact verification against the M3 operator laws.
+
+### Direct fold / rūpa grammar
+
+The same two distinctions can be carried by a spatially articulated fold site:
+
+```text
+polarity  = signed crease orientation / valley-mountain state
+mobility  = moving-resting hinge state
+```
+
+Under a fixed orientation convention these are the same two bits already carried by the nucleotide:
+
+```text
+Yin  + Moving   → A / Water
+Yang + Moving   → T / Fire
+Yin  + Resting  → C / Earth
+Yang + Resting  → G / Air
+```
+
+Three articulated sites therefore give:
+
+```text
+3 sites × 2 bits = 6 bits
+4³ = 2⁶ = 64 canonical fold/rūpa motifs
+```
+
+A one-bit change in one site is the spatial-form enactment of an M3 line change. The full local adjacency remains:
+
+```text
+64 motifs × 6 one-bit changes = 384 elementary form transformations
+```
+
+The `4×4=16` dinucleotide field supplies a natural intermediate geometry. If each ordered pair is given a `22.5°` angular address, a codon `XYZ` can be expressed through the two overlapping pair relations `XY` and `YZ`, sharing `Y` as the common hinge/mediating state. This provides a generated form grammar rather than assigning an arbitrary sculpture to each codon.
+
+The three existing matrix operations then act on the same form along the already-landed quaternion axes `i/j/k`. Symbol transformation, quaternion-axis operation and visible fold transformation can therefore be three concomitant registers of one M3 operation.
 
 ---
 
@@ -550,6 +635,8 @@ Mahāmāyā retains that polarity as the coarse twofold but expands the card's e
 For non-dual forms one position is algebraically non-distinct, leaving seven actual states.
 
 The point is increased expressive resolution: the same card/archetypal form can carry a more exact orientation than the classical upright/reversed binary, allowing a reading to distinguish finer modes of manifestation, tension, inversion, emergence or return.
+
+In the rūpa instrument this same field becomes **posture**: a canonical 64-fold form can occupy its lawful 7/8 expressive orientations. The `472` surface is thereby simultaneously codon-rotation, Tarot orientation and finite pose-space of the determinate form.
 
 ### Current deterministic environmental orientation
 
@@ -771,6 +858,30 @@ The later 60-position Fibonacci/Pisano work is best retained as a **pre-lensic/b
 
 It is not a seventeenth static lens. Its exact deeper derivation and relation to the sixteen lenses remains active specification work.
 
+### 16+1 fold-aperture composition
+
+The sixteen static apertures can additionally be given a **meta-orientation** over the same 360° form field at the M3 sixteenfold quantum:
+
+```text
+16 × 22.5° = 360°
+```
+
+This does not replace the divisor geometry of any aperture. It gives the sixteen apertures a common orientation ring over the Fibonacci/Pisano base. The eight reciprocal pairs can occupy opposed meta-orientations, making aperture reciprocity physically expressible as a conjugate fold across the same living form.
+
+The three relevant angular grids then synchronize as:
+
+```text
+Fibonacci/Pisano ground:  6°
+M2 elemental fibre:      20°
+M3 form aperture:        22.5°
+
+lcm(6°,20°)    = 60°  → 6 closures around 360°
+lcm(6°,22.5°)  = 90°  → 4 closures around 360°
+lcm(20°,22.5°) = 180° → 2 closures around 360°
+```
+
+The combined field therefore exposes a `6 / 4 / 2` synchronization; the M3-touching closures make the `4+2` structure directly visible inside the shared physical-pole clock geometry.
+
 ### Tick / pulse / diachronic relation — open
 
 Some later architecture labels a 12-fold diachronic traversal a `walk`. That terminology is not ratified here as the final semantics of Spanda.
@@ -839,6 +950,8 @@ M3′ is the deep playable/inspectable form of this system.
 
 Its principal experience should be a **professional symbolic-genetic clock/transcription instrument** in which one current inscription can be read across all of its lawful forms without renderer-local reinvention.
 
+The September physical-pole integration strengthens that experience into a **living rūpa instrument**: the currently selected/derived M3 address can inhabit a generated fold-body whose motif, six one-bit neighbours, matrix transformation, 7/8-state pose, Tarot expression and clock/aperture relation are all projections of the same underlying state.
+
 ### Human experience
 
 A person should be able to:
@@ -847,14 +960,16 @@ A person should be able to:
 - bring a person/entity/event/session/narrative into the M3 relation where a canonical transcriber exists;
 - inspect the elemental/quaternionic evidence that contributed to the inscription;
 - see the active codon/hexagram and its four charges;
-- see why its 7/8 rotational orientation is active;
+- see the same address as its canonical fold/rūpa motif;
+- traverse its six elementary one-bit/form-change neighbours and see the I-Ching line-change identity of each move;
+- see why its 7/8 rotational orientation is active and experience that orientation as the pose of the same form;
 - follow moving-line transformations;
 - follow DNA→RNA→amino / expression state;
 - read the same form as Tarot, including granular orientation;
 - inspect decanic, planetary, body-zone, medicine and backbone relations from canonical graph/source data;
 - track a Tarot narrative sequence and I-Ching transformation sequence through a Nara session;
-- view the 360°/720° clock and the current lens aperture;
-- move among flat/debug, lens-annulus, toroidal/world-clock and Hopf/identity depth views while remaining on the same underlying state;
+- view the 360°/720° clock, Fibonacci base and current lens aperture;
+- move among living-rūpa, flat/debug, lens-annulus, toroidal/world-clock and Hopf/identity depth views while remaining on the same underlying state;
 - inspect source/provenance/readiness for every derived relation.
 
 The deterministic engine chooses/transcribes state from actual inputs. Human interaction selects evidence, context, reading depth, casting events and inspectable alternatives; it does not replace the computation with arbitrary symbolic manipulation.
@@ -865,6 +980,7 @@ An Agent should receive the same semantic refs and state objects as the human su
 
 - resolve M3 addresses and source relations;
 - request deterministic transcription/rotation/change operations;
+- resolve `address64 ↔ six-bit fold motif ↔ codon/hexagram` without renderer-local tables;
 - explain derivation and provenance;
 - traverse canonical Tarot/I-Ching/codon/RNA/clock relations;
 - consume Nara session trajectory handles without reading protected bodies unless capability permits;
@@ -884,7 +1000,7 @@ The current `MathemeHarmonicProfile` exposes:
 - codon-rotation projection;
 - `q_cosmic`.
 
-It does **not** yet expose the M3 16-lens + Fibonacci-ground aperture state as a first-class `m3_lens_stack` / equivalent field, nor the full typed `TranscriptionalClockPacket`. These are concrete profile-bus development gaps.
+It does **not** yet expose the M3 16-lens + Fibonacci-ground aperture state as a first-class `m3_lens_stack` / equivalent field, nor the full typed `TranscriptionalClockPacket`, nor a typed fold/rūpa form-state projection. These are concrete profile-bus development gaps.
 
 ---
 
@@ -927,6 +1043,11 @@ It does **not** yet expose the M3 16-lens + Fibonacci-ground aperture state as a
 | `M3-C33` | Clifford / Pauli pattern-weave | M3-2/M3-3/M3-5 | Cl(4,2), three M3 axes/operators | 64-basis algebra / candidate involution relations | Deep mathematical inspector of the same M3 form | Computation exists; semantic operator mapping research |
 | `M3-C34` | 137 / α psychoid bridge | M3 in 1-2-3 | M1 +1, M2 72, M3 64 | `137 = 64 + 72 + 1` and cross-register coupling research | Inspect number-form across symbolic/physical/personal registers | Active research proposition |
 | `M3-C35` | Constitutional M/S/S′/M′ refraction | M3 | M3/S3/S3′/M3′ | semantic/standing/operative/deep views | Keeps product embodiment answerable to Mahāmāyā meaning | Current canonical fourfold |
+| `M3-C36` | Element-preserving 4×18→4×16 epogdoon transduction | M3-0 | M2 material elemental fibres + 9:8 | preserves four elemental carriers while resolving 18 modal states into 16 determinate states per carrier | inspect continuity of Earth/Fire/Water/Air from vibration into symbolic/form matter | current human-authored cross-coordinate synthesis; DET substrate implemented |
+| `M3-C37` | Six-bit fold / rūpa grammar | M3-1/M3-2 | polarity×mobility at three articulated sites | 64 canonical form motifs + 384 one-bit form changes | inhabit the M3 address and I-Ching change grammar as generated spatial form | current human-authored instrument/form synthesis |
+| `M3-C38` | Matrix-axis spatial transformation | M3-2/M3-3 | three pair matrices + existing `i/j/k` quaternion axes | three orthogonal transforms of the same symbolic/spatial form | see one operation concomitantly as symbol transform, quaternion rotation and form change | current authored synthesis over implemented axis assignment |
+| `M3-C39` | 16+1 fold-aperture world-clock | M3-5 | 16 static apertures + Fibonacci 60×6° base + 22.5° form quantum | reciprocal aperture-pair orientation and 6/4/2 synchronization field | inhabit the clock as an aperture-changing form rather than only a ring of labels | current authored design synthesis |
+| `M3-C40` | Nāma→rūpa modal inscription | M2-4/M2-5→M3 | M2 name/sound/mode/quality + modal elemental carrier | determinate symbolic/spatial form | hear and see one Power-event as continuous vibration/name and resolved form | current authored cross-coordinate synthesis |
 
 ---
 
@@ -965,6 +1086,7 @@ Deep compositional/experiential instrument:
 - professional symbolic-genetic clock/transcription workspace;
 - deterministic address/charge/rotation/transformation inspection;
 - Tarot/I-Ching/RNA/codon/clock composition;
+- living-rūpa/fold form generated from the same 64/384/472 state;
 - same-state human and Agent access through provenance-bearing refs.
 
 Cross-coordinate dependencies remain many-to-many. M3′ uses M1/M2 kernel, M4 protected context, QL formal relations and native O:I product capabilities where required.
@@ -1001,6 +1123,9 @@ Cross-coordinate dependencies remain many-to-many. M3′ uses M1/M2 kernel, M4 p
 - original 16 static clock lenses remain the primary settled aperture matrix.
 - Fibonacci/Pisano is pre-lensic/base rather than a seventeenth static lens.
 - exact Spanda `tick/pulse/walk` semantics remain open rather than being fixed by later “walk” terminology.
+- the four material elemental carriers continue from M2's `4×18` vibrational field into M3's `4×16` form field.
+- polarity×mobility can be embodied directly as fold/rūpa state; three such sites give the existing six-bit/64-state M3 form.
+- 64 motifs, 384 one-bit changes and 472 orientations are concomitant form registers of the same Mahāmāyā state.
 
 ### IMPLEMENTATION-FACT
 
@@ -1011,6 +1136,7 @@ Cross-coordinate dependencies remain many-to-many. M3′ uses M1/M2 kernel, M4 p
 - Nara canonical Tarot artifact currently carries only `upright|reversed`.
 - Nara canonical I-Ching artifact carries moving lines/result/nuclear structure and M3 refs.
 - current profile bus does not carry the 16-lens M3 stack.
+- current profile bus does not carry a typed fold/rūpa form-state.
 - current Rust `rna_phase` is a polarity-wide bit toggle, not T→U transcription.
 
 ### RESEARCH-PROPOSITION
@@ -1022,6 +1148,7 @@ Cross-coordinate dependencies remain many-to-many. M3′ uses M1/M2 kernel, M4 p
 - α / `137 = 64 + 72 + 1` as psychoid number-form connecting the 1-2-3 architecture with physical/personal coupling registers.
 - full K² × T² visual/material realisation of the world clock.
 - complete entity-level deterministic inscription from personal/lived quaternion into the M3 field.
+- the specific geometric solver/mesh family through which the now-defined fold/rūpa grammar becomes physical/rendered body.
 
 ### UNRESOLVED / requires later decision or parity proof
 
@@ -1034,12 +1161,13 @@ Cross-coordinate dependencies remain many-to-many. M3′ uses M1/M2 kernel, M4 p
 7. 16-lens + Fibonacci-ground fields on the shared profile bus;
 8. exact canonical semantic map from 12×7 `(lens,mode)` states into 472 codon-rotation cells; current Rust mapping is proportional;
 9. exact Spanda pulse/tick/two-phase-superposition relation and disposition of “walk” terminology;
-10. deeper 16+1/Fibonacci derivation and lens operation specification;
-11. karyotype/chromosome branch depth and its exact relation to Major Arcana / amino outputs;
-12. current live astronomical/world provider evidence for genuine live-now cosmic inscription;
-13. Tarot full-session trajectory / shuffle / 7-or-8 orientation payload landing;
-14. I-Ching session transformation trajectory integration;
-15. correction of the seed claim `Z4 ≅ Z2×Z2`: these groups have equal cardinality but are not group-isomorphic; any two-bit nucleotide feature mapping must be stated as a bijection/encoding or a different algebraic relation, not this group isomorphism.
+10. typed M3 fold/rūpa form-state projection on the shared profile bus;
+11. exact fold-body geometry/solver preserving all M3 state transformations and reciprocal aperture operation;
+12. karyotype/chromosome branch depth and its exact relation to Major Arcana / amino outputs;
+13. current live astronomical/world provider evidence for genuine live-now cosmic inscription;
+14. Tarot full-session trajectory / shuffle / 7-or-8 orientation payload landing;
+15. I-Ching session transformation trajectory integration;
+16. correction of the seed claim `Z4 ≅ Z2×Z2`: these groups have equal cardinality but are not group-isomorphic; any two-bit nucleotide feature mapping must be stated as a bijection/encoding or a different algebraic relation, not this group isomorphism.
 
 ---
 
@@ -1048,14 +1176,15 @@ Cross-coordinate dependencies remain many-to-many. M3′ uses M1/M2 kernel, M4 p
 | Recovered capability | Current body/evidence | Reality | Development consequence |
 |---|---|---|---|
 | 64 nucleotide/codon/hexagram codec | C + Rust | operative | Preserve as kernel authority |
-| 384 line changes | C + dataset/tests | operative | Expose as typed transformation graph |
+| 384 line changes | C + dataset/tests | operative | Expose as typed transformation graph and fold-form adjacency |
 | 16 pair S/D values | C/test | operative | Clarify D semantics before deeper formal proof |
-| three matrix axes/operators | C/test | operative | Keep Clifford correspondence separately provenance-tagged |
+| three matrix axes/operators | C/test | operative | Keep Clifford correspondence separately provenance-tagged; expose as form transforms |
 | four-charge quaternion | C/Rust/tests | operative | Use as common M3 charge representation |
 | 360 integral | C/tests | operative | Make derivation inspectable in M3′ |
-| 40/24→472 rotational field | C/Rust/tests | operative | Carry full state through Tarot/Nara artifacts |
-| environment→rotation | C DET overlay | operative for active codons | Surface as deterministic orientation evidence |
+| 40/24→472 rotational field | C/Rust/tests | operative | Carry full state through Tarot/Nara artifacts and living-rūpa pose |
+| environment→rotation | C DET overlay | operative for active codons | Surface as deterministic orientation/form-pose evidence |
 | arbitrary entity quaternion→primary codon | none canonical found | absent | Design/ratify kernel transcriber |
+| six-bit fold/rūpa grammar | current authored synthesis over existing 64/384/axis laws | semantics landed; typed body absent | Add canonical form-state projection and renderer/solver |
 | 56 Minor exact-cover | C LUT/tests/source | operative | Keep as Tarot/codon authority |
 | 22 Major mapping | C/source | operative but semantically partial | Align governance + chromosome/amino meaning |
 | Fool/World +2 governance | prose/review, start-stop primitives | partial | Express as roles on boundary cards |
@@ -1064,8 +1193,8 @@ Cross-coordinate dependencies remain many-to-many. M3′ uses M1/M2 kernel, M4 p
 | Nara Tarot artifact | canonical structure | partial | Add M3 rotational orientation + full session trajectory |
 | Nara I-Ching artifact | canonical structure | partial | Connect casts into session transformation trace |
 | 360/720 clock | C/Rust/architecture | substantial | Complete shared current-provider/profile composition |
-| 16 lenses | authored clock corpus | design-strong | Land typed profile projection and deeper semantics |
-| Fibonacci ground | research/design | partial | Specify without turning into 17th lens |
+| 16 lenses | authored clock corpus | design-strong | Land typed profile projection and fold-aperture meta-orientation |
+| Fibonacci ground | research/design | partial | Specify as base synchronisation field with the physical-pole form |
 | K²×T² world surface | architecture | design commitment / renderer incomplete | Build as one composition over one profile |
 | current live cosmic input | provider contract exists; no verified accepted live provider in current parent work | degraded | Keep provider truth explicit |
 | Clifford/Pauli | executable research seeds | research-evidenced | Continue proof against exact M3 operators |
@@ -1077,18 +1206,20 @@ Cross-coordinate dependencies remain many-to-many. M3′ uses M1/M2 kernel, M4 p
 
 A future M3 implementation is recognisably Mahāmāyā when all of the following can be demonstrated against one current entity/event/world state:
 
-1. **One address, many lawful faces.** Codon, hexagram, Tarot, rotation, charge and clock views co-reference one state rather than being independently recomputed widgets.
+1. **One address, many lawful faces.** Codon, hexagram, Tarot, rotation, charge, clock and fold/rūpa views co-reference one state rather than being independently recomputed widgets.
 2. **Determinative provenance.** The user/Agent can inspect why the current form/address/orientation was selected and which inputs/provider/source relations contributed.
 3. **Real Nara re-entry.** A situated entity/event/session can enter the M3 computation without pretending the current missing inverse-transcriber already exists.
 4. **Granular Tarot expression.** A card can carry its M3 7/8-state orientation while retaining intelligible upright/reversed coarse polarity.
-5. **Narrative trajectory.** A Nara session can accumulate a Tarot sequence as an archetypal developmental path and I-Ching throws as a transformation path.
-6. **RNA expression is coherent.** DNA/RNA phase follows the ratified transcription law and does not silently apply a contradictory bit transform.
-7. **Clock closure is visible.** Four-charge accounting, 360 integral, 720 phase, lenses and current world position can be traced as parts of one computation.
-8. **Cymatic relation is preserved.** M2 standing-wave/evidence is visibly upstream of M3 symbolic crystallisation rather than copied into M3 as an independent solver.
-9. **Lens namespaces stay distinct.** 12×6 MEF/L-L′, 12×7 playing landscape and M3 16 static apertures/Fibonacci ground remain separately named and explicitly related.
-10. **Research stays live.** Clifford, α/137, RNA, biological, 16+1 and Spanda developments remain first-class inspectable propositions rather than being erased from the product because they are unfinished.
-11. **Human and Agent inhabit the same world.** Both use the same current refs, operations, readiness and provenance rather than separate UI-only and agent-only symbolic reconstructions.
-12. **M3 remains one system.** The experience returns the integrated form-computation: harmonic/cymatic potential becoming symbolic matter, transformation, expression, narrative, clock/world and situated return.
+5. **Generated spatial form.** The current 64 address can render as a six-bit fold/rūpa motif, its six elementary neighbours exactly match the 384 one-bit/line-change graph, and its active 7/8 orientation is the pose of that same form.
+6. **Elemental continuity.** Earth/Fire/Water/Air can be traced through the M2 `4×18` source field, M3 `4×16` target field, nucleotide family and form state without renderer-local remapping.
+7. **Narrative trajectory.** A Nara session can accumulate a Tarot sequence as an archetypal developmental path and I-Ching throws as a transformation path.
+8. **RNA expression is coherent.** DNA/RNA phase follows the ratified transcription law and does not silently apply a contradictory bit transform.
+9. **Clock closure is visible.** Four-charge accounting, 360 integral, 720 phase, Fibonacci ground, lenses and current world position can be traced as parts of one computation.
+10. **Cymatic relation is preserved.** M2 standing-wave/evidence is visibly upstream of M3 symbolic/form crystallisation rather than copied into M3 as an independent solver.
+11. **Lens namespaces stay distinct.** 12×6 MEF/L-L′, 12×7 playing landscape and M3 16 static apertures/Fibonacci ground remain separately named and explicitly related.
+12. **Research stays live.** Clifford, α/137, RNA, biological, 16+1 and Spanda developments remain first-class inspectable propositions rather than being erased from the product because they are unfinished.
+13. **Human and Agent inhabit the same world.** Both use the same current refs, operations, readiness and provenance rather than separate UI-only and agent-only symbolic reconstructions.
+14. **M3 remains one system.** The experience returns the integrated form-computation: harmonic/cymatic potential becoming symbolic matter, spatial rūpa, transformation, expression, narrative, clock/world and situated return.
 
 ---
 
@@ -1108,8 +1239,9 @@ determinative psychoid form transcription
         │
         ├─ 4-state nucleotide / 64-address matter
         ├─ four-charge bioquaternion
-        ├─ I-Ching change grammar
-        ├─ 7/8-fold oriented expression
+        ├─ six-bit fold/rūpa motif
+        ├─ I-Ching / 384 change grammar
+        ├─ 7/8-fold / 472-state oriented expression
         ├─ DNA→RNA transcription
         ├─ Tarot narrative/archetypal language
         └─ 360°/720° lensic world-clock
@@ -1123,4 +1255,4 @@ situated lived person / paśu / event / narrative
 
 This reciprocal circuit is the matrix centre.
 
-Mahāmāyā is the first point at which the `1/2/3` cosmic field becomes a **fully writable form**, and therefore the point at which that same cosmic grammar can later receive a lived individual/event back into itself. Her clock is the totalised cosmic form; her codon is its compressed inscription; her I-Ching is its change grammar; her RNA is its expression passage; her Tarot is its archetypal narrative language; her rotational state is the finer orientation through which that narrative is actually appearing now.
+Mahāmāyā is the first point at which the `1/2/3` cosmic field becomes a **fully writable and inhabitable form**, and therefore the point at which that same cosmic grammar can later receive a lived individual/event back into itself. Her clock is the totalised cosmic form; her codon is its compressed inscription; her fold/rūpa is its spatial articulation; her I-Ching is its change grammar; her RNA is its expression passage; her Tarot is its archetypal narrative language; her rotational state is the finer orientation through which that same form is actually appearing now.
