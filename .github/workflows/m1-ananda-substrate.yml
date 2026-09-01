@@ -25,12 +25,20 @@ on:
 permissions:
   contents: read
 
+env:
+  # Existing M3 static assertions use const-array values in _Static_assert.
+  # Clang folds them as an extension and -Werror rejects that unrelated baseline.
+  # Keep every other strict project warning while exercising the M1 body cut.
+  M1_CFLAGS: >-
+    -std=c11 -Wall -Wextra -Werror -pedantic -Wno-gnu-folding-constant
+    -IBody/S/S0/epi-lib/include -IBody/S/S0/vendor/blake3
+
 jobs:
   c-substrate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build executable with typed Ananda substrate
-        run: make all
+        run: make all CFLAGS="$M1_CFLAGS"
       - name: Run M1 regression suites
-        run: make test_m1 test_m1_ananda test_m1_ananda_projection
+        run: make test_m1 test_m1_ananda test_m1_ananda_projection CFLAGS="$M1_CFLAGS"
