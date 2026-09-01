@@ -1,0 +1,29 @@
+name: W1 C Hopf temporal return
+
+on:
+  push:
+    branches:
+      - work/w1-ananda-substrate
+    paths:
+      - '.github/workflows/w1-c-hopf-wire.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    if: "github.event.head_commit.message == 'chore(w1): execute C Hopf temporal return'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/w1-ananda-substrate
+      - name: Return resolved Hopf clock into typed C Ananda state
+        run: python .github/scripts/w1_c_hopf_wire.py
+      - name: Commit C temporal contract
+        run: |
+          git config user.name "EpiLogos W1 CI"
+          git config user.email "actions@users.noreply.github.com"
+          git add Body/S/S0/epi-lib/include/m1_ananda_projection.h Body/S/S0/epi-lib/src/m1_ananda_projection.c Body/S/S0/epi-lib/test/m1/test_m1_ananda_projection.c
+          git commit -m "feat(m1): carry Hopf clock on typed Ananda address"
+          git push origin HEAD:work/w1-ananda-substrate
