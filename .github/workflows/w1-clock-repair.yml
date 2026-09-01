@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   repair:
-    if: github.event.head_commit.message == 'chore(w1): run clock repair'
+    if: "github.event.head_commit.message == 'chore(w1): execute clock repair'"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
