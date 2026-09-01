@@ -19,6 +19,33 @@ uint8_t m1_ananda_decimal_mod10(int16_t value) {
     return (uint8_t)rem;
 }
 
+int m1_ananda_oscillatory_address_from_tick12(
+        uint8_t tick12,
+        M1_Ananda_Oscillatory_Address* out)
+{
+    uint8_t position6;
+    M1_Ananda_Direct_Prime_Phase phase;
+
+    if (!out || tick12 >= 12u) return 0;
+
+    position6 = (uint8_t)(tick12 % 6u);
+    phase = tick12 < 6u ? M1_ANANDA_DIRECT_PHASE : M1_ANANDA_PRIME_PHASE;
+
+    out->tick12 = tick12;
+    out->position6 = position6;
+    out->phase = phase;
+
+    out->conjugate_tick12 = (uint8_t)((tick12 + 6u) % 12u);
+    out->conjugate_position6 = position6;
+    out->conjugate_phase = phase == M1_ANANDA_DIRECT_PHASE
+        ? M1_ANANDA_PRIME_PHASE
+        : M1_ANANDA_DIRECT_PHASE;
+
+    /* Ananda family position and Spanda stage are a compile-time 1:1 track. */
+    out->spanda_stage = ANANDA_TO_SPANDA_STAGE((Ananda_Matrix_Op)position6);
+    return 1;
+}
+
 static int16_t _m1_ananda_raw(
         Ananda_Matrix_Op family,
         uint8_t row12,
@@ -48,12 +75,17 @@ static uint8_t _m1_ananda_source_dr(
 }
 
 static int _m1_ananda_address_valid(const M1_Ananda_Oscillatory_Address* osc) {
+    M1_Ananda_Oscillatory_Address expected;
+
     if (!osc) return 0;
-    if (osc->tick12 >= 12u) return 0;
-    if (osc->position6 >= 6u || osc->conjugate_position6 >= 6u) return 0;
-    if ((uint8_t)osc->phase > (uint8_t)M1_ANANDA_PRIME_PHASE) return 0;
-    if ((uint8_t)osc->spanda_stage > (uint8_t)SPANDA_META) return 0;
-    return 1;
+    if (!m1_ananda_oscillatory_address_from_tick12(osc->tick12, &expected)) return 0;
+
+    return osc->position6 == expected.position6
+        && osc->phase == expected.phase
+        && osc->conjugate_tick12 == expected.conjugate_tick12
+        && osc->conjugate_position6 == expected.conjugate_position6
+        && osc->conjugate_phase == expected.conjugate_phase
+        && osc->spanda_stage == expected.spanda_stage;
 }
 
 static void _m1_ananda_fill_quintessence(
@@ -108,6 +140,7 @@ int m1_ananda_project_cell(
     out->oscillatory = *oscillatory;
     out->source_ref = M1_ANANDA_SOURCE_REF;
     out->derivation_ref = M1_ANANDA_DERIVATION_REF;
+    out->phase_ref = M1_ANANDA_PHASE_REF;
 
     if (family == MATRIX_QUINTESSENCE) {
         out->scalar_valid = false;
