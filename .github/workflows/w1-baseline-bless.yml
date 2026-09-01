@@ -1,0 +1,29 @@
+name: W1 baseline profile bless
+
+on:
+  push:
+    branches:
+      - work/w1-ananda-substrate
+    paths:
+      - '.github/workflows/w1-baseline-bless.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  bless:
+    if: "github.event.head_commit.message == 'chore(w1): bless schema-v2 baseline profile'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/w1-ananda-substrate
+      - name: Regenerate baseline from MathemeHarmonicProfile
+        run: BASELINE_FIXTURE_BLESS=1 cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml baseline_profile_fixture_is_real_code_generated_and_byte_stable
+      - name: Commit generated fixture
+        run: |
+          git config user.name "EpiLogos W1 CI"
+          git config user.email "actions@users.noreply.github.com"
+          git add Body/S/S0/portal-core/contract-inventory/baseline-profile.json
+          git commit -m "test(m1): rebless profile baseline for Ananda schema v2"
+          git push origin HEAD:work/w1-ananda-substrate
