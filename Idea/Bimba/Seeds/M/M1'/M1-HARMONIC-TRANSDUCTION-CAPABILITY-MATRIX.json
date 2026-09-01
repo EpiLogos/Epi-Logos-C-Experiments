@@ -1,0 +1,63 @@
+{
+  "schema": "epi.deep.capability-transduction/v1",
+  "status": "current-human-reviewed-companion",
+  "coordinate": "M1-2<->M1-3<->M1-4<->M1-5<->M1-prime",
+  "wayfinder": {
+    "kernel": "EpiLogos/QL-MEF#78",
+    "musical_derivation": "EpiLogos/QL-MEF#31"
+  },
+  "semantic_correction": {
+    "relation_family": {
+      "type": "A|B|C",
+      "families": {
+        "A": [[0,1],[2,3],[4,5]],
+        "B": [[1,2],[3,4],[5,0]],
+        "C": [[0,5],[1,4],[2,3]]
+      }
+    },
+    "conjugate_completion": {
+      "type": "D1|D2|D3",
+      "degrees": {
+        "D1": {"coordinate_count": 2, "shape": ["X","Y"]},
+        "D2": {"coordinate_count": 3, "shape_options": [["X","Y","X-prime"],["X","Y","Y-prime"]]},
+        "D3": {"coordinate_count": 4, "shape": ["X","Y","X-prime","Y-prime"]}
+      }
+    }
+  },
+  "spanda": {
+    "synchronous": "doubled-sixfold-direct-prime",
+    "diachronic": "W12(k)=(position6,phase,SU2-state)",
+    "partitions": {"first": "3:3", "second": "4:2"}
+  },
+  "ananda": {
+    "families": ["Bimba","Pratibimba","Sum","DifferenceA","DifferenceB","Quintessence"],
+    "faces": ["raw12","true_digit_root","decimal10_aperture"],
+    "classifier_status": "open-derived-edge",
+    "classifier_target": ["relation_family","conjugate_completion","exact_ratio"]
+  },
+  "canonical_ratios": ["1/1","4/3","3/4","3/2","2/3","16/9","9/8","2/1"],
+  "transduction": [
+    "spanda-bi-phase",
+    "ananda-raw-dr-decimal",
+    "A-B-C",
+    "D1-D2-D3",
+    "exact-ratio",
+    "chromatic-or-fifths-basis",
+    "L-L-prime-tonic-anchor",
+    "octatonic-8-plus-4",
+    "context-frame-musical-function",
+    "M1-prime-playable-expression"
+  ],
+  "janko_figure": {
+    "status": "orienting-instrumental-figure",
+    "authority": "historical-instrument-fact-not-QL-source",
+    "geometry": {
+      "rows": 6,
+      "repeated_touch_points_per_pitch": 3,
+      "row_interval": "whole-tone",
+      "alternate_row_offset": "semitone",
+      "partition_overlays": ["3:3","4:2"]
+    },
+    "companion": "M1-JANKO-PLAYABLE-FIGURE.md"
+  }
+}
