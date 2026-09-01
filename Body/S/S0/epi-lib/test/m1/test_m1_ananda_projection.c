@@ -2,7 +2,7 @@
  * test_m1_ananda_projection.c — W1 typed Ananda substrate acceptance
  *
  * Verifies canonical 12x12 raw arithmetic, true DR12, explicit decimal10
- * aperture, Quintessence tuple preservation and Spanda-address passthrough.
+ * aperture, Quintessence tuple preservation and generated bi-phase state.
  */
 
 #include "../../include/m1_ananda_projection.h"
@@ -36,11 +36,7 @@ static int test_failed = 0;
 
 static M1_Ananda_Oscillatory_Address address_fixture(void) {
     M1_Ananda_Oscillatory_Address a;
-    a.tick12 = 7u;
-    a.position6 = 4u;
-    a.conjugate_position6 = 1u;
-    a.phase = M1_ANANDA_PRIME_PHASE;
-    a.spanda_stage = SPANDA_FLOWERING;
+    ASSERT_TRUE(m1_ananda_oscillatory_address_from_tick12(7u, &a));
     return a;
 }
 
@@ -192,21 +188,55 @@ static void test_quintessence_preserves_source_tuple(void) {
     ASSERT_EQ_INT(1, q.quintessence.sum_decimal10);
 }
 
-static void test_oscillatory_address_is_carried_not_inferred(void) {
-    M1_Ananda_Cell_Projection p = project(MATRIX_SUM, 2u, 11u);
-    ASSERT_EQ_INT(7, p.oscillatory.tick12);
-    ASSERT_EQ_INT(4, p.oscillatory.position6);
-    ASSERT_EQ_INT(1, p.oscillatory.conjugate_position6);
-    ASSERT_EQ_INT(M1_ANANDA_PRIME_PHASE, p.oscillatory.phase);
-    ASSERT_EQ_INT(SPANDA_FLOWERING, p.oscillatory.spanda_stage);
+static void test_generated_biphase_address_exhaustive(void) {
+    for (uint8_t tick = 0u; tick < 12u; ++tick) {
+        M1_Ananda_Oscillatory_Address a;
+        uint8_t position = (uint8_t)(tick % 6u);
+        uint8_t conjugate_tick = (uint8_t)((tick + 6u) % 12u);
+        M1_Ananda_Direct_Prime_Phase expected_phase = tick < 6u
+            ? M1_ANANDA_DIRECT_PHASE
+            : M1_ANANDA_PRIME_PHASE;
+        M1_Ananda_Direct_Prime_Phase expected_conjugate = tick < 6u
+            ? M1_ANANDA_PRIME_PHASE
+            : M1_ANANDA_DIRECT_PHASE;
+
+        ASSERT_TRUE(m1_ananda_oscillatory_address_from_tick12(tick, &a));
+        ASSERT_EQ_INT(tick, a.tick12);
+        ASSERT_EQ_INT(position, a.position6);
+        ASSERT_EQ_INT(expected_phase, a.phase);
+        ASSERT_EQ_INT(conjugate_tick, a.conjugate_tick12);
+        ASSERT_EQ_INT(position, a.conjugate_position6);
+        ASSERT_EQ_INT(expected_conjugate, a.conjugate_phase);
+        ASSERT_EQ_INT(ANANDA_TO_SPANDA_STAGE((Ananda_Matrix_Op)position),
+                      a.spanda_stage);
+    }
 }
 
-static void test_invalid_addresses_rejected(void) {
+static void test_projection_carries_generated_conjugate_state(void) {
+    M1_Ananda_Cell_Projection p = project(MATRIX_SUM, 2u, 11u);
+    ASSERT_EQ_INT(7, p.oscillatory.tick12);
+    ASSERT_EQ_INT(1, p.oscillatory.position6);
+    ASSERT_EQ_INT(M1_ANANDA_PRIME_PHASE, p.oscillatory.phase);
+    ASSERT_EQ_INT(1, p.oscillatory.conjugate_tick12);
+    ASSERT_EQ_INT(1, p.oscillatory.conjugate_position6);
+    ASSERT_EQ_INT(M1_ANANDA_DIRECT_PHASE, p.oscillatory.conjugate_phase);
+    ASSERT_EQ_INT(SPANDA_POLE_A, p.oscillatory.spanda_stage);
+    ASSERT_TRUE(p.phase_ref == M1_ANANDA_PHASE_REF);
+}
+
+static void test_inconsistent_or_invalid_addresses_rejected(void) {
     M1_Ananda_Cell_Projection p;
     M1_Ananda_Oscillatory_Address a = address_fixture();
 
     ASSERT_TRUE(!m1_ananda_project_cell(MATRIX_BIMBA, 12u, 0u, &a, &p));
-    a.tick12 = 12u;
+    ASSERT_TRUE(!m1_ananda_oscillatory_address_from_tick12(12u, &a));
+
+    ASSERT_TRUE(m1_ananda_oscillatory_address_from_tick12(7u, &a));
+    a.position6 = 4u;
+    ASSERT_TRUE(!m1_ananda_project_cell(MATRIX_BIMBA, 0u, 0u, &a, &p));
+
+    ASSERT_TRUE(m1_ananda_oscillatory_address_from_tick12(7u, &a));
+    a.conjugate_phase = M1_ANANDA_PRIME_PHASE;
     ASSERT_TRUE(!m1_ananda_project_cell(MATRIX_BIMBA, 0u, 0u, &a, &p));
 }
 
@@ -219,8 +249,9 @@ int main(void) {
     RUN_TEST(test_source_rows_10_11_are_full_raw12_not_shadow_rows);
     RUN_TEST(test_decimal10_is_explicit_legacy_aperture);
     RUN_TEST(test_quintessence_preserves_source_tuple);
-    RUN_TEST(test_oscillatory_address_is_carried_not_inferred);
-    RUN_TEST(test_invalid_addresses_rejected);
+    RUN_TEST(test_generated_biphase_address_exhaustive);
+    RUN_TEST(test_projection_carries_generated_conjugate_state);
+    RUN_TEST(test_inconsistent_or_invalid_addresses_rejected);
     printf("\n%d passed, %d failed, %d total\n",
            suite_pass, suite_fail, suite_pass + suite_fail);
     return suite_fail ? 1 : 0;
