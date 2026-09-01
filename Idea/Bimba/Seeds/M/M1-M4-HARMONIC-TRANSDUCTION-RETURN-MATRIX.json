@@ -1,0 +1,129 @@
+{
+  "schema": "epi.deep.cross-system-transduction-matrix/v1",
+  "status": "research-matrix-current-human-review",
+  "title": "M1↔M4 Harmonic Transduction Return Matrix",
+  "kernelAuthority": {
+    "repository": "EpiLogos/QL-MEF",
+    "wayfinderIssue": 78,
+    "musicIssue": 31,
+    "musicPullRequest": 81
+  },
+  "directions": {
+    "forward": ["M1", "M2", "M3", "M4"],
+    "return": ["M4", "M3", "M2", "M1"]
+  },
+  "capabilities": [
+    {
+      "id": "m1.bi-phasal-harmonic-event",
+      "source": ["M1-3", "M1-5"],
+      "relation": "synchronous direct+prime sixfold ↔ diachronic 12-walk with Hopf/SU2 double cover",
+      "target": ["M1-2", "M1-4", "M1-prime"],
+      "expression": ["phase", "tick12", "position6", "quaternion", "harmonic-carrier"],
+      "provenanceClass": ["authored-position", "implementation-fact"],
+      "state": "architecture-and-current-code-evidence"
+    },
+    {
+      "id": "m1.ananda-projection",
+      "source": ["M1-2"],
+      "relation": "six Ananda matrix families expose raw12, digit-root12 and decimal10 typed projections",
+      "target": ["M1-4", "M1-prime", "QL-MEF music"],
+      "expression": ["raw-arithmetic", "recursive-residue", "decimal-aperture", "vortex-state"],
+      "provenanceClass": ["canonical-source", "current-development-state"],
+      "state": "partial-C-body-typed-projection-required"
+    },
+    {
+      "id": "ql.pre-m-music",
+      "source": ["QL-kernel", "M1-4 consumer"],
+      "relation": "3:3 × 4:2 → exact ratios → A/B/C → D1→D3 → chromatic/fifths → L/L-prime → 8+4/CF/modes",
+      "target": ["M1-prime", "M2 musical consumers"],
+      "expression": ["exact-ratio", "interval", "pitch-class", "tonic", "mode", "function"],
+      "provenanceClass": ["authored-derivation", "accepted-executable-relation"],
+      "state": "implemented-on-QL-MEF-PR-81"
+    },
+    {
+      "id": "m2.power-refraction-72",
+      "source": ["M2"],
+      "relation": "native address laws across heterogeneous 72-fold readings",
+      "target": ["M2-prime", "M3"],
+      "expression": ["MEF", "tattva", "decan", "Shem", "maqam", "symbolic-sonic"],
+      "provenanceClass": ["authored-position", "implementation-fact", "current-development-state"],
+      "state": "partial-per-axis-decoders"
+    },
+    {
+      "id": "m2-5.planetary-chakral-situated-field",
+      "source": ["M2-5", "M4"],
+      "relation": "cosmic planetary Power and embodied chakral/elemental identity are two orientations of one situated field",
+      "target": ["M3 clock", "M4"],
+      "expression": ["planetary-state", "chakra", "element", "identity", "world-condition"],
+      "provenanceClass": ["authored-position", "design-commitment"],
+      "state": "established-relation-live-provider-binding-in-development"
+    },
+    {
+      "id": "m1-m2.played-world-transcription",
+      "source": ["M1", "M2"],
+      "relation": "harmonic state + compiled Power relations + performed/material response becomes M3 evidence",
+      "target": ["M3"],
+      "expression": ["score", "address64", "transformation", "Tarot", "clock"],
+      "provenanceClass": ["authored-position", "design-commitment"],
+      "state": "architecture-established-trace-contract-required"
+    },
+    {
+      "id": "m4-m3.nara-transcription",
+      "source": ["M4"],
+      "relation": "entity/event/activity/narrative is re-inscribed by Mahamaya",
+      "target": ["M3"],
+      "expression": ["address64", "I-Ching", "Tarot", "clock-score"],
+      "provenanceClass": ["authored-position", "current-development-state"],
+      "state": "canonical-primary-address-selection-gap"
+    },
+    {
+      "id": "m3-m2.vibrational-replay",
+      "source": ["M3"],
+      "relation": "score compiles a bounded playable Paraśakti relation plan",
+      "target": ["M2"],
+      "expression": ["address72-views", "maqam", "mantra-name", "planetary-chakral", "automation"],
+      "provenanceClass": ["design-commitment", "current-development-state"],
+      "state": "return-contract-explicit-relation-compiler-required"
+    },
+    {
+      "id": "m2-m1.harmonic-realisation",
+      "source": ["M2"],
+      "relation": "compiled Power relation resolves against accepted QL harmonic grammar",
+      "target": ["M1", "M1-prime"],
+      "expression": ["ratio", "pitch", "tuning", "phase", "pulse", "audio"],
+      "provenanceClass": ["authored-relation", "research-proposition", "current-development-state"],
+      "state": "general-Ananda-M2-to-ABC-D-bridge-not-yet-frozen"
+    }
+  ],
+  "jankoFigure": {
+    "provenanceClass": "historical-instrument-figure",
+    "historicalFacts": {
+      "rows": 6,
+      "construction": "two interleaved whole-tone row families repeated as three touch-points per sounding note",
+      "traditionalColourDistributions": ["4 white : 2 black", "3 white : 3 black"]
+    },
+    "projectReading": {
+      "firstSpanda": "3:3 ↔ 3 white : 3 black row-family distribution",
+      "secondSpanda": "4:2 ↔ 4 white : 2 black row-family distribution",
+      "chromaticRelation": "two whole-tone helices ↔ two interleaved whole-tone row families",
+      "semitoneRelation": "cross-face semitone ↔ diagonal/cross-row semitone movement"
+    },
+    "boundary": "Janko is a controller/playable Figure over the accepted musical derivation, not derivational authority"
+  },
+  "acceptance": {
+    "forwardTrace": "M1→M2→M3→M4",
+    "returnTrace": "M4→M3→M2→M1→performed/observed return",
+    "mustPreserve": [
+      "M1 bi-phase and tick12",
+      "Ananda raw/DR/decimal provenance where used",
+      "QL relation family and completion degree",
+      "exact ratio",
+      "M2 native address decodings",
+      "M2-5 planetary/chakral relation",
+      "M3 score/address/transformation/Tarot/clock",
+      "M4 entity/event/narrative identity",
+      "source provenance",
+      "observed return"
+    ]
+  }
+}
