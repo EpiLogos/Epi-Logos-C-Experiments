@@ -125,9 +125,9 @@ fn portal_clock_state_kernel_projection_survives_ipc_json_round_trip() {
     assert_eq!(public_json["tick"]["element"], "InverseMobius");
     assert_eq!(public_json["tick"]["harmonicRatio"], "0.750000");
     assert_eq!(public_json["harmonicProfile"]["tick12"], 7);
-    assert_eq!(public_json["harmonicProfile"]["degree720"], 420);
-    assert_eq!(public_json["harmonicProfile"]["degree360"], 60);
-    assert_eq!(public_json["harmonicProfile"]["su2Layer"], "shadow");
+    assert_eq!(public_json["harmonicProfile"]["degree720"], 210);
+    assert_eq!(public_json["harmonicProfile"]["degree360"], 210);
+    assert_eq!(public_json["harmonicProfile"]["su2Layer"], "primary");
     assert_eq!(public_json["harmonicProfile"]["helix"], "pratibimba");
     assert_eq!(
         public_json["harmonicProfile"]["ratioRole"],
@@ -234,8 +234,8 @@ fn kernel_harmonic_profile_maps_tick_to_diatonic_cf_when_pitch_is_sounded() {
     let json = serde_json::to_value(public).unwrap();
 
     assert_eq!(json["harmonicProfile"]["tick12"], 10);
-    assert_eq!(json["harmonicProfile"]["degree720"], 600);
-    assert_eq!(json["harmonicProfile"]["degree360"], 240);
+    assert_eq!(json["harmonicProfile"]["degree720"], 660);
+    assert_eq!(json["harmonicProfile"]["degree360"], 300);
     assert_eq!(json["harmonicProfile"]["su2Layer"], "shadow");
     assert_eq!(
         json["harmonicProfile"]["ratioRole"],
@@ -432,4 +432,27 @@ fn kernel_harmonic_profile_exposes_canonical_m_prime_contract_fields() {
         profile.privacy_class,
         portal_core::ProfilePrivacyClass::PublicCurrentContext
     );
+}
+
+
+#[test]
+fn hopf_fibre_and_direct_prime_helix_are_independent_coordinates() {
+    let cases = [
+        (0u64, 0u8, 0u16, 0u16, "primary", "bimba"),
+        (0, 7, 210, 210, "primary", "pratibimba"),
+        (1, 0, 360, 0, "shadow", "bimba"),
+        (1, 7, 570, 210, "shadow", "pratibimba"),
+        (1, 11, 690, 330, "shadow", "pratibimba"),
+        (2, 0, 0, 0, "primary", "bimba"),
+    ];
+
+    for (cycle, tick12, degree720, degree360, layer, helix) in cases {
+        let tick = portal_core::kernel_tick_from_epogdoon(cycle, tick12);
+        let profile = portal_core::MathemeHarmonicProfile::from_tick(tick);
+        assert_eq!(profile.tick12, tick12);
+        assert_eq!(profile.degree720, degree720);
+        assert_eq!(profile.degree360, degree360);
+        assert_eq!(profile.su2_layer, layer);
+        assert_eq!(profile.helix, helix);
+    }
 }

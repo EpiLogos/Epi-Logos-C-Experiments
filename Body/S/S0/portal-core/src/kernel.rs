@@ -5,6 +5,7 @@ use crate::codon_rotation_projection::{
     codon_charge_quaternion, codon_rotation_from_lens_mode, CodonRotationProjection,
     MathemeLensMode,
 };
+use crate::hopf::hopf_clock_address;
 use crate::mahamaya::MahamayaCodecProjection;
 use crate::parashakti::vimarsha_read_profile;
 use crate::personal_identity::{PersonalIdentityProfile, PersonalResonance};
@@ -392,8 +393,9 @@ impl MathemeHarmonicProfile {
         let helix = if tick12 < 6 { "bimba" } else { "pratibimba" };
         let position = tick12 % 6;
         let pitch_class = pitch_class_for_tick(tick12);
-        let degree720 = tick12 as u16 * 60;
-        let degree360 = degree720 % 360;
+        let hopf = hopf_clock_address(tick.cycle, tick12);
+        let degree720 = hopf.degree720;
+        let degree360 = hopf.degree360;
         let diatonic = MathemeDiatonicContext::from_pitch_class(pitch_class);
         let resonance72 = MathemeResonance72Projection::from_tick(tick12, position);
         let lens_mode = MathemeLensMode::new(
@@ -425,7 +427,7 @@ impl MathemeHarmonicProfile {
             cycle: tick.cycle,
             degree720,
             degree360,
-            su2_layer: if degree720 >= 360 {
+            su2_layer: if hopf.fiber == 1 {
                 "shadow"
             } else {
                 "primary"

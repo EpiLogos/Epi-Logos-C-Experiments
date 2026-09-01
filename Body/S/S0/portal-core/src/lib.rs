@@ -22,7 +22,10 @@ pub use aspect::compute_aspects;
 pub use codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodon};
 pub use codon_rotation_projection::*;
 pub use events::*;
-pub use hopf::{hopf_fiber, hopf_project, validate_quaternion_unity};
+pub use hopf::{
+    hopf_clock_address, hopf_fiber, hopf_project, validate_quaternion_unity,
+    HopfClockAddress,
+};
 pub use kernel::*;
 pub use mahamaya::*;
 pub use nara_journal::*;
