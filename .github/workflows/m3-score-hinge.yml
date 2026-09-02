@@ -1,0 +1,40 @@
+name: M3 reciprocal score hinge
+
+on:
+  push:
+    branches:
+      - work/w1-ananda-substrate
+    paths:
+      - 'Body/S/S0/portal-core/Cargo.toml'
+      - 'Body/S/S0/portal-core/Cargo.lock'
+      - 'Body/S/S0/portal-core/src/kernel.rs'
+      - 'Body/S/S0/portal-core/src/mahamaya.rs'
+      - 'Body/S/S0/portal-core/src/mahamaya_score.rs'
+      - 'Body/S/S0/portal-core/src/codon.rs'
+      - 'Body/S/S0/portal-core/src/codon_rotation_projection.rs'
+      - 'Body/S/S0/portal-core/src/parashakti/**'
+      - 'Body/S/S0/portal-core/src/lib.rs'
+      - '.github/workflows/m3-score-hinge.yml'
+  pull_request:
+    paths:
+      - 'Body/S/S0/portal-core/Cargo.toml'
+      - 'Body/S/S0/portal-core/Cargo.lock'
+      - 'Body/S/S0/portal-core/src/kernel.rs'
+      - 'Body/S/S0/portal-core/src/mahamaya.rs'
+      - 'Body/S/S0/portal-core/src/mahamaya_score.rs'
+      - 'Body/S/S0/portal-core/src/codon.rs'
+      - 'Body/S/S0/portal-core/src/codon_rotation_projection.rs'
+      - 'Body/S/S0/portal-core/src/parashakti/**'
+      - 'Body/S/S0/portal-core/src/lib.rs'
+      - '.github/workflows/m3-score-hinge.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  rust-score-hinge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run portal-core W2/W3/W4 acceptance
+        run: cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml
