@@ -84,6 +84,11 @@ uint8_t hc_mirror_ratio_role(uint8_t ql_position) {
     return HC_RATIO_NONE;
 }
 
+bool hc_pointer_ref_has_role(const HC_PointerRef* ref, HC_RelationRole role) {
+    if (!ref || (uint8_t)role > (uint8_t)HC_REL_CONTEXT_FRAME) return false;
+    return (ref->relation_roles & HC_REL_ROLE_BIT(role)) != 0u;
+}
+
 static HC_BedrockRef make_bedrock_ref(
     const Holographic_Coordinate* target,
     uint8_t index,
@@ -190,6 +195,10 @@ static Holographic_Coordinate* tag_for_helix(
     return (helix == HC_HELIX_PRATIBIMBA) ? SET_INVERTED(target) : target;
 }
 
+/*
+ * Legacy/primary relation reading. Keep this stable for existing consumers.
+ * `position_relation_roles()` below carries the non-lossy relation set.
+ */
 static uint8_t position_relation_role(uint8_t source_q, uint8_t target_q, uint8_t helix) {
     if (target_q == source_q && helix == HC_HELIX_BIMBA) {
         return HC_REL_POSITION_IDENTITY;
@@ -207,6 +216,50 @@ static uint8_t position_relation_role(uint8_t source_q, uint8_t target_q, uint8_
         return HC_REL_EPOGDOON_TICK;
     }
     return HC_REL_POSITION_PROJECT;
+}
+
+/*
+ * Preserve every relation that is actually true of one positional traversal.
+ *
+ * Positional relations and helix relations are independent determinations:
+ *  - same-position identity, mirror X+Y=5, and cyclic successor can overlap;
+ *  - prime projection can additionally be inversion or the 5'->0 Mobius return.
+ *
+ * This set is the carrier W2 needs before QL classifies a traversal into its
+ * zero-to-many A/B/C relation-family participation.
+ */
+static HC_RelationRoleMask position_relation_roles(
+    uint8_t source_q,
+    uint8_t target_q,
+    uint8_t helix
+) {
+    HC_RelationRoleMask roles = 0u;
+
+    if (target_q == source_q) {
+        roles |= HC_REL_ROLE_BIT(HC_REL_POSITION_IDENTITY);
+    }
+    if (target_q == hc_mirror_position(source_q)) {
+        roles |= HC_REL_ROLE_BIT(HC_REL_MIRROR_XY5);
+    }
+    if (target_q == (uint8_t)((source_q + 1u) % HC_WEB_HELIX_SIZE)) {
+        roles |= HC_REL_ROLE_BIT(HC_REL_EPOGDOON_TICK);
+    }
+
+    if (helix == HC_HELIX_PRATIBIMBA) {
+        if (target_q == source_q) {
+            roles |= HC_REL_ROLE_BIT(HC_REL_INVERSION_SPANDA);
+        } else if (source_q == 5u && target_q == 0u) {
+            roles |= HC_REL_ROLE_BIT(HC_REL_MOBIUS_RETURN);
+        } else {
+            roles |= HC_REL_ROLE_BIT(HC_REL_POSITION_PROJECT);
+        }
+    }
+
+    if (roles == 0u) {
+        roles = HC_REL_ROLE_BIT(HC_REL_POSITION_PROJECT);
+    }
+
+    return roles;
 }
 
 static uint8_t relation_interval_role(uint8_t relation_role, uint8_t source_q) {
@@ -259,6 +312,7 @@ static HC_PointerRef make_ref(
     ref.ql_position = ql_position;
     ref.helix = helix;
     ref.relation_role = relation_role;
+    ref.relation_roles = HC_REL_ROLE_BIT(relation_role);
     ref.interval_role = interval_role;
     ref.ratio_role = ratio_role;
     ref.pitch_class = pitch_class;
@@ -323,6 +377,11 @@ int hc_pointer_web36_fill(
             relation_ratio_role(bimba_role, source_q),
             hc_bimba_pitch_class(q)
         );
+        out->position[q].relation_roles = position_relation_roles(
+            source_q,
+            q,
+            HC_HELIX_BIMBA
+        );
         out->position[prime_index] = make_ref(
             tag_for_helix(position_target, HC_HELIX_PRATIBIMBA),
             HC_POINTER_RING_POSITION,
@@ -333,6 +392,11 @@ int hc_pointer_web36_fill(
             relation_interval_role(prime_role, source_q),
             relation_ratio_role(prime_role, source_q),
             hc_pratibimba_pitch_class(q)
+        );
+        out->position[prime_index].relation_roles = position_relation_roles(
+            source_q,
+            q,
+            HC_HELIX_PRATIBIMBA
         );
 
         Holographic_Coordinate* lens_target = arena_family_target(arena, FAMILY_L, q);
