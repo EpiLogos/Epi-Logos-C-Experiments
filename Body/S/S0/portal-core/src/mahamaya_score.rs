@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::codon::{classify_codon, codon_charge_placeholder};
+use crate::codon::classify_codon;
 use crate::codon_rotation_projection::{codon_charge_quaternion, CodonRotationProjection};
 use crate::kernel::MathemeHarmonicProfile;
 use crate::mahamaya::MahamayaCodecProjection;
@@ -62,6 +62,9 @@ pub struct M3PrimarySelectionEvidence {
     pub rotation: Option<u8>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub rotation_derivation_ref: Option<String>,
+    /// A stable S3/world-clock or episode-time reference. It is not itself a
+    /// numeric clock coordinate and is therefore kept distinct from
+    /// `M3ClockPosition`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub temporal_context_ref: Option<String>,
     #[serde(default)]
@@ -147,8 +150,15 @@ pub struct M3Score {
     /// provenance for it; no rotation is inferred from address64.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub explicit_rotation: Option<M3ExplicitRotationState>,
+    /// Exact numeric clock coordinates are present only when they are actually
+    /// known (e.g. a current kernel profile).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub clock_position: Option<M3ClockPosition>,
+    /// A return score may know the temporal/world reference without yet having
+    /// a resolved M3 clock coordinate. This prevents a missing clock from being
+    /// represented by fabricated zeroes.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub temporal_context_ref: Option<String>,
     pub sources: M3StableSourceRefs,
     pub provenance: Vec<String>,
 }
@@ -175,6 +185,7 @@ impl M3Score {
             profile.profile_schema_version
         ));
         provenance.extend(sources.provenance_refs.iter().cloned());
+        let temporal_context_ref = "MathemeHarmonicProfile.tickAddress".to_owned();
 
         Ok(Self {
             schema: M3_SCORE_SCHEMA.to_owned(),
@@ -192,8 +203,9 @@ impl M3Score {
                 tick12: profile.tick12,
                 degree360: profile.degree360,
                 degree720: profile.degree720,
-                temporal_context_ref: "MathemeHarmonicProfile.tickAddress".to_owned(),
+                temporal_context_ref: temporal_context_ref.clone(),
             }),
+            temporal_context_ref: Some(temporal_context_ref),
             sources,
             provenance,
         })
@@ -237,16 +249,8 @@ impl M3Score {
             primary_codec: codec,
             modal_rotation_projection: None,
             explicit_rotation,
-            clock_position: selection.temporal_context_ref.map(|temporal_context_ref| {
-                M3ClockPosition {
-                    absolute_tick: 0,
-                    cycle: 0,
-                    tick12: 0,
-                    degree360: 0,
-                    degree720: 0,
-                    temporal_context_ref,
-                }
-            }),
+            clock_position: None,
+            temporal_context_ref: selection.temporal_context_ref,
             sources,
             provenance,
         })
@@ -371,6 +375,10 @@ mod tests {
             codon_charge_quaternion(score.primary_codec.codon_id)
         );
         assert_eq!(score.clock_position.as_ref().unwrap().tick12, profile.tick12);
+        assert_eq!(
+            score.temporal_context_ref.as_deref(),
+            Some("MathemeHarmonicProfile.tickAddress")
+        );
     }
 
     #[test]
@@ -396,10 +404,11 @@ mod tests {
         );
         assert!(score.modal_rotation_projection.is_none());
         assert!(score.explicit_rotation.is_none());
+        assert!(score.clock_position.is_none());
     }
 
     #[test]
-    fn return_score_does_not_infer_rotation_and_validates_explicit_rotation() {
+    fn return_score_does_not_infer_clock_or_rotation_and_validates_explicit_rotation() {
         let mut selection = M3PrimarySelectionEvidence {
             address64: 42,
             selection_derivation_ref: "M4->M3:derivation:episode-42".to_owned(),
@@ -414,9 +423,10 @@ mod tests {
         };
         let score = M3Score::from_primary_selection(selection.clone()).unwrap();
         assert_eq!(score.explicit_rotation.as_ref().unwrap().rotation, 2);
+        assert!(score.clock_position.is_none());
         assert_eq!(
-            score.clock_position.as_ref().unwrap().temporal_context_ref,
-            "S3:clock:episode-042"
+            score.temporal_context_ref.as_deref(),
+            Some("S3:clock:episode-042")
         );
 
         selection.rotation = Some(8);
