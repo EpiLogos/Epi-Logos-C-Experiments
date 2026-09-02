@@ -1,6 +1,7 @@
 pub mod ananda_music_bridge;
 pub mod ananda_ql_bridge;
 pub mod ananda_ratio_basis;
+pub mod ananda_traversal;
 pub mod ananda_vortex;
 pub mod aspect;
 pub mod codon;
@@ -25,6 +26,7 @@ pub mod vak_address;
 pub use ananda_music_bridge::*;
 pub use ananda_ql_bridge::*;
 pub use ananda_ratio_basis::*;
+pub use ananda_traversal::*;
 pub use ananda_vortex::*;
 pub use aspect::compute_aspects;
 pub use codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodon};
