@@ -112,6 +112,7 @@ static void test_family_ring_is_six_plus_six_prime(void) {
         assert(web.family[i].helix == HC_HELIX_BIMBA);
         assert(web.family[i].ql_position == 2u);
         assert(web.family[i].relation_role == HC_REL_FAMILY_LINK);
+        assert(hc_pointer_ref_has_role(&web.family[i], HC_REL_FAMILY_LINK));
         assert(GET_PTR(web.family[i].target)->family == i);
         assert(GET_PTR(web.family[i].target)->ql_position == 2u);
 
@@ -119,6 +120,7 @@ static void test_family_ring_is_six_plus_six_prime(void) {
         assert(web.family[prime_index].ring == HC_POINTER_RING_FAMILY);
         assert(web.family[prime_index].helix == HC_HELIX_PRATIBIMBA);
         assert(web.family[prime_index].relation_role == HC_REL_INVERSION_SPANDA);
+        assert(hc_pointer_ref_has_role(&web.family[prime_index], HC_REL_INVERSION_SPANDA));
         assert(web.family[prime_index].interval_role == HC_INTERVAL_SEMITONE);
         assert(IS_INVERTED(web.family[prime_index].target));
         assert(GET_PTR(web.family[prime_index].target)->family == i);
@@ -166,6 +168,53 @@ static void test_position_ring_separates_inversion_mirror_tick_and_return(void) 
     assert(web.position[6].interval_role == HC_INTERVAL_OCTAVE);
     assert(IS_INVERTED(web.position[6].target));
     assert(GET_PTR(web.position[6].target) == family_coord(&arena, FAMILY_M, 0u));
+
+    arena_destroy(&arena);
+}
+
+static void test_position_ring_preserves_overlapping_relation_roles(void) {
+    Coordinate_Arena arena;
+    Holographic_Coordinate* mirrors[6];
+    setup_arena(&arena, mirrors);
+
+    HC_PointerWeb36 web;
+
+    /* 2->3 is simultaneously the X+Y=5 mirror and the cyclic successor. */
+    assert(hc_pointer_web36_fill(&arena, family_coord(&arena, FAMILY_M, 2u), &web) == 0);
+    assert(web.position[3].relation_role == HC_REL_MIRROR_XY5);
+    assert(hc_pointer_ref_has_role(&web.position[3], HC_REL_MIRROR_XY5));
+    assert(hc_pointer_ref_has_role(&web.position[3], HC_REL_EPOGDOON_TICK));
+    assert(!hc_pointer_ref_has_role(&web.position[3], HC_REL_POSITION_PROJECT));
+
+    /* The conjugate surface retains the same positional facts plus projection. */
+    assert(web.position[9].relation_role == HC_REL_POSITION_PROJECT);
+    assert(hc_pointer_ref_has_role(&web.position[9], HC_REL_MIRROR_XY5));
+    assert(hc_pointer_ref_has_role(&web.position[9], HC_REL_EPOGDOON_TICK));
+    assert(hc_pointer_ref_has_role(&web.position[9], HC_REL_POSITION_PROJECT));
+
+    /* Same-position prime traversal carries identity and inversion together. */
+    assert(web.position[8].relation_role == HC_REL_INVERSION_SPANDA);
+    assert(hc_pointer_ref_has_role(&web.position[8], HC_REL_POSITION_IDENTITY));
+    assert(hc_pointer_ref_has_role(&web.position[8], HC_REL_INVERSION_SPANDA));
+
+    /* 5->0 is mirror + cyclic successor; on the prime face it is also Mobius. */
+    assert(hc_pointer_web36_fill(&arena, family_coord(&arena, FAMILY_M, 5u), &web) == 0);
+    assert(web.position[0].relation_role == HC_REL_MIRROR_XY5);
+    assert(hc_pointer_ref_has_role(&web.position[0], HC_REL_MIRROR_XY5));
+    assert(hc_pointer_ref_has_role(&web.position[0], HC_REL_EPOGDOON_TICK));
+
+    assert(web.position[6].relation_role == HC_REL_MOBIUS_RETURN);
+    assert(hc_pointer_ref_has_role(&web.position[6], HC_REL_MIRROR_XY5));
+    assert(hc_pointer_ref_has_role(&web.position[6], HC_REL_EPOGDOON_TICK));
+    assert(hc_pointer_ref_has_role(&web.position[6], HC_REL_MOBIUS_RETURN));
+    assert(!hc_pointer_ref_has_role(&web.position[6], HC_REL_POSITION_PROJECT));
+
+    /* A noncanonical positional jump remains an explicit projection only. */
+    assert(hc_pointer_web36_fill(&arena, family_coord(&arena, FAMILY_M, 0u), &web) == 0);
+    assert(web.position[2].relation_role == HC_REL_POSITION_PROJECT);
+    assert(web.position[2].relation_roles == HC_REL_ROLE_BIT(HC_REL_POSITION_PROJECT));
+
+    assert(!hc_pointer_ref_has_role(NULL, HC_REL_MIRROR_XY5));
 
     arena_destroy(&arena);
 }
@@ -246,6 +295,7 @@ int main(void) {
     RUN_TEST(test_bedrock_web_declares_kernel_successor_and_inversion_law);
     RUN_TEST(test_family_ring_is_six_plus_six_prime);
     RUN_TEST(test_position_ring_separates_inversion_mirror_tick_and_return);
+    RUN_TEST(test_position_ring_preserves_overlapping_relation_roles);
     RUN_TEST(test_lens_ring_exposes_full_twelve_lens_anchors);
     RUN_TEST(test_context_frame_overlay_is_sevenfold_and_diatonic);
     RUN_TEST(test_harmonic_helpers_match_ql_math);
