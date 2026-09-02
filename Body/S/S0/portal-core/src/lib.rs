@@ -11,6 +11,7 @@ pub mod harmonic_profile;
 pub mod hopf;
 pub mod kernel;
 pub mod mahamaya;
+pub mod mahamaya_score;
 pub mod nara_journal;
 pub mod oracle_lut;
 pub mod parashakti;
@@ -37,6 +38,7 @@ pub use hopf::{
 };
 pub use kernel::*;
 pub use mahamaya::*;
+pub use mahamaya_score::*;
 pub use nara_journal::*;
 pub use parashakti::*;
 pub use personal_identity::*;
