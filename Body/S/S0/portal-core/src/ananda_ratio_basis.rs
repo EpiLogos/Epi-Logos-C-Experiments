@@ -1,6 +1,4 @@
-use crate::ananda_music_bridge::{
-    AnandaRatioEvidence, ExactRatio, RatioEvidenceKind, source_ratio_evidence,
-};
+use crate::ananda_music_bridge::{AnandaRatioEvidence, source_ratio_evidence};
 use crate::ananda_vortex::{AnandaMatrixOp, AnandaVortexCell};
 
 fn source_row(family: AnandaMatrixOp, row12: u8) -> AnandaRatioEvidence {
@@ -43,6 +41,7 @@ pub fn derive_accepted_ql_ratio_basis() -> [AnandaRatioEvidence; 8] {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ananda_music_bridge::{ExactRatio, RatioEvidenceKind};
 
     #[test]
     fn ananda_source_recovers_the_complete_accepted_ratio_basis() {
