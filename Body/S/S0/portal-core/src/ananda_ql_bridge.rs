@@ -1,8 +1,7 @@
 use crate::ananda_music_bridge::{source_ratio_evidence, AnandaRatioEvidence};
 use crate::ananda_vortex::AnandaVortexCell;
 use ql_core::{
-    ConjugationDegree, ExpansionSide, PairingError, QlCoordinate, QlFace, QlPosition,
-    RelationFamily,
+    ConjugationDegree, ExpansionSide, PairingError, QlCoordinate, RelationFamily,
 };
 use ql_mef::{
     directed_pitch_delta, musical_completion_frame, pitch_at_lens, LensId, MusicalBasis,
@@ -74,10 +73,6 @@ pub struct AnandaQlBridgeResult {
     pub ananda_relation_table_ref: &'static str,
     pub traversal_ref: &'static str,
     pub ql_music_revision: &'static str,
-}
-
-fn position(value: u8) -> QlPosition {
-    QlPosition::new(value).expect("W2 traversal positions are validated in 0..5")
 }
 
 /// Classify an actual within-face positional traversal against the accepted
@@ -220,9 +215,13 @@ mod tests {
     use super::*;
     use crate::ananda_music_bridge::ExactRatio;
     use crate::ananda_vortex::AnandaMatrixOp;
+    use ql_core::{QlFace, QlPosition};
 
     fn q(position6: u8, face: QlFace) -> QlCoordinate {
-        QlCoordinate::new(position(position6), face)
+        QlCoordinate::new(
+            QlPosition::new(position6).expect("test position remains inside 0..5"),
+            face,
+        )
     }
 
     fn source_cell(family: AnandaMatrixOp, row12: u8) -> AnandaVortexCell {
