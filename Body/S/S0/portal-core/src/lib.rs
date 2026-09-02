@@ -1,3 +1,4 @@
+pub mod ananda_source_ratio;
 pub mod ananda_vortex;
 pub mod aspect;
 pub mod codon;
@@ -19,6 +20,7 @@ pub mod transcription;
 pub mod types;
 pub mod vak_address;
 
+pub use ananda_source_ratio::*;
 pub use ananda_vortex::*;
 pub use aspect::compute_aspects;
 pub use codon::{classify_codon, codon_sequence, codon_to_amino_acid, wc_anticodon};
