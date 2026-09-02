@@ -8,13 +8,18 @@ on:
       - 'Makefile'
       - 'Body/S/S0/epi-lib/include/m1.h'
       - 'Body/S/S0/epi-lib/include/m1_ananda_projection.h'
+      - 'Body/S/S0/epi-lib/include/pointer_web.h'
       - 'Body/S/S0/epi-lib/src/m1.c'
       - 'Body/S/S0/epi-lib/src/m1_ananda_projection.c'
+      - 'Body/S/S0/epi-lib/src/pointer_web.c'
       - 'Body/S/S0/epi-lib/test/m1/**'
+      - 'Body/S/S0/epi-lib/test/infrastructure/test_pointer_web.c'
       - 'Body/S/S0/portal-core/src/hopf.rs'
       - 'Body/S/S0/portal-core/src/kernel.rs'
       - 'Body/S/S0/portal-core/src/lib.rs'
       - 'Body/S/S0/portal-core/src/ananda_vortex.rs'
+      - 'Body/S/S0/portal-core/src/ananda_music_bridge.rs'
+      - 'Body/S/S0/portal-core/src/ananda_ratio_basis.rs'
       - 'Body/S/S0/portal-core/tests/kernel_clock_projection.rs'
       - 'Body/S/S0/portal-core/tests/ananda_vortex_projection.rs'
       - '.github/workflows/m1-ananda-substrate.yml'
@@ -23,13 +28,18 @@ on:
       - 'Makefile'
       - 'Body/S/S0/epi-lib/include/m1.h'
       - 'Body/S/S0/epi-lib/include/m1_ananda_projection.h'
+      - 'Body/S/S0/epi-lib/include/pointer_web.h'
       - 'Body/S/S0/epi-lib/src/m1.c'
       - 'Body/S/S0/epi-lib/src/m1_ananda_projection.c'
+      - 'Body/S/S0/epi-lib/src/pointer_web.c'
       - 'Body/S/S0/epi-lib/test/m1/**'
+      - 'Body/S/S0/epi-lib/test/infrastructure/test_pointer_web.c'
       - 'Body/S/S0/portal-core/src/hopf.rs'
       - 'Body/S/S0/portal-core/src/kernel.rs'
       - 'Body/S/S0/portal-core/src/lib.rs'
       - 'Body/S/S0/portal-core/src/ananda_vortex.rs'
+      - 'Body/S/S0/portal-core/src/ananda_music_bridge.rs'
+      - 'Body/S/S0/portal-core/src/ananda_ratio_basis.rs'
       - 'Body/S/S0/portal-core/tests/kernel_clock_projection.rs'
       - 'Body/S/S0/portal-core/tests/ananda_vortex_projection.rs'
       - '.github/workflows/m1-ananda-substrate.yml'
@@ -50,8 +60,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run M1 regression suites with typed Ananda source compiled
-        run: make test_m1 test_m1_ananda test_m1_ananda_projection CFLAGS="$M1_CFLAGS"
+      - name: Run M1 and pointer-web regression suites
+        run: make test_m1 test_m1_ananda test_m1_ananda_projection test_pointer_web CFLAGS="$M1_CFLAGS"
 
   rust-profile:
     runs-on: ubuntu-latest
