@@ -44,9 +44,11 @@ pub use portal_core::{
     NaraJournalDocument, NaraJournalParseError, NaraJournalParseInput, NaraJournalParser,
     NaraObservationKind, NaraParsedActivity, NaraSymbolicObservation, NatalPlanetPosition,
     PersonalIdentityError, PersonalIdentityProfile, PersonalResonance,
-    PersonalResonanceObservationEvent, ProfilePrivacyClass, RelationDescriptor, RelationFamily,
-    ResonanceVector72, VimarshaReading, CODON_ROTATION_SURFACE_COUNT, EPOGDOON_DEN, EPOGDOON_NUM,
-    LENS_MODE_COUNT, PERSONAL_RESONANCE_MAJOR_THRESHOLD, RESONANCE_DIM, TRITONE_SQUARES,
+    PersonalResonanceObservationEvent, ProfilePrivacyClass, RelationCompletionDegree,
+    RelationDescriptor, RelationExpansionSide, RelationFamily, ResonanceVector72,
+    SemanticCrossOperator, VimarshaReading, CODON_ROTATION_SURFACE_COUNT, EPOGDOON_DEN,
+    EPOGDOON_NUM, LENS_MODE_COUNT, PERSONAL_RESONANCE_MAJOR_THRESHOLD, RESONANCE_DIM,
+    TRITONE_SQUARES,
 };
 
 pub mod analysis;
