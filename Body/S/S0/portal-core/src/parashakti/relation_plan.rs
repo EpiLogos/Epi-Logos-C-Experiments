@@ -294,21 +294,10 @@ fn validate_routes(field: &str, routes: &[M2BoundedRoute]) -> Result<(), String>
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::kernel::{KernelPhase, KernelTick};
+    use crate::kernel::kernel_tick_from_epogdoon;
 
     fn profile(tick12: u8) -> MathemeHarmonicProfile {
-        MathemeHarmonicProfile::from_tick(KernelTick {
-            cycle: 0,
-            sub_tick: tick12,
-            phase: if tick12 < 6 {
-                KernelPhase::Descent
-            } else {
-                KernelPhase::Ascent
-            },
-            element: crate::kernel::KernelElement::from_position(tick12 % 6),
-            position6: tick12 % 6,
-            harmonic_ratio: 1.0,
-        })
+        MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(0, tick12))
     }
 
     fn context() -> M2RelationPlanContext {
