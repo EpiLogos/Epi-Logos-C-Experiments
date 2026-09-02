@@ -13,9 +13,9 @@ use ql_mef::{
 /// from a scalar digit-root or decimal value.
 pub const ANANDA_QL_BRIDGE_VERSION: &str = "0.1.0";
 pub const ANANDA_RELATION_TABLE_REF: &str =
-    "Idea/Bimba/Seeds/M/M1'/Legacy/plans/M1-C-architecture.md";
+    "Idea/Bimba/Seeds/M/M1'/M1-SPANDA-ANANDA-MUSICAL-DERIVATION-LOCK.md";
 pub const M1_PRIME_TRAVERSAL_REF: &str =
-    "Idea/Bimba/Seeds/M/M1'/m1-prime-paramasiva-instrument.md";
+    "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md";
 pub const QL_MEF_MUSIC_REVISION: &str =
     "EpiLogos/QL-MEF#81@ed754d1cd65d92b54620f4305145970b84c3b53f";
 
@@ -395,8 +395,8 @@ mod tests {
         );
         assert_eq!(result.realizations[0].relation.family, RelationFamily::A);
         assert_eq!(result.realizations[0].interval_semitones, 2);
-        assert!(result.ananda_relation_table_ref.contains("M1-C-architecture"));
-        assert!(result.traversal_ref.contains("paramasiva-instrument"));
+        assert!(result.ananda_relation_table_ref.contains("M1-SPANDA-ANANDA-MUSICAL-DERIVATION-LOCK"));
+        assert!(result.traversal_ref.contains("M1'-SPEC"));
         assert!(result.ql_music_revision.contains("QL-MEF#81"));
     }
 

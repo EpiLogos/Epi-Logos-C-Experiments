@@ -11,7 +11,7 @@ use ql_mef::{LensId, MusicalBasis};
 pub const ANANDA_QL_TRAVERSAL_SCHEMA: &str = "epi.m1.ananda-ql-traversal.v1";
 pub const ANANDA_QL_TRAVERSAL_OWNER: &str = "M1-4'/M1-2' traversal composition";
 pub const ANANDA_QL_TRAVERSAL_SOURCE_REF: &str =
-    "Idea/Bimba/Seeds/M/M1'/m1-prime-paramasiva-instrument.md";
+    "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -368,7 +368,7 @@ mod tests {
         assert_eq!(event.relations[0].family, "A");
         assert_eq!(event.relations[1].family, "C");
         assert!(event.relations.iter().all(|relation| relation.completion_degree == "D3"));
-        assert!(event.provenance.traversal_source.contains("paramasiva-instrument"));
+        assert!(event.provenance.traversal_source.contains("M1'-SPEC"));
         assert!(event.provenance.ql_music_revision.contains("QL-MEF#81"));
     }
 
