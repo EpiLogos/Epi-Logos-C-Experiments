@@ -4,14 +4,41 @@ use crate::{
     ConjugateFormCharacter, MathemeHarmonicProfile, NaraSymbolicObservation, ProfilePrivacyClass,
 };
 
+/// Canonical QL positional relation families.
+///
+/// D1/D2/D3 are deliberately not variants here: the accepted M1 lock and
+/// QL-MEF completion grammar define them as increasing conjugate completion
+/// of one selected A/B/C relation.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum RelationFamily {
     A,
     B,
     C,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RelationCompletionDegree {
     D1,
     D2,
     D3,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum RelationExpansionSide {
+    Left,
+    Right,
+}
+
+/// Semantic cross operators are separate from D completion degree.
+///
+/// Their historical D-coordinate provenance in the pre-M derivation must not
+/// be read as the D1/D2/D3 cardinality of the selected relation field.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum SemanticCrossOperator {
+    SamePosition,
+    Transform,
+    Require,
+    Complete,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -28,6 +55,13 @@ pub enum EventPrivacyClass {
 pub struct RelationDescriptor {
     pub relation_id: String,
     pub relation_family: RelationFamily,
+    pub completion_degree: RelationCompletionDegree,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub expansion_side: Option<RelationExpansionSide>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pair_index: Option<u8>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub semantic_cross_operator: Option<SemanticCrossOperator>,
     pub target_coordinate: String,
     pub target_profile_id: String,
     pub interval_semitones: i8,
@@ -36,6 +70,11 @@ pub struct RelationDescriptor {
 }
 
 impl RelationDescriptor {
+    /// Construct the selected direct A/B/C relation (D1).
+    ///
+    /// Existing callers that only know one traversed relation remain valid;
+    /// richer W2 callers can add pair/completion/cross-operator state with the
+    /// typed builder methods below.
     pub fn new(
         relation_id: impl Into<String>,
         relation_family: RelationFamily,
@@ -52,12 +91,50 @@ impl RelationDescriptor {
         Ok(Self {
             relation_id,
             relation_family,
+            completion_degree: RelationCompletionDegree::D1,
+            expansion_side: None,
+            pair_index: None,
+            semantic_cross_operator: None,
             target_coordinate,
             target_profile_id,
             interval_semitones,
             ratio_role,
             klein_flip,
         })
+    }
+
+    pub fn with_pair_index(mut self, pair_index: u8) -> Result<Self, String> {
+        if pair_index >= 3 {
+            return Err("QL A/B/C pair_index must be in 0..3".to_owned());
+        }
+        self.pair_index = Some(pair_index);
+        Ok(self)
+    }
+
+    pub fn with_completion(
+        mut self,
+        completion_degree: RelationCompletionDegree,
+        expansion_side: Option<RelationExpansionSide>,
+    ) -> Result<Self, String> {
+        match completion_degree {
+            RelationCompletionDegree::D2 if expansion_side.is_none() => {
+                return Err("D2 completion requires an expansion side".to_owned())
+            }
+            RelationCompletionDegree::D1 | RelationCompletionDegree::D3
+                if expansion_side.is_some() =>
+            {
+                return Err("only D2 completion carries an expansion side".to_owned())
+            }
+            _ => {}
+        }
+        self.completion_degree = completion_degree;
+        self.expansion_side = expansion_side;
+        Ok(self)
+    }
+
+    pub fn with_semantic_cross_operator(mut self, operator: SemanticCrossOperator) -> Self {
+        self.semantic_cross_operator = Some(operator);
+        self
     }
 }
 
