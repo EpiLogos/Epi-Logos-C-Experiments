@@ -1,0 +1,34 @@
+name: Janko controller projection
+
+on:
+  push:
+    branches:
+      - work/w1-ananda-substrate
+    paths:
+      - 'Body/S/S0/portal-core/Cargo.toml'
+      - 'Body/S/S0/portal-core/Cargo.lock'
+      - 'Body/S/S0/portal-core/src/janko_projection.rs'
+      - 'Body/S/S0/portal-core/src/ananda_ql_bridge.rs'
+      - 'Body/S/S0/portal-core/src/ananda_music_bridge.rs'
+      - 'Body/S/S0/portal-core/src/lib.rs'
+      - '.github/workflows/janko-controller-projection.yml'
+  pull_request:
+    paths:
+      - 'Body/S/S0/portal-core/Cargo.toml'
+      - 'Body/S/S0/portal-core/Cargo.lock'
+      - 'Body/S/S0/portal-core/src/janko_projection.rs'
+      - 'Body/S/S0/portal-core/src/ananda_ql_bridge.rs'
+      - 'Body/S/S0/portal-core/src/ananda_music_bridge.rs'
+      - 'Body/S/S0/portal-core/src/lib.rs'
+      - '.github/workflows/janko-controller-projection.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  rust-controller-projection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run portal-core W2-W5 acceptance
+        run: cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml
