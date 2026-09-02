@@ -81,8 +81,12 @@ pub struct TraversalCoordinate {
 
 impl TraversalCoordinate {
     fn ql_coordinate(self) -> Result<QlCoordinate, String> {
-        let position = QlPosition::new(self.position6)
-            .ok_or_else(|| format!("traversal position must be 0..5, got {}", self.position6))?;
+        let position = QlPosition::new(self.position6).map_err(|error| {
+            format!(
+                "traversal position must be 0..5, got {}: {error}",
+                self.position6
+            )
+        })?;
         Ok(QlCoordinate::new(position, self.face.ql_face()))
     }
 }
