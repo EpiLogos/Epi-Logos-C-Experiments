@@ -9,6 +9,7 @@ pub mod codon_rotation_projection;
 pub mod events;
 pub mod harmonic_profile;
 pub mod hopf;
+pub mod janko_projection;
 pub mod kernel;
 pub mod mahamaya;
 pub mod mahamaya_score;
@@ -36,6 +37,7 @@ pub use events::*;
 pub use hopf::{
     HopfClockAddress, hopf_clock_address, hopf_fiber, hopf_project, validate_quaternion_unity,
 };
+pub use janko_projection::*;
 pub use kernel::*;
 pub use mahamaya::*;
 pub use mahamaya_score::*;
