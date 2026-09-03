@@ -10,7 +10,12 @@ on:
       - 'Body/S/S0/portal-core/src/janko_projection.rs'
       - 'Body/S/S0/portal-core/src/ananda_ql_bridge.rs'
       - 'Body/S/S0/portal-core/src/ananda_music_bridge.rs'
+      - 'Body/S/S0/portal-core/src/ananda_ratio_basis.rs'
+      - 'Body/S/S0/portal-core/src/ananda_traversal.rs'
+      - 'Body/S/S0/portal-core/src/mahamaya_score.rs'
+      - 'Body/S/S0/portal-core/src/parashakti/relation_plan.rs'
       - 'Body/S/S0/portal-core/src/lib.rs'
+      - 'Body/S/S0/portal-core/tests/wayfinder_harmonic_return.rs'
       - '.github/workflows/janko-controller-projection.yml'
   pull_request:
     paths:
@@ -19,7 +24,12 @@ on:
       - 'Body/S/S0/portal-core/src/janko_projection.rs'
       - 'Body/S/S0/portal-core/src/ananda_ql_bridge.rs'
       - 'Body/S/S0/portal-core/src/ananda_music_bridge.rs'
+      - 'Body/S/S0/portal-core/src/ananda_ratio_basis.rs'
+      - 'Body/S/S0/portal-core/src/ananda_traversal.rs'
+      - 'Body/S/S0/portal-core/src/mahamaya_score.rs'
+      - 'Body/S/S0/portal-core/src/parashakti/relation_plan.rs'
       - 'Body/S/S0/portal-core/src/lib.rs'
+      - 'Body/S/S0/portal-core/tests/wayfinder_harmonic_return.rs'
       - '.github/workflows/janko-controller-projection.yml'
 
 permissions:
