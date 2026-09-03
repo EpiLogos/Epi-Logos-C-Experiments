@@ -225,7 +225,7 @@ mod tests {
     #[test]
     fn off_lattice_raw_charge_tuple_is_rejected_without_rounding() {
         let off_lattice = M3RawChargeEvaluation {
-            pp: 22,
+            pp: 23,
             mm: -8,
             mp: 6,
             pm: 4,
