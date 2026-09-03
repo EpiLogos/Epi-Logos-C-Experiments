@@ -1,0 +1,34 @@
+name: M2 relation plan
+
+on:
+  push:
+    branches:
+      - work/w1-ananda-substrate
+    paths:
+      - 'Body/S/S0/portal-core/Cargo.toml'
+      - 'Body/S/S0/portal-core/Cargo.lock'
+      - 'Body/S/S0/portal-core/src/kernel.rs'
+      - 'Body/S/S0/portal-core/src/parashakti/**'
+      - 'Body/S/S0/epi-lib/include/m2.h'
+      - 'Body/S/S0/epi-lib/src/m2.c'
+      - '.github/workflows/m2-relation-plan.yml'
+  pull_request:
+    paths:
+      - 'Body/S/S0/portal-core/Cargo.toml'
+      - 'Body/S/S0/portal-core/Cargo.lock'
+      - 'Body/S/S0/portal-core/src/kernel.rs'
+      - 'Body/S/S0/portal-core/src/parashakti/**'
+      - 'Body/S/S0/epi-lib/include/m2.h'
+      - 'Body/S/S0/epi-lib/src/m2.c'
+      - '.github/workflows/m2-relation-plan.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  rust-relation-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run portal-core M1/W2 and M2 relation-plan tests
+        run: cargo test --manifest-path Body/S/S0/portal-core/Cargo.toml

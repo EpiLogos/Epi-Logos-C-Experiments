@@ -9,7 +9,7 @@ fn public_current_profile_serializes_versioned_bridge_shape_without_protected_fi
     let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(9, 10));
     let json = serde_json::to_value(&profile).expect("profile serializes");
 
-    assert_eq!(json["profileSchemaVersion"], 1);
+    assert_eq!(json["profileSchemaVersion"], 2);
     assert_eq!(json["profileProvenance"]["owner"], "portal-core");
     assert_eq!(
         json["profileProvenance"]["contract"],
@@ -19,8 +19,8 @@ fn public_current_profile_serializes_versioned_bridge_shape_without_protected_fi
     assert_eq!(json["tickAddress"]["tick12"], 10);
     assert_eq!(json["tickAddress"]["absoluteTick"], profile.tick);
     assert_eq!(json["tick12"], 10);
-    assert_eq!(json["degree720"], 600);
-    assert_eq!(json["degree360"], 240);
+    assert_eq!(json["degree720"], 660);
+    assert_eq!(json["degree360"], 300);
     assert_eq!(json["su2Layer"], "shadow");
     assert_eq!(json["position6"], 4);
     assert_eq!(json["privacyClass"], "public-current-context");
@@ -31,6 +31,7 @@ fn public_current_profile_serializes_versioned_bridge_shape_without_protected_fi
     for required in [
         "phase",
         "helix",
+        "anandaVortex",
         "ratioRole",
         "lensMode",
         "chromatic",

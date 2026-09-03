@@ -29,11 +29,39 @@ impl MahamayaCodecProjection {
         m2_vibration_index: usize,
         rna_phase: bool,
     ) -> Self {
-        let address64 = mahamaya_address64_from_degree(degree360);
+        Self::from_address(
+            mahamaya_address64_from_degree(degree360),
+            line_index,
+            m2_vibration_index,
+            rna_phase,
+        )
+        .expect("clock-derived Mahamaya address is canonical 0..63")
+    }
+
+    /// Build the Mahāmāyā symbolic state from an already-determined primary
+    /// 64-fold address.
+    ///
+    /// This is the reciprocal-score entry point. It deliberately does not
+    /// decide *which* address an entity/event should receive; callers must
+    /// supply that determination and its provenance separately. Keeping that
+    /// selection law outside the codec prevents the current open
+    /// `Q_entity / Q_composed -> primary address64` research seam from being
+    /// replaced by nearest-neighbour or clock convenience.
+    pub fn from_address(
+        address64: u8,
+        line_index: u8,
+        m2_vibration_index: usize,
+        rna_phase: bool,
+    ) -> Result<Self, String> {
+        if address64 >= MAHAMAYA_SYMBOL_COUNT as u8 {
+            return Err(format!(
+                "Mahāmāyā primary address must be in 0..63, got {address64}"
+            ));
+        }
         let nucleotide_bits = nucleotide_bits_for_address(address64, rna_phase);
         let m2_to_m3_symbol = apply_epogdoon_compression(m2_vibration_index);
         let evolutionary_gap = is_evolutionary_gap(m2_vibration_index);
-        Self {
+        Ok(Self {
             address64,
             hexagram_id: address64,
             upper_trigram: address64 >> 3,
@@ -53,7 +81,7 @@ impl MahamayaCodecProjection {
                 "resolved"
             }
             .to_owned(),
-        }
+        })
     }
 }
 
@@ -156,5 +184,13 @@ mod tests {
         assert_eq!(rna.codon, "GGG");
         assert_eq!(rna.line_change_operator, 256);
         assert_eq!(rna.transcription_state, "provisional-gap");
+    }
+
+    #[test]
+    fn explicit_primary_address_uses_the_same_codec_without_inventing_selection() {
+        let explicit = MahamayaCodecProjection::from_address(42, 4, 64, false).unwrap();
+        let clock = MahamayaCodecProjection::from_clock(240, 4, 64, false);
+        assert_eq!(explicit, clock);
+        assert!(MahamayaCodecProjection::from_address(64, 0, 0, false).is_err());
     }
 }

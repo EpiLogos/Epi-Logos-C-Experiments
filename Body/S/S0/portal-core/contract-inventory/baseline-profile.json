@@ -1,9 +1,9 @@
 {
-  "profileSchemaVersion": 1,
+  "profileSchemaVersion": 2,
   "profileProvenance": {
     "owner": "portal-core",
     "contract": "MathemeHarmonicProfile.public-current",
-    "source": "S0 kernel tick + portal-core harmonic/codon/Vimarsha projections",
+    "source": "S0 kernel tick + portal-core harmonic/codon/Vimarsha/Ananda projections",
     "compatibility": {
       "binaryAlias": "binary",
       "mahamayaAlias": "mahamaya",
@@ -26,6 +26,60 @@
   "phase": "Descent",
   "position6": 0,
   "helix": "bimba",
+  "anandaVortex": {
+    "activeMatrixOp": "bimba",
+    "activeCell": [
+      0,
+      0
+    ],
+    "activeCellValue": {
+      "family": "bimba",
+      "row12": 0,
+      "col12": 0,
+      "rawValue": 0,
+      "rawBimba": 0,
+      "rawPratibimba": 1,
+      "rawSum": 1,
+      "rawDifferenceA": -1,
+      "rawDifferenceB": 1,
+      "rawDelta": 1,
+      "drValue": 0,
+      "drBimba": 0,
+      "drPratibimba": 1,
+      "drSum": 1,
+      "drDifferenceA": 9,
+      "drDifferenceB": 1,
+      "decimal10Value": 0,
+      "ruleValue": null,
+      "skeletonEvent": null
+    },
+    "oscillatory": {
+      "tick12": 0,
+      "position6": 0,
+      "phase": "direct",
+      "conjugateTick12": 6,
+      "conjugatePosition6": 0,
+      "conjugatePhase": "prime"
+    },
+    "drRingPhase": {
+      "positionIndex": 0,
+      "mahamayaValue": 1,
+      "parashaktiValue": 3
+    },
+    "cl42SignatureAtPosition": -1,
+    "ringQuaternion": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "hopfFiber": 0,
+    "kleinFlipAtThisTick": false,
+    "spandaStageIndex": 0,
+    "sourceRef": "Idea/Bimba/Map/datasets/(0_1) Vortex Modulae - (0_1) x 12Fold and 8_9fold (mod12 and mod10) Archetypal Number Identities - Sheet1.csv",
+    "derivationRef": "Idea/Bimba/Seeds/M/M1'/M1-2-ANANDA-EXECUTABLE-SUBSTRATE-CONTRACT.md",
+    "phaseRef": "Idea/Bimba/Seeds/M/M1'/M1-SPANDA-ANANDA-MUSICAL-DERIVATION-LOCK.md"
+  },
   "ratioRole": "1/1 unison standing identity",
   "lensMode": {
     "lens": 0,

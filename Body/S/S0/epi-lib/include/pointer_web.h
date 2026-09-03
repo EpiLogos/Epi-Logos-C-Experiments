@@ -14,6 +14,7 @@
 
 #include "arena.h"
 #include "psychoid_numbers.h"
+#include <stdbool.h>
 #include <stdint.h>
 
 #define HC_WEB_RING_COUNT 3u
@@ -44,6 +45,16 @@ typedef enum {
     HC_REL_LENS_ANCHOR       = 7,
     HC_REL_CONTEXT_FRAME     = 8
 } HC_RelationRole;
+
+/**
+ * A pointer traversal can participate in more than one authored relation at
+ * once. Keep `relation_role` as the legacy/primary reading and carry the full
+ * set here so overlap is not erased before QL relation classification.
+ */
+typedef uint16_t HC_RelationRoleMask;
+
+#define HC_REL_ROLE_BIT(role) \
+    ((HC_RelationRoleMask)(1u << (uint8_t)(role)))
 
 typedef enum {
     HC_INTERVAL_NONE          = 0,
@@ -95,6 +106,7 @@ typedef struct {
     uint8_t ql_position;
     uint8_t helix;
     uint8_t relation_role;
+    HC_RelationRoleMask relation_roles;
     uint8_t interval_role;
     uint8_t ratio_role;
     uint8_t pitch_class;
@@ -129,6 +141,7 @@ uint8_t hc_lens_pratibimba_pitch_class(uint8_t lens_anchor_pc, uint8_t ql_positi
 uint8_t hc_mirror_position(uint8_t ql_position);
 uint8_t hc_mirror_interval_role(uint8_t ql_position);
 uint8_t hc_mirror_ratio_role(uint8_t ql_position);
+bool hc_pointer_ref_has_role(const HC_PointerRef* ref, HC_RelationRole role);
 
 int hc_bedrock_web7_fill(HC_BedrockWeb7* out);
 

@@ -1,10 +1,12 @@
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Serialize};
 
+use crate::ananda_vortex::AnandaVortexProjection;
 use crate::codon_rotation_projection::{
     codon_charge_quaternion, codon_rotation_from_lens_mode, CodonRotationProjection,
     MathemeLensMode,
 };
+use crate::hopf::hopf_clock_address;
 use crate::mahamaya::MahamayaCodecProjection;
 use crate::parashakti::vimarsha_read_profile;
 use crate::personal_identity::{PersonalIdentityProfile, PersonalResonance};
@@ -248,7 +250,7 @@ impl KernelTemporalProjection {
     }
 }
 
-pub const CURRENT_PROFILE_SCHEMA_VERSION: u16 = 1;
+pub const CURRENT_PROFILE_SCHEMA_VERSION: u16 = 2;
 
 fn default_profile_schema_version() -> u16 {
     CURRENT_PROFILE_SCHEMA_VERSION
@@ -274,7 +276,7 @@ impl Default for MathemeProfileProvenance {
         Self {
             owner: "portal-core".to_owned(),
             contract: "MathemeHarmonicProfile.public-current".to_owned(),
-            source: "S0 kernel tick + portal-core harmonic/codon/Vimarsha projections".to_owned(),
+            source: "S0 kernel tick + portal-core harmonic/codon/Vimarsha/Ananda projections".to_owned(),
             compatibility: MathemeProfileCompatibility::default(),
         }
     }
@@ -359,6 +361,8 @@ pub struct MathemeHarmonicProfile {
     pub phase: KernelPhase,
     pub position6: u8,
     pub helix: String,
+    #[serde(default)]
+    pub ananda_vortex: AnandaVortexProjection,
     pub ratio_role: String,
     pub lens_mode: MathemeLensMode,
     pub chromatic: MathemeChromaticProfile,
@@ -392,8 +396,10 @@ impl MathemeHarmonicProfile {
         let helix = if tick12 < 6 { "bimba" } else { "pratibimba" };
         let position = tick12 % 6;
         let pitch_class = pitch_class_for_tick(tick12);
-        let degree720 = tick12 as u16 * 60;
-        let degree360 = degree720 % 360;
+        let hopf = hopf_clock_address(tick.cycle, tick12);
+        let ananda_vortex = AnandaVortexProjection::from_clock(tick.cycle, tick12);
+        let degree720 = hopf.degree720;
+        let degree360 = hopf.degree360;
         let diatonic = MathemeDiatonicContext::from_pitch_class(pitch_class);
         let resonance72 = MathemeResonance72Projection::from_tick(tick12, position);
         let lens_mode = MathemeLensMode::new(
@@ -425,7 +431,7 @@ impl MathemeHarmonicProfile {
             cycle: tick.cycle,
             degree720,
             degree360,
-            su2_layer: if degree720 >= 360 {
+            su2_layer: if hopf.fiber == 1 {
                 "shadow"
             } else {
                 "primary"
@@ -434,6 +440,7 @@ impl MathemeHarmonicProfile {
             phase: tick.phase,
             position6: position,
             helix: helix.to_owned(),
+            ananda_vortex,
             ratio_role: ratio_role_for_sub_tick(tick12).to_owned(),
             lens_mode,
             chromatic: MathemeChromaticProfile::from_tick(tick12, position, pitch_class),
