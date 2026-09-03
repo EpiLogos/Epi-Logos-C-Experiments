@@ -12,6 +12,7 @@ pub mod hopf;
 pub mod janko_projection;
 pub mod kernel;
 pub mod mahamaya;
+pub mod mahamaya_primary_selection;
 pub mod mahamaya_score;
 pub mod nara_journal;
 pub mod oracle_lut;
@@ -40,6 +41,7 @@ pub use hopf::{
 pub use janko_projection::*;
 pub use kernel::*;
 pub use mahamaya::*;
+pub use mahamaya_primary_selection::*;
 pub use mahamaya_score::*;
 pub use nara_journal::*;
 pub use parashakti::*;
