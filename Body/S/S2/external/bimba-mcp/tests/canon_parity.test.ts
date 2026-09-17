@@ -1,5 +1,6 @@
 import { execFile } from 'node:child_process';
-import { access, chmod, constants, mkdtemp, writeFile } from 'node:fs/promises';
+import { chmod, mkdtemp, writeFile } from 'node:fs/promises';
+import { accessSync, constants as fsConstants } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { promisify } from 'node:util';
@@ -32,13 +33,15 @@ const hasCanonCli =
   binName.includes('/') ||
   (process.env.PATH ?? '')
     .split(':')
-    .some(
-      (dir) =>
-        dir.length > 0 &&
-        access(join(dir, binName), constants.X_OK)
-          .then(() => true)
-          .catch(() => false),
-    );
+    .filter((dir) => dir.length > 0)
+    .some((dir) => {
+      try {
+        accessSync(join(dir, binName), fsConstants.X_OK);
+        return true;
+      } catch {
+        return false;
+      }
+    });
 const describeCanon = hasCanonCli ? describe : describe.skip;
 
 describeCanon('canon parity', () => {
