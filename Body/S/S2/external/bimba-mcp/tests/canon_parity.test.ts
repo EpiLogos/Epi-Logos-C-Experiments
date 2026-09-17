@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process';
-import { chmod, mkdtemp, writeFile } from 'node:fs/promises';
+import { access, chmod, constants, mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { promisify } from 'node:util';
@@ -24,7 +24,24 @@ async function runCanonCli(coordinate: string, depth: string): Promise<string> {
   return stdout.trimEnd();
 }
 
-describe('canon parity', () => {
+// The parity walk drives the built `epi` canon CLI. CI and other hosts
+// without the binary cannot execute it by design: declare the skip rather
+// than fail on a missing capability.
+const binName = process.env.EPI_CANON_BIN ?? 'epi';
+const hasCanonCli =
+  binName.includes('/') ||
+  (process.env.PATH ?? '')
+    .split(':')
+    .some(
+      (dir) =>
+        dir.length > 0 &&
+        access(join(dir, binName), constants.X_OK)
+          .then(() => true)
+          .catch(() => false),
+    );
+const describeCanon = hasCanonCli ? describe : describe.skip;
+
+describeCanon('canon parity', () => {
   for (const coordinate of COORDINATES) {
     for (const depth of DEPTHS) {
       it(`returns byte-identical JSON for ${coordinate} at ${depth}`, async () => {
