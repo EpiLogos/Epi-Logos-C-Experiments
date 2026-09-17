@@ -1,0 +1,35 @@
+{
+  "runId": "20260707T013140Z-36-T36.1",
+  "taskId": "36.T36.1",
+  "startedAt": "2026-07-07T01:31:40.390Z",
+  "owner": "fable-a-kernel",
+  "leaseExpiresAt": "2026-07-07T03:31:40.390Z",
+  "worktree": null,
+  "task": {
+    "id": "36.T36.1",
+    "trackId": "36",
+    "tranche": "T36.1",
+    "title": "`AnuttaraPentadicRuntimeTrace` profile projection",
+    "effort": null,
+    "file": "36-anuttara-pentadic-runtime-trace.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/36-anuttara-pentadic-runtime-trace.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/36-anuttara-pentadic-runtime-trace.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

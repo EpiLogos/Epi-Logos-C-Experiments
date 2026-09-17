@@ -1,0 +1,17 @@
+/* 25.T25.6 — personal cymatic field. Tokens only (Track 30 law). */
+
+.m4-personal-cymatic-field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+}
+
+.m4-personal-cymatic-field canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+.m4-personal-cymatic-field .pane-message {
+    font-size: var(--type-body-small);
+}

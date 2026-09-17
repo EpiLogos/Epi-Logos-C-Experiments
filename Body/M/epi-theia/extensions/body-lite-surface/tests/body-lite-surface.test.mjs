@@ -23,6 +23,8 @@ const require = createRequire(import.meta.url);
 const {
     EXTENSION_ID,
     BODY_LITE_WIDGET_IDS,
+    BODY_LITE_LIBRARY_PROJECTION_LENS,
+    BODY_LITE_PROJECTION_LENSES,
     BODY_DEEP_LINK_COMMAND_IDS,
     BODY_DEEP_LINK_CONTEXT_FIELDS,
     LITE_SURFACE_ALLOWED_PRIVACY_CLASSES,
@@ -94,6 +96,20 @@ test('three lite widgets are surfaced (badge, check-in, handle-row)', () => {
     assert.ok(ids.includes('pratibimba.body.review-alert-badge'));
     assert.ok(ids.includes('pratibimba.body.agent-checkin'));
     assert.ok(ids.includes('pratibimba.body.safe-source-handle-row'));
+});
+
+test('Library daily projection is registered as a lens, not a standalone surface', () => {
+    assert.equal(
+        BODY_LITE_PROJECTION_LENSES.LIBRARY_PROJECTION,
+        'pratibimba.daily.library-projection'
+    );
+    assert.deepEqual(BODY_LITE_LIBRARY_PROJECTION_LENS, {
+        id: 'pratibimba.daily.library-projection',
+        lensKind: 'coordinate-overlay',
+        targetSurface: 'theia-file-tree',
+        ownerExtension: 'body-lite-surface',
+        standaloneExtension: false
+    });
 });
 
 test('four typed deep-link command ids are registered', () => {

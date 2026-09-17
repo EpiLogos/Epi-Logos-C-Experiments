@@ -7,24 +7,34 @@ export type OmniPanelDefinition = {
 
 export const PRIMARY_PANELS: OmniPanelDefinition[] = [
   { id: 'chat', label: 'Chat' },
-  { id: 'workspace', label: 'Workspace' },
-  { id: 'overview', label: 'Overview' },
-  { id: 'channels', label: 'Channels' },
   { id: 'sessions', label: 'Sessions' },
+  { id: 'dispatch-trace', label: 'Trace' },
+  { id: 'tool-stream', label: 'Stream' },
+  { id: 'evidence', label: 'Evidence' },
+  { id: 'gateway', label: 'Gateway' },
 ];
 
 export const ADVANCED_PANELS: OmniPanelDefinition[] = [
   { id: 'config', label: 'Config' },
   { id: 'instances', label: 'Instances' },
   { id: 'nodes', label: 'Nodes' },
-  { id: 'debug', label: 'Debug' },
+  { id: 'diagnostics', label: 'Diagnostics' },
   { id: 'logs', label: 'Logs' },
 ];
 
 export const ALL_PANELS: OmniPanelDefinition[] = [...PRIMARY_PANELS, ...ADVANCED_PANELS];
+const LEGACY_PANEL_LABELS: Partial<Record<GatewayPanel, string>> = {
+  workspace: 'Gateway',
+};
 const GATEWAY_PANEL_IDS = new Set<GatewayPanel>([
   'chat',
   'workspace',
+  'dispatch-trace',
+  'tool-stream',
+  'evidence',
+  'review',
+  'gateway',
+  'diagnostics',
   'models',
   'overview',
   'channels',
@@ -48,5 +58,5 @@ export function isAdvancedPanel(panel: GatewayPanel): boolean {
 }
 
 export function panelLabel(panel: GatewayPanel): string {
-  return ALL_PANELS.find((p) => p.id === panel)?.label ?? panel;
+  return ALL_PANELS.find((p) => p.id === panel)?.label ?? LEGACY_PANEL_LABELS[panel] ?? panel;
 }

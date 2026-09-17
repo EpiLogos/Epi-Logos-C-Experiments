@@ -27,6 +27,7 @@ pub const PORTAL_PLUGIN_TYPE_IDS: &[&str] = &[
     "m5.logos",
     "m5.chat",
     "m5.fsm",
+    "m5.q_review",
 ];
 
 /// Build a standalone workspace with all portal plugin types registered.
@@ -66,6 +67,7 @@ mod tests {
             "m5.logos",
             "m5.chat",
             "m5.fsm",
+            "m5.q_review",
         ];
         #[cfg(feature = "portal-images")]
         let expected = {

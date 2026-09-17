@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "onboarding/blocked-readiness-matrix",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "extensions": [
+    { "id": "m0-anuttara", "coordinate": "M0", "surface": "Anuttara ground" },
+    { "id": "m1-paramasiva", "coordinate": "M1", "surface": "Paramasiva torus" },
+    { "id": "m2-parashakti", "coordinate": "M2", "surface": "Parashakti evidence" },
+    { "id": "m3-mahamaya", "coordinate": "M3", "surface": "Mahamaya wheel" },
+    { "id": "m4-nara", "coordinate": "M4", "surface": "Nara day field" },
+    { "id": "m5-epii", "coordinate": "M5", "surface": "Epii review" }
+  ],
+  "readinessStates": [
+    "bridge_unavailable",
+    "profile_missing_field",
+    "s2_graph_blocked",
+    "s3_subscription_blocked",
+    "s5_review_blocked",
+    "authority_payload_missing",
+    "privacy_blocked",
+    "degraded_but_readable",
+    "ready_public_current"
+  ],
+  "uxGrammarFlavours": [
+    "cold-start-splash",
+    "walkthrough-overlay",
+    "inline-error-surface",
+    "privacy-opt-in-dialog",
+    "settings-reset-section"
+  ],
+  "grammarByReadiness": {
+    "bridge_unavailable": { "severity": "blocked", "tone": "red", "emptyState": "Bridge unavailable", "action": "Open gateway diagnostics" },
+    "profile_missing_field": { "severity": "blocked", "tone": "amber", "emptyState": "Profile field pending", "action": "Inspect profile payload" },
+    "s2_graph_blocked": { "severity": "blocked", "tone": "amber", "emptyState": "S2 graph blocked", "action": "Open S2 graph diagnostics" },
+    "s3_subscription_blocked": { "severity": "blocked", "tone": "amber", "emptyState": "S3 subscription blocked", "action": "Retry gateway subscription" },
+    "s5_review_blocked": { "severity": "blocked", "tone": "amber", "emptyState": "S5 review blocked", "action": "Open review queue" },
+    "authority_payload_missing": { "severity": "blocked", "tone": "amber", "emptyState": "Authority payload missing", "action": "Open contract ledger" },
+    "privacy_blocked": { "severity": "blocked", "tone": "red", "emptyState": "Privacy gate closed", "action": "Open privacy settings" },
+    "degraded_but_readable": { "severity": "degraded", "tone": "green", "emptyState": "Readable with degraded upstream", "action": "Continue with diagnostics visible" },
+    "ready_public_current": { "severity": "ok", "tone": "green", "emptyState": "Ready", "action": "Mount live surface" }
+  },
+  "grammarByFlavour": {
+    "cold-start-splash": { "region": "overlay", "expectedRole": "status", "motionSensitive": true },
+    "walkthrough-overlay": { "region": "tour", "expectedRole": "dialog", "motionSensitive": true },
+    "inline-error-surface": { "region": "inline", "expectedRole": "alert", "motionSensitive": false },
+    "privacy-opt-in-dialog": { "region": "privacy", "expectedRole": "group", "motionSensitive": false },
+    "settings-reset-section": { "region": "settings", "expectedRole": "region", "motionSensitive": false }
+  }
+}

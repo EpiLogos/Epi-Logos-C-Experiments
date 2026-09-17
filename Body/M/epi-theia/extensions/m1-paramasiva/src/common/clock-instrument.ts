@@ -4,7 +4,7 @@ import {
     MExtensionReadinessSnapshot,
     MExtensionReadinessState
 } from '@pratibimba/m-extension-runtime';
-import { EXTENSION_ID, PRIVACY_CLASS } from './index';
+import { EXTENSION_ID, PRIVACY_CLASS } from './extension-constants';
 
 export interface M1LensModeCell {
     readonly lens: number;
@@ -90,6 +90,16 @@ export interface M1ObservabilityEvent {
     readonly extensionId: typeof EXTENSION_ID;
     readonly emittedAt: number;
     readonly payload: Readonly<Record<string, unknown>>;
+}
+
+export interface M1KleinTopologyViewModel {
+    readonly topology: M1ProfileClockModel['topology'];
+    readonly kleinFlip: {
+        readonly present: boolean;
+        readonly tickFlip: boolean;
+        readonly source: unknown;
+    };
+    readonly observabilityEvents: readonly M1ObservabilityEvent[];
 }
 
 export function buildM1ProfileClockModel(input: {
@@ -214,6 +224,61 @@ export function buildM1RelationWalkStep(input: {
         depositionPolicy: input.descriptor.depositionPolicy,
         audioOctetHz: audioOctet,
         nodalQuartet,
+        observabilityEvents: Object.freeze(events)
+    });
+}
+
+/**
+ * Track 02.T2.3 — wire the Klein-flip + topology invariants for the
+ * `m1.paramasiva.kleinTopology` view. Topology constants (doubleCoverDeg,
+ * torusGenus, Hopf identity, K² tritone crossing, M1-origin Klein flip) come
+ * from the bridge profile payload; the live `kleinFlip` field (Rust
+ * `Option<...>` → `Some(...)`/null) decides whether an `m1.klein_flip.source`
+ * observability event fires on this generation.
+ */
+export function buildM1KleinTopologyView(input: {
+    readonly profile: MathemeHarmonicProfileBoundary;
+    readonly context: CoordinateContext;
+    readonly emittedAt: number;
+}): M1KleinTopologyViewModel {
+    const payload = input.profile.payload;
+    const topology = topologyFromPayload(payload);
+    const vortex = objectValue(payload.anandaVortex);
+    const kleinFlipValue = payload.kleinFlip ?? payload.klein_flip ?? null;
+    const tickFlip = vortex?.kleinFlipAtThisTick === true;
+    const present = kleinFlipValue !== null && kleinFlipValue !== undefined;
+
+    const events: M1ObservabilityEvent[] = [];
+    if (present) {
+        events.push(
+            Object.freeze({
+                type: 'm1.klein_flip.source',
+                extensionId: EXTENSION_ID,
+                emittedAt: input.emittedAt,
+                payload: Object.freeze({
+                    m1Origin: true,
+                    sourceExtension: EXTENSION_ID,
+                    coordinateContext: input.context.canonicalMCoordinate,
+                    profileGeneration: input.profile.generation,
+                    privacyClass: PRIVACY_CLASS,
+                    kleinFlip: kleinFlipValue,
+                    kleinFlipAtThisTick: tickFlip,
+                    doubleCoverDeg: topology.doubleCoverDeg,
+                    torusGenus: topology.torusGenus,
+                    hopfIdentity: topology.hopfIdentity,
+                    k2TritoneCrossing: topology.k2TritoneCrossing
+                })
+            })
+        );
+    }
+
+    return Object.freeze({
+        topology,
+        kleinFlip: Object.freeze({
+            present,
+            tickFlip,
+            source: kleinFlipValue
+        }),
         observabilityEvents: Object.freeze(events)
     });
 }

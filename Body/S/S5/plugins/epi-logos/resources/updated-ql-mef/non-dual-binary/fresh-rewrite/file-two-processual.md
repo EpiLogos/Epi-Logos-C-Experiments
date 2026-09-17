@@ -326,7 +326,7 @@ Why does the Borromean hold? Because of the slash — and because the slash, exa
 
 ### §5' — 5'→0' = 1/0
 
-The QL positions earned. All registers converging at each position — the geometry (from T1), the ratio (from T0), the harmonic, the symmetry partner, the person, the question. These are the same six determinations first listed in File 1 §5 — 0/1, ?/!, −/+, X/x, AM/IS, ∞/00 — now proven to be the natural joints of the structure, the positions where all registers independently converge:
+The QL positions earned. All registers converging at each position — the geometry (from T1), the ratio (from T0), the harmonic, the symmetry partner, the person, the question. These are the same six determinations first listed in File 1 §5 — 0/1, ?/!, −/+, X/x, AM/IS, ∞/dx — now proven to be the natural joints of the structure, the positions where all registers independently converge:
 
 | # | QL Name | Question | Person | Geometry | Slash | Value | Dynamic |
 |---|---|---|---|---|---|---|---|

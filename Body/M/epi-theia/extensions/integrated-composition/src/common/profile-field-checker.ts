@@ -9,6 +9,15 @@ import { MathemeHarmonicProfileBoundary } from '@pratibimba/m-extension-runtime'
  * MathemeHarmonicProfileBoundary payload pocket; field shape is owned by
  * Track 01 T5 (kernel-bridge contract package) so we treat all values as
  * `unknown` here.
+ *
+ * Wave-A / Wave-B cross-link (07.T7.1): the `kleinFlip`, `resonance72`,
+ * `audio_octet`, and `nodal_quartet` members below are consumed as Wave-A
+ * pending blocked-state markers by `@pratibimba/plugin-integrated-1-2-3`
+ * (see its `WAVE_A_PENDING_MARKERS`). The plugin reports a
+ * `profile_missing_field` readiness blocker keyed to these markers until the
+ * upstream tranches land; resolution is tracked by Wave-B Tranche 11.8. This
+ * contract remains the single owner of the field-name vocabulary — the plugin
+ * imports `ProfileFieldName` from here rather than redeclaring it.
  */
 export type ProfileFieldName =
     | 'lens'
@@ -17,7 +26,7 @@ export type ProfileFieldName =
     | 'nodal_quartet'
     | 'planetaryChakral'
     | 'resonance72'
-    | 'kleinFlipState'
+    | 'kleinFlip'
     | 'codon_rotation_projection'
     | 'mahamaya'
     | 'codec_lut'
@@ -45,7 +54,7 @@ const FIELD_OWNER_TRACKS: Record<ProfileFieldName, string> = {
     nodal_quartet: 'Track 01 profile',
     planetaryChakral: 'Track 01 profile (M2 authority)',
     resonance72: 'Track 01 profile (M2 authority)',
-    kleinFlipState: 'Track 01 profile (M2 authority)',
+    kleinFlip: 'Track 01 profile (M2 authority)',
     codon_rotation_projection: 'Track 01 profile (M3 authority)',
     mahamaya: 'Track 01 profile (M3 authority)',
     codec_lut: 'Track 02 S2 graph (M3 library)',
@@ -60,7 +69,7 @@ const M3_CENTER_FIELDS: readonly ProfileFieldName[] = Object.freeze([
 const M2_LEFT_FIELDS: readonly ProfileFieldName[] = Object.freeze([
     'resonance72',
     'planetaryChakral',
-    'kleinFlipState'
+    'kleinFlip'
 ]);
 const M1_RIGHT_FIELDS: readonly ProfileFieldName[] = Object.freeze([
     'lens',

@@ -1,0 +1,43 @@
+{
+  "runId": "20260617T113033Z-06-T6.8",
+  "taskId": "06.T6.8",
+  "startedAt": "2026-06-17T11:30:33.102Z",
+  "owner": "admin",
+  "leaseExpiresAt": "2026-06-17T13:30:33.102Z",
+  "worktree": null,
+  "task": {
+    "id": "06.T6.8",
+    "trackId": "06",
+    "tranche": "T6.8",
+    "title": "EBM-Epii position 5' resonance-vector predictor module (72-dim N-channel head, Rust-native)",
+    "effort": "72-dim N-channel head, Rust-native",
+    "file": "06-m5-epii-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+    "dependsOn": [
+      "06.T6.7"
+    ],
+    "writeScopes": [
+      "Body/S/S5/epii-autoresearch-core/**",
+      "Body/S/S5/epii-autoresearch-core/skills/parashakti/ebm-head/**",
+      "Body/S/S5/epii-autoresearch-core/src/resonance_ebm/**",
+      "Body/S/S5/epii-operational-capacities/m5-prime-epii-on-mahamaya-process-reward-rl.md",
+      "Body/S/S5/epii-operational-capacities/m5-prime-epii-on-parashakti-graph-relational-ml.md",
+      "scripts/eval.rs",
+      "scripts/serve.rs",
+      "scripts/train.rs",
+      "vendor/legacy/epi-tauri/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

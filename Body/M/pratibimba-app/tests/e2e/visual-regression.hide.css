@@ -1,0 +1,46 @@
+/**
+ * 15.T15.12 — screenshot-time hiding of live-profile / wall-clock /
+ * lived-vault regions for the committed visual-regression baselines.
+ * Injected ONLY during `toHaveScreenshot` capture (Playwright `stylePath`);
+ * the live page and every assertion see the real surfaces.
+ *
+ * Why visibility:hidden instead of Playwright mask boxes: masks paint pink
+ * rectangles at the element's rounded bounding box, and a sub-pixel layout
+ * edge can round differently across runs — the close-gate re-run caught a
+ * 1px sliver of LIVE canvas escaping the mask at the pane edge (1913 px
+ * diff). visibility:hidden preserves the layout box exactly while removing
+ * every volatile pixel source, so edge rounding has nothing live to expose:
+ * the region renders the pane's own deterministic background.
+ *
+ * Regions (same inventory the spec asserts textually):
+ * - canvases + CSS2D layers: real kernel tick content, differs across runs
+ * - engine strip: kernel readouts reflow at 1 Hz
+ * - status strip: generation / day / session churn
+ * - vault tree + personal recognition engine: lived/profile-coupled content;
+ *   their real structure and state are asserted before pixel capture
+ */
+.inhabited-bimba-overlay, /* 29.T29.16 — live entity field (CCT-21 stream) */
+.being-pattern-perspective, /* 29.T29.16 — the personal pass-through card (live wire) */
+.cosmic-engine-canvas,
+canvas,
+.cosmic-engine-strip,
+[data-testid='status-strip'],
+[data-testid='vault-tree'],
+[data-testid='personal-recognition-engine'],
+[data-testid='now-pane'],
+[data-testid='m3-daily-wheel-mini-view'],
+[data-testid='m0-coordinate-summary-card'],
+[data-testid='personal-recognition-substrate'],
+[data-testid='personal-recognition-codon'],
+[data-testid='personal-recognition-line-change'],
+[data-testid='personal-recognition-checkpoint'] {
+    visibility: hidden !important;
+}
+
+/* The Review-fold baseline proves the synthetic BlockHost fixture. These
+ * asynchronous live readers have dedicated real-UI coverage and would make
+ * the fixture capture's height depend on gateway response timing. */
+[data-testid='review-session-close'],
+[data-testid='review-contemplation-object'] {
+    display: none !important;
+}

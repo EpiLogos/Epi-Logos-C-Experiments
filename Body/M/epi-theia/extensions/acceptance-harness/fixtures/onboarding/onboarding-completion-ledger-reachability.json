@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "onboarding/onboarding-completion-ledger-reachability",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "orchestratorStepPrefixes": [
+    "cold-start.",
+    "readiness.",
+    "empty-state.",
+    "error."
+  ],
+  "walkthroughStepIds": [
+    "walkthrough.0-1-toggle",
+    "walkthrough.omnipanel",
+    "walkthrough.activity-bar",
+    "walkthrough.status-bar",
+    "walkthrough.day-now-anchor",
+    "walkthrough.cosmic-personal"
+  ],
+  "pasuStepIds": [
+    "identity.pasu-birth-date",
+    "identity.pasu-birth-location",
+    "identity.pasu-natal-chart",
+    "identity.pasu-jungian",
+    "identity.pasu-gene-keys",
+    "identity.pasu-human-design",
+    "identity.pasu-wizard"
+  ],
+  "settingsStepIds": [
+    "settings.surface-opened",
+    "settings.reset-affordance-reviewed",
+    "privacy.default-class-reviewed",
+    "profile-tick.visibility-reviewed",
+    "reset.clear-pasu-reviewed",
+    "reset.clear-onboarding-reviewed",
+    "reset.clear-cache-reviewed"
+  ],
+  "kairosStepIds": [
+    "kairos.enable",
+    "kairos.skip"
+  ],
+  "firstSessionStepIds": [
+    "first-session.start"
+  ],
+  "skipPreferences": [
+    "epi-logos.onboarding.completed-steps",
+    "epi-logos.onboarding.pasu-skipped",
+    "epi-logos.onboarding.skipped-steps",
+    "epi-logos.privacy.kairos-enabled"
+  ]
+}

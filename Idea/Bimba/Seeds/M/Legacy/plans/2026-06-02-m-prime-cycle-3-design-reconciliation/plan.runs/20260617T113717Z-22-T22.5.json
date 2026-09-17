@@ -1,0 +1,35 @@
+{
+  "runId": "20260617T113717Z-22-T22.5",
+  "taskId": "22.T22.5",
+  "startedAt": "2026-06-17T11:37:17.066Z",
+  "owner": "admin",
+  "leaseExpiresAt": "2026-06-17T13:37:17.066Z",
+  "worktree": null,
+  "task": {
+    "id": "22.T22.5",
+    "trackId": "22",
+    "tranche": "T22.5",
+    "title": "7-8-9 spine reader at session close",
+    "effort": null,
+    "file": "22-m1-paramasiva-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/22-m1-paramasiva-frontend-deep.md",
+    "dependsOn": [
+      "22.T22.4"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/browser/m1-spine-789-reader.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

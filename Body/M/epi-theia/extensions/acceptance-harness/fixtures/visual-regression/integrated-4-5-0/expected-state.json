@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/integrated-4-5-0",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "description": "Expected, deterministic state for the jiva-siva composition rendered in the ide-deep layout. The visual-regression gate asserts the human-gated review surface renders blocked controls and that composition state survives a layout/face toggle and a workspace reload.",
+  "activeLayout": "ide-deep",
+  "compositionState": {
+    "compositionId": "jiva-siva.integrated",
+    "pinnedMatrixFamily": null,
+    "pinnedTorusView": "k2-surface",
+    "cosmicSelectedCoordinate": null,
+    "cosmicKleinToPersonalHinge": false,
+    "pinnedRecognitionSlot": null,
+    "personalSelectedDayId": "2026-06-11",
+    "personalReviewQueueFilter": "all",
+    "personalKleinToCosmicHinge": true
+  },
+  "omniPanel": {
+    "activeTab": "review",
+    "perTabState": {
+      "pi-chat": { "scrollOffset": 0, "draftCommand": "" },
+      "sessions": { "selectedSessionKey": "agent:epii:main", "dayNowAnchor": "2026-06-11" },
+      "dispatch-trace": { "selectedNodeId": null, "expandedNodeIds": [] },
+      "tool-stream": { "activeEventId": null, "actorFilter": null },
+      "evidence": { "selectedPacketId": "pkt-XYZ", "miniGraphNodeId": null },
+      "review": { "selectedReviewId": "rev-human-gate-001", "decisionDraft": null },
+      "gateway": { "activeCapability": null, "facet": "capabilities" },
+      "diagnostics": { "selectedIntentId": null, "readinessPanel": "kernel-bridge" }
+    }
+  },
+  "slots": {
+    "center-stage": {
+      "owner": "m4-nara",
+      "miniMode": "field-summary",
+      "emptyState": false
+    },
+    "side-panel": {
+      "owner": "m5-epii",
+      "miniMode": "review-queue",
+      "emptyState": false
+    },
+    "evidence-panel": {
+      "owner": "m5-epii",
+      "miniMode": "review-queue",
+      "emptyState": false
+    }
+  },
+  "humanGate": {
+    "reviewId": "rev-human-gate-001",
+    "humanRequired": true,
+    "approveDisabled": true,
+    "approveTooltipMatches": "human-gate enforced",
+    "iod17Parity": { "inParity": true }
+  },
+  "bridge": {
+    "connected": true,
+    "mode": "full",
+    "subscriptionIdentity": "STABLE",
+    "sessionKey": "agent:epii:main",
+    "dayNow": "2026-06-11"
+  },
+  "invariants": [
+    "composition state is byte-identical after layout:daily-0-1<->ide-deep toggle",
+    "composition state is byte-identical after face:cosmic<->personal-0/1 toggle",
+    "human-required review BLOCKS agent approval; only the human review surface may approve",
+    "OmniPanel exposes exactly 8 tabs in canonical order",
+    "no forbidden privacy field appears in any rendered DTO"
+  ]
+}

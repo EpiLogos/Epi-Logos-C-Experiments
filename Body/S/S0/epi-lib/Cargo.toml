@@ -1,0 +1,14 @@
+[package]
+name = "epi-lib"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = []
+m0_verifier = []
+# The calculus itself is unconditional substrate (build.rs); this flag is
+# the Tranche 01.T1.13 check surface (`cargo check --features m0_calculus`).
+m0_calculus = []
+
+[build-dependencies]
+cc = "1"

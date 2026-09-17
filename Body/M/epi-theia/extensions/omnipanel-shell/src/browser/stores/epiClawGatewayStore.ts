@@ -16,6 +16,11 @@ import type {
 } from '../controllers/epi-claw/types';
 import * as Controllers from '../controllers/epi-claw/controllers';
 import type { ConfigPanelMode } from '../domain/configPanelDomain';
+import {
+  createEmptyDispatchGenealogySnapshot,
+  normalizeDispatchGenealogy,
+  type DispatchGenealogySnapshot
+} from '../../common/dispatch-genealogy';
 
 // ============================================================================
 // CONNECTION STATE
@@ -50,6 +55,12 @@ export function normalizeChatPayload(evt: GatewayEventFrame): Controllers.ChatEv
 export type GatewayPanel =
   | 'chat'      // Chat interface with tool outputs
   | 'workspace' // Consolidated configuration workspace
+  | 'dispatch-trace' // Pi -> Anima -> subagent invocation tree
+  | 'tool-stream' // Time-ordered dispatch event stream
+  | 'evidence' // Evidence deep-link landing for dispatch genealogy
+  | 'review' // Review landing surface
+  | 'gateway' // Gateway landing surface
+  | 'diagnostics' // Diagnostics landing surface
   | 'models'    // Model defaults/current/fallbacks
   | 'overview'  // Gateway status, health, entry points
   | 'channels'  // Manage messaging channels
@@ -125,6 +136,14 @@ interface EpiClawGatewayState {
   // Nodes state
   nodes: Controllers.NodesState;
   devices: Controllers.DevicesState;
+
+  // Dispatch genealogy state
+  dispatchGenealogy: {
+    snapshot: DispatchGenealogySnapshot;
+    selectedNodeId: string | null;
+    loading: boolean;
+    error: string | null;
+  };
 
   // Actions - Connection
   connect: () => void;
@@ -218,6 +237,10 @@ interface EpiClawGatewayState {
   rotateDeviceToken: (params: { deviceId: string; role: string; scopes?: string[] }) => Promise<void>;
   revokeDeviceToken: (params: { deviceId: string; role: string }) => Promise<void>;
 
+  // Actions - Dispatch genealogy
+  loadDispatchGenealogy: (sessionKey?: string | null) => Promise<void>;
+  selectDispatchGenealogyNode: (nodeId: string | null) => void;
+
   // Actions - Navigation
   setActivePanel: (panel: GatewayPanel) => void;
 }
@@ -226,7 +249,7 @@ interface EpiClawGatewayState {
 // CREATE STORE
 // ============================================================================
 
-const createInitialState = (): Omit<EpiClawGatewayState, 'connect' | 'disconnect' | 'setGatewayUrl' | 'setGatewayToken' | 'setGatewayPassword' | 'setUiTheme' | 'setChatFocusMode' | 'setChatShowThinking' | 'setChatSplitRatio' | 'setNavCollapsed' | 'setSkillsFilter' | 'setConfigPanelMode' | 'setConfigSearchQuery' | 'setConfigActiveSection' | 'setConfigActiveSubsection' | 'sendMessage' | 'removeQueuedChatMessage' | 'abortChat' | 'loadChatHistory' | 'setSessionKey' | 'setChatDraft' | 'loadSessions' | 'patchSession' | 'deleteSession' | 'loadChannels' | 'startWhatsAppLogin' | 'waitWhatsAppLogin' | 'logoutWhatsApp' | 'loadSkills' | 'toggleSkill' | 'setSkillEdit' | 'saveSkillApiKey' | 'installSkill' | 'loadCronJobs' | 'toggleCronJob' | 'addCronJob' | 'runCronJob' | 'removeCronJob' | 'loadCronRuns' | 'loadConfig' | 'loadConfigSchema' | 'saveConfig' | 'applyConfig' | 'runUpdate' | 'setConfigRaw' | 'setConfigApplySessionKey' | 'loadPresence' | 'loadDebugStatus' | 'loadDebugHealth' | 'callDebugMethod' | 'loadLogs' | 'loadNodes' | 'loadDevices' | 'approveDevicePairing' | 'rejectDevicePairing' | 'rotateDeviceToken' | 'revokeDeviceToken' | 'setActivePanel'> => ({
+const createInitialState = (): Omit<EpiClawGatewayState, 'connect' | 'disconnect' | 'setGatewayUrl' | 'setGatewayToken' | 'setGatewayPassword' | 'setUiTheme' | 'setChatFocusMode' | 'setChatShowThinking' | 'setChatSplitRatio' | 'setNavCollapsed' | 'setSkillsFilter' | 'setConfigPanelMode' | 'setConfigSearchQuery' | 'setConfigActiveSection' | 'setConfigActiveSubsection' | 'sendMessage' | 'removeQueuedChatMessage' | 'abortChat' | 'loadChatHistory' | 'setSessionKey' | 'setChatDraft' | 'loadSessions' | 'patchSession' | 'deleteSession' | 'loadChannels' | 'startWhatsAppLogin' | 'waitWhatsAppLogin' | 'logoutWhatsApp' | 'loadSkills' | 'toggleSkill' | 'setSkillEdit' | 'saveSkillApiKey' | 'installSkill' | 'loadCronJobs' | 'toggleCronJob' | 'addCronJob' | 'runCronJob' | 'removeCronJob' | 'loadCronRuns' | 'loadConfig' | 'loadConfigSchema' | 'saveConfig' | 'applyConfig' | 'runUpdate' | 'setConfigRaw' | 'setConfigApplySessionKey' | 'loadPresence' | 'loadDebugStatus' | 'loadDebugHealth' | 'callDebugMethod' | 'loadLogs' | 'loadNodes' | 'loadDevices' | 'approveDevicePairing' | 'rejectDevicePairing' | 'rotateDeviceToken' | 'revokeDeviceToken' | 'loadDispatchGenealogy' | 'selectDispatchGenealogyNode' | 'setActivePanel'> => ({
   // Connection
   connectionState: 'disconnected',
   connectionError: null,
@@ -389,6 +412,12 @@ const createInitialState = (): Omit<EpiClawGatewayState, 'connect' | 'disconnect
     devicesLoading: false,
     devicesError: null,
     devicesList: null,
+  },
+  dispatchGenealogy: {
+    snapshot: createEmptyDispatchGenealogySnapshot(),
+    selectedNodeId: null,
+    loading: false,
+    error: null,
   },
 });
 
@@ -1036,6 +1065,57 @@ export const useEpiClawGatewayStore = create<EpiClawGatewayState>()(persist((set
       const state = get();
       await Controllers.revokeDeviceToken(state.devices, params);
       set({ devices: { ...state.devices } });
+    },
+
+    // ============================================================================
+    // DISPATCH GENEALOGY ACTIONS
+    // ============================================================================
+
+    loadDispatchGenealogy: async (sessionKey?: string | null) => {
+      const state = get();
+      const targetSessionKey =
+        sessionKey ??
+        state.chat.sessionKey ??
+        Controllers.resolvePreferredSessionKey(state.sessions.sessionsResult, state.chat.sessionKey);
+      state.dispatchGenealogy.loading = true;
+      state.dispatchGenealogy.error = null;
+      set({ dispatchGenealogy: { ...state.dispatchGenealogy } });
+
+      try {
+        let resolved: unknown = null;
+        if (state.client && state.connectionState === 'connected' && targetSessionKey) {
+          resolved = await state.client.request('sessions.resolve', { sessionKey: targetSessionKey });
+        }
+        if (!resolved) {
+          resolved =
+            state.sessions.sessionsResult?.sessions.find((session) => session.key === targetSessionKey) ??
+            state.sessions.sessionsResult?.sessions[0] ??
+            null;
+        }
+        const snapshot = normalizeDispatchGenealogy(resolved, targetSessionKey ?? null);
+        const selectedNodeStillExists =
+          Boolean(state.dispatchGenealogy.selectedNodeId) &&
+          snapshot.events.some((event) => event.nodeId === state.dispatchGenealogy.selectedNodeId);
+        state.dispatchGenealogy = {
+          snapshot,
+          selectedNodeId: selectedNodeStillExists
+            ? state.dispatchGenealogy.selectedNodeId
+            : snapshot.rootIds[0] ?? null,
+          loading: false,
+          error: null,
+        };
+        set({ dispatchGenealogy: { ...state.dispatchGenealogy } });
+      } catch (err) {
+        state.dispatchGenealogy.loading = false;
+        state.dispatchGenealogy.error = err instanceof Error ? err.message : String(err);
+        set({ dispatchGenealogy: { ...state.dispatchGenealogy } });
+      }
+    },
+
+    selectDispatchGenealogyNode: (nodeId: string | null) => {
+      const state = get();
+      state.dispatchGenealogy.selectedNodeId = nodeId;
+      set({ dispatchGenealogy: { ...state.dispatchGenealogy } });
     },
 
     // ============================================================================

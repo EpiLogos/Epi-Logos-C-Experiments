@@ -1,0 +1,331 @@
+{
+  "version": 1,
+  "ledger": [
+    {
+      "id": "cold-start.bridge-initialization",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "onboarding-completion-ledger Track 32.1: ColdStartOrchestrator stage 1 reaches ready after bridge initialization succeeds.",
+      "skipPath": "not skippable: bridge initialization is required for onboarding boot.",
+      "dependsOn": [],
+      "order": 10
+    },
+    {
+      "id": "cold-start.kernel-bridge-subscription",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "ColdStartOrchestrator stage 2 reaches ready after subscribing to the kernel readiness ledger.",
+      "skipPath": "not skippable: readiness subscription is required for truthful cold-start state.",
+      "dependsOn": [
+        "cold-start.bridge-initialization"
+      ],
+      "order": 20
+    },
+    {
+      "id": "cold-start.s2-s3-handshake",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "ColdStartOrchestrator stage 3 reaches ready after the S2 graph and S3 gateway handshake reports readable readiness.",
+      "skipPath": "not skippable: S2/S3 handshake may be blocked but not marked complete by user skip.",
+      "dependsOn": [
+        "cold-start.kernel-bridge-subscription"
+      ],
+      "order": 30
+    },
+    {
+      "id": "cold-start.first-profile-tick",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "ColdStartOrchestrator stage 4 reaches ready after profile tick number 1 is observed.",
+      "skipPath": "not skippable: first profile tick is the liveness gate for the shell.",
+      "dependsOn": [
+        "cold-start.s2-s3-handshake"
+      ],
+      "order": 40
+    },
+    {
+      "id": "cold-start.day-now-anchor",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "ColdStartOrchestrator stage 5 reaches ready after today's day folder is ensured and the day-now anchor is available.",
+      "skipPath": "not skippable: day-now anchoring is required before daily onboarding can continue.",
+      "dependsOn": [
+        "cold-start.first-profile-tick"
+      ],
+      "order": 50
+    },
+    {
+      "id": "cold-start.kairos-optional",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "ColdStartOrchestrator stage 6 reaches ready after kairos refresh completes, kairos enablement is handled, or FR-3 graceful stub path is selected.",
+      "skipPath": "epi-logos.onboarding.completed-steps contains 'kairos.skip' when the user continues without kairos.",
+      "dependsOn": [
+        "cold-start.day-now-anchor"
+      ],
+      "order": 60
+    },
+    {
+      "id": "identity.pasu-birth-date",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "PASU.md contains a non-empty birth-date frontmatter value accepted by the PASU field mapping.",
+      "skipPath": "epi-logos.onboarding.pasu-skipped contains 'birth-date'.",
+      "dependsOn": [
+        "cold-start.first-profile-tick"
+      ],
+      "order": 110
+    },
+    {
+      "id": "identity.pasu-birth-location",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "PASU.md contains a non-empty birth-location frontmatter value accepted by the PASU field mapping.",
+      "skipPath": "epi-logos.onboarding.pasu-skipped contains 'birth-location'.",
+      "dependsOn": [
+        "identity.pasu-birth-date"
+      ],
+      "order": 120
+    },
+    {
+      "id": "identity.pasu-natal-chart",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "PASU.md contains a non-empty natal-chart field or the orchestrator records the neutral natal anchor fallback.",
+      "skipPath": "epi-logos.onboarding.pasu-skipped contains 'natal-chart'.",
+      "dependsOn": [
+        "identity.pasu-birth-location"
+      ],
+      "order": 130
+    },
+    {
+      "id": "identity.pasu-jungian",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "PASU.md contains a non-empty Jungian profile field accepted by the PASU field mapping.",
+      "skipPath": "epi-logos.onboarding.pasu-skipped contains 'jungian'.",
+      "dependsOn": [
+        "identity.pasu-natal-chart"
+      ],
+      "order": 140
+    },
+    {
+      "id": "identity.pasu-gene-keys",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "PASU.md contains a non-empty Gene Keys profile field accepted by the PASU field mapping.",
+      "skipPath": "epi-logos.onboarding.pasu-skipped contains 'gene-keys'.",
+      "dependsOn": [
+        "identity.pasu-jungian"
+      ],
+      "order": 150
+    },
+    {
+      "id": "identity.pasu-human-design",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "PASU.md contains a non-empty Human Design profile field accepted by the PASU field mapping.",
+      "skipPath": "epi-logos.onboarding.pasu-skipped contains 'human-design'.",
+      "dependsOn": [
+        "identity.pasu-gene-keys"
+      ],
+      "order": 160
+    },
+    {
+      "id": "identity.pasu-wizard",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "All required PASU wizard fields are complete, or the full wizard skip has been explicitly recorded.",
+      "skipPath": "epi-logos.onboarding.pasu-skipped contains 'wizard'.",
+      "dependsOn": [
+        "identity.pasu-birth-date",
+        "identity.pasu-birth-location",
+        "identity.pasu-natal-chart",
+        "identity.pasu-jungian",
+        "identity.pasu-gene-keys",
+        "identity.pasu-human-design"
+      ],
+      "order": 170
+    },
+    {
+      "id": "walkthrough.0-1-toggle",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Walkthrough overlay records completion after the user advances through the 0/1 toggle tooltip.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'walkthrough.0-1-toggle'.",
+      "dependsOn": [
+        "identity.pasu-wizard"
+      ],
+      "order": 210
+    },
+    {
+      "id": "walkthrough.omnipanel",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Walkthrough overlay records completion after the user advances through the OmniPanel tooltip.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'walkthrough.omnipanel'.",
+      "dependsOn": [
+        "walkthrough.0-1-toggle"
+      ],
+      "order": 220
+    },
+    {
+      "id": "walkthrough.activity-bar",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Walkthrough overlay records completion after the user advances through the activity-bar tooltip.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'walkthrough.activity-bar'.",
+      "dependsOn": [
+        "walkthrough.omnipanel"
+      ],
+      "order": 230
+    },
+    {
+      "id": "walkthrough.status-bar",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Walkthrough overlay records completion after the user advances through the status-bar entries tooltip.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'walkthrough.status-bar'.",
+      "dependsOn": [
+        "walkthrough.activity-bar"
+      ],
+      "order": 240
+    },
+    {
+      "id": "walkthrough.day-now-anchor",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Walkthrough overlay records completion after the user advances through the day-now anchor tooltip.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'walkthrough.day-now-anchor'.",
+      "dependsOn": [
+        "walkthrough.status-bar"
+      ],
+      "order": 250
+    },
+    {
+      "id": "walkthrough.cosmic-personal",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Walkthrough overlay records completion after the user advances through the cosmic versus personal orientation tooltip.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'walkthrough.cosmic-personal'.",
+      "dependsOn": [
+        "walkthrough.day-now-anchor"
+      ],
+      "order": 260
+    },
+    {
+      "id": "settings.surface-opened",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Settings UX surface is available and the user has opened the Epi-Logos settings category at least once.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'settings.surface-opened'.",
+      "dependsOn": [
+        "walkthrough.cosmic-personal"
+      ],
+      "order": 310
+    },
+    {
+      "id": "settings.reset-affordance-reviewed",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Diagnostics reset section has been seen while epi-logos.diagnostics.reset-enabled remains governed by manual settings.json opt-in.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'settings.reset-affordance-reviewed'.",
+      "dependsOn": [
+        "settings.surface-opened"
+      ],
+      "order": 320
+    },
+    {
+      "id": "readiness.grammar-bound",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Readiness state grammar contract is present and all cold-start/readiness states can be rendered through the canonical grammar.",
+      "skipPath": "not skippable: readiness grammar is contract substrate, not a user-discretionary onboarding step.",
+      "dependsOn": [
+        "cold-start.kernel-bridge-subscription"
+      ],
+      "order": 410
+    },
+    {
+      "id": "empty-state.registry-bound",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "EmptyStateRegistry has a registered empty-state contribution for every M-extension onboarding surface.",
+      "skipPath": "not skippable: empty-state registration is required to avoid orphan first-render states.",
+      "dependsOn": [
+        "readiness.grammar-bound"
+      ],
+      "order": 510
+    },
+    {
+      "id": "error.diagnostics-deep-link",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Retry and diagnostics deep-link affordances are available from readiness and inline error surfaces.",
+      "skipPath": "not skippable: diagnostics routing is required for blocked onboarding states.",
+      "dependsOn": [
+        "readiness.grammar-bound"
+      ],
+      "order": 610
+    },
+    {
+      "id": "privacy.default-class-reviewed",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "User has seen the protected-local default privacy explanation or Settings Privacy section is opened.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'privacy.default-class-reviewed'.",
+      "dependsOn": [
+        "walkthrough.cosmic-personal"
+      ],
+      "order": 710
+    },
+    {
+      "id": "profile-tick.visibility-reviewed",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "User has seen the profile-tick explanation in walkthrough or the profile tick visibility preference has been reviewed.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'profile-tick.visibility-reviewed'.",
+      "dependsOn": [
+        "walkthrough.0-1-toggle"
+      ],
+      "order": 810
+    },
+    {
+      "id": "kairos.enable",
+      "preferenceKey": "epi-logos.privacy.kairos-enabled",
+      "completionCriterion": "Preference epi-logos.privacy.kairos-enabled is true after the kerykeion probe succeeds and Mercurius refresh is triggered.",
+      "skipPath": "epi-logos.onboarding.completed-steps contains 'kairos.skip'.",
+      "dependsOn": [
+        "identity.pasu-wizard",
+        "cold-start.kairos-optional"
+      ],
+      "order": 910
+    },
+    {
+      "id": "kairos.skip",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Completed-steps preference contains 'kairos.skip' after the user chooses to continue without kairos.",
+      "skipPath": "epi-logos.onboarding.completed-steps contains 'kairos.skip'.",
+      "dependsOn": [
+        "identity.pasu-wizard",
+        "cold-start.kairos-optional"
+      ],
+      "order": 920
+    },
+    {
+      "id": "first-session.start",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "First-session flow has called khora.session_start, created NOW.md, updated the day-now anchor, and activated the first daily widgets.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'first-session.start'.",
+      "dependsOn": [
+        "walkthrough.cosmic-personal",
+        "cold-start.day-now-anchor"
+      ],
+      "order": 1010
+    },
+    {
+      "id": "reset.clear-pasu-reviewed",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Clear PASU.md reset path has been surfaced with strong confirmation and protected backup semantics.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'reset.clear-pasu-reviewed'.",
+      "dependsOn": [
+        "settings.reset-affordance-reviewed"
+      ],
+      "order": 1110
+    },
+    {
+      "id": "reset.clear-onboarding-reviewed",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Clear onboarding state reset path has been surfaced and is known to clear completed-steps, pasu-skipped, and skipped-steps.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'reset.clear-onboarding-reviewed'.",
+      "dependsOn": [
+        "settings.reset-affordance-reviewed"
+      ],
+      "order": 1120
+    },
+    {
+      "id": "reset.clear-cache-reviewed",
+      "preferenceKey": "epi-logos.onboarding.completed-steps",
+      "completionCriterion": "Clear local cache reset path has been surfaced with cache-only semantics preserving vault and preferences.",
+      "skipPath": "epi-logos.onboarding.skipped-steps contains 'reset.clear-cache-reviewed'.",
+      "dependsOn": [
+        "settings.reset-affordance-reviewed"
+      ],
+      "order": 1130
+    }
+  ]
+}

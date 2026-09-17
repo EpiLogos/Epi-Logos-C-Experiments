@@ -1,0 +1,35 @@
+{
+  "runId": "20260617T234904Z-26-T26.14",
+  "taskId": "26.T26.14",
+  "startedAt": "2026-06-17T23:49:04.373Z",
+  "owner": "codex-m-dev-26-t26-14",
+  "leaseExpiresAt": "2026-06-18T01:49:04.373Z",
+  "worktree": null,
+  "task": {
+    "id": "26.T26.14",
+    "trackId": "26",
+    "tranche": "T26.14",
+    "title": "`PiAxiomTranslationInspector` — DR-B-2 axiom-translation surface",
+    "effort": null,
+    "file": "26-m5-epii-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/26-m5-epii-frontend-deep.md",
+    "dependsOn": [
+      "26.T26.13"
+    ],
+    "writeScopes": [
+      "Body/S/S4/pi-agent/skills/anuttara-symbolic-parse/SKILL.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

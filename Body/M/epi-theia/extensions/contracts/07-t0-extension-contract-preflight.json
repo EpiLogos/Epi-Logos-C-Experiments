@@ -35,7 +35,11 @@
       "subscribeObservability",
       "invokeGatewayRpc",
       "depositKernelObservation",
-      "requestReviewEvidence"
+      "requestReviewEvidence",
+      "s2.parashaktiCorrespondences",
+      "kernelBridge.m2.planetaryElementalWeights()",
+      "kernelBridge.m2.cymaticMonoPolyState(address72)",
+      "kernelBridge.m3.bioquaternionTranscription(codon)"
     ],
     "requiredSubscriptions": [
       "onMathemeHarmonicProfile",
@@ -55,6 +59,283 @@
       "epii-agent-core"
     ],
     "rule": "Individual extensions consume S0/S2/S3/S5 only through the shared bridge adapter or approved shared runtime package."
+  },
+  "rustSStackBoundary": {
+    "dependencySource": "Rust Cargo.toml dependency edges: [dependencies], [dev-dependencies], and [build-dependencies].",
+    "rule": "S-stack Rust crates may depend only on same-layer or lower-layer S crates unless an owning architecture spec declares a narrower exception; lower layers must not depend on higher layers, so S0 Cargo.toml edges to S1/S2/S3/S4/S5 are forbidden. The S0 CLI membrane (epi-logos) is exempt as a composition root: it is licensed to reach every layer because passthrough access IS its function, and it is instead constrained to hold no domain law.",
+    "ciCheck": {
+      "name": "forbidden-imports",
+      "expectedLintEntry": "make lint",
+      "validator": "Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs",
+      "failureMode": "Fail when a Cargo.toml dependency path or package name matches the declaring crate's forbiddenImports matrix."
+    },
+    "layers": [
+      {
+        "id": "S-root",
+        "crateNames": [
+          "epi-kernel-contract"
+        ],
+        "forbiddenImports": [
+          "Body/S/S1",
+          "Body/S/S2",
+          "Body/S/S3",
+          "Body/S/S4",
+          "Body/S/S5",
+          "epi-s1-hen-compiler-core",
+          "epi-s2-graph-schema",
+          "epi-s2-graph-services",
+          "epi-s2-m1-cpt-trainer",
+          "epi-s3-gateway-contract",
+          "epi-s3-gateway",
+          "epi-s3-graphiti-runtime",
+          "epi-s3-redis-context",
+          "epi-spacetime-module",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S0",
+        "crateNames": [
+          "epi-lib",
+          "gemini-embedding",
+          "portal-core",
+          "epi-s0-settings"
+        ],
+        "forbiddenImports": [
+          "Body/S/S1",
+          "Body/S/S2",
+          "Body/S/S3",
+          "Body/S/S4",
+          "Body/S/S5",
+          "epi-s1-hen-compiler-core",
+          "epi-s2-graph-schema",
+          "epi-s2-graph-services",
+          "epi-s2-m1-cpt-trainer",
+          "epi-s3-gateway-contract",
+          "epi-s3-gateway",
+          "epi-s3-graphiti-runtime",
+          "epi-s3-redis-context",
+          "epi-spacetime-module",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S0-membrane",
+        "crateNames": [
+          "epi-logos"
+        ],
+        "forbiddenImports": [],
+        "note": "The epi CLI is the passthrough membrane: its job is to let every module be touched from the terminal, so it necessarily reaches every layer and is licensed to do so. This is a composition root, not a layer. What it may NOT do is hold domain law — that is enforced structurally by the src/gate + src/graph residency guard (Track 53 T53.11), not by counting import edges. Architect ruling 2026-07-28 (Track 53)."
+      },
+      {
+        "id": "S1",
+        "crateNames": [
+          "epi-s1-hen-compiler-core"
+        ],
+        "forbiddenImports": [
+          "Body/S/S2",
+          "Body/S/S3",
+          "Body/S/S4",
+          "Body/S/S5",
+          "epi-s2-graph-schema",
+          "epi-s2-graph-services",
+          "epi-s2-m1-cpt-trainer",
+          "epi-s3-gateway-contract",
+          "epi-s3-gateway",
+          "epi-s3-graphiti-runtime",
+          "epi-s3-redis-context",
+          "epi-spacetime-module",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S2",
+        "crateNames": [
+          "epi-s2-graph-schema",
+          "epi-s2-graph-services",
+          "epi-s2-m1-cpt-trainer"
+        ],
+        "forbiddenImports": [
+          "Body/S/S3",
+          "Body/S/S4",
+          "Body/S/S5",
+          "epi-s3-gateway-contract",
+          "epi-s3-gateway",
+          "epi-s3-graphiti-runtime",
+          "epi-s3-redis-context",
+          "epi-spacetime-module",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S3",
+        "crateNames": [
+          "epi-s3-gateway-contract",
+          "epi-s3-gateway",
+          "epi-s3-graphiti-runtime",
+          "epi-s3-redis-context",
+          "epi-spacetime-module"
+        ],
+        "forbiddenImports": [
+          "Body/S/S4",
+          "Body/S/S5",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S4",
+        "crateNames": [],
+        "forbiddenImports": [
+          "Body/S/S5",
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ]
+      },
+      {
+        "id": "S5",
+        "crateNames": [
+          "epi-s5-kbase-core",
+          "epi-s5-epii-agent-core",
+          "epi-s5-epii-autoresearch-core",
+          "epi-s5-epii-review-core"
+        ],
+        "forbiddenImports": []
+      }
+    ],
+    "crates": [
+      {
+        "id": "epi-kernel-contract",
+        "layer": "S-root",
+        "manifestPath": "Body/S/epi-kernel-contract/Cargo.toml",
+        "forbiddenImportsFromLayer": "S-root"
+      },
+      {
+        "id": "epi-logos",
+        "layer": "S0-membrane",
+        "manifestPath": "Body/S/S0/epi-cli/Cargo.toml",
+        "forbiddenImportsFromLayer": "S0-membrane",
+        "note": "Composition-root membrane: licensed to reach every layer (that is what a passthrough CLI is), constrained instead to hold no domain law. Track 53 T53.02."
+      },
+      {
+        "id": "epi-lib",
+        "layer": "S0",
+        "manifestPath": "Body/S/S0/epi-lib/Cargo.toml",
+        "forbiddenImportsFromLayer": "S0"
+      },
+      {
+        "id": "gemini-embedding",
+        "layer": "S0",
+        "manifestPath": "Body/S/S0/gemini-embedding/Cargo.toml",
+        "forbiddenImportsFromLayer": "S0"
+      },
+      {
+        "id": "portal-core",
+        "layer": "S0",
+        "manifestPath": "Body/S/S0/portal-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S0"
+      },
+      {
+        "id": "epi-s0-settings",
+        "layer": "S0",
+        "manifestPath": "Body/S/S0/settings/Cargo.toml",
+        "forbiddenImportsFromLayer": "S0"
+      },
+      {
+        "id": "epi-s1-hen-compiler-core",
+        "layer": "S1",
+        "manifestPath": "Body/S/S1/hen-compiler-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S1"
+      },
+      {
+        "id": "epi-s2-graph-schema",
+        "layer": "S2",
+        "manifestPath": "Body/S/S2/graph-schema/Cargo.toml",
+        "forbiddenImportsFromLayer": "S2"
+      },
+      {
+        "id": "epi-s2-graph-services",
+        "layer": "S2",
+        "manifestPath": "Body/S/S2/graph-services/Cargo.toml",
+        "forbiddenImportsFromLayer": "S2"
+      },
+      {
+        "id": "epi-s2-m1-cpt-trainer",
+        "layer": "S2",
+        "manifestPath": "Body/S/S2/m1-cpt-trainer/Cargo.toml",
+        "forbiddenImportsFromLayer": "S2"
+      },
+      {
+        "id": "epi-s3-gateway-contract",
+        "layer": "S3",
+        "manifestPath": "Body/S/S3/gateway-contract/Cargo.toml",
+        "forbiddenImportsFromLayer": "S3"
+      },
+      {
+        "id": "epi-s3-gateway",
+        "layer": "S3",
+        "manifestPath": "Body/S/S3/gateway/Cargo.toml",
+        "forbiddenImportsFromLayer": "S3"
+      },
+      {
+        "id": "epi-s3-graphiti-runtime",
+        "layer": "S3",
+        "manifestPath": "Body/S/S3/graphiti-runtime/Cargo.toml",
+        "forbiddenImportsFromLayer": "S3"
+      },
+      {
+        "id": "epi-s3-redis-context",
+        "layer": "S3",
+        "manifestPath": "Body/S/S3/redis-context/Cargo.toml",
+        "forbiddenImportsFromLayer": "S3"
+      },
+      {
+        "id": "epi-spacetime-module",
+        "layer": "S3",
+        "manifestPath": "Body/S/S3/epi-spacetime-module/Cargo.toml",
+        "forbiddenImportsFromLayer": "S3"
+      },
+      {
+        "id": "epi-s5-kbase-core",
+        "layer": "S5",
+        "manifestPath": "Body/S/S5/epi-kbase-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S5"
+      },
+      {
+        "id": "epi-s5-epii-agent-core",
+        "layer": "S5",
+        "manifestPath": "Body/S/S5/epii-agent-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S5"
+      },
+      {
+        "id": "epi-s5-epii-autoresearch-core",
+        "layer": "S5",
+        "manifestPath": "Body/S/S5/epii-autoresearch-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S5"
+      },
+      {
+        "id": "epi-s5-epii-review-core",
+        "layer": "S5",
+        "manifestPath": "Body/S/S5/epii-review-core/Cargo.toml",
+        "forbiddenImportsFromLayer": "S5"
+      }
+    ]
   },
   "readinessTaxonomy": [
     {
@@ -123,6 +404,74 @@
       "epi-logos://ide/m4-nara/artifact?artifact_id=<handle>&day_now=<handle>"
     ]
   },
+  "MathemeHarmonicProfileBoundary": {
+    "payloadNarrowingExamples": [
+      {
+        "field": "kleinFlip",
+        "consumer": "m2-parashakti",
+        "payloadPath": "payload.kleinFlip",
+        "narrowing": "Treat as an object-valued profile event; when `kind` is `m2CymaticValenceInvert`, M2 renders inverted surface valence, otherwise primary.",
+        "examplePayload": {
+          "kleinFlip": {
+            "kind": "m2CymaticValenceInvert",
+            "source": "profile.kleinFlip"
+          }
+        },
+        "fallback": "If absent, M2 reports `pending-kleinFlip` and keeps primary surface valence."
+      },
+      {
+        "field": "anuttaraWitness",
+        "consumer": "m0-anuttara",
+        "payloadPath": "payload.anuttaraWitness",
+        "narrowing": "Treat as an emit-only typed witness projection with 9-bit virtue vector, 4-bit syntax vector, read-only R-factor path, band balance, palindrome state, open Law-6 questions, and coherence score. Consumers may render or learn from it but must not gate readiness on its presence.",
+        "examplePayload": {
+          "anuttaraWitness": {
+            "virtueWitnessVector": 453,
+            "syntaxWitnessVector": 9,
+            "rfactorPath": [
+              {
+                "rFactor": 1,
+                "baseRoute": "Nara",
+                "band": "pravritti",
+                "position": 4,
+                "isTurn": false
+              },
+              {
+                "rFactor": 2,
+                "baseRoute": "Shakti",
+                "band": "pravritti",
+                "position": 5,
+                "isTurn": true
+              },
+              {
+                "rFactor": 3,
+                "baseRoute": "Shakti",
+                "band": "nivritti",
+                "position": 0,
+                "isTurn": false
+              }
+            ],
+            "bandBalance": {
+              "pravrittiDepth": 2,
+              "nivrittiDepth": 1,
+              "reachedTurn": true,
+              "returned": false
+            },
+            "palindromeState": {
+              "normalFormSymmetric": false,
+              "mirrorNormalForm": "R1@Nara/4|(@#)|R3@Shakti/0"
+            },
+            "openQuestions": [
+              "Law-6:R3@Shakti:return?"
+            ],
+            "coherenceScore": 0.625
+          }
+        },
+        "fallback": "If absent, M0 reports `pending-anuttaraWitness` as informational/degraded evidence only; only the human gate and M5 review may block."
+      }
+    ],
+    "rule": "The bridge keeps `payload` opaque at the shared boundary; each M-extension narrows only the fields declared by its contract and readiness checks."
+  },
   "extensions": [
     {
       "id": "m0-anuttara",
@@ -130,7 +479,8 @@
       "viewIds": [
         "m0.anuttara.languageMap",
         "m0.anuttara.owlShaclInspector",
-        "m0.anuttara.rVirtuePanel"
+        "m0.anuttara.rVirtuePanel",
+        "m0.anuttara.communityClockOverlay"
       ],
       "command": {
         "open": "m0.openCoordinate",
@@ -138,6 +488,16 @@
         "depositOnly": "m0.openCoordinate.depositOnly"
       },
       "routePath": "/m0-anuttara/coordinate",
+      "intentTargets": [
+        {
+          "contributionId": "coordinate",
+          "label": "M0 Anuttara: Open Coordinate"
+        },
+        {
+          "contributionId": "graph",
+          "label": "M0 Anuttara: Open Graph Node"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",
@@ -180,6 +540,17 @@
         "M0CoordinateSummaryCard",
         "M0SelectionHandler"
       ],
+      "currentStateSelectors": [
+        {
+          "id": "m0-anuttara.activeLayer",
+          "source": "shared-bridge",
+          "reads": [
+            "activeLayer",
+            "implicateExplicate",
+            "mode"
+          ]
+        }
+      ],
       "firstSlicePriority": "Anuttara language-map browser plus OWL/SHACL provenance inspector backed by bridge-mediated S2 graph queries.",
       "blockers": [
         "Track 02 T7/T8 coordinate-native graph API parity",
@@ -193,7 +564,9 @@
       "viewIds": [
         "m1.paramasiva.clockInstrument",
         "m1.paramasiva.kleinTopology",
-        "m1.paramasiva.audioBusInspector"
+        "m1.paramasiva.audioBusInspector",
+        "m1.paramasiva.cl42SignatureInspector",
+        "m1.paramasiva.kleinFlipEventStrip"
       ],
       "command": {
         "open": "m1.startWalk",
@@ -201,6 +574,16 @@
         "depositOnly": "m1.startWalk.depositOnly"
       },
       "routePath": "/m1-paramasiva/walk",
+      "intentTargets": [
+        {
+          "contributionId": "walk",
+          "label": "M1 Paramasiva: Open Walk"
+        },
+        {
+          "contributionId": "schema",
+          "label": "M1 Paramasiva: Open Schema Walk"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",
@@ -264,13 +647,29 @@
         "depositOnly": "m2.openMeaningPacket.depositOnly"
       },
       "routePath": "/m2-parashakti/meaning-packet",
+      "intentTargets": [
+        {
+          "contributionId": "meaning-packet",
+          "label": "M2 Parashakti: Open Meaning Packet"
+        },
+        {
+          "contributionId": "resonance",
+          "label": "M2 Parashakti: Open Resonance Packet"
+        },
+        {
+          "contributionId": "correspondenceTree",
+          "label": "M2 Parashakti: Open Correspondence Tree"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",
           "readReadiness",
           "invokeGatewayRpc",
           "depositKernelObservation",
-          "requestReviewEvidence"
+          "requestReviewEvidence",
+          "kernelBridge.m2.planetaryElementalWeights()",
+          "kernelBridge.m2.cymaticMonoPolyState(address72)"
         ],
         "requiredSubscriptions": [
           "profile",
@@ -308,11 +707,12 @@
       ],
       "track08Exports": [
         "M2MeaningPacketCard",
-        "M2CymaticMiniView"
+        "M2CymaticMiniView",
+        "M2CymaticTextureContribution"
       ],
       "firstSlicePriority": "M2PrimeMeaningPacket viewer plus deterministic cymatic renderer driven by profile bus and proven correspondence payloads.",
       "blockers": [
-        "Track 01 resonance72, planetary-chakral, audio bus, and kleinFlipState fields",
+        "Track 01 resonance72, planetary-chakral, and audio bus fields",
         "Track 02 correspondence provenance and mapping law",
         "Track 03 Kerykeion and world_clock provider path"
       ]
@@ -331,6 +731,12 @@
         "depositOnly": "m3.openCodon.depositOnly"
       },
       "routePath": "/m3-mahamaya/codon",
+      "intentTargets": [
+        {
+          "contributionId": "codon",
+          "label": "M3 Mahamaya: Open Codon Rotation"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",
@@ -387,7 +793,9 @@
       "viewIds": [
         "m4.nara.dayContainer",
         "m4.nara.graphitiBrowser",
-        "m4.nara.personalField"
+        "m4.nara.personalField",
+        "m4.nara.lensApplication",
+        "m4.nara.logosCycle"
       ],
       "command": {
         "open": "m4.openArtifact",
@@ -395,6 +803,20 @@
         "depositOnly": "m4.openArtifact.depositOnly"
       },
       "routePath": "/m4-nara/artifact",
+      "intentTargets": [
+        {
+          "contributionId": "artifact",
+          "label": "M4 Nara: Open Artifact"
+        },
+        {
+          "contributionId": "journal",
+          "label": "M4 Nara: Start Journal Entry"
+        },
+        {
+          "contributionId": "logos",
+          "label": "M4 Nara: Logos Cycle"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",
@@ -432,14 +854,16 @@
           "neo4j-driver"
         ]
       },
-      "privacyClass": "protected_local_handle_only",
+      "privacyClass": "protected_local",
       "observabilityEventTypes": [
         "m4.artifact.created",
         "m4.privacy.blocked"
       ],
       "track08Exports": [
         "M4ArtifactHandleChip",
-        "M4RecognitionMiniView"
+        "M4RecognitionMiniView",
+        "M4LensCard",
+        "M4LogosStageRing"
       ],
       "firstSlicePriority": "Protected Nara DayContainer and Graphiti browser with handle-only deep links and explicit consent/privacy gates.",
       "blockers": [
@@ -462,6 +886,16 @@
         "depositOnly": "m5.openReview.depositOnly"
       },
       "routePath": "/m5-epii/review",
+      "intentTargets": [
+        {
+          "contributionId": "review",
+          "label": "M5 Epii: Open Review Item"
+        },
+        {
+          "contributionId": "evidence-deposit",
+          "label": "M5 Epii: Deposit Review Evidence"
+        }
+      ],
       "bridge": {
         "requiredCapabilities": [
           "readCurrentProfile",

@@ -1,8 +1,12 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
+import { createHash } from "node:crypto";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { renderTemplateWithVak } from "./modules/template-vak.ts";
 import { isValidVakAddress } from "../shared/vak_address.ts";
+import { hen_content_delta_since } from "./modules/hybrid-retrieve.ts";
 
 export async function henExtension(api: ExtensionAPI) {
   // ── Tool: hen_template_invoke ────────────────────────────────────
@@ -20,6 +24,10 @@ export async function henExtension(api: ExtensionAPI) {
         Type.Literal("now"),
         Type.Literal("thought"),
         Type.Literal("flow"),
+        // CT4a's archetype. `templates.rs` has rendered Integration-Preview.md
+        // all along; it was missing from this union, so the CT4a template was
+        // canon and on disk yet unreachable through the tool.
+        Type.Literal("integration-preview"),
       ]),
       coordinate: Type.Optional(Type.String({ description: "Coordinate of the artifact" })),
       session_id: Type.Optional(Type.String()),
@@ -44,6 +52,8 @@ export async function henExtension(api: ExtensionAPI) {
               body: params.body,
             });
             return {
+              // pi requires a details payload; this tool returns none.
+              details: undefined,
               content: [{ type: "text", text }],
               isError: false,
             };
@@ -58,6 +68,8 @@ export async function henExtension(api: ExtensionAPI) {
       if (params.now_override) args.push("--now", params.now_override);
       const render = spawnSync("epi", args, { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: render.stdout || render.stderr }],
         isError: render.status !== 0,
       };
@@ -77,7 +89,9 @@ export async function henExtension(api: ExtensionAPI) {
       const args = ["vault", "frontmatter-validate", params.note];
       if (params.vault) args.push("--vault", params.vault);
       const result = spawnSync("epi", args, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });
 
@@ -96,6 +110,8 @@ export async function henExtension(api: ExtensionAPI) {
         "vault", "frontmatter-set", params.file, params.key, params.value,
       ], { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr || `set ${params.key}=${params.value}` }],
         isError: result.status !== 0,
       };
@@ -121,6 +137,8 @@ export async function henExtension(api: ExtensionAPI) {
         const pathResult = spawnSync("epi", ["vault", "now-path", "--session-id", params.session_id], { encoding: "utf8" });
         if (pathResult.status !== 0) {
           return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined,
             content: [{ type: "text", text: pathResult.stderr || "now-path resolution failed" }],
             isError: true,
           };
@@ -133,7 +151,9 @@ export async function henExtension(api: ExtensionAPI) {
         args = ["tasks", "daily"];
       }
       const result = spawnSync("obsidian-cli", args, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || "(no tasks found)" }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || "(no tasks found)" }] };
     },
   });
 
@@ -153,6 +173,8 @@ export async function henExtension(api: ExtensionAPI) {
         "task", `file="${params.file}"`, `line=${params.line}`, action,
       ], { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr || `task line ${params.line} ${action}d` }],
         isError: result.status !== 0,
       };
@@ -173,7 +195,9 @@ export async function henExtension(api: ExtensionAPI) {
       const args = ["search", `query="${params.query}"`, `limit=${params.limit ?? 20}`];
       if (params.path) args.push(`path="${params.path}"`);
       const result = spawnSync("obsidian-cli", args, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || "(no results)" }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || "(no results)" }] };
     },
   });
 
@@ -203,9 +227,55 @@ export async function henExtension(api: ExtensionAPI) {
       }
       const result = spawnSync("epi", args, { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr || "link candidate lookup unavailable" }],
         isError: result.status !== 0,
       };
+    },
+  });
+
+  // ── Tool: hen_arena_promotion_intake ─────────────────────────────
+  api.registerTool({
+    name: "hen_arena_promotion_intake",
+    label: "Hen Arena Promotion Intake",
+    description: "Intake arena-promotion proposals from warm Vama Shakti lifecycle into the CCT-14 entity-candidate path. Accept emits a Track 40 CU-ENTITY candidate with vama_shakti_class provenance; reject archives the proposal under Idea/Empty/Pratibimba/arena-promotion-archive.",
+    parameters: Type.Object({
+      proposal: Type.Record(Type.String(), Type.Unknown(), { description: "arena-promotion proposal payload emitted by epi_gnostic.arena_promotion" }),
+      action: Type.Optional(Type.Union([Type.Literal("intake"), Type.Literal("accept"), Type.Literal("reject")], { default: "intake" })),
+      track40_id: Type.Optional(Type.String({ description: "Existing or reserved CU-ENTITY id" })),
+      rejection_reason: Type.Optional(Type.String()),
+      archive_root: Type.Optional(Type.String({ description: "Override archive root for tests or controlled runs" })),
+    }),
+    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      try {
+        const action = params.action ?? "intake";
+        const receipt = buildArenaPromotionIntakeReceipt(params.proposal, action, params.track40_id);
+
+        if (action === "reject") {
+          const archivePath = archiveArenaPromotionProposal(
+            params.proposal,
+            params.archive_root,
+            params.rejection_reason,
+          );
+          receipt.archive_path = archivePath;
+          receipt.warm_update = { promotion_status: "rejected" };
+        }
+
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
+          content: [{ type: "text", text: JSON.stringify(receipt, null, 2) }],
+          isError: false,
+        };
+      } catch (error) {
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined,
+          content: [{ type: "text", text: `arena-promotion intake refused: ${error}` }],
+          isError: true,
+        };
+      }
     },
   });
 
@@ -219,7 +289,9 @@ export async function henExtension(api: ExtensionAPI) {
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("obsidian-cli", ["backlinks", `file="${params.file}"`], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || "(no backlinks)" }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || "(no backlinks)" }] };
     },
   });
 
@@ -229,15 +301,23 @@ export async function henExtension(api: ExtensionAPI) {
     label: "Hen Hybrid Retrieve",
     description: "Coordinate-aware retrieval: obsidian search + Neo4j graph traversal.",
     parameters: Type.Object({
-      query: Type.String(),
+      query: Type.Optional(Type.String()),
       coordinate: Type.Optional(Type.String({ description: "Filter by coordinate for graph traversal" })),
       vault: Type.Optional(Type.String()),
       limit: Type.Optional(Type.Integer({ default: 10 })),
+      path: Type.Optional(Type.String({ description: "Exact note path for a temporal content-delta query" })),
+      since: Type.Optional(Type.String({ description: "ISO-8601 lower bound for changed content" })),
+      response_token: Type.Optional(Type.String({ description: "Khora response token establishing the content boundary" })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      const obsArgs = ["search", `query="${params.query}"`, `limit=${params.limit ?? 10}`];
-      const obsResult = spawnSync("obsidian-cli", obsArgs, { encoding: "utf8" });
-      const vaultHits = obsResult.stdout?.trim() || "(no vault results)";
+      if (!params.query && !params.path) {
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: "hen_hybrid_retrieve requires query or path" }], isError: true };
+      }
+      const vaultHits = params.query
+        ? spawnSync("obsidian-cli", ["search", `query="${params.query}"`, `limit=${params.limit ?? 10}`], { encoding: "utf8" }).stdout?.trim() || "(no vault results)"
+        : "";
 
       let graphHits = "";
       if (params.coordinate) {
@@ -245,12 +325,24 @@ export async function henExtension(api: ExtensionAPI) {
         graphHits = gResult.stdout?.trim() || "";
       }
 
+      const delta = params.path
+        ? hen_content_delta_since({
+            path: params.path,
+            since: params.since,
+            response_token: params.response_token,
+          })
+        : null;
+
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{
           type: "text",
-          text: ["=== Vault (obsidian search) ===", vaultHits,
+          text: [vaultHits ? "=== Vault (obsidian search) ===" : "", vaultHits,
             graphHits ? "\n=== Graph (Neo4j coordinate) ===" : "",
             graphHits,
+            delta ? "\n=== Content delta (Hen) ===" : "",
+            delta ? JSON.stringify(delta) : "",
           ].filter(Boolean).join("\n"),
         }],
       };
@@ -266,6 +358,8 @@ export async function henExtension(api: ExtensionAPI) {
     async execute(_id: string, _params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["--json", "agent", "extensions", "status", "--agent", "main"], { encoding: "utf8" });
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{ type: "text", text: result.stdout || result.stderr || "extension status unavailable" }],
         isError: result.status !== 0,
       };
@@ -284,6 +378,8 @@ export async function henExtension(api: ExtensionAPI) {
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined,
         content: [{
           type: "text",
           text: `graph_query unavailable: epi does not expose arbitrary Cypher execution.\nRequested query: ${params.cypher}`,
@@ -322,7 +418,9 @@ export async function henExtension(api: ExtensionAPI) {
         const snippets = [...html.matchAll(snippetRe)];
 
         if (titles.length === 0) {
-          return { content: [{ type: "text", text: "No results found (DDG may have changed markup or rate-limited)" }] };
+          return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined, content: [{ type: "text", text: "No results found (DDG may have changed markup or rate-limited)" }] };
         }
 
         const results: string[] = [];
@@ -344,9 +442,13 @@ export async function henExtension(api: ExtensionAPI) {
           results.push(`${i + 1}. **${title}**\n   ${realUrl}\n   ${snippet}`);
         }
 
-        return { content: [{ type: "text", text: results.join("\n\n") }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: results.join("\n\n") }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `web_search error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `web_search error: ${e}` }], isError: true };
       }
     },
   });
@@ -367,13 +469,19 @@ export async function henExtension(api: ExtensionAPI) {
           headers: { "Accept": "text/plain", "X-No-Cache": "true" },
         });
         if (!res.ok) {
-          return { content: [{ type: "text", text: `web_fetch: HTTP ${res.status} for ${params.url}` }], isError: true };
+          return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined, content: [{ type: "text", text: `web_fetch: HTTP ${res.status} for ${params.url}` }], isError: true };
         }
         const text = await res.text();
         const out = text.length > limit ? text.slice(0, limit) + `\n\n... [truncated at ${limit} chars]` : text;
-        return { content: [{ type: "text", text: out }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: out }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `web_fetch error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `web_fetch error: ${e}` }], isError: true };
       }
     },
   });
@@ -390,4 +498,123 @@ export async function henExtension(api: ExtensionAPI) {
   api.on("tool_result", async () => {
     // Sync event emission handled by khora_write → khora_sync_queue_push
   });
+}
+
+type ArenaPromotionAction = "intake" | "accept" | "reject";
+
+function buildArenaPromotionIntakeReceipt(
+  proposal: Record<string, unknown>,
+  action: ArenaPromotionAction,
+  track40Id?: string,
+): Record<string, unknown> {
+  if (!proposal || typeof proposal !== "object") {
+    throw new Error("proposal object is required");
+  }
+  if (proposal.event !== "promotion_proposal_emitted") {
+    throw new Error("promotion_proposal_emitted event is required");
+  }
+  const vamaClass = stringField(proposal, "vama_shakti_class");
+  const coordinate = stringField(proposal, "vama_shakti_coordinate_label");
+  const patch = objectField(proposal, "augmentation_patch");
+  const target = stringField(patch, "target");
+  if (target !== "form_text" && target !== "element_signature") {
+    throw new Error(`unsupported augmentation target ${target}`);
+  }
+
+  const cuId = track40Id ?? `CU-ENTITY-${shortHash(`${coordinate}:${vamaClass}`)}`;
+  const row = {
+    id: cuId,
+    category: "ENTITY",
+    status: action === "accept" ? "reviewed" : "designed",
+    title: `Arena promotion intake for ${coordinate} (${vamaClass})`,
+    claim_statement: `Warm Vama Shakti ${coordinate} crossed its classifier-specific arena-promotion threshold and proposes an augmented-rupa candidate.`,
+    ratification_path: "Entity-candidate lifecycle (CCT-14)",
+    intake_flow: "arena-promotion",
+    vama_shakti_class: vamaClass,
+    augmentation_target: target,
+    originating_session: {
+      date: new Date().toISOString().slice(0, 10),
+      agent: "hen_arena_promotion_intake",
+      conversation_id: stringField(proposal, "proposal_id"),
+    },
+    target_landing_site: {
+      kind: "new-entity",
+      path: `Idea/Bimba/World/${coordinate}.md`,
+      anchor: "arena-promotion augmentation",
+    },
+    qm_witness: {
+      vak_address: proposal.distilled_vak_address_signature,
+      content_hash: shortHash(JSON.stringify(proposal)),
+    },
+  };
+
+  return {
+    event: "arena-promotion_intake_registered",
+    action,
+    cu_entity_row: row,
+    form_patch: patch,
+    warm_update: {
+      promotion_status: action === "accept" ? "accepted" : "proposed",
+    },
+  };
+}
+
+function archiveArenaPromotionProposal(
+  proposal: Record<string, unknown>,
+  archiveRoot?: string,
+  rejectionReason?: string,
+): string {
+  const root = archiveRoot ?? join(repoRoot(), "Idea", "Empty", "Pratibimba", "arena-promotion-archive");
+  mkdirSync(root, { recursive: true });
+  const coordinate = sanitizeFilename(String(proposal.vama_shakti_coordinate_label ?? "unknown"));
+  const vamaClass = sanitizeFilename(String(proposal.vama_shakti_class ?? "unknown"));
+  const date = new Date().toISOString().slice(0, 10);
+  const hash = shortHash(JSON.stringify(proposal));
+  const archivePath = join(root, `${date}-${coordinate}-${vamaClass}-${hash}.md`);
+  const body = [
+    "---",
+    'c_4_artifact_role: "arena-promotion-archive"',
+    `c_4_promotion_status: "rejected"`,
+    `c_4_vama_shakti_class: "${String(proposal.vama_shakti_class ?? "unknown")}"`,
+    "---",
+    "",
+    "# Arena Promotion Archive",
+    "",
+    `Rejection reason: ${rejectionReason ?? "not supplied"}`,
+    "",
+    "```json",
+    JSON.stringify(proposal, null, 2),
+    "```",
+    "",
+  ].join("\n");
+  writeFileSync(archivePath, body, "utf8");
+  return archivePath;
+}
+
+function objectField(source: Record<string, unknown>, key: string): Record<string, unknown> {
+  const value = source[key];
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error(`${key} object is required`);
+  }
+  return value as Record<string, unknown>;
+}
+
+function stringField(source: Record<string, unknown>, key: string): string {
+  const value = source[key];
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new Error(`${key} string is required`);
+  }
+  return value;
+}
+
+function shortHash(value: string): string {
+  return createHash("sha256").update(value).digest("hex").slice(0, 12);
+}
+
+function repoRoot(): string {
+  return process.env.EPI_REPO_ROOT ?? process.cwd();
+}
+
+function sanitizeFilename(value: string): string {
+  return value.replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^_+|_+$/g, "") || "unknown";
 }

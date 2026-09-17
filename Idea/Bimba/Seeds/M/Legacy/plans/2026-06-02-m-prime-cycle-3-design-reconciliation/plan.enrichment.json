@@ -1,0 +1,1636 @@
+{
+  "05.T5.3": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "05.T5.4": {
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "05.T5.5": {
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "05.T5.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "05.T5.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "05.T5.9": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "06.T6.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "originalScopes": [
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "06.T6.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/agentic-control-room/src/common/parity.ts",
+      "Body/M/epi-theia/extensions/agentic-control-room/src/common/index.ts"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/agentic-control-room/src/common/run-model.ts"
+    ],
+    "originalScopes": [
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "07.T7.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**"
+    ]
+  },
+  "07.T7.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**"
+    ]
+  },
+  "07.T7.9": {
+    "specRef": "Idea/Bimba/Seeds/M/INTEGRATED-1-2-3-COSMIC-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**"
+    ]
+  },
+  "08.T8.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**"
+    ]
+  },
+  "08.T8.5": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**"
+    ]
+  },
+  "08.T8.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**"
+    ]
+  },
+  "08.T8.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**"
+    ]
+  },
+  "09.T9.2": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**"
+    ]
+  },
+  "09.T9.3": {
+    "enrichedScopes": [
+      "Body/S/S2/graph-schema/src/lib.rs"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**"
+    ]
+  },
+  "09.T9.5": {
+    "specRef": "Idea/Bimba/Seeds/M/INTEGRATED-1-2-3-COSMIC-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**"
+    ]
+  },
+  "09.T9.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/frontend-module.ts"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/m0-anuttara-widget.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**"
+    ]
+  },
+  "09.T9.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts",
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/index.ts"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**"
+    ]
+  },
+  "09.T9.9": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**"
+    ]
+  },
+  "09.T9.10": {
+    "specRef": "Idea/Bimba/Seeds/S/S2/S2-ARCHITECTURE.md",
+    "enrichedScopes": [
+      "Body/S/S3/gateway-contract/src/lib.rs"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**"
+    ]
+  },
+  "09.T9.11": {
+    "specRef": "Idea/Bimba/Seeds/S/S1/S1-ARCHITECTURE.md",
+    "enrichedScopes": [
+      "Body/S/S2/graph-services/Cargo.toml",
+      "Body/S/S2/graph-schema/src/lib.rs",
+      "Body/S/S2/graph-schema/Cargo.toml",
+      "Body/S/S2/graph-services/src/coordinate.rs"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S2/graph-schema/src/lib.rs",
+      "Body/S/S2/graph-services/src/coordinate.rs",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Bimba/World/Types/Coordinates/C/**",
+      "Idea/Pratibimba/System/**"
+    ]
+  },
+  "09.T9.12": {
+    "enrichedScopes": [
+      "Body/S/S1/hen-compiler-core/src/graph_promotion.rs",
+      "Body/S/S1/hen-compiler-core/Cargo.toml"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S1/hen-compiler-core/src/graph_promotion.rs",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**"
+    ]
+  },
+  "11.T11.2": {
+    "originalScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ]
+  },
+  "11.T11.3": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/<owner>/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ]
+  },
+  "11.T11.4": {
+    "originalScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ]
+  },
+  "11.T11.5": {
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/test/validate-extension-contract-preflight.test.mjs",
+      "Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**",
+      "src/**/*.ts"
+    ]
+  },
+  "11.T11.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "originalScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ]
+  },
+  "11.T11.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "originalScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ]
+  },
+  "11.T11.8": {
+    "specRef": "Idea/Bimba/Seeds/M/INTEGRATED-1-2-3-COSMIC-ARCHITECTURE.md",
+    "originalScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ]
+  },
+  "11.T11.9": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/contracts/surface-extension-contract-ledger.json",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ]
+  },
+  "12.T12.1": {
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/agentic-control-room/src/common/parity.ts",
+      "Body/M/epi-theia/extensions/agentic-control-room/src/common/index.ts"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/agentic-control-room/src/common/run-model.ts"
+    ]
+  },
+  "12.T12.2": {
+    "specRef": "Idea/Bimba/Seeds/S/S3/S3-ARCHITECTURE.md",
+    "enrichedScopes": [
+      "Body/S/S5/epi-gnostic/tests/test_enrichment.py"
+    ],
+    "originalScopes": [
+      "Body/S/S3/gateway/src/**"
+    ]
+  },
+  "12.T12.3": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+    "originalScopes": [
+      "Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/{nous,logos,eros,mythos,psyche,sophia,anima}.md"
+    ]
+  },
+  "12.T12.4": {
+    "originalScopes": [
+      "Body/S/S4/pi-agent/lib/**"
+    ]
+  },
+  "12.T12.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+  },
+  "12.T12.7": {
+    "specRef": "Idea/Bimba/Seeds/S/S4/S4-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/S/S4/pi-agent/lib/axiom-translate.ts"
+    ]
+  },
+  "12.T12.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+  },
+  "12.T12.9": {
+    "specRef": "Idea/Bimba/Seeds/S/S4/S4-ARCHITECTURE.md"
+  },
+  "12.T12.10": {
+    "specRef": "Idea/Bimba/Seeds/S/S4/S4-ARCHITECTURE.md"
+  },
+  "12.T12.12": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+  },
+  "12.T12.13": {
+    "specRef": "Idea/Bimba/Seeds/S/S4/S4-ARCHITECTURE.md",
+    "enrichedScopes": [
+      "Body/S/S5/epi-gnostic/tests/test_enrichment.py"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/agentic-control-room/**"
+    ]
+  },
+  "15.T15.4": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/composition-pattern.md"
+    ]
+  },
+  "15.T15.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m1-paramasiva-played-torus/ARCHITECTURE.md",
+      "Body/S/S0/epi-lib/src/m1.c:22-114",
+      "Idea/Bimba/Seeds/M/M1'/M1-2-ANANDA-VORTEX-ARCHITECTURE.md"
+    ]
+  },
+  "15.T15.9": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "originalScopes": [
+      "Idea/Bimba/Seeds/M/M1'/M1-2-ANANDA-VORTEX-ARCHITECTURE.md"
+    ]
+  },
+  "17.T17.2": {
+    "specRef": "Idea/Bimba/Seeds/S/S0/S0-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/S/S0/epi-cli/src/gate/server.rs"
+    ]
+  },
+  "17.T17.3": {
+    "specRef": "Idea/Bimba/Seeds/S/S2/S2-ARCHITECTURE.md"
+  },
+  "17.T17.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md"
+  },
+  "17.T17.5": {
+    "specRef": "Idea/Bimba/Seeds/S/S0/S0-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/S/S0/epi-cli/src/core/mod.rs"
+    ]
+  },
+  "17.T17.6": {
+    "specRef": "Idea/Bimba/Seeds/S/S0/S0-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/S/S0/portal-core/src/kernel.rs"
+    ]
+  },
+  "17.T17.7": {
+    "specRef": "Idea/Bimba/Seeds/S/S3/S3-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/S/S3/gateway/src/spacetime.rs"
+    ]
+  },
+  "17.T17.8": {
+    "specRef": "Idea/Bimba/Seeds/S/S2/S2-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/S/S2/graph-services/src/sync_coordinator.rs"
+    ]
+  },
+  "17.T17.9": {
+    "specRef": "Idea/Bimba/Seeds/S/S4/S4-ARCHITECTURE.md",
+    "existingSurface": [
+      "Body/S/S4/ta-onta/S4-5p-aletheia/spine-contribution.ts"
+    ],
+    "originalScopes": [
+      "Body/S/S4/ta-onta/S4-5p-aletheia/extension.ts"
+    ]
+  },
+  "17.T17.17": {
+    "specRef": "Idea/Bimba/Seeds/S/S2/S2-ARCHITECTURE.md"
+  },
+  "17.T17.18": {
+    "specRef": "Idea/Bimba/Seeds/S/S1/S1-ARCHITECTURE.md"
+  },
+  "17.T17.19": {
+    "specRef": "Idea/Bimba/Seeds/S/S1/S1-ARCHITECTURE.md"
+  },
+  "17.T17.21": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "originalScopes": [
+      "Body/S/S0/luts/**"
+    ]
+  },
+  "17.T17.22": {
+    "specRef": "Idea/Bimba/Seeds/S/S1/S1-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/S/S1/hen-compiler/**"
+    ]
+  },
+  "17.T17.23": {
+    "specRef": "Idea/Bimba/Seeds/S/S3/S3-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/M/epi-theia",
+      "Body/S/S3",
+      "Body/S/S3/epi-app"
+    ]
+  },
+  "17.T17.24": {
+    "specRef": "Idea/Bimba/Seeds/S/S4/S4-ARCHITECTURE.md"
+  },
+  "17.T17.25": {
+    "specRef": "Idea/Bimba/Seeds/S/S4/S4-ARCHITECTURE.md"
+  },
+  "17.T17.26": {
+    "specRef": "Idea/Bimba/Seeds/S/S3/S3-ARCHITECTURE.md",
+    "enrichedScopes": [
+      "Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py"
+    ],
+    "originalScopes": [
+      "Body/S/S3/graphiti-runtime/**",
+      "Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py"
+    ]
+  },
+  "18.T18.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+  },
+  "18.T18.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md"
+  },
+  "18.T18.6": {
+    "specRef": "Idea/Bimba/Seeds/S/S0/S0-ARCHITECTURE.md",
+    "enrichedScopes": [
+      "Body/S/S0/portal-core/src/kernel.rs"
+    ]
+  },
+  "18.T18.8": {
+    "enrichedScopes": [
+      "Body/S/S0/portal-core/src/kernel.rs"
+    ]
+  },
+  "18.T18.9": {
+    "specRef": "Idea/Bimba/Seeds/S/S2/S2-ARCHITECTURE.md"
+  },
+  "05.T5.19": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Idea/Bimba/Seeds/M/M4'/2026-06-04-prospective-retrospective-canvas-spec.md",
+      "Idea/Bimba/World/NOW.md",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "12.T12.18": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "existingSurface": [
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/hen-integration.ts",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/chronos-integration.ts",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/sophia-ingest.ts"
+    ],
+    "originalScopes": [
+      "Body/S/S4/ta-onta/S4-5p-aletheia/S5'/agents/janus.md",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/janus-doorway.ts",
+      "Idea/Bimba/Seeds/M/M4'/2026-06-04-prospective-retrospective-canvas-spec.md"
+    ]
+  },
+  "12.T12.19": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Idea/Bimba/Seeds/M/M4'/2026-06-04-prospective-retrospective-canvas-spec.md"
+    ]
+  },
+  "05.T5.20": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "existingSurface": [
+      "Body/S/S4/ta-onta/S4-4p-anima/spine-contribution.ts",
+      "Body/S/S4/ta-onta/S4-4p-anima/extension.ts"
+    ],
+    "enrichedScopes": [
+      "Body/S/S4/ta-onta/S4-4p-anima/CONTRACT.md"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Body/S/S4/pi-agent/**",
+      "Body/S/S4/ta-onta/S4-4p-anima/CONTRACT.md",
+      "Body/S/S5/epii-operational-capacities/m5-prime-epii-on-nara-qlora-dialogic-voice.md",
+      "Body/S/S5/epii-operational-capacities/m5-prime-epii-on-paramasiva-ql-cpt-and-rag.md",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "05.T5.21": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Body/S/S4/pi-agent/skills/anuttara-symbolic-parse/SKILL.md",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "06.T6.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+    "enrichedScopes": [
+      "Body/S/S5/epii-autoresearch-core/src/lib.rs",
+      "Body/S/S0/portal-core/src/kernel.rs"
+    ],
+    "originalScopes": [
+      "Body/S/S5/epii-autoresearch-core/**",
+      "Body/S/S5/epii-autoresearch-core/skills/parashakti/ebm-head/**",
+      "Body/S/S5/epii-autoresearch-core/src/resonance_ebm/**",
+      "Body/S/S5/epii-operational-capacities/m5-prime-epii-on-mahamaya-process-reward-rl.md",
+      "Body/S/S5/epii-operational-capacities/m5-prime-epii-on-parashakti-graph-relational-ml.md",
+      "scripts/eval.rs",
+      "scripts/serve.rs",
+      "scripts/train.rs",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "06.T6.9": {
+    "specRef": "Idea/Bimba/Seeds/S/S0/S0-ARCHITECTURE.md",
+    "enrichedScopes": [
+      "Body/S/S0/epi-cli/src/main.rs"
+    ],
+    "originalScopes": [
+      "Body/S/S0/epi-cli/src/main.rs",
+      "Body/S/S5/epii-autoresearch-core/src/resonance_corpus/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "12.T12.20": {
+    "specRef": "Idea/Bimba/Seeds/S/S4/S4-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/S/S3/spacetime-context/schemas/elo-runtime.sql",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/anansi-elo-index.ts",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/mercurius-elo.ts",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/moirai-fair-comparison.ts",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/{mercurius-elo, anansi-elo-index, moirai-fair-comparison, janus-threshold}.ts"
+    ]
+  },
+  "12.T12.21": {
+    "originalScopes": [
+      "Body/S/S4/pi-agent/skills/user-context/{SKILL.md, index.ts, schema.json}",
+      "Body/S/S5/epii-autoresearch-core/src/ebm_user_projection.py",
+      "Idea/Pratibimba/Self/PASU.md"
+    ]
+  },
+  "12.T12.22": {
+    "originalScopes": [
+      "Body/S/S0/epi-cli/src/slot.rs"
+    ]
+  },
+  "12.T12.23": {
+    "originalScopes": [
+      "Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts"
+    ]
+  },
+  "12.T12.24": {
+    "enrichedScopes": [
+      "Body/S/S0/portal-core/src/kernel.rs"
+    ],
+    "originalScopes": [
+      "Body/S/S0/epi-cli/src/skill.rs",
+      "Body/S/S0/portal-core/src/kernel.rs:346-388",
+      "Body/S/S3/spacetime-context/schemas/retrain-loop.sql",
+      "Body/S/S3/spacetime-context/schemas/skill-registry.sql",
+      "Body/S/S4/pi-agent/skills/custom/mlx-lora/**",
+      "Body/S/S4/pi-agent/skills/hermes/{name}/**",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/agora-vendoring.ts",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/skills/custom/drift-detection/**",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/skills/custom/elo-rating/**",
+      "Body/S/S5/epii-autoresearch-core/skills/parashakti/ebm-head/**",
+      "Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/**",
+      "scripts/train.rs"
+    ]
+  },
+  "19.T19.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "enrichedScopes": [
+      "Body/S/S0/epi-lib/include/m3.h",
+      "Body/S/S0/epi-lib/src/m3.c"
+    ]
+  },
+  "19.T19.6": {
+    "specRef": "Idea/Bimba/Seeds/S/S3/S3-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/S/S3/gateway/**"
+    ]
+  },
+  "19.T19.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+    "enrichedScopes": [
+      "Body/S/S0/epi-lib/src/m5.c"
+    ]
+  },
+  "19.T19.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "originalScopes": [
+      "Idea/Bimba/Seeds/M/M1'/m1-prime-kaprekar-pedagogy.md"
+    ]
+  },
+  "21.T21.2": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts",
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/index.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/language-layer-panel.tsx"
+    ]
+  },
+  "21.T21.3": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts",
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/index.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/ql-structure-layer-panel.tsx"
+    ]
+  },
+  "21.T21.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts",
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/index.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/relations-layer-panel.tsx"
+    ]
+  },
+  "21.T21.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts",
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/index.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/community-clock-panel.tsx"
+    ]
+  },
+  "21.T21.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/components/bridged-layer-launcher.tsx"
+    ]
+  },
+  "21.T21.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts",
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/index.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/components/implicate-explicate-toggle.tsx"
+    ]
+  },
+  "21.T21.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts",
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/index.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/archetype-routing-panel.tsx"
+    ]
+  },
+  "21.T21.9": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/components/contemplation-prompt-footer.tsx"
+    ]
+  },
+  "21.T21.18": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts",
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/index.ts"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts"
+    ]
+  },
+  "21.T21.19": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/m0-anuttara-widget.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/cross-layout-intent.ts"
+    ]
+  },
+  "21.T21.20": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts",
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-inspector.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/common/index.ts"
+    ]
+  },
+  "22.T22.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/browser/m1-spine-789-reader.tsx"
+    ]
+  },
+  "22.T22.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "originalScopes": [
+      "src/browser/m1-mersenne-proof-overlay.tsx"
+    ]
+  },
+  "22.T22.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/browser/m1-kaprekar-inspector.tsx",
+      "Body/S/S0/epi-lib/src/m1.c:30",
+      "Idea/Bimba/Seeds/M/M1'/m1-prime-kaprekar-pedagogy.md"
+    ]
+  },
+  "22.T22.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/browser/m1-vortex-matrices-browser.tsx",
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/common/vortex-matrices-model.ts"
+    ]
+  },
+  "22.T22.9": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/common/extension-constants.ts",
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/common/m1-backend-studio-pack.ts",
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/common/surface-dispatch.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/browser/m1-audio-bus-inspector-view.tsx",
+      "Body/M/epi-theia/extensions/m1-paramasiva/src/common/index.ts:11"
+    ]
+  },
+  "23.T23.2": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m2-parashakti/src/browser/components/MefGrid72Component.tsx"
+    ]
+  },
+  "23.T23.3": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "23.T23.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "23.T23.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "23.T23.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "23.T23.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "23.T23.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md"
+  },
+  "23.T23.10": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "23.T23.11": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "23.T23.12": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "23.T23.13": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md",
+    "originalScopes": [
+      "Body/S/S0/portal-core/src/music_tech.rs"
+    ]
+  },
+  "23.T23.14": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "23.T23.15": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/acceptance-harness/tests/topology.test.mjs"
+    ]
+  },
+  "23.T23.16": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "23.T23.17": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m2-parashakti/test/cymatic-determinism.test.mjs"
+    ]
+  },
+  "26.T26.2": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+  },
+  "26.T26.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+  },
+  "26.T26.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+  },
+  "26.T26.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+  },
+  "26.T26.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+  },
+  "26.T26.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+    "originalScopes": [
+      "Body/S/S4/pi-agent/agents/{name}.md"
+    ]
+  },
+  "26.T26.9": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/acr/aletheia-subagent-trace.tsx",
+      "Idea/Bimba/Seeds/M/M4'/2026-06-04-prospective-retrospective-canvas-spec.md"
+    ]
+  },
+  "26.T26.13": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md"
+  },
+  "26.T26.14": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+    "originalScopes": [
+      "Body/S/S4/pi-agent/skills/anuttara-symbolic-parse/SKILL.md"
+    ]
+  },
+  "27.T27.7": {
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/domain/configPanelDomain.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/components/omni/panels/GatewayPanel.tsx",
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/domain/configPanelDomain.ts",
+      "Body/S/S4/pi-agent/skills/*",
+      "Body/S/S4/ta-onta/chronos/**"
+    ]
+  },
+  "27.T27.8": {
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/components/omni/panels/ToolStreamPanel.tsx",
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/components/omni/panels/OverviewPanel.tsx",
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/components/omni/panels/panelUtils.ts",
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/components/omni/panels/CronPanel.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/components/omni/panels/DebugPanel.tsx"
+    ]
+  },
+  "27.T27.9": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/browser/services/omnipanel-intent-router.ts"
+    ]
+  },
+  "28.T28.2": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/activity-bar/left-sidebar-activity-bar-contribution.ts"
+    ]
+  },
+  "28.T28.3": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/frontend-module.ts",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/bridge-gate.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/canon-studio-widget.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/coordinate-tree-widget.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/bimba-graph-viewer-widget.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/bimba-graph-viewer/graph-canvas.tsx"
+    ]
+  },
+  "28.T28.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/frontend-module.ts",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/bridge-gate.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/coordinate-tree-widget.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/canon-studio-widget.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/canon-studio/monaco-mount.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/style/canon-studio-decorations.css"
+    ]
+  },
+  "28.T28.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/frontend-module.ts",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/bridge-gate.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/canon-studio-widget.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/coordinate-tree-widget.tsx"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/agentic-control-room-widget.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/acr/**",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/acr/aletheia-subagent-trace.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/agentic-control-room-widget.tsx"
+    ]
+  },
+  "28.T28.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/frontend-module.ts",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/bridge-gate.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/canon-studio-widget.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/coordinate-tree-widget.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/style/coordinate-tree.css"
+    ]
+  },
+  "28.T28.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/frontend-module.ts",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/bridge-gate.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/canon-studio-widget.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/coordinate-tree-widget.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/logos-atelier-widget.tsx"
+    ]
+  },
+  "28.T28.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/frontend-module.ts",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/bridge-gate.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/canon-studio-widget.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/coordinate-tree-widget.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/evidence-pane-widget.tsx"
+    ]
+  },
+  "28.T28.9": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/frontend-module.ts",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/bridge-gate.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/canon-studio-widget.tsx",
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/coordinate-tree-widget.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/review-pane-widget.tsx"
+    ]
+  },
+  "28.T28.19": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/acceptance-harness/tests/topology.test.mjs"
+    ]
+  },
+  "30.T30.2": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/contracts/ui-colour-tokens.json"
+    ]
+  },
+  "30.T30.3": {
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/browser/design-primitives/icons-contribution.ts",
+      "Body/M/epi-theia/extensions/integrated-composition/src/browser/design-primitives/hexagram-string.tsx",
+      "Body/M/epi-theia/extensions/integrated-composition/src/browser/design-primitives/index.ts",
+      "Body/M/epi-theia/extensions/integrated-composition/src/browser/design-primitives/katex.d.ts",
+      "Body/M/epi-theia/extensions/integrated-composition/src/browser/design-primitives/codon-string.tsx"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/browser/design-primitives/slerp-choreography-clock.tsx",
+      "Body/M/epi-theia/extensions/integrated-composition/src/browser/design-primitives/lemniscate-transition.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/contracts/ui-motion-tokens.{json,ts,md}",
+      "Body/M/epi-theia/extensions/integrated-composition/src/browser/design-primitives/lemniscate-transition.tsx",
+      "Body/M/epi-theia/extensions/integrated-composition/src/browser/design-primitives/slerp-choreography-clock.tsx",
+      "src/**"
+    ]
+  },
+  "30.T30.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/contracts/ui-theme-mapping.ts"
+    ]
+  },
+  "30.T30.6": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/browser/design-primitives/**"
+    ]
+  },
+  "30.T30.7": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/highlight-category-registry.ts"
+    ]
+  },
+  "30.T30.8": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/contracts/ui-family-palette-derivation.md"
+    ]
+  },
+  "30.T30.9": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/contracts/icons/**",
+      "Body/M/epi-theia/extensions/contracts/ui-iconography.{ts,md}",
+      "Body/M/epi-theia/extensions/integrated-composition/src/browser/icons-contribution.ts"
+    ]
+  },
+  "31.T31.4": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/pratibimba-layouts/src/common/activity-bar-modes.ts"
+    ]
+  },
+  "31.T31.5": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/pratibimba-layouts/src/browser/epi-logos-menu.ts"
+    ]
+  },
+  "31.T31.6": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/breadcrumbs/coordinate-breadcrumbs-contribution.ts"
+    ]
+  },
+  "31.T31.7": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/contracts/shell-slot-policy.json"
+    ]
+  },
+  "31.T31.8": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/scripts/validate-no-modal-discipline.mjs"
+    ]
+  },
+  "31.T31.9": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/preferences/epi-logos-preferences.ts"
+    ]
+  },
+  "31.T31.11": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/contracts/chrome-action-surface-policy.md"
+    ]
+  },
+  "31.T31.12": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/contracts/chrome-contributions-catalog.json"
+    ]
+  },
+  "31.T31.13": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/scripts/validate-all-chrome.mjs",
+      "Body/M/epi-theia/extensions/{scripts,test}/**",
+      "scripts/validate-chrome-contributions-catalog.mjs",
+      "scripts/validate-composition-contract-preflight.mjs",
+      "scripts/validate-extension-contract-preflight.mjs",
+      "scripts/validate-keybinding-chord-uniqueness.mjs",
+      "scripts/validate-no-modal-discipline.mjs",
+      "scripts/validate-status-bar-discipline.mjs"
+    ]
+  },
+  "32.T32.4": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/settings/epi-logos-settings-page.tsx",
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/common/preferences-schema.ts"
+    ]
+  },
+  "32.T32.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/common/empty-state-registry.ts",
+      "Body/M/epi-theia/extensions/{m0-anuttara,m1-paramasiva,m2-parashakti,m3-mahamaya,m4-nara,m5-epii}/src/browser/empty-state.tsx"
+    ]
+  },
+  "32.T32.7": {
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/cold-start-orchestrator.ts",
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/intent-target-registration.ts",
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/cold-start-splash.tsx",
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/frontend-module.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/inline-error-surface.tsx",
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/readiness-banner.tsx"
+    ]
+  },
+  "32.T32.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/privacy-opt-in-dialog.tsx"
+    ]
+  },
+  "05.T5.22": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Body/S/S4/ta-onta/S4-x/skills/{nara-voice-training, nara-journal-parser, mlx-lora}/**",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "12.T12.25": {
+    "specRef": "Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md",
+    "existingSurface": [
+      "Body/S/S4/ta-onta/S4-4p-anima/spine-contribution.ts"
+    ],
+    "enrichedScopes": [
+      "Body/S/S5/epii-autoresearch-core/src/lib.rs",
+      "Body/S/S4/ta-onta/S4-4p-anima/extension.ts",
+      "Body/S/S5/epii-review-core/src/lib.rs"
+    ],
+    "originalScopes": [
+      "Body/S/S4/ta-onta/S4-4p-anima/extension.ts:460",
+      "Body/S/S5/epii-autoresearch-core/src/lib.rs",
+      "Body/S/S5/epii-review-core/src/lib.rs:261-269",
+      "Idea/Empty/Discarded/{round-key}/*",
+      "Idea/Empty/Discarded/{round-key}/**"
+    ]
+  },
+  "36.T36.3": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md"
+  },
+  "36.T36.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md"
+  },
+  "36.T36.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md"
+  },
+  "36.T36.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md"
+  },
+  "36.T36.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md"
+  },
+  "05.T5.23": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "enrichedScopes": [
+      "Body/S/S2/graph-services/src/semantic.rs"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Body/S/S2/graph-schema/src/lib.rs:1340-1395",
+      "Idea/Bimba/Seeds/M/q-vocabulary-canon.md",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "08.T8.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/.../privacy-scrubber.ts:32",
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S0/portal-core/src/kernel_bridge_runtime.rs:107, 119, 293, 309"
+    ]
+  },
+  "09.T9.13": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S0/epi-cli/src/canon/**",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**"
+    ]
+  },
+  "12.T12.26": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "existingSurface": [
+      "Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts",
+      "Body/S/S4/ta-onta/S4-4p-anima/modules/eros-route.ts"
+    ],
+    "originalScopes": [
+      "Body/S/S4/ta-onta/S4-0p-khora/modules/sophia-fire.ts",
+      "Body/S/S4/ta-onta/S4-4p-anima/modules/sophia-hook.ts",
+      "Body/S/S4/ta-onta/S4-4p-anima/modules/sophia-synthesis.ts"
+    ]
+  },
+  "17.T17.28": {
+    "specRef": "Idea/Bimba/Seeds/S/S2/S2-ARCHITECTURE.md",
+    "originalScopes": [
+      ".claude/skills/gitnexus-*",
+      "Body/S/S2/external/bimba-mcp/**",
+      "Body/S/S2/external/bimba-mcp/src/tools/spec-retrieve.ts",
+      "Body/S/S2/external/bimba-mcp/tests/canon_parity.test.ts"
+    ]
+  },
+  "24.T24.2": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/CosmicClockRenderService.tsx"
+    ]
+  },
+  "24.T24.3": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M1ChromaticLensConsumer.tsx",
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3DepthViewModes.tsx",
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/QuintessenceIndicator.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3LensApertureSwitcher.tsx"
+    ]
+  },
+  "24.T24.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3WalkNavigator.tsx"
+    ]
+  },
+  "24.T24.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3HexagramBrowser.tsx"
+    ]
+  },
+  "24.T24.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3TarotWheel.tsx"
+    ]
+  },
+  "24.T24.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3DecanChainBreadcrumb.tsx",
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/services/TarotDecanService.ts"
+    ]
+  },
+  "24.T24.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3HexagramBodyDynamicsViewer.tsx",
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/services/HexagramBodyDynamicsService.ts"
+    ]
+  },
+  "24.T24.9": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/common/index.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/common/codon-wheel.ts::surfaceBlockers",
+      "Body/M/epi-theia/extensions/m3-mahamaya/test/codon-wheel.test.ts",
+      "Body/M/epi-theia/extensions/test/validate-extension-contract-preflight.test.mjs"
+    ]
+  },
+  "24.T24.18": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M1ChromaticLensConsumer.tsx",
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3DepthViewModes.tsx",
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/QuintessenceIndicator.tsx"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3PentadicRelationInspector.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3PentadicRelationInspector.tsx",
+      "src/browser/services/**"
+    ]
+  },
+  "25.T25.2": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/canvas-editor.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/frontend-module.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/m4-nara-widget.tsx"
+    ]
+  },
+  "25.T25.3": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m4-nara/src/common/deck-context.ts",
+      "Body/M/epi-theia/extensions/m4-nara/src/common/nara-surface.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/journal-entries-sidebar.tsx"
+    ]
+  },
+  "25.T25.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/pasu-wizard.tsx",
+      "Body/S/S0/epi-cli/src/vault/pasu.rs::PasuRecord"
+    ]
+  },
+  "25.T25.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/quintessence-display.tsx"
+    ]
+  },
+  "25.T25.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/personal-cymatic-field.tsx"
+    ]
+  },
+  "25.T25.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/personal-coordinate-sidebar.tsx"
+    ]
+  },
+  "25.T25.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/oracle-cast.tsx",
+      "src/browser/widgets/oracle/**"
+    ]
+  },
+  "25.T25.9": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/oracle-history.tsx"
+    ]
+  },
+  "25.T25.17": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/time-axis-switcher.tsx"
+    ]
+  },
+  "25.T25.19": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/session-close-ceremony.tsx"
+    ]
+  },
+  "25.T25.20": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/psyche-anchor-coherence.tsx"
+    ]
+  },
+  "25.T25.21": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m4-nara/src/common/deck-context.ts",
+      "Body/M/epi-theia/extensions/m4-nara/src/common/nara-surface.ts"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/common/index.ts"
+    ]
+  },
+  "29.T29.2": {
+    "specRef": "Idea/Bimba/Seeds/M/INTEGRATED-1-2-3-COSMIC-ARCHITECTURE.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/frontend-module.ts",
+      "Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/third-spanda-overlay.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/cosmic-engine-panes.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/cosmic-engine-composition.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/plugin-integrated-1-2-3-widget.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-1-2-3/tests/cosmic-engine-composition.test.mjs"
+    ]
+  },
+  "29.T29.3": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/lens-application.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/logos-cycle.tsx"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/kairos-display.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/mercurius-relay-indicator.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/tuning-bar.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/canvas-editor.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/plugin-integrated-4-5-0-widget.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/ambient-state-strip.tsx"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/components/**",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/canvas-editor.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/ambient-state-strip.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/kairos-display.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/mercurius-relay-indicator.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/personal-cymatic-field.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/time-axis-switcher.tsx",
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/tuning-bar.tsx",
+      "Body/M/epi-theia/extensions/m5-epii/src/browser/recognition-layer-widget.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/personal-recognition-composition.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/plugin-integrated-4-5-0-widget.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/tests/personal-recognition-composition.test.mjs"
+    ]
+  },
+  "29.T29.4": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/profile-tick-subscription.ts"
+    ]
+  },
+  "29.T29.5": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/integrated-readiness.ts"
+    ]
+  },
+  "29.T29.6": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/composition-load.ts"
+    ]
+  },
+  "29.T29.7": {
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/klein-flip-choreography.ts"
+    ]
+  },
+  "29.T29.8": {
+    "specRef": "Idea/Bimba/Seeds/M/INTEGRATED-1-2-3-COSMIC-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/matheme-137-overlay.tsx",
+      "Idea/Bimba/Seeds/M/M1'/m1-prime-kaprekar-pedagogy.md"
+    ]
+  },
+  "29.T29.9": {
+    "specRef": "Idea/Bimba/Seeds/M/INTEGRATED-4-5-0-RECOGNITION-ARCHITECTURE.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/contemplation-flow-director.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/personal-recognition-composition.tsx"
+    ]
+  },
+  "29.T29.15": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/consent-gate.ts",
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/recognition-claim.ts",
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/commands.ts"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/composition-events.ts"
+    ]
+  },
+  "05.T5.24": {
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "05.T5.25": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "enrichedScopes": [
+      "Body/S/S0/epi-lib/include/m4.h"
+    ],
+    "originalScopes": [
+      "Body/M/epi-theia/**",
+      "Body/S/S4/ta-onta/S4-3p-chronos/S3'/kairos-python-adapter.ts",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ]
+  },
+  "24.T24.19": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/**"
+    ]
+  },
+  "25.T25.22": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/being-pattern-perspective.tsx"
+    ]
+  },
+  "29.T29.16": {
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/consent-gate.ts",
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/recognition-claim.ts",
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/commands.ts"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/composition-events.ts",
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/graphiti-source-guard.ts"
+    ]
+  },
+  "01.T1.13": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "enrichedScopes": [
+      "Body/S/S0/epi-lib/include/m0_verifier.h"
+    ],
+    "originalScopes": [
+      "Body/S/S0/**",
+      "Body/S/S0/epi-lib/src/m0_calculus.c"
+    ]
+  },
+  "01.T1.14": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "originalScopes": [
+      "Body/S/S0/**"
+    ]
+  },
+  "01.T1.15": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "enrichedScopes": [
+      "Body/S/S2/ontology/epi.ttl"
+    ],
+    "originalScopes": [
+      "Body/S/S0/**",
+      "Body/S/S2/ontology/epi.ttl"
+    ]
+  },
+  "01.T1.16": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "enrichedScopes": [
+      "Body/S/S0/epi-lib/src/m0.c"
+    ],
+    "originalScopes": [
+      "Body/S/S0/**"
+    ]
+  },
+  "01.T1.17": {
+    "enrichedScopes": [
+      "Body/S/S0/epi-lib/include/m3.h",
+      "Body/S/S0/epi-lib/docs/m0-dataset-audit.md"
+    ],
+    "originalScopes": [
+      "Body/S/S0/**"
+    ]
+  },
+  "18.T18.11": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "existingSurface": [
+      "Body/M/epi-theia/extensions/kernel-bridge/src/common/protocol.ts",
+      "Body/M/epi-theia/extensions/kernel-bridge/src/common/index.ts"
+    ],
+    "enrichedScopes": [
+      "Body/M/epi-theia/extensions/kernel-bridge/src/common/types.ts"
+    ]
+  },
+  "23.T23.18": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "23.T23.19": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md",
+    "originalScopes": [
+      "Body/S/S0/portal-core/src/aspect.rs"
+    ]
+  },
+  "23.T23.20": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md"
+  },
+  "24.T24.20": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3TranscriptionEngine.tsx",
+      "Body/S/S0"
+    ]
+  },
+  "25.T25.23": {
+    "specRef": "Idea/Bimba/Seeds/M/M4'/M4'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/rfactor-fretboard.tsx"
+    ]
+  },
+  "37.T37.1": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "37.T37.2": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "37.T37.3": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "37.T37.4": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "37.T37.5": {
+    "specRef": "Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md",
+    "originalScopes": [
+      "Body/M/epi-theia/shared/**"
+    ]
+  },
+  "37.T37.6": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md"
+  },
+  "37.T37.7": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md"
+  },
+  "37.T37.8": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "enrichedScopes": [
+      "Body/S/S0/epi-lib/include/m3.h"
+    ]
+  },
+  "37.T37.9": {
+    "specRef": "Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md",
+    "enrichedScopes": [
+      "Body/S/S0/portal-core/src/aspect.rs"
+    ]
+  },
+  "37.T37.10": {
+    "specRef": "Idea/Bimba/Seeds/M/M3'/M3'-SPEC.md",
+    "enrichedScopes": [
+      "Body/S/S0/epi-lib/include/m3.h",
+      "Body/S/S0/epi-cli/src/nara/medicine_frame.rs"
+    ]
+  },
+  "37.T37.11": {
+    "enrichedScopes": [
+      "Body/S/S0/epi-lib/include/m2.h",
+      "Body/S/S0/epi-lib/src/m3.c",
+      "Body/S/S0/epi-lib/include/m1.h",
+      "Body/S/S0/portal-core/src/aspect.rs",
+      "Body/S/S0/epi-lib/include/m3.h",
+      "Body/S/S0/epi-cli/src/nara/medicine_frame.rs"
+    ]
+  }
+}

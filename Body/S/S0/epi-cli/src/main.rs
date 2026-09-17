@@ -1,7 +1,10 @@
 use clap::{Parser, Subcommand};
 use epi_logos::{
-    agent, app, book, code, core, ffi, gate, graph, nara, notebook, portal, profile, sesh, sync,
-    techne, up, vault, vimarsa,
+    agent, app, bimba, book, canon, code, core, entity, ffi, gate, graph, know, nara, notebook,
+    portal, profile, sesh, settings, skill, slot, sync, techne, up, vault, vimarsa, world,
+};
+use epi_s5_epii_autoresearch_core::resonance_corpus::{
+    EbmTrainingConfig, ResonanceCorpusStore, TrainEbmRequest,
 };
 
 #[derive(Parser)]
@@ -32,10 +35,32 @@ enum Commands {
         #[command(subcommand)]
         cmd: vault::VaultCmd,
     },
+    /// Entity-candidate lifecycle (CCT-14) — capture, classify, promote, review
+    Entity {
+        #[command(subcommand)]
+        cmd: entity::EntityCmd,
+    },
+    /// Flat /World namespace — graduate entities, list graduated forms
+    World {
+        #[command(subcommand)]
+        cmd: world::WorldCmd,
+    },
     /// Neo4j + Redis graph operations
     Graph {
         #[command(subcommand)]
         cmd: graph::GraphCmd,
+    },
+    /// Coordinate knowing — unified VAK packet across Bimba / World / Gnostic faces
+    Know(know::KnowCmd),
+    /// Canon distribution surface — coordinate ladder, search, and diff
+    Canon {
+        #[command(subcommand)]
+        cmd: canon::CanonCmd,
+    },
+    /// Bimba canon-update ledger (Track 40) — propose, list, show, land, refuse
+    Bimba {
+        #[command(subcommand)]
+        cmd: bimba::BimbaCmd,
     },
     /// Gateway (S3') — RPC server, plugin host
     Gate {
@@ -46,6 +71,40 @@ enum Commands {
     Agent {
         #[command(subcommand)]
         cmd: Option<agent::AgentCmd>,
+    },
+    /// Pi-Agent model-slot and harness-slot configuration
+    Slot {
+        #[command(subcommand)]
+        cmd: slot::SlotCmd,
+    },
+    /// ML skill surface — vendored/custom skill registry and scaffold workflow
+    Skill {
+        #[command(subcommand)]
+        cmd: skill::SkillCmd,
+    },
+    /// S0 settings — API key status + cloud opt-in (keys read from env, never over the gateway)
+    Settings {
+        #[command(subcommand)]
+        cmd: settings::SettingsCmd,
+    },
+    /// Review a staged retrain artifact before promotion
+    #[command(name = "review-retrain")]
+    ReviewRetrain { retrain_id: String },
+    /// Promote a staged retrain artifact into its deployment slot
+    #[command(name = "promote-retrain")]
+    PromoteRetrain { retrain_id: String },
+    /// Reject a staged retrain artifact and record the calibration signal
+    #[command(name = "reject-retrain")]
+    RejectRetrain {
+        retrain_id: String,
+        /// Human-readable rejection reason recorded as calibration signal
+        #[arg(long)]
+        reason: Option<String>,
+    },
+    /// Pi bootstrap protocol — resonance corpus and EBM operations
+    Pi {
+        #[command(subcommand)]
+        cmd: PiCmd,
     },
     /// Webhook / n8n integration
     Sync {
@@ -82,7 +141,7 @@ enum Commands {
         #[command(subcommand)]
         cmd: techne::TechneCmd,
     },
-    /// EpiLogos Tauri desktop app
+    /// Pratibimba Theia/Electron desktop app
     App {
         #[command(subcommand)]
         cmd: app::AppCmd,
@@ -125,6 +184,29 @@ enum Commands {
     },
 }
 
+#[derive(Subcommand)]
+enum PiCmd {
+    /// Trigger deliberate EBM retraining over accumulated corpus pairs
+    #[command(name = "train-ebm")]
+    TrainEbm {
+        /// Produce a training plan without writing a checkpoint
+        #[arg(long)]
+        dry_run: bool,
+        /// Override the resonance corpus store root
+        #[arg(long)]
+        corpus_root: Option<std::path::PathBuf>,
+    },
+    /// Export current EBM weights and metadata as a paired checkpoint snapshot
+    #[command(name = "export-ebm-state")]
+    ExportEbmState {
+        /// Destination directory for checkpoint, metadata, and corpus snapshot
+        destination: std::path::PathBuf,
+        /// Override the resonance corpus store root
+        #[arg(long)]
+        corpus_root: Option<std::path::PathBuf>,
+    },
+}
+
 #[tokio::main]
 async fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
@@ -142,10 +224,47 @@ async fn main() -> color_eyre::Result<()> {
                 std::process::exit(1);
             }
         },
+        Commands::Entity { cmd } => match entity::dispatch(cmd, cli.json) {
+            Ok(out) => println!("{}", out),
+            Err(e) => {
+                eprintln!("entity error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::World { cmd } => match world::dispatch(cmd, cli.json) {
+            Ok(out) => println!("{}", out),
+            Err(e) => {
+                eprintln!("world error: {}", e);
+                std::process::exit(1);
+            }
+        },
         Commands::Graph { cmd } => match graph::dispatch_with_format(cmd, cli.json).await {
             Ok(out) => println!("{}", out),
             Err(e) => {
                 eprintln!("graph error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::Know(cmd) => match know::dispatch(cmd, cli.json) {
+            Ok(out) => println!("{}", out),
+            Err(e) => {
+                eprintln!("know error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::Canon { cmd } => match canon::dispatch(cmd, cli.json) {
+            Ok(out) if !out.is_empty() => println!("{}", out),
+            Ok(_) => {}
+            Err(e) => {
+                eprintln!("canon error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::Bimba { cmd } => match bimba::dispatch(cmd, cli.json) {
+            Ok(out) if !out.is_empty() => println!("{}", out),
+            Ok(_) => {}
+            Err(e) => {
+                eprintln!("bimba error: {}", e);
                 std::process::exit(1);
             }
         },
@@ -165,6 +284,65 @@ async fn main() -> color_eyre::Result<()> {
                 std::process::exit(1);
             }
         },
+        Commands::Slot { cmd } => match slot::dispatch(cmd, cli.json) {
+            Ok(out) if !out.is_empty() => println!("{}", out),
+            Ok(_) => {}
+            Err(e) => {
+                eprintln!("slot error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::Skill { cmd } => match skill::dispatch(cmd, cli.json) {
+            Ok(out) if !out.is_empty() => println!("{}", out),
+            Ok(_) => {}
+            Err(e) => {
+                eprintln!("skill error: {}", e);
+                std::process::exit(1);
+            }
+        },
+        Commands::Settings { cmd } => {
+            if let Err(e) = settings::run(cmd, cli.json) {
+                eprintln!("settings error: {}", e);
+                std::process::exit(1);
+            }
+        }
+        Commands::ReviewRetrain { retrain_id } => {
+            match skill::review_retrain(retrain_id, cli.json) {
+                Ok(out) if !out.is_empty() => println!("{}", out),
+                Ok(_) => {}
+                Err(e) => {
+                    eprintln!("retrain review error: {}", e);
+                    std::process::exit(1);
+                }
+            }
+        }
+        Commands::PromoteRetrain { retrain_id } => {
+            match skill::promote_retrain(retrain_id, cli.json) {
+                Ok(out) if !out.is_empty() => println!("{}", out),
+                Ok(_) => {}
+                Err(e) => {
+                    eprintln!("retrain promotion error: {}", e);
+                    std::process::exit(1);
+                }
+            }
+        }
+        Commands::RejectRetrain { retrain_id, reason } => {
+            match skill::reject_retrain(retrain_id, reason.as_deref(), cli.json) {
+                Ok(out) if !out.is_empty() => println!("{}", out),
+                Ok(_) => {}
+                Err(e) => {
+                    eprintln!("retrain rejection error: {}", e);
+                    std::process::exit(1);
+                }
+            }
+        }
+        Commands::Pi { cmd } => match dispatch_pi(cmd) {
+            Ok(out) => println!("{}", out),
+            Err(e) => {
+                eprintln!("pi error: {}", e);
+                std::process::exit(1);
+            }
+        },
         Commands::Sync { cmd } => sync::dispatch(cmd),
         Commands::Sesh { cmd } => sesh::dispatch(cmd),
         Commands::Vimarsa { cmd } => vimarsa::dispatch(cmd),
@@ -174,7 +352,7 @@ async fn main() -> color_eyre::Result<()> {
         },
         Commands::Notebook { cmd } => notebook::dispatch(cmd),
         Commands::Techne { cmd } => techne::dispatch(cmd),
-        Commands::App { cmd } => app::dispatch(cmd),
+        Commands::App { cmd } => app::dispatch(cmd).await,
         Commands::Up(cmd) => match up::dispatch(cmd, cli.json).await {
             Ok(out) => println!("{}", out),
             Err(e) => eprintln!("up error: {}", e),
@@ -212,4 +390,45 @@ async fn main() -> color_eyre::Result<()> {
     }
 
     Ok(())
+}
+
+fn dispatch_pi(cmd: &PiCmd) -> Result<String, String> {
+    match cmd {
+        PiCmd::TrainEbm {
+            dry_run,
+            corpus_root,
+        } => {
+            let store = ResonanceCorpusStore::new(resolve_resonance_corpus_root(corpus_root)?);
+            let report = store.train_ebm(TrainEbmRequest {
+                dry_run: *dry_run,
+                config: EbmTrainingConfig::default(),
+            })?;
+            serde_json::to_string_pretty(&report).map_err(|err| err.to_string())
+        }
+        PiCmd::ExportEbmState {
+            destination,
+            corpus_root,
+        } => {
+            let store = ResonanceCorpusStore::new(resolve_resonance_corpus_root(corpus_root)?);
+            let export = store.export_ebm_state(destination, EbmTrainingConfig::default())?;
+            serde_json::to_string_pretty(&export).map_err(|err| err.to_string())
+        }
+    }
+}
+
+fn resolve_resonance_corpus_root(
+    override_root: &Option<std::path::PathBuf>,
+) -> Result<std::path::PathBuf, String> {
+    if let Some(root) = override_root {
+        return Ok(root.clone());
+    }
+    if let Ok(root) = std::env::var("EPI_RESONANCE_CORPUS_ROOT") {
+        return Ok(std::path::PathBuf::from(root));
+    }
+    if let Ok(home) = std::env::var("HOME") {
+        return Ok(std::path::PathBuf::from(home)
+            .join(".epi-logos")
+            .join("resonance-corpus"));
+    }
+    Err("HOME is required to locate ~/.epi-logos/resonance-corpus".to_owned())
 }

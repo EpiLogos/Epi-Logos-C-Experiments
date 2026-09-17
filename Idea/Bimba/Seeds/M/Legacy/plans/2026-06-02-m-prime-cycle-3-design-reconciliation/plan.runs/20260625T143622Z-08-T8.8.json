@@ -1,0 +1,37 @@
+{
+  "runId": "20260625T143622Z-08-T8.8",
+  "taskId": "08.T8.8",
+  "startedAt": "2026-06-25T14:36:22.940Z",
+  "owner": "codex-m-dev-08-t8-8-q-personal-privacy",
+  "leaseExpiresAt": "2026-06-25T16:36:22.940Z",
+  "worktree": null,
+  "task": {
+    "id": "08.T8.8",
+    "trackId": "08",
+    "tranche": "T8.8",
+    "title": "`q_personal` privacy partition extension for q_-economy carrier path",
+    "effort": null,
+    "file": "08-integrated-4-5-0-recognition-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md",
+    "dependsOn": [
+      "08.T8.7"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/.../privacy-scrubber.ts:32",
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S0/portal-core/src/kernel_bridge_runtime.rs:107, 119, 293, 309"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

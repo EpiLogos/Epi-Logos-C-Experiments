@@ -13,6 +13,7 @@ fn dialogical_compose_vak() -> VakAddress {
         cs: CsField {
             code: "CS1".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     }
 }

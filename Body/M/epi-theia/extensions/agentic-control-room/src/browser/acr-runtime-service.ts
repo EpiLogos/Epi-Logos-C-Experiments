@@ -7,6 +7,7 @@ import {
 } from '@pratibimba/kernel-bridge';
 import {
     type AgenticActor,
+    type AletheiaTechneClass,
     type AgenticRoute,
     type RunTreeNode,
     type ToolStreamEvent,
@@ -37,6 +38,7 @@ export interface SelectedCandidate {
     readonly title: string;
     readonly coordinate: string | null;
     readonly humanRequired: boolean;
+    readonly recursiveSelfReview?: boolean;
     readonly proposer: string | null;
     readonly privacyClass: string;
 }
@@ -45,6 +47,7 @@ export interface RunState {
     readonly candidate: SelectedCandidate | null;
     readonly route: AgenticRoute | null;
     readonly actor: AgenticActor | null;
+    readonly techneClass: AletheiaTechneClass | null;
     readonly runTree: RunTreeNode | null;
     readonly toolStream: readonly ToolStreamEvent[];
     readonly diagnostics: readonly string[];
@@ -59,6 +62,7 @@ const EMPTY_STATE: RunState = {
     candidate: null,
     route: null,
     actor: null,
+    techneClass: null,
     runTree: null,
     toolStream: [],
     diagnostics: [],
@@ -68,6 +72,40 @@ const EMPTY_STATE: RunState = {
     errored: null,
     humanGateBlocks: []
 };
+
+const DR_M5_1_AGENTIC_ACTORS: readonly AgenticActor[] = [
+    'pi',
+    'anima',
+    'aletheia'
+];
+
+const ALETHEIA_TECHNE_CLASSES: readonly AletheiaTechneClass[] = [
+    'anansi',
+    'moirai',
+    'janus',
+    'mercurius',
+    'agora',
+    'zeithoven'
+];
+
+function normalizeAgenticRouteSelection(value: string | null | undefined): {
+    readonly actor: AgenticActor | undefined;
+    readonly techneClass: AletheiaTechneClass | null;
+} {
+    if (!value) {
+        return { actor: undefined, techneClass: null };
+    }
+    const normalized = value.toLowerCase();
+    const actor = DR_M5_1_AGENTIC_ACTORS.find(candidate => candidate === normalized);
+    if (actor) {
+        return { actor, techneClass: null };
+    }
+    const techneClass = ALETHEIA_TECHNE_CLASSES.find(candidate => candidate === normalized) ?? null;
+    return {
+        actor: techneClass ? 'aletheia' : undefined,
+        techneClass
+    };
+}
 
 @injectable()
 export class AgenticControlRoomRuntimeService {
@@ -101,8 +139,8 @@ export class AgenticControlRoomRuntimeService {
         this._onChange.fire(this._state);
     }
 
-    selectRouteActor(route: AgenticRoute, actor: AgenticActor): void {
-        this._state = { ...this._state, route, actor };
+    selectRouteActor(route: AgenticRoute, actor: AgenticActor, techneClass: AletheiaTechneClass | null = null): void {
+        this._state = { ...this._state, route, actor, techneClass };
         this._onChange.fire(this._state);
     }
 
@@ -117,6 +155,7 @@ export class AgenticControlRoomRuntimeService {
         const candidate = this._state.candidate;
         const route = this._state.route;
         const actor = this._state.actor;
+        const techneClass = this._state.techneClass;
         if (!candidate || !route || !actor) {
             this._state = {
                 ...this._state,
@@ -148,6 +187,7 @@ export class AgenticControlRoomRuntimeService {
                     gatewayMethod: "s4'.mediation.route",
                     route,
                     actor,
+                    techneClass,
                     candidateId: candidate.id,
                     coordinate: candidate.coordinate
                 },
@@ -241,15 +281,20 @@ export class AgenticControlRoomRuntimeService {
     ): Promise<void> {
         const candidate = this._state.candidate;
         const actor = this._state.actor;
+        const techneClass = this._state.techneClass;
         if (!candidate) {
             this._state = { ...this._state, errored: 'cannot submit review: no candidate selected' };
             this._onChange.fire(this._state);
             return;
         }
+        const normalizedProposer = normalizeAgenticRouteSelection(candidate.proposer);
         const gate = enforceHumanGate({
             decision,
             humanRequired: candidate.humanRequired,
-            actorIsHuman
+            actorIsHuman,
+            recursiveSelfReview: candidate.recursiveSelfReview,
+            actor: actor ?? normalizedProposer.actor,
+            techneClass: techneClass ?? normalizedProposer.techneClass
         });
         if (!gate.ok) {
             this._state = {
@@ -270,6 +315,7 @@ export class AgenticControlRoomRuntimeService {
                     decision,
                     reason,
                     actor,
+                    techneClass,
                     actorIsHuman
                 },
                 profileGeneration: this.bridge.cachedProfile?.generation ?? null,
@@ -280,7 +326,8 @@ export class AgenticControlRoomRuntimeService {
                 candidateId: candidate.id,
                 decision,
                 reason,
-                actor: actor ?? 'anima',
+                actor: techneClass ?? actor ?? normalizedProposer.techneClass ?? normalizedProposer.actor ?? 'anima',
+                techneClass: techneClass ?? normalizedProposer.techneClass,
                 humanRequired: candidate.humanRequired,
                 transitionAtMs: Date.now()
             };

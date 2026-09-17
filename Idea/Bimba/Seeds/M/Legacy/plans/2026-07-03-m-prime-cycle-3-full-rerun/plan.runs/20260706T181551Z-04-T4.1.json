@@ -1,0 +1,36 @@
+{
+  "runId": "20260706T181551Z-04-T4.1",
+  "taskId": "04.T4.1",
+  "startedAt": "2026-07-06T18:15:51.717Z",
+  "owner": "fable-main-20260706",
+  "leaseExpiresAt": "2026-07-06T20:15:51.717Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T4.1",
+    "trackId": "04",
+    "tranche": "T4.1",
+    "title": "Codon-rotation projection field contract audit",
+    "effort": null,
+    "file": "04-m3-mahamaya-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/04-m3-mahamaya-reconciliation.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

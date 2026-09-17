@@ -139,7 +139,7 @@ fn repo_pi_foundation_has_bootable_root_assets() {
 
     let composite = fs::read_to_string(root.join("Body/S/S4/pi-agent/composite-entry.ts")).unwrap();
     assert!(composite.contains("export default async function"));
-    assert!(composite.contains("./extensions/ta-onta/composite-entry.ts"));
+    assert!(composite.contains("../ta-onta/composite-entry.ts"));
 
     let epi_citta =
         fs::read_to_string(root.join("Body/S/S4/pi-agent/extensions/epi-citta.ts")).unwrap();
@@ -188,9 +188,29 @@ fn anima_s4_modules_are_real_pi_vs_claude_code_ports() {
     assert!(agent_team.contains("pi.registerTool({"));
     assert!(agent_team.contains("name: \"dispatch_agent\""));
     assert!(agent_team.contains("pi.registerCommand(\"agents-team\""));
-    assert!(agent_team.contains("childPiRuntimeArgs()"));
-    assert!(agent_team.contains("\"--tools\", state.def.tools"));
-    assert!(agent_team.contains("spawn(\"pi\""));
+    // 50.T50.02: child spawn-arg construction and the raw `spawn("pi", ...)` moved
+    // OUT of the three seams into the one gated executor. Each seam now routes
+    // through `dispatchChildPi`; the executor owns childPiRuntimeArgs(), the
+    // `--tools` allow-list (now entitlement-resolved on all three seams), and the
+    // pi binary constant. Assert the seams delegate, and that the executor holds
+    // the invariants.
+    assert!(agent_team.contains("dispatchChildPi({"));
+    assert!(agent_team.contains("seam: \"agent-team\""));
+    assert!(!agent_team.contains("spawn(\"pi\""));
+
+    let executor =
+        fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/lib/child-pi-executor.ts"))
+            .unwrap();
+    assert!(executor.contains("childPiRuntimeArgs()"));
+    assert!(executor.contains("spawn(CHILD_PI_BINARY"));
+    assert!(executor.contains("guardVamaShaktiDispatch"));
+    assert!(executor.contains("enforceReviewGate"));
+    assert!(executor.contains("resolveEntitlement"));
+
+    let pi_pi = fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/S4/pi-pi.ts")).unwrap();
+    assert!(pi_pi.contains("dispatchChildPi({"));
+    assert!(pi_pi.contains("seam: \"pi-pi\""));
+    assert!(!pi_pi.contains("spawn(\"pi\""));
 
     let agent_chain =
         fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/S4/agent-chain.ts")).unwrap();
@@ -202,9 +222,9 @@ fn anima_s4_modules_are_real_pi_vs_claude_code_ports() {
     assert!(agent_chain.contains("name: \"run_chain\""));
     assert!(agent_chain.contains("pi.registerCommand(\"chain\""));
     assert!(agent_chain.contains("pi.registerCommand(\"chain-list\""));
-    assert!(agent_chain.contains("childPiRuntimeArgs()"));
-    assert!(agent_chain.contains("\"--tools\", agentDef.tools"));
-    assert!(agent_chain.contains("spawn(\"pi\""));
+    assert!(agent_chain.contains("dispatchChildPi({"));
+    assert!(agent_chain.contains("seam: \"agent-chain\""));
+    assert!(!agent_chain.contains("spawn(\"pi\""));
 
     let subagent_widget =
         fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/S4/subagent-widget.ts"))
@@ -314,7 +334,19 @@ fn pleroma_supports_the_ported_anima_runtime_helpers() {
     )
     .unwrap();
     assert!(pleroma_propagation.contains("export {"));
-    assert!(pleroma_propagation.contains("../../khora/S0'/child-extension-propagation.ts"));
+    // Cross-carrier imports address khora by its CANONICAL coordinate directory, never
+    // through the legacy lowercase `ta-onta/khora` compat symlink: addressing the same file
+    // under two paths made TypeScript see two identities of the module (ec5354ec, which
+    // canonicalised 22 such specifiers). The symlink stays for humans; code uses the real path.
+    assert!(
+        pleroma_propagation.contains("../../S4-0p-khora/S0'/child-extension-propagation.ts"),
+        "pleroma must re-export khora's propagation helpers from khora's canonical \
+         S4-0p-khora path, not through the `khora` compat symlink"
+    );
+    assert!(
+        !pleroma_propagation.contains("../../khora/S0'/"),
+        "pleroma still reaches khora through the legacy compat symlink"
+    );
 }
 
 #[test]
@@ -354,6 +386,20 @@ fn khora_ports_cross_agent_and_system_select_from_copied_upstream_sources() {
     assert!(khora.contains("./S0'/system-select.ts"));
 }
 
+/// Apply one sanctioned adaptation to the vendored tilldone snapshot.
+///
+/// The upstream text must actually be present: if the vendor snapshot moves, or an
+/// adaptation stops being needed, the normalisation fails loudly here instead of silently
+/// no-opping and letting genuine rot slip past the byte-fidelity comparison it feeds.
+fn sanctioned_tilldone_adaptation(text: &str, upstream: &str, ported: &str, why: &str) -> String {
+    assert!(
+        text.contains(upstream),
+        "sanctioned tilldone port adaptation no longer matches the vendor snapshot ({why}); \
+         expected to find in vendors/pi-vs-claude-code/extensions/tilldone.ts:\n{upstream}"
+    );
+    text.replace(upstream, ported)
+}
+
 #[test]
 fn pleroma_ports_damage_control_tilldone_and_cmux_visibility_helpers() {
     let root = repo_root();
@@ -368,9 +414,67 @@ fn pleroma_ports_damage_control_tilldone_and_cmux_visibility_helpers() {
         fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-2p-pleroma/S2/tilldone.ts")).unwrap();
     let upstream_tilldone =
         fs::read_to_string(root.join("vendors/pi-vs-claude-code/extensions/tilldone.ts")).unwrap();
+
+    // tilldone remains a byte-fidelity port of the Disler vendor execution gate MODULO exactly
+    // the four adaptations below. The vendor snapshot is pinned to the pre-0.80.7 `@mariozechner`
+    // pi; each adaptation is forced by the harness this repo actually runs
+    // (@earendil-works/pi-coding-agent 0.80.7) and each was ratified in ec5354ec.
+    //
+    // Normalising the vendor text by those four and THEN comparing byte-for-byte keeps the
+    // fidelity assertion at full strength: any other divergence, in either file, still fails.
+    let mut expected = upstream_tilldone;
+
+    expected = sanctioned_tilldone_adaptation(
+        &expected,
+        "@mariozechner/",
+        "@earendil-works/",
+        "package-provenance rename @mariozechner/pi-* -> @earendil-works/pi-*, same product",
+    );
+
+    expected = sanctioned_tilldone_adaptation(
+        &expected,
+        "import { Type } from \"@sinclair/typebox\";",
+        "import { Type } from \"typebox\";",
+        "typebox dropped its @sinclair scope at v1; Body/S/S4 installs typebox@1.1.38 and \
+         @sinclair/typebox is not present, so the vendor specifier would not resolve",
+    );
+
+    // pi 0.80.7 declares `setStatus(key: string, text: string | undefined)` — key FIRST
+    // (pi-coding-agent/dist/core/extensions/types.d.ts). The vendor passes (text, key), so
+    // upstream renders the literal "tilldone" under a key made of the message.
+    expected = sanctioned_tilldone_adaptation(
+        &expected,
+        "\t\t\tctx.ui.setStatus(\"📋 TillDone: no tasks\", \"tilldone\");",
+        "\t\t\tctx.ui.setStatus(\"tilldone\", \"📋 TillDone: no tasks\");",
+        "setStatus takes the key first; the vendor's empty-task status arguments are reversed",
+    );
+    expected = sanctioned_tilldone_adaptation(
+        &expected,
+        "\t\t\tctx.ui.setStatus(`${label}: ${tasks.length} tasks (${remaining} remaining)`, \"tilldone\");",
+        "\t\t\tctx.ui.setStatus(\"tilldone\", `${label}: ${tasks.length} tasks (${remaining} remaining)`);",
+        "setStatus takes the key first; the vendor's task-count status arguments are reversed",
+    );
+
+    // `session_switch` and `session_fork` are not members of pi's `ExtensionAPI.on()` overload
+    // set; `session_info_changed` is the post-change event that covers both. Upstream's two
+    // handlers never fire, so a switched or forked session keeps the previous task list.
+    expected = sanctioned_tilldone_adaptation(
+        &expected,
+        "\tpi.on(\"session_switch\", async (_event, ctx) => reconstructState(ctx));\n\
+         \tpi.on(\"session_fork\", async (_event, ctx) => reconstructState(ctx));",
+        "\t// `session_switch` and `session_fork` are NOT pi events — the handlers\n\
+         \t// registered under those names never fired, so a switched or forked session\n\
+         \t// silently kept the previous branch's task list. `session_info_changed` is\n\
+         \t// the post-change event that actually covers both.\n\
+         \tpi.on(\"session_info_changed\", async (_event, ctx) => reconstructState(ctx));",
+        "session_switch/session_fork are not pi events; session_info_changed covers both",
+    );
+
     assert_eq!(
-        upstream_tilldone, tilldone,
-        "tilldone should remain a fidelity port of the Disler vendor execution gate"
+        expected, tilldone,
+        "tilldone should remain a fidelity port of the Disler vendor execution gate, differing \
+         from vendors/pi-vs-claude-code/extensions/tilldone.ts only by the sanctioned pi-0.80.7 \
+         adaptations normalised above"
     );
     assert!(tilldone.contains("name: \"tilldone\""));
     assert!(tilldone.contains("pi.registerCommand(\"tilldone\""));
@@ -379,7 +483,7 @@ fn pleroma_ports_damage_control_tilldone_and_cmux_visibility_helpers() {
     let pleroma =
         fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-2p-pleroma/extension.ts")).unwrap();
     assert!(pleroma.contains("./S2/damage-control.ts"));
-    assert!(pleroma.contains("import registerTilldone from \"./S2/tilldone.ts\""));
+    assert!(pleroma.contains("await import(\"./S2/tilldone.ts\")"));
     assert!(pleroma.contains("registerTilldone(api);"));
     assert!(pleroma.contains("shouldRegisterTilldone"));
     assert!(pleroma.contains("EPI_TILLDONE_MODE"));
@@ -465,7 +569,9 @@ fn anima_ports_pi_pi_meta_agent_and_team_manifest() {
     assert!(pi_pi.contains("name: \"query_experts\""));
     assert!(pi_pi.contains("pi.registerCommand(\"experts\""));
     assert!(pi_pi.contains("pi-orchestrator.md"));
-    assert!(pi_pi.contains("childPiRuntimeArgs"));
+    // 50.T50.02: childPiRuntimeArgs() moved into the one gated child-pi executor;
+    // this seam now delegates to it instead of building child argv itself.
+    assert!(pi_pi.contains("dispatchChildPi({"));
 
     let anima =
         fs::read_to_string(root.join("Body/S/S4/ta-onta/S4-4p-anima/extension.ts")).unwrap();

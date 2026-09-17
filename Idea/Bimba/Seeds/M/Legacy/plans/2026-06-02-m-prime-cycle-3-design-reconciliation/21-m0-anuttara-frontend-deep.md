@@ -1,5 +1,20 @@
 # Track 21 — M0' Anuttara Frontend Deep Design
 
+> **⚑ ONTOLOGY SUPERSEDED (2026-07-11, DR-FACE-7)** — The widget/registration framing
+> below is the dead Theia paradigm. Before executing ANY tranche in this file, read
+> [[M'-ENGINE-FACES-ONTOLOGY-2026-07-11]] and enter its frame: the carrier is one
+> playing organism (two poles — 1-2-3 cosmic instrument, 4-5-0 lived return — over
+> one kernel spine); the unit is the stateless **face**, not the widget. Sort every
+> tranche through the ontology §2 fate algorithm (carried-by-integration / face-gap /
+> spine-gap) and close per fate. The CONTENT-LAW below (data shapes, field lists,
+> pedagogy contracts, privacy rules) remains binding; the Theia nouns (WidgetFactory,
+> frontend-module, contributions, shell slots, "exactly six" chrome enumerations) do not.
+
+
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Closes the per-extension widget UX of the `m0-anuttara` Theia surface. Track 01 (M0 substrate reconciliation) lands the six-layer contract + ARCHETYPE_LUT ordering fix + symbolic-coordinate-string EBNF + Verifier module at the substrate side. Track 11 (theia-shell-surface-hosting) ratifies the shell that hosts the extension. Track 15 (ui-design-foundations) names the binding foundation principles. Track 19 (contemplation-surface-integration) lands the contemplative substrate (`CONTEMPLATION_PROMPT_LUT[12]`, Verifier `virtue_witness_vector`, M0/M2 parity bridges). **What none of those tracks own is the per-Mn widget DEPTH: how the M0' Anuttara surface actually reads as a workbench.** Track 21 closes that gap.
 
 The current `Body/M/epi-theia/extensions/m0-anuttara/` scaffold is one `ReactWidget` (`m0-anuttara-widget.tsx`) with five flat `<section>` blocks (banner / detail / language fields / S2 provenance / M5 actions / profile snapshot), one inspector (`m0-inspector.ts` with `M0InspectorModel` that *types* six-layer routing but does not render it), one layer-discriminator (`m0-layers.ts` with `M0_LAYER_VIEWS[6]` already-frozen), and one contribution contract (`index.ts` with `TRACK_08_CONTRIBUTION`, three declared view IDs, three commands, an intent target for legacy `'graph'`). The substrate is real but flat — the integrated bimba-map engagement system the Anuttara UX names is *typed but not surfaced*. Track 21 lifts the typed-and-not-surfaced into actual per-layer panels, contemplative footers, archetype routing readers, virtue witness rendering, symbolic-coordinate question consoles, and the Reading↔Authoring mode grammar — without rebuilding any landed scaffold and without violating the `mutatesGraphCanon: false` invariant ratified by DR-M0-1.

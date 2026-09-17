@@ -1,6 +1,10 @@
 use clap::Subcommand;
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+
+use crate::gate::{parity, preflight};
+use crate::sesh::session::load_env_file;
 
 #[derive(Subcommand)]
 pub enum AppCmd {
@@ -12,11 +16,15 @@ pub enum AppCmd {
     Build,
 }
 
-pub fn dispatch(cmd: &AppCmd) {
+pub async fn dispatch(cmd: &AppCmd) {
     let repo_root = repo_root();
 
     match cmd {
         AppCmd::Launch => {
+            if let Err(err) = ensure_app_gateway_ready(&repo_root).await {
+                eprintln!("epi app launch: failed to prepare gateway: {}", err);
+                std::process::exit(1);
+            }
             let bundle = app_bundle_path(&repo_root);
             if !bundle.exists() {
                 eprintln!("epi app launch: bundle not found at {}", bundle.display());
@@ -35,7 +43,16 @@ pub fn dispatch(cmd: &AppCmd) {
         }
         AppCmd::Dev => {
             let source = app_source_dir(&repo_root);
-            let status = pnpm_app_command(&source, "dev").status();
+            let env_map = match ensure_app_gateway_ready(&repo_root).await {
+                Ok(env_map) => env_map,
+                Err(err) => {
+                    eprintln!("epi app dev: failed to prepare gateway: {}", err);
+                    std::process::exit(1);
+                }
+            };
+            let mut command = pnpm_app_command(&source, "dev");
+            apply_app_env(&mut command, &repo_root, &env_map);
+            let status = command.status();
             match status {
                 Ok(s) if !s.success() => std::process::exit(s.code().unwrap_or(1)),
                 Err(e) => {
@@ -60,6 +77,23 @@ pub fn dispatch(cmd: &AppCmd) {
             }
         }
     }
+}
+
+async fn ensure_app_gateway_ready(repo_root: &Path) -> Result<BTreeMap<String, String>, String> {
+    let mut env_map = load_env_file(repo_root)?;
+    env_map.insert(
+        "EPI_GATE_STATE_ROOT".to_owned(),
+        repo_root.join(".epi").join("gate").display().to_string(),
+    );
+    let gateway =
+        preflight::ensure_gateway_ready(parity::DEFAULT_GATEWAY_PORT, repo_root, &env_map).await?;
+    env_map.insert("EPI_GATEWAY_URL".to_owned(), gateway.url);
+    Ok(env_map)
+}
+
+fn apply_app_env(command: &mut Command, repo_root: &Path, env_map: &BTreeMap<String, String>) {
+    command.env("EPI_REPO_ROOT", repo_root);
+    command.envs(env_map);
 }
 
 fn repo_root() -> PathBuf {
@@ -112,6 +146,15 @@ fn pnpm_app_command(source_dir: &Path, script: &str) -> Command {
 
 /// Used by `epi up` to launch the app as part of full-stack startup.
 pub fn launch_command_for_repo(repo_root: &Path) -> Command {
+    // Launcher override seams (restored — dropped by the 312b5ed8 refactor):
+    // EPI_UP_APP_LAUNCHER lets `epi up` tests/ops inject a launcher instead of
+    // opening the real bundle or running pnpm dev.
+    if let Some(launcher) = std::env::var_os("EPI_UP_APP_LAUNCHER") {
+        return Command::new(launcher);
+    }
+    if let Some(launcher) = std::env::var_os("EPI_APP_LAUNCHER_PATH") {
+        return Command::new(launcher);
+    }
     let bundle = app_bundle_path(repo_root);
     if bundle.exists() {
         let mut cmd = Command::new("open");

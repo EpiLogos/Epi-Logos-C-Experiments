@@ -1,0 +1,140 @@
+# M2 aspect-engine behavioral knobs — Track 38 unified surface drain
+# (2026-07-19 audit). Angles 0/60/90/120/180 are LAW (structural, never
+# tunable); the ORBS are behavioral detection windows. Defaults equal the
+# former ASPECT_ANGLES orb constants. Consumption wiring flagged per
+# Track 38 §8 gating.
+
+[[tunable]]
+key = "m2.aspect.orb.conjunction"
+type = "f32"
+default = 10.0
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M2"
+authoritative_doc = "aspect.rs ASPECT_ANGLES orbs"
+[tunable.range]
+min = 1.0
+max = 15.0
+
+[[tunable]]
+key = "m2.aspect.orb.sextile"
+type = "f32"
+default = 6.0
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M2"
+authoritative_doc = "aspect.rs ASPECT_ANGLES orbs"
+[tunable.range]
+min = 1.0
+max = 15.0
+
+[[tunable]]
+key = "m2.aspect.orb.square"
+type = "f32"
+default = 8.0
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M2"
+authoritative_doc = "aspect.rs ASPECT_ANGLES orbs"
+[tunable.range]
+min = 1.0
+max = 15.0
+
+[[tunable]]
+key = "m2.aspect.orb.trine"
+type = "f32"
+default = 8.0
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M2"
+authoritative_doc = "aspect.rs ASPECT_ANGLES orbs"
+[tunable.range]
+min = 1.0
+max = 15.0
+
+[[tunable]]
+key = "m2.aspect.orb.opposition"
+type = "f32"
+default = 10.0
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M2"
+authoritative_doc = "aspect.rs ASPECT_ANGLES orbs"
+[tunable.range]
+min = 1.0
+max = 15.0
+
+[[tunable]]
+key = "m4.vama.egregore_gain"
+type = "f32"
+default = 0.0125
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "vama_shakti.rs perturb_q_activity per-class gains"
+[tunable.range]
+min = 0.001
+max = 0.1
+
+[[tunable]]
+key = "m4.vama.sprite_gain"
+type = "f32"
+default = 0.03
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "vama_shakti.rs perturb_q_activity per-class gains"
+[tunable.range]
+min = 0.001
+max = 0.1
+
+[[tunable]]
+key = "m4.vama.daemon_gain"
+type = "f32"
+default = 0.018
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "vama_shakti.rs perturb_q_activity per-class gains"
+[tunable.range]
+min = 0.001
+max = 0.1
+
+[[tunable]]
+key = "m4.vama.mantra_gain"
+type = "f32"
+default = 0.016
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "vama_shakti.rs perturb_q_activity per-class gains"
+[tunable.range]
+min = 0.001
+max = 0.1

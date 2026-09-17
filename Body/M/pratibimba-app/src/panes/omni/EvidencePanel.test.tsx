@@ -1,0 +1,187 @@
+/**
+ * Coordinate: M' `/` membrane (Evidence tab body tests — Track 27.T27.5)
+ * Actualises: the Evidence fold renders MediatedRunEvidencePacket packets (list
+ *   + full view), NEVER leaks a protected body (opaque projections show keys
+ *   only), persists mediator/privacy filters + selection, cross-folds to the
+ *   Dispatch Trace tab (15.11), and is honest-empty with no packets.
+ */
+
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import type { MediatedRunEvidencePacket } from './evidenceShapes';
+import { EvidencePanel } from './EvidencePanel';
+import { privacyClassKind } from './PrivacyClassBadge';
+import { hydrateOmniPanelSessionState, readOmniPanelSessionState } from './omnipanelSessionState';
+
+beforeEach(() => hydrateOmniPanelSessionState(null));
+afterEach(cleanup);
+
+function fixture(overrides: Partial<MediatedRunEvidencePacket> = {}): MediatedRunEvidencePacket {
+    return {
+        id: 'packet-1',
+        title: 'Run one',
+        mediatedBy: { kind: 'anima' },
+        candidateId: 'cand-1',
+        coordinate: 'M5-5',
+        sourceAnchor: 'src://a',
+        graphAnchor: 'graph://a',
+        reviewId: 'rev-1',
+        testAnchor: 'test://a',
+        privacyClass: 'protected-local',
+        dispatchTrace: {
+            id: 'node-1',
+            parentId: null,
+            actor: { kind: 'anima' },
+            methodOrSkill: "s4'.mediation.route",
+            invokedAt: 1000,
+            tickAtInvoke: 5,
+            children: []
+        },
+        toolStream: [],
+        gateLandings: [],
+        axiomTranslationSteps: [],
+        sessionKey: 'agent:anima:main',
+        dayNowContext: '23-07-2026',
+        profileGeneration: 32,
+        bridgeReadinessHandle: 'ready://a',
+        currentProfile: { tick12: 3, SECRET_BODY: 'do-not-leak-this-body' },
+        graphContext: { namespace: 'bimba' },
+        sessionRuntime: { dayId: '23-07-2026' },
+        semanticCandidates: ['cand://x'],
+        s5Refs: ['s5://y'],
+        ...overrides
+    };
+}
+
+const evidenceState = () => readOmniPanelSessionState().perTabState.evidence;
+
+describe('PrivacyClassBadge.privacyClassKind', () => {
+    it('normalises free-form privacy strings to a known kind', () => {
+        expect(privacyClassKind('safe-public-current-kernel-tick')).toBe('public');
+        expect(privacyClassKind('protected-local')).toBe('protected');
+        expect(privacyClassKind('private')).toBe('private');
+        expect(privacyClassKind('weird')).toBe('unknown');
+    });
+});
+
+describe('EvidencePanel', () => {
+    it('is honest-empty with no packets — nothing synthesised', () => {
+        render(<EvidencePanel />);
+        expect(screen.getByTestId('evidence-list-empty')).toBeTruthy();
+    });
+
+    it('lists a packet and opens its full view on select', () => {
+        render(<EvidencePanel packets={[fixture()]} />);
+        const row = screen.getByTestId('evidence-packet-row');
+        fireEvent.click(row);
+        expect(evidenceState().selectedPacketId).toBe('packet-1');
+        // re-render reflects the persisted selection
+        cleanup();
+        render(<EvidencePanel packets={[fixture()]} />);
+        expect(screen.getByTestId('evidence-packet-view')).toBeTruthy();
+        expect(screen.getByTestId('evidence-mediator').textContent).toBe('Anima');
+    });
+
+    it('NEVER leaks a protected body — opaque projections render keys only', () => {
+        hydrateOmniPanelSessionState({ perTabState: { evidence: { selectedPacketId: 'packet-1' } } } as never);
+        const { container } = render(<EvidencePanel packets={[fixture()]} />);
+        // the opaque record's KEYS show, its VALUES never do
+        expect(screen.getByTestId('evidence-opaque-currentProfile').textContent).toContain('SECRET_BODY');
+        expect(container.textContent).not.toContain('do-not-leak-this-body');
+    });
+
+    it('persists + applies the privacy-class filter', () => {
+        render(
+            <EvidencePanel
+                packets={[fixture({ id: 'pub-1', privacyClass: 'public' }), fixture({ id: 'prot-1', privacyClass: 'protected-local' })]}
+            />
+        );
+        fireEvent.click(screen.getByTestId('evidence-privacy-filter-public'));
+        expect(evidenceState().filters.privacyClass).toBe('public');
+        const rows = screen.getAllByTestId('evidence-packet-row');
+        expect(rows).toHaveLength(1);
+        expect(rows[0].getAttribute('data-packet-id')).toBe('pub-1');
+    });
+
+    it('cross-folds to the Dispatch Trace tab at the packet genealogy node (15.11)', () => {
+        hydrateOmniPanelSessionState({ perTabState: { evidence: { selectedPacketId: 'packet-1' } } } as never);
+        render(<EvidencePanel packets={[fixture()]} />);
+        // the packet's genealogy renders as an embedded mini-graph, COLLAPSED —
+        // 28.8 (c), and it is also how the abbreviated `/` folding differs from
+        // the deep governance one (DR-WC-IS-2): the same component, opened.
+        const mini = screen.getByTestId('dispatch-mini-graph');
+        expect(mini.getAttribute('data-expanded')).toBe('false');
+        expect(screen.queryByTestId('dispatch-mini-node')).toBeNull();
+        fireEvent.click(screen.getByTestId('dispatch-mini-expand'));
+        expect(screen.getByTestId('dispatch-mini-node').getAttribute('data-node-id')).toBe('node-1');
+        fireEvent.click(screen.getByTestId('dispatch-mini-open'));
+        expect(readOmniPanelSessionState().activeTab).toBe('dispatch-trace');
+        expect(readOmniPanelSessionState().perTabState['dispatch-trace'].selectedNodeId).toBe('node-1');
+    });
+});
+
+describe('26.T26.4 — the evidence fold lands its close-paths', () => {
+    /** Select the only packet so the full view renders. */
+    function renderWithSelection(packet: MediatedRunEvidencePacket) {
+        render(<EvidencePanel packets={[packet]} />);
+        fireEvent.click(screen.getByTestId('evidence-packet-row'));
+    }
+
+    it('offers the contemplation close-path ONLY when the run landed one (19.7)', () => {
+        renderWithSelection(fixture());
+        expect(screen.queryByTestId('evidence-open-contemplation')).toBeNull();
+        cleanup();
+
+        renderWithSelection(fixture({ contemplationObjectRef: 'contemplation://run-1' }));
+        const link = screen.getByTestId('evidence-open-contemplation');
+        expect(link.textContent).toContain('Contemplation');
+        expect(link.getAttribute('data-contemplation-ref')).toBe('contemplation://run-1');
+    });
+
+    it('routes the contemplation close-path to the Review fold at THIS packet’s review', () => {
+        renderWithSelection(fixture({ contemplationObjectRef: 'contemplation://run-1' }));
+        fireEvent.click(screen.getByTestId('evidence-open-contemplation'));
+
+        const state = readOmniPanelSessionState();
+        expect(state.activeTab, 'the Review fold IS the contemplation landing surface (15.2)').toBe(
+            'review'
+        );
+        expect(
+            state.perTabState.review.selectedReviewId,
+            'opening a fold without carrying the record strands the user'
+        ).toBe('rev-1');
+    });
+
+    it('carries the record into the Tool Stream fold, not merely opening it', () => {
+        renderWithSelection(
+            fixture({
+                toolStream: [
+                    {
+                        id: 'tool-9',
+                        dispatchNodeId: 'node-1',
+                        toolName: 'graph_query',
+                        inputDigest: 'in',
+                        outputDigest: 'out'
+                    }
+                ]
+            })
+        );
+        const link = screen.getByTestId('evidence-open-tools');
+        expect(link.getAttribute('data-cross-link')).toBe('omnipanel.tool-stream');
+        expect(link.getAttribute('data-evidence-id')).toBe('packet-1');
+
+        fireEvent.click(link);
+        const state = readOmniPanelSessionState();
+        expect(state.activeTab).toBe('tool-stream');
+        expect(state.perTabState['tool-stream'].selectedEventId).toBe('tool-9');
+    });
+
+    it('keeps the fold non-modal — the close-paths are links, never dialogs (15.2/CCT-8)', () => {
+        const { container } = render(
+            <EvidencePanel packets={[fixture({ contemplationObjectRef: 'contemplation://run-1' })]} />
+        );
+        fireEvent.click(screen.getByTestId('evidence-packet-row'));
+        expect(container.querySelectorAll('[aria-modal="true"]').length).toBe(0);
+        expect(container.querySelectorAll('dialog').length).toBe(0);
+    });
+});

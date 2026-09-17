@@ -92,12 +92,18 @@ fn s3_subscription_registry_facts_name_unified_envelope_and_forbid_silent_fallba
         "13.T4 mandates ONE envelope type for both subscribe methods"
     );
     assert_eq!(facts.temporal_method, SPACETIME_SUBSCRIBE_METHOD);
-    assert_eq!(facts.spacetime_alias_method, SPACETIME_SUBSCRIBE_ALIAS_METHOD);
+    assert_eq!(
+        facts.spacetime_alias_method,
+        SPACETIME_SUBSCRIBE_ALIAS_METHOD
+    );
     assert_eq!(
         facts.silent_fallback_forbidden_sentinel,
         SPACETIME_SILENT_HTTP_FALLBACK_FORBIDDEN
     );
-    assert_eq!(facts.fallback_policy, SpacetimeFallbackPolicy::NativeWebsocket);
+    assert_eq!(
+        facts.fallback_policy,
+        SpacetimeFallbackPolicy::NativeWebsocket
+    );
     assert_ne!(
         SPACETIME_SILENT_HTTP_FALLBACK_FORBIDDEN, SPACETIME_FALLBACK_ACTIVE,
         "silent-HTTP-fallback sentinel must not collide with the legitimate fallback-active mode"
@@ -173,4 +179,42 @@ fn s5_mcp_event_cursor_contract_is_ordered_over_epii_events() {
     assert!(contract.event_sources.contains(&"Epii inbox"));
     assert!(contract.event_sources.contains(&"autoresearch"));
     assert!(contract.ordering_key.contains("cursor"));
+}
+
+/// 50.T50.13 / DR-VAK-6 — the vak_eval payload carries the audible reading.
+///
+/// The event existed as a NAME with no emitter and a coordinate-only payload.
+/// Its contract now declares the diatonic degree it was read at and the tonal
+/// reading of the run, so a consumer can tell what the run sounded like and
+/// not merely where it stood.
+#[test]
+fn portal_vak_eval_carries_the_audible_reading_contract() {
+    let contract = portal_event_contracts()
+        .iter()
+        .find(|contract| contract.event_name == "portal.vak_eval")
+        .expect("portal.vak_eval is a first-class portal event");
+
+    for key in ["diatonicDegree", "modeTonicCf", "tonalReading"] {
+        assert!(
+            contract.payload_keys.contains(&key),
+            "DR-VAK-6 requires {key} on the vak_eval payload"
+        );
+    }
+    // The optional 72-fold address (DR-VAK-6 item 2) and its derived half-decan.
+    assert!(contract.payload_keys.contains(&"resonance72Index"));
+    assert!(contract.payload_keys.contains(&"halfDecanIndex"));
+
+    // The six VAK coordinates stay — the reading is additive, not a swap.
+    for key in ["cpf", "ct", "cp", "cf", "cfp", "cs"] {
+        assert!(
+            contract.payload_keys.contains(&key),
+            "the C'-branch envelope survives the extension: {key}"
+        );
+    }
+
+    // The emitter is named, not left as a dangling contract.
+    assert!(
+        contract.projection_source.contains("s4'.vak.evaluate"),
+        "the projection source names the method that broadcasts it"
+    );
 }

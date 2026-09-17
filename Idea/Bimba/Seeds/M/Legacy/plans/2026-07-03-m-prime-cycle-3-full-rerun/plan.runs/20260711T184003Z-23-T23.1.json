@@ -1,0 +1,36 @@
+{
+  "runId": "20260711T184003Z-23-T23.1",
+  "taskId": "23.T23.1",
+  "startedAt": "2026-07-11T18:40:03.946Z",
+  "owner": "opus-f-faces",
+  "leaseExpiresAt": "2026-07-11T21:10:03.946Z",
+  "worktree": null,
+  "task": {
+    "id": "23.T23.1",
+    "trackId": "23",
+    "tranche": "T23.1",
+    "title": "Per-view widget class registration (cymaticEngine + correspondenceTree)",
+    "effort": "cymaticEngine + correspondenceTree",
+    "file": "23-m2-parashakti-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/23-m2-parashakti-frontend-deep.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M2' Chladni chi shader (octet-drive/quartet-constrain), six-axis decoder m2.decodeAxisAt, 72-fold breadcrumb with 9:8 indicator, descent engine 23.18, elemental feed 23.19, MonoPoly classifier 23.20 in pratibimba-app engine. §2 track 23."
+  }
+}

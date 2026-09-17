@@ -1,0 +1,35 @@
+{
+  "runId": "20260609T204431Z-01-T1.11",
+  "taskId": "01.T1.11",
+  "startedAt": "2026-06-09T20:44:31.584Z",
+  "owner": "codex-m-dev",
+  "leaseExpiresAt": "2026-06-09T22:44:31.584Z",
+  "worktree": null,
+  "task": {
+    "id": "01.T1.11",
+    "trackId": "01",
+    "tranche": "T1.11",
+    "title": "Anuttara symbolic-coordinate-string emission protocol",
+    "effort": null,
+    "file": "01-m0-anuttara-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md",
+    "dependsOn": [
+      "01.T1.10"
+    ],
+    "writeScopes": [
+      "Body/S/S0/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

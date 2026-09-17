@@ -1,0 +1,35 @@
+# Coordinate: M' (carrier binary)
+# Residency: Body/M/pratibimba-app/src-tauri
+# Actualises: the one-binary organism — Tauri v2 host that supervises the epi
+#   gateway (S3) and carries the webview face. Owning spec: M'-SYSTEM-SPEC
+#   (Carrier Decision 2026-07-02).
+# Does NOT own: kernel computation (Body/S/S0/portal-core), gateway protocol
+#   (Body/S/S3/gateway-contract), vault law (S1/Hen).
+
+[package]
+name = "pratibimba-app"
+version = "0.1.0"
+edition = "2021"
+description = "M' Pratibimba surface — one Tauri v2 binary supervising the epi gateway"
+
+# Standalone crate: excluded from the repo root workspace like epi-cli.
+[workspace]
+
+[lib]
+name = "pratibimba_app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["time"] }
+notify = "6"
+dirs = "5"
+chrono = "0.4"
+
+[dev-dependencies]
+tempfile = "3"

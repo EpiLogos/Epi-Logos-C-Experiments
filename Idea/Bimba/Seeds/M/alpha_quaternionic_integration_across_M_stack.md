@@ -42,7 +42,9 @@ M4  Nara                  the epigenetic layer atop M3 genetics, modulated
 M5  Epii / Anuttara return the whole returned as IDE / canon / pedagogy
 ```
 
-The +1 is at M1 because M1 is where the 100% is *defined*. M0 is the prior ground (0/1) that M1 *receives* and conjugates with its mirror 1/0 to produce 1/1 = 100%. The α-rasa bridge §11 ("Paramaśiva's fifth, toroidal culmination") names this directly: the +1 parent is Paramaśiva-as-paramount, with the toroidal culmination at M1-5. M0 holds the witness-axis as variable-invariant ground but does not itself instantiate the +1 of the 137-skeleton — it is the prior 0/1 from which the +1 is generated.
+The +1 is at M1 because M1 is where the 100% is *defined*. M0 is the prior ground (0/1) that M1 *receives* and conjugates with its mirror 1/0 to produce 1/1 = 100%. The α-rasa bridge §11 ("Paramaśiva's fifth, toroidal culmination") names this directly: the +1 parent is Paramaśiva-as-paramount, with the toroidal culmination at M1-5. M0 is the variable-invariant prior ground and does not itself instantiate the +1 of the 137-skeleton — it is the prior 0/1 from which the +1 is generated.
+
+The witness-axis of the spine is M1-5's (+1 parent) per M1'-SPEC §1 (DR-M1-1, standing invariant). The Third Spanda execution order makes the attribution operationally decisive: `64 + 72 = 136 → (−9) → 127 = 2^7−1 = M_7 → (+1) → 128 = 2^7 → (+9) → 137` — the +1 is the parent-seal effecting binary closure of the Mersenne substrate 127 into 128 *inside* the chain, while the prior ground is the source-syntax *above* the entire execution chain and cannot be the +1.
 
 The manifestational sequence M1 → M2 → M3 also means the structural-content of M3 (the 64) and M2 (the 72) are **produced by M1's double-track logic**, not co-equal to it. M1-5 is therefore not just one toroidal coordinate among many — it is the recognition-locus from which the double-track that becomes M2 and M3 issues. The actual double-torus (K² × T²_Mahāmāya) lives at **M3-5**, the synthesis-wheel where M1's emitted double-track has fully unfolded as inscription-circle × lens-circle.
 
@@ -74,7 +76,7 @@ The integer skeleton `137 = 64 + 72 + 1` maps directly onto the M-coordinate arc
 | Parent / bindu / Paramaśiva | $+1$ | **M1 / M1' / Paramaśiva** | The physical pole where $0/1 + 1/0 = 1/1 = 100\%$ is defined; the +1 that generates the 1-2-3 manifestational sequence. M1-5 is the toroidal culmination (per α-rasa §11). M1 receives 0/1 from M0 (Anuttara) and produces the double-track logic that becomes M2 and M3. |
 | Paraśakti bridge | $36\times 2 = 72$ | **M2 / M2'** | 12 lenses × 6 positions = 36 tattvas × 2 phases = 8 choirs × 9 names = 72-fold vibrational invariant carried in `M2_Vibrational_72_Space` union. The doubled-recognition-square that bridges the +1 parent into the 64 substrate. |
 | Mahāmāyā binary matrix | $64 = 2^6$ | **M3 / M3'** | Sixfold binary substrate: 64 codons, 64 hexagrams, 64-bit M3 address space, three pair-matrices with explicit quaternion-axis assignments (`M3_MATRIX_QUATERNION_AXIS`). |
-| **Prior ground (not the +1)** | $0/1$ | **M0 / M0' / Anuttara** | Variable-invariant ground; what M1 receives from. Anuttara is not the +1 — it is the prior 0/1 the +1 emerges from when M1 conjugates it with its mirror 1/0 to define 100%. The witness-axis function M0 carries is structurally prior to the 137 expansion. |
+| **Prior ground (not the +1)** | $0/1$ | **M0 / M0' / Anuttara** | Variable-invariant ground; what M1 receives from. Anuttara is not the +1 — it is the prior 0/1 the +1 emerges from when M1 conjugates it with its mirror 1/0 to define 100%. Structurally prior to the 137 expansion; the spine's +1 seat and its witnessing function are M1-5's per M1'-SPEC §1 (DR-M1-1). |
 | **Full structure** | $64 + 72 + 1 = 137$ | **M1–M2–M3 spine** | The integer psychoid skeleton of α⁻¹(0) ≈ 137.036, instantiated as the M-stack's 1-2-3 manifestational sequence. |
 
 The attribution-flip from my earlier draft matters: putting the +1 at M0 collapses the prior-ground / +1-parent distinction. M0 is what M1 *receives*; the +1 is what M1 *defines* when it conjugates the received 0/1 with its mirror 1/0. Anuttara is the variable-invariant ground; Paramaśiva is the variable-invariant ratio that the ground generates as soon as it has a mirror. The α-rasa bridge §11 names the +1 as Paramaśiva's fifth (toroidal culmination), not as the Anuttara ground.
@@ -87,7 +89,7 @@ $$
 \alpha^{-1}(m_W) \approx 128 = 64 \times 2.
 $$
 
-This is **the doubled Mahāmāyā shell** — the 64 codon matrix in its bimba/pratibimba doubling, before the 72-fold Paraśakti articulation and the +1 parent become operative. In M-stack terms, this is the state where only M3 (and its primed reflection M3') are visible, without M2's Paraśakti-bridge rendering the field as readable correspondence and without M0's witness-axis holding the whole as one identity.
+This is **the doubled Mahāmāyā shell** — the 64 codon matrix in its bimba/pratibimba doubling, before the 72-fold Paraśakti articulation and the +1 return become operative. In M-stack terms, this is the state where only M3 (and its primed reflection M3') are visible, without M2's Paraśakti-bridge rendering the field as readable correspondence and without the 1/1 element from the First Spanda re-entering to close the whole as one identity.
 
 The corridor
 
@@ -97,11 +99,11 @@ $$
 
 is therefore the system's own developmental corridor:
 
-- **128 = 64 × 2** — high-energy / un-bridged: M3's 64-codon doubled shell without M2's 72-fold vibrational play and without M0's parent witness; pure binary symbolic transcription
-- **137 = 64 + 72 + 1** — low-energy / fully-bridged: M3 codon matrix + M2 Paraśakti correspondence-tree + M0 Anuttara witness-axis; the full system at its atomic dressing
+- **128 = 64 × 2** — high-energy / un-bridged: M3's 64-codon doubled shell without M2's 72-fold vibrational play and without the 1/1 return from the First Spanda; pure binary symbolic transcription
+- **137 = 64 + 72 + 1** — low-energy / fully-bridged: M3 codon matrix + M2 Paraśakti correspondence-tree + the 1/1 element returning from the First Spanda; the full system at its atomic dressing
 - **137.035999177…** — the measured physical value: the residue $\delta(0) \approx 0.036$ is the dressing by which physical-real refuses to collapse into a flat integer while still constellating it
 
-The system *is* this corridor. Without M2's 72-fold correspondence-tree rendering Mahāmāyā as actually-vibrational, M3 alone is the pre-screened binary shell. Without M0's witness-axis as the +1 holding the whole, the bridged 64+72 is just two layered counts. With all three, the system articulates the integer psychoid attractor that physics measures.
+The system *is* this corridor. Without M2's 72-fold correspondence-tree rendering Mahāmāyā as actually-vibrational, M3 alone is the pre-screened binary shell. Without the 1/1 element returning from the First Spanda to close the bridge, 64+72 is just two layered counts. With all three, the system articulates the integer psychoid attractor that physics measures.
 
 ### §1.2 Why this is not numerology added afterward
 
@@ -133,11 +135,16 @@ The M3 system has **three matrices, full stop**. The pair-level naming (`M3_MATR
 |---|---|---|---|---|
 | **Matrix 1** `COMPLEMENTARY` / `COMP` | i-axis | Watson-Crick pairs (AT, TA, GC, CG): sum = 15, diff = ±3 / ±1 | `comp[i] = i ^ 0x3F` — all 6 lines flipped | Polarity-complementarity at both scales: the base-pairing axis |
 | **Matrix 2** `MOVING_RESTING` / `MOVE` | j-axis | Cross-complementary pairs (AG, GA, TC, CT): sum = 14 / 16, diff = ±2 | `move[i] = ((i & 0x07) << 3) | ((i >> 3) & 0x07)` — upper↔lower trigram swap | Mobility-flip at both scales: the orthogonal-axis swap |
-| **Matrix 3** `SAME_QUALITY` / `RES` | k-axis | Cross-diagonal pairs (AC, CA, TG, GT): sum = 13 / 17, diff = ±1 | 56 valid + 8 evolutionary-gap entries (0xFF) — the 9:8-epogdoon slack-points | Doubled-flip at both scales: where the closure carries the slack-residue |
+| **Matrix 3** `SAME_QUALITY` / `RES` | k-axis | Cross-diagonal pairs (AC, CA, TG, GT): sum = 13 / 17, diff = ±1 | Partial resonance operator: 56 resolved targets + 8 unresolved entries (`0xFF`) | Doubled-flip at both scales; unresolved resonance remains provisional |
 
 The kernel-level `M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_COUNT]` literally assigns these as `{x=1,0,0}`, `{0,y=1,0}`, `{0,0,z=1}` — i, j, k of the quaternion algebra. The same three matrices act on dinucleotide-pairs as their signature operation and on the full 64-codon-hexagram space as their derived involution.
 
-The 8 evolutionary-gap entries in Matrix 3 are not separate "stubs of broken symmetry" — they are **the structural-mathematical slack** that the cross-diagonal axis (the doubled-flip axis) carries because that's where the 9:8 epogdoon compression from M2's 72-fold can't quite close into the 64. The gaps mark where Paraśakti's vibrational play exceeds Mahāmāyā's binary substrate's capacity to receive without remainder.
+The eight unresolved entries in Matrix 3 must remain distinct from the eight
+collision pairs of the 9:8 epogdoon. `M3_RES_MATRIX` is indexed by the 64-codon
+domain and may return a provisional sentinel; epogdoon compression is indexed
+by the 72-address M2 domain and always returns an M3 address. Their matching
+cardinality supports a labelled structural comparison, not a shared runtime
+identity.
 
 ### §2.2 The 64 × 3 × 2 = 384 architecture
 
@@ -350,7 +357,7 @@ The α-bridge implication: M2-0 is **the 72-place in the system's 137 integer-sk
 In the α-quaternionic integration, M2-5 is **the 9:8 epogdoon conjugation enacted at the user-cosmos bridge layer**:
 
 - **9 orbital planets : 8 chakras = 9:8** (temp-file §6.7) is the same M2-M3 conjugation enacted at the planetary-chakral bridge. The 9 cosmic frequencies entering the 8 embodied chakras IS the epogdoon-conjugation between cosmic structural numerology and embodied chakral substrate
-- **Earth as observer-ground** (separate `EarthBodyState` struct, not a planet in M2_PLANET_LUT) is **the +1 parent witness-position at the bodily-cosmic bridge**. Earth-as-fused-anchor at CHAKRA_EARTH is the user's bodily registration of the +1 parent witness-axis — the user's body is where the M0 witness-axis touches the planetary-chakral coupling
+- **Earth as observer-ground** (separate `EarthBodyState` struct, not a planet in M2_PLANET_LUT) is **the +1 parent witness-position at the bodily-cosmic bridge**. Earth-as-fused-anchor at CHAKRA_EARTH is the user's bodily registration of the +1 parent witness-axis — the user's body is where the M1-5 (+1 parent) witness-axis touches the planetary-chakral coupling
 - **α as "the strength with which a charged being feels itself through light"** (α-bridge §11) is operative at M2-5 as **the strength with which the user feels themselves through the planetary-chakral resonance**. The user's resonance with the current planetary-chakral state at M2-5 IS α(E) at the personal-cosmic bridge layer — variable (it changes with time and cosmic state), invariant (it is the user's coupling-law to the cosmos)
 - **The Cousto frequencies** at M2-5 give the audible-Hz substrate; the chakra-elements give the bodily-zone substrate; the phases (DESCENT/ASCENT/FUSED/BEYOND) give the directional substrate. The combined 10-planet × 8-chakra × 5-element × 4-phase space is the structural arena in which the user's α-coupling to the cosmos is read at this layer
 
@@ -761,7 +768,7 @@ The Diamond-QL Vitruvian rendering (temp-file §2 and §6.9) is the visible-audi
 - **6 vertices** = 6 P-positions = the sixfold matheme substrate from which $2^6 = 64$ and $6^2 = 36$ derive
 - **12 edges** = 12 MEF lenses = the epistemic-mode quaternary play (with Pauli i, j, k sub-grouping on the three axial edge-pairs)
 - **8 faces** = 8 chakras = the bodily-energetic substrate of the user's α-coupling
-- **Vertical axis** = bindu / +1 parent / witness-axis from root-chakra (Earth/Muladhara at bottom) to crown-chakra (Sahasrara at top); the user's body-axis is the M0 witness-axis registered personally
+- **Vertical axis** = bindu / +1 parent / witness-axis from root-chakra (Earth/Muladhara at bottom) to crown-chakra (Sahasrara at top); the user's body-axis is the M1-5 (+1 parent) witness-axis registered personally
 - **Equatorial 4 vertices** = (Earth, Water, Air, Fire) Pauli-quaternionic elemental belt = the (w, x, y, z) of $q_\text{Nara}$
 - **Polar cap conditions** = (Aether, Mineral) = the meta-conditions of the user's source and crystallisation, the +1 parent-cap doubled at the body's vertical poles
 
@@ -847,7 +854,7 @@ The Epi-Logos repo already commits to SpaceTimeDB at S3':
 
 - **`Body/S/S3/epi-spacetime-module/src/lib.rs`** — live WASM module pinning `spacetimedb = "=2.2.0"`, with `KairosSurface`, `SessionSurface`, `GlobalTemporalSurface` tables and reducers already defined
 - **`Body/S/S0/epi-cli/src/gate/spacetimedb_bridge.rs`** — Rust gateway client (REST + partially-built native WebSocket subscription stub gated behind `EPI_SPACETIME_SUBSCRIPTION_MODE=native-websocket`)
-- **`Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs`** — Tauri-side handle with `ClockPresenceRow` and `KairosSnapshot` shapes
+- **`Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs`** — deprecated migration-source handle with `ClockPresenceRow` and `KairosSnapshot` shapes; it is not an active carrier boundary
 - **`Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md`** §III — canonical two-plane decision: **Plane A (Gateway)** = imperative RPC ("do X now"); **Plane B (Universal NOW)** = SpaceTimeDB declarative subscriptions ("show what is true for all participants right now")
 
 The work that remains is **completing the bridge** (REST → native WebSocket subscriptions), **adding the shared-cosmos tables** (world_clock, pratibimba_presence, shared_archetype_event, coincidence), and **reframing identity signatures as quaternionic** (per §11.4 below).
@@ -1128,7 +1135,7 @@ Concrete sizing for Epi-Logos at 1,000 users:
 
 ### §11.7 Three milestones to prove the model end-to-end
 
-1. **Complete native-WebSocket subscriptions** in the Rust gateway — finish the stubbed `subscribe_projection` path (`spacetimedb_bridge.rs:603-641`) and the Tauri-side `SpacetimeMode::NativeWebSocket`. Verify Tauri frontend receives a `KairosSurface` row update within 100 ms of the gateway calling `bind_kairos_surface`.
+1. **Complete native-WebSocket subscriptions** in the Rust gateway — finish the stubbed `subscribe_projection` path (`spacetimedb_bridge.rs:603-641`) and replace the deprecated `epi-tauri` `SpacetimeMode::NativeWebSocket` path with the active carrier consumer. Verify the active frontend receives a `KairosSurface` row update within 100 ms of the gateway calling `bind_kairos_surface`.
 
 2. **Add `world_clock` singleton + scheduled `advance_world_clock` reducer at 1 Hz**. Verify 10 simultaneous Tauri clients see the same tick within ±30 ms. This proves the shared-cosmos hosting end-to-end.
 
@@ -1166,7 +1173,7 @@ Past those three milestones, the architecture has been proved at the layer that 
 - `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md`: canonical S3/S3' two-plane spec (gateway imperative + SpaceTimeDB declarative)
 - `Body/S/S3/epi-spacetime-module/src/lib.rs`: live SpaceTimeDB module with KairosSurface / SessionSurface / GlobalTemporalSurface and bind_* reducers
 - `Body/S/S0/epi-cli/src/gate/spacetimedb_bridge.rs`: Rust gateway client (REST + native WebSocket stub)
-- `Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs`: Tauri-side handle with ClockPresenceRow / KairosSnapshot
+- `Body/M/epi-tauri/src-tauri/src/temporal/spacetime.rs`: deprecated migration-source handle with ClockPresenceRow / KairosSnapshot
 - `epi-lib/include/m2.h`, `m3.h`, `m1.h`: C-level operative substrate
 
 ## Physics and external references

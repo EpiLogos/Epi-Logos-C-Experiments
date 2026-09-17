@@ -1,0 +1,38 @@
+coordinate: "CT3"
+c_4_artifact_role: "base-view"
+c_1_ct_type: "CT3"
+c_5_reflects: "[[CT3]]"
+c_0_source_coordinates: ["[[CT3]]", "[[CT]]", "[[C5]]"]
+filters:
+  or:
+    - 'c_1_ct_type == "CT3"'
+    - 'ctx_type == "CT3"'
+views:
+  - type: table
+    name: "Day pattern atlas"
+    group_by: c_3_ctx_frame
+    order:
+      - coordinate
+      - c_4_artifact_role
+      - c_3_ctx_frame
+      - c_3_created_at
+      - c_3_updated_at
+      - c_0_source_coordinates
+      - p0_grounds
+      - p1_definitions
+      - p2_operations
+      - p3_patterns
+    sort:
+      - { property: coordinate, direction: ASC }
+  - type: table
+    name: "Night' anomalous patterns"
+    filters:
+      or:
+        - "coordinate.contains(\"'\")"
+        - "ql_position.contains(\"'\")"
+    order:
+      - coordinate
+      - c_4_artifact_role
+      - c_3_ctx_frame
+      - p0_grounds
+      - p3_patterns

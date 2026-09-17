@@ -24,6 +24,10 @@ Raw tools are always available at the extension level. Skills shape and constrai
 
 Anima is the **orchestration centre** — the lemniscate self-fold where the agent system manages itself. It owns VAK evaluation (task → 6-layer coordinate assignment), CF dispatch (CF code → constitutional agent routing), thread-type execution (CFP0-CFP5 via agent-team/chain/subagent primitives), and CS-phase management (Klein mode, Ouroboros, day/night configuration). All agent dispatch in the ta-onta system routes through Anima. No other extension spawns agents directly.
 
+Within that dispatch boundary, [[Mythos]] owns the in-session [[M4_Symbolic_Protein]] pattern-reading module. `modules/symbolic-protein-reader.ts` consumes only an opaque protein handle, governed chain fingerprint/position projection, current M1/M2/M3 weather, and four provenance wikilinks. It owns trigger state, reading history, voice/reification checks, and the final close reading. It does not dereference or persist the protected protein body, duplicate the [[M3]] Major Arcana table, parse TOML, or widen the Anima active-tool surface.
+
+**Canonical mental-pole dispatch (per DR-MP-1):** Anima IS still the `#` operator/dispatch — the orchestrating function that routes to constitutional agents. For the mental-pole triplet (4'-5'-0' = LLM/EBM/Verifier), the dispatch routes through **Pi-as-LLM-Nara at position 4'** — the traversal-voice that synthesizes EBM evaluation (position 5'/Epii) and Verifier report (position 0'/Anuttara) into user-articulable feedback. Pi-as-Nara IS the LLM the dispatch routes through; Anima IS the dispatch function that routes to it.
+
 **What Anima does NOT own:** vault writes (Khora), content structure (Hen), temporal scheduling (Chronos), knowledge crystallisation/retrieval tooling (Aletheia). Anima dispatches TO Aletheia's specialist subagents — it does not define them.
 
 ---
@@ -36,6 +40,16 @@ Anima is the **orchestration centre** — the lemniscate self-fold where the age
 | `after_tool_call` | Check if Sophia post-execution review is needed |
 | `session_end` | Trigger Sophia review + thought routing to `thoughts/` |
 
+## Verify Phase Gate
+
+The [[S4-4'-SPEC]] Z-thread cycle is Compose -> Perform -> Verify -> Rehear -> Recompose. Anima owns dispatch-time judge role resolution for the Verify phase; the judge is a role selected from task VAK coordinates and available model slots, not a hardcoded agent identity.
+
+- Judge input: GoalSpec, builder output, and original goal condition.
+- Judge output: structured questions with symbolic-coordinate-string evidence references; no pass/fail boolean verdict surface.
+- Gate invariant: at least one judge clearance is required before transition to Rehear.
+- Escalation invariant: after 3 uncleared verify cycles, Anima escalates to a human instead of continuing autonomous revision.
+- Model-pairing invariant: when slots allow, the judge model differs from the builder model.
+
 ---
 
 ## Registered Tools
@@ -45,11 +59,22 @@ Anima is the **orchestration centre** — the lemniscate self-fold where the age
 | `vak_evaluate` | Assign 6-layer VAK coordinates (CPF/CT/CP/CF/CFP/CS) to a task |
 | `anima_orchestrate` | CF code → constitutional agent routing decision |
 | `dispatch_agent` | Spawn agent from team grid (agent-team.ts) |
+| `dispatch_moirai_night_pass` | Dispatch Klotho/Lachesis/Atropos for Night' rehearing; with optional CPF `(00/00)` consented `aeon_graduation`, writes the Z-thread accrual block into an [[Aeon]] form and returns the Aletheia improvement proposal payload |
+| `dispatch_parallel_agents` | Spawn parallel constitutional agents with VAK validation |
+| `dispatch_fusion_agents` | Run CFP3 fusion dispatch with shared task aggregation |
+| `anima_self_invoke` | Queue an Anima invocation into another session through the gateway route |
+| `nous_disclose` | Prepare the Nous clearing context package without dispatching execution |
+| `goal_prelude` | Create a NOW-bound dialogical goal prelude artifact |
 | `run_chain` | Execute sequential agent pipeline (agent-chain.ts) |
 | `subagent_create` | Spawn background subagent (subagent-widget.ts) |
 | `subagent_continue` | Resume background subagent |
 | `subagent_list` | List active background subagents |
 | `subagent_remove` | Terminate and clean up subagent |
+| `tilldone` | Continue a bounded agent loop until a terminal condition |
+
+### Dispatch Topology Handoff
+
+`modules/dispatch-policy.ts` emits one typed `tmux_topology_decision` envelope for each selected `CFP0`/`CFP1`/`CFP3` child dispatch. Each carries the complete VAK address and the learned selection's per-day tmux session, role window, and child-task pane names. When a dispatch has a [[ConversationSliceHandle]], Anima redacts it before adding the exact child command; the same `EPI_PARENT_SLICE_HANDLE` reaches a headless tmux pane or a cmux-attached pane. A successful native child report publishes `agent:team:dispatch:complete` with the task, VAK, slice, evidence, and c=1/c=0 outcome for [[Chronos]]. [[Pleroma]] consumes topology envelopes exclusively through `techne_tmux_topology_apply`; [[Anima]] does not allocate multiplexer resources itself. `CFP2` remains a sequential policy path and emits no topology envelope because it is outside Pleroma's accepted layouts.
 
 ---
 
@@ -97,14 +122,38 @@ CF code → constitutional agent mapping:
 
 ## CFP Thread Types → pi-vs-claude-code Primitives
 
-| CFP | Thread Type | Primitive | Description |
-|-----|------------|-----------|-------------|
-| CFP0 | Base Thread | — | Direct single-agent execution |
-| CFP1 | P-Thread | `agent-team.ts` | Parallel multi-agent dispatch grid |
-| CFP2 | C-Thread | `agent-chain.ts` | Sequential pipeline (A → B → C) |
-| CFP3 | F-Thread | `agent-team.ts` fusion mode | Same task → N agents → aggregate |
-| CFP4 | L-Thread | `subagent-widget.ts` | Background subagent with stop hooks |
-| CFP5 | B-Thread | meta-nested | Anima orchestrating subagent-widget |
+Canon maps a CFP to a **skill or pattern**, never to a tool — and writes CFP3
+as a *mode* of CFP1's skill, i.e. many-to-one, in the constitutional table
+itself (`S4'/skills/vak-coordinate-frame/SKILL.md`). So this table records what
+each thread IS (its shape) and, separately, which tools could realise it.
+
+**Threads are shapes. Tools are capabilities.** A tool does not belong to a
+thread type: several shapes may use one tool, one shape may use several, and an
+agent may hold a tool and never use that shape. `capabilitiesFor(shape)` answers
+"which entitled tools could realise this", never "which tool IS this thread".
+
+| CFP | Thread | Shape (fan-out / aggregation / nesting / autonomy / completion) | Canon "Maps To" | Conventional starting tool |
+|-----|--------|----------------------------------------------------------------|-----------------|-----------------------------|
+| CFP0 | Base | one · none · flat · checkpointed · review | Direct execution | `dispatch_agent` |
+| CFP1 | P-Thread (Parallel) | many · none · flat · checkpointed · review | `dispatching-parallel-agents` | `dispatch_parallel_agents` |
+| CFP2 | C-Thread (Chained) | many · sequential · flat · checkpointed · review | `subagent-driven-development` | `run_chain` |
+| CFP3 | F-Thread (Fusion) | many · fused · flat · checkpointed · review | **Mode of** `dispatching-parallel-agents` | `dispatch_fusion_agents` |
+| CFP4 | L-Thread (Long) | one · none · flat · **long-running · till-done** | `executing-plans` | **none** |
+| CFP5 | B-Thread (Big) | many · none · **recursive** · long-running · review | Meta-nested dispatch | `subagent_create` |
+
+**Why CFP4's tool column is empty.** "Long" is a duration and completion
+property, not a topology — there is no "long" dispatch primitive to point at.
+The old 1:1 map named `tilldone` here, and that name dangled precisely because
+the model was wrong, not because a registration was missing. `tilldone` is a
+completion DISCIPLINE: it is offered to any shape declaring
+`completion: "till-done"`, which is why it is also entitled to `anuttara`, an
+agent with no CFP4 relationship. Likewise `subagent_create` is one member of a
+lifecycle family (`create`/`continue`/`list`/`remove`) that no CFP owns.
+
+Implementation: `lib/thread-shape.ts` (`shapeOf`, `capabilitiesFor`,
+`TOOL_CAPABILITIES` keyed by TOOL). Tool residency for `tilldone` is Pleroma
+(`S4-2p-pleroma/S2/tilldone.ts`, 12.T12.11); Anima owns only the executor
+(`S4/tilldone.ts`) that decides when a run-till-done thread may close.
 
 ---
 
@@ -166,6 +215,7 @@ Day/Night' is a **CS (Context-System) runtime configuration**, not a hardwired a
 7. Psyche is the session subject — she is the agent who undergoes, not the orchestrator
 8. Nous prepares dis-closure (RAG context) before task execution — never routes tasks
 9. Skills gate tool use for subagents — raw tools are registered at the extension level and are always available; skills contextualise how subagents invoke them
+10. Mythos symbolic-protein reads consume governed projections only; raw codons/protein bodies never enter Anima state, and the session-close read is the sole final `mythosArchetypeReading` value.
 
 ---
 
@@ -176,6 +226,8 @@ Day/Night' is a **CS (Context-System) runtime configuration**, not a hardwired a
 - Hen: template invocation for task-spec + pattern-note artifacts
 - Pleroma: bounded primitive surfaces (tmux, cmux, worktrunk, etc.) for CFP execution
 - Chronos: Day lifecycle events, session temporal boundaries
+- M4/Nara: protected protein handle plus governed chain position/fingerprint projection
+- Matheme profile: current M1/M2/M3 cosmic-weather snapshot and its provenance handle
 
 **Provides to:**
 - Aletheia: Night' analysis triggers (Möbius pass start); `thoughts/` routing signal
@@ -194,7 +246,7 @@ Day/Night' is a **CS (Context-System) runtime configuration**, not a hardwired a
 | P1 | CFP1 P-Thread: `agent-team.ts` port + `dispatch_agent` tool |
 | P1 | CFP2 C-Thread: `agent-chain.ts` port + `run_chain` tool |
 | P1 | Sophia post-execution review: `thinking/` → `thoughts/` classification |
-| P1 | CFP4 L-Thread: `subagent-widget.ts` port + subagent lifecycle tools |
+| P1 | CFP5 B-Thread: `subagent-widget.ts` port + subagent lifecycle tools (CFP4's completion gate is `tilldone` — see the CFP table above) |
 | P2 | Klein mode (Day + Night' self-review) |
 | P2 | Ouroboros incubation loop |
 | P3 | CFP3 F-Thread (fusion mode), CFP5 B-Thread (meta-nested) |

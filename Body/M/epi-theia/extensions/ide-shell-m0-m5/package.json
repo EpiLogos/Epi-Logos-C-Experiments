@@ -19,6 +19,7 @@
     "@pratibimba/kernel-bridge": "workspace:*",
     "@pratibimba/pratibimba-layouts": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
+    "@pratibimba/block-kit": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -32,6 +33,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build && node --test tests/contract.test.mjs tests/canon-studio-save-routing.test.mjs"
+    "test": "pnpm build && node --test tests/contract.test.mjs tests/canon-studio-save-routing.test.mjs tests/privacy-drop-feed.test.mjs tests/pi-axiom-translation.test.mjs"
   }
 }

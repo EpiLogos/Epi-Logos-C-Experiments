@@ -1,0 +1,36 @@
+{
+  "runId": "20260714T103640Z-26-T26.10",
+  "taskId": "26.T26.10",
+  "startedAt": "2026-07-14T10:36:40.153Z",
+  "owner": "fable-c",
+  "leaseExpiresAt": "2026-07-14T12:06:40.153Z",
+  "worktree": null,
+  "task": {
+    "id": "26.T26.10",
+    "trackId": "26",
+    "tranche": "T26.10",
+    "title": "`MediatedRunEvidencePacket` schema landing",
+    "effort": null,
+    "file": "26-m5-epii-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/26-m5-epii-frontend-deep.md",
+    "dependsOn": [
+      "26.T26.1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/26-m5-epii-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M5' EBM observatory in pratibimba-app ('M5' does not talk. It scores.' 72-grid, three Klein-V4 tritone squares, wisdom-delta 8-byte XOR, psyche-facet badges never actor rows). §2 track 26."
+  }
+}

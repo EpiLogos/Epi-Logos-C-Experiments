@@ -1,0 +1,119 @@
+# Existing [slot.*] per M'-MODEL-SLOT-SPEC, migrated to schema-backed.
+
+[[tunable]]
+key = "slot.nara_parser.state"
+type = "enum"
+default = "local-default"
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "M'-MODEL-SLOT-SPEC §2"
+[tunable.range]
+enum_values = ["local-default", "cloud-opt-in", "null"]
+
+[[tunable]]
+key = "slot.epii_judge.state"
+type = "enum"
+default = "cloud-opt-in"
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "vector-derived"
+owning_subsystem = "M5"
+authoritative_doc = "M'-MODEL-SLOT-SPEC §3"
+[tunable.range]
+enum_values = ["local-default", "cloud-opt-in", "cloud-opt-in-pool", "null"]
+
+[[tunable]]
+key = "slot.aletheia.anansi.state"
+type = "enum"
+default = "local-default"
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-MODEL-SLOT-SPEC §4"
+[tunable.range]
+enum_values = ["local-default", "cloud-opt-in", "null"]
+
+[[tunable]]
+key = "slot.aletheia.janus.state"
+type = "enum"
+default = "local-default"
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-MODEL-SLOT-SPEC §4"
+[tunable.range]
+enum_values = ["local-default", "cloud-opt-in", "null"]
+
+[[tunable]]
+key = "slot.aletheia.moirai.state"
+type = "enum"
+default = "cloud-opt-in"
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "vector-derived"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-MODEL-SLOT-SPEC §4"
+[tunable.range]
+enum_values = ["local-default", "cloud-opt-in", "null"]
+
+[[tunable]]
+key = "slot.aletheia.mercurius.state"
+type = "enum"
+default = "local-default"
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-MODEL-SLOT-SPEC §4"
+[tunable.range]
+enum_values = ["local-default", "cloud-opt-in", "null"]
+
+[[tunable]]
+key = "slot.aletheia.agora.state"
+type = "enum"
+default = "local-default"
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-MODEL-SLOT-SPEC §4"
+[tunable.range]
+enum_values = ["local-default", "cloud-opt-in", "null"]
+
+[[tunable]]
+key = "slot.aletheia.zeithoven.state"
+type = "enum"
+default = "cloud-opt-in"
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "aletheia"
+authoritative_doc = "M'-MODEL-SLOT-SPEC §4"
+[tunable.range]
+enum_values = ["local-default", "cloud-opt-in", "null"]

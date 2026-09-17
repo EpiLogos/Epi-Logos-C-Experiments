@@ -2,21 +2,25 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use epi_s1_hen_compiler_core::{
-    plan_compile, CompilePlanRequest, ExecutorKind, HenTimestamp, TargetAgent,
-};
-use epi_s5_epii_review_core::{
-    GateKind, GovernanceLevel, ReviewCategory, ReviewDecision, ReviewStore,
-};
+use epi_s1_hen_compiler_core::{plan_compile, CompilePlanRequest, ExecutorKind, HenTimestamp};
+// `ReviewCategory` is re-exported crate-internally so the `capacity_workflows`
+// modules keep resolving `crate::ReviewCategory` (the promotion-gate types now
+// live in `promotion`; the review-core enum itself stays a crate-root re-export).
+pub(crate) use epi_s5_epii_review_core::ReviewCategory;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use uuid::Uuid;
 
 pub mod adapters;
+pub mod anamnesis_proposer;
 pub mod capacity_workflows;
 pub mod inbox;
 pub mod recompose;
+pub mod resonance_corpus;
+#[cfg(feature = "resonance_ebm")]
+pub mod resonance_ebm;
+pub mod s5_handlers;
 pub mod spine;
+pub mod tuning_review;
 // inbox + recompose intentionally not re-exported — callers namespace via
 // `inbox::` / `recompose::` to keep the seam topology visible at import sites.
 pub use spine::{
@@ -27,521 +31,23 @@ pub use spine::{
 pub const KERNEL_EVIDENCE_PRIVACY: &str = "safe-public-current-kernel-tick";
 pub const KERNEL_EVIDENCE_COMPUTATION_SOURCE: &str = "portal-core::KernelProjection";
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct ArtifactRef {
-    pub path: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub coordinate: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kind: Option<String>,
-}
+mod kernel_evidence;
+mod orchestration;
+mod promotion;
+mod q_review;
+mod types;
 
-impl ArtifactRef {
-    pub fn new(path: impl Into<String>) -> Self {
-        Self {
-            path: path.into(),
-            coordinate: None,
-            kind: None,
-        }
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum LoopState {
-    Idle,
-    Hypothesis,
-    Evaluating,
-    Deciding,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum ImprovementDecision {
-    Keep,
-    Discard,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ProposeRequest {
-    pub target_family: String,
-    pub target_coordinate: String,
-    pub direction: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub source_review_item_id: Option<String>,
-    pub baseline: ArtifactRef,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct EvidenceSourceRef {
-    pub kind: String,
-    pub uri: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub coordinate: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub summary: Option<String>,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct EvaluationEvidence {
-    pub dimension: String,
-    pub baseline_score: f64,
-    pub challenger_score: f64,
-    pub weight: f64,
-    pub notes: String,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub source_refs: Vec<EvidenceSourceRef>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub kernel_evidence: Option<KernelEvidence>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct KernelEvidenceSnapshot {
-    pub generation: u64,
-    pub phase: String,
-    pub element: String,
-    pub harmonic_ratio: String,
-    pub pulse_ratio: String,
-    pub total_energy: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct KernelEvidenceDelta {
-    pub energy_delta: String,
-    pub harmonic_changed: bool,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub resonance_delta: Option<String>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct KernelEvidence {
-    pub baseline: KernelEvidenceSnapshot,
-    pub challenger: KernelEvidenceSnapshot,
-    pub delta: KernelEvidenceDelta,
-    pub privacy: String,
-    pub computation_source: String,
-    pub advisory_only: bool,
-    pub interpretation_boundary: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub trajectory: Option<KernelTrajectoryRef>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct KernelTrajectoryRef {
-    pub session_key: String,
-    pub day_id: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub now_path: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub spacetimedb_session_surface: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub spacetimedb_global_surface: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub graphiti_arc_id: Option<String>,
-}
-
-impl KernelEvidence {
-    pub fn from_public_projections(
-        baseline: &Value,
-        challenger: &Value,
-        resonance_delta: Option<String>,
-        interpretation_boundary: impl Into<String>,
-    ) -> Result<Self, String> {
-        validate_public_kernel_projection(baseline)?;
-        validate_public_kernel_projection(challenger)?;
-
-        let baseline = KernelEvidenceSnapshot::from_public_projection(baseline)?;
-        let challenger = KernelEvidenceSnapshot::from_public_projection(challenger)?;
-        let energy_delta = format!(
-            "{:.6}",
-            parse_f64(&challenger.total_energy, "challenger totalEnergy")?
-                - parse_f64(&baseline.total_energy, "baseline totalEnergy")?
-        );
-        let harmonic_changed = baseline.phase != challenger.phase
-            || baseline.element != challenger.element
-            || baseline.harmonic_ratio != challenger.harmonic_ratio
-            || baseline.pulse_ratio != challenger.pulse_ratio;
-        let interpretation_boundary = interpretation_boundary.into();
-        if interpretation_boundary.trim().is_empty() {
-            return Err("kernel evidence interpretation_boundary is required".to_owned());
-        }
-
-        Ok(Self {
-            baseline,
-            challenger,
-            delta: KernelEvidenceDelta {
-                energy_delta,
-                harmonic_changed,
-                resonance_delta,
-            },
-            privacy: KERNEL_EVIDENCE_PRIVACY.to_owned(),
-            computation_source: KERNEL_EVIDENCE_COMPUTATION_SOURCE.to_owned(),
-            advisory_only: true,
-            interpretation_boundary,
-            trajectory: None,
-        })
-    }
-
-    pub fn with_trajectory(mut self, trajectory: KernelTrajectoryRef) -> Result<Self, String> {
-        validate_kernel_trajectory(&trajectory)?;
-        self.trajectory = Some(trajectory);
-        Ok(self)
-    }
-}
-
-impl KernelEvidenceSnapshot {
-    fn from_public_projection(value: &Value) -> Result<Self, String> {
-        let ratio_num = required_u64(value, "/harmonicPulse/ratioNum")?;
-        let ratio_den = required_u64(value, "/harmonicPulse/ratioDen")?;
-        Ok(Self {
-            generation: required_u64(value, "/generation")?,
-            phase: required_str(value, "/tick/phase")?.to_owned(),
-            element: required_str(value, "/tick/element")?.to_owned(),
-            harmonic_ratio: required_str(value, "/tick/harmonicRatio")?.to_owned(),
-            pulse_ratio: format!("{ratio_num}/{ratio_den}"),
-            total_energy: required_str(value, "/energy/totalEnergy")?.to_owned(),
-        })
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct EvaluationResult {
-    pub winner: String,
-    pub baseline_score: f64,
-    pub challenger_score: f64,
-    pub evidence: Vec<EvaluationEvidence>,
-    pub rationale: String,
-    pub evaluated_at: u128,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ImprovementRun {
-    pub run_id: String,
-    pub target_family: String,
-    pub target_coordinate: String,
-    pub direction: String,
-    #[serde(default)]
-    pub closure_kind: ClosureKind,
-    #[serde(default)]
-    pub ct_register: ContentTypeRegister,
-    pub source_review_item_id: Option<String>,
-    pub baseline: ArtifactRef,
-    pub challenger: ArtifactRef,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub typed_candidate: Option<ImprovementCandidate>,
-    pub loop_state: LoopState,
-    pub evaluation: Option<EvaluationResult>,
-    pub decision: Option<ImprovementDecision>,
-    pub created_at: u128,
-    pub updated_at: u128,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ImprovementVector {
-    pub run_id: String,
-    pub target_family: String,
-    pub target_coordinate: String,
-    pub direction: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ImproveStatus {
-    pub loop_state: LoopState,
-    pub active_vectors: Vec<ImprovementVector>,
-    pub last_run: Option<u128>,
-    pub total_runs: usize,
-    pub keep_count: usize,
-    pub discard_count: usize,
-    pub kernel_evidence_count: usize,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ImprovementHistory {
-    pub runs: Vec<ImprovementRun>,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct CandidateRecord {
-    pub candidate_id: String,
-    pub run_id: String,
-    pub candidate: ImprovementCandidate,
-    pub surfaced_at: u128,
-    pub updated_at: u128,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum RouteStatus {
-    Open,
-    Blocked,
-    Resolved,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct RouteRecord {
-    pub route_id: String,
-    pub candidate_id: String,
-    pub run_id: String,
-    pub target_subsystem: TargetSubsystem,
-    pub queue: String,
-    pub closure_kind: ClosureKind,
-    pub ct_register: ContentTypeRegister,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub cross_target_link: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub blocked_by_route_id: Option<String>,
-    pub status: RouteStatus,
-    pub created_at: u128,
-    pub updated_at: u128,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct SurfacedCandidateReceipt {
-    pub candidate: CandidateRecord,
-    pub run: ImprovementRun,
-    pub routes: Vec<RouteRecord>,
-    pub suppressed_duplicate: bool,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct AletheiaLineageSurfaceReceipt {
-    pub surfaced: SurfacedCandidateReceipt,
-    pub lineage: inbox::DisclosureLineage,
-    pub safe_source_uri: String,
-}
+pub use kernel_evidence::*;
+pub use orchestration::*;
+pub use promotion::*;
+pub use q_review::*;
+pub use types::*;
 
 #[derive(Debug, Clone, PartialEq)]
 struct AletheiaInboxSurfaceRecord {
     surfaced: SurfacedCandidateReceipt,
     lineage: Option<inbox::DisclosureLineage>,
     safe_source_uri: String,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum OrchestrationState {
-    Queued,
-    InReview,
-    AwaitingUserValidation,
-    Retrying,
-    Integrating,
-    Verifying,
-    Promoted,
-    Discarded,
-    Abandoned,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum ReviewStage {
-    Unsubmitted,
-    Submitted,
-    HumanReview,
-    Resolved,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct RetryPolicy {
-    pub max_attempts: u8,
-    pub attempts: u8,
-    pub backoff_ms: u64,
-}
-
-impl Default for RetryPolicy {
-    fn default() -> Self {
-        Self {
-            max_attempts: 2,
-            attempts: 0,
-            backoff_ms: 300_000,
-        }
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum DiscardReason {
-    Superseded,
-    InsufficientEvidence,
-    TimeoutAbandoned,
-    HumanRejected,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct OrchestrationRecord {
-    pub orchestration_id: String,
-    pub candidate_id: String,
-    pub route_id: String,
-    pub improvement_run_id: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub review_item_id: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub promotion_plan_id: Option<String>,
-    pub state: OrchestrationState,
-    pub review_stage: ReviewStage,
-    pub retry_policy: RetryPolicy,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub discard_reason: Option<DiscardReason>,
-    pub created_at: u128,
-    pub updated_at: u128,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub deadline_at: Option<u128>,
-    pub last_transition_reason: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct CreateOrchestrationRequest {
-    pub candidate_id: String,
-    pub route_id: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub review_item_id: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub timeout_after_ms: Option<u128>,
-    #[serde(default)]
-    pub retry_policy: RetryPolicy,
-    pub now_ms: u128,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct TransitionOrchestrationRequest {
-    pub orchestration_id: String,
-    pub next_state: OrchestrationState,
-    pub reason: String,
-    pub now_ms: u128,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub review_stage: Option<ReviewStage>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub discard_reason: Option<DiscardReason>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub promotion_plan_id: Option<String>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct IntegrationVerificationEntry {
-    pub orchestration_id: String,
-    pub candidate_id: String,
-    pub route_id: String,
-    pub verify_after_ms: u128,
-    pub requirement: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ContinuityHint {
-    pub kind: String,
-    pub summary: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub candidate_id: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub route_id: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub orchestration_id: Option<String>,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct CrossCycleContinuity {
-    pub continuity_hints: Vec<ContinuityHint>,
-    pub pending_articulations: Vec<ContinuityHint>,
-    pub pending_integrations: Vec<ContinuityHint>,
-    pub user_validation_awaits: Vec<ContinuityHint>,
-    pub suppression_windows: Vec<ContinuityHint>,
-    pub verification_schedule: Vec<IntegrationVerificationEntry>,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct CompilerInvocationSummary {
-    pub executor_kind: String,
-    pub target_agent: String,
-    pub required_plugin: String,
-    pub required_skill: String,
-    pub review_policy: String,
-    pub mutation_mode: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct CompilePlanSummary {
-    pub ledger_entries: Vec<String>,
-    pub artifacts: Vec<PathBuf>,
-    pub errors: Vec<String>,
-    pub invocation: Option<CompilerInvocationSummary>,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-pub struct PromotionHenTimestamp {
-    pub year: i32,
-    pub month: u8,
-    pub day: u8,
-    pub hour: u8,
-    pub minute: u8,
-    pub second: u8,
-}
-
-impl PromotionHenTimestamp {
-    pub const fn new(year: i32, month: u8, day: u8, hour: u8, minute: u8, second: u8) -> Self {
-        Self {
-            year,
-            month,
-            day,
-            hour,
-            minute,
-            second,
-        }
-    }
-}
-
-impl From<PromotionHenTimestamp> for HenTimestamp {
-    fn from(value: PromotionHenTimestamp) -> Self {
-        HenTimestamp::new(
-            value.year,
-            value.month,
-            value.day,
-            value.hour,
-            value.minute,
-            value.second,
-        )
-    }
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct PromoteRequest {
-    pub run_id: String,
-    pub destination: PromotionDestination,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub legacy_destination: Option<String>,
-    pub approved_review_resolution_id: String,
-    pub review_store_root: PathBuf,
-    pub vault_root: PathBuf,
-    pub compiler_root: PathBuf,
-    pub artifact_slug: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub requested_at: Option<PromotionHenTimestamp>,
-    pub dry_run: bool,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct RollbackStep {
-    pub step_id: String,
-    pub description: String,
-    pub evidence_required: String,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct RollbackPlan {
-    pub executable: bool,
-    pub reason: String,
-    pub steps: Vec<RollbackStep>,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct PromotionPlan {
-    pub ok: bool,
-    pub dry_run: bool,
-    pub run_id: String,
-    pub destination: PromotionDestination,
-    pub legacy_destination: Option<String>,
-    pub governance_category: ReviewCategory,
-    pub approved_review_resolution_id: String,
-    pub promoted_path: Option<String>,
-    pub compile_plan: CompilePlanSummary,
-    pub rollback_plan: RollbackPlan,
 }
 
 #[derive(Debug, Clone)]
@@ -899,7 +405,7 @@ impl ImprovementStore {
                 }
             }
             if let Some(kernel_evidence) = &item.kernel_evidence {
-                validate_kernel_evidence(kernel_evidence)?;
+                crate::kernel_evidence::validate_kernel_evidence(kernel_evidence)?;
             }
         }
 
@@ -970,8 +476,8 @@ impl ImprovementStore {
             ));
         }
 
-        validate_destination_for_run(run, &request.destination)?;
-        let governance_category = validate_approved_review(
+        promotion::validate_destination_for_run(run, &request.destination)?;
+        let governance_category = promotion::validate_approved_review(
             &request.review_store_root,
             &request.approved_review_resolution_id,
             &request.destination,
@@ -979,7 +485,7 @@ impl ImprovementStore {
         let promotion_now = request
             .requested_at
             .map(HenTimestamp::from)
-            .unwrap_or_else(system_hen_timestamp);
+            .unwrap_or_else(promotion::system_hen_timestamp);
         let compile_plan = CompilePlanSummary::from(plan_compile(CompilePlanRequest {
             vault_root: request.vault_root.clone(),
             compiler_root: request.compiler_root,
@@ -988,11 +494,11 @@ impl ImprovementStore {
             thought_lane: "T5".to_owned(),
             artifact_slug: request.artifact_slug,
             executor_kind: ExecutorKind::PiAgent,
-            target_agent: target_agent_for_destination(&request.destination),
+            target_agent: promotion::target_agent_for_destination(&request.destination),
             required_skill: Some("autoresearch".to_owned()),
             dry_run: true,
         }));
-        let rollback_plan = rollback_plan_for(&request.destination);
+        let rollback_plan = promotion::rollback_plan_for(&request.destination);
 
         Ok(PromotionPlan {
             ok: compile_plan.errors.is_empty(),
@@ -1150,7 +656,7 @@ impl ImprovementStore {
             .iter_mut()
             .find(|record| record.orchestration_id == request.orchestration_id)
             .ok_or_else(|| format!("orchestration not found: {}", request.orchestration_id))?;
-        validate_orchestration_transition(record.state, request.next_state)?;
+        orchestration::validate_orchestration_transition(record.state, request.next_state)?;
         record.state = request.next_state;
         if let Some(review_stage) = request.review_stage {
             record.review_stage = review_stage;
@@ -1302,100 +808,6 @@ impl ImprovementStore {
     }
 }
 
-fn validate_kernel_evidence(evidence: &KernelEvidence) -> Result<(), String> {
-    if !evidence.advisory_only {
-        return Err("kernel evidence must be advisory_only".to_owned());
-    }
-    if evidence.privacy != KERNEL_EVIDENCE_PRIVACY {
-        return Err(format!(
-            "kernel evidence privacy must be {KERNEL_EVIDENCE_PRIVACY}"
-        ));
-    }
-    if evidence.computation_source != KERNEL_EVIDENCE_COMPUTATION_SOURCE {
-        return Err(format!(
-            "kernel evidence computation_source must be {KERNEL_EVIDENCE_COMPUTATION_SOURCE}"
-        ));
-    }
-    if evidence.interpretation_boundary.trim().is_empty() {
-        return Err("kernel evidence interpretation_boundary is required".to_owned());
-    }
-    parse_f64(&evidence.baseline.total_energy, "baseline total_energy")?;
-    parse_f64(&evidence.challenger.total_energy, "challenger total_energy")?;
-    parse_f64(&evidence.delta.energy_delta, "energy_delta")?;
-    if let Some(trajectory) = &evidence.trajectory {
-        validate_kernel_trajectory(trajectory)?;
-    }
-    Ok(())
-}
-
-fn validate_kernel_trajectory(trajectory: &KernelTrajectoryRef) -> Result<(), String> {
-    if trajectory.session_key.trim().is_empty() {
-        return Err("kernel trajectory session_key is required".to_owned());
-    }
-    if trajectory.day_id.trim().is_empty() {
-        return Err("kernel trajectory day_id is required".to_owned());
-    }
-    for (label, value) in [
-        ("now_path", trajectory.now_path.as_deref()),
-        (
-            "spacetimedb_session_surface",
-            trajectory.spacetimedb_session_surface.as_deref(),
-        ),
-        (
-            "spacetimedb_global_surface",
-            trajectory.spacetimedb_global_surface.as_deref(),
-        ),
-        ("graphiti_arc_id", trajectory.graphiti_arc_id.as_deref()),
-    ] {
-        if value.is_some_and(|value| value.trim().is_empty()) {
-            return Err(format!("kernel trajectory {label} must not be blank"));
-        }
-    }
-    Ok(())
-}
-
-fn validate_public_kernel_projection(value: &Value) -> Result<(), String> {
-    if required_str(value, "/privacy")? != KERNEL_EVIDENCE_PRIVACY {
-        return Err(format!(
-            "kernel projection privacy must be {KERNEL_EVIDENCE_PRIVACY}"
-        ));
-    }
-    if required_str(value, "/computationSource")? != KERNEL_EVIDENCE_COMPUTATION_SOURCE {
-        return Err(format!(
-            "kernel projection computationSource must be {KERNEL_EVIDENCE_COMPUTATION_SOURCE}"
-        ));
-    }
-    if value.get("bioquaternion").is_some() || value.get("resonanceSquareEmphasis").is_some() {
-        return Err("kernel projection must not expose protected kernel fields".to_owned());
-    }
-    Ok(())
-}
-
-fn required_str<'a>(value: &'a Value, pointer: &str) -> Result<&'a str, String> {
-    value
-        .pointer(pointer)
-        .and_then(Value::as_str)
-        .ok_or_else(|| format!("kernel projection field is required: {pointer}"))
-}
-
-fn required_u64(value: &Value, pointer: &str) -> Result<u64, String> {
-    value
-        .pointer(pointer)
-        .and_then(Value::as_u64)
-        .ok_or_else(|| format!("kernel projection field is required: {pointer}"))
-}
-
-fn parse_f64(value: &str, label: &str) -> Result<f64, String> {
-    let parsed = value
-        .parse::<f64>()
-        .map_err(|_| format!("{label} must be a finite decimal"))?;
-    if parsed.is_finite() {
-        Ok(parsed)
-    } else {
-        Err(format!("{label} must be finite"))
-    }
-}
-
 fn validate_proposal(request: &ProposeRequest) -> Result<(), String> {
     if request.target_family.trim().is_empty() {
         return Err("target_family is required".to_owned());
@@ -1521,65 +933,6 @@ fn aletheia_present_inbox_uri(stored: &inbox::StoredInboxEntry) -> String {
 
 fn vak_coordinate_label(vak: &portal_core::VakAddress) -> Result<String, String> {
     serde_json::to_string(vak).map_err(|err| format!("serialize final_vak: {err}"))
-}
-
-fn validate_orchestration_transition(
-    current: OrchestrationState,
-    next: OrchestrationState,
-) -> Result<(), String> {
-    if current == next {
-        return Ok(());
-    }
-    let legal = match current {
-        OrchestrationState::Queued => matches!(
-            next,
-            OrchestrationState::InReview
-                | OrchestrationState::Discarded
-                | OrchestrationState::Abandoned
-        ),
-        OrchestrationState::InReview => matches!(
-            next,
-            OrchestrationState::AwaitingUserValidation
-                | OrchestrationState::Retrying
-                | OrchestrationState::Discarded
-                | OrchestrationState::Promoted
-        ),
-        OrchestrationState::AwaitingUserValidation => matches!(
-            next,
-            OrchestrationState::Integrating
-                | OrchestrationState::Retrying
-                | OrchestrationState::Discarded
-        ),
-        OrchestrationState::Retrying => {
-            matches!(
-                next,
-                OrchestrationState::InReview | OrchestrationState::Abandoned
-            )
-        }
-        OrchestrationState::Integrating => {
-            matches!(
-                next,
-                OrchestrationState::Verifying | OrchestrationState::Discarded
-            )
-        }
-        OrchestrationState::Verifying => matches!(
-            next,
-            OrchestrationState::Promoted
-                | OrchestrationState::Retrying
-                | OrchestrationState::Discarded
-        ),
-        OrchestrationState::Promoted
-        | OrchestrationState::Discarded
-        | OrchestrationState::Abandoned => false,
-    };
-    if legal {
-        Ok(())
-    } else {
-        Err(format!(
-            "illegal orchestration transition: {:?} -> {:?}",
-            current, next
-        ))
-    }
 }
 
 fn cross_cycle_continuity_from_state(
@@ -1765,280 +1118,6 @@ fn weighted_score(
         .map(|item| score(item) * item.weight)
         .sum::<f64>()
         / total_weight
-}
-
-impl From<epi_s1_hen_compiler_core::CompilePlanResponse> for CompilePlanSummary {
-    fn from(response: epi_s1_hen_compiler_core::CompilePlanResponse) -> Self {
-        Self {
-            ledger_entries: response.ledger_entries,
-            artifacts: response.artifacts,
-            errors: response.errors,
-            invocation: response
-                .invocation
-                .map(|invocation| CompilerInvocationSummary {
-                    executor_kind: match invocation.executor_kind {
-                        ExecutorKind::PiAgent => "pi_agent",
-                        ExecutorKind::Service => "service",
-                        ExecutorKind::VendorClaudeSdk => "vendor_claude_sdk",
-                    }
-                    .to_owned(),
-                    target_agent: match invocation.target_agent {
-                        TargetAgent::Anima => "anima",
-                        TargetAgent::Epii => "epii",
-                    }
-                    .to_owned(),
-                    required_plugin: invocation.required_plugin.to_owned(),
-                    required_skill: invocation.required_skill,
-                    review_policy: invocation.review_policy.to_owned(),
-                    mutation_mode: invocation.mutation_mode.to_owned(),
-                }),
-        }
-    }
-}
-
-fn validate_destination_for_run(
-    run: &ImprovementRun,
-    destination: &PromotionDestination,
-) -> Result<(), String> {
-    let Some(candidate) = run.typed_candidate.as_ref() else {
-        return Err("typed candidate is required before promotion".to_owned());
-    };
-    let expected = destination_target_subsystem(destination);
-    if candidate.target_subsystem != expected {
-        return Err(format!(
-            "promotion destination targets {:?}, not {:?}",
-            expected, candidate.target_subsystem
-        ));
-    }
-    if candidate.vector_kind.target_subsystem() != expected {
-        return Err(format!(
-            "promotion vector targets {:?}, not {:?}",
-            candidate.vector_kind.target_subsystem(),
-            expected
-        ));
-    }
-    Ok(())
-}
-
-fn validate_approved_review(
-    review_store_root: &Path,
-    approved_review_resolution_id: &str,
-    destination: &PromotionDestination,
-) -> Result<ReviewCategory, String> {
-    let history = ReviewStore::new(review_store_root).history(None)?;
-    let resolution = history
-        .resolutions
-        .iter()
-        .find(|resolution| resolution.item_id == approved_review_resolution_id)
-        .ok_or_else(|| {
-            format!(
-                "approved review resolution not found: {approved_review_resolution_id}; use the resolved review item id"
-            )
-        })?;
-    if resolution.decision != ReviewDecision::Approve {
-        return Err(format!(
-            "review resolution {} is {:?}, not approve",
-            approved_review_resolution_id, resolution.decision
-        ));
-    }
-
-    let item = history
-        .items
-        .iter()
-        .find(|item| item.item_id == resolution.item_id)
-        .ok_or_else(|| {
-            format!(
-                "review resolution {} has no matching review item",
-                approved_review_resolution_id
-            )
-        })?;
-    let expected_category = governance_category_for_destination(destination);
-    let Some(profile) = item.governance_profile.as_ref() else {
-        return Err("promotion review is missing governance_profile".to_owned());
-    };
-    if profile.category != expected_category {
-        return Err(format!(
-            "review category {:?} is incompatible with destination category {:?}",
-            profile.category, expected_category
-        ));
-    }
-    if !governance_allows_dry_run(profile.gate_kind, profile.governance_level) {
-        return Err(format!(
-            "review governance {:?}/{:?} does not permit dry-run promotion planning",
-            profile.gate_kind, profile.governance_level
-        ));
-    }
-    if let Some(review_destination) = profile.promotion_destination.as_deref() {
-        PromotionDestination::validate_legacy_destination(review_destination)?;
-        if review_destination != destination_legacy_label(destination) {
-            return Err(format!(
-                "review destination {review_destination} does not match {}",
-                destination_legacy_label(destination)
-            ));
-        }
-    }
-    if let Some(resolution_destination) = resolution.promotion_destination.as_deref() {
-        PromotionDestination::validate_legacy_destination(resolution_destination)?;
-        if resolution_destination != destination_legacy_label(destination) {
-            return Err(format!(
-                "resolution destination {resolution_destination} does not match {}",
-                destination_legacy_label(destination)
-            ));
-        }
-    }
-    Ok(expected_category)
-}
-
-fn governance_allows_dry_run(gate_kind: GateKind, level: GovernanceLevel) -> bool {
-    matches!(
-        (gate_kind, level),
-        (GateKind::Standard, GovernanceLevel::Advisory)
-            | (GateKind::HumanFinal, GovernanceLevel::HumanRequired)
-            | (
-                GateKind::DeploymentGate,
-                GovernanceLevel::DeploymentBlocking
-            )
-            | (
-                GateKind::RecursiveSelfModification,
-                GovernanceLevel::RecursiveLoadBearing
-            )
-            | (GateKind::AnimaPrimary, GovernanceLevel::Advisory)
-            | (GateKind::AnimaPrimary, GovernanceLevel::HumanRequired)
-            | (
-                GateKind::PublicationGate,
-                GovernanceLevel::PublicationBlocking
-            )
-    )
-}
-
-fn destination_target_subsystem(destination: &PromotionDestination) -> TargetSubsystem {
-    match destination {
-        PromotionDestination::AnuttaraOntologyExtension { .. }
-        | PromotionDestination::AnuttaraShapeAddition { .. } => TargetSubsystem::Anuttara,
-        PromotionDestination::ParamasivaCorpusInclusion { .. }
-        | PromotionDestination::ParamasivaVoiceLoRADeployment { .. } => TargetSubsystem::Paramasiva,
-        PromotionDestination::ParashaktiEmbeddingDeployment { .. }
-        | PromotionDestination::ParashaktiLensLoRADeployment { .. } => TargetSubsystem::Parashakti,
-        PromotionDestination::MahamayaPolicyWeightDeployment { .. }
-        | PromotionDestination::MahamayaSymbolicProgramRegistration { .. } => {
-            TargetSubsystem::Mahamaya
-        }
-        PromotionDestination::NaraDialogueAdapterDeployment { .. } => TargetSubsystem::Nara,
-        PromotionDestination::EpiiAgentConfigDeployment { .. }
-        | PromotionDestination::EpiiSpineMechanismUpdate { .. }
-        | PromotionDestination::SeedDeposit { .. }
-        | PromotionDestination::WorldPromotion { .. }
-        | PromotionDestination::PresentScratchpad { .. }
-        | PromotionDestination::KernelLawUpdate { .. }
-        | PromotionDestination::SpaceTimeDBTableChange { .. }
-        | PromotionDestination::SpacedRetrievalReindexing { .. } => TargetSubsystem::Epii,
-    }
-}
-
-fn governance_category_for_destination(destination: &PromotionDestination) -> ReviewCategory {
-    match destination {
-        PromotionDestination::WorldPromotion { .. } => ReviewCategory::UserFinalValidation,
-        PromotionDestination::KernelLawUpdate { .. }
-        | PromotionDestination::SpaceTimeDBTableChange { .. }
-        | PromotionDestination::EpiiAgentConfigDeployment { .. } => ReviewCategory::DeploymentGate,
-        PromotionDestination::EpiiSpineMechanismUpdate { .. } => {
-            ReviewCategory::RecursiveSelfModification
-        }
-        PromotionDestination::NaraDialogueAdapterDeployment { .. } => {
-            ReviewCategory::NaraAnimaPrimaryGate
-        }
-        PromotionDestination::SpacedRetrievalReindexing { .. } => {
-            ReviewCategory::CanonRecognitionPublicationGate
-        }
-        PromotionDestination::SeedDeposit { .. }
-        | PromotionDestination::PresentScratchpad { .. } => ReviewCategory::StandardImprovement,
-        _ => ReviewCategory::StandardImprovement,
-    }
-}
-
-fn target_agent_for_destination(destination: &PromotionDestination) -> TargetAgent {
-    match destination {
-        PromotionDestination::NaraDialogueAdapterDeployment { .. } => TargetAgent::Anima,
-        _ => TargetAgent::Epii,
-    }
-}
-
-fn destination_legacy_label(destination: &PromotionDestination) -> &'static str {
-    match destination {
-        PromotionDestination::SeedDeposit { .. } => "seeds",
-        PromotionDestination::WorldPromotion { .. } => "world",
-        PromotionDestination::PresentScratchpad { .. } => "present",
-        PromotionDestination::AnuttaraOntologyExtension { .. } => "anuttara:ontology",
-        PromotionDestination::AnuttaraShapeAddition { .. } => "anuttara:shape",
-        PromotionDestination::ParamasivaCorpusInclusion { .. } => "paramasiva:corpus",
-        PromotionDestination::ParamasivaVoiceLoRADeployment { .. } => "paramasiva:checkpoint",
-        PromotionDestination::ParashaktiEmbeddingDeployment { .. } => "parashakti:embedding",
-        PromotionDestination::ParashaktiLensLoRADeployment { .. } => "parashakti:lens-lora",
-        PromotionDestination::MahamayaPolicyWeightDeployment { .. } => "mahamaya:policy",
-        PromotionDestination::MahamayaSymbolicProgramRegistration { .. } => "mahamaya:program",
-        PromotionDestination::NaraDialogueAdapterDeployment { .. } => "nara:adapter",
-        PromotionDestination::EpiiAgentConfigDeployment { .. } => "epii:agent",
-        PromotionDestination::EpiiSpineMechanismUpdate { .. } => "epii:spine",
-        PromotionDestination::KernelLawUpdate { .. } => "kernel:law",
-        PromotionDestination::SpaceTimeDBTableChange { .. } => "spacetimedb:table",
-        PromotionDestination::SpacedRetrievalReindexing { .. } => "sync:publication",
-    }
-}
-
-fn rollback_plan_for(destination: &PromotionDestination) -> RollbackPlan {
-    RollbackPlan {
-        executable: false,
-        reason: "non-dry-run mutation law is not wired; rollback is metadata only".to_owned(),
-        steps: vec![
-            RollbackStep {
-                step_id: "review-reopen".to_owned(),
-                description: format!(
-                    "Re-open the {:?} review item and attach failed promotion evidence",
-                    governance_category_for_destination(destination)
-                ),
-                evidence_required: "review item id, compile-plan artifacts, operator note"
-                    .to_owned(),
-            },
-            RollbackStep {
-                step_id: "hen-artifact-quarantine".to_owned(),
-                description: "Quarantine generated Hen dry-run artifacts from promotion queues"
-                    .to_owned(),
-                evidence_required: "artifact paths from compile_plan.artifacts".to_owned(),
-            },
-        ],
-    }
-}
-
-fn system_hen_timestamp() -> HenTimestamp {
-    let seconds = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap_or_default()
-        .as_secs() as i64;
-    let days = seconds.div_euclid(86_400);
-    let seconds_of_day = seconds.rem_euclid(86_400);
-    let (year, month, day) = civil_from_unix_days(days);
-    HenTimestamp::new(
-        year,
-        month,
-        day,
-        (seconds_of_day / 3_600) as u8,
-        ((seconds_of_day % 3_600) / 60) as u8,
-        (seconds_of_day % 60) as u8,
-    )
-}
-
-fn civil_from_unix_days(days_since_epoch: i64) -> (i32, u8, u8) {
-    let z = days_since_epoch + 719_468;
-    let era = if z >= 0 { z } else { z - 146_096 }.div_euclid(146_097);
-    let doe = z - era * 146_097;
-    let yoe = (doe - doe / 1_460 + doe / 36_524 - doe / 146_096).div_euclid(365);
-    let y = yoe + era * 400;
-    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
-    let mp = (5 * doy + 2).div_euclid(153);
-    let day = doy - (153 * mp + 2).div_euclid(5) + 1;
-    let month = mp + if mp < 10 { 3 } else { -9 };
-    let year = y + if month <= 2 { 1 } else { 0 };
-    (year as i32, month as u8, day as u8)
 }
 
 fn now_ms() -> u128 {

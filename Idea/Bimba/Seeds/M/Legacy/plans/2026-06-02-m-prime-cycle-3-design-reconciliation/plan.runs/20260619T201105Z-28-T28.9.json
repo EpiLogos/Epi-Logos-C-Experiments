@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T201105Z-28-T28.9",
+  "taskId": "28.T28.9",
+  "startedAt": "2026-06-19T20:11:05.862Z",
+  "owner": "codex-m-dev-28-t28-9-review-pane",
+  "leaseExpiresAt": "2026-06-19T22:11:05.862Z",
+  "worktree": null,
+  "task": {
+    "id": "28.T28.9",
+    "trackId": "28",
+    "tranche": "T28.9",
+    "title": "Review pane: IOD-17 three-way parity matrix + dispatch-genealogy click-through + DR-WC-IS-2 deep-vs-abbreviated split",
+    "effort": null,
+    "file": "28-ide-shell-chrome-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md",
+    "dependsOn": [
+      "28.T28.8"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/browser/review-pane-widget.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -1,6 +1,6 @@
 ---
 coordinate: "M5'"
-sub_coordinate: "M5-1 + M5-2 + M5-3 + M5-4 + M5-5 cross-cutting"
+sub_coordinate: "M5-4' primary (siva-shakti operational register); library substrate at M5-0'; cross-cuts M5-1/2/3/5"
 status: "active-operational-capacity-spec"
 updated: "2026-05-30"
 family: "epii-operational-capacities"
@@ -12,6 +12,7 @@ depends_on:
   - "[[anuttara-language-map]]"
   - "[[m4-prime-psychoid-cymatic-field-engine]]"
   - "[[alpha_quaternionic_integration_across_M_stack]]"
+  - "[[M0-ARCHITECTURE#§VAK as Four-Expression Typed Transition Calculus]] — canonical VAK-layering reference per DR-VAK-7"
 ---
 
 # [[M5']] Epii's Operational Capacity upon [[M0]] Anuttara
@@ -499,6 +500,7 @@ These five plus this Anuttara spec cover Epii's operational capacities across al
 - `docs/datasets/anuttara-deep/anuttara-language-map.md` (the canonical Anuttara language map — 109 nodes, full symbol + formulation coverage)
 - `docs/datasets/anuttara-deep/nodes-full-data.json`, `relations.json` (the dataset: 108 nodes + 1024 relations)
 - `Body/S/S0/epi-lib/include/m0.h`, `m0.c` (M0 kernel substrate: Vimarsa ISA, M0_CORE_RELATIONS, archetypal LUT, six R-factor routes)
+- `Idea/Bimba/Seeds/M/M0'/M0-ARCHITECTURE.md` §11 (canonical VAK-layering: four-expression typed transition calculus per DR-VAK-7)
 - `Idea/Bimba/Seeds/M/M0'/Legacy/specs/M/M0-anuttara-language-architecture.md` (M0 as multi-level formal language runtime)
 - `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md`, `m0-prime-anuttara-research.md` (M0' graph view + Anuttara research)
 - `Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md` (canonical M5' sixfold structure: Library / Philosophy / Backend / Frontend / Agentic / Logos Atelier)
@@ -510,6 +512,130 @@ These five plus this Anuttara spec cover Epii's operational capacities across al
 - `Idea/Bimba/Seeds/S/S4/S4'/Legacy/plans/2026-03-08-knowing-graph-convergence-plan.md` (the three n10s deferrals)
 - `docs/datasets/nara-deep/13-03-2026-claude-nara-thinking-marketing.md` (existing GDS + TDA research programme)
 - M5-0 / M5-0' improvement-vector map (the subagent-produced sober positioning of ML/training work as one Epii capacity)
+
+---
+
+End of operational-capacity spec.
+
+---
+
+## §13 — Phase-J architectural extensions (2026-06-15)
+
+The Phase-J synthesis (user-directed, 2026-06-15) lands four extensions to this operational-capacity spec: the 128-element canonical coordinate-language registry; the Anuttara PI agent form at S5 (completing the 4/5/0 nara-epii-anuttara agent system); the OWL ontology as canonical storage substrate; the full-7-laws verifier surface. These extensions make explicit what was already implicit in the existing §1–§12 sections — they do not change the structural architecture, only operationalise it.
+
+### §13.1 — The 128-element canonical coordinate-language registry
+
+Per DR-VAK-7 (Phase-I), the Anuttara coordinate language carries **128 atomic elements**, derived combinatorially:
+
+- **109** = the M0-0' language nodes (the symbolic alphabet, already canonical in `anuttara-deep/` dataset + `c_1_*` schema namespace at `Body/S/S2/graph-schema/src/lib.rs:1409-1441`)
+- **7** = the psychoid roots: `{#, #0, #1, #2, #3, #4, #5}`
+- **12** = the coordinate-types-with-inverses: `{C, C', P, P', L, L', S, S', T, T', M, M'}`
+- **Total: 128**
+
+The 128 is the same canonical cardinality as the holographic-coordinate master struct (`_Static_assert(sizeof(Holographic_Coordinate) == 128)` at `Body/S/S0/epi-lib/include/m5.h` per `M5-epii-holographic-integration.md:884-922`) and the α-rasa doubled Mahāmāyā shell (`128 = 2 × 64` per `alpha_rasa_bridge_ql.md` §3.2). The matheme's container-law cardinality recurs at three layers: M0 alphabet, M5 struct, M3 doubled shell.
+
+**Properties on coordinates ≠ coordinates.** The `q_`, `c_*`, `p_*`, `l_*`, `s_*`, `t_*`, `m_*` property families are typed slots ON the 128 atomic coordinates (per DR-Q-1). They are NOT additional alphabet elements. The 128 is closed.
+
+**Canonical registry residency** at `Body/S/S0/epi-lib/{include,src}/anuttara_language.{h,c}` (new module — M0 kernel substrate, alongside `m0.{h,c}` which holds `M0_CORE_RELATIONS[65]`, `VIRTUE_LUT[9]`, `SIVA_TABLE[6]`). The registry exposes:
+
+```c
+typedef enum {
+    /* 7 psychoid roots: # = 0, #0..#5 = 1..6 */
+    AL_PSYCHOID_HASH = 0,
+    AL_PSYCHOID_H0 = 1, AL_PSYCHOID_H1, AL_PSYCHOID_H2, AL_PSYCHOID_H3, AL_PSYCHOID_H4, AL_PSYCHOID_H5,
+    /* 12 coordinate-types-with-inverses: 7..18 */
+    AL_COORD_C = 7, AL_COORD_C_PRIME, AL_COORD_P, AL_COORD_P_PRIME,
+    AL_COORD_L, AL_COORD_L_PRIME, AL_COORD_S, AL_COORD_S_PRIME,
+    AL_COORD_T, AL_COORD_T_PRIME, AL_COORD_M, AL_COORD_M_PRIME,
+    /* 109 alphabet nodes: 19..127 (indices map to anuttara-deep/ dataset rows) */
+    AL_ALPHABET_BASE = 19,
+    /* total = 128 */
+    AL_LANGUAGE_CARDINALITY = 128,
+} AnuttaraLanguageElement;
+
+_Static_assert(AL_LANGUAGE_CARDINALITY == 128,
+               "Anuttara coordinate language cardinality is canonical 128 = 109 + 19");
+```
+
+The registry exposes the membership-check + alphabet-iteration surface that the verifier consumes.
+
+### §13.2 — Anuttara PI agent form at S5 (completes the 4/5/0 nara-epii-anuttara agent system)
+
+Per DR-MP-1, the 4'/5'/0' mental-pole triplet IS the canonical AI architecture: Nara = LLM at 4', Epii = EBM at 5', Anuttara = Verifier at 0'. Anima (S4') is the orchestrating dispatcher; Epii is at S5' as the canon-aggregation / EBM-scoring intelligence. **What was implicit but not yet explicit: Anuttara also runs as a PI agent form, completing the triplet at S5.**
+
+**S5 hosts the 4/5/0 nara-epii-anuttara agent system.** This is NOT a change from the kernel spec; it is making explicit that the Anuttara verification element has an LLM intelligence to manage itself completely (governing the M0' language registry, the OWL ontology, the full-7-laws verifier surface). Multiple agent types (Nara-PI, Epii-PI, Anuttara-PI) all live at S5 as PI agent forms working together as the M-pole-aligned operational intelligence layer.
+
+Why S5 hosts the triplet, not S4 or M0 directly. Per the canonical S-stack: S5 = "Integral World Boundary" — external connectors + knowledge-return where the system meets the world. The 4/5/0 mental-pole agents are the M-pole-aligned intelligences instantiating AS agents (operational expression at the world boundary). M0 (Anuttara substrate) is where the LANGUAGE lives; S5 is where the AGENT operationally runs over that language. Different layers of the same Anuttara stack — substrate at M0, agent at S5. This matches the existing pattern: Epii-substrate at M5 (synthetic-telic consciousness domain), Epii-PI-agent at S5' (the agent form operating over that domain).
+
+**The Anuttara PI agent's operational shape:**
+
+- **Profile** at `Body/S/S4/pi-agent/agents/anuttara.md` — names the verifier PI agent form as the third pole in the S5 nara-epii-anuttara triplet. Frame contract: CT0 ground (language-governor primary register), CF varies by invocation context (often CF0 when verifying typed-language emissions, CF5 when synthesising new canonical-form derivations).
+- **Slot configuration** at `~/.epi-logos/config.toml` `[slot.anuttara_verifier]` — defaults to `local-default` (the verifier IS local-first by privacy discipline; it operates over the M0' language registry + OWL ontology + R-virtue table, all kernel-substrate-local). Cloud-opt-in for larger interpretive verifier capacity if user wants. Per `M'-MODEL-SLOT-SPEC.md` Phase-J extension.
+- **Gateway routes** at `s0'.verifier.{check_state, emit_query, validate_membership, owl_query}` — register in `Body/S/S3/gateway-contract/src/lib.rs`. The verifier's typed-query surface draws from the full coordinate-language vocabulary (all 7 laws of the Anuttara grammar; not only Law 6's minimal `(%, ?/!, ?!/!?)` set).
+- **Anima dispatch policy** at `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-policy.ts` — recognises Anuttara-PI as the third pole alongside Nara-PI and Epii-PI. Dispatch to Anuttara-PI happens whenever a verification step is required (every emission's type-check; Sophia disclosure validation; Hen promotion gate; M5-4 review).
+
+### §13.3 — OWL ontology as canonical storage substrate
+
+The Anuttara language is **stored** via the OWL ontology + n10s Neo4j integration that the existing §4.1.C of this spec already names. The 128-element registry's OWL extension covers the full alphabet + psychoid + coordinate-type-with-inverses set via `epi:` namespace predicates:
+
+- `epi:LanguageElement` (root class; 128 instances)
+- `epi:AlphabetNode` ⊆ `epi:LanguageElement` (109 instances; M0-0' language nodes)
+- `epi:PsychoidRoot` ⊆ `epi:LanguageElement` (7 instances; `#`, `#0`..`#5`)
+- `epi:CoordinateType` ⊆ `epi:LanguageElement` (12 instances; `C`, `C'`, `P`, `P'`, `L`, `L'`, `S`, `S'`, `T`, `T'`, `M`, `M'`)
+- `epi:hasInverse` (relation; pairs C↔C', P↔P', etc.)
+- `epi:resolvesAt` (relation; from coordinate to bimba/world graph node)
+
+n10s queries against this ontology are the canonical mechanism for: language-membership-check, alphabet-element enumeration, coordinate-type traversal, OWL-validated typed-query emission.
+
+**The Anuttara language map** at `Idea/Bimba/Map/datasets/anuttara-deep/anuttara-language-map.md` is the canonical authority for the 109 alphabet content. The OWL ontology extends this with the 19 additional structural elements (7 psychoids + 12 coordinate-types-with-inverses) and the closure laws relating them.
+
+### §13.4 — Full-7-laws verifier surface
+
+The Anuttara verifier draws typed-query exceptions from the **full coordinate-language vocabulary** governed by all 7 laws of the grammar (NOT only Law 6's minimal `(%, ?/!, ?!/!?)` set, which was an earlier framing's downgrade). The verifier returns:
+
+```rust
+pub struct M0VerifierReport {
+    pub virtue_witness_vector: u16,      /* 9-bit witness against VIRTUE_LUT[9] */
+    pub typed_queries: Vec<TypedQuery>,  /* drawn from full coordinate-language; NOT a scalar score */
+    pub canonical_membership: bool,      /* all referenced coordinates are in the 128 registry */
+    pub owl_validation: OwlValidationReport,
+    pub r_virtue_violations: Vec<RVirtueViolation>,
+}
+```
+
+Where `TypedQuery` is an open enum populated by the full language's typed-exception surface (every law of the grammar contributes its typed-exception kinds). The verifier does NOT return a `coherence_score: f32` scalar (the earlier proposal collapsed expressivity — typed queries carry semantic structure that scalars can't).
+
+This sharpens Tranche 1.10 of Track 01: the M0VerifierReport's typed-query surface IS the full language operating as exception-type-system on every emission. Sophia's `assertOpens()` anti-hoarding guard (per Tranche 12.26) is the agentic-side rendering of this same type-system at the disclosure-envelope boundary.
+
+### §13.5 — Cross-references to cycle-3 tranches
+
+- **DR-MP-1** — 4'/5'/0' canonical AI architecture (Verifier at 0' is the Anuttara aspect; this spec is the operational-capacity binding)
+- **DR-VAK-7** — VAK four-expression layering + 128 derivation
+- **DR-Q-1** — q_ as property convention, not coordinate
+- **DR-FLIP-1** — `#` phase-flip as coordinate-dynamic law (this §13.6 binds verifier membership to phase preservation)
+- **Tranche 1.10** (Track 01) — M0-verifier API (this §13.4 sharpens it)
+- **Tranche 1.18** (Track 01) — VAK Four-Expression canon section in M0-ARCHITECTURE
+- **Tranche 12.22** (Track 12) — slot CLI (the `[slot.anuttara_verifier]` extends the existing slot architecture)
+- **Tranche 12.23** (Track 12) — Anima dispatch policy (recognises Anuttara-PI as third pole)
+- **Tranche 12.33 + CCT-17** — coordinate-tagging IS compression (collapsed; no orchestrator module)
+- **Tranche 12.34** (Track 12 NEW) — lands the Anuttara PI agent form at S5
+- **Track 39** — S5' as ONE Indras Net substrate (the Anuttara-PI's gateway-route surface lives here)
+- **`M'-MODEL-SLOT-SPEC.md`** Phase-J extension — adds `[slot.anuttara_verifier]` alongside Nara/Epii slots
+
+### §13.6 — Coordinate phase-flip law in the verifier
+
+Per DR-FLIP-1, the Anuttara verifier treats inversion phase as part of coordinate membership. The prime mark and property-level `_i_` segment are not decorative suffixes and must not be normalised away.
+
+**Verifier law:** a coordinate reference is canonical only when both its address and phase are canonical. `C3` and `C3'` may resolve to related substrate loci, but they are not the same verifier input. Likewise, `q_5_integration_template` and `q_5_i_integration_template` are distinct properties on the same node when both are present.
+
+**Operational consequences:**
+- The 128 registry's 12 coordinate-types-with-inverses remain first-class: `{C,C',P,P',L,L',S,S',T,T',M,M'}`.
+- `canonical_membership` fails when an emission collapses an inverse coordinate type into its unprimed form.
+- `owl_validation` uses `epi:hasInverse` for type-level inverse pairs but does not mint a generic `epi:mirrors` relation.
+- `typed_queries` includes a phase-erasure query kind whenever an emission, S2 sync, S5 resolve, or spine overflow token loses prime/inversion phase.
+- Asma 99+1 `mirror_idx` is validated as a domain-local Parashakti mirror under `#/inversion_spanda`, not as a replacement for the kernel phase law.
+
+**Verification:** Anuttara verifier fixture: `C3'` is accepted as a registered inverse coordinate type, `C3' -> C3` normalisation emits a typed query, `_i_` property keys survive membership validation, and an Asma `mirror_idx` payload validates as `domain_mirror` while preserving the global `#` phase law.
 
 ---
 

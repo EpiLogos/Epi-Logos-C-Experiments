@@ -12,11 +12,11 @@
  * Usage: pi -e extensions/system-select.ts -e extensions/minimal.ts
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join, basename } from "node:path";
 import { homedir } from "node:os";
-import { applyExtensionDefaults } from "../../pleroma/S2/themeMap.ts";
+import { applyExtensionDefaults } from "../../S4-2p-pleroma/S2/themeMap.ts";
 
 interface AgentDef {
 	name: string;
@@ -141,7 +141,7 @@ export default function (pi: ExtensionAPI) {
 				activeAgent = null;
 				pi.setActiveTools(defaultTools);
 				ctx.ui.setStatus("system-prompt", "System Prompt: Default");
-				ctx.ui.notify("System Prompt reset to Default", "success");
+				ctx.ui.notify("System Prompt reset to Default", "info");
 				return;
 			}
 
@@ -156,7 +156,7 @@ export default function (pi: ExtensionAPI) {
 			}
 
 			ctx.ui.setStatus("system-prompt", `System Prompt: ${displayName(agent.name)}`);
-			ctx.ui.notify(`System Prompt switched to: ${displayName(agent.name)}`, "success");
+			ctx.ui.notify(`System Prompt switched to: ${displayName(agent.name)}`, "info");
 		},
 	});
 

@@ -28,6 +28,53 @@ pub struct GatewayError {
     pub message: String,
 }
 
+pub const VERIFY_PHASE_MAX_CYCLES: u8 = 3;
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct VerifyPhaseContractFrame {
+    pub phase: &'static str,
+    pub gate: &'static str,
+    pub max_verify_cycles: u8,
+    pub evidence_record: &'static str,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum VerifyPhaseStatus {
+    Questions,
+    Cleared,
+    HumanEscalation,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct VerifyPhaseQuestionFrame {
+    pub symbolic_coordinate: String,
+    pub prompt: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub evidence_ref: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct VerifyPhaseEvidenceFrame {
+    pub judge_agent: String,
+    pub judge_vak_coordinate: String,
+    pub status: VerifyPhaseStatus,
+    pub cycle: u8,
+    pub questions: Vec<VerifyPhaseQuestionFrame>,
+}
+
+pub fn verify_phase_contract() -> VerifyPhaseContractFrame {
+    VerifyPhaseContractFrame {
+        phase: "Verify",
+        gate: "adversarial",
+        max_verify_cycles: VERIFY_PHASE_MAX_CYCLES,
+        evidence_record: "GoalRun.verify_phase_evidence",
+    }
+}
+
 #[derive(Debug, Clone, Serialize)]
 pub struct HelloOkFrame {
     #[serde(rename = "type")]

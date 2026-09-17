@@ -105,7 +105,7 @@ The S5/S5' branch decomposes into six sub-coordinates per `S5'-SPEC.md` lines 22
 
 **`Body/S/S5/epi-gnostic/`**:
 
-- `pyproject.toml` declares two binaries: `epi-gnostic` → `epi_gnostic.cli:main` and `epi-graphiti` → `epi_gnostic.graphiti_service:main`. Production deps: `raganything>=1.2.0`, `lightrag-hku>=1.0.0`, `neo4j>=5.0.0`, `google-genai>=1.0.0`, `graphiti-core>=0.3.0`, `fastapi>=0.110.0`, `redis>=5.0.0`.
+- `pyproject.toml` declares two binaries: `epi-gnostic` → `epi_gnostic.cli:main` and deprecated `epi-graphiti` → `epi_gnostic._deprecated.graphiti_service:main`. Production deps: `raganything>=1.2.0`, `lightrag-hku>=1.0.0`, `neo4j>=5.0.0`, `google-genai>=1.0.0`, `graphiti-core>=0.3.0`, `fastapi>=0.110.0`, `redis>=5.0.0`.
 - `epi_gnostic/cli.py` (137 LOC): CLI dispatcher for the Rust subprocess-bridge pattern. Commands: `status | ingest | ingest-text | query | enrich`. Output is JSON-on-stdout (line 20 `_json_out`) consumed by `Body/S/S0/epi-cli/src/techne/gnosis/`.
 - `epi_gnostic/wrapper.py` (155 LOC): `GnosticRAG` class wrapping `RAGAnything` + `LightRAG` with `Neo4jVectorStorage`. **Embedding contract:** `embedding_dim: int` from `GnosticConfig` (default `3072` per `Aletheia CONTRACT §"Gnosis RAG Pipeline"`). `vector_storage="Neo4jVectorStorage"` registered via monkey-patch at lines 17-50 (`_register_neo4j_vector_storage`).
 - `epi_gnostic/graphiti_service.py` (534 LOC): FastAPI HTTP wrapper at port 37778. The **temporary** Graphiti compatibility adapter — `S5-SPEC.md:104-105` explicitly names this as transitional and the target as `Body/S/S3/graphiti-runtime`. The wrapper monkey-patches `graphiti_core.graphiti.Graphiti.add_episode` to suppress `group_id → database` switching (lines 105-130) — all data stays in the single Neo4j database "neo4j", with `group_id` becoming a property filter only.
@@ -146,7 +146,7 @@ Gateway routes for episodic operations are S3-side (`s5.episodic.{search, deposi
 
 **`Body/S/S5/epii-autoresearch-core/`** — the largest S5 crate (~6700 LOC Rust, ~6700 LOC of integration tests):
 
-- `Cargo.toml` deps: `epi-s1-hen-compiler-core` (via path) — for `plan_compile` / `CompilePlanRequest` / `HenTimestamp` / `TargetAgent` (consumed at `lib.rs:5-7`); `epi-s5-epii-review-core` — for the review-gate types (consumed at `lib.rs:8-10`); `portal-core` — for kernel projection types.
+- `Cargo.toml` deps: `epi-s1-hen-compiler-core` (via path) — for `plan_compile` / `CompilePlanRequest` / `HenTimestamp` / `TargetAgent` (consumed at `lib.rs:5-7`); `epi-s5-epii-review-core` — for the review-gate types (consumed at `lib.rs:8-10`); `portal-core` — for kernel projection types; optional `candle-core` / `candle-nn` behind `resonance_ebm` — for native EBM tensor execution and autograd.
 - `src/lib.rs` (2049 LOC): the main façade. Pubs `mod adapters, capacity_workflows, inbox, recompose, spine` (lines 15-19). **Critically `inbox` and `recompose` are intentionally not re-exported** (per comment at line 20-21: "callers namespace via `inbox::` / `recompose::` to keep the seam topology visible at import sites"). This is a deliberate **import-shape contract** worth preserving.
   - `ArtifactRef` (lines 31-37), `LoopState` (lines 49-56), `ImprovementDecision` (lines 58-63), `ProposeRequest` (lines 65-73).
   - `EvidenceSourceRef` (lines 75-83), `EvaluationEvidence` (lines 85-96) — the source-referenced evidence schema.
@@ -181,6 +181,8 @@ Gateway routes for episodic operations are S3-side (`s5.episodic.{search, deposi
   - `DisclosureLineageStage` (lines 59-69), `DisclosureLineage` (lines 71-80+): `lineage_id`, `source_subagent`, `moirai_mode`, `stages`, `tool_refs` — the structured trace surfacing Aletheia work to Epii review.
 
 - `src/recompose.rs` (90 LOC): the **Möbius recompose pass** — produces next-cycle compose hints from the inbox-store, closing the 5→0 return seam in code form.
+
+- `src/resonance_ebm/`: the feature-gated position-5' resonance runtime. It encodes the seven ordered `MathemeHarmonicProfile` channels, applies checkpoint-loaded attention/head and learned bioquaternion-projection weights through Candle tensors, emits a sigmoid-normalised tritone-paired 72-vector and scalar E5 energy, and exposes Candle backpropagation with respect to `q_p`. Versioned checkpoints fail closed on architecture, ordered channel set, variant, shape, and corpus-snapshot mismatches; an explicitly unloaded runtime alone may return the declared zero-score/zero-gradient fallback. `resonance_corpus::export_ebm_state` exports the exact latest trained checkpoint with its training-time corpus snapshot (even if the live corpus has since advanced); only a store with no trained checkpoint authors a bootstrap-untrained export.
 
 - `src/adapters.rs` (814 LOC): **non-Aletheia pipeline reports** — `NonAletheiaPipelineReport` enum (lines 18-28) with 7 variants:
   - `AnuttaraShaclFailureReport` (lines 30-40)
@@ -349,7 +351,7 @@ The S5 substrate is functionally complete. Findings below are quality-of-life re
 - Current shape: single Python package under `epi_gnostic/` with submodules `enrichment/`, `storage/`. Tests at `tests/`. Scripts at `scripts/`. The `graphiti_service.py` (534 LOC FastAPI wrapper) lives at the top level alongside the LightRAG wrapper (`wrapper.py`).
 - Proposed refactor: extract `graphiti_service.py` into a sub-package `epi_gnostic/graphiti/` (with `service.py`, `monkeypatches.py` for the `_patch_graphiti_group_id` logic at lines 105-130, `config.py` for graphiti-specific config). The temporary HTTP-wrapper status per `S5-SPEC.md:104-105` ("not canonical architecture") makes this isolation valuable for the future migration to `Body/S/S3/graphiti-runtime`.
 - Benefit: marks the transitional code as transitional; eases the S3' migration.
-- Blast radius: **LOW** — `pyproject.toml` script entry `epi-graphiti = "epi_gnostic.graphiti_service:main"` needs updating to `epi_gnostic.graphiti.service:main`.
+- Blast radius: **LOW** — compatibility callers may still import `epi_gnostic.graphiti_service`; the executable `epi-graphiti` entry now points at `epi_gnostic._deprecated.graphiti_service:main` until cycle-4 deletion.
 
 ### 5.6 Test surface — gaps
 
@@ -499,6 +501,9 @@ cargo test -p epi-s5-epii-autoresearch-core --test inbox_contract
 cargo test -p epi-s5-epii-autoresearch-core --test spine_schema
 # Schema version freezing:
 cargo test -p epi-s5-epii-autoresearch-core SPINE_SCHEMA_VERSION
+# Position-5' Candle runtime, checkpoint boundary, tritone invariant, and autograd:
+cargo check --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --features resonance_ebm
+cargo test --offline --manifest-path Body/S/S5/epii-autoresearch-core/Cargo.toml --features resonance_ebm --test resonance_ebm_runtime
 ```
 
 ### S5-5' (canon promotion + Möbius)

@@ -49,7 +49,7 @@ When this skill persists an artifact (Thought entry, plan, summary, oracle readi
 - Position coordinates: `[[P0]]`…`[[P5]]` / `[[P0']]`…`[[P5']]`
 - Lens coordinates: `[[L0]]`…`[[L5]]` / `[[L0']]`…`[[L5']]`
 - Klein V₄ Squares: `[[Square A]]` / `[[Square B]]` / `[[Square C]]`
-- Relation families: `[[Family A — Adjacent-Identity]]`, `[[Family B — Offset-Transition]]`, `[[Family C — Converse-Mirror]]`, `[[Family D1 — Same-Position Cross]]`, `[[Family D2-Transform]]`, `[[Family D2-Require]]`, `[[Family D2-Complete]]`, `[[Family D3 — Helix-Invariance]]`
+- Relation families: `[[Family A — Adjacent-Identity / Being]]`, `[[Family B — Converse-Mirror / Becoming]]`, `[[Family C — Offset-Transition / Knowing-Unknowing]]`, `[[Family D — Inversion Faces]]` (`D_LEFT`, `D_RIGHT`, `D_BOTH`)
 - Symbolic systems: `[[Tarot]]` · `[[I-Ching]]` · `[[Codon]]` · `[[Nucleotide]]` · `[[QL Music]]`
 - Language objects: `[[OracleFrame]]` · `[[ReadingPosition]]` · `[[TranscriptionalClockPacket]]` · `[[SymbolicProtein]]` · `[[NaraDeckContext]]` · `[[PatternPacket]]`
 

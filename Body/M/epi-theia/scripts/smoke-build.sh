@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Track 05 T1 smoke test — verify the Theia browser bundle builds from a clean
-# checkout. Used by CI and by /m-dev verification.
+# Track 05 T1 smoke test — verify the Electron-primary Theia bundle builds
+# from a clean checkout. Used by CI and by /m-dev verification. Browser mode is
+# the derived gateway/remote target and is verified separately.
 #
 # Run from the workspace root: ./scripts/smoke-build.sh
 
@@ -10,6 +11,10 @@ cd "$(dirname "$0")/.."
 
 echo "==> pnpm install --frozen-lockfile"
 CI=true pnpm install --frozen-lockfile
+node scripts/ensure-electron-dist.mjs
+
+echo "==> electron target package parity gate"
+node --test extensions/test/electron-target-parity.test.mjs
 
 echo "==> build extensions (TS)"
 pnpm --filter @pratibimba/m-extension-runtime build
@@ -35,45 +40,47 @@ pnpm --filter @pratibimba/acceptance-harness build
 # Track 09 T9b — /body lite surface (admin-track09-body-surface).
 pnpm --filter @pratibimba/body-lite-surface build
 
-echo "==> build theia-app (webpack via @theia/cli)"
-pnpm --filter @pratibimba/theia-app build
+echo "==> build electron-app (webpack via @theia/cli)"
+EPI_ELECTRON_SMOKE_STUB_NATIVE=1 pnpm --filter @pratibimba/electron-app build
 
 echo "==> verify frontend bundle artifacts"
-test -f theia-app/lib/frontend/bundle.js   || { echo "bundle.js missing"; exit 1; }
-test -f theia-app/lib/frontend/index.html  || { echo "index.html missing"; exit 1; }
+test -f electron-app/lib/frontend/bundle.js   || { echo "bundle.js missing"; exit 1; }
+test -f electron-app/lib/frontend/index.html  || { echo "index.html missing"; exit 1; }
 
-# Every Theia extension package must chunk into the frontend bundle.
-required_chunk_prefixes=(
-    "extensions_kernel-bridge-readiness_"
-    "extensions_kernel-bridge_"
-    "extensions_m-extension-runtime_"
-    "extensions_pratibimba-layouts_"
-    "extensions_omnipanel-shell_"
-    "extensions_m0-anuttara_"
-    "extensions_m1-paramasiva_"
-    "extensions_m2-parashakti_"
-    "extensions_m3-mahamaya_"
-    "extensions_m4-nara_"
-    "extensions_m5-epii_"
-    "extensions_integrated-composition_"
-    "extensions_plugin-integrated-1-2-3_"
-    "extensions_plugin-integrated-4-5-0_"
+# Every Theia extension package must be present in the emitted frontend bundle.
+# Chunk filenames are webpack implementation details; module paths are the
+# stable proof that the package was composed into the Electron target.
+required_extension_packages=(
+    "kernel-bridge-readiness"
+    "kernel-bridge"
+    "m-extension-runtime"
+    "pratibimba-layouts"
+    "omnipanel-shell"
+    "m0-anuttara"
+    "m1-paramasiva"
+    "m2-parashakti"
+    "m3-mahamaya"
+    "m4-nara"
+    "m5-epii"
+    "integrated-composition"
+    "plugin-integrated-1-2-3"
+    "plugin-integrated-4-5-0"
     # Track 05 T4 — IDE shell M0/M5 chrome (admin-track05-finishing).
-    "extensions_ide-shell-m0-m5_"
+    "ide-shell-m0-m5"
     # Track 05 T8 — Agentic Control Room run flow (admin-track05-finishing).
-    "extensions_agentic-control-room_"
+    "agentic-control-room"
     # Track 05 T9 — Acceptance harness (admin-track05-finishing).
-    "extensions_acceptance-harness_"
+    "acceptance-harness"
     # Track 09 T9b — /body lite surface (admin-track09-body-surface).
-    "extensions_body-lite-surface_"
+    "body-lite-surface"
 )
-for prefix in "${required_chunk_prefixes[@]}"; do
-    if ! ls theia-app/lib/frontend/${prefix}*.js >/dev/null 2>&1; then
-        echo "missing frontend chunk for ${prefix}"
+for package_name in "${required_extension_packages[@]}"; do
+    if ! rg -q "../extensions/${package_name}/lib/" electron-app/lib/frontend/*.js; then
+        echo "missing frontend modules for ${package_name}"
         exit 1
     fi
 done
 
-bundle_bytes=$(wc -c < theia-app/lib/frontend/bundle.js | tr -d ' ')
+bundle_bytes=$(wc -c < electron-app/lib/frontend/bundle.js | tr -d ' ')
 echo "==> ok: bundle.js is $bundle_bytes bytes"
 echo "smoke build passed"

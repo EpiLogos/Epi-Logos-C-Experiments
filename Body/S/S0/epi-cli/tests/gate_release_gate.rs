@@ -2,17 +2,37 @@
 //! reconnect verification against a live local SpaceTimeDB instance with
 //! the `epi-logos-runtime` module published.
 //!
-//! Two flavours of soak:
+//! # SpaceTimeDB runs NATIVELY, not in Docker
 //!
-//! - The default `#[test]`-gated variants are CI-friendly (scaled to a few
-//!   seconds, 4-10 subscribers, < 1 minute wall-clock); they prove the
-//!   code path works and produce the per-subscriber latency distribution.
-//! - The `#[ignore]`-gated variants are the full canonical 10-minute,
-//!   10-subscriber soak and the 50-publisher coincidence harness named in
-//!   the verification rider — run manually with `cargo test --ignored`.
+//! There is no `spacetimedb` service in `docker-compose.epi-s2.yml` (that
+//! file carries Neo4j, Redis, and Graphiti only). The host is an operator-run
+//! native process, per `docs/operations/track-03-runbook.md` §1:
 //!
-//! All variants are gated by env probe: if SpaceTimeDB is not reachable
-//! the tests skip cleanly with a clear message rather than failing.
+//! ```bash
+//! spacetime start --listen-addr 127.0.0.1:3000
+//! cd Body/S/S3/epi-spacetime-module
+//! spacetime build
+//! spacetime publish epi-logos-runtime --server http://127.0.0.1:3000 -y
+//! ```
+//!
+//! `epi up` does NOT start it — nothing in the Rust tree spawns `spacetime`.
+//! Point the suite elsewhere with `EPI_SPACETIME_LIVE_HOST` /
+//! `EPI_SPACETIME_LIVE_DATABASE` (see `live_host()` / `live_database()`).
+//!
+//! # What is gated how
+//!
+//! - `release_gate_report_assembles_from_constants` is the only offline
+//!   `#[test]`: it assembles the report shape from contract constants and
+//!   needs no host.
+//! - Every live test below is `#[ignore]`d and requires the native host
+//!   above. Run them with
+//!   `cargo test --test gate_release_gate -- --ignored`.
+//!
+//! These live tests do NOT probe-and-skip. With no host reachable they FAIL
+//! at `open_subscribers` / `subscribe_projection` with
+//! `spacetimedb websocket connect failed: Connection refused (os error 61)`
+//! (`Body/S/S3/gateway/src/spacetime/registration.rs:247`). A connection
+//! refusal here means "you did not start SpaceTimeDB", not "the gate is red".
 
 mod support;
 
@@ -21,10 +41,10 @@ use std::time::{Duration, Instant};
 
 use epi_logos::gate::spacetimedb_bridge::{SpacetimePresence, SpacetimeRegistration};
 use epi_s3_gateway_contract::{
-    detect_production_fallback_policy, scan_for_forbidden_privacy_fields,
+    detect_production_fallback_policy, scan_for_forbidden_privacy_fields, GraphitiRuntimeStatus,
     ProductionFallbackPolicy, SpacetimeTableDelta, Track03ReleaseGateReport,
-    GraphitiRuntimeStatus, SPACETIME_CLOCK_PROTOCOL_VERSION,
-    SPACETIME_PROJECTION_SCHEMA_VERSION, SPACETIME_REDUCER_ABI_VERSION,
+    SPACETIME_CLOCK_PROTOCOL_VERSION, SPACETIME_PROJECTION_SCHEMA_VERSION,
+    SPACETIME_REDUCER_ABI_VERSION,
 };
 use serde_json::json;
 use support::temp_env;
@@ -34,8 +54,7 @@ fn live_host() -> String {
 }
 
 fn live_database() -> String {
-    std::env::var("EPI_SPACETIME_LIVE_DATABASE")
-        .unwrap_or_else(|_| "epi-logos-runtime".into())
+    std::env::var("EPI_SPACETIME_LIVE_DATABASE").unwrap_or_else(|_| "epi-logos-runtime".into())
 }
 
 fn live_test_env() -> support::TestEnv {
@@ -170,11 +189,12 @@ async fn run_world_clock_soak(
     spreads
 }
 
-/// 03.T7 CI-FRIENDLY soak: 4 subscribers, 5 ticks @ 1 Hz, asserts every
-/// tick's spread is within the +-30 ms rider. Long-form 10-subscriber +
-/// 10-minute variant is the `#[ignore]` test below.
+/// 03.T7 SHORT-FORM soak: 4 subscribers, 5 ticks @ 1 Hz, asserts every
+/// tick's spread is within the +-30 ms rider. Long-form 10-subscriber
+/// variant is the test below. Both are `#[ignore]`d — "short" means a few
+/// seconds of wall-clock, not "runs without a host".
 #[tokio::test(flavor = "multi_thread", worker_threads = 6)]
-#[ignore = "requires a live SpaceTimeDB instance with epi-logos-runtime published"]
+#[ignore = "requires a natively-run SpaceTimeDB host with epi-logos-runtime published: `spacetime start --listen-addr 127.0.0.1:3000`, then `cd Body/S/S3/epi-spacetime-module && spacetime build && spacetime publish epi-logos-runtime --server http://127.0.0.1:3000 -y`. NOT a Docker service — docker-compose.epi-s2.yml has no spacetimedb entry, and `epi up` does not start it."]
 async fn release_gate_multi_subscriber_world_clock_within_30ms() {
     let _guard = live_test_env().apply_to_process();
     let host = live_host();
@@ -204,7 +224,7 @@ async fn release_gate_multi_subscriber_world_clock_within_30ms() {
 /// tick_count straightforwardly extends the run). Run via
 /// `cargo test --ignored release_gate_ten_subscriber_canonical`.
 #[tokio::test(flavor = "multi_thread", worker_threads = 12)]
-#[ignore = "canonical 10-subscriber soak; requires a live SpaceTimeDB instance"]
+#[ignore = "canonical 10-subscriber soak; requires a natively-run SpaceTimeDB host: `spacetime start --listen-addr 127.0.0.1:3000` + `spacetime publish epi-logos-runtime` from Body/S/S3/epi-spacetime-module. NOT a Docker service."]
 async fn release_gate_ten_subscriber_canonical_30_tick_soak() {
     let _guard = live_test_env().apply_to_process();
     let host = live_host();
@@ -236,7 +256,7 @@ async fn release_gate_ten_subscriber_canonical_30_tick_soak() {
 /// subscriber. The 03.T3 carry-forward test proved one round-trip at 42 ms;
 /// this test produces the distribution.
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
-#[ignore = "requires a live SpaceTimeDB instance"]
+#[ignore = "requires a natively-run SpaceTimeDB host: `spacetime start --listen-addr 127.0.0.1:3000` + `spacetime publish epi-logos-runtime` from Body/S/S3/epi-spacetime-module. NOT a Docker service."]
 async fn release_gate_bind_kairos_p95_under_100ms() {
     let _guard = live_test_env().apply_to_process();
     let host = live_host();
@@ -295,9 +315,7 @@ async fn release_gate_bind_kairos_p95_under_100ms() {
                 if let SpacetimeTableDelta::KairosSurface { row } = delta {
                     let array: Vec<serde_json::Value> = match row {
                         serde_json::Value::Array(items) => items.clone(),
-                        serde_json::Value::String(s) => {
-                            serde_json::from_str(s).unwrap_or_default()
-                        }
+                        serde_json::Value::String(s) => serde_json::from_str(s).unwrap_or_default(),
                         serde_json::Value::Object(map) => {
                             return map
                                 .get("kairos_snapshot_id")
@@ -336,7 +354,7 @@ async fn release_gate_bind_kairos_p95_under_100ms() {
 /// consumed). Identity is via subscription_id which is freshly generated
 /// per subscribe call.
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
-#[ignore = "requires a live SpaceTimeDB instance"]
+#[ignore = "requires a natively-run SpaceTimeDB host: `spacetime start --listen-addr 127.0.0.1:3000` + `spacetime publish epi-logos-runtime` from Body/S/S3/epi-spacetime-module. NOT a Docker service."]
 async fn release_gate_reconnect_does_not_replay_consumed_deltas() {
     let _guard = live_test_env().apply_to_process();
     let host = live_host();
@@ -383,9 +401,10 @@ async fn release_gate_reconnect_does_not_replay_consumed_deltas() {
             .unwrap_or_else(|_| panic!("first tick"))
             .expect("decode")
             .expect("delta");
-        saw_first = next.inserts.iter().any(|delta| {
-            matches!(delta, SpacetimeTableDelta::WorldClock { .. })
-        });
+        saw_first = next
+            .inserts
+            .iter()
+            .any(|delta| matches!(delta, SpacetimeTableDelta::WorldClock { .. }));
     }
     assert!(saw_first, "first tick must arrive before reconnect");
 
@@ -410,17 +429,13 @@ async fn release_gate_reconnect_does_not_replay_consumed_deltas() {
     let mut seen_ticks: HashMap<String, u64> = HashMap::new();
     let deadline = Instant::now() + Duration::from_millis(8000);
     while seen_ticks.get(&gateway_id).is_none() && Instant::now() < deadline {
-        let next = match tokio::time::timeout(
-            Duration::from_millis(3000),
-            recovered.next_delta(),
-        )
-        .await
-        {
-            Ok(Ok(Some(delta))) => delta,
-            Ok(Ok(None)) => break,
-            Ok(Err(err)) => panic!("recovered delta decode failed: {err}"),
-            Err(_) => continue, // per-frame timeout; outer deadline still applies
-        };
+        let next =
+            match tokio::time::timeout(Duration::from_millis(3000), recovered.next_delta()).await {
+                Ok(Ok(Some(delta))) => delta,
+                Ok(Ok(None)) => break,
+                Ok(Err(err)) => panic!("recovered delta decode failed: {err}"),
+                Err(_) => continue, // per-frame timeout; outer deadline still applies
+            };
         for delta in &next.inserts {
             if let SpacetimeTableDelta::WorldClock { row } = delta {
                 let (gw, tick) = parse_world_clock(row);
@@ -474,7 +489,7 @@ fn parse_world_clock(row: &serde_json::Value) -> (Option<String>, Option<u64>) {
 /// `*_tick` audit table. If any row contains any name from
 /// `PRIVACY_FORBIDDEN_FIELD_NAMES`, the gate is closed.
 #[test]
-#[ignore = "requires a live SpaceTimeDB instance"]
+#[ignore = "requires a natively-run SpaceTimeDB host: `spacetime start --listen-addr 127.0.0.1:3000` + `spacetime publish epi-logos-runtime` from Body/S/S3/epi-spacetime-module. NOT a Docker service."]
 fn release_gate_privacy_audit_no_forbidden_fields_anywhere_in_projection() {
     let _guard = live_test_env().apply_to_process();
     let host = live_host();

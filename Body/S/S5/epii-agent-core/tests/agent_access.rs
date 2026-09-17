@@ -65,6 +65,7 @@ fn snapshot_reads_real_review_and_autoresearch_state() {
                         "Epii observed review and autoresearch state through real stores."
                             .to_owned(),
                     ),
+                    anchor: None,
                 }],
                 kernel_evidence: None,
             }],
@@ -111,6 +112,7 @@ fn anima_review_deposit_creates_inbox_item_without_resolution_authority() {
             now_path: Some("Idea/Empty/Present/12-05-2026/NOW.md".to_owned()),
             session_key: Some("agent:anima:12-05-2026".to_owned()),
             vault_root: Some("Idea".to_owned()),
+            evidence_anchors: None,
             requires_human: true,
         })
         .expect("Anima deposit should create review item");
@@ -156,6 +158,7 @@ fn aletheia_improvement_deposit_creates_review_item_and_improvement_run() {
             now_path: Some("Idea/Empty/Present/12-05-2026/NOW.md".to_owned()),
             session_key: Some("agent:aletheia:12-05-2026".to_owned()),
             vault_root: Some("Idea".to_owned()),
+            evidence_anchors: None,
             requires_human: false,
         })
         .expect("Aletheia improvement deposit should create linked run");
@@ -588,6 +591,7 @@ fn m5_promotion_dry_run_returns_filtered_dto_from_real_review_and_improvement_st
                     uri: "review://m5/workbench/open-gate".to_owned(),
                     coordinate: Some("S5/S5'".to_owned()),
                     summary: Some("M5 workbench DTO checked through review gate.".to_owned()),
+                    anchor: None,
                 }],
                 kernel_evidence: None,
             }],

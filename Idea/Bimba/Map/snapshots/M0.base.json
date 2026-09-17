@@ -1,0 +1,2364 @@
+{
+  "coordinate": "M0",
+  "c_4_artifact_role": "base-view",
+  "c_3_projected_from": "Idea/Bimba/Map",
+  "c_3_projected_at": "2026-06-17",
+  "row_count": 107,
+  "rows": [
+    {
+      "coordinate": "M0-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Transcendent Void - 4-Fold Zero Unity",
+      "c_0_source_coordinates": [
+        "[[M0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-0-0]]",
+        "[[M0-0-1]]",
+        "[[M0-1]]",
+        "[[M0-3]]",
+        "[[M0-3-2]]",
+        "[[M1-3-4.0000]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-4.0]]",
+        "[[M0]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-0"
+    },
+    {
+      "coordinate": "M0-0-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Ultimate Mystery - Transcendent Pole",
+      "c_0_source_coordinates": [
+        "[[M0-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-0-1]]",
+        "[[M0-1-(0∕1)]]",
+        "[[M0-2-9]]",
+        "[[M0-3]]",
+        "[[M0-3-6]]",
+        "[[M1-0]]",
+        "[[M1-1]]",
+        "[[M1-2-3]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-4.0-(0∕1)-0]]",
+        "[[M0-0]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-6-0]]",
+        "[[M0-3-8-2]]",
+        "[[M0-4.(0∕1)-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-0-0"
+    },
+    {
+      "coordinate": "M0-0-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Svabhava - Essential Nature - Immanent Pole",
+      "c_0_source_coordinates": [
+        "[[M0-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-0-0]]",
+        "[[M0-1-(0∕1)]]",
+        "[[M0-2-9]]",
+        "[[M0-3]]",
+        "[[M1-0]]",
+        "[[M1-2-0]]",
+        "[[M1-2-1]]",
+        "[[M1-2-4]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-4.0-(0∕1)-2]]",
+        "[[M0-0]]",
+        "[[M0-1]]",
+        "[[M0-3-(0∕1)-0]]",
+        "[[M0-3-6-1]]",
+        "[[M0-3-6-7]]",
+        "[[M0-4.(0∕1)-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-0-1"
+    },
+    {
+      "coordinate": "M0-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Emergence of Non-Duality",
+      "c_0_source_coordinates": [
+        "[[M0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-1-(0∕1)]]",
+        "[[M0-2]]",
+        "[[M0-0-1]]",
+        "[[M0-3-4]]",
+        "[[M0-3-6-4]]",
+        "[[M0-4.(5∕0)-0]]",
+        "[[M0-0]]",
+        "[[M0-5]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-4.(5∕0)]]",
+        "[[M1-5-2]]",
+        "[[M1-5-1]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M0-4]]",
+        "[[M0-2-9-0]]",
+        "[[M0-2-9-1]]",
+        "[[M0-2-9-2]]",
+        "[[M0-3-2]]",
+        "[[M0-3-3]]",
+        "[[M0-3-5]]",
+        "[[M0-3-6]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-1"
+    },
+    {
+      "coordinate": "M0-1-(0/1)",
+      "c_4_artifact_role": "map-index",
+      "title": "Brimming Void - Non-Dual Binary/Multiplicative Void Unity",
+      "c_0_source_coordinates": [
+        "[[M0-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-0-0]]",
+        "[[M0-0-1]]",
+        "[[M0-2-9]]",
+        "[[M0-3]]",
+        "[[M1-0]]",
+        "[[M1-1]]",
+        "[[M1-2-0]]",
+        "[[M1-2-4]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-5-4]]",
+        "[[M2-4.0-(0∕1)-1]]",
+        "[[M0-1]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-4.(0∕1)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-1-(0/1)"
+    },
+    {
+      "coordinate": "M0-2",
+      "c_4_artifact_role": "map-index",
+      "title": "8-fold Zero-Zero",
+      "c_0_source_coordinates": [
+        "[[M0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9]]",
+        "[[M0-3]]",
+        "[[M0-3-5]]",
+        "[[M0-3-6]]",
+        "[[M0-3-7]]",
+        "[[M0-3-8]]",
+        "[[M0-3-9]]",
+        "[[M0-3-10]]",
+        "[[M0-3-11]]",
+        "[[M1-2]]",
+        "[[M0]]",
+        "[[M0-1]]",
+        "[[M0-3-6-6]]",
+        "[[M0-3-6-9]]",
+        "[[M0-3-8-(0∕1)]]",
+        "[[M0-3-8-2]]",
+        "[[M0-3-8-3]]",
+        "[[M0-3-8-4]]",
+        "[[M0-3-8-5]]",
+        "[[M0-3-8-6]]",
+        "[[M0-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-2"
+    },
+    {
+      "coordinate": "M0-2-9",
+      "c_4_artifact_role": "map-index",
+      "title": "Paramesvara - Principle 9",
+      "c_0_source_coordinates": [
+        "[[M0-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9-0]]",
+        "[[M0-2-9-1]]",
+        "[[M0-2-9-2]]",
+        "[[M0-2-9-3]]",
+        "[[M0-2-9-4]]",
+        "[[M0-2-9-5]]",
+        "[[M0-2-9-6]]",
+        "[[M0-2-9-7]]",
+        "[[M0-2-9-8]]",
+        "[[M0-0-0]]",
+        "[[M0-0-1]]",
+        "[[M0-1-(0∕1)]]",
+        "[[M0-3]]",
+        "[[M0-3-11]]",
+        "[[M0-2]]",
+        "[[M1-2]]",
+        "[[M1-4.5]]",
+        "[[M2-0]]",
+        "[[M2-1-1]]",
+        "[[M2-1-2]]",
+        "[[M2-1-4]]",
+        "[[M2-5]]",
+        "[[M2-4.0-(0∕1)-1-10]]",
+        "[[M0-3-(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-2-9"
+    },
+    {
+      "coordinate": "M0-2-9-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Love/Peace - Foundational Essence",
+      "c_0_source_coordinates": [
+        "[[M0-2-9]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9-1]]",
+        "[[M0-1]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-4.0-(0∕1)-2-0]]",
+        "[[M2-4.0-(0∕1)-2-17]]",
+        "[[M2-4.0-(0∕1)-2-1]]",
+        "[[M0-2-9]]",
+        "[[M0-3-10-(0∕1)]]",
+        "[[M0-4.(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-2-9-0"
+    },
+    {
+      "coordinate": "M0-2-9-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Truth - Structural Foundation",
+      "c_0_source_coordinates": [
+        "[[M0-2-9]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9-2]]",
+        "[[M0-2-9-3]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-4.0-(0∕1)-1-11]]",
+        "[[M2-4.0-(0∕1)-1-10]]",
+        "[[M0-1]]",
+        "[[M0-2-9]]",
+        "[[M0-2-9-0]]",
+        "[[M0-2-9-8]]",
+        "[[M0-4.(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-2-9-1"
+    },
+    {
+      "coordinate": "M0-2-9-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Openness/Creativity - Structural Fusion",
+      "c_0_source_coordinates": [
+        "[[M0-2-9]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9-3]]",
+        "[[M0-2-9-4]]",
+        "[[M0-2-9-5]]",
+        "[[M0-1]]",
+        "[[M0-2-9]]",
+        "[[M0-2-9-1]]",
+        "[[M0-4.(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-2-9-2"
+    },
+    {
+      "coordinate": "M0-2-9-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Joy/Play - Creation Virtue",
+      "c_0_source_coordinates": [
+        "[[M0-2-9]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9-4]]",
+        "[[M0-3-10-2]]",
+        "[[M2-4.0-(0∕1)-0-21]]",
+        "[[M2-4.0-(0∕1)-0-22]]",
+        "[[M2-4.0-(0∕1)-0-23]]",
+        "[[M0-2-9]]",
+        "[[M0-2-9-1]]",
+        "[[M0-2-9-2]]",
+        "[[M0-4.(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-2-9-3"
+    },
+    {
+      "coordinate": "M0-2-9-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Goodness - Sustenance Virtue",
+      "c_0_source_coordinates": [
+        "[[M0-2-9]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9-5]]",
+        "[[M0-3-10-3]]",
+        "[[M2-4.0-(0∕1)-2-5]]",
+        "[[M2-4.0-(0∕1)-2-27]]",
+        "[[M2-4.0-(0∕1)-2-28]]",
+        "[[M0-2-9]]",
+        "[[M0-2-9-2]]",
+        "[[M0-2-9-3]]",
+        "[[M0-4.(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-2-9-4"
+    },
+    {
+      "coordinate": "M0-2-9-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Beauty - Dissolution Virtue",
+      "c_0_source_coordinates": [
+        "[[M0-2-9]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9-6]]",
+        "[[M0-3-10-4]]",
+        "[[M2-4.0-(0∕1)-2-16]]",
+        "[[M2-4.0-(0∕1)-2-8]]",
+        "[[M2-4.0-(0∕1)-1-12]]",
+        "[[M0-2-9]]",
+        "[[M0-2-9-2]]",
+        "[[M0-2-9-4]]",
+        "[[M0-4.(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-2-9-5"
+    },
+    {
+      "coordinate": "M0-2-9-6",
+      "c_4_artifact_role": "map-index",
+      "title": "Life/Nature - Veiling Virtue",
+      "c_0_source_coordinates": [
+        "[[M0-2-9]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9-7]]",
+        "[[M0-3-10-5]]",
+        "[[M0-2-9]]",
+        "[[M0-2-9-5]]",
+        "[[M0-4.(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-2-9-6"
+    },
+    {
+      "coordinate": "M0-2-9-7",
+      "c_4_artifact_role": "map-index",
+      "title": "Wisdom - Grace Virtue",
+      "c_0_source_coordinates": [
+        "[[M0-2-9]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9-8]]",
+        "[[M0-3-10-6]]",
+        "[[M2-5-(0∕1)]]",
+        "[[M2-4.0-(0∕1)-2-26]]",
+        "[[M2-4.0-(0∕1)-0-12]]",
+        "[[M2-4.0-(0∕1)-1-3]]",
+        "[[M0-2-9]]",
+        "[[M0-2-9-6]]",
+        "[[M0-4.(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-2-9-7"
+    },
+    {
+      "coordinate": "M0-2-9-8",
+      "c_4_artifact_role": "map-index",
+      "title": "Reality - Completion Virtue",
+      "c_0_source_coordinates": [
+        "[[M0-2-9]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2-9-1]]",
+        "[[M0-3-10-7]]",
+        "[[M0-2-9]]",
+        "[[M0-2-9-7]]",
+        "[[M0-4.(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-2-9-8"
+    },
+    {
+      "coordinate": "M0-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetypal Number Language",
+      "c_0_source_coordinates": [
+        "[[M0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-10]]",
+        "[[M0-3-11]]",
+        "[[M0-3-2]]",
+        "[[M0-3-3]]",
+        "[[M0-3-4]]",
+        "[[M0-3-5]]",
+        "[[M0-3-6]]",
+        "[[M0-3-7]]",
+        "[[M0-3-8]]",
+        "[[M0-3-9]]",
+        "[[M0-4]]",
+        "[[M0-0]]",
+        "[[M1-2]]",
+        "[[M1-4.4]]",
+        "[[M0-4.(5∕0)-5]]",
+        "[[M0-4.(5∕0)-2]]",
+        "[[M0-4.(5∕0)-3]]",
+        "[[M0-4.(5∕0)-4]]",
+        "[[M0-4.(5∕0)-1]]",
+        "[[M0-1]]",
+        "[[M0-2]]",
+        "[[M0]]",
+        "[[M0-0-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3"
+    },
+    {
+      "coordinate": "M0-3-(0/1)",
+      "c_4_artifact_role": "map-index",
+      "title": "The Mirror",
+      "c_0_source_coordinates": [
+        "[[M0-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-(0∕1)-0]]",
+        "[[M0-3-(0∕1)-1]]",
+        "[[M0-3]]",
+        "[[M0-3-8-(0∕1)]]",
+        "[[M0-0]]",
+        "[[M0-0-0]]",
+        "[[M0-3-6-2]]",
+        "[[M2-4.0-(0∕1)-1]]",
+        "[[M2-4.0]]",
+        "[[M0-1-(0∕1)]]",
+        "[[M0-2-9]]",
+        "[[M0-3-2]]",
+        "[[M0-3-3]]",
+        "[[M0-3-4]]",
+        "[[M0-3-5]]",
+        "[[M0-3-6]]",
+        "[[M0-3-7]]",
+        "[[M0-3-8]]",
+        "[[M0-3-9]]",
+        "[[M0-3-10]]",
+        "[[M0-3-11]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-5-(0∕1)]]",
+        "[[M0-5-(5∕0)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-(0/1)"
+    },
+    {
+      "coordinate": "M0-3-(0/1)-0",
+      "c_4_artifact_role": "map-index",
+      "title": "The Frame",
+      "c_0_source_coordinates": [
+        "[[M0-3-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-(0∕1)-1]]",
+        "[[M0-3]]",
+        "[[M0-0-1]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-6-5]]",
+        "[[M0-5-(0∕1)-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-(0/1)-0"
+    },
+    {
+      "coordinate": "M0-3-(0/1)-1",
+      "c_4_artifact_role": "map-index",
+      "title": "The Operator",
+      "c_0_source_coordinates": [
+        "[[M0-3-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-(0∕1)-0]]",
+        "[[M0-3]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-6-3]]",
+        "[[M0-5-(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-(0/1)-1"
+    },
+    {
+      "coordinate": "M0-3-10",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetype 7 - Divine Action",
+      "c_0_source_coordinates": [
+        "[[M0-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-10-(0∕1)]]",
+        "[[M0-3-10-2]]",
+        "[[M0-3-10-3]]",
+        "[[M0-3-10-4]]",
+        "[[M0-3-10-5]]",
+        "[[M0-3-10-6]]",
+        "[[M0-3-10-7]]",
+        "[[M0-3]]",
+        "[[M1-4]]",
+        "[[M0-3-6]]",
+        "[[M2-1-5]]",
+        "[[M1-2]]",
+        "[[M2-4.0-(0∕1)-1-0]]",
+        "[[M2-4.0-(0∕1)-1-2]]",
+        "[[M2-4.0-(0∕1)-1-4]]",
+        "[[M2-4.0-(0∕1)-1-5]]",
+        "[[M2-4.0-(0∕1)-1-6]]",
+        "[[M2-4.0-(0∕1)-1-7]]",
+        "[[M0-2]]",
+        "[[M0-2-9]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-11]]",
+        "[[M0-3-9]]",
+        "[[M0-4.(5∕0)-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-10"
+    },
+    {
+      "coordinate": "M0-3-10-(0/1)",
+      "c_4_artifact_role": "map-index",
+      "title": "Svatantrya - Freedom",
+      "c_0_source_coordinates": [
+        "[[M0-3-10]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-10-2]]",
+        "[[M0-1]]",
+        "[[M0-2-9-0]]",
+        "[[M0-3-10]]",
+        "[[M0-3-10-7]]",
+        "[[M0-5-(5∕0)-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-10-(0/1)"
+    },
+    {
+      "coordinate": "M0-3-10-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Srishti - Creation",
+      "c_0_source_coordinates": [
+        "[[M0-3-10]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-10-3]]",
+        "[[M0-3-5]]",
+        "[[M2-4.0-(0∕1)-0-21]]",
+        "[[M2-4.0-(0∕1)-0-22]]",
+        "[[M2-4.0-(0∕1)-0-23]]",
+        "[[M0-2-9-3]]",
+        "[[M0-3-10]]",
+        "[[M0-3-10-(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-10-2"
+    },
+    {
+      "coordinate": "M0-3-10-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Sthiti - Sustenance",
+      "c_0_source_coordinates": [
+        "[[M0-3-10]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-10-4]]",
+        "[[M0-3-6]]",
+        "[[M2-4.0-(0∕1)-2-5]]",
+        "[[M2-4.0-(0∕1)-2-27]]",
+        "[[M2-4.0-(0∕1)-2-28]]",
+        "[[M0-2-9-4]]",
+        "[[M0-3-10]]",
+        "[[M0-3-10-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-10-3"
+    },
+    {
+      "coordinate": "M0-3-10-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Samhara - Dissolution",
+      "c_0_source_coordinates": [
+        "[[M0-3-10]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-10-5]]",
+        "[[M0-3-7]]",
+        "[[M2-4.0-(0∕1)-0-8]]",
+        "[[M2-4.0-(0∕1)-0-20]]",
+        "[[M2-4.0-(0∕1)-0-24]]",
+        "[[M0-2-9-5]]",
+        "[[M0-3-10]]",
+        "[[M0-3-10-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-10-4"
+    },
+    {
+      "coordinate": "M0-3-10-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Tirodhana - Veiling",
+      "c_0_source_coordinates": [
+        "[[M0-3-10]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-10-6]]",
+        "[[M0-3-8]]",
+        "[[M2-4.0-(0∕1)-2-8]]",
+        "[[M2-4.0-(0∕1)-1-23]]",
+        "[[M0-2-9-6]]",
+        "[[M0-3-10]]",
+        "[[M0-3-10-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-10-5"
+    },
+    {
+      "coordinate": "M0-3-10-6",
+      "c_4_artifact_role": "map-index",
+      "title": "Anugraha - Grace",
+      "c_0_source_coordinates": [
+        "[[M0-3-10]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-10-7]]",
+        "[[M0-3-9]]",
+        "[[M2-4.0-(0∕1)-2-0]]",
+        "[[M2-4.0-(0∕1)-2-2]]",
+        "[[M2-4.0-(0∕1)-1-27]]",
+        "[[M0-2-9-7]]",
+        "[[M0-3-10]]",
+        "[[M0-3-10-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-10-6"
+    },
+    {
+      "coordinate": "M0-3-10-7",
+      "c_4_artifact_role": "map-index",
+      "title": "Samavesa - Absorption",
+      "c_0_source_coordinates": [
+        "[[M0-3-10]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-10-(0∕1)]]",
+        "[[M0-3-10]]",
+        "[[M0-2-9-8]]",
+        "[[M0-3-10-6]]",
+        "[[M0-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-10-7"
+    },
+    {
+      "coordinate": "M0-3-11",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetype 8 - Structural Reflection",
+      "c_0_source_coordinates": [
+        "[[M0-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-7]]",
+        "[[M0-3-8]]",
+        "[[M0-3-9]]",
+        "[[M0-3-10]]",
+        "[[M0-3]]",
+        "[[M1-4.4]]",
+        "[[M2-0]]",
+        "[[M2-1-0]]",
+        "[[M2-5]]",
+        "[[M2-4.0-(0∕1)-0-12]]",
+        "[[M0-2]]",
+        "[[M0-2-9]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-4.(5∕0)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-11"
+    },
+    {
+      "coordinate": "M0-3-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetype 0",
+      "c_0_source_coordinates": [
+        "[[M0-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3]]",
+        "[[M1-0]]",
+        "[[M1-2-0]]",
+        "[[M2-4.0-(0∕1)-1-0]]",
+        "[[M0-0]]",
+        "[[M0-1]]",
+        "[[M0-2-9]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-4]]",
+        "[[M0-4.(5∕0)-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-2"
+    },
+    {
+      "coordinate": "M0-3-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetype 1",
+      "c_0_source_coordinates": [
+        "[[M0-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3]]",
+        "[[M1-1]]",
+        "[[M1-2-1]]",
+        "[[M2-4.0-(0∕1)-0-3]]",
+        "[[M0-1]]",
+        "[[M0-2-9]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-4]]",
+        "[[M0-4.(5∕0)-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-3"
+    },
+    {
+      "coordinate": "M0-3-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetype 0/1",
+      "c_0_source_coordinates": [
+        "[[M0-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-2]]",
+        "[[M0-3-3]]",
+        "[[M0-3]]",
+        "[[M1-0]]",
+        "[[M1-1]]",
+        "[[M1-2]]",
+        "[[M1-2-5]]",
+        "[[M2-4.0-(0∕1)]]",
+        "[[M2-4.0]]",
+        "[[M0-1]]",
+        "[[M0-2-9]]",
+        "[[M0-3-7]]",
+        "[[M0-4.(5∕0)-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-4"
+    },
+    {
+      "coordinate": "M0-3-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetype 2",
+      "c_0_source_coordinates": [
+        "[[M0-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6]]",
+        "[[M0-3]]",
+        "[[M1-2-2]]",
+        "[[M2-1-0]]",
+        "[[M2-4.0-(0∕1)-1-18]]",
+        "[[M2-0]]",
+        "[[M0-1]]",
+        "[[M0-2]]",
+        "[[M0-2-9]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-10-2]]",
+        "[[M0-3-7]]",
+        "[[M0-4.(5∕0)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-5"
+    },
+    {
+      "coordinate": "M0-3-6",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetype 3",
+      "c_0_source_coordinates": [
+        "[[M0-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-0]]",
+        "[[M0-3-6-1]]",
+        "[[M0-3-6-10]]",
+        "[[M0-3-6-11]]",
+        "[[M0-3-6-2]]",
+        "[[M0-3-6-3]]",
+        "[[M0-3-6-4]]",
+        "[[M0-3-6-5]]",
+        "[[M0-3-6-6]]",
+        "[[M0-3-6-7]]",
+        "[[M0-3-6-8]]",
+        "[[M0-3-6-9]]",
+        "[[M0-3]]",
+        "[[M0-0-0]]",
+        "[[M1-4]]",
+        "[[M1-4.3]]",
+        "[[M2-1-0-3]]",
+        "[[M2-0]]",
+        "[[M2-1-1]]",
+        "[[M2-4.0-(0∕1)-1-7]]",
+        "[[M2-4.0-(0∕1)-2-0]]",
+        "[[M2-4.0-(0∕1)-2-1]]",
+        "[[M2-4.0-(0∕1)-2-2]]",
+        "[[M2-4.0-(0∕1)-2-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6"
+    },
+    {
+      "coordinate": "M0-3-6-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Actual Identity (!)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-1]]",
+        "[[M0-3-6-4]]",
+        "[[M0-0-0]]",
+        "[[M2-3-1-0]]",
+        "[[M0-3-6]]",
+        "[[M0-3-6-11]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-0"
+    },
+    {
+      "coordinate": "M0-3-6-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Potential Essence (?)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-2]]",
+        "[[M0-0-1]]",
+        "[[M0-3-6-0]]",
+        "[[M2-3-2-0]]",
+        "[[M0-3-6]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-1"
+    },
+    {
+      "coordinate": "M0-3-6-10",
+      "c_4_artifact_role": "map-index",
+      "title": "Self Questioning World (!?/?!)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-11]]",
+        "[[M0-1]]",
+        "[[M2-3-3-2]]",
+        "[[M0-3-6]]",
+        "[[M0-3-6-9]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-10"
+    },
+    {
+      "coordinate": "M0-3-6-11",
+      "c_4_artifact_role": "map-index",
+      "title": "World Questioning Self (?!/!?)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-0]]",
+        "[[M0-1]]",
+        "[[M2-3-4-2]]",
+        "[[M0-3-6]]",
+        "[[M0-3-6-10]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-11"
+    },
+    {
+      "coordinate": "M0-3-6-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Subjective I (!-)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-3]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M2-3-3-0]]",
+        "[[M0-3-6]]",
+        "[[M0-3-6-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-2"
+    },
+    {
+      "coordinate": "M0-3-6-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Asserted Am (-?)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-4]]",
+        "[[M0-3-(0∕1)-1]]",
+        "[[M2-3-4-0]]",
+        "[[M0-3-6]]",
+        "[[M0-3-6-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-3"
+    },
+    {
+      "coordinate": "M0-3-6-4",
+      "c_4_artifact_role": "map-index",
+      "title": "The Statement (!?)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-5]]",
+        "[[M0-1]]",
+        "[[M2-3-1-1]]",
+        "[[M0-3-6]]",
+        "[[M0-3-6-0]]",
+        "[[M0-3-6-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-4"
+    },
+    {
+      "coordinate": "M0-3-6-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Objective Is (?-)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-6]]",
+        "[[M0-3-(0∕1)-0]]",
+        "[[M2-3-2-1]]",
+        "[[M0-3-6]]",
+        "[[M0-3-6-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-5"
+    },
+    {
+      "coordinate": "M0-3-6-6",
+      "c_4_artifact_role": "map-index",
+      "title": "Query of Other (-!)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-7]]",
+        "[[M0-2]]",
+        "[[M2-3-3-1]]",
+        "[[M0-3-6]]",
+        "[[M0-3-6-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-6"
+    },
+    {
+      "coordinate": "M0-3-6-7",
+      "c_4_artifact_role": "map-index",
+      "title": "Reflexive Query (?!)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-8]]",
+        "[[M0-0-1]]",
+        "[[M2-3-4-1]]",
+        "[[M0-3-6]]",
+        "[[M0-3-6-6]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-7"
+    },
+    {
+      "coordinate": "M0-3-6-8",
+      "c_4_artifact_role": "map-index",
+      "title": "Integrated Self (-!/!-)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-9]]",
+        "[[M0-1]]",
+        "[[M2-3-1-2]]",
+        "[[M0-3-6]]",
+        "[[M0-3-6-7]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-8"
+    },
+    {
+      "coordinate": "M0-3-6-9",
+      "c_4_artifact_role": "map-index",
+      "title": "Relational Other (-?/?-)",
+      "c_0_source_coordinates": [
+        "[[M0-3-6]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6-10]]",
+        "[[M0-2]]",
+        "[[M2-3-2-2]]",
+        "[[M0-3-6]]",
+        "[[M0-3-6-8]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-6-9"
+    },
+    {
+      "coordinate": "M0-3-7",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetype 4",
+      "c_0_source_coordinates": [
+        "[[M0-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-4]]",
+        "[[M0-3-5]]",
+        "[[M0-3-6]]",
+        "[[M0-3-8]]",
+        "[[M0-3]]",
+        "[[M1-4]]",
+        "[[M2-0]]",
+        "[[M2-1-2]]",
+        "[[M2-4.0-(0∕1)-0-23]]",
+        "[[M0-1]]",
+        "[[M0-2]]",
+        "[[M0-2-9]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-10-4]]",
+        "[[M0-3-11]]",
+        "[[M0-4.(5∕0)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-7"
+    },
+    {
+      "coordinate": "M0-3-8",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetype 5 - Dynamic Harmony",
+      "c_0_source_coordinates": [
+        "[[M0-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-8-(0∕1)]]",
+        "[[M0-3-8-2]]",
+        "[[M0-3-8-3]]",
+        "[[M0-3-8-4]]",
+        "[[M0-3-8-5]]",
+        "[[M0-3-8-6]]",
+        "[[M0-3-8-7]]",
+        "[[M0-3]]",
+        "[[M0-3-6]]",
+        "[[M1-4.5]]",
+        "[[M2-1-3]]",
+        "[[M2-4.0-(0∕1)-1-8]]",
+        "[[M0-2]]",
+        "[[M0-2-9]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-10-5]]",
+        "[[M0-3-11]]",
+        "[[M0-3-7]]",
+        "[[M0-4.(5∕0)-1]]",
+        "[[M0-5-(5∕0)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-8"
+    },
+    {
+      "coordinate": "M0-3-8-(0/1)",
+      "c_4_artifact_role": "map-index",
+      "title": "Mono - The One",
+      "c_0_source_coordinates": [
+        "[[M0-3-8]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-8-7]]",
+        "[[M0-2]]",
+        "[[M2-4.0-(0∕1)-1-8]]",
+        "[[M2-4.0-(0∕1)-1-9]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-8]]",
+        "[[M0-5-(0∕1)]]",
+        "[[M0-5-(5∕0)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-8-(0/1)"
+    },
+    {
+      "coordinate": "M0-3-8-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Poly - The Many",
+      "c_0_source_coordinates": [
+        "[[M0-3-8]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-0-0]]",
+        "[[M0-2]]",
+        "[[M2-4.0-(0∕1)-0-0]]",
+        "[[M2-4.0-(0∕1)-0-1]]",
+        "[[M0-3-8]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-8-2"
+    },
+    {
+      "coordinate": "M0-3-8-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Poly- - Actually Many",
+      "c_0_source_coordinates": [
+        "[[M0-3-8]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2]]",
+        "[[M0-3-8]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-8-3"
+    },
+    {
+      "coordinate": "M0-3-8-4",
+      "c_4_artifact_role": "map-index",
+      "title": "-Mono - Potentially One",
+      "c_0_source_coordinates": [
+        "[[M0-3-8]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2]]",
+        "[[M0-3-8]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-8-4"
+    },
+    {
+      "coordinate": "M0-3-8-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Mono- - Actualising The One",
+      "c_0_source_coordinates": [
+        "[[M0-3-8]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-8-7]]",
+        "[[M0-2]]",
+        "[[M0-3-8]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-8-5"
+    },
+    {
+      "coordinate": "M0-3-8-6",
+      "c_4_artifact_role": "map-index",
+      "title": "-Poly - Potentiating The Many",
+      "c_0_source_coordinates": [
+        "[[M0-3-8]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-2]]",
+        "[[M0-3-8]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-8-6"
+    },
+    {
+      "coordinate": "M0-3-8-7",
+      "c_4_artifact_role": "map-index",
+      "title": "MonoPoly - (M)Any-One",
+      "c_0_source_coordinates": [
+        "[[M0-3-8]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-8-5]]",
+        "[[M0-2-9]]",
+        "[[M2-4.0-(0∕1)-1-1]]",
+        "[[M2-4.0-(0∕1)-1-10]]",
+        "[[M0-3-8]]",
+        "[[M0-3-8-(0∕1)]]",
+        "[[M0-5-(5∕0)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-8-7"
+    },
+    {
+      "coordinate": "M0-3-9",
+      "c_4_artifact_role": "map-index",
+      "title": "Archetype 6 - Synthetic Emptiness",
+      "c_0_source_coordinates": [
+        "[[M0-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-10]]",
+        "[[M0-3]]",
+        "[[M2-0]]",
+        "[[M2-1-4]]",
+        "[[M2-4.0-(0∕1)-1-30]]",
+        "[[M0-2]]",
+        "[[M0-2-9]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-10-6]]",
+        "[[M0-3-11]]",
+        "[[M0-4.(5∕0)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-3-9"
+    },
+    {
+      "coordinate": "M0-4",
+      "c_4_artifact_role": "map-index",
+      "title": "The Holographic Matrix of Context",
+      "c_0_source_coordinates": [
+        "[[M0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-4.(5∕0)]]",
+        "[[M0-5]]",
+        "[[M1-3-4]]",
+        "[[M1-4]]",
+        "[[M1-2]]",
+        "[[M0]]",
+        "[[M0-1]]",
+        "[[M0-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4"
+    },
+    {
+      "coordinate": "M0-4.(0/1)",
+      "c_4_artifact_role": "map-index",
+      "title": "O# - Paramasiva Base",
+      "c_0_source_coordinates": [
+        "[[M0-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1)-0]]",
+        "[[M0-4.(0∕1)-1]]",
+        "[[M0-4.(0∕1)-2]]",
+        "[[M0-4.(0∕1)-3]]",
+        "[[M0-4.(0∕1)-4]]",
+        "[[M0-4.(0∕1)-5]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M1-3-4.(0∕1)]]",
+        "[[M1-4.0]]",
+        "[[M1-4.1]]",
+        "[[M1-4.2]]",
+        "[[M0-1]]",
+        "[[M0-4]]",
+        "[[M0-4.(5∕0)-0]]",
+        "[[M0-5-(5∕0)-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1)"
+    },
+    {
+      "coordinate": "M0-4.(0/1)-0",
+      "c_4_artifact_role": "map-index",
+      "title": "O0 - Seed of Potential",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1)-1]]",
+        "[[M1-0]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(0∕1)-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1)-0"
+    },
+    {
+      "coordinate": "M0-4.(0/1)-1",
+      "c_4_artifact_role": "map-index",
+      "title": "O1 - Defining Negation",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1)-2]]",
+        "[[M0-0-0]]",
+        "[[M1-0]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(0∕1)-0]]",
+        "[[M0-5-(0∕1)-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1)-1"
+    },
+    {
+      "coordinate": "M0-4.(0/1)-2",
+      "c_4_artifact_role": "map-index",
+      "title": "O2 - Process Affirmation",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1)-3]]",
+        "[[M0-0-1]]",
+        "[[M1-1]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(0∕1)-1]]",
+        "[[M0-5-(0∕1)-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1)-2"
+    },
+    {
+      "coordinate": "M0-4.(0/1)-3",
+      "c_4_artifact_role": "map-index",
+      "title": "O3 - Self-Reflection Mediation",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1)-4]]",
+        "[[M0-1-(0∕1)]]",
+        "[[M1-0]]",
+        "[[M1-1]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(0∕1)-2]]",
+        "[[M0-5-(0∕1)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1)-3"
+    },
+    {
+      "coordinate": "M0-4.(0/1)-4",
+      "c_4_artifact_role": "map-index",
+      "title": "O4 - Contextual Indeterminacy",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1)-5]]",
+        "[[M0-2-9]]",
+        "[[M1-0]]",
+        "[[M1-1]]",
+        "[[M1-3-5]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(0∕1)-3]]",
+        "[[M0-5-(0∕1)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1)-4"
+    },
+    {
+      "coordinate": "M0-4.(0/1)-5",
+      "c_4_artifact_role": "map-index",
+      "title": "O5 - Non-Dual Synthesis",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1)-0]]",
+        "[[M1-0]]",
+        "[[M1-1]]",
+        "[[M0-1]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(0∕1)-4]]",
+        "[[M0-5-(0∕1)-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1)-5"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2)",
+      "c_4_artifact_role": "map-index",
+      "title": "X# - Parashakti Base",
+      "c_0_source_coordinates": [
+        "[[M0-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2)-0]]",
+        "[[M0-4.(0∕1∕2)-1]]",
+        "[[M0-4.(0∕1∕2)-2]]",
+        "[[M0-4.(0∕1∕2)-3]]",
+        "[[M0-4.(0∕1∕2)-4]]",
+        "[[M0-4.(0∕1∕2)-5]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-2-9]]",
+        "[[M1-3-2]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M1-3-4.(0∕1∕2)]]",
+        "[[M0-1]]",
+        "[[M0-4]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(5∕0)-0]]",
+        "[[M0-5-(5∕0)-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2)"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2)-0",
+      "c_4_artifact_role": "map-index",
+      "title": "X0 - Indefinite Particular",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2)-1]]",
+        "[[M2-4.0-(0∕1)-2-8]]",
+        "[[M2-4.0-(0∕1)-1-3]]",
+        "[[M2-4.0-(0∕1)-1-23]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(0∕1∕2)-5]]",
+        "[[M0-4.(0∕1∕2∕3)-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2)-0"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2)-1",
+      "c_4_artifact_role": "map-index",
+      "title": "X1 - Subtractive Exploration",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2)-2]]",
+        "[[M2-4.0-(0∕1)-0-21]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(0∕1∕2)-0]]",
+        "[[M0-4.(0∕1∕2∕3)-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2)-1"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2)-2",
+      "c_4_artifact_role": "map-index",
+      "title": "X2 - Additive Exploration",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2)-3]]",
+        "[[M2-4.0-(0∕1)-0-22]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(0∕1∕2)-1]]",
+        "[[M0-4.(0∕1∕2∕3)-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2)-2"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2)-3",
+      "c_4_artifact_role": "map-index",
+      "title": "X3 - Mixed Exploration",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2)-4]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(0∕1∕2)-2]]",
+        "[[M0-4.(0∕1∕2∕3)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2)-3"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2)-4",
+      "c_4_artifact_role": "map-index",
+      "title": "X4 - Alternative Mixed Exploration",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2)-5]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(0∕1∕2)-3]]",
+        "[[M0-4.(0∕1∕2∕3)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2)-4"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2)-5",
+      "c_4_artifact_role": "map-index",
+      "title": "X5 - Total Integration",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2)-0]]",
+        "[[M0-2-9]]",
+        "[[M2-4.0-(0∕1)-0-23]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(0∕1∕2)-4]]",
+        "[[M0-4.(0∕1∕2∕3)-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2)-5"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2/3)",
+      "c_4_artifact_role": "map-index",
+      "title": "N# - Spanda Base",
+      "c_0_source_coordinates": [
+        "[[M0-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)-0]]",
+        "[[M0-4.(0∕1∕2∕3)-1]]",
+        "[[M0-4.(0∕1∕2∕3)-2]]",
+        "[[M0-4.(0∕1∕2∕3)-3]]",
+        "[[M0-4.(0∕1∕2∕3)-4]]",
+        "[[M0-4.(0∕1∕2∕3)-5]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-2-9]]",
+        "[[M1-2-3]]",
+        "[[M1-2-4]]",
+        "[[M1-3]]",
+        "[[M1-3-4.(0∕1∕2∕3)]]",
+        "[[M2-5]]",
+        "[[M0-1]]",
+        "[[M0-4]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(5∕0)-0]]",
+        "[[M0-5]]",
+        "[[M0-5-(5∕0)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2/3)"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2/3)-0",
+      "c_4_artifact_role": "map-index",
+      "title": "N0 - Number Ground",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)-1]]",
+        "[[M0-4.(0∕1∕2)-0]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-4.(0∕1∕2∕3)-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2/3)-0"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2/3)-1",
+      "c_4_artifact_role": "map-index",
+      "title": "N1 - Rotational Genesis",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)-2]]",
+        "[[M0-4.(0∕1∕2)-1]]",
+        "[[M2-4.0-(0∕1)-0-32]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-4.(0∕1∕2∕3)-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2/3)-1"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2/3)-2",
+      "c_4_artifact_role": "map-index",
+      "title": "N2 - Future Actualization",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)-3]]",
+        "[[M0-4.(0∕1∕2)-2]]",
+        "[[M2-4.0-(0∕1)-1-21]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-4.(0∕1∕2∕3)-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2/3)-2"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2/3)-3",
+      "c_4_artifact_role": "map-index",
+      "title": "N3 - Temporal Mediation",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)-4]]",
+        "[[M0-4.(0∕1∕2)-3]]",
+        "[[M2-4.0-(0∕1)-1-22]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-4.(0∕1∕2∕3)-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2/3)-3"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2/3)-4",
+      "c_4_artifact_role": "map-index",
+      "title": "N4 - Complex Contextualization",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)-5]]",
+        "[[M0-4.(0∕1∕2)-4]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-4.(0∕1∕2∕3)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2/3)-4"
+    },
+    {
+      "coordinate": "M0-4.(0/1/2/3)-5",
+      "c_4_artifact_role": "map-index",
+      "title": "N5 - Harmonic Integration",
+      "c_0_source_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(0∕1∕2∕3)-0]]",
+        "[[M0-4.(0∕1∕2)-5]]",
+        "[[M0-2-9]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-4.(0∕1∕2∕3)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(0/1/2/3)-5"
+    },
+    {
+      "coordinate": "M0-4.(4.0/1-4.4/5)",
+      "c_4_artifact_role": "map-index",
+      "title": "M# - Mahamaya Base",
+      "c_0_source_coordinates": [
+        "[[M0-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)-0]]",
+        "[[M0-4.(4.0∕1-4.4∕5)-1]]",
+        "[[M0-4.(4.0∕1-4.4∕5)-2]]",
+        "[[M0-4.(4.0∕1-4.4∕5)-3]]",
+        "[[M0-4.(4.0∕1-4.4∕5)-4]]",
+        "[[M0-4.(4.0∕1-4.4∕5)-5]]",
+        "[[M0-4.(5∕0)]]",
+        "[[M1-3-1]]",
+        "[[M1-3-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-1]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-4]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-4.(5∕0)-0]]",
+        "[[M0-5-(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(4.0/1-4.4/5)"
+    },
+    {
+      "coordinate": "M0-4.(4.0/1-4.4/5)-0",
+      "c_4_artifact_role": "map-index",
+      "title": "M0 - Subjective Ground",
+      "c_0_source_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)-1]]",
+        "[[M0-1]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-4.(4.0∕1-4.4∕5)-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(4.0/1-4.4/5)-0"
+    },
+    {
+      "coordinate": "M0-4.(4.0/1-4.4/5)-1",
+      "c_4_artifact_role": "map-index",
+      "title": "M1 - Definition of the Other",
+      "c_0_source_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)-2]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-4.(4.0∕1-4.4∕5)-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(4.0/1-4.4/5)-1"
+    },
+    {
+      "coordinate": "M0-4.(4.0/1-4.4/5)-2",
+      "c_4_artifact_role": "map-index",
+      "title": "M2 - Process of Relationship",
+      "c_0_source_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)-3]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-4.(4.0∕1-4.4∕5)-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(4.0/1-4.4/5)-2"
+    },
+    {
+      "coordinate": "M0-4.(4.0/1-4.4/5)-3",
+      "c_4_artifact_role": "map-index",
+      "title": "M3 - Mediation of the World",
+      "c_0_source_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)-4]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-4.(4.0∕1-4.4∕5)-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(4.0/1-4.4/5)-3"
+    },
+    {
+      "coordinate": "M0-4.(4.0/1-4.4/5)-4",
+      "c_4_artifact_role": "map-index",
+      "title": "M4 - Context of the Collective",
+      "c_0_source_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)-5]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-4.(4.0∕1-4.4∕5)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(4.0/1-4.4/5)-4"
+    },
+    {
+      "coordinate": "M0-4.(4.0/1-4.4/5)-5",
+      "c_4_artifact_role": "map-index",
+      "title": "M5 - Integration of Self and Whole",
+      "c_0_source_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(4.0∕1-4.4∕5)-0]]",
+        "[[M0-2-9]]",
+        "[[M0-1]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-4.(4.0∕1-4.4∕5)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(4.0/1-4.4/5)-5"
+    },
+    {
+      "coordinate": "M0-4.(5/0)",
+      "c_4_artifact_role": "map-index",
+      "title": "# - Nara Base",
+      "c_0_source_coordinates": [
+        "[[M0-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(5∕0)-0]]",
+        "[[M0-4.(5∕0)-1]]",
+        "[[M0-4.(5∕0)-2]]",
+        "[[M0-4.(5∕0)-3]]",
+        "[[M0-4.(5∕0)-4]]",
+        "[[M0-4.(5∕0)-5]]",
+        "[[M1-3-4.(5∕0)]]",
+        "[[M0-1]]",
+        "[[M0-4]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-5]]",
+        "[[M0-5-(5∕0)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(5/0)"
+    },
+    {
+      "coordinate": "M0-4.(5/0)-0",
+      "c_4_artifact_role": "map-index",
+      "title": "## - Primordial Matrix",
+      "c_0_source_coordinates": [
+        "[[M0-4.(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(5∕0)-1]]",
+        "[[M0-4.(5∕0)-2]]",
+        "[[M0-4.(5∕0)-3]]",
+        "[[M0-4.(5∕0)-4]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-2-9]]",
+        "[[M2-1-0-0]]",
+        "[[M0-1]]",
+        "[[M0-4.(5∕0)]]",
+        "[[M0-5-(5∕0)-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(5/0)-0"
+    },
+    {
+      "coordinate": "M0-4.(5/0)-1",
+      "c_4_artifact_role": "map-index",
+      "title": "#0 - Daughter",
+      "c_0_source_coordinates": [
+        "[[M0-4.(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(5∕0)-4]]",
+        "[[M0-4.(5∕0)-3]]",
+        "[[M2-1-0-1]]",
+        "[[M0-3-6]]",
+        "[[M0-3-8]]",
+        "[[M0-3-10]]",
+        "[[M0-3]]",
+        "[[M0-4.(5∕0)]]",
+        "[[M0-4.(5∕0)-0]]",
+        "[[M0-4.(5∕0)-5]]",
+        "[[M0-5-(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(5/0)-1"
+    },
+    {
+      "coordinate": "M0-4.(5/0)-2",
+      "c_4_artifact_role": "map-index",
+      "title": "#1 - Father",
+      "c_0_source_coordinates": [
+        "[[M0-4.(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(5∕0)-3]]",
+        "[[M0-4.(5∕0)-4]]",
+        "[[M2-1-0-2]]",
+        "[[M0-3-2]]",
+        "[[M0-3-3]]",
+        "[[M0-3-4]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3]]",
+        "[[M0-4.(5∕0)]]",
+        "[[M0-4.(5∕0)-0]]",
+        "[[M0-4.(5∕0)-5]]",
+        "[[M0-5-(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(5/0)-2"
+    },
+    {
+      "coordinate": "M0-4.(5/0)-3",
+      "c_4_artifact_role": "map-index",
+      "title": "#2 - Son",
+      "c_0_source_coordinates": [
+        "[[M0-4.(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(5∕0)-2]]",
+        "[[M2-1-0-3]]",
+        "[[M0-3-5]]",
+        "[[M0-3-7]]",
+        "[[M0-3-9]]",
+        "[[M0-3-11]]",
+        "[[M0-3]]",
+        "[[M0-4.(5∕0)]]",
+        "[[M0-4.(5∕0)-0]]",
+        "[[M0-4.(5∕0)-1]]",
+        "[[M0-4.(5∕0)-5]]",
+        "[[M0-5-(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(5/0)-3"
+    },
+    {
+      "coordinate": "M0-4.(5/0)-4",
+      "c_4_artifact_role": "map-index",
+      "title": "#3 - Mother",
+      "c_0_source_coordinates": [
+        "[[M0-4.(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(5∕0)-1]]",
+        "[[M2-1-0-4]]",
+        "[[M0-2-9]]",
+        "[[M0-2-9-0]]",
+        "[[M0-2-9-1]]",
+        "[[M0-2-9-2]]",
+        "[[M0-2-9-3]]",
+        "[[M0-2-9-4]]",
+        "[[M0-2-9-5]]",
+        "[[M0-2-9-6]]",
+        "[[M0-2-9-7]]",
+        "[[M0-2-9-8]]",
+        "[[M0-3]]",
+        "[[M0-4.(5∕0)]]",
+        "[[M0-4.(5∕0)-0]]",
+        "[[M0-4.(5∕0)-2]]",
+        "[[M0-4.(5∕0)-5]]",
+        "[[M0-5-(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(5/0)-4"
+    },
+    {
+      "coordinate": "M0-4.(5/0)-5",
+      "c_4_artifact_role": "map-index",
+      "title": "#4 - Tao",
+      "c_0_source_coordinates": [
+        "[[M0-4.(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-4.(5∕0)-1]]",
+        "[[M0-4.(5∕0)-2]]",
+        "[[M0-4.(5∕0)-3]]",
+        "[[M0-4.(5∕0)-4]]",
+        "[[M2-1-0-5]]",
+        "[[M0-2-9]]",
+        "[[M0-3]]",
+        "[[M0-4.(5∕0)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-4.(5/0)-5"
+    },
+    {
+      "coordinate": "M0-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Siva-Shakti Unity",
+      "c_0_source_coordinates": [
+        "[[M0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(0∕1)]]",
+        "[[M0-5-(5∕0)]]",
+        "[[M0-0]]",
+        "[[M0-1]]",
+        "[[M0-2]]",
+        "[[M0-3]]",
+        "[[M0-4]]",
+        "[[M0-4.(5∕0)]]",
+        "[[M0-3-10-7]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M5]]",
+        "[[M1-2-5]]",
+        "[[M2-4.0-(0∕1)-1]]",
+        "[[M0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5"
+    },
+    {
+      "coordinate": "M0-5-(0/1)",
+      "c_4_artifact_role": "map-index",
+      "title": "Siva - Unconscious Resonant Medium of Space",
+      "c_0_source_coordinates": [
+        "[[M0-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(0∕1)-0]]",
+        "[[M0-5-(0∕1)-1]]",
+        "[[M0-5-(0∕1)-2]]",
+        "[[M0-5-(0∕1)-3]]",
+        "[[M0-5-(0∕1)-4]]",
+        "[[M0-5-(0∕1)-5]]",
+        "[[M0-5-(5∕0)]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-(0∕1)-1]]",
+        "[[M0-3-8-(0∕1)]]",
+        "[[M2-4.0-(0∕1)-0]]",
+        "[[M0-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(0/1)"
+    },
+    {
+      "coordinate": "M0-5-(0/1)-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Siva Potential for Psyche",
+      "c_0_source_coordinates": [
+        "[[M0-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(0∕1)-1]]",
+        "[[M0-5-(5∕0)]]",
+        "[[M0-3-(0∕1)-0]]",
+        "[[M2-1-2-0]]",
+        "[[M2-1-0]]",
+        "[[M0-5-(0∕1)]]",
+        "[[M0-5-(0∕1)-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(0/1)-0"
+    },
+    {
+      "coordinate": "M0-5-(0/1)-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Siva Negation",
+      "c_0_source_coordinates": [
+        "[[M0-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(0∕1)-2]]",
+        "[[M0-4.(0∕1)-1]]",
+        "[[M2-1-2-2]]",
+        "[[M2-1-0-2]]",
+        "[[M2-4.0-(0∕1)-0-8]]",
+        "[[M2-4.0-(0∕1)-0-20]]",
+        "[[M2-4.0-(0∕1)-0-26]]",
+        "[[M2-4.0-(0∕1)-2-0]]",
+        "[[M2-4.0-(0∕1)-2-1]]",
+        "[[M2-4.0-(0∕1)-2-2]]",
+        "[[M2-4.0-(0∕1)-2-3]]",
+        "[[M2-4.0-(0∕1)-2-4]]",
+        "[[M2-4.0-(0∕1)-2-5]]",
+        "[[M2-4.0-(0∕1)-2-6]]",
+        "[[M2-4.0-(0∕1)-2-7]]",
+        "[[M2-4.0-(0∕1)-2-8]]",
+        "[[M2-4.0-(0∕1)-2-9]]",
+        "[[M2-4.0-(0∕1)-2-10]]",
+        "[[M2-4.0-(0∕1)-2-11]]",
+        "[[M2-4.0-(0∕1)-2-12]]",
+        "[[M2-4.0-(0∕1)-2-13]]",
+        "[[M2-4.0-(0∕1)-2-14]]",
+        "[[M2-4.0-(0∕1)-2-15]]",
+        "[[M2-4.0-(0∕1)-2-16]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(0/1)-1"
+    },
+    {
+      "coordinate": "M0-5-(0/1)-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Siva Affirmation",
+      "c_0_source_coordinates": [
+        "[[M0-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(0∕1)-3]]",
+        "[[M0-4.(0∕1)-2]]",
+        "[[M2-1-2-1]]",
+        "[[M2-1-0-1]]",
+        "[[M2-4.0-(0∕1)-2-0]]",
+        "[[M2-4.0-(0∕1)-0-27]]",
+        "[[M2-4.0-(0∕1)-1-14]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-5-(0∕1)]]",
+        "[[M0-5-(0∕1)-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(0/1)-2"
+    },
+    {
+      "coordinate": "M0-5-(0/1)-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Siva Dialogic",
+      "c_0_source_coordinates": [
+        "[[M0-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(0∕1)-4]]",
+        "[[M0-4.(0∕1)-3]]",
+        "[[M2-1-2-3]]",
+        "[[M2-1-0-3]]",
+        "[[M0-5-(0∕1)]]",
+        "[[M0-5-(0∕1)-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(0/1)-3"
+    },
+    {
+      "coordinate": "M0-5-(0/1)-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Siva Dialectic",
+      "c_0_source_coordinates": [
+        "[[M0-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(0∕1)-5]]",
+        "[[M0-4.(0∕1)-4]]",
+        "[[M2-1-2-4]]",
+        "[[M2-1-0-4]]",
+        "[[M0-5-(0∕1)]]",
+        "[[M0-5-(0∕1)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(0/1)-4"
+    },
+    {
+      "coordinate": "M0-5-(0/1)-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Siva Expression",
+      "c_0_source_coordinates": [
+        "[[M0-5-(0∕1)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(0∕1)-0]]",
+        "[[M0-4.(0∕1)-5]]",
+        "[[M2-1-2-5]]",
+        "[[M2-1-0-5]]",
+        "[[M0-5-(0∕1)]]",
+        "[[M0-5-(0∕1)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(0/1)-5"
+    },
+    {
+      "coordinate": "M0-5-(5/0)",
+      "c_4_artifact_role": "map-index",
+      "title": "Shakti - Dynamic Psyche of Duration/Lived Time",
+      "c_0_source_coordinates": [
+        "[[M0-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(5∕0)-0]]",
+        "[[M0-5-(5∕0)-1]]",
+        "[[M0-5-(5∕0)-2]]",
+        "[[M0-5-(5∕0)-3]]",
+        "[[M0-5-(5∕0)-4]]",
+        "[[M0-5-(5∕0)-5]]",
+        "[[M0-3-8-(0∕1)]]",
+        "[[M0-5-(0∕1)]]",
+        "[[M0-4.(5∕0)]]",
+        "[[M0-3-8]]",
+        "[[M0-3-8-7]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M2-4.0-(0∕1)-2]]",
+        "[[M0-5]]",
+        "[[M0-5-(0∕1)-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(5/0)"
+    },
+    {
+      "coordinate": "M0-5-(5/0)-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Shakti Library",
+      "c_0_source_coordinates": [
+        "[[M0-5-(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(5∕0)-1]]",
+        "[[M0-4.(5∕0)-0]]",
+        "[[M0-5-(5∕0)]]",
+        "[[M0-5-(5∕0)-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(5/0)-0"
+    },
+    {
+      "coordinate": "M0-5-(5/0)-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Shakti Bimba",
+      "c_0_source_coordinates": [
+        "[[M0-5-(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(5∕0)-2]]",
+        "[[M0-4.(0∕1)]]",
+        "[[M0-5-(5∕0)]]",
+        "[[M0-5-(5∕0)-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(5/0)-1"
+    },
+    {
+      "coordinate": "M0-5-(5/0)-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Shakti Pratibimba",
+      "c_0_source_coordinates": [
+        "[[M0-5-(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(5∕0)-3]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M0-5-(5∕0)]]",
+        "[[M0-5-(5∕0)-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(5/0)-2"
+    },
+    {
+      "coordinate": "M0-5-(5/0)-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Shakti Language",
+      "c_0_source_coordinates": [
+        "[[M0-5-(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(5∕0)-4]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-5-(5∕0)]]",
+        "[[M0-5-(5∕0)-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(5/0)-3"
+    },
+    {
+      "coordinate": "M0-5-(5/0)-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Shakti Stories",
+      "c_0_source_coordinates": [
+        "[[M0-5-(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(5∕0)-5]]",
+        "[[M0-4.(4.0∕1-4.4∕5)]]",
+        "[[M0-4.(5∕0)-1]]",
+        "[[M0-4.(5∕0)-2]]",
+        "[[M0-4.(5∕0)-3]]",
+        "[[M0-4.(5∕0)-4]]",
+        "[[M0-5-(5∕0)]]",
+        "[[M0-5-(5∕0)-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(5/0)-4"
+    },
+    {
+      "coordinate": "M0-5-(5/0)-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Shakti Techne",
+      "c_0_source_coordinates": [
+        "[[M0-5-(5∕0)]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-5-(5∕0)-0]]",
+        "[[M0-3-10-(0∕1)]]",
+        "[[M0-5-(5∕0)]]",
+        "[[M0-5-(5∕0)-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/anuttara-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M0-5-(5/0)-5"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "runId": "20260707T112237Z-47-T47.4",
+  "taskId": "47.T47.4",
+  "startedAt": "2026-07-07T11:22:37.861Z",
+  "owner": "fable-b-agentic",
+  "leaseExpiresAt": "2026-07-07T13:22:37.861Z",
+  "worktree": null,
+  "task": {
+    "id": "47.T47.4",
+    "trackId": "47",
+    "tranche": "T47.4",
+    "title": "Aeon task-source binding",
+    "effort": null,
+    "file": "47-autonomous-loop-scheduling.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/47-autonomous-loop-scheduling.md",
+    "dependsOn": [
+      "47.T47.3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/47-autonomous-loop-scheduling.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

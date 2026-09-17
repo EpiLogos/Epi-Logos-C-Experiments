@@ -12,6 +12,7 @@ use crate::gate::{
     team_store::{TeamMemberRecord, TeamRecord, TeamStore},
 };
 use crate::techne::cmux;
+use epi_s3_gateway_contract::TerminalBinding;
 
 pub fn run(cmd: &ChainCmd, json: bool) -> Result<String, String> {
     match cmd {
@@ -46,6 +47,7 @@ struct ChainStepReport {
     output: String,
     exit_code: i32,
     elapsed_ms: u128,
+    terminal_binding: Option<TerminalBinding>,
 }
 
 fn run_chain(
@@ -69,6 +71,7 @@ fn run_chain(
     }
     team.status = "running".to_owned();
     team = team_store.create(team)?;
+    let terminal_backed = subagents::terminal_backed_from_env();
 
     let mut input = task.to_owned();
     let mut steps = Vec::new();
@@ -90,9 +93,13 @@ fn run_chain(
                 member.worker_index,
             )),
             cmux_pane_id: member.cmux_pane_id.clone(),
+            terminal_backed,
+            terminal_lease: None,
         })?;
         member.status = report.status.clone();
-        input = report.output.clone();
+        if !terminal_backed {
+            input = report.output.clone();
+        }
         steps.push(ChainStepReport {
             agent: member.agent_id.clone(),
             session_key: report.session_key,
@@ -100,6 +107,7 @@ fn run_chain(
             output: report.output,
             exit_code: report.exit_code,
             elapsed_ms: report.elapsed_ms,
+            terminal_binding: report.terminal_binding,
         });
         if !report.ok {
             team.status = "error".to_owned();
@@ -114,11 +122,16 @@ fn run_chain(
         }
     }
 
-    team.status = "completed".to_owned();
+    let final_status = if terminal_backed {
+        "running"
+    } else {
+        "completed"
+    };
+    team.status = final_status.to_owned();
     team = team_store.save_record(&team)?;
     Ok(ChainRunReport {
         ok: true,
-        status: "completed".to_owned(),
+        status: final_status.to_owned(),
         team,
         steps,
         output: input,

@@ -1,0 +1,33 @@
+{
+  "runId": "20260627T110136Z-44-T44.4",
+  "taskId": "44.T44.4",
+  "startedAt": "2026-06-27T11:01:36.299Z",
+  "owner": "codex-m-dev-44-t44-4-human-gate-verdict",
+  "leaseExpiresAt": "2026-06-27T13:01:36.299Z",
+  "worktree": null,
+  "task": {
+    "id": "44.T44.4",
+    "trackId": "44",
+    "tranche": "T44.4",
+    "title": "Verdict/annotation loop under the Human Gate",
+    "effort": null,
+    "file": "44-pratibimba-surface-standard.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md",
+    "dependsOn": [
+      "44.T44.3"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

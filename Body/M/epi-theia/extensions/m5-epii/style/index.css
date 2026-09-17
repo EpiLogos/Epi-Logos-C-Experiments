@@ -43,3 +43,373 @@
     color: var(--theia-descriptionForeground);
     font-style: italic;
 }
+
+.mext-widget-m5-epii .m5-capacity-affordance {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.mext-widget-m5-epii .m5-capacity-affordance-header,
+.mext-widget-m5-epii .m5-capacity-pane-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.mext-widget-m5-epii .m5-capacity-affordance-header span {
+    color: var(--theia-descriptionForeground);
+    font-family: var(--theia-editor-font-family);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m5-epii .m5-capacity-tabbar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(138px, 1fr));
+    gap: 6px;
+}
+
+.mext-widget-m5-epii .m5-capacity-tab,
+.mext-widget-m5-epii .m5-capacity-monitor-button {
+    border: 1px solid var(--theia-button-border, var(--theia-widget-border));
+    border-radius: 4px;
+    padding: 6px 8px;
+    color: var(--theia-button-secondaryForeground, var(--theia-foreground));
+    background: var(--theia-button-secondaryBackground, var(--theia-editorWidget-background));
+    cursor: pointer;
+}
+
+.mext-widget-m5-epii .m5-capacity-tab {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    align-items: center;
+    gap: 8px;
+    min-height: 42px;
+    text-align: left;
+}
+
+.mext-widget-m5-epii .m5-capacity-tab span {
+    overflow-wrap: anywhere;
+}
+
+.mext-widget-m5-epii .m5-capacity-tab strong {
+    min-width: 24px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.mext-widget-m5-epii .m5-capacity-tab-active {
+    border-color: var(--theia-focusBorder);
+    color: var(--theia-button-foreground);
+    background: var(--theia-button-background);
+}
+
+.mext-widget-m5-epii .m5-capacity-pane {
+    border: 1px solid var(--theia-widget-border);
+    border-radius: 4px;
+    padding: 10px;
+    background: color-mix(in srgb, var(--theia-editor-background) 88%, var(--theia-sideBar-background) 12%);
+}
+
+.mext-widget-m5-epii .m5-capacity-pane-header p {
+    margin: 0;
+    color: var(--theia-descriptionForeground);
+    line-height: 1.35;
+}
+
+.mext-widget-m5-epii .m5-capacity-metrics {
+    margin-top: 10px;
+}
+
+.mext-widget-m5-epii .m5-capacity-records {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.mext-widget-m5-epii .m5-capacity-records h4 {
+    margin: 0 0 6px;
+    font-size: var(--theia-ui-font-size1);
+}
+
+.mext-widget-m5-epii .m5-capacity-records p,
+.mext-widget-m5-epii .m5-capacity-records ol {
+    margin: 0;
+}
+
+.mext-widget-m5-epii .m5-capacity-records ol {
+    padding-left: 18px;
+}
+
+.mext-widget-m5-epii .m5-contemplation-object {
+    margin-top: 12px;
+}
+
+.mext-widget-m5-epii .m5-contemplation-narrative {
+    margin: 0 0 12px;
+    max-width: 92ch;
+    color: var(--theia-foreground);
+    font-size: var(--theia-ui-font-size1);
+    line-height: 1.45;
+}
+
+.mext-widget-m5-epii .m5-contemplation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px;
+}
+
+.mext-widget-m5-epii .m5-contemplation-pane {
+    border: 1px solid var(--theia-widget-border);
+    border-radius: 4px;
+    padding: 10px;
+    min-width: 0;
+    background: color-mix(in srgb, var(--theia-editor-background) 88%, var(--theia-sideBar-background) 12%);
+}
+
+.mext-widget-m5-epii .m5-contemplation-pane h4 {
+    margin: 0 0 8px;
+    font-size: var(--theia-ui-font-size1);
+    font-weight: 600;
+    color: var(--theia-foreground);
+}
+
+.mext-widget-m5-epii .m5-kairos-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.mext-widget-m5-epii .m5-kairos-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m5-epii .m5-kairos-column ol,
+.mext-widget-m5-epii .m5-contemplation-pane ol {
+    margin: 6px 0 0;
+    padding-left: 18px;
+}
+
+.mext-widget-m5-epii .m5-tarot-cards,
+.mext-widget-m5-epii .m5-syntax-seeds {
+    display: grid;
+    gap: 6px;
+}
+
+.mext-widget-m5-epii .m5-tarot-card,
+.mext-widget-m5-epii .m5-syntax-seeds article {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border-left: 3px solid var(--theia-focusBorder);
+    padding-left: 8px;
+}
+
+.mext-widget-m5-epii .m5-q-trajectory {
+    position: relative;
+    height: 130px;
+    border: 1px solid var(--theia-widget-border);
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.mext-widget-m5-epii .m5-q-trajectory span {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    margin: -9px 0 0 -9px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--theia-button-background);
+    color: var(--theia-button-foreground);
+    font-size: 10px;
+}
+
+.mext-widget-m5-epii .m5-contemplation-pane table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m5-epii .m5-contemplation-pane th,
+.mext-widget-m5-epii .m5-contemplation-pane td {
+    border-bottom: 1px solid var(--theia-widget-border);
+    padding: 4px;
+    text-align: left;
+    word-break: break-word;
+}
+
+.mext-widget-m5-epii .m5-charge-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 88px;
+    margin-top: 8px;
+}
+
+.mext-widget-m5-epii .m5-charge-bars span {
+    flex: 1 1 0;
+    min-height: 8px;
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 2px;
+    color: var(--theia-button-foreground);
+    background: var(--theia-button-background);
+    font-size: 10px;
+}
+
+.mext-widget-m5-epii .m5-charge-pass {
+    color: var(--theia-testing-iconPassed);
+}
+
+.mext-widget-m5-epii .m5-charge-fail {
+    color: var(--theia-testing-iconFailed);
+}
+
+.mext-widget-m5-epii .m5-skeleton-gold {
+    color: #d9a441;
+}
+
+.mext-widget-m5-epii .m5-skeleton-emerald {
+    color: #2fbf7f;
+}
+
+.mext-widget-m5-epii .m5-wisdom-delta {
+    margin-top: 12px;
+}
+
+.mext-widget-m5-epii .m5-wisdom-pane {
+    border: 1px solid var(--theia-widget-border);
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 10px;
+    min-width: 0;
+    background: color-mix(in srgb, var(--theia-editor-background) 90%, var(--theia-sideBar-background) 10%);
+}
+
+.mext-widget-m5-epii .m5-wisdom-pane h4 {
+    margin: 0 0 8px;
+    font-size: var(--theia-ui-font-size1);
+    font-weight: 600;
+    color: var(--theia-foreground);
+}
+
+.mext-widget-m5-epii .m5-joint-composition-grid,
+.mext-widget-m5-epii .m5-spine-789-columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.mext-widget-m5-epii .m5-joint-composition-grid article,
+.mext-widget-m5-epii .m5-spine-789-columns article,
+.mext-widget-m5-epii .m5-xor-step {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+    border: 1px solid var(--theia-editorWidget-border);
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.mext-widget-m5-epii .m5-joint-composition-grid p,
+.mext-widget-m5-epii .m5-joint-composition-grid small {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.mext-widget-m5-epii .m5-xor-fold {
+    display: grid;
+    grid-template-columns: minmax(72px, max-content) minmax(0, 1fr) minmax(72px, max-content);
+    gap: 10px;
+}
+
+.mext-widget-m5-epii .m5-hash-column,
+.mext-widget-m5-epii .m5-xor-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.mext-widget-m5-epii .m5-hash-column span,
+.mext-widget-m5-epii .m5-xor-step span,
+.mext-widget-m5-epii .m5-symbolic-question-list code {
+    font-family: var(--theia-editor-font-family);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m5-epii .m5-xor-bit-flips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+}
+
+.mext-widget-m5-epii .m5-xor-bit-flips span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 20px;
+    border-radius: 4px;
+    color: var(--theia-button-foreground);
+    background: var(--theia-button-background);
+    animation: m5-xor-pulse 720ms ease-out both;
+}
+
+.mext-widget-m5-epii .m5-virtue-lut9 {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(22px, 1fr));
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.mext-widget-m5-epii .m5-virtue-lut9 span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 24px;
+    border-radius: 4px;
+    border: 1px solid var(--theia-widget-border);
+}
+
+.mext-widget-m5-epii .m5-virtue-lut9 span[data-witness-state="lit"] {
+    color: var(--theia-button-foreground);
+    background: var(--theia-button-background);
+}
+
+.mext-widget-m5-epii .m5-symbolic-question-list {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding-left: 18px;
+}
+
+.mext-widget-m5-epii .m5-symbolic-question-list li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content max-content;
+    gap: 8px;
+    align-items: center;
+}
+
+@keyframes m5-xor-pulse {
+    0% {
+        transform: scale(0.94);
+        opacity: 0.55;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

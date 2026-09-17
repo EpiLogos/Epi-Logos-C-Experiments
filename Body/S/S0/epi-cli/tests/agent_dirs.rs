@@ -15,9 +15,10 @@ fn doctor_reports_missing_repo_pi_assets() {
 fn resolves_default_agent_dir_under_epi_home() {
     let env = TestEnv::repo_with_assets();
     let result = run_epi(["agent", "doctor", "--json"].as_slice(), &env);
+    // Default agent is `epii` (DEFAULT_PI_AGENT_ID, Anima/Epii split law).
     assert!(result.stdout.contains(&format!(
         "\"path\": \"{}\"",
-        env.repo_root.join(".epi/agents/main/agent").display()
+        env.repo_root.join(".epi/agents/epii/agent").display()
     )));
     assert!(result.stdout.contains("\"modelsPath\""));
     assert!(result.stdout.contains("\"authProfilesPath\""));
@@ -46,9 +47,10 @@ fn honors_epi_agent_home_override() {
         ["agent", "doctor", "--json"].as_slice(),
         &env.with_env("EPI_AGENT_HOME", override_home.display().to_string()),
     );
+    // Default agent is `epii` (DEFAULT_PI_AGENT_ID, Anima/Epii split law).
     assert!(result.stdout.contains(&format!(
         "\"path\": \"{}\"",
-        override_home.join("agents/main/agent").display()
+        override_home.join("agents/epii/agent").display()
     )));
 }
 

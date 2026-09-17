@@ -783,5 +783,8 @@ fn t9_inventory_modules_total_matches_recorded() {
         modules_total,
         records.len()
     );
-    assert!(records.len() >= 25, "inventory must list at least 25 modules");
+    assert!(
+        records.len() >= 25,
+        "inventory must list at least 25 modules"
+    );
 }

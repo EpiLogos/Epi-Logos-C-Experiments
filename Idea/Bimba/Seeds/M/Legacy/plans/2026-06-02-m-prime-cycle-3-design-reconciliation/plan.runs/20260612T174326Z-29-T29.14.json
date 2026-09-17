@@ -1,0 +1,35 @@
+{
+  "runId": "20260612T174326Z-29-T29.14",
+  "taskId": "29.T29.14",
+  "startedAt": "2026-06-12T17:43:26.746Z",
+  "owner": "codex-m-dev-29-t29-14",
+  "leaseExpiresAt": "2026-06-12T19:43:26.746Z",
+  "worktree": null,
+  "task": {
+    "id": "29.T29.14",
+    "trackId": "29",
+    "tranche": "T29.14",
+    "title": "Composition deep-link routes + cross-layout intent integration *(spec-ahead-integration; closes OW-WC-IP-3; cross-link 11.2 / TS-11)*",
+    "effort": null,
+    "file": "29-integrated-plugins-composition-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md",
+    "dependsOn": [
+      "29.T29.13"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/integrated-deep-links.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

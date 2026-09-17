@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T165911Z-18-T18.2",
+  "taskId": "18.T18.2",
+  "startedAt": "2026-06-10T16:59:11.836Z",
+  "owner": "codex-m-dev-18-t18-2",
+  "leaseExpiresAt": "2026-06-10T18:59:11.836Z",
+  "worktree": null,
+  "task": {
+    "id": "18.T18.2",
+    "trackId": "18",
+    "tranche": "T18.2",
+    "title": "Land `klein_flip` and `KleinFlipEvent` together",
+    "effort": null,
+    "file": "18-typed-kernel-bridge-json-edge.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/18-typed-kernel-bridge-json-edge.md",
+    "dependsOn": [
+      "18.T18.1"
+    ],
+    "writeScopes": [
+      "Body/S/S0/portal-core/src/events.rs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

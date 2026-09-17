@@ -1,0 +1,36 @@
+{
+  "runId": "20260710T223347Z-32-T32.1",
+  "taskId": "32.T32.1",
+  "startedAt": "2026-07-10T22:33:47.805Z",
+  "owner": "opus-c-law",
+  "leaseExpiresAt": "2026-07-11T00:33:47.805Z",
+  "worktree": null,
+  "task": {
+    "id": "32.T32.1",
+    "trackId": "32",
+    "tranche": "T32.1",
+    "title": "Cold-start playbook",
+    "effort": null,
+    "file": "32-onboarding-settings-empty-states.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/32-onboarding-settings-empty-states.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: onboarding/settings/empty-states — six-stage cold-start (non-modal splash 'Profile-tick 1 — system alive'), 9-id+5-flavour readiness via flavourOf(), per-Mn empty copy, typed-confirmation reset, per-artifact privacy opt-in. §2 track 32."
+  }
+}

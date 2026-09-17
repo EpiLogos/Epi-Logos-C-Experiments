@@ -1,0 +1,38 @@
+{
+  "runId": "20260713T104054Z-33-T33.3",
+  "taskId": "33.T33.3",
+  "startedAt": "2026-07-13T10:40:54.172Z",
+  "owner": "uc-3303",
+  "leaseExpiresAt": "2026-07-13T14:40:54.172Z",
+  "worktree": null,
+  "task": {
+    "id": "33.T33.3",
+    "trackId": "33",
+    "tranche": "T33.3",
+    "title": "Energy-decomposition carrier surface on the 4-5-0 engine (E₄/E₅/E₆ read-out)",
+    "effort": null,
+    "file": "33-harmonic-energy-channel-handoff.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/33-harmonic-energy-channel-handoff.md",
+    "dependsOn": [
+      "33.T33.2"
+    ],
+    "writeScopes": [
+      "Body/M/pratibimba-app",
+      "Body/M/pratibimba-app/src",
+      "Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md:110"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — harmonic energy channel handoff (kernel_energy_evaluate E4 personal / E5 harmonic [user data NEVER enters E5] / E6 verifier, 4:5:6 weighting; oracle codon-charge FFI fix — m3_compute_charges has zero Rust callers). CARRIER: the 4-5-0 engine is its consumption point. Expected-red owner. §2 track 33 + §5.1/§5.3."
+  }
+}

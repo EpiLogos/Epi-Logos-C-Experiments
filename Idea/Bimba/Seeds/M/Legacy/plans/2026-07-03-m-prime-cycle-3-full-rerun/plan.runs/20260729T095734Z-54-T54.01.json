@@ -1,0 +1,38 @@
+{
+  "runId": "20260729T095734Z-54-T54.01",
+  "taskId": "54.T54.01",
+  "startedAt": "2026-07-29T09:57:34.809Z",
+  "owner": "opus5-t5401-impl",
+  "leaseExpiresAt": "2026-07-29T12:57:34.809Z",
+  "worktree": null,
+  "task": {
+    "id": "54.T54.01",
+    "trackId": "54",
+    "tranche": "T54.01",
+    "title": "Decode the transaction log into a typed command stream",
+    "effort": null,
+    "file": "54-bimba-graph-enrichment-recovery.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/54-bimba-graph-enrichment-recovery.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Body/S/S2/graph-services"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER = Body/M/pratibimba-app (panes/engine/design); SUBSTRATE crates carry unchanged. epi-theia = FROZEN. See recapture register §2 for this track's exact CARRIER line."
+  }
+}

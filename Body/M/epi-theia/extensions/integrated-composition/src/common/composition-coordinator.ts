@@ -1,15 +1,18 @@
 import {
     MExtensionReadinessState,
     readinessSeverity
-} from '@pratibimba/m-extension-runtime';
+} from '@pratibimba/m-extension-runtime/lib/common/readiness';
 import {
     IntegratedContributorRecord,
+    IntegratedGeometricSlot,
     IntegratedLayoutClaim,
     IntegratedLayoutSlot,
     IntegratedNamedLayout,
     IntegratedReadinessAggregate,
     LayoutClaimResolution,
-    ResolvedLayoutClaim
+    ResolvedLayoutClaim,
+    FORBIDDEN_HANDLE_CLASSES_ON_GEOMETRIC,
+    PERSONAL_GEOMETRIC_SLOTS
 } from './layout-claim';
 
 const SINGLETON_SLOTS: readonly IntegratedLayoutSlot[] = Object.freeze([
@@ -19,6 +22,24 @@ const SINGLETON_SLOTS: readonly IntegratedLayoutSlot[] = Object.freeze([
     'selection-owner',
     'evidence-panel'
 ]);
+
+const PERSONAL_GEOMETRIC_SLOT_SET: ReadonlySet<IntegratedGeometricSlot> = new Set(
+    PERSONAL_GEOMETRIC_SLOTS
+);
+
+const FORBIDDEN_GEOMETRIC_HANDLE_CLASS_SET: ReadonlySet<string> = new Set(
+    FORBIDDEN_HANDLE_CLASSES_ON_GEOMETRIC
+);
+
+export type CompositionLoadStatus = 'mounted' | 'rejected';
+
+export interface CompositionLoadResult {
+    readonly status: CompositionLoadStatus;
+    readonly layout: IntegratedNamedLayout;
+    readonly rejectedReasons: readonly string[];
+    readonly resolvedClaims: readonly ResolvedLayoutClaim[];
+    readonly readiness: IntegratedReadinessAggregate;
+}
 
 function severityRank(state: MExtensionReadinessState): number {
     switch (readinessSeverity(state)) {
@@ -209,20 +230,54 @@ export class CompositionCoordinator {
             return violations;
         }
         for (const c of contributors) {
-            if (c.extensionId !== 'm4-nara') {
-                continue;
-            }
-            const exposesBody = c.contribution.compactViews.some(view =>
-                view.requiredSelectors.some(
-                    sel => sel.includes('body') || sel.includes('raw') || sel.includes('plaintext')
-                )
-            );
-            if (exposesBody) {
-                violations.push(
-                    'm4-nara compact view declares a raw-body selector; protected-local data must not enter the integrated 4/5/0 composition (08.T0 sharedRules).'
+            if (c.extensionId === 'm4-nara') {
+                const exposesBody = c.contribution.compactViews.some(view =>
+                    view.requiredSelectors.some(
+                        sel => sel.includes('body') || sel.includes('raw') || sel.includes('plaintext')
+                    )
                 );
+                if (exposesBody) {
+                    violations.push(
+                        'm4-nara compact view declares a raw-body selector; protected-local data must not enter the integrated 4/5/0 composition (08.T0 sharedRules).'
+                    );
+                }
+            }
+            for (const claim of c.geometricClaims ?? []) {
+                if (
+                    PERSONAL_GEOMETRIC_SLOT_SET.has(claim.geometricSlot) &&
+                    FORBIDDEN_GEOMETRIC_HANDLE_CLASS_SET.has(claim.handleClass)
+                ) {
+                    violations.push(
+                        `contribution-declares-raw-body-on-geometric-slot: contributor=${c.extensionId}; claim.extensionId=${claim.extensionId}; geometricSlot=${claim.geometricSlot}; handleClass=${claim.handleClass}; layout=${this.layout.id}`
+                    );
+                }
             }
         }
         return violations;
     }
+}
+
+export function compositionLoad(
+    layout: IntegratedNamedLayout,
+    contributors: readonly IntegratedContributorRecord[]
+): CompositionLoadResult {
+    const coordinator = new CompositionCoordinator(layout);
+    const readiness = coordinator.aggregateReadiness(contributors);
+    const rejectedReasons = coordinator.enforceProtectedLocalBoundary(contributors);
+    if (rejectedReasons.length > 0) {
+        return Object.freeze({
+            status: 'rejected',
+            layout,
+            rejectedReasons: Object.freeze([...rejectedReasons]),
+            resolvedClaims: Object.freeze([]),
+            readiness
+        });
+    }
+    return Object.freeze({
+        status: 'mounted',
+        layout,
+        rejectedReasons: Object.freeze([]),
+        resolvedClaims: Object.freeze([...coordinator.resolveClaims(contributors)]),
+        readiness
+    });
 }

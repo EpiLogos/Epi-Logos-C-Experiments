@@ -1,0 +1,47 @@
+{
+  "runId": "20260718T230531Z-22-T22.5",
+  "taskId": "22.T22.5",
+  "startedAt": "2026-07-18T23:05:31.100Z",
+  "owner": "codex-mdev-continuous",
+  "leaseExpiresAt": "2026-07-19T01:05:31.100Z",
+  "worktree": null,
+  "task": {
+    "id": "22.T22.5",
+    "trackId": "22",
+    "tranche": "T22.5",
+    "title": "7-8-9 spine reader at session close",
+    "effort": null,
+    "file": "22-m1-paramasiva-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/22-m1-paramasiva-frontend-deep.md",
+    "dependsOn": [
+      "22.T22.4"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/22-m1-paramasiva-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-18T10:24:37.065Z",
+        "text": "Blocked on the same missing session-close transport confirmed across three traces. Frozen M1Spine789Reader requires an M0VerifierReport at session close, but the active carrier has only current-tick anuttaraWitness data (not a close report) and the M5 Review fold receives a review ID plus fixture blocks, with no ContemplationObject receiver. Do not derive session completion from current profile fields."
+      },
+      {
+        "at": "2026-07-18T20:46:20.366Z",
+        "text": "Reopened with the persisted PASU-scoped nara.session_close bundle, opaque ref, and governed readback made implementation scope."
+      }
+    ],
+    "claimedAt": "2026-07-18T10:23:45.542Z",
+    "completedAt": null,
+    "owner": "codex-mdev-continuous",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-18T10:23:45.542Z",
+    "runId": "20260718T102345Z-22-T22.5",
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: M1' instrument strata in pratibimba-app (see track 02) — raw 12x12 vortex face must come from the Vortex Modulae CSV before Ananda is complete. §2 track 22."
+  }
+}

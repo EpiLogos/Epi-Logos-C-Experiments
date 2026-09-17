@@ -1,0 +1,38 @@
+{
+  "runId": "20260717T235458Z-17-T17.22",
+  "taskId": "17.T17.22",
+  "startedAt": "2026-07-17T23:54:58.025Z",
+  "owner": "codex-mdev-continuous",
+  "leaseExpiresAt": "2026-07-18T01:54:58.025Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.22",
+    "trackId": "17",
+    "tranche": "T17.22",
+    "title": "Declare `Body/S/S1/hen-compiler/` compatibility-only via `STATUS.md`",
+    "effort": null,
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.21"
+    ],
+    "writeScopes": [
+      "Body/S/S1/hen-compiler/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — S-stack facade-split discipline (METHOD_DISPATCH_PLAN canonical DR-S3-3 co-PR rule, Hen rename-reconciliation authority, 17.28 canon byte-identity). Body/S/*. Worst-audited infra track. §2 track 17."
+  }
+}

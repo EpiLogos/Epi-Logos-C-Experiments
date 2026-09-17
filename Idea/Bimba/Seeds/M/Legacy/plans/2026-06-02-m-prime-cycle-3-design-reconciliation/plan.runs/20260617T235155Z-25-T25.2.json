@@ -1,0 +1,35 @@
+{
+  "runId": "20260617T235155Z-25-T25.2",
+  "taskId": "25.T25.2",
+  "startedAt": "2026-06-17T23:51:55.729Z",
+  "owner": "codex-m-dev-25-t25-2",
+  "leaseExpiresAt": "2026-06-18T01:51:55.729Z",
+  "worktree": null,
+  "task": {
+    "id": "25.T25.2",
+    "trackId": "25",
+    "tranche": "T25.2",
+    "title": "DayContainer detail with per-session breakdown + canvas deep-link *(spec-ahead-integration; extends existing `M4NaraWidget`)*",
+    "effort": null,
+    "file": "25-m4-nara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md",
+    "dependsOn": [
+      "25.T25.19"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/m4-nara-widget.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "runId": "20260714T080717Z-37-T37.7",
+  "taskId": "37.T37.7",
+  "startedAt": "2026-07-14T08:07:17.435Z",
+  "owner": "uc-3707",
+  "leaseExpiresAt": "2026-07-14T10:37:17.435Z",
+  "worktree": null,
+  "task": {
+    "id": "37.T37.7",
+    "trackId": "37",
+    "tranche": "T37.7",
+    "title": "Honest RNA / chromosome deferral badges",
+    "effort": null,
+    "file": "37-biological-quaternionic-cross-layer-integration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/37-biological-quaternionic-cross-layer-integration.md",
+    "dependsOn": [
+      "37.T37.6"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/37-biological-quaternionic-cross-layer-integration.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-14T08:01:59.753Z",
+        "text": "Released for a focused build. Kernel m3_codon_is_rna_capable flag LANDED (m3.c:321); the carrier deferral badges pending-rna-codon-family / pending-chromosome-graph are the GAP — add them to the codon surface (src/components/CodonWheel.tsx + src/panes/m3Inspectors.ts) where the U-codon family / chromosome nodes would render, following the carrier's existing pending-* badge vocabulary (pending-codon-rotation-projection etc.); confirm the 24-amino backbone + RNA-capable flag render fully (no pending badge). Bounded carrier-UI build; unblocks 37.8/37.9 (lensCodonBinary/lensOrbiterRelations substrate already in portal-core)."
+      }
+    ],
+    "claimedAt": "2026-07-14T07:59:30.586Z",
+    "completedAt": null,
+    "owner": "uc-3707",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-14T07:59:30.586Z",
+    "runId": "20260714T075930Z-37-T37.7",
+    "worktree": null,
+    "carrier": "SUBSTRATE — bio-quaternionic projection backlog (m2.epogdoonProjection, planetaryElementalWeights, cymaticMonoPolyState, m3.lensCodonBinary, m2m3.lensOrbiterRelations, m3.bioquaternionTranscription) in portal-core/epi-lib. CARRIER: epogdoon gap-wheel, MonoPoly cymatic shader state, elemental-weights feed, 24-amino backbone ring. §2 track 37."
+  }
+}

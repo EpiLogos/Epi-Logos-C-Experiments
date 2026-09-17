@@ -37,17 +37,23 @@ static int fail_count = 0;
  * =================================================================== */
 
 static void test_elemental_throughline(void) {
-    /* Nucleotide-to-element identity */
-    TEST("A == Water(0)", M4_ELEM_WATER == M3_NUC_A);
-    TEST("T == Fire(1)",  M4_ELEM_FIRE  == M3_NUC_T);
-    TEST("C == Earth(2)", M4_ELEM_EARTH == M3_NUC_C);
-    TEST("G == Air(3)",   M4_ELEM_AIR   == M3_NUC_G);
+    /* Nucleotide-to-element identity via the canonical throughline mapping.
+     * Nucleotide IDs (A=0..G=3) no longer coincide with element IDs; the
+     * identity is preserved through m4_nuc_to_elem. */
+    TEST("A -> Water", m4_nuc_to_elem(M3_NUC_A) == M4_ELEM_WATER);
+    TEST("T -> Fire",  m4_nuc_to_elem(M3_NUC_T) == M4_ELEM_FIRE);
+    TEST("C -> Earth", m4_nuc_to_elem(M3_NUC_C) == M4_ELEM_EARTH);
+    TEST("G -> Air",   m4_nuc_to_elem(M3_NUC_G) == M4_ELEM_AIR);
 
-    /* Four elements cover 0-3 */
-    TEST("Water=0", M4_ELEM_WATER == 0);
-    TEST("Fire=1",  M4_ELEM_FIRE  == 1);
-    TEST("Earth=2", M4_ELEM_EARTH == 2);
-    TEST("Air=3",   M4_ELEM_AIR   == 3);
+    /* Canonical L2' element IDs */
+    TEST("Water=2", M4_ELEM_WATER == ELEMENT_WATER);
+    TEST("Fire=4",  M4_ELEM_FIRE  == ELEMENT_FIRE);
+    TEST("Earth=1", M4_ELEM_EARTH == ELEMENT_EARTH);
+    TEST("Air=3",   M4_ELEM_AIR   == ELEMENT_AIR);
+    TEST("Water canonical 2", ELEMENT_WATER == 2);
+    TEST("Fire canonical 4",  ELEMENT_FIRE  == 4);
+    TEST("Earth canonical 1", ELEMENT_EARTH == 1);
+    TEST("Air canonical 3",   ELEMENT_AIR   == 3);
 }
 
 
@@ -168,10 +174,87 @@ static void test_temporal_now(void) {
     TEST("shadow implicate", shadow.clock.is_implicate_phase);
     TEST("shadow degree=360", shadow.degree == 360);
 
-    /* All 7 planet slots zeroed */
-    for (int i = 0; i < 7; i++) {
-        TEST("planet slot zero", now.planet_degrees[i] == 0);
+    TEST("natal frame kind", now.natal.kind == KAIROS_FRAME_NATAL);
+    TEST("realtime frame kind", now.realtime.kind == KAIROS_FRAME_REALTIME);
+    TEST("kairotic frame kind", now.kairotic.kind == KAIROS_FRAME_KAIROTIC);
+    TEST("kairotic inactive by default", now.kairotic_active == 0);
+
+    /* All 10 live planet slots zeroed */
+    const uint16_t* live = m4_planet_degrees_live(&now);
+    TEST("live frame defaults realtime", live == now.realtime.planet_degrees);
+    for (int i = 0; i < 10; i++) {
+        TEST("planet slot zero", live[i] == 0);
     }
+}
+
+static void test_kairos_frame_natal_persists_across_session(void) {
+    M4_Temporal_Now now = m4_snapshot_now(0, 1000);
+    uint16_t natal[M2_PLANET_COUNT] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    uint16_t realtime[M2_PLANET_COUNT] = {110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
+
+    m4_kairos_frame_set_planets(&now.natal, natal, M4_PLANET_VALID_ALL);
+    m4_temporal_now_set_planets(&now, realtime, M4_PLANET_VALID_ALL);
+
+    TEST("natal persists after realtime write", now.natal.planet_degrees[0] == 10);
+    TEST("natal keeps all slots", now.natal.planet_degrees[9] == 100);
+    TEST("realtime accepts live write", now.realtime.planet_degrees[0] == 110);
+    TEST("realtime valid all", now.planet_valid == M4_PLANET_VALID_ALL);
+}
+
+static void test_kairos_frame_kairotic_decays(void) {
+    M4_Temporal_Now now = m4_snapshot_now(0, 1000);
+    uint16_t realtime[M2_PLANET_COUNT] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    uint16_t kairotic[M2_PLANET_COUNT] = {101, 102, 103, 104, 105, 106, 107, 108, 109, 110};
+
+    m4_temporal_now_set_planets(&now, realtime, M4_PLANET_VALID_ALL);
+    m4_kairos_frame_set_planets(&now.kairotic, kairotic, M4_PLANET_VALID_ALL);
+    now.kairotic_active = 1;
+    now.kairotic.captured_at_ns = 1000u;
+    now.kairotic.decays_at_ns = 2000u;
+
+    TEST("kairotic active before decay", m4_planet_degrees_live_at(&now, 1999u) == now.kairotic.planet_degrees);
+    TEST("kairotic inactive past decay", m4_planet_degrees_live_at(&now, 2001u) == now.realtime.planet_degrees);
+    TEST("decay clears active flag", now.kairotic_active == 0);
+}
+
+static void test_planet_degrees_live_precedence(void) {
+    M4_Temporal_Now now = m4_snapshot_now(0, 1000);
+    uint16_t realtime[M2_PLANET_COUNT] = {11, 22, 33, 44, 55, 66, 77, 88, 99, 111};
+    uint16_t kairotic[M2_PLANET_COUNT] = {211, 222, 233, 244, 255, 266, 277, 288, 299, 311};
+
+    m4_temporal_now_set_planets(&now, realtime, M4_PLANET_VALID_ALL);
+    m4_kairos_frame_set_planets(&now.kairotic, kairotic, M4_PLANET_VALID_ALL);
+
+    TEST("live defaults realtime", m4_planet_degrees_live(&now) == now.realtime.planet_degrees);
+    now.kairotic_active = 1;
+    TEST("live prefers kairotic when active", m4_planet_degrees_live(&now) == now.kairotic.planet_degrees);
+    now.kairotic_active = 0;
+    TEST("live returns realtime after deactivation", m4_planet_degrees_live(&now) == now.realtime.planet_degrees);
+    TEST("live never null", m4_planet_degrees_live(&now) != NULL);
+}
+
+static void test_capture_kairotic_arms_and_decays(void) {
+    M4_Temporal_Now now = m4_snapshot_now(0, 1000);
+    uint16_t realtime[M2_PLANET_COUNT] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    uint16_t kairotic[M2_PLANET_COUNT] = {211, 222, 233, 244, 255, 266, 277, 288, 299, 311};
+
+    m4_temporal_now_set_planets(&now, realtime, M4_PLANET_VALID_ALL);
+    /* Explicit TTL: capture at 1000ns with 500ns TTL -> decays at 1500ns. */
+    m4_temporal_now_capture_kairotic(&now, kairotic, M4_PLANET_VALID_ALL, 1000u, 500u);
+
+    TEST("capture arms kairotic_active", now.kairotic_active == 1);
+    TEST("capture sets decay deadline = captured + ttl", now.kairotic.decays_at_ns == 1500u);
+    TEST("capture records captured_at", now.kairotic.captured_at_ns == 1000u);
+    TEST("capture writes kairotic degrees", now.kairotic.planet_degrees[0] == 211);
+    TEST("captured kairotic preempts realtime", m4_planet_degrees_live(&now) == now.kairotic.planet_degrees);
+    TEST("kairotic live before decay", m4_planet_degrees_live_at(&now, 1499u) == now.kairotic.planet_degrees);
+    TEST("kairotic reverts to realtime past decay", m4_planet_degrees_live_at(&now, 1501u) == now.realtime.planet_degrees);
+
+    /* Default TTL (0) arms captured_at + the 4-hour default (the DR-FIB-3 gap: the
+     * deadline is now populated on the live path, not left at 0/no-decay). */
+    M4_Temporal_Now now2 = m4_snapshot_now(0, 1000);
+    m4_temporal_now_capture_kairotic(&now2, kairotic, M4_PLANET_VALID_ALL, 2000u, 0u);
+    TEST("default ttl is the 4-hour deadline", now2.kairotic.decays_at_ns == 2000u + M4_KAIROTIC_DEFAULT_TTL_NS);
 }
 
 
@@ -329,7 +412,8 @@ static void test_protocol_library(void) {
             const M4_Decan_Recipe_Card* card = &M4_PROTOCOL_LIBRARY[s][d];
             TEST("card storey matches", card->storey == (uint8_t)s);
             TEST("card decan matches", card->decan == (uint8_t)d);
-            TEST("card element valid", card->element_focus <= 3);
+            /* Protocol cards focus on the operative quartet (canonical 1-4). */
+            TEST("card element valid", m_canonical_is_operative(card->element_focus));
             TEST("card chakra valid", card->chakra_focus <= 6);
         }
     }
@@ -571,6 +655,69 @@ static void test_mef_thresholds(void) {
 
 
 /* ===================================================================
+ * Session-as-transcription lifecycle
+ * =================================================================== */
+
+static void test_m4_session_open_emits_start_codon(void) {
+    M4_Identity_Matrix id = {0};
+    id.numerological_key = 42;
+    M4_Session_Frame frame = {0};
+
+    int rc = m4_session_open(&id, 7205u, &frame);
+
+    TEST("session_open ok", rc == 0);
+    TEST("session_open opened", frame.opened);
+    TEST("session_open protein handle", frame.protein == &frame.protein_storage);
+    TEST("session_open tarot context preserved", frame.tarot_psyche_anchor.draw_count == 3);
+    TEST("session_open tarot cast degree preserved", frame.tarot_psyche_anchor.cast_degree == 42u);
+    TEST("session_open tarot anchor contains a card", frame.tarot_psyche_anchor.drawn[0] < 78u);
+    TEST("session_open protein has one seed step", frame.protein->step_count == 1u);
+    TEST("session_open start codon header", frame.protein->start_codon == M3_CODON_ATG_AUG);
+    TEST("session_open ATG step", frame.protein->steps[0].codon == M3_CODON_ATG_AUG);
+    TEST("session_open START role", frame.protein->steps[0].governance_role == M3_GOVERNANCE_ROLE_START);
+    TEST("session_open START flag", (frame.protein->steps[0].flags & M4_TRANSCRIPTION_STEP_START) != 0u);
+}
+
+static void test_m4_session_close_seals_protein_with_kairos_derived_stop(void) {
+    M4_Identity_Matrix id = {0};
+    id.numerological_key = 19;
+    M4_Session_Frame frame = {0};
+    M4_Symbolic_Protein sealed = {0};
+
+    int rc = m4_session_open(&id, 7205u, &frame);
+    TEST("session_close open ok", rc == 0);
+
+    rc = m4_session_close(&frame, &sealed);
+
+    TEST("session_close ok", rc == 0);
+    TEST("session_close sealed", sealed.sealed == 1u);
+    TEST("session_close copied handle", strcmp(sealed.session_id, frame.protein->session_id) == 0);
+    TEST("session_close stop codon kairos-derived", sealed.stop_codon == M3_STOP_CODON_TGA_VALUE);
+    TEST("session_close two steps", sealed.step_count == 2u);
+    TEST("session_close STOP role", sealed.steps[1].governance_role == M3_GOVERNANCE_ROLE_STOP);
+    TEST("session_close STOP flag", (sealed.steps[1].flags & M4_TRANSCRIPTION_STEP_STOP) != 0u);
+}
+
+static void test_m4_session_protein_capacity_truncates_with_tail_marker(void) {
+    M4_Identity_Matrix id = {0};
+    id.numerological_key = 7;
+    M4_Session_Frame frame = {0};
+
+    int rc = m4_session_open(&id, 8u, &frame);
+    TEST("protein_capacity open ok", rc == 0);
+
+    frame.protein->capacity = 2u;
+    TEST("protein_capacity append fills", m4_symbolic_protein_append_step(frame.protein, 9u, 0u, 0u, M3_GOVERNANCE_ROLE_NONE) == 0);
+    TEST("protein_capacity append truncates", m4_symbolic_protein_append_step(frame.protein, 10u, 1u, 1u, M3_GOVERNANCE_ROLE_NONE) == 0);
+
+    TEST("protein_capacity count bounded", frame.protein->step_count == 2u);
+    TEST("protein_capacity truncated flag", frame.protein->truncated == 1u);
+    TEST("protein_capacity tail codon", frame.protein->steps[1].codon == M4_TRANSCRIPTION_TAIL_MARKER_CODON);
+    TEST("protein_capacity tail flag", (frame.protein->steps[1].flags & M4_TRANSCRIPTION_STEP_TAIL) != 0u);
+}
+
+
+/* ===================================================================
  * Main
  * =================================================================== */
 
@@ -582,6 +729,10 @@ int main(void) {
     test_identity_compute();
     test_blake3_determinism();
     test_temporal_now();
+    test_kairos_frame_natal_persists_across_session();
+    test_kairos_frame_kairotic_decays();
+    test_planet_degrees_live_precedence();
+    test_capture_kairotic_arms_and_decays();
     test_sacred_random();
     test_iching_cast();
     test_tarot_draw();
@@ -596,6 +747,9 @@ int main(void) {
     test_lens_registry();
     test_m4_api();
     test_mef_thresholds();
+    test_m4_session_open_emits_start_codon();
+    test_m4_session_close_seals_protein_with_kairos_derived_stop();
+    test_m4_session_protein_capacity_truncates_with_tail_marker();
 
     printf("\n=== Results: %d passed, %d failed (of %d) ===\n",
            pass_count, fail_count, pass_count + fail_count);

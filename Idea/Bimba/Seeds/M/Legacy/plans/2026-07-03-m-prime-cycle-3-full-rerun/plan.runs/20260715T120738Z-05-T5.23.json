@@ -1,0 +1,39 @@
+{
+  "runId": "20260715T120738Z-05-T5.23",
+  "taskId": "05.T5.23",
+  "startedAt": "2026-07-15T12:07:38.205Z",
+  "owner": "codex-05-route",
+  "leaseExpiresAt": "2026-07-15T15:07:38.205Z",
+  "worktree": null,
+  "task": {
+    "id": "05.T5.23",
+    "trackId": "05",
+    "tranche": "T5.23",
+    "title": "`q_` content vocabulary canonicalisation + `q_4_{i?}_locality_signature` extension",
+    "effort": null,
+    "file": "05-m4-nara-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/05-m4-nara-reconciliation.md",
+    "dependsOn": [
+      "05.T5.22"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M4' lived-surface depth (oracle aliveness, R-factor fretboard, session-close ceremony, time-axis switcher) in pratibimba-app. SUBSTRATE: portal-core nara/* + kairos. Least-real M surface (22 AR). §2 track 05/25."
+  }
+}

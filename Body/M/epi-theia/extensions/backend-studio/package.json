@@ -1,0 +1,61 @@
+{
+  "name": "@pratibimba/backend-studio",
+  "version": "0.1.0",
+  "description": "Backend Studio Theia extension: LSP contributions for rust-analyzer, clangd, and pylsp with provenance for epi-lib, portal-core, and S1-S5 cores.",
+  "license": "MIT",
+  "files": [
+    "lib",
+    "src",
+    "style"
+  ],
+  "main": "lib/common/index.js",
+  "types": "lib/common/index.d.ts",
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module"
+    }
+  ],
+  "backendStudio": {
+    "languageServers": [
+      "rust-analyzer",
+      "clangd",
+      "pylsp"
+    ],
+    "provenanceRoots": [
+      "epi-lib",
+      "portal-core",
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "S5"
+    ]
+  },
+  "keywords": [
+    "theia-extension",
+    "epi-logos",
+    "backend-studio",
+    "rust-analyzer",
+    "clangd",
+    "pylsp"
+  ],
+  "dependencies": {
+    "@theia/core": "1.56.0",
+    "@theia/editor": "1.56.0",
+    "@theia/monaco": "1.56.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build && node --test tests/backend-contract.test.mjs"
+  }
+}

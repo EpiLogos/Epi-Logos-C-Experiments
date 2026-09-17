@@ -1,0 +1,210 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/six-matrix-tick-choreography",
+  "plan": "track-15-t15.12-visual-regression",
+  "tranche": "15.T15.12",
+  "status": "baseline-committed",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "diffThreshold": {
+    "pixelRatio": 0.02
+  },
+  "captureRecipe": {
+    "command": "pnpm --filter @pratibimba/acceptance-harness test:visual",
+    "renderer": "scripts/visual-regression-renderer.mjs",
+    "reviewGate": "visual review required when any frame exceeds 0.02 pixelRatio"
+  },
+  "frames": [
+    {
+      "id": "tick-00",
+      "screenshot": "tick-00.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 0,
+      "matrixIndex": 0,
+      "matrixId": "M0",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "9b3300a437041ccc4033447dce87228bdfe6f94f8db3517207b92df0e6b5b3ce"
+    },
+    {
+      "id": "tick-01",
+      "screenshot": "tick-01.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 1,
+      "matrixIndex": 1,
+      "matrixId": "M1",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "08a326e5cc7092c921f08202ebd995bf91d9907eb73df39e79ea7cee042416b7"
+    },
+    {
+      "id": "tick-02",
+      "screenshot": "tick-02.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 2,
+      "matrixIndex": 2,
+      "matrixId": "M2",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "036ebc367da7ef0ba159b592a7e6014bb4b76945d3cc96f158e3d0403d549f4f"
+    },
+    {
+      "id": "tick-03",
+      "screenshot": "tick-03.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 3,
+      "matrixIndex": 3,
+      "matrixId": "M3",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "41f78840475ff16066b592b76790a9958e525aa071f1b349913a3b5d2c7a176a"
+    },
+    {
+      "id": "tick-04",
+      "screenshot": "tick-04.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 4,
+      "matrixIndex": 4,
+      "matrixId": "M4",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "7fe4917a660d820fab407376a21304549ab4cb3342902552f3349a8342054c40"
+    },
+    {
+      "id": "tick-05",
+      "screenshot": "tick-05.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 5,
+      "matrixIndex": 5,
+      "matrixId": "M5",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "422e2081f95662ec8bd8734a0ab642e60440feda1a6d14ed6d877712a8378916"
+    },
+    {
+      "id": "tick-06",
+      "screenshot": "tick-06.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 6,
+      "matrixIndex": 0,
+      "matrixId": "M0",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "4f1a6fa83c2e3cfd744490a884e3f7d309a643e1638cfaf7ae09bb5b45d2f9d1"
+    },
+    {
+      "id": "tick-07",
+      "screenshot": "tick-07.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 7,
+      "matrixIndex": 1,
+      "matrixId": "M1",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "38eb6b311a5ec3e4a640064265f24dc7bbb8ed9ba9c65baa31aefb249c172e0b"
+    },
+    {
+      "id": "tick-08",
+      "screenshot": "tick-08.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 8,
+      "matrixIndex": 2,
+      "matrixId": "M2",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "f24a3b3f01d8a21ab2f75ec4708adda7d3c532fc704c3367ac055e5adcdb947e"
+    },
+    {
+      "id": "tick-09",
+      "screenshot": "tick-09.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 9,
+      "matrixIndex": 3,
+      "matrixId": "M3",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "f6efdcefb76de0d90d14808210a17b5bfbf52d112c1b390bb57aebc807990169"
+    },
+    {
+      "id": "tick-10",
+      "screenshot": "tick-10.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 10,
+      "matrixIndex": 4,
+      "matrixId": "M4",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "7692d03a26dd520b05fe2cbf5f073c140384c4e6ecd9fcaa89aec4347f7269e6"
+    },
+    {
+      "id": "tick-11",
+      "screenshot": "tick-11.png",
+      "width": 720,
+      "height": 300,
+      "deviceScaleFactor": 1,
+      "captured": true,
+      "tickIndex": 11,
+      "matrixIndex": 5,
+      "matrixId": "M5",
+      "tolerance": {
+        "pixelRatio": 0.02,
+        "maxChangedPixels": 4320
+      },
+      "sha256": "120dd8be8c81df9c8c381a9257991e2416300a1522720406a637c9968da38b7e"
+    }
+  ]
+}

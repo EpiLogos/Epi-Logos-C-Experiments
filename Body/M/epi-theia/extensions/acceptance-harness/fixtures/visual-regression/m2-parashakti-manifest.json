@@ -1,0 +1,292 @@
+{
+  "fixtureId": "visual-regression/m2-parashakti",
+  "tranche": "23.T23.17",
+  "suite": "m2-parashakti",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "zodiacalSignStarts": [
+    0,
+    6,
+    12,
+    18,
+    24,
+    30,
+    36,
+    42,
+    48,
+    54,
+    60,
+    66
+  ],
+  "entries": [
+    {
+      "file": "m2-cymatic-plate-tick-0.png",
+      "kind": "plate",
+      "index": 0,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "6940c462d6754a478f734c1c801c23643f59df1ac12706e96d9d8465fad9a8a1",
+      "description": "M2 cymatic plate spanda-cycle tick 0"
+    },
+    {
+      "file": "m2-cymatic-plate-tick-1.png",
+      "kind": "plate",
+      "index": 1,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "130d4f0dc0fd5f2c4c4144eb1b975eaa7a3416c5df960c9291ca5c726e04a685",
+      "description": "M2 cymatic plate spanda-cycle tick 1"
+    },
+    {
+      "file": "m2-cymatic-plate-tick-2.png",
+      "kind": "plate",
+      "index": 2,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "c11bab5edf7c0a3dca07fc0f1853a84a57ab26934f4256b705a17161c40f64cf",
+      "description": "M2 cymatic plate spanda-cycle tick 2"
+    },
+    {
+      "file": "m2-cymatic-plate-tick-3.png",
+      "kind": "plate",
+      "index": 3,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "1a8a494cfc18cc5f97ebb6f05b1a5400cfa41a74fda74af7230ea6edc25dafd0",
+      "description": "M2 cymatic plate spanda-cycle tick 3"
+    },
+    {
+      "file": "m2-cymatic-plate-tick-4.png",
+      "kind": "plate",
+      "index": 4,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "05d218d3fd43d9997360c1c1218e4fbedee57dbf498818cfcf221341ec1c5f8c",
+      "description": "M2 cymatic plate spanda-cycle tick 4"
+    },
+    {
+      "file": "m2-cymatic-plate-tick-5.png",
+      "kind": "plate",
+      "index": 5,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "4ba957ac6df69933b67316c776279508514b95addff0a9a95c58a41defd7d36b",
+      "description": "M2 cymatic plate spanda-cycle tick 5"
+    },
+    {
+      "file": "m2-cymatic-plate-tick-6.png",
+      "kind": "plate",
+      "index": 6,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "31bbad066b94334da624f8c6740a2fc22ffc5d82e5d00491688f010b370571a5",
+      "description": "M2 cymatic plate spanda-cycle tick 6"
+    },
+    {
+      "file": "m2-cymatic-plate-tick-7.png",
+      "kind": "plate",
+      "index": 7,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "01c7b4d6dd0706d20222428b94bfbf5093cbfcb8b7c7820d30e6619031d4ba4a",
+      "description": "M2 cymatic plate spanda-cycle tick 7"
+    },
+    {
+      "file": "m2-cymatic-plate-tick-8.png",
+      "kind": "plate",
+      "index": 8,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "b9c2da3e95be50c90b5b36f1b27066d8d4c84625f754b36f5ec8079c99f20ed6",
+      "description": "M2 cymatic plate spanda-cycle tick 8"
+    },
+    {
+      "file": "m2-cymatic-plate-tick-9.png",
+      "kind": "plate",
+      "index": 9,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "0e7c476aff29dd466b425d431b52570cb147f3e12d7c2a6a5eb61bae855aa135",
+      "description": "M2 cymatic plate spanda-cycle tick 9"
+    },
+    {
+      "file": "m2-cymatic-plate-tick-10.png",
+      "kind": "plate",
+      "index": 10,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "de8dc81e493ea0939ceddcdfcb404c03bcd01332adc2ab7b80e2a0db7aaa5064",
+      "description": "M2 cymatic plate spanda-cycle tick 10"
+    },
+    {
+      "file": "m2-cymatic-plate-tick-11.png",
+      "kind": "plate",
+      "index": 11,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "4552c69d9826150b2617b32508d83b87237ceea5a0c1097b40a057adfab585a4",
+      "description": "M2 cymatic plate spanda-cycle tick 11"
+    },
+    {
+      "file": "m2-cymatic-klein-flip-boundary.png",
+      "kind": "klein",
+      "index": 5,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.05,
+      "sha256": "f5b7c55199887cbba213c9187958d560ccf5af0e93a710dd268a7e627a6ef8d7",
+      "description": "M2 cymatic 200ms Klein self-fold transition boundary"
+    },
+    {
+      "file": "m2-mef-grid-tick-0.png",
+      "kind": "mef",
+      "index": 0,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "9c03ee7aa8ca89cc380ae2cd7c0eda8184746fdfa267069d4b151b4712fd53cb",
+      "description": "M2 Layer A MEF grid pulse tick 0"
+    },
+    {
+      "file": "m2-mef-grid-tick-1.png",
+      "kind": "mef",
+      "index": 1,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "02f6f4c5e6e7cbf0e9916de7a64916a3970e2a72d1d6f1ec794ee23d872c6232",
+      "description": "M2 Layer A MEF grid pulse tick 1"
+    },
+    {
+      "file": "m2-mef-grid-tick-2.png",
+      "kind": "mef",
+      "index": 2,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "c96317b968160ebe3fc09bba3dc790a4ec10d561fbfa67c4a550086f2615549f",
+      "description": "M2 Layer A MEF grid pulse tick 2"
+    },
+    {
+      "file": "m2-mef-grid-tick-3.png",
+      "kind": "mef",
+      "index": 3,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "914de7c704f27c2c1af9235c0e33f52915c59b45ba7c0f61c67c411b0090ee2d",
+      "description": "M2 Layer A MEF grid pulse tick 3"
+    },
+    {
+      "file": "m2-mef-grid-tick-4.png",
+      "kind": "mef",
+      "index": 4,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "48829323da1496a77b45ea2e22e4698ec1a0b2c4b8409dbab0ba75875d03e6e8",
+      "description": "M2 Layer A MEF grid pulse tick 4"
+    },
+    {
+      "file": "m2-mef-grid-tick-5.png",
+      "kind": "mef",
+      "index": 5,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "4c7de30f68c8cfbbcf1921d688292a909c0db4c85417e9ad48f870185bcdf733",
+      "description": "M2 Layer A MEF grid pulse tick 5"
+    },
+    {
+      "file": "m2-mef-grid-tick-6.png",
+      "kind": "mef",
+      "index": 6,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "2a8652e128d2209ddaebd6fe76e4634bc6ed363fca58fa641001a1a8ba6e7065",
+      "description": "M2 Layer A MEF grid pulse tick 6"
+    },
+    {
+      "file": "m2-mef-grid-tick-7.png",
+      "kind": "mef",
+      "index": 7,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "0faeff6a1bf5d4c2848226a4d333a7a0a963d399b32fd9f2c366319384f71f63",
+      "description": "M2 Layer A MEF grid pulse tick 7"
+    },
+    {
+      "file": "m2-mef-grid-tick-8.png",
+      "kind": "mef",
+      "index": 8,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "6e970284336d9fa3b6f30a45db3267a3c29a39852ab53a33cff8af4935035c86",
+      "description": "M2 Layer A MEF grid pulse tick 8"
+    },
+    {
+      "file": "m2-mef-grid-tick-9.png",
+      "kind": "mef",
+      "index": 9,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "86fb7cb0a9c48f7eb6cdb8fcd4395ebd2f11ef5f420835e247d37f0c77218a8f",
+      "description": "M2 Layer A MEF grid pulse tick 9"
+    },
+    {
+      "file": "m2-mef-grid-tick-10.png",
+      "kind": "mef",
+      "index": 10,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "4af55daf7eee3419db4dcd1e69d528d97014a420de11c35e4dfb5cc5c26f2fe1",
+      "description": "M2 Layer A MEF grid pulse tick 10"
+    },
+    {
+      "file": "m2-mef-grid-tick-11.png",
+      "kind": "mef",
+      "index": 11,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "86c841e752440c428fb1ca395d48985aaf24a2c86eab7584deba00b79a050f36",
+      "description": "M2 Layer A MEF grid pulse tick 11"
+    },
+    {
+      "file": "m2-correspondence-tree-six-axes.png",
+      "kind": "tree",
+      "index": 6,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "3a862fcb6ba069861cd7c2d96f654695d6a022f089b43a4b53c06cc888103990",
+      "description": "M2 correspondence-tree six-axis filter reference"
+    },
+    {
+      "file": "m2-breadcrumb-72-fold.png",
+      "kind": "breadcrumb",
+      "index": 12,
+      "width": 96,
+      "height": 96,
+      "diffThreshold": 0.01,
+      "sha256": "27c504e99c1e3783d2273b022406204babb8cab6c246c3299622de85fe1f3b52",
+      "description": "M2 breadcrumb traversal reference covering 12 zodiacal sign starts"
+    }
+  ]
+}

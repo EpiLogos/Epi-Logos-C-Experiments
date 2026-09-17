@@ -1,0 +1,37 @@
+{
+  "runId": "20260710T151929Z-08-T8.9",
+  "taskId": "08.T8.9",
+  "startedAt": "2026-07-10T15:19:29.737Z",
+  "owner": "opus-a-m3",
+  "leaseExpiresAt": "2026-07-10T17:19:29.737Z",
+  "worktree": null,
+  "task": {
+    "id": "08.T8.9",
+    "trackId": "08",
+    "tranche": "T8.9",
+    "title": "Unified VAK Choreography Across 4/5/0 (one act per tick, six faces) — kernel + tunability co-design",
+    "effort": null,
+    "file": "08-integrated-4-5-0-recognition-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/08-integrated-4-5-0-recognition-reconciliation.md",
+    "dependsOn": [
+      "08.T8.8"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/08-integrated-4-5-0-recognition-reconciliation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: 4-5-0 recognition engine as the E4/E5/E6 consumption point (dipyramid 6+6=12 DR-IG-6, Mobius write-back read-only). SUBSTRATE: portal-core. §2 track 08."
+  }
+}

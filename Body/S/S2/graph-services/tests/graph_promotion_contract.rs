@@ -86,6 +86,85 @@ fn valid_promotion_intent_becomes_s2_validated_plan() {
 }
 
 #[test]
+fn world_namespace_promotion_plan_preserves_root_link_and_span_pointer() {
+    let intent: S2GraphPromotionIntent = serde_json::from_value(json!({
+        "node": {
+            "coordinate": "C2-1",
+            "identity_property": "coordinate",
+            "vault_path": "Idea/Bimba/World/Types/Coordinates/C/C2/SomeEntity.md",
+            "requested_label_hints": ["World", "Archetypal"],
+            "properties": {
+                "coordinate": "C2-1",
+                "vault_path": "Idea/Bimba/World/Types/Coordinates/C/C2/SomeEntity.md",
+                "artifact_kind": "vault_markdown",
+                "content_hash": "sha256:world",
+                "coordinate_prefix": "C2",
+                "coordinate_parent": "C2",
+                "coordinate_axis": "direct",
+                "type_family": "C",
+                "type_path": "Idea/Bimba/World/Types/Coordinates/C/C2/SomeEntity",
+                "world_type_path": "Idea/Bimba/World/Types/Coordinates/C/C2/SomeEntity",
+                "type_coordinate": "C2",
+                "semantic_authority": "candidate_pending_review",
+                "crystallisation_state": "entity_candidate",
+                "c_layer_path": "Idea/Bimba/World/Types/Coordinates/C/C2",
+                "graph_evidence_kind": "c2_entity_candidate",
+                "c_1_source_artifact_span": ["C2@12:26", "Anima@12:52"]
+            }
+        },
+        "link_evidence": [],
+        "frontmatter_evidence": [],
+        "property_proposals": [{
+            "key": "q_4_template_role",
+            "value": "World entity-form entry grounded in C2 typology.",
+            "evidence_kind": "content_synthesis",
+            "evidence_text": "The World/Types path and type_coordinate identify this artifact as a C2 entity form.",
+            "source_path": "Idea/Bimba/World/Types/Coordinates/C/C2/SomeEntity.md",
+            "source_line": 12,
+            "proposed_by": "pi:hen-world-namespace",
+            "reasoning": "Bimba World files require PI property reasoning while the namespace/root relation remains deterministic."
+        }],
+        "relation_candidates": [{
+            "source_coordinate": "C2-1",
+            "target_coordinate": "C2",
+            "relation_type": "WORLD_FORM_OF",
+            "confidence": 1.0,
+            "evidence_kind": "llm_inference",
+            "evidence_text": "DR-WORLD-1 deterministic World namespace root link from SomeEntity to C2.",
+            "source_path": "Idea/Bimba/World/Types/Coordinates/C/C2/SomeEntity.md",
+            "source_line": null,
+            "target_text": "C2",
+            "inferred_by": "pi:hen-world-namespace",
+            "prompt_hash": "sha256:world"
+        }],
+        "content_hash": "sha256:world",
+        "markdown_body_hash": "sha256:body",
+        "compatibility_source_label": null,
+        "compatibility_source_property": null,
+        "compatibility_source_coordinate": null,
+        "promotion_source": "hen_compiler_core",
+        "sync_version": "s1-hen-graph-promotion-v1"
+    }))
+    .unwrap();
+
+    let plan = SyncCoordinator::validate_promotion_intent(&intent).unwrap();
+
+    assert!(plan.labels.contains(&"World".to_owned()));
+    assert!(plan.labels.contains(&"Archetypal".to_owned()));
+    assert_eq!(
+        plan.properties.get("c_1_source_artifact_span"),
+        Some(&json!(["C2@12:26", "Anima@12:52"]))
+    );
+    let root = plan
+        .relationships
+        .iter()
+        .find(|relationship| relationship.rel_type == "WORLD_FORM_OF")
+        .expect("WORLD_FORM_OF relationship missing");
+    assert_eq!(root.source_coordinate, "C2-1");
+    assert_eq!(root.target_coordinate, "C2");
+}
+
+#[test]
 fn promotion_intent_rejects_missing_canonical_coordinate() {
     let mut intent = valid_intent();
     intent.node.coordinate.clear();

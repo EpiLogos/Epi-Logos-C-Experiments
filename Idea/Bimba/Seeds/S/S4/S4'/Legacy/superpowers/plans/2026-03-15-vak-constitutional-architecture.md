@@ -440,7 +440,7 @@ Cross-check each against VAK-SUPERPOWERS-INTEGRATION-SPEC.md §11.
 
 ### Task 5: Create Aletheia Root Parent (aletheia.md)
 
-**Purpose:** The # parent of the Aletheia 7-fold system. Aletheia = S5 integration layer.
+**Purpose:** The # parent of the six Aletheia guardiansfold system. Aletheia = S5 integration layer.
 Night' = CS = night' directionality. Aletheia root responds to CS state change.
 
 **Files:**

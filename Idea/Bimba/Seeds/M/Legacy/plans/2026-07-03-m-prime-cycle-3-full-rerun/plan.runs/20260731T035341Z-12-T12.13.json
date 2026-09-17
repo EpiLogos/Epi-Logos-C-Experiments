@@ -1,0 +1,55 @@
+{
+  "runId": "20260731T035341Z-12-T12.13",
+  "taskId": "12.T12.13",
+  "startedAt": "2026-07-31T03:53:41.453Z",
+  "owner": "opus5-t12t13-seamaudit",
+  "leaseExpiresAt": "2026-07-31T07:53:41.453Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.13",
+    "trackId": "12",
+    "tranche": "T12.13",
+    "title": "S4 ↔ S5 shared-intelligence seam runtime audit",
+    "effort": null,
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.11"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-07T22:41:50.269Z",
+        "text": "Substrate landed and partially verified: test_enrichment.py + test_cross_namespace_edge_created present, offline pytest lane green (1 passed/2 skipped under SKIP_NEO4J), and the EMBEDDING_DIM=3072 clause is satisfied (single VALID value, default in config.py + graphiti_config.py). BLOCKED on the live cross-namespace-edge acceptance: it needs a no-auth Neo4j on localhost:7687 (test does driver(uri, auth=None)), but the only running dev Neo4j is antichrist-neo4j — auth'd (neo4j/antichrist-dev-pw) on bolt 17687. Cannot honestly close without a wired no-auth 7687 instance; standing up a second Neo4j risks colliding with the parallel session's graph. Needs an env decision (which Neo4j is canonical for gnostic integration tests). Numeric chain 12.15+ waits on this."
+      },
+      {
+        "at": "2026-07-18T20:46:36.717Z",
+        "text": "Classified environment gate: offline substrate tests pass, but the live acceptance currently assumes unauthenticated localhost:7687 while the available canonical dev Neo4j is authenticated on 17687. Resume when the canonical integration target/config is selected; do not start a competing graph implicitly."
+      },
+      {
+        "at": "2026-07-30T23:28:16.189Z",
+        "text": "Blocker LIFTED — the named environment dependency is satisfied and re-verified live, not inherited. The 2026-07-18 classification said 'resume when the canonical integration target/config is selected'; it now is. Probed 2026-07-30: docker ps shows epi-neo4j publishing 0.0.0.0:7687, docker inspect shows NEO4J_AUTH=none, lsof shows ONLY 7687 listening (the competing auth'd 17687 instance is gone), and 'docker exec epi-neo4j cypher-shell \"RETURN 1\"' succeeds with no credentials — exactly the no-auth localhost:7687 that tests/test_enrichment.py:41,54 assumes via AsyncGraphDatabase.driver(NEO4J_URI, auth=None). The live acceptance itself is GREEN: 'pytest tests/test_enrichment.py -v' with SKIP_NEO4J_TESTS unset = 3 passed in 0.94s, including test_cross_namespace_edge_created (the MAPS_TO_COORDINATE edge onto the :Bimba '#0' node, which exists live as labels [Bimba, Psychoid]). Graph integrity held across the run: 3296 nodes / 2141 :Bimba / 13344 rels before AND after, with zero test_enrich_* residue labels — the test's DETACH DELETE is doubly scoped to a per-run workspace label plus a unique vector_id, so it cannot reach canonical nodes. Requeued to pending rather than closed: the tranche is a runtime AUDIT of the whole S4-to-S5 seam, and this proves only its blocking acceptance. NOTE for the cycle seal: track 12 was routed for G5 solely because this row was classified-blocked, so this correction opens G5 track 12 until the audit is actually done — recording the truth is worth more than a gate kept green by a blocker that no longer exists."
+      },
+      {
+        "at": "2026-07-30T23:30:23.249Z",
+        "text": "Audit progress on the three clauses of 12.13 (spec 12-agentic-layer-s4-s5.md:249-253). CLAUSE (b) RELATES_TO_COORDINATE cross-namespace edges — PROVEN GREEN today (see prior evidence entry), with one naming divergence to record rather than silently accept: the spec names RELATES_TO_COORDINATE, the landed test and enricher create MAPS_TO_COORDINATE (tests/test_enrichment.py::test_cross_namespace_edge_created, asserted at the edge type literal). Same seam, different spelling; the landed name is the one in graph-schema. CLAUSE (a) GEMINI_EMBED_DIMS=3072 end-to-end — the prior 2026-07-07 evidence on this row claims it is 'satisfied (single VALID value)'. THAT CLAIM IS FALSE and is corrected here: epi_gnostic/config.py:6 declares VALID_EMBEDDING_DIMS = {128,256,384,512,768,1024,1536,2048,3072} — NINE accepted values, not one — and tests/test_config.py:20-24 explicitly proves a GNOSTIC_EMBEDDING_DIM=768 env override is accepted and yields config.embedding_dim == 768. What IS single is the DEFAULT (config.py:32-34, GNOSTIC_EMBEDDING_DIM default '3072') and the error-message canon (config.py:52 'Canonical is 3072.'). So the spec's Verify line ('returns single value') is NOT literally met: an env override can silently stand up a Gnosis store whose dimensionality disagrees with the 3072-dim Bimba vector indexes, and nothing in the validator refuses it. Recorded as an open seam risk for the audit report, not patched here — narrowing the valid set is a contract decision for the Architect, not a unilateral edit. CLAUSE (c) MathemeHarmonicProfile.resonance72 consumed by Aletheia gnosis-RAG via Pi — NOT YET AUDITED; the resonance72 consumers found so far are Rust S5 autoresearch (epii-autoresearch-core/src/adapters.rs:663-673, resonance_ebm/anuttara_pentadic_feature.rs:63-86), which is the EBM path, not the gnosis-RAG-via-Pi path the clause names. Remains pending: clause (c) plus the audit-report deliverable."
+      }
+    ],
+    "claimedAt": "2026-07-07T22:39:12.079Z",
+    "completedAt": null,
+    "owner": "fable-b2",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-07T22:39:12.079Z",
+    "runId": "20260707T223912Z-12-T12.13",
+    "worktree": null,
+    "blocker": null,
+    "carrier": "SUBSTRATE-heavy — ta-onta agentic seams (s4'.mediation.* in dispatch.rs, gnostic routes, terminal-lease, Sophia/Moirai/Verify-phase machinery) + gateway. CARRIER: session/agent panes. WORST audit track (36 AR). §2 track 12."
+  }
+}

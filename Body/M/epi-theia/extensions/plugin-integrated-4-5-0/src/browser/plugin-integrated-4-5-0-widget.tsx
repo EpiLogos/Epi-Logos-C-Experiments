@@ -7,7 +7,7 @@ import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
 import {
     Disposable,
     MExtensionId,
-    MathemeHarmonicProfileBoundary,
+    MObservabilityEvent,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER
 } from '@pratibimba/m-extension-runtime';
@@ -15,19 +15,30 @@ import {
     CLOSED_EPII_REVIEW_STATE,
     EpiiActionId,
     EpiiReviewSurfaceState,
-    checkJivaSivaPanes,
     CompositionCoordinator,
     ConsentAction,
     ConsentGate,
+    CompositionProfileProvider,
     findNamedLayout,
     IntegratedContributorRecord,
     IntegratedEmptyState,
     buildEmptyState,
+    useCompositionProfile,
     withPanelMode,
-    withReviewInboxCount
+    withReviewInboxCount,
+    type IdentityAugmentReviewProposal,
+    type RoutedIdentityAugmentReviewProposal
 } from '@pratibimba/integrated-composition';
 import { EpiiReviewPanel } from './epii-review-panel';
-import { JivaSivaPanes } from './jiva-siva-panes';
+import { PersonalRecognitionComposition } from './personal-recognition-composition';
+import {
+    routePluginIdentityAugmentProposalThroughM5Gate
+} from './identity-augment-review-routing';
+import {
+    DepositHandleReceptionResult,
+    NaraJournalDepositReceipt,
+    NaraJournalDepositReception
+} from './deposit-handle-reception';
 import { PLUGIN_ID, CONTRIBUTOR_IDS } from '../common';
 
 @injectable()
@@ -43,10 +54,11 @@ export class PluginIntegrated450Widget extends ReactWidget {
     );
     protected consentGate: ConsentGate = new ConsentGate();
     protected contributorRecords: readonly IntegratedContributorRecord[] = [];
-    protected currentProfile: MathemeHarmonicProfileBoundary | null = null;
     protected subscriptions: Disposable[] = [];
     /** Epii review pane state — defaults to closed per 08.T6 deliverable 4. */
     protected epiiReviewState: EpiiReviewSurfaceState = CLOSED_EPII_REVIEW_STATE;
+    protected naraJournalDepositReception = new NaraJournalDepositReception();
+    protected sessionCloseEvent: MObservabilityEvent | null = null;
 
     @postConstruct()
     protected init(): void {
@@ -61,10 +73,7 @@ export class PluginIntegrated450Widget extends ReactWidget {
             this.bridge.onReadiness(() => this.update())
         );
         this.subscriptions.push(
-            this.bridge.onProfile(profile => {
-                this.currentProfile = profile;
-                this.update();
-            })
+            this.bridge.onObservabilityEvent(event => this.handleObservabilityEvent(event))
         );
     }
 
@@ -101,6 +110,44 @@ export class PluginIntegrated450Widget extends ReactWidget {
         return this.epiiReviewState;
     }
 
+    routeIdentityAugmentProposalToM5Review(
+        proposal: IdentityAugmentReviewProposal
+    ): RoutedIdentityAugmentReviewProposal {
+        const routed = routePluginIdentityAugmentProposalThroughM5Gate(
+            this.epiiReviewState,
+            proposal,
+            Date.now()
+        );
+        this.epiiReviewState = routed.state;
+        this.update();
+        return routed;
+    }
+
+    naraJournalDepositsRef(): readonly NaraJournalDepositReceipt[] {
+        return this.naraJournalDepositReception.entries();
+    }
+
+    protected handleObservabilityEvent(event: MObservabilityEvent): void {
+        const eventKind = typeof event.payload.kind === 'string' ? event.payload.kind : event.type;
+        if (event.type === 'm5.session.contemplation.complete' || eventKind === 'm5.session.contemplation.complete') {
+            this.sessionCloseEvent = event;
+            this.update();
+        }
+        const result = this.naraJournalDepositReception.receive(event);
+        if (result.status !== 'ignored') {
+            this.publishDepositHandoffResult(result);
+        }
+    }
+
+    protected publishDepositHandoffResult(
+        result: Exclude<DepositHandleReceptionResult, { readonly status: 'ignored' }>
+    ): void {
+        this.bridge.publish(result.event);
+        if (result.status === 'accepted') {
+            this.update();
+        }
+    }
+
     protected handleEpiiAction(_action: EpiiActionId): void {
         // Real Epii action routing happens in epii-review-actions.ts. The
         // widget owns the UI dispatch; bridge wiring is deferred until the
@@ -126,44 +173,75 @@ export class PluginIntegrated450Widget extends ReactWidget {
 
     protected override render(): React.ReactNode {
         const required = CONTRIBUTOR_IDS as readonly MExtensionId[];
-        const present = this.contributorRecords.map(r => r.extensionId);
-        const allContributorsPresent = required.every(id => present.includes(id));
+        return (
+            <CompositionProfileProvider bridge={this.bridge}>
+                <PersonalRecognitionProfileSurface
+                    contributorRecords={this.contributorRecords}
+                    coordinator={this.coordinator}
+                    required={required}
+                    epiiReviewState={this.epiiReviewState}
+                    sessionCloseEvent={this.sessionCloseEvent}
+                    bridge={this.bridge}
+                    onEpiiAction={action => this.handleEpiiAction(action)}
+                    onDismissReview={() => this.setEpiiReviewMode('closed')}
+                />
+            </CompositionProfileProvider>
+        );
+    }
+}
 
-        if (!allContributorsPresent || !this.currentProfile) {
-            const aggregate = this.coordinator.aggregateReadiness(this.contributorRecords);
-            const view = buildEmptyState(
-                this.coordinator.layout,
-                aggregate,
-                required,
-                present
-            );
-            return (
-                <div className="integrated-widget-root">
-                    <IntegratedEmptyState
-                        view={view}
-                        title={PluginIntegrated450Widget.LABEL}
-                    />
-                </div>
-            );
-        }
+const PersonalRecognitionProfileSurface: React.FC<{
+    readonly contributorRecords: readonly IntegratedContributorRecord[];
+    readonly coordinator: CompositionCoordinator;
+    readonly required: readonly MExtensionId[];
+    readonly epiiReviewState: EpiiReviewSurfaceState;
+    readonly sessionCloseEvent: MObservabilityEvent | null;
+    readonly bridge: Pick<SharedBridgeAdapter, 'onObservabilityEvent' | 'invokeGatewayRpc' | 'publish'>;
+    readonly onEpiiAction: (action: EpiiActionId) => void;
+    readonly onDismissReview: () => void;
+}> = ({
+    contributorRecords,
+    coordinator,
+    required,
+    epiiReviewState,
+    sessionCloseEvent,
+    bridge,
+    onEpiiAction,
+    onDismissReview
+}) => {
+    const { profile } = useCompositionProfile();
+    const present = contributorRecords.map(r => r.extensionId);
+    const allContributorsPresent = required.every(id => present.includes(id));
 
-        const panes = checkJivaSivaPanes(this.currentProfile);
+    if (!allContributorsPresent || !profile) {
+        const aggregate = coordinator.aggregateReadiness(contributorRecords);
+        const view = buildEmptyState(
+            coordinator.layout,
+            aggregate,
+            required,
+            present
+        );
         return (
             <div className="integrated-widget-root">
-                <JivaSivaPanes
-                    profile={this.currentProfile}
-                    m4Foreground={panes.m4Foreground}
-                    m0Backdrop={panes.m0Backdrop}
-                    m5Side={panes.m5Side}
-                    onDeepOpen={action => this.handleDeepOpen(action)}
-                    isActionPermitted={action => this.consentGate.isPermitted(action)}
-                />
-                <EpiiReviewPanel
-                    state={this.epiiReviewState}
-                    onAction={action => this.handleEpiiAction(action)}
-                    onDismiss={() => this.setEpiiReviewMode('closed')}
+                <IntegratedEmptyState
+                    view={view}
+                    title={PluginIntegrated450Widget.LABEL}
                 />
             </div>
         );
     }
-}
+
+    return (
+        <div className="integrated-widget-root">
+            <PersonalRecognitionComposition
+                bridge={bridge}
+                sessionCloseEvent={sessionCloseEvent}
+            />
+            <EpiiReviewPanel
+                state={epiiReviewState}
+                onAction={onEpiiAction}
+                onDismiss={onDismissReview}
+            />
+        </div>
+    );
+};

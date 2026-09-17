@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T231109Z-27-T27.11",
+  "taskId": "27.T27.11",
+  "startedAt": "2026-06-10T23:11:09.848Z",
+  "owner": "codex-m-dev-27-t27-11",
+  "leaseExpiresAt": "2026-06-11T01:11:09.848Z",
+  "worktree": null,
+  "task": {
+    "id": "27.T27.11",
+    "trackId": "27",
+    "tranche": "T27.11",
+    "title": "OmniPanelSessionState — active-tab + per-tab state across layout toggle",
+    "effort": null,
+    "file": "27-omnipanel-tabs-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/27-omnipanel-tabs-deep.md",
+    "dependsOn": [
+      "27.T27.10"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/common/omnipanel-session-state.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

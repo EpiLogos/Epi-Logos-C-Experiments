@@ -5,6 +5,11 @@
     "outDir": "lib",
     "composite": true,
     "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@pratibimba/integrated-composition": ["../integrated-composition/lib/common/index.d.ts"],
+      "@pratibimba/m-extension-runtime": ["../m-extension-runtime/src/common"]
+    },
     "strict": false,
     "noImplicitAny": false,
     "strictNullChecks": false,
@@ -14,6 +19,9 @@
     "noFallthroughCasesInSwitch": false
   },
   "references": [
+    { "path": "../ide-shell-m0-m5" },
+    { "path": "../block-kit" },
+    { "path": "../m-extension-runtime" },
     { "path": "../pratibimba-layouts" }
   ],
   "include": ["src"]

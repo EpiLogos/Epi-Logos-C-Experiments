@@ -1,0 +1,35 @@
+{
+  "runId": "20260611T141421Z-30-T30.12",
+  "taskId": "30.T30.12",
+  "startedAt": "2026-06-11T14:14:21.903Z",
+  "owner": "codex-m-dev-30-t30-12",
+  "leaseExpiresAt": "2026-06-11T16:14:21.903Z",
+  "worktree": null,
+  "task": {
+    "id": "30.T30.12",
+    "trackId": "30",
+    "tranche": "T30.12",
+    "title": "Composition design rules",
+    "effort": null,
+    "file": "30-design-language-layer.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md",
+    "dependsOn": [
+      "30.T30.11"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/contracts/ui-composition-rules.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

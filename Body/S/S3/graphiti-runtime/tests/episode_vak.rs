@@ -12,6 +12,7 @@ fn episode_attrs_with_vak_carries_canonical_fields() {
         cs: CsField {
             code: "CS3".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     };
     let attrs = EpisodeAttrs::with_vak(vak.clone());
@@ -37,6 +38,7 @@ fn episode_attrs_with_vak_uses_primed_night_for_pratibimba_direction() {
         cs: CsField {
             code: "CS5".into(),
             direction: CsDirection::Night,
+            recognized: false,
         },
     };
     let attrs = EpisodeAttrs::with_vak(vak);
@@ -50,7 +52,11 @@ fn episode_attrs_default_is_empty() {
     let serialised = serde_json::to_value(&attrs).unwrap();
     // Default attrs serialise to an empty object (no VAK fields).
     let obj = serialised.as_object().expect("attrs is a json object");
-    assert!(obj.is_empty(), "default EpisodeAttrs has no fields, got: {:?}", obj);
+    assert!(
+        obj.is_empty(),
+        "default EpisodeAttrs has no fields, got: {:?}",
+        obj
+    );
 }
 
 #[test]
@@ -64,6 +70,7 @@ fn episode_insert_carries_vak_attrs_through_serialisation() {
         cs: CsField {
             code: "CS1".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     };
     let insert = EpisodeInsert {

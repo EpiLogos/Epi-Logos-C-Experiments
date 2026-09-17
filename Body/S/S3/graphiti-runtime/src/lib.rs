@@ -1,12 +1,65 @@
+//! epi-s3-graphiti-runtime — S3 Graphiti runtime adapter contracts and native client.
+//!
+//! # Coordinate
+//!
+//! | Field | Value |
+//! |-------|-------|
+//! | Coordinate | S5/S5' |
+//! | Residency  | Body/S/S3/graphiti-runtime/src/lib.rs (physically S3, conceptually actualises S5 world-return) |
+//! | Position   | #3 — Gateway runtime adapter / world-return bridge |
+//! | Actualises | [[S3-SPEC]], [[S3-ARCHITECTURE]], and [[S5-SPEC]] Graphiti world-return runtime |
+//!
+//! # Public surface
+//! * `GraphitiClient` / `NativeLibraryClient` — canonical native Graphiti runtime client.
+//! * `HttpCompatibilityClient` — deprecated HTTP compatibility client.
+//! * Episode, provenance, and kernel deposit payload helpers.
+//! * `nara_insert_relation` / `nara_relations_for_episode` — native idempotent Nara edge write/read-back.
+//!
+//! # Does NOT own
+//! * S2 graph storage law, S0 kernel state, or S5 identity promotion authority.
+
 use chrono::Utc;
-use epi_s3_gateway_contract::{
-    ProvenanceEvent, GRAPHITI_BASE_URL, GRAPHITI_INVOCATION_OWNER, GRAPHITI_PORT,
-    GRAPHITI_RUNTIME_AUTHORITY,
-};
 use portal_core::VakAddress;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
+use std::sync::{Mutex, OnceLock};
+
+#[path = "sidecar-compat/mod.rs"]
+pub mod http_compatibility;
+pub mod native;
+mod native_gateway;
+
+#[allow(deprecated)]
+pub use http_compatibility::HttpCompatibilityClient;
+pub use native::{
+    canonicalise_transcript, EntityNode, EpisodeNode, ExtractedEntity, ExtractedEventAnchor,
+    ExtractedRelationship, GraphitiClient, InMemoryGraphitiStore, IngestReceipt, MemoryQueryResult,
+    NativeLibraryClient, NeutralTranscript, RelationshipEdge, SophiaExtraction,
+    SophiaExtractionService, TranscriptMessage,
+};
+pub use native_gateway::{
+    kernel_profile_observation_deposit, kernel_resonance_deposit, session_memory_deposit,
+    session_memory_search,
+};
+
+pub const GRAPHITI_PORT: u16 = 37778;
+pub const GRAPHITI_BASE_URL: &str = "http://127.0.0.1:37778";
+pub const GRAPHITI_RUNTIME_AUTHORITY: &str = "S3 graphiti runtime adapter";
+pub const GRAPHITI_INVOCATION_OWNER: &str = "S5 episodic invocation and arc governance";
+
+static NARA_RELATION_STORE: OnceLock<Mutex<InMemoryGraphitiStore>> = OnceLock::new();
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProvenanceEvent {
+    pub event_type: String,
+    pub session_id: String,
+    pub channel_id: String,
+    pub channel_type: String,
+    pub day_id: String,
+    pub vault_now_path: String,
+    pub timestamp: String,
+}
 
 /// Bag of episode attributes flattened into the episode payload.
 ///
@@ -62,6 +115,51 @@ pub struct EpisodeInsert {
     pub attrs: EpisodeAttrs,
 }
 
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+pub enum NaraRelationKind {
+    HasDay,
+    ContainsDailyNote,
+    PartOfDay,
+    NextInArc,
+}
+
+impl NaraRelationKind {
+    pub fn edge_label(self) -> &'static str {
+        match self {
+            Self::HasDay => "HAS_DAY",
+            Self::ContainsDailyNote => "CONTAINS_DAILY_NOTE",
+            Self::PartOfDay => "PART_OF_DAY",
+            Self::NextInArc => "NEXT_IN_ARC",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+pub enum NaraRelationPrivacyClass {
+    ProtectedLocalBody,
+    ProtectedLocalDerived,
+    ProtectedLocalHandleOnly,
+}
+
+impl NaraRelationPrivacyClass {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ProtectedLocalBody => "protected-local-body",
+            Self::ProtectedLocalDerived => "protected-local-derived",
+            Self::ProtectedLocalHandleOnly => "protected_local_handle_only",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct NaraRelation {
+    pub kind: NaraRelationKind,
+    pub target_handle: String,
+    pub privacy_class: NaraRelationPrivacyClass,
+    #[serde(default)]
+    pub metadata: Value,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct GraphitiRuntimeConfig {
     pub base_url: &'static str,
@@ -78,7 +176,7 @@ impl Default for GraphitiRuntimeConfig {
             port: GRAPHITI_PORT,
             runtime_authority: GRAPHITI_RUNTIME_AUTHORITY,
             invocation_owner: GRAPHITI_INVOCATION_OWNER,
-            compatibility_http_adapter: true,
+            compatibility_http_adapter: false,
         }
     }
 }
@@ -91,16 +189,124 @@ pub struct GraphitiStatus {
     pub health: Option<Value>,
 }
 
+/// CCT-16 (iii): at-least-once provenance delivery. The old 3-second
+/// fire-and-forget silently dropped events on any hiccup; delivery now
+/// retries with exponential backoff and dead-letters on final failure so
+/// a dropped event is observable, never invisible.
+pub const PROVENANCE_MAX_ATTEMPTS: u32 = 5;
+
 pub fn fire_provenance(event: ProvenanceEvent) {
     tokio::spawn(async move {
-        let client = reqwest::Client::new();
-        let _ = client
-            .post(format!("{GRAPHITI_BASE_URL}/provenance"))
-            .json(&event)
+        if let Err(error) =
+            deliver_provenance_to(GRAPHITI_BASE_URL, &event, PROVENANCE_MAX_ATTEMPTS, None).await
+        {
+            eprintln!(
+                "[graphiti] provenance delivery failed after retries (dead-lettered): {error}"
+            );
+        }
+    });
+}
+
+/// Deliver one provenance event with bounded retry (exponential backoff,
+/// `max_attempts` tries). Idempotency key = `(session_id, event_type,
+/// timestamp)`, carried as a header so the receiver can dedupe replays.
+/// On final failure the event dead-letters to
+/// `{day_dir}/.provenance-dead-letter.jsonl` (append-only) — `day_dir` is
+/// the override when given, else derived from `vault_now_path` /
+/// `EPILOGOS_VAULT` + `day_id`. Returns the attempt count that delivered.
+pub async fn deliver_provenance_to(
+    base_url: &str,
+    event: &ProvenanceEvent,
+    max_attempts: u32,
+    dead_letter_dir: Option<std::path::PathBuf>,
+) -> Result<u32, String> {
+    let client = reqwest::Client::new();
+    let idempotency_key = format!(
+        "{}:{}:{}",
+        event.session_id, event.event_type, event.timestamp
+    );
+    let mut last_error = String::new();
+    for attempt in 1..=max_attempts.max(1) {
+        let sent = client
+            .post(format!("{base_url}/provenance"))
+            .header("x-idempotency-key", &idempotency_key)
+            .json(event)
             .timeout(std::time::Duration::from_secs(3))
             .send()
             .await;
+        match sent {
+            Ok(response) if response.status().is_success() => return Ok(attempt),
+            Ok(response) => {
+                last_error = format!("provenance endpoint returned {}", response.status());
+            }
+            Err(error) => {
+                last_error = format!("provenance send failed: {error}");
+            }
+        }
+        if attempt < max_attempts {
+            tokio::time::sleep(std::time::Duration::from_millis(100u64 << attempt)).await;
+        }
+    }
+    dead_letter_provenance(event, &last_error, dead_letter_dir);
+    Err(format!(
+        "provenance event {idempotency_key} dead-lettered after {max_attempts} attempts: {last_error}"
+    ))
+}
+
+fn dead_letter_provenance(
+    event: &ProvenanceEvent,
+    last_error: &str,
+    dead_letter_dir: Option<std::path::PathBuf>,
+) {
+    use std::io::Write;
+
+    let day_dir = dead_letter_dir.or_else(|| provenance_day_dir(event));
+    let Some(day_dir) = day_dir else {
+        eprintln!(
+            "[graphiti] provenance dead-letter UNWRITABLE (no day dir resolvable) — event lost: {}",
+            serde_json::to_string(event).unwrap_or_default()
+        );
+        return;
+    };
+    let path = day_dir.join(".provenance-dead-letter.jsonl");
+    let record = json!({
+        "event": event,
+        "lastError": last_error,
+        "idempotencyKey": format!("{}:{}:{}", event.session_id, event.event_type, event.timestamp),
+        "deadLetteredAt": iso8601_now(),
     });
+    let appended = std::fs::create_dir_all(&day_dir).and_then(|_| {
+        std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&path)
+            .and_then(|mut file| writeln!(file, "{record}"))
+    });
+    if let Err(error) = appended {
+        eprintln!(
+            "[graphiti] provenance dead-letter write failed at {}: {error}",
+            path.display()
+        );
+    }
+}
+
+fn provenance_day_dir(event: &ProvenanceEvent) -> Option<std::path::PathBuf> {
+    if !event.vault_now_path.is_empty() {
+        // vault_now_path = .../Idea/Empty/Present/{day}/{session}/now.md —
+        // the day dir is two ancestors up from the file.
+        let path = std::path::Path::new(&event.vault_now_path);
+        if let Some(day_dir) = path.parent().and_then(std::path::Path::parent) {
+            return Some(day_dir.to_path_buf());
+        }
+    }
+    if event.day_id.is_empty() {
+        return None;
+    }
+    std::env::var("EPILOGOS_VAULT").ok().map(|vault| {
+        std::path::PathBuf::from(vault)
+            .join("Empty/Present")
+            .join(&event.day_id)
+    })
 }
 
 pub fn provenance_from_record(
@@ -133,6 +339,80 @@ pub fn session_memory_envelope(access: Value) -> Value {
         "runtimeUrl": GRAPHITI_BASE_URL,
         "access": access,
     })
+}
+
+pub fn being_pattern_provenance_refs_payload(
+    entity_id: &str,
+    refs: &[(&str, &str, &str)],
+) -> Result<Value, String> {
+    if entity_id.trim().is_empty() {
+        return Err("entityId is required".to_owned());
+    }
+    let episode_refs = refs
+        .iter()
+        .map(|(episode_id, source_ref, public_summary)| {
+            let summary = public_summary.trim();
+            if summary.contains("protected_payload")
+                || summary.contains("protectedPayload")
+                || summary.contains("episodeBody")
+                || summary.contains("journal_text")
+                || summary.contains("rawQuaternion")
+                || summary.contains("qB")
+                || summary.contains("qP")
+            {
+                return Err(format!(
+                    "BeingPattern provenance summary for {episode_id} contains protected_payload marker"
+                ));
+            }
+            Ok(json!({
+                "episodeId": episode_id,
+                "sourceRef": source_ref,
+                "publicSummary": summary,
+            }))
+        })
+        .collect::<Result<Vec<_>, String>>()?;
+
+    Ok(json!({
+        "entityId": entity_id,
+        "privacyBoundary": "public-safe-provenance-refs-only",
+        "episodeRefs": episode_refs,
+    }))
+}
+
+pub fn nara_relation_payload(
+    day_id: &str,
+    episode_handle: &str,
+    relation: &NaraRelation,
+) -> Result<Value, String> {
+    if day_id.trim().is_empty() {
+        return Err("day_id is required".to_owned());
+    }
+    if episode_handle.trim().is_empty() {
+        return Err("episode_handle is required".to_owned());
+    }
+    if relation.target_handle.trim().is_empty() {
+        return Err("relation.target_handle is required".to_owned());
+    }
+    if let Some(key) = protected_nara_relation_metadata_key(&relation.metadata) {
+        return Err(format!(
+            "Nara relation metadata cannot include protected episode body field `{key}`"
+        ));
+    }
+
+    Ok(json!({
+        "coordinate": "S5/S5'",
+        "runtimeOwner": "S3'",
+        "invocationOwner": "S5/S5'",
+        "graphOwner": "S2",
+        "privacyBoundary": "protected-local-episodic-memory",
+        "dayId": day_id,
+        "episodeHandle": episode_handle,
+        "sourceHandle": episode_handle,
+        "targetHandle": relation.target_handle,
+        "edgeLabel": relation.kind.edge_label(),
+        "privacyClass": relation.privacy_class.as_str(),
+        "metadata": relation.metadata,
+    }))
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -439,7 +719,11 @@ pub async fn status_value() -> GraphitiStatus {
     }
 }
 
-pub async fn session_memory_search(params: &Value) -> Result<Value, String> {
+#[deprecated(
+    since = "2026-06-03",
+    note = "HTTP sidecar compatibility only; use the native session_memory_search"
+)]
+pub async fn compatibility_session_memory_search(params: &Value) -> Result<Value, String> {
     let query = required_str(params, "query")?;
     let agent_id = optional_str(params, "agentId").unwrap_or("epii");
     let session_key = required_str(params, "sessionKey")?;
@@ -503,7 +787,11 @@ pub async fn session_memory_search(params: &Value) -> Result<Value, String> {
     Ok(envelope)
 }
 
-pub async fn session_memory_deposit(params: &Value) -> Result<Value, String> {
+#[deprecated(
+    since = "2026-06-03",
+    note = "HTTP sidecar compatibility only; use the native session_memory_deposit"
+)]
+pub async fn compatibility_session_memory_deposit(params: &Value) -> Result<Value, String> {
     let content = required_str(params, "content")?;
     let source_agent = optional_str(params, "sourceAgent").unwrap_or("epii");
     let session_key = required_str(params, "sessionKey")?;
@@ -573,7 +861,11 @@ pub async fn session_memory_deposit(params: &Value) -> Result<Value, String> {
     Ok(envelope)
 }
 
-pub async fn kernel_resonance_deposit(params: &Value) -> Result<Value, String> {
+#[deprecated(
+    since = "2026-06-03",
+    note = "HTTP sidecar compatibility only; use the native kernel_resonance_deposit"
+)]
+pub async fn compatibility_kernel_resonance_deposit(params: &Value) -> Result<Value, String> {
     let source_agent = optional_str(params, "sourceAgent").unwrap_or("anima");
     let session_key = required_str(params, "sessionKey")?;
     let namespace_ref = required_str(params, "namespaceRef")?;
@@ -649,7 +941,13 @@ pub async fn kernel_resonance_deposit(params: &Value) -> Result<Value, String> {
     Ok(envelope)
 }
 
-pub async fn kernel_profile_observation_deposit(params: &Value) -> Result<Value, String> {
+#[deprecated(
+    since = "2026-06-03",
+    note = "HTTP sidecar compatibility only; use the native kernel_profile_observation_deposit"
+)]
+pub async fn compatibility_kernel_profile_observation_deposit(
+    params: &Value,
+) -> Result<Value, String> {
     let source_agent = optional_str(params, "sourceAgent").unwrap_or("anima");
     let session_key = required_str(params, "sessionKey")?;
     let namespace_ref = required_str(params, "namespaceRef")?;
@@ -731,6 +1029,52 @@ pub async fn kernel_profile_observation_deposit(params: &Value) -> Result<Value,
     Ok(envelope)
 }
 
+pub async fn nara_insert_relation(
+    day_id: &str,
+    episode_handle: &str,
+    relation: NaraRelation,
+) -> Result<Value, String> {
+    let payload = nara_relation_payload(day_id, episode_handle, &relation)?;
+    let mut envelope = session_memory_envelope(json!({
+        "mayInsertRelation": true,
+        "mayMutateIdentity": false,
+        "requiresEpiiReviewForPromotion": true,
+        "privacyClass": relation.privacy_class.as_str(),
+        "edgeLabel": relation.kind.edge_label(),
+    }));
+    envelope["method"] = Value::String("s5.episodic.nara.relation.insert".to_owned());
+    envelope["dayId"] = Value::String(day_id.to_owned());
+    envelope["episodeHandle"] = Value::String(episode_handle.to_owned());
+    envelope["relation"] = payload.clone();
+
+    let (edge, created) = nara_relation_store()?
+        .lock()
+        .map_err(|_| "native Graphiti Nara relation store lock poisoned".to_owned())?
+        .insert_nara_relation(day_id, episode_handle, &relation);
+    envelope["runtimeAvailable"] = Value::Bool(true);
+    envelope["write"] = json!({
+        "adapter": "native-library",
+        "created": created,
+        "edge": edge,
+    });
+
+    Ok(envelope)
+}
+
+pub fn nara_relations_for_episode(episode_handle: &str) -> Result<Vec<RelationshipEdge>, String> {
+    if episode_handle.trim().is_empty() {
+        return Err("episode_handle is required".to_owned());
+    }
+    Ok(nara_relation_store()?
+        .lock()
+        .map_err(|_| "native Graphiti Nara relation store lock poisoned".to_owned())?
+        .nara_relations_for_episode(episode_handle))
+}
+
+fn nara_relation_store() -> Result<&'static Mutex<InMemoryGraphitiStore>, String> {
+    Ok(NARA_RELATION_STORE.get_or_init(|| Mutex::new(InMemoryGraphitiStore::default())))
+}
+
 fn iso8601_now() -> String {
     Utc::now().to_rfc3339()
 }
@@ -785,4 +1129,35 @@ fn required_score(params: &Value, key: &str) -> Result<f64, String> {
         return Err(format!("{key} must be normalized between 0 and 1"));
     }
     Ok(value)
+}
+
+fn protected_nara_relation_metadata_key(value: &Value) -> Option<&'static str> {
+    const PROTECTED_KEYS: &[&str] = &[
+        "body",
+        "episode",
+        "episodeBody",
+        "episode_body",
+        "journal_text",
+        "dream_body",
+        "memory_body",
+        "protected_payload",
+        "raw_episode",
+    ];
+
+    match value {
+        Value::Object(map) => {
+            for (key, child) in map {
+                if let Some(protected) = PROTECTED_KEYS.iter().find(|candidate| **candidate == key)
+                {
+                    return Some(*protected);
+                }
+                if let Some(protected) = protected_nara_relation_metadata_key(child) {
+                    return Some(protected);
+                }
+            }
+            None
+        }
+        Value::Array(values) => values.iter().find_map(protected_nara_relation_metadata_key),
+        _ => None,
+    }
 }

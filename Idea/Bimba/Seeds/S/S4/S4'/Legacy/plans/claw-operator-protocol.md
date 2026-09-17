@@ -1,5 +1,7 @@
 # Claw Operator Protocol
 
+> ⚑ **SUPERSEDED — 2026-07-16 (see [[DR-S4-CLAW-1]]).** The `claw-rust` lane is **abandoned**; [[PI Agent]] (TypeScript) is the canonical, terminal S4 runtime. Retained as a dated historical record only.
+
 **Status:** Experimental — claw-rust lane (Task 7 of OMX/Pleroma migration)
 **Date:** 2026-04-04
 **Coordinate:** S0' (terminal/runtime substrate layer)

@@ -1,0 +1,91 @@
+{
+  "epilogos": {
+    "motion": {
+      "profile-tick": {
+        "duration": {
+          "$value": "kernel-bridge:subscribeToProfileTick.intervalMs",
+          "$fallback": "500ms",
+          "$type": "duration",
+          "$description": "Profile-tick duration is derived from the kernel-bridge subscribeToProfileTick.intervalMs cadence for the active profile generation. It is not a free UI parameter; 500ms is used only while bridge_unavailable readiness is active. Derivation: Track 30.3 cross-link 15.6."
+        },
+        "easing": {
+          "$value": "linear",
+          "$type": "cubicBezier",
+          "$description": "The profile tick is the clock, so easing adds no independent meaning. Derivation: Track 30.3 cross-link 15.6."
+        }
+      },
+      "transition": {
+        "lemniscate": {
+          "duration": {
+            "$value": "600ms",
+            "$reducedMotionValue": "100ms",
+            "$type": "duration",
+            "$description": "Cosmic to personal fold duration for the lemniscate transition primitive; reduced motion collapses to a 100ms snap. Derivation: Track 30.3 cross-link 15.5 and DR-WC-DL-4."
+          },
+          "easing": {
+            "$value": "cubic-bezier(0.4, 0.0, 0.2, 1)",
+            "$type": "cubicBezier",
+            "$description": "Canonical cosmic-personal fold easing for LemniscateTransition. Derivation: Track 30.3 cross-link 15.5."
+          },
+          "path": {
+            "$value": "M 12 50 C 24 18 48 18 64 50 C 80 82 104 82 116 50 C 104 18 80 18 64 50 C 48 82 24 82 12 50",
+            "$type": "string",
+            "$description": "Figure-eight lemniscate path crossing at the #4 anchor inflection point. Derivation: Track 30.3 cross-link 15.5."
+          }
+        }
+      },
+      "tick": {
+        "slerp": {
+          "angularStep": {
+            "$value": "30deg",
+            "$type": "dimension",
+            "$description": "SO(3) / 12 tick angular step for the single slerp choreography primitive. Derivation: Track 30.3 cross-link 15.9."
+          },
+          "choreography": {
+            "$value": "RING_QUATERNION_LUT[12]",
+            "$type": "string",
+            "$description": "Reference to the canonical twelve-quaternion ring; consumers must not fork the choreography table. Derivation: Track 30.3 cross-link 15.9."
+          },
+          "kleinBoundaryTick": {
+            "$value": 5,
+            "$type": "number",
+            "$description": "Hopf-fibre flag flips at the tick 5 to 6 boundary. Derivation: Track 30.3 cross-link 15.9."
+          }
+        }
+      },
+      "flow": {
+        "streamline": {
+          "advance": {
+            "$value": {
+              "positionsPerTick": 1,
+              "ringSize": 6,
+              "duration": "200ms",
+              "easing": "ease-out"
+            },
+            "$type": "object",
+            "$description": "DR streamline advances one position per profile tick along the six-element ring, reading MathemeHarmonicProfile.ananda_vortex.dr_ring_* from the bridge. Derivation: Track 30.3 cross-link 15.8 and 15.9."
+          }
+        }
+      },
+      "klein-flip": {
+        "flagDuration": {
+          "$value": "300ms",
+          "$type": "duration",
+          "$description": "Hopf-fibre flag rotates 180 degrees across the tick 5 to 6 boundary. Derivation: Track 30.3 cross-link 15.9."
+        },
+        "crossfadeMs": {
+          "$value": "500ms",
+          "$type": "duration",
+          "$description": "Active Ananda matrix cross-fades to its dual at the Klein boundary. Derivation: Track 30.3 cross-link 15.9."
+        }
+      },
+      "flow-watcher": {
+        "debounceMs": {
+          "$value": "2000ms",
+          "$type": "duration",
+          "$description": "Khora flow-watcher debounce consumed by chronos.tranche.complete.quiet event scheduling. Derivation: Track 30.3 cross-link 19.11."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "generated_at": "2026-08-04T19:38:21.124Z",
+  "scope": "Tracked test-bearing source files under Body/ and .codex/; syntactic counts are audit indicators, not coverage claims.",
+  "totals": {
+    "files": 1356,
+    "declared_tests": 9189,
+    "skips": 96,
+    "mock_calls": 20,
+    "source_reads": 711
+  },
+  "by_area": {
+    "M-prime-carrier": {
+      "files": 411,
+      "declared_tests": 2645
+    },
+    "M-prime-other": {
+      "files": 167,
+      "declared_tests": 1010
+    },
+    "S0": {
+      "files": 410,
+      "declared_tests": 3234
+    },
+    "S1": {
+      "files": 26,
+      "declared_tests": 129
+    },
+    "S2": {
+      "files": 99,
+      "declared_tests": 404
+    },
+    "S3": {
+      "files": 47,
+      "declared_tests": 274
+    },
+    "S4": {
+      "files": 100,
+      "declared_tests": 868
+    },
+    "S5": {
+      "files": 55,
+      "declared_tests": 251
+    },
+    "other": {
+      "files": 10,
+      "declared_tests": 54
+    },
+    "verification-harness": {
+      "files": 31,
+      "declared_tests": 320
+    }
+  },
+  "by_runner": {
+    "cargo-test": {
+      "files": 601,
+      "declared_tests": 2953
+    },
+    "make-or-native": {
+      "files": 30,
+      "declared_tests": 1261
+    },
+    "node-test": {
+      "files": 22,
+      "declared_tests": 256
+    },
+    "playwright": {
+      "files": 100,
+      "declared_tests": 192
+    },
+    "pytest": {
+      "files": 25,
+      "declared_tests": 141
+    },
+    "shell": {
+      "files": 1,
+      "declared_tests": 2
+    },
+    "vitest": {
+      "files": 577,
+      "declared_tests": 4384
+    }
+  },
+  "by_kind": {
+    "browser-e2e": {
+      "files": 100,
+      "declared_tests": 192
+    },
+    "harness-selftest": {
+      "files": 31,
+      "declared_tests": 320
+    },
+    "live-integration": {
+      "files": 4,
+      "declared_tests": 10
+    },
+    "script-contract": {
+      "files": 13,
+      "declared_tests": 126
+    },
+    "unit-or-component": {
+      "files": 1208,
+      "declared_tests": 8541
+    }
+  },
+  "pratibimba_carrier": {
+    "files": 411,
+    "declared_tests": 2645,
+    "testid_refs": 2982,
+    "role_refs": 62,
+    "source_reads": 97,
+    "mock_calls": 20
+  },
+  "browser_e2e": {
+    "files": 100,
+    "declared_tests": 192,
+    "testid_refs": 1507,
+    "role_refs": 26,
+    "screenshot_assertions": 4,
+    "canon_or_task_refs": 496
+  },
+  "cycle3_task_proof": {
+    "indexed_tasks": 656,
+    "tasks_without_verify_label": 22,
+    "tasks_with_verify_but_no_extracted_command": 573,
+    "tasks_with_extracted_command": 61,
+    "tasks_with_only_echo_exit_or_rg": 1,
+    "verification_records": 658,
+    "records_using_generic_gate_only_marker": 602
+  },
+  "limitations": [
+    "Declaration-pattern counts are not executed-test discovery.",
+    "Canon/task references establish trace syntax only, not an independently derived oracle.",
+    "Mocks, fixtures, test IDs, and source reads are review indicators, not automatic defects."
+  ]
+}

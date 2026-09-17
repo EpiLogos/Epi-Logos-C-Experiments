@@ -1,0 +1,35 @@
+{
+  "runId": "20260611T154037Z-25-T25.10",
+  "taskId": "25.T25.10",
+  "startedAt": "2026-06-11T15:40:37.074Z",
+  "owner": "codex-m-dev-25-t25-10",
+  "leaseExpiresAt": "2026-06-11T17:40:37.074Z",
+  "worktree": null,
+  "task": {
+    "id": "25.T25.10",
+    "trackId": "25",
+    "tranche": "T25.10",
+    "title": "Medicine view *(spec-ahead-integration; depends on 5.16 + 19.12)*",
+    "effort": null,
+    "file": "25-m4-nara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md",
+    "dependsOn": [
+      "25.T25.1"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/medicine-view.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

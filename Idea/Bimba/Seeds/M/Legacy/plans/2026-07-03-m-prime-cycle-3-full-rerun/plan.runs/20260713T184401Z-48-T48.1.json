@@ -1,0 +1,36 @@
+{
+  "runId": "20260713T184401Z-48-T48.1",
+  "taskId": "48.T48.1",
+  "startedAt": "2026-07-13T18:44:01.892Z",
+  "owner": "fable-c",
+  "leaseExpiresAt": "2026-07-13T20:44:01.892Z",
+  "worktree": null,
+  "task": {
+    "id": "48.T48.1",
+    "trackId": "48",
+    "tranche": "T48.1",
+    "title": "`.base` artifact class + the CS/Pratibimba framing law *(L1; canon/contract + bimba-vault-validate)",
+    "effort": "L1; canon/contract + bimba-vault-validate",
+    "file": "48-bases-cs-reflection-layer.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/48-bases-cs-reflection-layer.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — Bases/CS reflection layer (C-ladder CT=C1' write-form -> MOC=C4 -> Base=C5/CS read-only -> Mobius to C0; s1'.base.ensure, s2.graph.list_by_filter, BaseViewConfig/BasesRecord). CARRIER: a coordinate-keyed query-view pane (table/cards/list) over the existing GatewayClient. §2 track 48."
+  }
+}

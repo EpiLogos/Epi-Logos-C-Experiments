@@ -1,0 +1,39 @@
+{
+  "runId": "20260713T092428Z-45-T45.3",
+  "taskId": "45.T45.3",
+  "startedAt": "2026-07-13T09:24:28.963Z",
+  "owner": "uc-4503",
+  "leaseExpiresAt": "2026-07-13T13:24:28.963Z",
+  "worktree": null,
+  "task": {
+    "id": "45.T45.3",
+    "trackId": "45",
+    "tranche": "T45.3",
+    "title": "Carrier coordinate rendering via gateway-side normalisation (guard against a 6th local impl)",
+    "effort": "guard against a 6th local impl",
+    "file": "45-bimba-map-indexing-and-dox-okf-unification.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/45-bimba-map-indexing-and-dox-okf-unification.md",
+    "dependsOn": [
+      "00.T3",
+      "45.T45.2"
+    ],
+    "writeScopes": [
+      "Body/M/pratibimba-app/src",
+      "Body/M/pratibimba-app/src/bridge/types.ts:504",
+      "Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md:74"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — Bimba Map indexing / DOX-OKF (crystallisation upward Hen vs reflection downward Map projection never re-promotes; five cross-language normaliser impls must stay in sync; Hen is_valid_coordinate rejects depth>=2 — real gap). Coordinate rendering must use gateway-side normalisation, never a 6th local impl. §2 track 45."
+  }
+}

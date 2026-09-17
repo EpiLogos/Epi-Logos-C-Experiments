@@ -15,10 +15,12 @@ import * as React from 'react';
 import {
     MathemeHarmonicProfileBoundary
 } from '@pratibimba/m-extension-runtime';
-import {
+import { M2PrimeMeaningPacket } from '@pratibimba/m2-parashakti';
+import type {
     IntegratedEvidenceProducerId,
     PaneAvailability
 } from '@pratibimba/integrated-composition';
+import { useCompositionProfile } from '@pratibimba/integrated-composition/composition-profile-context';
 
 interface PaneShellProps {
     readonly title: string;
@@ -85,7 +87,8 @@ const PaneShell: React.FC<PaneShellProps> = ({
 };
 
 export interface CosmicEnginePanesProps {
-    readonly profile: MathemeHarmonicProfileBoundary | null;
+    readonly profile?: MathemeHarmonicProfileBoundary | null;
+    readonly routedM2Packet?: M2PrimeMeaningPacket | null;
     readonly m3CenterStage: PaneAvailability;
     readonly m2LeftStage: PaneAvailability;
     readonly m1RightInspector: PaneAvailability;
@@ -100,27 +103,30 @@ export interface CosmicEnginePanesProps {
  */
 export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
     profile,
+    routedM2Packet,
     m3CenterStage,
     m2LeftStage,
     m1RightInspector,
     onOpenInReview
 }) => {
-    const codon = readPayloadString(profile, 'codon_rotation_projection');
-    const mahamaya = readPayloadString(profile, 'mahamaya');
-    const resonance72 = readPayloadString(profile, 'resonance72');
-    const planetaryChakral = readPayloadString(profile, 'planetaryChakral');
-    const kleinFlipState = readPayloadString(profile, 'kleinFlipState');
-    const lens = readPayloadString(profile, 'lens');
-    const mode = readPayloadString(profile, 'mode');
-    const audioOctet = readPayloadString(profile, 'audio_octet');
-    const nodalQuartet = readPayloadString(profile, 'nodal_quartet');
+    const shared = useCompositionProfile();
+    const paneProfile = profile ?? shared.profile;
+    const codon = readPayloadString(paneProfile, 'codon_rotation_projection');
+    const mahamaya = readPayloadString(paneProfile, 'mahamaya');
+    const resonance72 = readPayloadString(paneProfile, 'resonance72');
+    const planetaryChakral = readPayloadString(paneProfile, 'planetaryChakral');
+    const kleinFlip = readPayloadString(paneProfile, 'kleinFlip');
+    const lens = readPayloadString(paneProfile, 'lens');
+    const mode = readPayloadString(paneProfile, 'mode');
+    const audioOctet = readPayloadString(paneProfile, 'audio_octet');
+    const nodalQuartet = readPayloadString(paneProfile, 'nodal_quartet');
     return (
         <div className="cosmic-engine-layout">
             <PaneShell
                 title="Cosmic Wheel"
                 extensionLabel="M3 Mahamaya"
                 availability={m3CenterStage}
-                profile={profile}
+                profile={paneProfile}
                 evidenceProducerId="route-codon-projection-audit"
                 onOpenInReview={onOpenInReview}
             >
@@ -135,7 +141,7 @@ export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
                 title="Lens / Cymatic Backdrop"
                 extensionLabel="M2 Parashakti"
                 availability={m2LeftStage}
-                profile={profile}
+                profile={paneProfile}
                 evidenceProducerId="m2-meaning-packet-trace"
                 onOpenInReview={onOpenInReview}
             >
@@ -144,15 +150,28 @@ export const CosmicEnginePanes: React.FC<CosmicEnginePanesProps> = ({
                     <dd data-test="m2-resonance72">{resonance72}</dd>
                     <dt>planetaryChakral</dt>
                     <dd data-test="m2-planetary">{planetaryChakral}</dd>
-                    <dt>kleinFlipState</dt>
-                    <dd data-test="m2-klein">{kleinFlipState}</dd>
+                    <dt>kleinFlip</dt>
+                    <dd data-test="m2-klein">{kleinFlip}</dd>
+                    <dt>M2 pending</dt>
+                    <dd data-test="m2-pending">
+                        {routedM2Packet ? routedM2Packet.pendingFields.join(', ') || '—' : 's2.parashaktiCorrespondences'}
+                    </dd>
+                    <dt>S2 provenance</dt>
+                    <dd data-test="m2-s2-provenance">
+                        {routedM2Packet
+                            ? routedM2Packet.provenance
+                                .filter(handle => handle.source === 's2')
+                                .map(handle => handle.handle)
+                                .join(' / ') || '—'
+                            : '—'}
+                    </dd>
                 </dl>
             </PaneShell>
             <PaneShell
                 title="Torus / Path / Audio Walk Inspector"
                 extensionLabel="M1 Paramasiva"
                 availability={m1RightInspector}
-                profile={profile}
+                profile={paneProfile}
                 evidenceProducerId="kernel-trace-handle"
                 onOpenInReview={onOpenInReview}
             >

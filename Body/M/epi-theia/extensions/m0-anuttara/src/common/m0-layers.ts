@@ -1,4 +1,4 @@
-import { M_EXTENSION_ROUTE_SCHEME } from '@pratibimba/m-extension-runtime';
+import { M_EXTENSION_ROUTE_SCHEME } from '@pratibimba/m-extension-runtime/lib/common/route';
 
 /**
  * The six M0-X' data layers (per M0'-SPEC "The Six M0-X' Data Layers").

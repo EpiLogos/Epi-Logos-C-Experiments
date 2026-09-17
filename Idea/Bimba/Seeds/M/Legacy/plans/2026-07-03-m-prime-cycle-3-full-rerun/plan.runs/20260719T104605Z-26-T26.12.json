@@ -1,0 +1,47 @@
+{
+  "runId": "20260719T104605Z-26-T26.12",
+  "taskId": "26.T26.12",
+  "startedAt": "2026-07-19T10:46:05.883Z",
+  "owner": "codex-mdev-2612-contemplation",
+  "leaseExpiresAt": "2026-07-19T12:46:05.883Z",
+  "worktree": null,
+  "task": {
+    "id": "26.T26.12",
+    "trackId": "26",
+    "tranche": "T26.12",
+    "title": "`ContemplationObjectViewer` widget service inside m5-epii",
+    "effort": null,
+    "file": "26-m5-epii-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/26-m5-epii-frontend-deep.md",
+    "dependsOn": [
+      "26.T26.11"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/26-m5-epii-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-16T15:51:36.480Z",
+        "text": "Blocked: gateway contains a close-of-session contemplation route but no PASU-scoped fetch/readback seam (s5'.epii.runtimeContext or contemplate.fetch_object) for a persisted ContemplationObject. A viewer without it would display invented or non-retrievable state."
+      },
+      {
+        "at": "2026-07-18T20:46:21.447Z",
+        "text": "Reopened with durable PASU-scoped contemplation persistence and governed opaque-ref readback made implementation scope."
+      }
+    ],
+    "claimedAt": "2026-07-16T15:51:36.261Z",
+    "completedAt": null,
+    "owner": "codex-mdev-track26-contemplation",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-16T15:51:36.261Z",
+    "runId": "20260716T155136Z-26-T26.12",
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: M5' EBM observatory in pratibimba-app ('M5' does not talk. It scores.' 72-grid, three Klein-V4 tritone squares, wisdom-delta 8-byte XOR, psyche-facet badges never actor rows). §2 track 26."
+  }
+}

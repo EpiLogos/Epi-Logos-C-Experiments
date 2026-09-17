@@ -21,13 +21,15 @@ fn workspace_root() -> String {
         .to_string()
 }
 
-async fn teardown(client: &Neo4jClient) {
-    client.run("MATCH (n:Bimba) DETACH DELETE n").await.unwrap();
-    client
-        .run("MATCH (m:GraphMeta) DETACH DELETE m")
-        .await
-        .unwrap();
-}
+// There is no `teardown` helper any more, and no setup wipe.
+//
+// It used to be `MATCH (n:Bimba) DETACH DELETE n` plus the same for
+// `:GraphMeta`. On 2026-07-28 that pair ran against the live development Neo4j
+// and destroyed the Bimba ontology. It cannot be rescued by narrowing its WHERE
+// clause either: everything `graph bootstrap` writes is either an ontology ROOT
+// coordinate (MERGEd onto whatever is already there, not created) or the
+// singleton `:GraphMeta` bootstrap record. A test may delete only what it
+// uniquely created, and this suite uniquely creates nothing.
 
 /// Track 13 T5 — assert the S0 graph compatibility re-exports resolve
 /// to `epi_s2_graph_services`. The named six graph-law surface families
@@ -41,54 +43,69 @@ fn t5_s0_graph_facade_re_exports_resolve_to_epi_s2_graph_services() {
     use epi_logos::graph;
 
     // (a) Graph retrieval
-    assert!(std::any::type_name::<graph::retrieval::coordinate::CoordinateRetrieval<'static>>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<graph::retrieval::graphrag::GraphRAGRetriever<'static>>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<graph::retrieval::hybrid::HybridRetriever<'static>>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::retrieval::coordinate::CoordinateRetrieval<'static>>()
+            .contains("epi_s2_graph_services")
+    );
+    assert!(
+        std::any::type_name::<graph::retrieval::graphrag::GraphRAGRetriever<'static>>()
+            .contains("epi_s2_graph_services")
+    );
+    assert!(
+        std::any::type_name::<graph::retrieval::hybrid::HybridRetriever<'static>>()
+            .contains("epi_s2_graph_services")
+    );
 
     // (b) Semantic cache
-    assert!(std::any::type_name::<graph::semantic_cache::SemanticCacheConfig>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<graph::semantic_cache::GraphRedisRole>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::semantic_cache::SemanticCacheConfig>()
+            .contains("epi_s2_graph_services")
+    );
+    assert!(
+        std::any::type_name::<graph::semantic_cache::GraphRedisRole>()
+            .contains("epi_s2_graph_services")
+    );
 
     // (c) Dataset import
-    assert!(std::any::type_name::<graph::dataset_import::DatasetImporter<'static>>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::dataset_import::DatasetImporter<'static>>()
+            .contains("epi_s2_graph_services")
+    );
 
     // (d) Doctor
-    assert!(
-        std::any::type_name::<graph::doctor::DoctorReport>().contains("epi_s2_graph_services")
-    );
+    assert!(std::any::type_name::<graph::doctor::DoctorReport>().contains("epi_s2_graph_services"));
 
     // (e) Relationship manager
-    assert!(std::any::type_name::<graph::relationship_manager::RelationshipManager>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::relationship_manager::RelationshipManager>()
+            .contains("epi_s2_graph_services")
+    );
 
     // (f) Sync coordinator
-    assert!(std::any::type_name::<graph::sync_coordinator::SyncCoordinator<'static>>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::sync_coordinator::SyncCoordinator<'static>>()
+            .contains("epi_s2_graph_services")
+    );
 
     // T5 moves: cypher guard, constraint registry, analyser, anuttara
-    assert!(
-        std::any::type_name::<graph::cypher::CypherMode>().contains("epi_s2_graph_services")
-    );
+    assert!(std::any::type_name::<graph::cypher::CypherMode>().contains("epi_s2_graph_services"));
     assert!(std::any::type_name::<graph::cypher::CypherGuardOutcome>()
         .contains("epi_s2_graph_services"));
+    assert!(std::any::type_name::<graph::constraint::Registry>().contains("epi_s2_graph_services"));
     assert!(
-        std::any::type_name::<graph::constraint::Registry>().contains("epi_s2_graph_services")
+        std::any::type_name::<graph::analyse::DeterministicAnalyser>()
+            .contains("epi_s2_graph_services")
     );
-    assert!(std::any::type_name::<graph::analyse::DeterministicAnalyser>()
-        .contains("epi_s2_graph_services"));
-    assert!(std::any::type_name::<graph::anuttara::AnuttaraReflectionRequest>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::anuttara::AnuttaraReflectionRequest>()
+            .contains("epi_s2_graph_services")
+    );
 
     // Lifecycle evidence re-export — surfaced via `crate::graph` for the
     // S0 reconcile arm.
-    assert!(std::any::type_name::<graph::LiveGraphBackedEvidence>()
-        .contains("epi_s2_graph_services"));
+    assert!(
+        std::any::type_name::<graph::LiveGraphBackedEvidence>().contains("epi_s2_graph_services")
+    );
 }
 
 #[test]
@@ -348,8 +365,13 @@ async fn live_graph_commands_suite() {
     let _lock = live_lock();
     let config = Neo4jConfig::from_env();
     let client = Neo4jClient::connect(&config).expect("connect failed");
-    teardown(&client).await;
 
+    // NOTE — this next line still requires a graph with zero `:Bimba` nodes:
+    // `GraphCmd::Bootstrap` refuses a non-empty graph (`meta::is_bootstrapped`
+    // is `count(:Bimba) > 0`, Body/S/S2/graph-services/src/meta.rs:126). The
+    // wipe that used to precede it is gone and is not coming back. Point this
+    // suite at its own throwaway Neo4j instance; do NOT re-add a delete to make
+    // it pass against a database that holds real coordinates.
     let bootstrap = graph::dispatch(&GraphCmd::Bootstrap).await.unwrap();
     assert!(bootstrap.contains("bootstrapped") || bootstrap.contains("Bootstrap"));
 
@@ -411,12 +433,10 @@ async fn live_graph_commands_suite() {
     .unwrap();
     assert!(!hybrid.contains("Hybrid query:"));
     assert!(hybrid.contains("score") || hybrid.contains("#5"));
-
-    teardown(&client).await;
 }
 
 #[test]
-#[ignore]
+#[ignore = "live-infra: requires running graph backends"]
 fn live_graph_doctor_reports_backend_readiness() {
     let _lock = live_lock();
     let env = TestEnv::empty()
@@ -456,7 +476,7 @@ fn live_graph_doctor_reports_backend_readiness() {
 }
 
 #[test]
-#[ignore]
+#[ignore = "live-infra: requires running graph backends"]
 fn live_bootstrap_dev_writes_env_file() {
     let _lock = live_lock();
     let env = TestEnv::empty()

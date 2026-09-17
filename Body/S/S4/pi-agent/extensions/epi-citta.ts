@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
-import { epiRoutes, registerTool as getRoute } from "./ta-onta/anima/S4/epi-citta.ts";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
+import { epiRoutes, registerTool as getRoute } from "../../ta-onta/S4-4p-anima/S4/epi-citta.ts";
 
 type EpiRouteName =
   | "epi_core_inspect"
@@ -21,6 +21,8 @@ function runEpi(args: string[]) {
   });
 
   return {
+    // pi requires a details payload; this tool returns none.
+    details: undefined,
     content: [{ type: "text" as const, text: result.stdout || result.stderr || "" }],
     isError: result.status !== 0,
   };
@@ -30,6 +32,7 @@ function registerRouteTool(api: ExtensionAPI, name: EpiRouteName) {
   const route = getRoute(name);
   api.registerTool({
     name: route.name,
+    label: route.name,
     description: `Run ${route.command.join(" ")} via the sovereign epi CLI substrate.`,
     parameters: Type.Object({
       coordinate: Type.Optional(Type.String({ description: "Coordinate or subject identifier." })),

@@ -15,10 +15,6 @@ tests:
         expected_name: cmux
         expected_port_type: fresh-design
 
-      - path: skills/atomic/mprocs/SKILL.md
-        expected_name: mprocs
-        expected_port_type: port-and-refine
-
       - path: skills/atomic/worktrunk/SKILL.md
         expected_name: worktrunk
         expected_port_type: fresh-design
@@ -31,10 +27,6 @@ tests:
         expected_name: repl
         expected_port_type: true-port
 
-      - path: skills/atomic/notebooklm/SKILL.md
-        expected_name: notebooklm
-        expected_port_type: port-and-refine
-
       - path: skills/atomic/chatlog-fetcher/SKILL.md
         expected_name: chatlog-fetcher
         expected_port_type: fresh-design
@@ -42,10 +34,6 @@ tests:
       - path: skills/atomic/youtube-transcript/SKILL.md
         expected_name: youtube-transcript
         expected_port_type: fresh-design
-
-      - path: skills/atomic/gitbutler/SKILL.md
-        expected_name: gitbutler
-        expected_port_type: port-and-refine
 
       - path: skills/atomic/pleroma-skill-proxy/SKILL.md
         expected_name: pleroma-skill-proxy

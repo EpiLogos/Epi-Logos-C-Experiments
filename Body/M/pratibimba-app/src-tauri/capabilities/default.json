@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "Pratibimba shell — core runtime plus supervisor status events",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

@@ -1,0 +1,36 @@
+{
+  "runId": "20260707T220453Z-17-T17.11",
+  "taskId": "17.T17.11",
+  "startedAt": "2026-07-07T22:04:53.087Z",
+  "owner": "fable-b2",
+  "leaseExpiresAt": "2026-07-07T23:04:53.087Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.11",
+    "trackId": "17",
+    "tranche": "T17.11",
+    "title": "Split `Body/S/S1/hen-compiler-core/src/lib.rs` (881 LOC)",
+    "effort": "881 LOC",
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.10"
+    ],
+    "writeScopes": [
+      "Body/S/S1/hen-compiler-core/src/lib.rs",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

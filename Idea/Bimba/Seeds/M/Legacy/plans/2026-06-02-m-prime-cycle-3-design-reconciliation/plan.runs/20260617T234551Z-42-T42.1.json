@@ -1,0 +1,33 @@
+{
+  "runId": "20260617T234551Z-42-T42.1",
+  "taskId": "42.T42.1",
+  "startedAt": "2026-06-17T23:45:51.707Z",
+  "owner": "codex-m-dev-42-t42-1",
+  "leaseExpiresAt": "2026-06-18T01:45:51.707Z",
+  "worktree": null,
+  "task": {
+    "id": "42.T42.1",
+    "trackId": "42",
+    "tranche": "T42.1",
+    "title": "Harness dispatch envelope + normalized turn-event stream (gateway-contract)",
+    "effort": null,
+    "file": "42-harness-dynamics-surface.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/42-harness-dynamics-surface.md",
+    "dependsOn": [],
+    "writeScopes": [
+      "Body/S/S3/gateway-contract/src/harness.rs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

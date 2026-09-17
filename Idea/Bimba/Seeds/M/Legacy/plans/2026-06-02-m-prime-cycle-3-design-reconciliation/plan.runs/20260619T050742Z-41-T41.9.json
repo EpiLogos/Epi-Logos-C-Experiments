@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T050742Z-41-T41.9",
+  "taskId": "41.T41.9",
+  "startedAt": "2026-06-19T05:07:42.435Z",
+  "owner": "codex-m-dev-41-t41-9",
+  "leaseExpiresAt": "2026-06-19T07:07:42.435Z",
+  "worktree": null,
+  "task": {
+    "id": "41.T41.9",
+    "trackId": "41",
+    "tranche": "T41.9",
+    "title": "Moirai closure-distillation with classifier-modulated edge patterns *(code-pending-closure; depends on 41.6, 41.8; cross-link CCT-17)*",
+    "effort": null,
+    "file": "41-vama-shakti-factory-and-dialogical-arena.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/41-vama-shakti-factory-and-dialogical-arena.md",
+    "dependsOn": [
+      "41.T41.8"
+    ],
+    "writeScopes": [
+      "Body/S/S4/ta-onta/S4-5p-aletheia/S5'/agents/moirai.md §5 Capability"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

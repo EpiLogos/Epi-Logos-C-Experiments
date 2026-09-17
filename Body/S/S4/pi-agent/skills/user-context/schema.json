@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://epi-logos.local/schemas/user-context-frame.schema.json",
+  "title": "UserContextFrame",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pasu",
+    "kairos",
+    "identity",
+    "recent_sessions",
+    "active_dev_goals",
+    "recognized",
+    "recognition_provenance",
+    "fired_at",
+    "fired_for",
+    "fire_reason"
+  ],
+  "properties": {
+    "pasu": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "birth_date",
+        "birth_location",
+        "natal_chart_path",
+        "jungian",
+        "gene_keys",
+        "human_design",
+        "quintessence_hash",
+        "quintessence_clock",
+        "last_wound"
+      ],
+      "properties": {
+        "birth_date": { "type": "string" },
+        "birth_location": { "type": "string" },
+        "natal_chart_path": { "type": "string" },
+        "jungian": { "$ref": "#/$defs/stringRecord" },
+        "gene_keys": { "$ref": "#/$defs/stringRecord" },
+        "human_design": { "$ref": "#/$defs/stringRecord" },
+        "quintessence_hash": { "type": "string", "minLength": 1 },
+        "quintessence_clock": { "$ref": "#/$defs/stringRecord" },
+        "last_wound": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/stringRecord" }
+          ]
+        }
+      }
+    },
+    "kairos": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "planet_degrees",
+        "transits_active",
+        "decan_window",
+        "moon_phase",
+        "epoch_marker"
+      ],
+      "properties": {
+        "planet_degrees": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "items": { "type": "number", "minimum": 0, "exclusiveMaximum": 720 }
+        },
+        "transits_active": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/stringRecord" }
+        },
+        "decan_window": { "type": "string" },
+        "moon_phase": { "type": "number", "minimum": 0, "maximum": 1 },
+        "epoch_marker": { "type": "string" }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "q_identity",
+        "q_personal",
+        "tick12",
+        "exact_degree_720",
+        "phase"
+      ],
+      "properties": {
+        "q_identity": { "$ref": "#/$defs/quaternion4" },
+        "q_personal": { "$ref": "#/$defs/quaternion4" },
+        "tick12": { "type": "integer", "minimum": 0, "maximum": 11 },
+        "exact_degree_720": { "type": "number", "minimum": 0, "exclusiveMaximum": 720 },
+        "phase": { "type": "integer", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "recent_sessions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/stringRecord" }
+    },
+    "active_dev_goals": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/stringRecord" }
+    },
+    "recognized": { "type": "boolean" },
+    "recognition_provenance": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string" }
+      ]
+    },
+    "fired_at": { "type": "string", "format": "date-time" },
+    "fired_for": { "$ref": "#/$defs/vakFrame" },
+    "fire_reason": {
+      "type": "string",
+      "enum": [
+        "policy_fire",
+        "ct_synthesis",
+        "cf_non_ground",
+        "target_nara",
+        "constitutional_agent",
+        "explicit_required"
+      ]
+    }
+  },
+  "$defs": {
+    "stringRecord": {
+      "type": "object",
+      "additionalProperties": {
+        "anyOf": [
+          { "type": "string" },
+          { "type": "number" },
+          { "type": "boolean" },
+          { "type": "null" },
+          {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                { "type": "string" },
+                { "type": "number" },
+                { "type": "boolean" },
+                { "type": "null" }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "quaternion4": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": { "type": "number" }
+    },
+    "vakFrame": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "cpf": { "type": "string" },
+        "ct": {
+          "anyOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          ]
+        },
+        "cp": { "type": "string" },
+        "cf": { "type": "string" },
+        "cfp": { "type": "string" },
+        "cs": {
+          "anyOf": [
+            { "type": "string" },
+            { "type": "object" }
+          ]
+        },
+        "target": { "type": "string" },
+        "agent_role": { "type": "string" },
+        "require_user_context": { "type": "boolean" },
+        "user_context_policy": {
+          "type": "string",
+          "enum": ["auto", "fire", "skip"]
+        }
+      }
+    }
+  }
+}

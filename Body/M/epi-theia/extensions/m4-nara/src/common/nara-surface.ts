@@ -9,6 +9,8 @@ import {
 } from '@pratibimba/m-extension-runtime';
 import { EXTENSION_ID, PRIVACY_CLASS } from './index';
 
+export * from './e4-personal-energy';
+
 export const M4_NARA_CONTRACT_VERSION = '2026-06-01.07-T7';
 
 export type NaraArtifactKind =
@@ -30,6 +32,16 @@ export interface NaraScalarRef {
     readonly sourceHandle: string;
 }
 
+export type ConjugateFormCharacter = 'Major' | 'Minor' | 'Shadow';
+
+export interface NaraResonanceIndicator {
+    readonly state: 'resolved' | 'pending-resonance';
+    readonly numeric: number | null;
+    readonly conjugateFormCharacter: ConjugateFormCharacter | null;
+    readonly sourceHandle: string | null;
+    readonly label: string;
+}
+
 export interface NaraArtifactEnvelope {
     readonly artifactId: string;
     readonly artifactHandle: string;
@@ -44,6 +56,7 @@ export interface NaraArtifactEnvelope {
     readonly bodySha256: string;
     readonly scalarRefs: readonly NaraScalarRef[];
     readonly graphitiEpisodeHandles: readonly string[];
+    readonly resonance?: NaraResonanceIndicator;
     readonly qActivityPolicy?: QActivityUpdatePolicy;
     readonly payload: Readonly<Record<string, unknown>>;
 }
@@ -145,6 +158,7 @@ export async function createNaraArtifact(input: {
     readonly privacyClass?: NaraPrivacyClass;
     readonly scalarRefs?: readonly NaraScalarRef[];
     readonly graphitiEpisodeHandles?: readonly string[];
+    readonly resonance?: Partial<NaraResonanceIndicator>;
     readonly qActivityPolicy?: QActivityUpdatePolicy;
     readonly payload?: Readonly<Record<string, unknown>>;
     readonly createdAt?: string;
@@ -170,6 +184,7 @@ export async function createNaraArtifact(input: {
         bodySha256: stableId(input.body),
         scalarRefs: Object.freeze([...(input.scalarRefs ?? [])]),
         graphitiEpisodeHandles: Object.freeze([...(input.graphitiEpisodeHandles ?? [])]),
+        resonance: normalizeResonanceIndicator(input.resonance),
         qActivityPolicy: input.qActivityPolicy,
         payload: Object.freeze({ ...(input.payload ?? {}) })
     });
@@ -249,6 +264,7 @@ export function buildM4NaraSurface(input: M4NaraSurfaceInput): M4NaraSurface {
         artifactCounts: dayContainer?.artifactCounts ?? null,
         nowLineage: dayContainer?.nowLineage ?? [],
         privacyClass: PRIVACY_CLASS,
+        resonance: dayContainer ? summarizeDayResonance(dayContainer.artifactTree) : pendingDayResonanceSummary(),
         scalarRefs: dayContainer?.scalarRefs ?? [],
         graphitiEpisodeHandles: dayContainer?.graphitiEpisodeHandles ?? []
     });
@@ -289,6 +305,7 @@ export function buildS2CanonicalProjection(day: NaraDayContainer): Readonly<Reco
         dayHandle: `nara://day/${day.dayId}`,
         artifactHandles: day.artifactTree.map(artifact => artifact.artifactHandle),
         scalarRefs: day.scalarRefs,
+        lensApplications: projectLensApplications(day.artifactTree),
         graphitiEpisodeHandles: day.graphitiEpisodeHandles,
         protectedBodiesIncluded: false
     });
@@ -320,11 +337,15 @@ export function buildSpaceTimeRows(day: NaraDayContainer): readonly Readonly<Rec
 }
 
 export function renderProtectedPersonalField(input: ProtectedPersonalFieldInput): Readonly<Record<string, unknown>> {
+    const qBHandle = `${input.qComposedHandle}#q_b`;
+    const qPHandle = `${input.qComposedHandle}#q_p`;
     const handles = [
         input.qIdentityHandle,
         input.qTransitHandle,
         input.qActivityHandle,
         input.qComposedHandle,
+        qBHandle,
+        qPHandle,
         input.audioBusHandle,
         input.planetaryChakralStateHandle
     ];
@@ -342,6 +363,8 @@ export function renderProtectedPersonalField(input: ProtectedPersonalFieldInput)
             qTransitHandle: input.qTransitHandle,
             qActivityHandle: input.qActivityHandle,
             qComposedHandle: input.qComposedHandle,
+            qBHandle,
+            qPHandle,
             audioBusHandle: input.audioBusHandle,
             planetaryChakralStateHandle: input.planetaryChakralStateHandle
         })
@@ -506,8 +529,33 @@ function toArtifactTreeRow(artifact: NaraArtifactEnvelope): Readonly<Record<stri
         privacyClass: artifact.privacyClass,
         scalarRefs: artifact.scalarRefs,
         graphitiEpisodeHandles: artifact.graphitiEpisodeHandles,
+        resonance: normalizeResonanceIndicator(artifact.resonance),
         bodyRendered: false
     });
+}
+
+function projectLensApplications(
+    artifacts: readonly NaraArtifactEnvelope[]
+): readonly Readonly<Record<string, unknown>>[] {
+    return Object.freeze(
+        artifacts
+            .map(artifact => {
+                const payload = artifact.payload;
+                const lensPositionRef = stringValue(payload.lensPositionRef);
+                const activeSquare = stringValue(payload.c_3_active_square) ?? stringValue(payload.active_square);
+                const vakAddress = objectValue(payload.vak_address);
+                if (!lensPositionRef || !activeSquare || !vakAddress) {
+                    return null;
+                }
+                return freezeRecord({
+                    artifactHandle: artifact.artifactHandle,
+                    lensPositionRef,
+                    c_3_active_square: activeSquare,
+                    vak_address: vakAddress
+                });
+            })
+            .filter((row): row is Readonly<Record<string, unknown>> => row !== null)
+    );
 }
 
 function toGraphitiBrowserRow(episode: NaraGraphitiEpisode): Readonly<Record<string, unknown>> {
@@ -544,6 +592,79 @@ function objectValue(value: unknown): Readonly<Record<string, unknown>> | undefi
         return undefined;
     }
     return value as Readonly<Record<string, unknown>>;
+}
+
+function normalizeResonanceIndicator(input: unknown): NaraResonanceIndicator {
+    const record = objectValue(input);
+    const numeric = finiteNumber(record?.numeric);
+    const conjugateFormCharacter = parseConjugateFormCharacter(record?.conjugateFormCharacter);
+    const sourceHandle = stringValue(record?.sourceHandle);
+    if (numeric === null || conjugateFormCharacter === null) {
+        return Object.freeze({
+            state: 'pending-resonance',
+            numeric: null,
+            conjugateFormCharacter: null,
+            sourceHandle,
+            label: 'pending-resonance'
+        });
+    }
+    return Object.freeze({
+        state: 'resolved',
+        numeric,
+        conjugateFormCharacter,
+        sourceHandle,
+        label: `${numeric.toFixed(3)} ${conjugateFormCharacter}`
+    });
+}
+
+function summarizeDayResonance(artifacts: readonly NaraArtifactEnvelope[]): Readonly<Record<string, unknown>> {
+    const indicators = artifacts.map(artifact => normalizeResonanceIndicator(artifact.resonance));
+    const resolved = indicators.filter(indicator => indicator.state === 'resolved');
+    const numericAverage =
+        resolved.length === 0
+            ? null
+            : resolved.reduce((sum, indicator) => sum + (indicator.numeric ?? 0), 0) / resolved.length;
+    const byConjugateFormCharacter: Record<ConjugateFormCharacter, number> = {
+        Major: 0,
+        Minor: 0,
+        Shadow: 0
+    };
+    for (const indicator of resolved) {
+        if (indicator.conjugateFormCharacter) {
+            byConjugateFormCharacter[indicator.conjugateFormCharacter] += 1;
+        }
+    }
+    return freezeRecord({
+        state: resolved.length === 0 ? 'pending-resonance' : 'resolved',
+        numericAverage,
+        resolvedCount: resolved.length,
+        pendingCount: indicators.length - resolved.length,
+        byConjugateFormCharacter: freezeRecord(byConjugateFormCharacter),
+        label: numericAverage === null ? 'pending-resonance' : `${numericAverage.toFixed(3)} day resonance`
+    });
+}
+
+function pendingDayResonanceSummary(): Readonly<Record<string, unknown>> {
+    return freezeRecord({
+        state: 'pending-resonance',
+        numericAverage: null,
+        resolvedCount: 0,
+        pendingCount: 0,
+        byConjugateFormCharacter: freezeRecord({ Major: 0, Minor: 0, Shadow: 0 }),
+        label: 'pending-resonance'
+    });
+}
+
+function finiteNumber(value: unknown): number | null {
+    return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function parseConjugateFormCharacter(value: unknown): ConjugateFormCharacter | null {
+    return value === 'Major' || value === 'Minor' || value === 'Shadow' ? value : null;
+}
+
+function stringValue(value: unknown): string | null {
+    return typeof value === 'string' && value.length > 0 ? value : null;
 }
 
 function freezeRecord(record: Record<string, unknown>): Readonly<Record<string, unknown>> {

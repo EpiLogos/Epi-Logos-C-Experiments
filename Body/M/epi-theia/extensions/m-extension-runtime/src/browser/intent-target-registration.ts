@@ -1,5 +1,10 @@
 import type { CommandRegistry } from '@theia/core/lib/common';
 
+interface IntentTargetEnvelope {
+    readonly requestedExtensionId?: string | null;
+    readonly requestedContributionId?: string | null;
+}
+
 /**
  * Register a Pratibimba intent target command for an M-extension contribution.
  *
@@ -29,7 +34,30 @@ export function registerIntentTarget(
     commands.registerCommand(
         { id, label },
         {
-            execute: (intent: unknown) => executor(intent)
+            execute: (intent: unknown) => {
+                if (
+                    !isIntentTargetEnvelope(intent) ||
+                    !intentTargetsExtensionContribution(intent, extensionId, contributionId)
+                ) {
+                    return undefined;
+                }
+                return executor(intent);
+            }
         }
     );
+}
+
+function intentTargetsExtensionContribution(
+    intent: IntentTargetEnvelope,
+    extensionId: string,
+    contributionId: string
+): boolean {
+    return (
+        intent.requestedExtensionId === extensionId &&
+        intent.requestedContributionId === contributionId
+    );
+}
+
+function isIntentTargetEnvelope(intent: unknown): intent is IntentTargetEnvelope {
+    return Boolean(intent) && typeof intent === 'object';
 }

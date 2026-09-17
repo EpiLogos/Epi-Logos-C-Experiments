@@ -85,7 +85,7 @@ impl AgentSessionRuntimeFactory {
         let env = load_env_file(&request.effective_cwd)?;
         let vault_root = resolve_vault_root_for_repo(&request.effective_cwd, &env);
         let pi_session = pi_session_runtime_for_request(&request, &env);
-        let expected_day_id = request.now.format("%d-%m-%Y").to_string();
+        let expected_day_id = crate::vault::paths::format_day_id(request.now);
         let mut diagnostics = explicit_resource_path_diagnostics(&env);
 
         if !request.force_new && request.random_suffix.is_none() {
@@ -276,13 +276,11 @@ impl SessionContext {
             .map(ToOwned::to_owned)
             .unwrap_or_else(default_random_suffix);
         let session_id = generate_session_id_with_suffix(now, &random_suffix);
-        let day_id = now.format("%d-%m-%Y").to_string();
-        let now_path = vault_root
-            .join("Empty")
-            .join("Present")
-            .join(&day_id)
-            .join(&session_id)
-            .join("now.md");
+        let day_id = crate::vault::paths::format_day_id(now);
+        // Built by the one day-path authority, never joined by hand — a second
+        // hand-rolled copy in vault/day.rs is what let Present drift into the
+        // archive's nested shape (see tests/vault_present_day_path_authority.rs).
+        let now_path = crate::vault::paths::now_note_path(vault_root, now, &session_id);
 
         Self {
             session_id,
@@ -307,7 +305,7 @@ impl SessionContext {
 }
 
 pub fn generate_session_id_with_suffix(now: DateTime<Utc>, suffix: &str) -> String {
-    format!("{}-{suffix}", now.format("%Y%m%d-%H%M%S"))
+    format!("{}-{suffix}", crate::vault::paths::local_stamp(now))
 }
 
 pub fn bootstrap_sequence(repo_root: &Path, now_path: &Path) -> Vec<BootstrapArtifact> {

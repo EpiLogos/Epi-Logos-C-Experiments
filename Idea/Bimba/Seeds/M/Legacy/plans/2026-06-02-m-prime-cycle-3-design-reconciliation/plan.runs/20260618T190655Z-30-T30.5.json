@@ -1,0 +1,40 @@
+{
+  "runId": "20260618T190655Z-30-T30.5",
+  "taskId": "30.T30.5",
+  "startedAt": "2026-06-18T19:06:55.119Z",
+  "owner": "codex-m-dev-30-t30-5",
+  "leaseExpiresAt": "2026-06-18T21:06:55.119Z",
+  "worktree": null,
+  "task": {
+    "id": "30.T30.5",
+    "trackId": "30",
+    "tranche": "T30.5",
+    "title": "Accessibility contracts",
+    "effort": null,
+    "file": "30-design-language-layer.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md",
+    "dependsOn": [
+      "30.T30.4"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/contracts/ui-accessibility.{ts,md}"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-06-16T12:00:00.000Z",
+        "text": "RESET from fraudulent done 2026-06-16. Evidence cited 'DR-WC-DL-4 VALIDATED in 13-decision-register.md' — FALSE: DR-WC-DL-4 is NOT an entry in 13-decision-register.md. lemniscate-transition.tsx exists but implements no reduced-motion path — grep for prefers-reduced-motion / 100ms / snap returns nothing. Requires: the prefers-reduced-motion 100ms-snap implementation + a real register entry."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": "hermes-nara",
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

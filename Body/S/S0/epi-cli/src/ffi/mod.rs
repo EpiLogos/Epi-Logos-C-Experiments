@@ -8,6 +8,7 @@ pub mod role_names;
 pub mod tagged;
 
 use libc::c_void;
+use std::ffi::CStr;
 
 /// Mirror of C Holographic_Coordinate — 128 bytes, repr(C)
 #[repr(C)]
@@ -170,6 +171,19 @@ pub const HC_INTERVAL_OCTAVE: u8 = 12;
 pub const HC_BEDROCK_HASH_OPERATOR: u8 = 0;
 pub const HC_BEDROCK_PSYCHOID_NUMBER: u8 = 1;
 pub const HC_BEDROCK_INVERTED_PSYCHOID: u8 = 2;
+pub const HC_HARMONIC_FAMILY_A: u8 = 1;
+pub const HC_HARMONIC_FAMILY_B: u8 = 2;
+pub const HC_HARMONIC_FAMILY_C: u8 = 3;
+pub const HC_D_FACE_NONE: u8 = 0;
+pub const HC_D_FACE_LEFT: u8 = 1;
+pub const HC_D_FACE_RIGHT: u8 = 2;
+pub const HC_D_FACE_BOTH: u8 = 3;
+pub const HC_REL_ADJACENTLY_ARTICULATES: u8 = 1;
+pub const HC_REL_MIRRORS_COMPLEMENT: u8 = 2;
+pub const HC_REL_CROSSES_KNOWING_LIMIT: u8 = 3;
+pub const HC_REL_INVERTS_THROUGH_FIRST: u8 = 4;
+pub const HC_REL_INVERTS_THROUGH_SECOND: u8 = 5;
+pub const HC_REL_INVERTS_THROUGH_PAIR: u8 = 6;
 
 impl CoordinateFamily {
     pub fn from_u8(v: u8) -> Self {
@@ -256,6 +270,20 @@ extern "C" {
     pub fn hc_pratibimba_pitch_class(ql_position: u8) -> u8;
     pub fn hc_mirror_position(ql_position: u8) -> u8;
     pub fn hc_mirror_interval_role(ql_position: u8) -> u8;
+    pub fn hc_harmonic_families_for_pair(
+        first_ql_position: u8,
+        second_ql_position: u8,
+        out: *mut u8,
+        out_capacity: u8,
+    ) -> u8;
+    pub fn hc_harmonic_depth_for_d_face(face: u8) -> u8;
+    pub fn hc_harmonic_d_face(first_is_prime: u8, second_is_prime: u8) -> u8;
+    pub fn hc_harmonic_register_for_family(family: u8) -> u8;
+    pub fn hc_harmonic_relation_type(family: u8, face: u8) -> u8;
+    pub fn hc_harmonic_family_name(family: u8) -> *const libc::c_char;
+    pub fn hc_harmonic_register_name(harmonic_register: u8) -> *const libc::c_char;
+    pub fn hc_harmonic_d_face_name(face: u8) -> *const libc::c_char;
+    pub fn hc_harmonic_relation_type_name(relation_type: u8) -> *const libc::c_char;
     pub fn engine_torus_walk(start: *const HolographicCoordinate, ctx: *mut c_void, steps: u32);
     pub fn engine_double_covering(start: *const HolographicCoordinate, ctx: *mut c_void);
     pub fn Execute_Hash(hc: *mut HolographicCoordinate, target: *mut c_void);
@@ -428,6 +456,44 @@ impl EpiLib {
         (result == 0).then_some(web)
     }
 
+    pub fn harmonic_families_for_pair(&self, first: u8, second: u8) -> Vec<u8> {
+        let mut families = [0u8; 2];
+        let count = unsafe {
+            hc_harmonic_families_for_pair(
+                first,
+                second,
+                families.as_mut_ptr(),
+                families.len() as u8,
+            )
+        };
+        families[..count as usize].to_vec()
+    }
+
+    pub fn harmonic_d_face(&self, first_is_prime: bool, second_is_prime: bool) -> u8 {
+        unsafe { hc_harmonic_d_face(first_is_prime as u8, second_is_prime as u8) }
+    }
+
+    pub fn harmonic_depth_for_d_face(&self, face: u8) -> u8 {
+        unsafe { hc_harmonic_depth_for_d_face(face) }
+    }
+
+    pub fn harmonic_relation_type(&self, family: u8, face: u8) -> u8 {
+        unsafe { hc_harmonic_relation_type(family, face) }
+    }
+
+    pub fn harmonic_family_name(&self, family: u8) -> &'static str {
+        c_name_to_str(unsafe { hc_harmonic_family_name(family) })
+    }
+
+    pub fn harmonic_register_name_for_family(&self, family: u8) -> &'static str {
+        let register = unsafe { hc_harmonic_register_for_family(family) };
+        c_name_to_str(unsafe { hc_harmonic_register_name(register) })
+    }
+
+    pub fn harmonic_relation_type_name(&self, relation_type: u8) -> &'static str {
+        c_name_to_str(unsafe { hc_harmonic_relation_type_name(relation_type) })
+    }
+
     pub fn torus_walk(
         &self,
         start: *const HolographicCoordinate,
@@ -449,6 +515,13 @@ impl EpiLib {
             )
         }
     }
+}
+
+fn c_name_to_str(ptr: *const libc::c_char) -> &'static str {
+    if ptr.is_null() {
+        return "";
+    }
+    unsafe { CStr::from_ptr(ptr).to_str().unwrap_or("") }
 }
 
 /// Read a coordinate's fields safely

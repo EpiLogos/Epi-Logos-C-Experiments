@@ -3,6 +3,17 @@ mod common;
 use common::{read_to_string, run_epi, write_file, TestEnv};
 use std::fs;
 
+/// The goal-prelude filename is stamped with `vault::paths::local_stamp`, i.e.
+/// the LOCAL wall clock. Deriving it here rather than freezing the UTC spelling
+/// keeps the test honest in every timezone: `2026-05-18T12:34:56Z` is 13:34:56
+/// in BST, so the frozen `...-123456.md` only ever passed under TZ=UTC.
+fn local_stamp_of(rfc3339: &str) -> String {
+    let instant = chrono::DateTime::parse_from_rfc3339(rfc3339)
+        .expect("test instant parses")
+        .with_timezone(&chrono::Utc);
+    epi_logos::vault::paths::local_stamp(instant)
+}
+
 #[test]
 fn goal_prelude_writes_now_bound_markdown_without_run_side_effects() {
     let env = TestEnv::repo_with_assets();
@@ -37,9 +48,10 @@ fn goal_prelude_writes_now_bound_markdown_without_run_side_effects() {
         .contains("EPI_SESSION_ID=20260518-120000-goal01"));
     assert!(output.stdout.contains("EPI_DAY_ID=18-05-2026"));
 
-    let prelude_path = env.root.join(
-        "vault/Empty/Present/18-05-2026/20260518-120000-goal01/goals/goal-prelude-20260518-123456.md",
-    );
+    let prelude_path = env.root.join(format!(
+        "vault/Empty/Present/18-05-2026/20260518-120000-goal01/goals/goal-prelude-{}.md",
+        local_stamp_of("2026-05-18T12:34:56Z")
+    ));
     let body = read_to_string(&prelude_path);
     assert!(body.contains("c_4_artifact_role: \"goal-prelude\""));
     assert!(body.contains("c_4_cpf: \"(00/00)\""));

@@ -1,0 +1,36 @@
+{
+  "runId": "20260707T210752Z-01-T1.17",
+  "taskId": "01.T1.17",
+  "startedAt": "2026-07-07T21:07:52.849Z",
+  "owner": "fable-a-kernel",
+  "leaseExpiresAt": "2026-07-07T23:07:52.849Z",
+  "worktree": null,
+  "task": {
+    "id": "01.T1.17",
+    "trackId": "01",
+    "tranche": "T1.17",
+    "title": "`R#`/`##` tao-elements + Tao ≡ the codon charge-evaluation in the calculus",
+    "effort": null,
+    "file": "01-m0-anuttara-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/01-m0-anuttara-reconciliation.md",
+    "dependsOn": [
+      "01.T1.16"
+    ],
+    "writeScopes": [
+      "Body/S/S0/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

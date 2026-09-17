@@ -15,8 +15,10 @@
   "dependencies": {
     "@theia/core": "1.56.0",
     "@pratibimba/kernel-bridge": "workspace:*",
+    "@pratibimba/omnipanel-shell": "workspace:*",
     "@pratibimba/pratibimba-layouts": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
+    "@pratibimba/block-kit": "workspace:*",
     "@pratibimba/ide-shell-m0-m5": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -31,6 +33,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build && node --test tests/run-flow.test.mjs tests/human-gate.test.mjs tests/evidence-envelope.test.mjs"
+    "test": "pnpm build && node --test tests/run-flow.test.mjs tests/human-gate.test.mjs tests/evidence-envelope.test.mjs tests/pi-runtime-monitor.test.mjs"
   }
 }

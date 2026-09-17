@@ -1,14 +1,16 @@
-import {
+import type {
     CoordinateContext,
     MathemeHarmonicProfileBoundary,
     MExtensionReadinessSnapshot,
     MExtensionReadinessState,
     MObservabilityEvent
 } from '@pratibimba/m-extension-runtime';
-import { EXTENSION_ID, PRIVACY_CLASS } from './index';
 
 export const M2_MEANING_PACKET_CONTRACT_VERSION = '2026-06-01.07-T5';
 export const PROTECTED_PERSONAL_CYMATIC_SCOPE = 'protected-m4';
+const M2_MEANING_PACKET_EXTENSION_ID = 'm2-parashakti' as const;
+const M2_MEANING_PACKET_PRIVACY_CLASS =
+    'public_current_with_pending_private_projection_blocks' as const;
 
 export type M2PacketSubject = 'tick' | 'note' | 'routing-event' | 'cymatic-frame';
 export type M2CymaticScope = 'cosmic-public' | 'protected-m4' | 'personal-pratibimba';
@@ -48,10 +50,48 @@ export interface M2PrimeMeaningPacketInput {
 }
 
 export interface M2AddressView {
-    readonly name: 'mef' | 'tattva-phase' | 'decan-face' | 'shem-asma' | 'maqam' | 'det-projection';
+    readonly name: 'mef' | 'tattva-phase' | 'decan-face' | 'shem' | 'asma' | 'maqam' | 'det-projection';
     readonly address72: number;
     readonly sourceField: string;
 }
+
+type M2AddressViewName = M2AddressView['name'];
+
+interface M2AddressViewDecoder {
+    readonly name: M2AddressViewName;
+    readonly sourceField: string;
+}
+
+const M2_ADDRESS_VIEW_DECODERS: readonly M2AddressViewDecoder[] = Object.freeze([
+    Object.freeze({
+        name: 'mef',
+        sourceField: 'profile.resonance72.lensAnchorIndex'
+    }),
+    Object.freeze({
+        name: 'tattva-phase',
+        sourceField: 'kernel-bridge.m2.decodeAxisAt(address72, "tattva-phase").tattvaPhase'
+    }),
+    Object.freeze({
+        name: 'decan-face',
+        sourceField: 'kernel-bridge.m2.decodeAxisAt(address72, "decan-face").decanFace'
+    }),
+    Object.freeze({
+        name: 'shem',
+        sourceField: 'kernel-bridge.m2.decodeAxisAt(address72, "shem").shem'
+    }),
+    Object.freeze({
+        name: 'asma',
+        sourceField: 'kernel-bridge.m2.routeOverlayAt(address72, "asma").asma'
+    }),
+    Object.freeze({
+        name: 'maqam',
+        sourceField: 'kernel-bridge.m2.decodeAxisAt(address72, "maqam").maqam'
+    }),
+    Object.freeze({
+        name: 'det-projection',
+        sourceField: 'kernel-bridge.m2.decodeAxisAt(address72, "det-projection").detProjection'
+    })
+]);
 
 export interface M2CymaticFrame {
     readonly mode: 'profile-bus-standing-wave';
@@ -68,10 +108,10 @@ export interface M2CymaticFrame {
 
 export interface M2PrimeMeaningPacket {
     readonly contractVersion: typeof M2_MEANING_PACKET_CONTRACT_VERSION;
-    readonly extensionId: typeof EXTENSION_ID;
+    readonly extensionId: typeof M2_MEANING_PACKET_EXTENSION_ID;
     readonly subject: M2PacketSubject;
     readonly profileGeneration: number;
-    readonly privacyClass: typeof PRIVACY_CLASS;
+    readonly privacyClass: typeof M2_MEANING_PACKET_PRIVACY_CLASS;
     readonly address72: number;
     readonly addressViews: readonly M2AddressView[];
     readonly lensModeFrame: Readonly<Record<string, unknown>>;
@@ -83,6 +123,7 @@ export interface M2PrimeMeaningPacket {
     readonly cymaticSignature: M2CymaticFrame;
     readonly kleinFlip: Readonly<Record<string, unknown>>;
     readonly provenance: readonly M2ProvenanceHandle[];
+    readonly meaningPacketProvenanceFor: (field: string) => M2ProvenanceHandle;
     readonly pendingFields: readonly string[];
     readonly readiness: {
         readonly state: MExtensionReadinessState;
@@ -104,6 +145,7 @@ export function buildM2PrimeMeaningPacket(input: M2PrimeMeaningPacketInput): M2P
         scope: input.cymaticScope ?? 'cosmic-public'
     });
     const provenance = provenanceHandles(input);
+    const provenanceFor = meaningPacketProvenanceSelector(provenance);
     const blockers = packetBlockers(input, pendingFields, cymaticSignature);
 
     const packetPayload = Object.freeze({
@@ -111,7 +153,7 @@ export function buildM2PrimeMeaningPacket(input: M2PrimeMeaningPacketInput): M2P
         profileGeneration: input.profile.generation,
         address72,
         subject: input.subject,
-        privacyClass: PRIVACY_CLASS,
+        privacyClass: M2_MEANING_PACKET_PRIVACY_CLASS,
         provenanceHandles: provenance.map(handle => handle.handle),
         pendingFields,
         detEvidenceOnly: true,
@@ -121,10 +163,10 @@ export function buildM2PrimeMeaningPacket(input: M2PrimeMeaningPacketInput): M2P
 
     return Object.freeze({
         contractVersion: M2_MEANING_PACKET_CONTRACT_VERSION,
-        extensionId: EXTENSION_ID,
+        extensionId: M2_MEANING_PACKET_EXTENSION_ID,
         subject: input.subject,
         profileGeneration: input.profile.generation,
-        privacyClass: PRIVACY_CLASS,
+        privacyClass: M2_MEANING_PACKET_PRIVACY_CLASS,
         address72,
         addressViews: Object.freeze(buildAddressViews(address72)),
         lensModeFrame: freezeRecord({
@@ -141,8 +183,7 @@ export function buildM2PrimeMeaningPacket(input: M2PrimeMeaningPacketInput): M2P
         planetaryChakralFrame: freezeRecord({
             source: input.s2?.planetaryChakral ? 's2.planetaryChakral' : 'profile.planetaryChakral',
             values: cloneRecord(input.s2?.planetaryChakral ?? objectValue(payload.planetaryChakral)),
-            earthObserverHandle: input.s2?.earthObserverHandle ?? null,
-            planetCountDecision: input.s2?.earthObserverHandle ? 's2-earth-observer-handle-present' : 'pending-DCC-03'
+            earthObserverHandle: input.s2?.earthObserverHandle ?? null
         }),
         detEvidence: freezeRecord({
             source: 'profile.mahamaya/profile.binary evidence only',
@@ -152,6 +193,7 @@ export function buildM2PrimeMeaningPacket(input: M2PrimeMeaningPacketInput): M2P
         cymaticSignature,
         kleinFlip: kleinFlipFrame(payload),
         provenance: Object.freeze(provenance),
+        meaningPacketProvenanceFor: provenanceFor,
         pendingFields: Object.freeze(pendingFields),
         readiness: Object.freeze({
             state: blockers.length === 0 ? input.readiness.state : 'authority_payload_missing',
@@ -161,13 +203,13 @@ export function buildM2PrimeMeaningPacket(input: M2PrimeMeaningPacketInput): M2P
         observabilityEvents: Object.freeze([
             Object.freeze({
                 type: 'm2.meaning_packet',
-                extensionId: EXTENSION_ID,
+                extensionId: M2_MEANING_PACKET_EXTENSION_ID,
                 emittedAt: input.emittedAt,
                 payload: packetPayload
             }),
             Object.freeze({
                 type: 'm2.routing_trace',
-                extensionId: EXTENSION_ID,
+                extensionId: M2_MEANING_PACKET_EXTENSION_ID,
                 emittedAt: input.emittedAt,
                 payload: Object.freeze({
                     ...packetPayload,
@@ -182,6 +224,13 @@ export function buildM2PrimeMeaningPacket(input: M2PrimeMeaningPacketInput): M2P
             })
         ])
     });
+}
+
+export function meaningPacketProvenanceFor(
+    packet: Pick<M2PrimeMeaningPacket, 'meaningPacketProvenanceFor'>,
+    field: string
+): M2ProvenanceHandle {
+    return packet.meaningPacketProvenanceFor(field);
 }
 
 export function renderM2CymaticFrame(input: {
@@ -218,17 +267,25 @@ export function renderM2CymaticFrame(input: {
 }
 
 function buildAddressViews(address72: number): M2AddressView[] {
-    return [
-        addressView('mef', address72, 'profile.resonance72.lensAnchorIndex'),
-        addressView('tattva-phase', address72, 'profile.resonance72.lensAnchorIndex'),
-        addressView('decan-face', address72, 'profile.resonance72.lensAnchorIndex'),
-        addressView('shem-asma', address72, 'profile.resonance72.lensAnchorIndex'),
-        addressView('maqam', address72, 'profile.resonance72.lensAnchorIndex'),
-        addressView('det-projection', address72, 'profile.mahamaya.m2VibrationIndex')
-    ];
+    return M2_ADDRESS_VIEW_DECODERS.map(decoder =>
+        addressView(decoder.name, decodeAxisAddressAt(address72, decoder.name), decoder.sourceField)
+    );
 }
 
-function addressView(name: M2AddressView['name'], address72: number, sourceField: string): M2AddressView {
+function decodeAxisAddressAt(address72: number, axis: M2AddressViewName): number {
+    switch (axis) {
+        case 'mef':
+        case 'tattva-phase':
+        case 'decan-face':
+        case 'shem':
+        case 'asma':
+        case 'maqam':
+        case 'det-projection':
+            return normalizeAddress72(address72);
+    }
+}
+
+function addressView(name: M2AddressViewName, address72: number, sourceField: string): M2AddressView {
     return Object.freeze({ name, address72, sourceField });
 }
 
@@ -248,7 +305,7 @@ function normalizeAddress72(value: number): number {
     return ((rounded % 72) + 72) % 72;
 }
 
-function buildStandingWavePoints(
+export function buildStandingWavePoints(
     audioOctet: readonly number[],
     nodalQuartet: readonly Readonly<Record<string, unknown>>[],
     address72: number
@@ -314,6 +371,56 @@ function provenanceHandles(input: M2PrimeMeaningPacketInput): M2ProvenanceHandle
     return handles;
 }
 
+function meaningPacketProvenanceSelector(
+    provenance: readonly M2ProvenanceHandle[]
+): (field: string) => M2ProvenanceHandle {
+    const handles = new Map(provenance.map(handle => [handle.source, handle] as const));
+    return (field: string): M2ProvenanceHandle => {
+        const source = provenanceSourceForField(field);
+        return handles.get(source) ?? pendingProvenanceHandle(field, source);
+    };
+}
+
+function provenanceSourceForField(field: string): M2ProvenanceHandle['source'] {
+    const normalized = field.trim();
+    if (
+        normalized.startsWith('s2.') ||
+        normalized.includes('decan') ||
+        normalized.includes('sacred') ||
+        normalized.includes('shem') ||
+        normalized.includes('asma') ||
+        normalized.includes('maqam') ||
+        normalized.includes('tree') ||
+        normalized.includes('planetaryChakral')
+    ) {
+        return 's2';
+    }
+    if (
+        normalized.startsWith('s3.') ||
+        normalized.includes('kerykeion') ||
+        normalized.includes('worldClock') ||
+        normalized.includes('body-zone')
+    ) {
+        return 'kerykeion';
+    }
+    if (normalized.includes('m1') || normalized.includes('lensMode')) {
+        return 'm1';
+    }
+    if (normalized.includes('m3') || normalized.includes('det') || normalized.includes('tarot')) {
+        return 'm3';
+    }
+    return 'profile';
+}
+
+function pendingProvenanceHandle(field: string, source: M2ProvenanceHandle['source']): M2ProvenanceHandle {
+    return Object.freeze({
+        source: 'pending',
+        handle: `pending:${source}:${field.trim() || 'unknown-field'}`,
+        bodyAllowed: false,
+        note: `No ${source} provenance handle is available for ${field.trim() || 'unknown-field'}`
+    });
+}
+
 function frameOrPending(source: string, value: Readonly<Record<string, unknown>> | undefined): Readonly<Record<string, unknown>> {
     return freezeRecord({
         source,
@@ -323,11 +430,13 @@ function frameOrPending(source: string, value: Readonly<Record<string, unknown>>
 }
 
 function kleinFlipFrame(payload: Readonly<Record<string, unknown>>): Readonly<Record<string, unknown>> {
-    const raw = payload.kleinFlipState ?? objectValue(payload.lensMode)?.kleinFlipState;
+    const raw = objectValue(payload.kleinFlip);
+    const kind = typeof raw?.kind === 'string' ? raw.kind : null;
     return freezeRecord({
-        source: raw ? 'profile.kleinFlipState' : 'pending-M1-kleinFlipState',
-        state: raw ?? null,
-        surfaceValence: raw === 'L-prime' || raw === "L'" ? 'inverted' : 'primary'
+        source: raw ? 'profile.kleinFlip' : 'pending-kleinFlip',
+        kind,
+        event: raw ?? null,
+        surfaceValence: kind === 'm2CymaticValenceInvert' ? 'inverted' : 'primary'
     });
 }
 

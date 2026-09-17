@@ -12,7 +12,8 @@ describe("Z-phase VAK factories", () => {
     assert.deepEqual(vak.ct, ["CT0"]);
     assert.equal(vak.cfp, "CFP0");
     assert.equal(vak.cs.code, "CS1");
-    assert.equal(vak.cs.direction, "Day");
+    assert.equal(vak.cs.sense, "prospective");
+    assert.equal(vak.cs.direction, "Day", "legacy Day alias retained for one release (05.T5.15)");
     assert.ok(isValidVakAddress(vak), "compose phase VAK is canonically valid");
   });
 
@@ -24,7 +25,8 @@ describe("Z-phase VAK factories", () => {
     assert.deepEqual(vak.ct, ["CT5"]);
     assert.equal(vak.cfp, "CFP3");
     assert.equal(vak.cs.code, "CS0");
-    assert.equal(vak.cs.direction, "Night'");
+    assert.equal(vak.cs.sense, "retrospective");
+    assert.equal(vak.cs.direction, "Night'", "legacy Night' alias retained for one release (05.T5.15)");
     assert.ok(isValidVakAddress(vak), "rehear phase VAK is canonically valid");
   });
 });

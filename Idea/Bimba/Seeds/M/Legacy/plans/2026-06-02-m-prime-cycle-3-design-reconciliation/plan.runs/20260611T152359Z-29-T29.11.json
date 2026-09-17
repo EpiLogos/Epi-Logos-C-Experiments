@@ -1,0 +1,35 @@
+{
+  "runId": "20260611T152359Z-29-T29.11",
+  "taskId": "29.T29.11",
+  "startedAt": "2026-06-11T15:23:59.030Z",
+  "owner": "codex-m-dev-29-t29-11",
+  "leaseExpiresAt": "2026-06-11T17:23:59.030Z",
+  "worktree": null,
+  "task": {
+    "id": "29.T29.11",
+    "trackId": "29",
+    "tranche": "T29.11",
+    "title": "Composition observability event vocabulary + OmniPanel Dispatch Trace wiring *(spec-ahead-integration; closes OW-WC-IP-1; cross-link 15.11)*",
+    "effort": null,
+    "file": "29-integrated-plugins-composition-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md",
+    "dependsOn": [
+      "29.T29.10"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/composition-events.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

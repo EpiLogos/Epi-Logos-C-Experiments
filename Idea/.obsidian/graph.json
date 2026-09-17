@@ -1,22 +1,135 @@
 {
-  "collapse-filter": false,
+  "collapse-filter": true,
   "search": "",
   "showTags": false,
   "showAttachments": false,
   "hideUnresolved": true,
   "showOrphans": false,
-  "collapse-color-groups": true,
-  "colorGroups": [],
-  "collapse-display": false,
-  "showArrow": false,
-  "textFadeMultiplier": 1,
-  "nodeSizeMultiplier": 1.63444010416667,
-  "lineSizeMultiplier": 1.97280381944444,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "[\"coordinate\": M2]",
+      "color": {
+        "a": 1,
+        "rgb": 13441048
+      }
+    },
+    {
+      "query": "[\"coordinate\": M0]",
+      "color": {
+        "a": 1,
+        "rgb": 16777215
+      }
+    },
+    {
+      "query": "[\"coordinate\": M1]",
+      "color": {
+        "a": 1,
+        "rgb": 1332178
+      }
+    },
+    {
+      "query": "[\"coordinate\": M3]",
+      "color": {
+        "a": 1,
+        "rgb": 14863686
+      }
+    },
+    {
+      "query": "[\"coordinate\": M4]",
+      "color": {
+        "a": 1,
+        "rgb": 3718216
+      }
+    },
+    {
+      "query": "[\"coordinate\": M5]",
+      "color": {
+        "a": 1,
+        "rgb": 7352002
+      }
+    },
+    {
+      "query": "[\"coordinate\": S0]",
+      "color": {
+        "a": 1,
+        "rgb": 0
+      }
+    },
+    {
+      "query": "[\"coordinate\": S1]",
+      "color": {
+        "a": 1,
+        "rgb": 6540249
+      }
+    },
+    {
+      "query": "[\"coordinate\": S2]",
+      "color": {
+        "a": 1,
+        "rgb": 15479507
+      }
+    },
+    {
+      "query": "[\"coordinate\": S3]",
+      "color": {
+        "a": 1,
+        "rgb": 10084434
+      }
+    },
+    {
+      "query": "[\"coordinate\": S4]",
+      "color": {
+        "a": 1,
+        "rgb": 13209112
+      }
+    },
+    {
+      "query": "[\"coordinate\": S5]",
+      "color": {
+        "a": 1,
+        "rgb": 12098047
+      }
+    },
+    {
+      "query": "[\"coordinate\": P]",
+      "color": {
+        "a": 1,
+        "rgb": 3743339
+      }
+    },
+    {
+      "query": "[\"coordinate\": L]",
+      "color": {
+        "a": 1,
+        "rgb": 5431473
+      }
+    },
+    {
+      "query": "[\"coordinate\": C]",
+      "color": {
+        "a": 1,
+        "rgb": 5419488
+      }
+    },
+    {
+      "query": "[\"coordinate\": T]",
+      "color": {
+        "a": 1,
+        "rgb": 1266284
+      }
+    }
+  ],
+  "collapse-display": true,
+  "showArrow": true,
+  "textFadeMultiplier": -0.2,
+  "nodeSizeMultiplier": 0.470052083333333,
+  "lineSizeMultiplier": 0.944314236111111,
   "collapse-forces": true,
-  "centerStrength": 0.518713248970312,
-  "repelStrength": 10,
-  "linkStrength": 1,
-  "linkDistance": 250,
-  "scale": 0.2140812468020421,
+  "centerStrength": 0.203385416666667,
+  "repelStrength": 6.89930555555556,
+  "linkStrength": 0.915885416666667,
+  "linkDistance": 281,
+  "scale": 0.07685134495296532,
   "close": true
 }

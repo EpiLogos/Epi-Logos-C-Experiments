@@ -1,0 +1,40 @@
+{
+  "runId": "20260718T011839Z-17-T17.8",
+  "taskId": "17.T17.8",
+  "startedAt": "2026-07-18T01:18:39.775Z",
+  "owner": "codex-mdev-continuous",
+  "leaseExpiresAt": "2026-07-18T03:18:39.775Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.8",
+    "trackId": "17",
+    "tranche": "T17.8",
+    "title": "Split `Body/S/S2/graph-services/src/sync_coordinator.rs` (1,384 LOC)",
+    "effort": "1,384 LOC",
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.7"
+    ],
+    "writeScopes": [
+      "Body/S/S2/graph-services/src/sync_coordinator.rs",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [
+      "17.T17.7"
+    ],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — S-stack facade-split discipline (METHOD_DISPATCH_PLAN canonical DR-S3-3 co-PR rule, Hen rename-reconciliation authority, 17.28 canon byte-identity). Body/S/*. Worst-audited infra track. §2 track 17."
+  }
+}

@@ -109,6 +109,7 @@ test('M2PrimeMeaningPacket is built from the real portal-core profile fixture pl
     assert.equal(model.address72, baselineProfile.resonance72.lensAnchorIndex);
     assert.equal(model.elementalFrame.values.pPositionElement, baselineProfile.elements.pPositionElement);
     assert.equal(model.planetaryChakralFrame.values.provenance, 'S2 governed correspondence payload');
+    assert.equal(Object.hasOwn(model.planetaryChakralFrame, 'planetCountDecision'), false);
     assert.deepEqual(
         model.provenance.map(handle => handle.handle),
         [
@@ -133,6 +134,42 @@ test('every packet address view remains inside canonical 72-space', () => {
     const shiftedPacket = packet({ profile: boundary(18, shifted) });
     assert.equal(shiftedPacket.address72, 71);
 });
+
+test('address views decode each M2 axis through its kernel-bridge LUT source for every 72-space address', () => {
+    const expectedSources = new Map([
+        ['mef', 'profile.resonance72.lensAnchorIndex'],
+        ['tattva-phase', 'kernel-bridge.m2.decodeAxisAt(address72, "tattva-phase").tattvaPhase'],
+        ['decan-face', 'kernel-bridge.m2.decodeAxisAt(address72, "decan-face").decanFace'],
+        ['shem', 'kernel-bridge.m2.decodeAxisAt(address72, "shem").shem'],
+        ['asma', 'kernel-bridge.m2.routeOverlayAt(address72, "asma").asma'],
+        ['maqam', 'kernel-bridge.m2.decodeAxisAt(address72, "maqam").maqam'],
+        ['det-projection', 'kernel-bridge.m2.decodeAxisAt(address72, "det-projection").detProjection']
+    ]);
+
+    for (let address72 = 0; address72 < 72; address72 += 1) {
+        const payload = structuredClone(baselineProfile);
+        payload.resonance72.lensAnchorIndex = address72;
+        const model = packet({ profile: boundary(address72 + 1, payload) });
+        assert.equal(model.addressViews.length, expectedSources.size);
+        for (const view of model.addressViews) {
+            assert.equal(view.address72, address72, `${view.name} must round-trip address ${address72}`);
+            assert.equal(view.sourceField, expectedSources.get(view.name), `${view.name} source must be axis-specific`);
+        }
+    }
+
+    const source = readFileSync(SOURCE_FILE, 'utf8');
+    assert.equal((source.match(/sourceField: 'profile\.resonance72/g) ?? []).length, 1);
+    assert.equal(source.includes(`'shem-${'asma'}'`), false);
+    const addressViewNames = modelAxisNames(packet());
+    assert.equal(addressViewNames.includes('shem'), true);
+    assert.equal(addressViewNames.includes('asma'), true);
+    assert.equal(addressViewNames.filter(name => name !== 'asma').length, 6);
+    assert.ok(expectedSources.get('asma')?.includes('routeOverlayAt'), 'Asma must remain an overlay, not a 72-axis decoder');
+});
+
+function modelAxisNames(model) {
+    return model.addressViews.map(view => view.name);
+}
 
 test('cymatic renderer consumes exact profile audioOctet and nodalQuartet without rewriting the bus', () => {
     const frame = renderM2CymaticFrame({ profile: boundary(17), address72: 0 });

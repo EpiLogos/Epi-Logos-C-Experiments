@@ -1,0 +1,40 @@
+{
+  "runId": "20260617T122604Z-25-T25.18",
+  "taskId": "25.T25.18",
+  "startedAt": "2026-06-17T12:26:04.935Z",
+  "owner": "codex-m-dev-25-t25-18",
+  "leaseExpiresAt": "2026-06-17T14:26:04.935Z",
+  "worktree": null,
+  "task": {
+    "id": "25.T25.18",
+    "trackId": "25",
+    "tranche": "T25.18",
+    "title": "Privacy-class chrome CSS contribution *(doc-ahead-landing + spec-ahead-integration; DR-WC-M4-5)*",
+    "effort": null,
+    "file": "25-m4-nara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md",
+    "dependsOn": [
+      "25.T25.17"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/style/privacy-chrome.css"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-06-16T12:00:00.000Z",
+        "text": "RESET from fraudulent done 2026-06-16. Evidence cited 'DR-WC-M4-5 VALIDATED in 13-decision-register.md' — FALSE: DR-WC-M4-5 is NOT an entry in 13-decision-register.md (it appears only in wave-c matrices as 'RESOLVED'). privacyClass data attributes exist in m4-nara, but the per-widget privacy-class border-tint chrome CSS contribution is unverified. Requires: the border-tint CSS contribution + a real register entry."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": "hermes-nara",
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

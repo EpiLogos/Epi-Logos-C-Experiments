@@ -1,7 +1,8 @@
 use portal_core::{
-    codon_charge_quaternion, kernel_tick_from_epogdoon, ConjugateFormCharacter,
-    KerykeionNatalChart, MathemeHarmonicProfile, PersonalIdentityProfile, PersonalResonance,
-    ProfilePrivacyClass,
+    codon_charge_quaternion, identity_hash_kinds_during_cutover, integrate_nara_quintessence,
+    kernel_tick_from_epogdoon, ConjugateFormCharacter, IdentityHashKind, KerykeionNatalChart,
+    MathemeHarmonicProfile, PersonalIdentityProfile, PersonalResonance, ProfilePrivacyClass,
+    CL42_PERSONAL_AXIS_ORDER, PERSONAL_CYMATIC_POLARITY, VAMA_LONG_PERIOD_REVIEW_POLICY,
 };
 
 const COMPLETE_NATAL: &str = include_str!("fixtures/kerykeion_natal_complete.json");
@@ -25,7 +26,12 @@ fn identity_profile_is_deterministic_and_normalized_from_kerykeion_fixture() {
     );
     assert_eq!(first.natal_chart_handle, NATAL_HANDLE);
     assert_eq!(first.identity_hash, IDENTITY_HASH);
+    assert_eq!(
+        first.q_personal,
+        integrate_nara_quintessence(first.q_identity, &[])
+    );
     assert_unit(first.q_personal);
+    assert_unit(first.q_identity);
 
     let elemental_sum = first.elemental_balance.earth
         + first.elemental_balance.fire
@@ -36,6 +42,23 @@ fn identity_profile_is_deterministic_and_normalized_from_kerykeion_fixture() {
         .q_personal
         .iter()
         .all(|component| component.is_finite()));
+}
+
+#[test]
+fn dr_m4_2_policy_bindings_are_ratified_in_personal_identity_surface() {
+    assert_eq!(CL42_PERSONAL_AXIS_ORDER.len(), 4);
+    assert_eq!(PERSONAL_CYMATIC_POLARITY[0].pole, 0);
+    assert_eq!(PERSONAL_CYMATIC_POLARITY[1].pole, 1);
+    assert!(VAMA_LONG_PERIOD_REVIEW_POLICY.computed_mandatory_internal_long_period_review);
+    assert!(VAMA_LONG_PERIOD_REVIEW_POLICY.user_visible_on_request);
+    assert!(!VAMA_LONG_PERIOD_REVIEW_POLICY.auto_raise_to_user);
+    assert_eq!(
+        identity_hash_kinds_during_cutover(IDENTITY_HASH),
+        Some([
+            IdentityHashKind::LegacyBirthDataBlake3,
+            IdentityHashKind::QuaternionicSignatureBlake3,
+        ])
+    );
 }
 
 #[test]
@@ -114,6 +137,8 @@ fn resonance_uses_codon_charge_quaternion_and_public_profile_does_not_leak_ident
     assert!(public_json.contains("resonance"));
     assert!(!public_json.contains("qPersonal"));
     assert!(!public_json.contains("q_personal"));
+    assert!(!public_json.contains("qIdentity"));
+    assert!(!public_json.contains("q_identity"));
     assert!(!public_json.contains("natalChartHandle"));
     assert!(!public_json.contains("identityHash"));
     assert!(!public_json.contains("birth"));
@@ -145,6 +170,45 @@ fn conjugate_form_character_uses_signed_dot_and_major_threshold() {
         shadow.conjugate_form_character,
         ConjugateFormCharacter::ShadowInversion
     );
+}
+
+#[test]
+fn q_composed_order_is_identity_then_transit_then_activity() {
+    // T14.C6 — spec (INTEGRATED-4-5-0 §M4-4-4-4 / recapture register §1
+    // Quaternion): `Q_composed = (Q_identity · Q_transit) · Q_activity`,
+    // left-associative, normalized. Hamilton products are non-commutative,
+    // so the expected value below — hand-derived from the Hamilton algebra,
+    // never from the code under test — detects any operand reordering:
+    //   Q_id = i, Q_transit = j, Q_activity = 0.6 + 0.8i
+    //   spec order:       (i·j)·(0.6+0.8i) = k·(0.6+0.8i) = 0.8j + 0.6k
+    //   transit-first:    (j·i)·(0.6+0.8i) = −0.8j − 0.6k
+    //   activity-first:   (0.6+0.8i)·(i·j) = −0.8j + 0.6k
+    //   act/transit swap: i·(0.6+0.8i)·j   = −0.8j + 0.6k
+    let q_identity = [0.0, 1.0, 0.0, 0.0];
+    let q_transit = [0.0, 0.0, 1.0, 0.0];
+    let q_activity = [0.6, 0.8, 0.0, 0.0];
+    let expected = [0.0, 0.0, 0.8, 0.6];
+
+    let composed = portal_core::compose_personal_quaternion(q_identity, q_transit, q_activity);
+    assert_approx_quat(composed, expected);
+    assert_unit(composed);
+
+    // Explicitly rule out the reordered compositions derived above.
+    for wrong in [[0.0, 0.0, -0.8, -0.6], [0.0, 0.0, -0.8, 0.6]] {
+        assert!(
+            (0..4).any(|i| (composed[i] - wrong[i]).abs() > 1e-3),
+            "composition collapsed onto a reordered product {wrong:?}"
+        );
+    }
+
+    // Normalization law: Q_composed = normalize(product) — scaled inputs
+    // compose to the same unit quaternion.
+    let scaled = portal_core::compose_personal_quaternion(
+        [0.0, 2.0, 0.0, 0.0],
+        [0.0, 0.0, 3.0, 0.0],
+        [3.0, 4.0, 0.0, 0.0],
+    );
+    assert_approx_quat(scaled, expected);
 }
 
 fn assert_unit(q: [f32; 4]) {

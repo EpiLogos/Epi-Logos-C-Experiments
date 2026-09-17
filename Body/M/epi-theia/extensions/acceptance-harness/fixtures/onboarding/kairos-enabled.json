@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "onboarding/kairos-enabled",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "preferences": {
+    "epi-logos.privacy.kairos-enabled": true,
+    "epi-logos.privacy.kairos-refresh-interval-minutes": 60
+  },
+  "kerykeionProbe": {
+    "result": "success",
+    "source": "gateway-fixture"
+  },
+  "mercurius": {
+    "rpc": "nara.kairos.refresh",
+    "refreshedAt": "2026-06-11T12:16:00.000Z",
+    "M4_Temporal_Now": {
+      "planet_degrees": [14.2, 25.1, 302.4, 112.7, 88.5, 177.3, 201.6, 44.8, 269.9, 11.1, 123.456]
+    }
+  },
+  "relay": {
+    "expectedPhase": "active",
+    "expectedLabelFragment": "Kairos active"
+  }
+}

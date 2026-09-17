@@ -17,6 +17,7 @@
     "@pratibimba/kernel-bridge": "workspace:*",
     "@pratibimba/pratibimba-layouts": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
+    "@pratibimba/block-kit": "workspace:*",
     "@pratibimba/ide-shell-m0-m5": "workspace:*",
     "@pratibimba/agentic-control-room": "workspace:*",
     "react": "^18.3.1",
@@ -32,6 +33,8 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build && node --test tests/topology.test.mjs tests/acceptance-plan.test.mjs"
+    "baseline:visual": "node scripts/generate-visual-regression-baselines.mjs",
+    "test:visual": "node scripts/run-visual-regression-suite.mjs",
+    "test": "pnpm build && node --test tests/*.test.mjs ../test/validate-extension-contract-preflight.test.mjs"
   }
 }

@@ -77,8 +77,16 @@ fn every_surface_cell_reverse_addresses_a_lens_mode() {
     for cell in &surface {
         let anchor = lens_mode_from_codon_rotation(cell.codon_id, cell.rotation)
             .expect("every materialized surface cell reverse-maps to a lens-mode anchor");
-        assert!(anchor.lens < 12, "reverse lens out of range for cell {}", cell.surface_index);
-        assert!(anchor.mode < 7, "reverse mode out of range for cell {}", cell.surface_index);
+        assert!(
+            anchor.lens < 12,
+            "reverse lens out of range for cell {}",
+            cell.surface_index
+        );
+        assert!(
+            anchor.mode < 7,
+            "reverse mode out of range for cell {}",
+            cell.surface_index
+        );
         assert_eq!(
             cell.rotation_degrees,
             cell.rotation as u16 * 45,
@@ -89,6 +97,67 @@ fn every_surface_cell_reverse_addresses_a_lens_mode() {
     assert!(lens_mode_from_codon_rotation(64, 0).is_none());
     let last = surface.last().expect("non-empty surface");
     assert!(lens_mode_from_codon_rotation(last.codon_id, last.rotational_state_count).is_none());
+}
+
+#[test]
+fn codon_rotation_representative_cells_pin_the_materialized_map() {
+    // 04.T4.1 audit closure: the invariant tests above cannot catch a silent
+    // change of the proportional formula itself (any consistent bijective band
+    // map would pass them). These pins freeze the AUDITED materialization
+    // (probed 2026-07-06 against the shipped kernel LUT) so the concrete
+    // 84->472 mapping is a contract, not an accident. If a future DR replaces
+    // the proportional map with the M3'-SPEC §7 three-step semantic
+    // construction (symmetry-axis anchor · mode->rotation · DET codon
+    // selection), these pins are the seam that change must consciously repin.
+    let pins: [(u8, u8, usize, u8, &str, &str, u8); 6] = [
+        (0, 0, 0, 0, "AAA", "non-dual", 0),
+        (0, 6, 34, 4, "ATA", "non-dual", 6),
+        (5, 3, 214, 29, "TGT", "non-dual", 0),
+        (6, 0, 236, 32, "CAA", "non-dual", 0),
+        (11, 0, 433, 58, "GCC", "non-dual", 3),
+        (11, 6, 467, 63, "GGG", "non-dual", 2),
+    ];
+    for (lens, mode, surface_index, codon_id, codon, class, rotation) in pins {
+        let p =
+            codon_rotation_from_lens_mode(lens, mode).expect("pinned lens-mode cell materializes");
+        assert_eq!(
+            (
+                p.surface_index,
+                p.codon_id,
+                p.codon.as_str(),
+                p.codon_class.as_str(),
+                p.rotation
+            ),
+            (surface_index, codon_id, codon, class, rotation),
+            "pinned representative cell ({lens},{mode}) drifted from the audited materialization"
+        );
+    }
+
+    // Dual-cardinality law (M3'-SPEC §7): the 84 forward images are injective
+    // (no two lens-mode cells collapse onto one surface cell), strictly
+    // monotonic in lens-mode index, and split 53 non-dual / 31 dual — most
+    // cells project to non-dual codons, per the spec's own claim.
+    let surface = codon_rotation_surface();
+    let images: Vec<usize> = (0..84usize)
+        .map(|i| {
+            codon_rotation_from_lens_mode((i / 7) as u8, (i % 7) as u8)
+                .expect("forward map covers all 84 cells")
+                .surface_index
+        })
+        .collect();
+    assert!(
+        images.windows(2).all(|w| w[0] < w[1]),
+        "forward surface indices must be strictly monotonic (injective band map)"
+    );
+    let dual_reached = images
+        .iter()
+        .filter(|&&si| surface[si].codon_class == "dual")
+        .count();
+    assert_eq!(
+        (84 - dual_reached, dual_reached),
+        (53, 31),
+        "forward image class split drifted from the audited 53 non-dual / 31 dual"
+    );
 }
 
 #[test]

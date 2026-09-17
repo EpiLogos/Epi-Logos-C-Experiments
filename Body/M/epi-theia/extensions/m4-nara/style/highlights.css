@@ -1,0 +1,17 @@
+.m4-nara-highlight {
+    border-left: 2px solid var(--highlight-accent, #fbbf24);
+    border-radius: 2px;
+    padding: 0 0.15em;
+    background: color-mix(in srgb, var(--highlight-accent, #fbbf24) 16%, transparent);
+}
+
+.m4-nara-highlight-daily-note { --highlight-accent: #fbbf24; }
+.m4-nara-highlight-oracle { --highlight-accent: #a78bfa; }
+.m4-nara-highlight-dream { --highlight-accent: #60a5fa; }
+.m4-nara-highlight-expand { --highlight-accent: #34d399; }
+.m4-nara-highlight-recognition { --highlight-accent: #d4a574; }
+.m4-nara-highlight-prospective-surfacing { --highlight-accent: #e8a3a3; }
+.m4-nara-highlight-retrospective-surfacing { --highlight-accent: #8090a3; }
+.m4-nara-highlight-kairos-touch { --highlight-accent: #b8c0cc; }
+.m4-nara-highlight-somatic-mark { --highlight-accent: #8a7355; }
+.m4-nara-highlight-live-spread { --highlight-accent: #5b3a7e; }

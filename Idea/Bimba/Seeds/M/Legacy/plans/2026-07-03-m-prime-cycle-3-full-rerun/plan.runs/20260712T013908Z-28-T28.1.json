@@ -1,0 +1,36 @@
+{
+  "runId": "20260712T013908Z-28-T28.1",
+  "taskId": "28.T28.1",
+  "startedAt": "2026-07-12T01:39:08.833Z",
+  "owner": "thread-3",
+  "leaseExpiresAt": "2026-07-12T04:39:08.833Z",
+  "worktree": null,
+  "task": {
+    "id": "28.T28.1",
+    "trackId": "28",
+    "tranche": "T28.1",
+    "title": "Chrome contract doc-ahead-landing + M0/M5 ownership partition",
+    "effort": null,
+    "file": "28-ide-shell-chrome-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/28-ide-shell-chrome-deep.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: IDE chrome partitions (M0' reads / M5' governance / shared) + governed-write flow (Atelier Mobius write-back -> aletheia_crystallise -> Canon Studio); CrossLayoutIntent envelope; nine-id readiness inline. §2 track 28."
+  }
+}

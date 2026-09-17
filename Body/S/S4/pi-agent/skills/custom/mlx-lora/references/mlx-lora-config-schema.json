@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Epi-Logos MLX LoRA local-only config",
+  "type": "object",
+  "required": [
+    "privacy_class",
+    "base_model",
+    "adapter_rank",
+    "learning_rate",
+    "corpus_manifest",
+    "checkpoint_dir",
+    "checkpoint_version"
+  ],
+  "properties": {
+    "privacy_class": { "const": "local-only" },
+    "base_model": { "type": "string", "minLength": 1 },
+    "adapter_rank": { "type": "number", "exclusiveMinimum": 0 },
+    "learning_rate": { "type": "number", "exclusiveMinimum": 0 },
+    "corpus_manifest": { "type": "string", "minLength": 1 },
+    "checkpoint_dir": { "type": "string", "minLength": 1 },
+    "checkpoint_version": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": true
+}

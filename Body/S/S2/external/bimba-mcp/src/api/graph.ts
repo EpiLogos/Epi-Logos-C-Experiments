@@ -8,17 +8,61 @@
 import { getNeo4jConnectionManager } from '../db/neo4j.js';
 import { GeminiEmbeddingClient, type TaskType } from '../embeddings/gemini.js';
 import { getAlignmentValidator } from '../validation/alignment.js';
-import type { GraphResult, NodeRef, PathResult, EdgeRef, ContextResult, PositionConnections, SpecResult, CoordinateSpec, PositionConnectedEntities, ConnectedEntity, RetrievalResult, GraphSearchOutput, CoordinateFilter, DisclosureResult, EmbeddingResult, BatchEmbeddingResult, ValidationResult, GraphChunkResult, GraphChunkInput, GraphTraversePositionsOutput, PositionEntities, GraphAdminInput, GraphAdminOutput } from '../schemas/graph.js';
+import type { GraphResult, NodeRef, PathResult, EdgeRef, ContextResult, RelTypeConnections, SpecResult, CoordinateSpec, PositionConnectedEntities, ConnectedEntity, RetrievalResult, GraphSearchOutput, CoordinateFilter, DisclosureResult, EmbeddingResult, BatchEmbeddingResult, ValidationResult, GraphChunkResult, GraphChunkInput, GraphTraversePositionsOutput, TraversalStep, GraphAdminInput, GraphAdminOutput } from '../schemas/graph.js';
 import { chunkDocument } from '../chunking/contextual.js';
 import { readFile } from 'fs/promises';
 import { join } from 'node:path';
 import { resolvePresentRoot } from '../repo-paths.js';
-import { convertHashToMFamily } from '../coordinates/syntax.js';
-import { int } from 'neo4j-driver';
+import neo4j from 'neo4j-driver';
+import { convertHashToMFamily, wrapContextFrames } from '../coordinates/syntax.js';
+import { buildRoleView, groupByFamily } from './property-roles.js';
+import { sanitizeIdentifier } from './graph-crud.js';
 
 // =============================================================================
 // Helper for Node Property Translation
 // =============================================================================
+
+/**
+ * Build a NodeRef from a node's raw properties + labels, prefix-agnostically.
+ *
+ * Synthesizes the back-compat keys (uuid/title/coordinate/file_path) that
+ * handlers read directly, AND attaches the open-schema views (`roles`,
+ * `by_family`) so the rich {family}_{n}_ data is surfaced rather than buried.
+ * `fallbackUuid` is the top-level uuid some Cypher projections carry alongside
+ * properties.
+ */
+export function buildNodeRef(
+  rawProperties: Record<string, unknown>,
+  labels: string[],
+  fallbackUuid?: unknown
+): NodeRef {
+  const roles = buildRoleView(rawProperties);
+  const resolvedUuid = roles.uuid?.value ?? rawProperties['uuid'] ?? fallbackUuid;
+  const resolvedName = roles.name?.value;
+  const coordinate = rawProperties['coordinate'];
+  const filePath = rawProperties['s_1_vault_path'] ?? rawProperties['file_path'];
+
+  const properties: Record<string, unknown> = {
+    ...rawProperties,
+    uuid: resolvedUuid,
+    title:
+      (typeof resolvedName === 'string' ? resolvedName : undefined) ??
+      (typeof rawProperties['title'] === 'string' ? (rawProperties['title'] as string) : undefined) ??
+      `Node at ${coordinate}`,
+    coordinate,
+    file_path: filePath,
+  };
+
+  return {
+    uuid: typeof resolvedUuid === 'string' ? resolvedUuid : '',
+    labels,
+    properties,
+    // The structured views are plain objects; the schema types them as records.
+    by_family: groupByFamily(rawProperties) as unknown as Record<string, unknown>,
+    roles: roles as unknown as Record<string, unknown>,
+    file_path: typeof filePath === 'string' ? filePath : undefined,
+  };
+}
 
 export function mapNeo4jNode(nodeData: unknown): NodeRef | null {
   if (!nodeData || typeof nodeData !== 'object') {
@@ -26,28 +70,13 @@ export function mapNeo4jNode(nodeData: unknown): NodeRef | null {
   }
 
   const obj = nodeData as Record<string, unknown>;
-  const rawProperties = (typeof obj['properties'] === 'object' && obj['properties'] !== null)
-    ? (obj['properties'] as Record<string, unknown>)
-    : {};
-
-  const properties: Record<string, unknown> = {
-    ...rawProperties,
-    uuid: rawProperties['c_2_uuid'] ?? rawProperties['uuid'],
-    title: rawProperties['c_1_name'] ?? rawProperties['title'] ?? rawProperties['name'] ?? `Node at ${rawProperties['coordinate']}`,
-    coordinate: rawProperties['coordinate'],
-    file_path: rawProperties['s_1_vault_path'] ?? rawProperties['file_path'],
-  };
-
-  const uuid = typeof properties['uuid'] === 'string' ? properties['uuid'] : '';
+  const rawProperties =
+    typeof obj['properties'] === 'object' && obj['properties'] !== null
+      ? (obj['properties'] as Record<string, unknown>)
+      : {};
   const labels = Array.isArray(obj['labels']) ? (obj['labels'] as string[]) : [];
-  const file_path = typeof properties['file_path'] === 'string' ? properties['file_path'] : undefined;
 
-  return {
-    uuid,
-    labels,
-    properties,
-    file_path,
-  };
+  return buildNodeRef(rawProperties, labels, obj['uuid']);
 }
 
 
@@ -82,23 +111,11 @@ function coordinateToFilter(coordinate: string): {
     };
   }
 
-  // Handle ranges like M2-5
-  const rangeMatcher = coordinate.match(/^([A-Z])(\d+)-(\d+)$/);
-  if (rangeMatcher && rangeMatcher[1] && rangeMatcher[2] && rangeMatcher[3]) {
-    const type = rangeMatcher[1];
-    const start = rangeMatcher[2];
-    const end = rangeMatcher[3];
-    const startNum = parseInt(start, 10);
-    const endNum = parseInt(end, 10);
-    return {
-      condition: `node.coordinate =~ $coordinatePattern`,
-      params: {
-        coordinatePattern: `^${type}([${startNum}-${endNum}])($|[-'.]).*`,
-      },
-    };
-  }
-
-  // Simple coordinate like P2, M3, etc.
+  // A coordinate is a PATH: '-' is branch descent and '.' is a 4-segment nest,
+  // never a numeric range. So "M1-0" means the node at that path (plus its
+  // descendants under prefix match) — NOT the range M1..M0. The old range branch
+  // built an illegal regex (e.g. [1-0]) and crashed; matching by prefix is the
+  // same behavior every other coordinate already uses.
   return {
     condition: `node.coordinate STARTS WITH $coordinatePrefix`,
     params: { coordinatePrefix: coordinate },
@@ -146,8 +163,12 @@ export async function queryByCoordinate(
     throw new Error('Not connected to Neo4j');
   }
 
-  // Normalize coordinate (e.g. hash to M)
-  const normalizedCoordinate = convertHashToMFamily(coordinate);
+  // Raw '#' archetypes (#, #0..#5) are stored literally and are DISTINCT nodes
+  // from the M-family manifestations — do not rewrite them to M, or the # nodes
+  // become unreachable and # queries wrongly return M results. Only convert the
+  // legacy hash form for non-'#' input.
+  const trimmed = coordinate.trim();
+  const normalizedCoordinate = trimmed.startsWith('#') ? trimmed : wrapContextFrames(convertHashToMFamily(coordinate));
 
   try {
     const startTime = Date.now();
@@ -163,7 +184,9 @@ export async function queryByCoordinate(
 
     const queryParams = {
       ...params,
-      limit: int(limit),
+      // Neo4j requires an Integer for LIMIT; the JS driver marshals plain
+      // numbers as floats (which Neo4j 5 rejects), so wrap with neo4j.int().
+      limit: neo4j.int(limit),
     };
 
     // Execute query
@@ -221,8 +244,8 @@ export async function queryByQLCoordinate(
   coordinate: string,
   limit = 100
 ): Promise<GraphResult> {
-  // Normalize legacy hash coordinate if present
-  const normalized = convertHashToMFamily(coordinate);
+  // Normalize legacy hash coordinate + context frames if present
+  const normalized = wrapContextFrames(convertHashToMFamily(coordinate));
 
   // Ensure it looks like a QL coordinate
   if (!normalized.match(/^[CPMSLT]\d+/)) {
@@ -300,7 +323,7 @@ export async function traverse(
     // Use Cypher path traversal to find all paths from start node
     // Returns paths of varying lengths from start to reachable nodes
     const query = `
-      MATCH path = (start:Bimba)-[rel:*1..${maxDepth}]->(target:Bimba)
+      MATCH path = (start:Bimba)-[rel*1..${maxDepth}]->(target:Bimba)
       WHERE start.c_2_uuid = $startUuid OR start.uuid = $startUuid
       ${relFilter}
       RETURN {
@@ -317,7 +340,7 @@ export async function traverse(
       query,
       {
         startUuid,
-        pathLimit: int(pathLimit),
+        pathLimit: neo4j.int(pathLimit),
       }
     );
 
@@ -342,24 +365,11 @@ export async function traverse(
         const rawProperties = typeof nodeObj['properties'] === 'object' && nodeObj['properties'] !== null
           ? (nodeObj['properties'] as Record<string, unknown>)
           : {};
-        
-        const properties: Record<string, unknown> = {
-          ...rawProperties,
-          uuid: rawProperties['c_2_uuid'] ?? rawProperties['uuid'] ?? nodeObj['uuid'],
-          title: rawProperties['c_1_name'] ?? rawProperties['title'] ?? rawProperties['name'],
-          coordinate: rawProperties['coordinate'],
-          file_path: rawProperties['s_1_vault_path'] ?? rawProperties['file_path'],
-        };
-
-        const uuid = typeof properties['uuid'] === 'string' ? properties['uuid'] : '';
-        if (!uuid) continue;
-        nodeSet.add(uuid);
-        nodeList.push({
-          uuid,
-          labels: Array.isArray(nodeObj['labels']) ? (nodeObj['labels'] as string[]) : [],
-          properties,
-          file_path: typeof properties['file_path'] === 'string' ? properties['file_path'] : undefined,
-        });
+        const labels = Array.isArray(nodeObj['labels']) ? (nodeObj['labels'] as string[]) : [];
+        const ref = buildNodeRef(rawProperties, labels, nodeObj['uuid']);
+        if (!ref.uuid) continue;
+        nodeSet.add(ref.uuid);
+        nodeList.push(ref);
       }
       const nodes = nodeList;
 
@@ -417,36 +427,36 @@ export async function traverse(
 }
 
 /**
- * Traverse the graph following a specific sequence of QL positions
+ * Traverse the graph following a sequence of real relationship types, hop by hop.
  *
- * Follows relationships organized by position level (P0=LINKS_TO, P1=DEFINES,
- * P2=OPERATES, P3=FORMS, P4=CONTEXTUALIZES, P5=INTEGRATES) through the
- * specified position sequence.
+ * Each step follows one relationship type from the entities reached at the
+ * previous step. Relationship types are the graph's actual named/correspondential
+ * types (e.g. FAMILY_CONTAINS, MANIFESTS, REFLECTS_AS) — call graph_schema to
+ * discover them. The retired POSn_* scheme is NOT used.
  *
- * Example: position_sequence [0, 2, 5] will:
- *   1. Find entities connected via POS0_LINKS_TO from start
- *   2. Find entities connected via POS2_OPERATES from each result
- *   3. Find entities connected via POS5_INTEGRATES from each result
+ * Example: rel_type_sequence ["FAMILY_CONTAINS", "MANIFESTS"] will:
+ *   1. Find entities connected via FAMILY_CONTAINS from start
+ *   2. From each result, find entities connected via MANIFESTS
  *
  * @param startUuid UUID of the starting node
- * @param positionSequence Array of position levels (0-5) defining the traversal path
- * @param maxPerPosition Maximum entities to return per position level (default 10)
- * @returns PositionTraversalResult with paths organized by position
- * @throws Error if traversal fails
+ * @param relTypeSequence Relationship types to follow, one per step
+ * @param maxPerPosition Maximum entities to return per step (default 10)
+ * @returns GraphTraversePositionsOutput with entities organized by step
+ * @throws Error if traversal fails or a rel type is not a valid identifier
  */
 export async function traversePositions(
   startUuid: string,
-  positionSequence: number[],
+  relTypeSequence: string[],
   maxPerPosition = 10
 ): Promise<GraphTraversePositionsOutput> {
   // Validate inputs
-  if (!positionSequence || positionSequence.length === 0) {
-    throw new Error('position_sequence must contain at least one position level');
+  if (!relTypeSequence || relTypeSequence.length === 0) {
+    throw new Error('rel_type_sequence must contain at least one relationship type');
   }
 
-  if (!positionSequence.every((p) => typeof p === 'number' && p >= 0 && p <= 5)) {
-    throw new Error('All positions must be numbers between 0 and 5');
-  }
+  // Each rel type is interpolated into the per-hop Cypher, so validate it against
+  // the identifier allowlist (injection guard) before use.
+  relTypeSequence.forEach((t) => sanitizeIdentifier(t));
 
   if (maxPerPosition < 1 || maxPerPosition > 100) {
     throw new Error('max_per_position must be between 1 and 100');
@@ -459,16 +469,6 @@ export async function traversePositions(
 
   try {
     const startTime = Date.now();
-
-    // Map position numbers to relationship types and names
-    const positionMap: Record<number, { relType: string; name: string }> = {
-      0: { relType: 'POS0_LINKS_TO', name: 'Ground' },
-      1: { relType: 'POS1_DEFINES', name: 'Definition' },
-      2: { relType: 'POS2_OPERATES', name: 'Operation' },
-      3: { relType: 'POS3_FORMS', name: 'Pattern' },
-      4: { relType: 'POS4_CONTEXTUALIZES', name: 'Context' },
-      5: { relType: 'POS5_INTEGRATES', name: 'Integration' },
-    };
 
     // Start with the root node
     const startQuery = `
@@ -491,39 +491,23 @@ export async function traversePositions(
 
     const startNode = startRecords[0]?.['node'] as Record<string, unknown>;
     const rawStartProps = typeof startNode?.['properties'] === 'object' ? (startNode.properties as Record<string, unknown>) : {};
-    const startProperties: Record<string, unknown> = {
-      ...rawStartProps,
-      uuid: rawStartProps['c_2_uuid'] ?? rawStartProps['uuid'] ?? startNode?.['uuid'],
-      title: rawStartProps['c_1_name'] ?? rawStartProps['title'] ?? rawStartProps['name'],
-      coordinate: rawStartProps['coordinate'],
-      file_path: rawStartProps['s_1_vault_path'] ?? rawStartProps['file_path'],
-    };
+    const startLabels = Array.isArray(startNode?.['labels']) ? (startNode.labels as string[]) : [];
+    const startNodeRef: NodeRef = buildNodeRef(rawStartProps, startLabels, startNode?.['uuid'] ?? startUuid);
 
-    const startNodeRef: NodeRef = {
-      uuid: typeof startProperties['uuid'] === 'string' ? startProperties.uuid : startUuid,
-      labels: Array.isArray(startNode?.['labels']) ? (startNode.labels as string[]) : [],
-      properties: startProperties,
-      file_path: typeof startProperties['file_path'] === 'string' ? startProperties.file_path : undefined,
-    };
-
-    // Build the traversal path by following position sequence
-    const pathsByPosition: PositionEntities[] = [];
+    // Build the traversal path by following the relationship-type sequence
+    const steps: TraversalStep[] = [];
     const allFoundUuids = new Set<string>([startUuid]);
     let currentNodes: string[] = [startUuid];
 
-    for (let i = 0; i < positionSequence.length; i++) {
-      const posNum = positionSequence[i]!;
-      const posInfo = positionMap[posNum];
-      if (!posInfo) {
-        throw new Error(`Invalid position number: ${posNum}`);
-      }
+    for (let i = 0; i < relTypeSequence.length; i++) {
+      const relType = sanitizeIdentifier(relTypeSequence[i]!);
 
-      // Query for nodes connected via this position's relationship type
+      // Query for nodes connected via this step's relationship type
       const posQuery = `
         UNWIND $nodeUuids AS current_uuid
         MATCH (current:Bimba)
         WHERE current.c_2_uuid = current_uuid OR current.uuid = current_uuid
-        MATCH (current)-[rel:${posInfo.relType}]->(next:Bimba)
+        MATCH (current)-[rel:\`${relType}\`]->(next:Bimba)
         RETURN DISTINCT {
           uuid: coalesce(next.c_2_uuid, next.uuid),
           labels: labels(next),
@@ -534,7 +518,7 @@ export async function traversePositions(
 
       const posRecords = await connectionManager.executeRead<Record<string, unknown>>(posQuery, {
         nodeUuids: currentNodes,
-        limit: int(maxPerPosition),
+        limit: neo4j.int(maxPerPosition),
       });
 
       // Convert records to NodeRef objects
@@ -544,37 +528,25 @@ export async function traversePositions(
       for (const record of posRecords) {
         const nodeData = record['node'] as Record<string, unknown>;
         const rawProps = typeof nodeData?.['properties'] === 'object' ? (nodeData.properties as Record<string, unknown>) : {};
-        const properties: Record<string, unknown> = {
-          ...rawProps,
-          uuid: rawProps['c_2_uuid'] ?? rawProps['uuid'] ?? nodeData?.['uuid'],
-          title: rawProps['c_1_name'] ?? rawProps['title'] ?? rawProps['name'],
-          coordinate: rawProps['coordinate'],
-          file_path: rawProps['s_1_vault_path'] ?? rawProps['file_path'],
-        };
-        const uuid = typeof properties['uuid'] === 'string' ? properties.uuid : '';
+        const labels = Array.isArray(nodeData?.['labels']) ? (nodeData.labels as string[]) : [];
+        const nodeRef = buildNodeRef(rawProps, labels, nodeData?.['uuid']);
+        const uuid = nodeRef.uuid;
 
         if (uuid && !allFoundUuids.has(uuid)) {
           allFoundUuids.add(uuid);
-          const nodeRef: NodeRef = {
-            uuid,
-            labels: Array.isArray(nodeData?.['labels']) ? (nodeData.labels as string[]) : [],
-            properties,
-            file_path: typeof properties['file_path'] === 'string' ? properties.file_path : undefined,
-          };
           positionNodes.push(nodeRef);
           nextNodeUuids.push(uuid);
         }
       }
 
-      // Record this position level's results
-      pathsByPosition.push({
-        position: posNum,
-        position_name: posInfo.name,
+      // Record this step's results
+      steps.push({
+        rel_type: relType,
         entities: positionNodes,
         connection_count: currentNodes.length,
       });
 
-      // Move to next level - only continue if we found entities at this level
+      // Move to next step - only continue if we found entities here
       currentNodes = nextNodeUuids;
       if (currentNodes.length === 0) {
         break; // No more entities found, stop traversal
@@ -586,9 +558,9 @@ export async function traversePositions(
     return {
       start_uuid: startUuid,
       start_node: startNodeRef,
-      position_sequence: positionSequence,
-      paths_by_position: pathsByPosition,
-      total_paths: pathsByPosition.length,
+      rel_type_sequence: relTypeSequence,
+      steps,
+      total_paths: steps.length,
       total_entities: allFoundUuids.size - 1, // Exclude start node
       execution_time_ms: executionTime,
     };
@@ -629,7 +601,7 @@ export async function context(
   entityUuid: string,
   depth = 2,
   mode: 'narrow' | 'balanced' | 'wide' = 'balanced',
-  positions?: number[]
+  relTypes?: string[]
 ): Promise<ContextResult> {
   // Validate inputs
   if (depth < 1 || depth > 5) {
@@ -655,19 +627,20 @@ export async function context(
       traversalDepth = Math.max(3, depth);
     }
 
-    // Build position filter if provided
-    let positionFilter = '';
-    if (positions && positions.length > 0) {
-      const posList = positions.map((p) => `'P${p}'`).join(',');
-      positionFilter = `AND any(rel IN relationships(path) WHERE startNode(rel).coordinate STARTS WITH ${posList})`;
-    }
+    // Filter by ACTUAL relationship type (the rel that connects to the neighbor),
+    // not by the retired POSn_* position scheme. $relTypes is a value param — no
+    // injection surface.
+    const relTypeFilter =
+      relTypes && relTypes.length > 0
+        ? 'AND type(relationships(path)[-1]) IN $relTypes'
+        : '';
 
     // Query to get entity and its context from canonical :Bimba nodes
     const query = `
-      MATCH path = (entity:Bimba)-[rel:*1..${traversalDepth}]->(neighbor:Bimba)
-      WHERE entity.c_2_uuid = $entityUuid OR entity.uuid = $entityUuid
-      ${positionFilter}
-      WITH entity, neighbor, path, rel
+      MATCH path = (entity:Bimba)-[rel*1..${traversalDepth}]->(neighbor:Bimba)
+      WHERE (entity.c_2_uuid = $entityUuid OR entity.uuid = $entityUuid)
+      ${relTypeFilter}
+      WITH entity, neighbor, path
       RETURN {
         entity: {uuid: coalesce(entity.c_2_uuid, entity.uuid), labels: labels(entity), properties: properties(entity)},
         neighbor: {uuid: coalesce(neighbor.c_2_uuid, neighbor.uuid), labels: labels(neighbor), properties: properties(neighbor)},
@@ -676,7 +649,7 @@ export async function context(
           edges: [e IN relationships(path) | {source_uuid: coalesce(startNode(e).c_2_uuid, startNode(e).uuid), target_uuid: coalesce(endNode(e).c_2_uuid, endNode(e).uuid), rel_type: type(e), properties: properties(e)}],
           length: length(path)
         },
-        rel_type: type(rel)
+        rel_type: type(relationships(path)[-1])
       } AS result
       LIMIT $resultLimit
     `;
@@ -687,7 +660,8 @@ export async function context(
       query,
       {
         entityUuid,
-        resultLimit: int(resultLimit),
+        resultLimit: neo4j.int(resultLimit),
+        relTypes: relTypes ?? [],
       }
     );
 
@@ -696,7 +670,7 @@ export async function context(
     const neighborMap = new Map<string, NodeRef>();
     const pathList: PathResult[] = [];
     const edgeSet = new Set<string>();
-    const neighborsByPosition = new Map<number, PositionConnections>();
+    const neighborsByRelType = new Map<string, RelTypeConnections>();
 
     for (const record of records) {
       const result = record['result'] as Record<string, unknown>;
@@ -709,19 +683,8 @@ export async function context(
         const entityData = result['entity'] as Record<string, unknown>;
         if (entityData && typeof entityData === 'object') {
           const rawProps = typeof entityData['properties'] === 'object' && entityData['properties'] !== null ? (entityData['properties'] as Record<string, unknown>) : {};
-          const properties: Record<string, unknown> = {
-            ...rawProps,
-            uuid: rawProps['c_2_uuid'] ?? rawProps['uuid'] ?? entityData['uuid'],
-            title: rawProps['c_1_name'] ?? rawProps['title'] ?? rawProps['name'],
-            coordinate: rawProps['coordinate'],
-            file_path: rawProps['s_1_vault_path'] ?? rawProps['file_path'],
-          };
-          entityNode = {
-            uuid: typeof properties['uuid'] === 'string' ? properties['uuid'] : '',
-            labels: Array.isArray(entityData['labels']) ? (entityData['labels'] as string[]) : [],
-            properties,
-            file_path: typeof properties['file_path'] === 'string' ? properties['file_path'] : undefined,
-          };
+          const labels = Array.isArray(entityData['labels']) ? (entityData['labels'] as string[]) : [];
+          entityNode = buildNodeRef(rawProps, labels, entityData['uuid']);
         }
       }
 
@@ -729,22 +692,12 @@ export async function context(
       const neighborData = result['neighbor'] as Record<string, unknown>;
       if (neighborData && typeof neighborData === 'object') {
         const rawProps = typeof neighborData['properties'] === 'object' && neighborData['properties'] !== null ? (neighborData['properties'] as Record<string, unknown>) : {};
-        const properties: Record<string, unknown> = {
-          ...rawProps,
-          uuid: rawProps['c_2_uuid'] ?? rawProps['uuid'] ?? neighborData['uuid'],
-          title: rawProps['c_1_name'] ?? rawProps['title'] ?? rawProps['name'],
-          coordinate: rawProps['coordinate'],
-          file_path: rawProps['s_1_vault_path'] ?? rawProps['file_path'],
-        };
-        const neighborUuid = typeof properties['uuid'] === 'string' ? properties['uuid'] : '';
+        const labels = Array.isArray(neighborData['labels']) ? (neighborData['labels'] as string[]) : [];
+        const neighborRef = buildNodeRef(rawProps, labels, neighborData['uuid']);
+        const neighborUuid = neighborRef.uuid;
 
         if (neighborUuid && !neighborMap.has(neighborUuid)) {
-          neighborMap.set(neighborUuid, {
-            uuid: neighborUuid,
-            labels: Array.isArray(neighborData['labels']) ? (neighborData['labels'] as string[]) : [],
-            properties,
-            file_path: typeof properties['file_path'] === 'string' ? properties['file_path'] : undefined,
-          });
+          neighborMap.set(neighborUuid, neighborRef);
         }
       }
 
@@ -757,21 +710,10 @@ export async function context(
           if (!n || typeof n !== 'object') continue;
           const nodeObj = n as Record<string, unknown>;
           const rawProps = typeof nodeObj['properties'] === 'object' && nodeObj['properties'] !== null ? (nodeObj['properties'] as Record<string, unknown>) : {};
-          const properties: Record<string, unknown> = {
-            ...rawProps,
-            uuid: rawProps['c_2_uuid'] ?? rawProps['uuid'] ?? nodeObj['uuid'],
-            title: rawProps['c_1_name'] ?? rawProps['title'] ?? rawProps['name'],
-            coordinate: rawProps['coordinate'],
-            file_path: rawProps['s_1_vault_path'] ?? rawProps['file_path'],
-          };
-          const uuid = typeof properties['uuid'] === 'string' ? properties['uuid'] : '';
-          if (!uuid) continue;
-          nodeList.push({
-            uuid,
-            labels: Array.isArray(nodeObj['labels']) ? (nodeObj['labels'] as string[]) : [],
-            properties,
-            file_path: typeof properties['file_path'] === 'string' ? properties['file_path'] : undefined,
-          });
+          const labels = Array.isArray(nodeObj['labels']) ? (nodeObj['labels'] as string[]) : [];
+          const ref = buildNodeRef(rawProps, labels, nodeObj['uuid']);
+          if (!ref.uuid) continue;
+          nodeList.push(ref);
         }
 
         const edgesRaw = Array.isArray(pathData['edges']) ? pathData['edges'] : [];
@@ -807,47 +749,22 @@ export async function context(
         });
       }
 
-      // Track relationship type for position organization
+      // Group neighbors by the ACTUAL relationship type connecting them.
       const relType = typeof result['rel_type'] === 'string' ? result['rel_type'] : '';
       const nodeUuidVal = typeof (result['neighbor'] as Record<string, unknown>)?.['uuid'] === 'string' ? ((result['neighbor'] as Record<string, unknown>)['uuid'] as string) : '';
       const neighbor = neighborMap.get(nodeUuidVal);
 
       if (neighbor && relType) {
-        // Extract position from rel_type (e.g., POS0_LINKS_TO -> position 0)
-        const posMatch = relType.match(/POS(\d+)_/);
-        const posNumberStr = posMatch ? posMatch[1] : undefined;
-        const posNumber = posNumberStr ? parseInt(posNumberStr, 10) : -1;
-
-        if (posNumber >= 0 && posNumber <= 5) {
-          if (!neighborsByPosition.has(posNumber)) {
-            const positionLabels: Record<number, 'grounds' | 'definitions' | 'operations' | 'patterns' | 'contexts' | 'integrations'> = {
-              0: 'grounds',
-              1: 'definitions',
-              2: 'operations',
-              3: 'patterns',
-              4: 'contexts',
-              5: 'integrations',
-            };
-
-            const label = positionLabels[posNumber];
-            if (label) {
-              neighborsByPosition.set(posNumber, {
-                position: posNumber,
-                label,
-                connections: [],
-              });
-            }
-          }
-
-          const posConn = neighborsByPosition.get(posNumber);
-          if (posConn) {
-            posConn.connections.push({
-              node: neighbor,
-              rel_type: relType,
-              properties: typeof result['properties'] === 'object' && result['properties'] !== null ? (result['properties'] as Record<string, unknown>) : undefined,
-            });
-          }
+        let bucket = neighborsByRelType.get(relType);
+        if (!bucket) {
+          bucket = { rel_type: relType, connections: [] };
+          neighborsByRelType.set(relType, bucket);
         }
+        bucket.connections.push({
+          node: neighbor,
+          rel_type: relType,
+          properties: typeof result['properties'] === 'object' && result['properties'] !== null ? (result['properties'] as Record<string, unknown>) : undefined,
+        });
       }
     }
 
@@ -857,7 +774,9 @@ export async function context(
 
     // Build result
     const neighbors = Array.from(neighborMap.values());
-    const positionConnections = Array.from(neighborsByPosition.values()).sort((a, b) => a.position - b.position);
+    const relTypeConnections = Array.from(neighborsByRelType.values()).sort(
+      (a, b) => b.connections.length - a.connections.length || a.rel_type.localeCompare(b.rel_type)
+    );
 
     const executionTime = Date.now() - startTime;
 
@@ -865,7 +784,7 @@ export async function context(
       entity: entityNode,
       neighbors,
       paths: pathList,
-      position_connections: positionConnections,
+      rel_type_connections: relTypeConnections,
       depth_used: traversalDepth,
       mode_used: mode,
       total_nodes: 1 + neighbors.length,
@@ -892,6 +811,12 @@ export interface SpecRetrieveOptions {
 
 /**
  * Retrieve the full specification of an entity
+ *
+ * @deprecated The live `spec_retrieve` MCP tool routes to the canon engine
+ * adapter (`tools/spec-retrieve.ts` → `epi canon coord`), NOT this function.
+ * This Neo4j-backed implementation is retained as an internal helper only; its
+ * `connected_by_position` output is empty against the current named-relationship
+ * graph (use `graph_context`/`graph_cypher` for connections).
  *
  * Returns comprehensive entity information including:
  * - UUID, title, file path
@@ -962,14 +887,15 @@ export async function spec(
     // Extract coordinates from properties
     const properties = mappedEntity.properties;
 
-    const coordinates: CoordinateSpec = {
-      C: typeof properties['C'] === 'number' ? properties['C'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'C' ? properties['c_4_ql_position'] : undefined),
-      P: typeof properties['P'] === 'number' ? properties['P'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'P' ? properties['c_4_ql_position'] : undefined),
-      M: typeof properties['M'] === 'number' ? properties['M'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'M' ? properties['c_4_ql_position'] : undefined),
-      S: typeof properties['S'] === 'number' ? properties['S'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'S' ? properties['c_4_ql_position'] : undefined),
-      T: typeof properties['T'] === 'number' ? properties['T'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'T' ? properties['c_4_ql_position'] : undefined),
-      L: typeof properties['L'] === 'number' ? properties['L'] : (typeof properties['c_4_ql_position'] === 'number' && properties['c_4_family'] === 'L' ? properties['c_4_ql_position'] : undefined),
-    };
+    // Derive the family + top-level position from the real `coordinate` string
+    // (e.g. "M1-0" -> {M: 1}). Raw `C`/`P`/`M`/… numeric props do not exist on
+    // live nodes; this reads the one authoritative coordinate field.
+    const coordStr = typeof properties['coordinate'] === 'string' ? (properties['coordinate'] as string) : '';
+    const headMatch = coordStr.match(/^([CPMSLT])(\d+)/);
+    const coordinates: CoordinateSpec = {};
+    if (headMatch && headMatch[1] && headMatch[2]) {
+      coordinates[headMatch[1] as keyof CoordinateSpec] = parseInt(headMatch[2], 10);
+    }
 
     // Extract content summary (use description/c_1_description if available, otherwise truncate content/c_5_content)
     const contentSummary =
@@ -1009,7 +935,7 @@ export async function spec(
 
     // Query for connected entities (neighbors up to 2 hops) using canonical :Bimba label
     const connectedQuery = `
-      MATCH path = (entity:Bimba)-[rel:*1..2]->(neighbor:Bimba)
+      MATCH path = (entity:Bimba)-[rel*1..2]->(neighbor:Bimba)
       WHERE entity.c_2_uuid = $uuid OR entity.uuid = $uuid
       WITH entity, neighbor, path, relationships(path)[-1] AS lastRel
       RETURN {
@@ -1025,7 +951,7 @@ export async function spec(
       connectedQuery,
       {
         uuid,
-        resultLimit: int(resultLimit),
+        resultLimit: neo4j.int(resultLimit),
       }
     );
 
@@ -1203,7 +1129,7 @@ async function performGraphSearch(
   const graphQuery = `
     MATCH (node:Bimba)
     ${coordinateFilterCondition ? `WHERE ${coordinateFilterCondition}` : ''}
-    WITH node, COUNT { ()--(node) } AS degree
+    WITH node, COUNT { (node)--() } AS degree
     RETURN {
       node: {uuid: coalesce(node.c_2_uuid, node.uuid), labels: labels(node), properties: properties(node)},
       degree: degree
@@ -1270,7 +1196,7 @@ async function performChunkAwareSearch(
     MATCH (node)
     WHERE (node:Bimba OR node:Chunk)
     ${coordinateFilterCondition ? `AND ${coordinateFilterCondition}` : ''}
-    WITH node, COUNT { ()--(node) } AS degree, labels(node) AS nodeLabels
+    WITH node, COUNT { (node)--() } AS degree, labels(node) AS nodeLabels
     RETURN {
       node: {uuid: coalesce(node.c_2_uuid, node.uuid), labels: nodeLabels, properties: properties(node)},
       degree: degree,
@@ -1433,6 +1359,72 @@ async function performChunkAwareSearch(
  * @returns GraphSearchOutput with ranked retrieval results
  * @throws Error if query fails or connection unavailable
  */
+/**
+ * True vector similarity search against the canonical `coord_embedding` index
+ * (:Bimba.c_5_embedding, 3072-dim cosine). Embeds the query with the same Gemini
+ * client used for writes, then queries the native Neo4j vector index.
+ *
+ * Throws if the embedding API/index is unavailable — callers in hybrid mode catch
+ * and degrade to graph ranking; vector_only surfaces the error.
+ */
+async function performVectorSearch(
+  query: string,
+  topK: number,
+  connectionManager: ReturnType<typeof getNeo4jConnectionManager>
+): Promise<Array<{ node: NodeRef; score: number }>> {
+  const client = new GeminiEmbeddingClient();
+  // The coord_embedding index is 3072-dim; embed the query at full resolution.
+  const queryVector = await client.embedText(query, 'SEMANTIC_SIMILARITY', 3072);
+
+  const records = await connectionManager.executeRead<Record<string, unknown>>(
+    `CALL db.index.vector.queryNodes('coord_embedding', $k, $vec) YIELD node, score
+     RETURN {uuid: coalesce(node.c_2_uuid, node.uuid), labels: labels(node), properties: properties(node)} AS node, score`,
+    { k: neo4j.int(topK), vec: queryVector }
+  );
+
+  const out: Array<{ node: NodeRef; score: number }> = [];
+  for (const rec of records) {
+    const mapped = mapNeo4jNode(rec['node']);
+    if (mapped) {
+      out.push({ node: mapped, score: typeof rec['score'] === 'number' ? rec['score'] : Number(rec['score'] ?? 0) });
+    }
+  }
+  return out;
+}
+
+/** Reciprocal-rank-fusion merge of vector and graph result lists (k=60). */
+function rrfMerge(
+  vec: Array<{ node: NodeRef; score: number }>,
+  graph: Array<{ node: NodeRef; score: number }>,
+  topK: number,
+  k = 60
+): RetrievalResult[] {
+  const merged = new Map<string, { node: NodeRef; rrf: number; vector_score?: number; graph_score?: number }>();
+  const add = (list: Array<{ node: NodeRef; score: number }>, kind: 'vector' | 'graph') => {
+    list.forEach((r, i) => {
+      const key = r.node.uuid || `${kind}:${i}`;
+      const e = merged.get(key) ?? { node: r.node, rrf: 0 };
+      e.rrf += 1 / (k + i + 1);
+      if (kind === 'vector') e.vector_score = r.score;
+      else e.graph_score = r.score;
+      merged.set(key, e);
+    });
+  };
+  add(vec, 'vector');
+  add(graph, 'graph');
+  return Array.from(merged.values())
+    .sort((a, b) => b.rrf - a.rrf)
+    .slice(0, topK)
+    .map((e, idx) => ({
+      node: e.node,
+      score: e.rrf,
+      vector_score: e.vector_score,
+      graph_score: e.graph_score,
+      rank_position: idx,
+      match_context: `Hybrid RRF (vector ${e.vector_score !== undefined ? '✓' : '✗'} + graph ${e.graph_score !== undefined ? '✓' : '✗'})`,
+    }));
+}
+
 export async function search(
   query: string,
   topK = 10,
@@ -1461,95 +1453,75 @@ export async function search(
     // Build coordinate filter condition
     const coordinateFilterCondition = buildCoordinateFilterCondition(coordinates);
 
-    // For now, we implement graph-only search as a foundation
-    // The vector embedding would be handled separately by GeminiEmbeddingClient
-    // This provides graph structure-based ranking
-
     let results: RetrievalResult[] = [];
-    let queryEmbedding: number[] | undefined;
+    const queryEmbedding: number[] | undefined = undefined;
 
-    // Perform chunk-aware or standard graph search
-    if (mode === 'graph_only' || mode === 'hybrid_rrf' || mode === 'hybrid_weighted') {
-      let graphResults: Array<{ node: NodeRef; score: number; isChunk?: boolean; chunkMetadata?: Record<string, unknown> }>;
+    const wantsGraph = mode === 'graph_only' || mode === 'hybrid_rrf' || mode === 'hybrid_weighted';
+    const wantsVector = mode === 'vector_only' || mode === 'hybrid_rrf' || mode === 'hybrid_weighted';
 
-      if (searchChunks) {
-        graphResults = await performChunkAwareSearch(query, topK, connectionManager, coordinateFilterCondition, expandToParent);
-      } else {
-        const simpleResults = await performGraphSearch(query, topK, connectionManager, coordinateFilterCondition);
-        graphResults = simpleResults.map(r => ({ node: r.node, score: r.score }));
-      }
-
-      // Convert graph results to retrieval results, adding chunk-specific fields
-      results = graphResults.map((r, idx) => {
-        const result: RetrievalResult = {
-          node: r.node,
-          score: r.score,
-          graph_score: r.score,
-          rank_position: idx,
-          match_context: `Found via graph structure analysis (degree score: ${(r.score * 100).toFixed(1)}%)`,
-        };
-
-        // Add chunk-specific fields if this is a chunk result
-        if (r.isChunk && r.chunkMetadata) {
-          result.chunk_uuid = r.chunkMetadata.chunk_uuid as string;
-          result.parent_uuid = r.chunkMetadata.parent_uuid as string;
-          result.sequence_num = r.chunkMetadata.sequence_num as number;
-          result.chunk_content = r.chunkMetadata.raw_content as string;
-
-          if (expandToParent) {
-            result.parent_title = r.chunkMetadata.parent_title as string;
-            result.parent_path = r.chunkMetadata.parent_path as string;
-            if (r.chunkMetadata.surrounding_chunks) {
-              result.surrounding_chunks = r.chunkMetadata.surrounding_chunks as { prev_chunk?: { uuid: string; sequence_num: number; content: string }; next_chunk?: { uuid: string; sequence_num: number; content: string } };
-            }
+    // Map a graph-structure result (degree + keyword), preserving chunk fields.
+    const toGraphRetrieval = (
+      r: { node: NodeRef; score: number; isChunk?: boolean; chunkMetadata?: Record<string, unknown> },
+      idx: number
+    ): RetrievalResult => {
+      const result: RetrievalResult = {
+        node: r.node,
+        score: r.score,
+        graph_score: r.score,
+        rank_position: idx,
+        match_context: `Graph-structure match (degree score ${(r.score * 100).toFixed(1)}%)`,
+      };
+      if (r.isChunk && r.chunkMetadata) {
+        result.chunk_uuid = r.chunkMetadata.chunk_uuid as string;
+        result.parent_uuid = r.chunkMetadata.parent_uuid as string;
+        result.sequence_num = r.chunkMetadata.sequence_num as number;
+        result.chunk_content = r.chunkMetadata.raw_content as string;
+        if (expandToParent) {
+          result.parent_title = r.chunkMetadata.parent_title as string;
+          result.parent_path = r.chunkMetadata.parent_path as string;
+          if (r.chunkMetadata.surrounding_chunks) {
+            result.surrounding_chunks = r.chunkMetadata.surrounding_chunks as { prev_chunk?: { uuid: string; sequence_num: number; content: string }; next_chunk?: { uuid: string; sequence_num: number; content: string } };
           }
         }
+      }
+      return result;
+    };
 
-        return result;
-      });
+    // Graph-structure results (degree + keyword), optionally chunk-aware.
+    let graphResults: Array<{ node: NodeRef; score: number; isChunk?: boolean; chunkMetadata?: Record<string, unknown> }> = [];
+    if (wantsGraph) {
+      graphResults = searchChunks
+        ? await performChunkAwareSearch(query, topK, connectionManager, coordinateFilterCondition, expandToParent)
+        : (await performGraphSearch(query, topK, connectionManager, coordinateFilterCondition)).map(r => ({ node: r.node, score: r.score }));
     }
 
-    // For vector_only or hybrid modes, we would integrate embedding lookup here
-    // This requires the GeminiEmbeddingClient to embed the query and perform similarity search
-    if (mode === 'vector_only') {
-      // Placeholder: vector search would be implemented here with embedding client
-      // For now, fall back to graph search
-      let graphResults: Array<{ node: NodeRef; score: number; isChunk?: boolean; chunkMetadata?: Record<string, unknown> }>;
-
-      if (searchChunks) {
-        graphResults = await performChunkAwareSearch(query, topK, connectionManager, coordinateFilterCondition, expandToParent);
+    // True vector similarity against the coord_embedding index (c_5_embedding).
+    let vectorResults: Array<{ node: NodeRef; score: number }> = [];
+    if (wantsVector) {
+      if (mode === 'vector_only') {
+        // Pure vector mode surfaces config/index errors to the caller.
+        vectorResults = await performVectorSearch(query, topK, connectionManager);
       } else {
-        const simpleResults = await performGraphSearch(query, topK, connectionManager, coordinateFilterCondition);
-        graphResults = simpleResults.map(r => ({ node: r.node, score: r.score }));
-      }
-
-      results = graphResults.map((r, idx) => {
-        const result: RetrievalResult = {
-          node: r.node,
-          score: r.score,
-          vector_score: r.score,
-          rank_position: idx,
-          match_context: `Vector similarity search (using graph fallback)`,
-        };
-
-        // Add chunk-specific fields if this is a chunk result
-        if (r.isChunk && r.chunkMetadata) {
-          result.chunk_uuid = r.chunkMetadata.chunk_uuid as string;
-          result.parent_uuid = r.chunkMetadata.parent_uuid as string;
-          result.sequence_num = r.chunkMetadata.sequence_num as number;
-          result.chunk_content = r.chunkMetadata.raw_content as string;
-
-          if (expandToParent) {
-            result.parent_title = r.chunkMetadata.parent_title as string;
-            result.parent_path = r.chunkMetadata.parent_path as string;
-            if (r.chunkMetadata.surrounding_chunks) {
-              result.surrounding_chunks = r.chunkMetadata.surrounding_chunks as { prev_chunk?: { uuid: string; sequence_num: number; content: string }; next_chunk?: { uuid: string; sequence_num: number; content: string } };
-            }
-          }
+        try {
+          vectorResults = await performVectorSearch(query, topK, connectionManager);
+        } catch (err) {
+          console.error('[graph_search] vector path unavailable, using graph ranking only:', err instanceof Error ? err.message : err);
         }
+      }
+    }
 
-        return result;
-      });
+    if (mode === 'graph_only') {
+      results = graphResults.map(toGraphRetrieval);
+    } else if (mode === 'vector_only') {
+      results = vectorResults.map((r, idx) => ({
+        node: r.node,
+        score: r.score,
+        vector_score: r.score,
+        rank_position: idx,
+        match_context: `Vector similarity (cosine ${r.score.toFixed(3)})`,
+      }));
+    } else {
+      results = rrfMerge(vectorResults, graphResults, topK);
     }
 
     // Sort by score and limit to topK
@@ -1813,25 +1785,9 @@ export async function disclosure(
       }
     }
 
-    // Level 4: Extended + connected entities by position
+    // Level 4: Extended + connected entities grouped by ACTUAL relationship type
     if (clampedLevel >= 4) {
-      const connectedEntities: Record<string, unknown> = {};
-      const posLabels = ['grounds', 'definitions', 'operations', 'patterns', 'contexts', 'integrations'];
-
-      for (let position = 0; position < 6; position++) {
-        const posLabel = posLabels[position];
-        if (!posLabel) continue;
-        const connected = await getConnectedEntitiesByPosition(
-          entityUuid,
-          position,
-          connectionManager,
-          5 // limit per position
-        );
-        if (connected.length > 0) {
-          connectedEntities[posLabel] = connected;
-        }
-      }
-
+      const connectedEntities = await getConnectedEntitiesByRelType(entityUuid, connectionManager, 5);
       if (Object.keys(connectedEntities).length > 0) {
         disclosed['connected_entities'] = connectedEntities;
       }
@@ -1879,55 +1835,48 @@ export async function disclosure(
 }
 
 /**
- * Helper: Get connected entities for a specific position
+ * Helper: Get connected entities grouped by ACTUAL relationship type.
+ * Returns { [relType]: [{uuid, title}, ...] } capped at `limit` per type.
  */
-async function getConnectedEntitiesByPosition(
+async function getConnectedEntitiesByRelType(
   entityUuid: string,
-  position: number,
   connectionManager: ReturnType<typeof getNeo4jConnectionManager>,
   limit: number
-): Promise<Array<{ uuid: string; title: string; relationship: string }>> {
+): Promise<Record<string, Array<{ uuid: string; title: string }>>> {
   try {
-    const relTypes = [
-      'POS0_LINKS_TO',
-      'POS1_DEFINES',
-      'POS2_OPERATES',
-      'POS3_FORMS',
-      'POS4_CONTEXTUALIZES',
-      'POS5_INTEGRATES'
-    ];
-    const relType = relTypes[position] || `POS${position}_LINKS_TO`;
-
     const query = `
-      MATCH (entity:Bimba)-[rel:${relType}]-(connected:Bimba)
+      MATCH (entity:Bimba)-[rel]-(connected:Bimba)
       WHERE entity.c_2_uuid = $uuid OR entity.uuid = $uuid
-      RETURN {
+      WITH type(rel) AS rel_type, collect(DISTINCT {
         uuid: coalesce(connected.c_2_uuid, connected.uuid),
-        title: coalesce(connected.c_1_name, connected.title, connected.name, 'Untitled'),
-        rel_type: type(rel)
-      } AS conn
-      LIMIT $limit
+        title: coalesce(connected.c_1_name, connected.c_1_primary_designation, connected.title, connected.name, 'Untitled')
+      }) AS ents
+      RETURN rel_type, ents[0..$limit] AS entities
     `;
 
     const records = await connectionManager.executeRead<Record<string, unknown>>(
       query,
-      { uuid: entityUuid, limit: int(limit) }
+      { uuid: entityUuid, limit: neo4j.int(limit) }
     );
 
-    return records
-      .map((record) => {
-        const conn = record['conn'];
-        if (!conn || typeof conn !== 'object') return null;
-        const connObj = conn as Record<string, unknown>;
-        return {
-          uuid: typeof connObj['uuid'] === 'string' ? connObj['uuid'] : '',
-          title: typeof connObj['title'] === 'string' ? connObj['title'] : 'Untitled',
-          relationship: typeof connObj['rel_type'] === 'string' ? connObj['rel_type'] : 'CONNECTED',
-        };
-      })
-      .filter((item): item is { uuid: string; title: string; relationship: string } => item !== null && item.uuid.length > 0);
+    const out: Record<string, Array<{ uuid: string; title: string }>> = {};
+    for (const record of records) {
+      const relType = typeof record['rel_type'] === 'string' ? record['rel_type'] : '';
+      const entitiesRaw = Array.isArray(record['entities']) ? record['entities'] : [];
+      const entities = entitiesRaw
+        .map((e) => {
+          const obj = (e ?? {}) as Record<string, unknown>;
+          return {
+            uuid: typeof obj['uuid'] === 'string' ? obj['uuid'] : '',
+            title: typeof obj['title'] === 'string' ? obj['title'] : 'Untitled',
+          };
+        })
+        .filter((item) => item.uuid.length > 0);
+      if (relType && entities.length > 0) out[relType] = entities;
+    }
+    return out;
   } catch {
-    return [];
+    return {};
   }
 }
 
@@ -1941,7 +1890,7 @@ async function getFullContext(
   try {
     // Query for entities within 2 hops
     const query = `
-      MATCH path = (start:Bimba)-[rel:*1..2]-(target:Bimba)
+      MATCH path = (start:Bimba)-[rel*1..2]-(target:Bimba)
       WHERE start.c_2_uuid = $uuid OR start.uuid = $uuid
       WITH target, min(length(path)) AS depth
       RETURN DISTINCT target, depth
@@ -2004,14 +1953,14 @@ async function getFullContext(
  *
  * @param text - Text to embed
  * @param taskType - Task type for embedding optimization (default: SEMANTIC_SIMILARITY)
- * @param dimensions - Embedding dimensions: 768, 1536, or 3072 (default: 768)
- * @param storeFor - Optional entity UUID to store embedding in graph
+ * @param dimensions - Embedding dimensions: 768, 1536, or 3072 (default: 3072, matching the coord_embedding index)
+ * @param storeFor - Optional entity UUID to store embedding in graph (written to c_5_embedding)
  * @returns EmbeddingResult with vector, metadata, and storage status
  */
 export async function embed(
   text: string,
   taskType: TaskType = 'SEMANTIC_SIMILARITY',
-  dimensions: 768 | 1536 | 3072 = 768,
+  dimensions: 768 | 1536 | 3072 = 3072,
   storeFor?: string
 ): Promise<EmbeddingResult> {
   const startTime = performance.now();
@@ -2019,6 +1968,7 @@ export async function embed(
   try {
     // Create embedding client
     const client = new GeminiEmbeddingClient();
+    const model = client.getModelVersion();
 
     // Generate embedding
     const vector = await client.embedText(text, taskType, dimensions);
@@ -2037,27 +1987,27 @@ export async function embed(
       try {
         const connectionManager = getNeo4jConnectionManager();
 
-        // Update entity node with embedding
-        // Store as JSON string to handle large arrays
-        const embeddingJson = JSON.stringify(vector);
-
+        // Store the vector on the canonical c_5_embedding property as a NATIVE
+        // float list (not a JSON string) so the coord_embedding vector index
+        // picks it up. db.create.setNodeVectorProperty guarantees float encoding.
         const result = await connectionManager.executeWrite<Record<string, unknown>>(
           `
-          MATCH (n)
-          WHERE n.uuid = $uuid OR n.c_2_uuid = $uuid
-          SET n.embedding = $embedding,
-              n.embedding_dimensions = $dimensions,
-              n.embedding_task_type = $taskType,
-              n.embedding_model = $model,
-              n.embedding_generated_at = datetime()
+          MATCH (n:Bimba)
+          WHERE n.c_2_uuid = $uuid OR n.uuid = $uuid
+          WITH n LIMIT 1
+          CALL db.create.setNodeVectorProperty(n, 'c_5_embedding', $embedding)
+          SET n.c_5_embedding_model = $model,
+              n.c_5_embedding_dimensions = $dimensions,
+              n.c_5_embedding_task_type = $taskType,
+              n.c_5_embedding_generated_at = datetime()
           RETURN coalesce(n.c_2_uuid, n.uuid) as uuid
           `,
           {
             uuid: storeFor,
-            embedding: embeddingJson,
-            dimensions,
+            embedding: vector,
+            dimensions: neo4j.int(dimensions),
             taskType,
-            model: 'models/text-embedding-004',
+            model,
           }
         );
 
@@ -2075,7 +2025,7 @@ export async function embed(
       text,
       vector,
       dimensions,
-      model: 'models/text-embedding-004',
+      model,
       task_type: taskType,
       stored,
       store_entity_uuid: storeEntityUuid,
@@ -2108,7 +2058,7 @@ export async function embed(
 export async function embedBatch(
   texts: string[],
   taskType: TaskType = 'SEMANTIC_SIMILARITY',
-  dimensions: 768 | 1536 | 3072 = 768,
+  dimensions: 768 | 1536 | 3072 = 3072,
   storeFor?: string[]
 ): Promise<BatchEmbeddingResult> {
   // Validation
@@ -2125,6 +2075,7 @@ export async function embedBatch(
   try {
     // Create embedding client
     const client = new GeminiEmbeddingClient();
+    const model = client.getModelVersion();
 
     // Generate batch embeddings
     const vectors = await client.embedBatch(texts, taskType, dimensions);
@@ -2149,24 +2100,24 @@ export async function embedBatch(
       if (storeFor?.[i]) {
         try {
           const connectionManager = getNeo4jConnectionManager();
-          const embeddingJson = JSON.stringify(vector);
-
           const result = await connectionManager.executeWrite<Record<string, unknown>>(
             `
-            MATCH (n {uuid: $uuid})
-            SET n.embedding = $embedding,
-                n.embedding_dimensions = $dimensions,
-                n.embedding_task_type = $taskType,
-                n.embedding_model = $model,
-                n.embedding_generated_at = datetime()
-            RETURN n.uuid as uuid
+            MATCH (n:Bimba)
+            WHERE n.c_2_uuid = $uuid OR n.uuid = $uuid
+            WITH n LIMIT 1
+            CALL db.create.setNodeVectorProperty(n, 'c_5_embedding', $embedding)
+            SET n.c_5_embedding_model = $model,
+                n.c_5_embedding_dimensions = $dimensions,
+                n.c_5_embedding_task_type = $taskType,
+                n.c_5_embedding_generated_at = datetime()
+            RETURN coalesce(n.c_2_uuid, n.uuid) as uuid
             `,
             {
               uuid: storeFor[i],
-              embedding: embeddingJson,
-              dimensions,
+              embedding: vector,
+              dimensions: neo4j.int(dimensions),
               taskType,
-              model: 'models/text-embedding-004',
+              model,
             }
           );
 
@@ -2184,7 +2135,7 @@ export async function embedBatch(
         text,
         vector,
         dimensions,
-        model: 'models/text-embedding-004',
+        model,
         task_type: taskType,
         stored,
         store_entity_uuid: storeEntityUuid,
@@ -2252,14 +2203,10 @@ export async function chunk(input: GraphChunkInput): Promise<GraphChunkResult> {
 
   const parentUuid = mappedDoc.uuid;
   const props = mappedDoc.properties;
-  const parentCoordinates = [
-    props['C'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'C' ? props['c_4_ql_position'] : undefined),
-    props['P'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'P' ? props['c_4_ql_position'] : undefined),
-    props['M'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'M' ? props['c_4_ql_position'] : undefined),
-    props['S'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'S' ? props['c_4_ql_position'] : undefined),
-    props['T'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'T' ? props['c_4_ql_position'] : undefined),
-    props['L'] ?? (props['c_4_ql_position'] && props['c_4_family'] === 'L' ? props['c_4_ql_position'] : undefined),
-  ];
+  // Inherit the parent's canonical `coordinate` string onto each chunk. The live
+  // schema has no raw C/P/M/S/T/L numeric props, so we propagate the one
+  // authoritative coordinate field instead of fabricating per-family numbers.
+  const parentCoordinate = typeof props['coordinate'] === 'string' ? (props['coordinate'] as string) : null;
 
   // Read file from vault
   const vaultPath = join(resolvePresentRoot(), input.file_path);
@@ -2311,12 +2258,7 @@ export async function chunk(input: GraphChunkInput): Promise<GraphChunkResult> {
         c.h3 = $h3,
         c.code_language = $codeLanguage,
         c.wikilinks = $wikilinks,
-        c.C = $C,
-        c.P = $P,
-        c.M = $M,
-        c.S = $S,
-        c.T = $T,
-        c.L = $L,
+        c.coordinate = $parentCoordinate,
         c.created_at = datetime(),
         c.updated_at = datetime()
       ON MATCH SET
@@ -2347,12 +2289,7 @@ export async function chunk(input: GraphChunkInput): Promise<GraphChunkResult> {
         h3: chunk.metadata.h3,
         codeLanguage: chunk.metadata.code_language,
         wikilinks: JSON.stringify(chunk.metadata.wikilinks),
-        C: parentCoordinates[0],
-        P: parentCoordinates[1],
-        M: parentCoordinates[2],
-        S: parentCoordinates[3],
-        T: parentCoordinates[4],
-        L: parentCoordinates[5],
+        parentCoordinate,
       }
     );
 
@@ -2424,6 +2361,135 @@ export async function validate(
 }
 
 // =============================================================================
+// Batch Embedding (focused node sets / coordinate branches)
+// =============================================================================
+
+/**
+ * Compose an embedding text from a node's resolved roles + rich string fields.
+ * Prefix-agnostic: name + description first, then all string-valued {family}_{n}_
+ * properties (excluding ids/timestamps/embeddings). The client truncates to its
+ * canonical context limit.
+ */
+function composeEmbeddingText(coord: string, props: Record<string, unknown>): string {
+  const roles = buildRoleView(props);
+  const parts: string[] = [];
+  if (coord) parts.push(`Coordinate: ${coord}`);
+  if (typeof roles.name?.value === 'string') parts.push(`Name: ${roles.name.value}`);
+  if (typeof roles.description?.value === 'string') parts.push(String(roles.description.value));
+
+  const used = new Set<string>([roles.name?.key ?? '', roles.description?.key ?? '', 'coordinate']);
+  for (const [k, v] of Object.entries(props)) {
+    if (typeof v !== 'string' || v.length === 0 || used.has(k)) continue;
+    if (!/^[cptlsm]_\d_/.test(k)) continue;
+    if (k.endsWith('_embedding') || /uuid|notion_page_id|_updated_at|_last_updated|dataset/.test(k)) continue;
+    parts.push(v);
+  }
+  return parts.join('\n\n');
+}
+
+export interface EmbedNodesInput {
+  coordinatePrefix?: string;
+  label?: string;
+  onlyMissing?: boolean;
+  limit?: number;
+  dimensions?: 768 | 1536 | 3072;
+  taskType?: TaskType;
+}
+
+export interface EmbedNodesResult {
+  requested: number;
+  embedded: number;
+  failed: number;
+  dimensions: number;
+  model: string;
+  task_type: TaskType;
+  results: Array<{ coordinate: string; status: 'embedded' | 'failed'; error?: string }>;
+  execution_time_ms: number;
+}
+
+/**
+ * Batch-embed a focused set of :Bimba nodes into the canonical c_5_embedding
+ * property (picked up by the coord_embedding vector index). Target by coordinate
+ * branch (prefix), label, and/or only nodes missing an embedding.
+ */
+export async function embedNodes(input: EmbedNodesInput): Promise<EmbedNodesResult> {
+  const start = Date.now();
+  const limit = Math.min(Math.max(input.limit ?? 50, 1), 500);
+  const dimensions = input.dimensions ?? 3072;
+  const taskType = input.taskType ?? 'SEMANTIC_SIMILARITY';
+  const onlyMissing = input.onlyMissing ?? true;
+
+  const cm = getNeo4jConnectionManager();
+  await cm.connect();
+
+  const conds: string[] = [];
+  const params: Record<string, unknown> = { limit: neo4j.int(limit) };
+  if (input.label) {
+    conds.push(`n:\`${sanitizeIdentifier(input.label)}\``);
+  }
+  if (input.coordinatePrefix) {
+    conds.push('n.coordinate STARTS WITH $prefix');
+    params['prefix'] = input.coordinatePrefix;
+  }
+  if (onlyMissing) {
+    conds.push('n.c_5_embedding IS NULL');
+  }
+  const where = conds.length ? `WHERE ${conds.join(' AND ')}` : '';
+
+  const targets = await cm.executeRead<Record<string, unknown>>(
+    `MATCH (n:Bimba) ${where} RETURN n.coordinate AS coord, properties(n) AS props LIMIT $limit`,
+    params
+  );
+
+  const client = new GeminiEmbeddingClient();
+  const model = client.getModelVersion();
+  const results: Array<{ coordinate: string; status: 'embedded' | 'failed'; error?: string }> = [];
+  let embedded = 0;
+  let failed = 0;
+
+  for (const rec of targets) {
+    const coord = typeof rec['coord'] === 'string' ? rec['coord'] : '';
+    const props = (rec['props'] ?? {}) as Record<string, unknown>;
+    try {
+      const text = composeEmbeddingText(coord, props);
+      if (!text.trim()) {
+        results.push({ coordinate: coord, status: 'failed', error: 'no embeddable text content' });
+        failed++;
+        continue;
+      }
+      const vector = await client.embedText(text, taskType, dimensions);
+      await cm.executeWrite(
+        `MATCH (n:Bimba {coordinate: $coord})
+         WITH n LIMIT 1
+         CALL db.create.setNodeVectorProperty(n, 'c_5_embedding', $embedding)
+         SET n.c_5_embedding_model = $model,
+             n.c_5_embedding_dimensions = $dimensions,
+             n.c_5_embedding_task_type = $taskType,
+             n.c_5_embedding_generated_at = datetime()
+         RETURN n.coordinate AS coord`,
+        { coord, embedding: vector, model, dimensions: neo4j.int(dimensions), taskType }
+      );
+      results.push({ coordinate: coord, status: 'embedded' });
+      embedded++;
+    } catch (e) {
+      results.push({ coordinate: coord, status: 'failed', error: e instanceof Error ? e.message : String(e) });
+      failed++;
+    }
+  }
+
+  return {
+    requested: targets.length,
+    embedded,
+    failed,
+    dimensions,
+    model,
+    task_type: taskType,
+    results,
+    execution_time_ms: Date.now() - start,
+  };
+}
+
+// =============================================================================
 // Graph Admin Functions (MCP-023)
 // =============================================================================
 
@@ -2441,8 +2507,8 @@ export async function validate(
  */
 export async function createVectorIndex(
   indexName: string,
-  property: string = 'embedding',
-  dimensions: number = 768
+  property: string = 'c_5_embedding',
+  dimensions: number = 3072
 ): Promise<{ success: boolean; index_name: string; message: string }> {
   const manager = getNeo4jConnectionManager();
   await manager.connect();
@@ -2464,7 +2530,7 @@ export async function createVectorIndex(
 
     // Create vector index
     await manager.executeWrite<void>(
-      `CREATE VECTOR INDEX ${indexName} FOR (n:Node) ON (n.${property}) OPTIONS {dimension: $dimensions, similarity_function: 'cosine'}`,
+      `CREATE VECTOR INDEX ${indexName} FOR (n:Bimba) ON (n.${property}) OPTIONS {dimension: $dimensions, similarity_function: 'cosine'}`,
       { dimensions }
     );
 
@@ -2632,38 +2698,36 @@ export async function getGraphStats(): Promise<{
   await manager.connect();
 
   try {
-    // Get total node count
-    const totalNodesResult = await manager.executeRead<{ count: number }>(
-      `MATCH (n) RETURN count(n) as count`
-    );
-    const totalNodes = totalNodesResult[0]?.count || 0;
+    // Neo4j returns count() as an Integer object; convert to a JS number.
+    const num = (v: unknown): number => (neo4j.isInt(v) ? (v as unknown as { toNumber(): number }).toNumber() : Number(v ?? 0));
 
-    // Get total relationship count
-    const totalRelsResult = await manager.executeRead<{ count: number }>(
-      `MATCH ()-[r]->() RETURN count(r) as count`
-    );
-    const totalRels = totalRelsResult[0]?.count || 0;
+    const totalNodesResult = await manager.executeRead<{ count: unknown }>(`MATCH (n) RETURN count(n) as count`);
+    const totalNodes = num(totalNodesResult[0]?.count);
 
-    // Get node counts by label
-    const nodeCounts = await manager.executeRead<{ label: string; count: number }>(
-      `MATCH (n) RETURN labels(n)[0] as label, count(n) as count WHERE label IS NOT NULL GROUP BY label ORDER BY label`
+    const totalRelsResult = await manager.executeRead<{ count: unknown }>(`MATCH ()-[r]->() RETURN count(r) as count`);
+    const totalRels = num(totalRelsResult[0]?.count);
+
+    // Node counts by label (Cypher has no GROUP BY — grouping is implicit via the
+    // non-aggregated key. UNWIND so multi-label nodes are counted per label.)
+    const nodeCounts = await manager.executeRead<{ label: string; count: unknown }>(
+      `MATCH (n) UNWIND labels(n) AS label RETURN label, count(*) as count ORDER BY count DESC`
     );
 
-    // Get relationship counts by type
-    const relCounts = await manager.executeRead<{ type: string; count: number }>(
-      `MATCH ()-[r]->() RETURN type(r) as type, count(r) as count GROUP BY type ORDER BY type`
+    // Relationship counts by type
+    const relCounts = await manager.executeRead<{ type: string; count: unknown }>(
+      `MATCH ()-[r]->() RETURN type(r) as type, count(*) as count ORDER BY count DESC`
     );
 
     return {
       total_nodes: totalNodes,
       total_relationships: totalRels,
-      node_counts: nodeCounts.map((r: any) => ({
+      node_counts: nodeCounts.map((r) => ({
         label: r.label || 'unknown',
-        count: r.count || 0,
+        count: num(r.count),
       })),
-      relationship_counts: relCounts.map((r: any) => ({
+      relationship_counts: relCounts.map((r) => ({
         type: r.type || 'unknown',
-        count: r.count || 0,
+        count: num(r.count),
       })),
     };
   } catch (error) {
@@ -2689,9 +2753,9 @@ export async function admin(input: GraphAdminInput): Promise<GraphAdminOutput> {
   switch (operation) {
     case 'create_index': {
       const result = await createVectorIndex(
-        (params.index_name as string) || 'embedding_vector_index',
-        (params.property as string) || 'embedding',
-        (params.dimensions as number) || 768
+        (params.index_name as string) || 'coord_embedding',
+        (params.property as string) || 'c_5_embedding',
+        (params.dimensions as number) || 3072
       );
       return {
         operation: 'create_index',

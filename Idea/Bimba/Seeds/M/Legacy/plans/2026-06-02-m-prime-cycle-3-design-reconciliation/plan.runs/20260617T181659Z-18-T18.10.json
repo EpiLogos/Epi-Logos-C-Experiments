@@ -1,0 +1,33 @@
+{
+  "runId": "20260617T181659Z-18-T18.10",
+  "taskId": "18.T18.10",
+  "startedAt": "2026-06-17T18:16:59.550Z",
+  "owner": "codex-m-dev-18-t18-10",
+  "leaseExpiresAt": "2026-06-17T20:16:59.550Z",
+  "worktree": null,
+  "task": {
+    "id": "18.T18.10",
+    "trackId": "18",
+    "tranche": "T18.10",
+    "title": "Land typed PASU / BeingPattern live-state JSON edge",
+    "effort": null,
+    "file": "18-typed-kernel-bridge-json-edge.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/18-typed-kernel-bridge-json-edge.md",
+    "dependsOn": [
+      "18.T18.1"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "runId": "20260725T202728Z-51-T51.1",
+  "taskId": "51.T51.1",
+  "startedAt": "2026-07-25T20:27:28.328Z",
+  "owner": "opus-mdev-t51-impl",
+  "leaseExpiresAt": "2026-07-25T23:27:28.328Z",
+  "worktree": null,
+  "task": {
+    "id": "51.T51.1",
+    "trackId": "51",
+    "tranche": "T51.1",
+    "title": "`s4'.context.assemble`: make context-pack assembly a real surface, and make the spine injection visible",
+    "effort": null,
+    "file": "51-specced-surface-gap-closure.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/51-specced-surface-gap-closure.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Body/M/pratibimba-app",
+      "Body/S/S3/gateway-contract/src/protocol.rs",
+      "Body/S/S3/gateway/src/dispatch.rs",
+      "Body/S/S4/pi-agent/lib/capability-parity.ts",
+      "Body/S/S4/plugins/pleroma/capability-matrix.json",
+      "Body/S/S4/ta-onta/composite-entry.ts",
+      "Idea/Bimba/Seeds/S/S4/S4'/S4-4'-SPEC.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER = Body/M/pratibimba-app (panes/engine/design); SUBSTRATE crates carry unchanged. epi-theia = FROZEN. See recapture register §2 for this track's exact CARRIER line."
+  }
+}

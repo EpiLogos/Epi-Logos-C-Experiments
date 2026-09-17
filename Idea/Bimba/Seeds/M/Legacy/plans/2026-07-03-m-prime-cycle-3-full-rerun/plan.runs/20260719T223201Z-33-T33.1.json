@@ -1,0 +1,48 @@
+{
+  "runId": "20260719T223201Z-33-T33.1",
+  "taskId": "33.T33.1",
+  "startedAt": "2026-07-19T22:32:01.360Z",
+  "owner": "opus-mdev-3301-e56",
+  "leaseExpiresAt": "2026-07-20T00:32:01.360Z",
+  "worktree": null,
+  "task": {
+    "id": "33.T33.1",
+    "trackId": "33",
+    "tranche": "T33.1",
+    "title": "Close the E₅/E₆ energy channels beyond stub-zero (kernel-truth 4:5:6 expected-red)",
+    "effort": "kernel-truth 4:5:6 expected-red",
+    "file": "33-harmonic-energy-channel-handoff.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/33-harmonic-energy-channel-handoff.md",
+    "dependsOn": [
+      "00.T3",
+      "33.T0"
+    ],
+    "writeScopes": [
+      "Body/S/S0/portal-core/src/kernel.rs:352-353,653-670"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-12T18:12:55.207Z",
+        "text": "BLOCKED (mis-scoped at dispatch; adversarial review refuted a stub-zero close): the rerun body demands E5/E6 BEYOND stub-zero — wire the real E5 channel consuming Stream C's N-channel EBM head + the E6 verifier scalar, flip the expected-red kernel_energy_carries_e5_e6_with_456_weighting to green with E5/E6 non-zero for non-default inputs. That physics depends on Stream C (EBM head at Body/S/S5/epii-autoresearch-core) and Stream F (Nara forward), neither landed. The E4/E5/E6 struct scaffolding + three-input signature is already pre-landed (08.T8.9) and green; the expected-red E5/E6 test is correctly preserved red. Reopen when Streams C/F land. Working-tree stub-pin test reverted so nothing falsely locks e5=0."
+      },
+      {
+        "at": "2026-07-18T20:46:22.494Z",
+        "text": "Reopened: Stream C 12.T12.24 and Stream F 05.T5.22 are both done and now encoded as dependencies."
+      }
+    ],
+    "claimedAt": "2026-07-12T17:01:01.895Z",
+    "completedAt": null,
+    "owner": "uc-t33",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-12T17:01:01.895Z",
+    "runId": "20260712T170101Z-33-T33.1",
+    "worktree": null,
+    "blocker": null,
+    "carrier": "SUBSTRATE — harmonic energy channel handoff (kernel_energy_evaluate E4 personal / E5 harmonic [user data NEVER enters E5] / E6 verifier, 4:5:6 weighting; oracle codon-charge FFI fix — m3_compute_charges has zero Rust callers). CARRIER: the 4-5-0 engine is its consumption point. Expected-red owner. §2 track 33 + §5.1/§5.3."
+  }
+}

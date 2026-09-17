@@ -1,0 +1,43 @@
+{
+  "runId": "20260801T155842Z-25-T25.22",
+  "taskId": "25.T25.22",
+  "startedAt": "2026-08-01T15:58:42.301Z",
+  "owner": "opus-mdev-lane25",
+  "leaseExpiresAt": "2026-08-01T17:58:42.301Z",
+  "worktree": null,
+  "task": {
+    "id": "25.T25.22",
+    "trackId": "25",
+    "tranche": "T25.22",
+    "title": "PASU BeingPattern perspective and family-field consumer *(spec-ahead-integration; consumes CCT-21 + 10.PASU + 18.10 + PASU.md)",
+    "effort": "spec-ahead-integration; consumes CCT-21 + 10.PASU + 18.10 + PASU.md",
+    "file": "25-m4-nara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/25-m4-nara-frontend-deep.md",
+    "dependsOn": [
+      "25.T25.21"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-08-01T15:58:41.398Z",
+        "text": "Orphan release: owner fable5-mdev-0801 died in a session-limit event at ~13:27Z and its lease expired 15:16Z with the work uncommitted on disk. Released so opus-mdev-lane25 can re-claim it; the WIP is inherited, not discarded."
+      }
+    ],
+    "claimedAt": "2026-08-01T12:16:38.797Z",
+    "completedAt": null,
+    "owner": "fable5-mdev-0801",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-08-01T12:16:38.797Z",
+    "runId": "20260801T121638Z-25-T25.22",
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: M4' 23 widget contracts in pratibimba-app (PASU wizard derived-only quintessence, oracle aliveness 4h decay, R-factor fretboard 7x6, session-close ceremony XOR+seeds+lamps, time-axis switcher). AR=14, least-real. §2 track 25."
+  }
+}

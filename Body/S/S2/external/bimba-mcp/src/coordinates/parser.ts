@@ -12,7 +12,7 @@
  * @see coordinate-syntax.md for syntax rules
  */
 
-import { isCanonicalCoordinateSyntax, convertHashToMFamily } from './syntax.js';
+import { isCanonicalCoordinateSyntax, convertHashToMFamily, wrapContextFrames } from './syntax.js';
 
 /**
  * Parsed coordinate representation
@@ -55,8 +55,9 @@ export function parseCoordinate(input: string): ParsedCoordinate | null {
     return null;
   }
 
-  // Convert legacy '#' syntax to canonical M family
-  const normalizedInput = convertHashToMFamily(input);
+  // Convert legacy '#' syntax to canonical M family, then normalise context frames
+  // (bare/legacy `4.0/1` -> `4.(0/1)`, doubling -> `4.(4.0/1-4.4/5)`) so the validator sees canon.
+  const normalizedInput = wrapContextFrames(convertHashToMFamily(input));
 
   if (!isCanonicalCoordinateSyntax(normalizedInput)) {
     return null;

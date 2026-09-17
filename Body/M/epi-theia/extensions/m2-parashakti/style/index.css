@@ -43,3 +43,335 @@
     color: var(--theia-descriptionForeground);
     font-style: italic;
 }
+
+.mext-widget-m2-parashakti .m2-planetary-keying-panel {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--theia-widget-border);
+}
+
+.mext-widget-m2-parashakti .m2-planetary-keying-panel h4 {
+    margin: 0 0 8px;
+    font-size: var(--theia-ui-font-size1);
+    font-weight: 600;
+}
+
+.mext-widget-m2-parashakti .m2-planetary-keying-panel ol {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mext-widget-m2-parashakti .m2-planetary-keying-panel li {
+    display: grid;
+    grid-template-columns: minmax(72px, 1fr) 64px 44px minmax(92px, 1fr);
+    gap: 8px;
+    align-items: center;
+    min-height: 28px;
+    padding: 4px 6px;
+    border: 1px solid var(--theia-widget-border);
+    border-radius: 4px;
+}
+
+.mext-widget-m2-parashakti .m2-planetary-keying-panel li[data-selected='true'] {
+    border-color: var(--theia-focusBorder);
+    background-color: var(--theia-list-activeSelectionBackground);
+}
+
+.mext-widget-m2-parashakti .m2-pending-badge {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 1px 6px;
+    border: 1px solid var(--theia-editorWarning-foreground);
+    border-radius: 4px;
+    color: var(--theia-editorWarning-foreground);
+    font-size: var(--theia-ui-font-size0);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 10px;
+    border: 1px solid var(--theia-widget-border);
+    border-radius: 6px;
+    background-color: var(--theia-sideBar-background);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__toolbar,
+.mext-widget-m2-parashakti .m2-cymatic-transport__scrubber {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__button {
+    min-height: 28px;
+    padding: 3px 10px;
+    border: 1px solid var(--theia-button-border, transparent);
+    border-radius: 4px;
+    color: var(--theia-button-foreground);
+    background-color: var(--theia-button-background);
+    font: inherit;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__button:hover {
+    background-color: var(--theia-button-hoverBackground);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__paused-badge,
+.mext-widget-m2-parashakti .m2-cymatic-transport__pending {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    min-height: 24px;
+    padding: 1px 7px;
+    border: 1px solid var(--theia-focusBorder);
+    border-radius: 4px;
+    color: var(--theia-foreground);
+    font-size: var(--theia-ui-font-size0);
+    overflow-wrap: anywhere;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__pending {
+    border-color: var(--theia-editorWarning-foreground);
+    color: var(--theia-editorWarning-foreground);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__label,
+.mext-widget-m2-parashakti .m2-cymatic-transport__tick-readout {
+    color: var(--theia-descriptionForeground);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__scrubber input[type='range'] {
+    flex: 1 1 180px;
+    min-width: 120px;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__snapshot-bar {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(4px, 1fr);
+    align-items: center;
+    width: 100%;
+    min-height: 18px;
+    gap: 2px;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__tick {
+    display: block;
+    height: 6px;
+    border-radius: 2px;
+    background-color: var(--theia-widget-border);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__tick[data-active='true'] {
+    background-color: var(--theia-focusBorder);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__klein-marker {
+    min-width: 12px;
+    min-height: 12px;
+    padding: 0;
+    border: 2px solid var(--theia-editorWarning-foreground);
+    border-radius: 50%;
+    background: transparent;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__surface {
+    min-height: 58px;
+    padding-top: 8px;
+    border-top: 1px solid var(--theia-widget-border);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-transport__summary {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 10px;
+    row-gap: 3px;
+    margin: 0;
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-chladni-surface {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-chladni-surface canvas {
+    inline-size: min(100%, 280px);
+    aspect-ratio: 1;
+    border: 1px solid var(--theia-contrastBorder);
+    background: var(--theia-editor-background);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-chladni-surface__caption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    color: var(--theia-descriptionForeground);
+    font-size: 11px;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--theia-widget-border);
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface h4,
+.mext-widget-m2-parashakti .m2-shadow-decan-column h5 {
+    margin: 0;
+    font-size: var(--theia-ui-font-size1);
+    font-weight: 600;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface header span {
+    color: var(--theia-descriptionForeground);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-surface__columns {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-column {
+    min-width: 0;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-column ol {
+    display: grid;
+    gap: 4px;
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-column li {
+    display: grid;
+    grid-template-columns: minmax(88px, 1fr) 48px minmax(56px, 0.8fr) minmax(64px, 0.9fr) 58px;
+    gap: 6px;
+    align-items: center;
+    min-height: 30px;
+    padding: 4px 6px;
+    border: 1px solid var(--theia-widget-border);
+    border-radius: 4px;
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-column li span,
+.mext-widget-m2-parashakti .m2-shadow-decan-column li strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.mext-widget-m2-parashakti .m2-shadow-decan-column li strong {
+    color: var(--theia-descriptionForeground);
+    font-weight: 600;
+}
+
+@media (max-width: 920px) {
+    .mext-widget-m2-parashakti .m2-shadow-decan-surface__columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── 23.9 Layer C variant switcher + deferred 'spheres' carrier ─────────────── */
+.mext-widget-m2-parashakti .m2-cymatic-surface-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-surface-switcher__button {
+    min-height: 26px;
+    padding: 2px 9px;
+    border: 1px solid var(--theia-button-border, transparent);
+    border-radius: 4px;
+    color: var(--theia-button-foreground);
+    background-color: var(--theia-button-secondaryBackground, var(--theia-button-background));
+    font: inherit;
+    text-transform: capitalize;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-surface-switcher__button[aria-checked="true"] {
+    border-color: var(--theia-focusBorder);
+    background-color: var(--theia-button-background);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-surface-switcher__button[data-variant-deferred="true"] {
+    border-style: dashed;
+    border-color: var(--theia-editorWarning-foreground);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-surface-switcher__pending {
+    color: var(--theia-editorWarning-foreground);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-spheres-surface {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 12px;
+    padding: 14px;
+    border: 1px dashed var(--theia-editorWarning-foreground);
+    border-radius: 6px;
+    background-color: var(--theia-sideBar-background);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-spheres-surface__pending-tile {
+    display: grid;
+    gap: 6px;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-spheres-surface__badge {
+    justify-self: start;
+    padding: 1px 8px;
+    border: 1px solid var(--theia-editorWarning-foreground);
+    border-radius: 4px;
+    color: var(--theia-editorWarning-foreground);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-spheres-surface__note {
+    margin: 0;
+    color: var(--theia-descriptionForeground);
+    font-size: var(--theia-ui-font-size0);
+    overflow-wrap: anywhere;
+}
+
+.mext-widget-m2-parashakti .m2-cymatic-spheres-surface__caption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: var(--theia-descriptionForeground);
+    font-size: var(--theia-ui-font-size0);
+}

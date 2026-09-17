@@ -168,3 +168,66 @@
     width: 100%;
     text-align: left;
 }
+
+/* 36.T36.5 — recognition handoff: trace → M5 EBM feature context → M0 grounding. */
+.recognition-handoff-ebm-context {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+    padding: 6px 8px;
+    border-top: 1px solid var(--theia-editorWidget-border);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.recognition-handoff-ebm-context-label {
+    color: var(--theia-descriptionForeground);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.recognition-handoff-ebm-context-features {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 10px;
+    row-gap: 2px;
+    margin: 0;
+}
+
+.recognition-handoff-ebm-context-features dt {
+    color: var(--theia-descriptionForeground);
+}
+
+.recognition-handoff-ebm-context-features dd {
+    margin: 0;
+    font-family: var(--theia-code-font-family);
+}
+
+.recognition-handoff-pending {
+    color: var(--theia-descriptionForeground);
+    font-style: italic;
+}
+
+.recognition-handoff-grounding {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: var(--theia-ui-font-size0);
+}
+
+.recognition-handoff-grounding-label {
+    color: var(--theia-descriptionForeground);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.recognition-handoff-grounding-handle,
+.recognition-handoff-grounding-address {
+    font-family: var(--theia-code-font-family);
+}
+
+.recognition-handoff-grounding-recognized .recognition-handoff-grounding-phrase {
+    color: var(--theia-successBackground, #4caf50);
+}

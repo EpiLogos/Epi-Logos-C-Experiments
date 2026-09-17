@@ -143,7 +143,7 @@ const m2MeaningPacketTrace: EnvelopeBuilder = (input, id) => {
         {
             resonance72: input.profile.payload['resonance72'],
             planetaryChakral: input.profile.payload['planetaryChakral'],
-            kleinFlipState: input.profile.payload['kleinFlipState']
+            kleinFlip: input.profile.payload['kleinFlip']
         },
         false,
         readProvenanceHandles(input.profile),

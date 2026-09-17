@@ -1,5 +1,22 @@
 # Track 24 — M3' Mahāmāyā Frontend Deep Design
 
+> **OPERATIVE CARDINALITY CORRECTION — 2026-07-15.** The 18-aperture / `operator-no-frame` branch is deleted and superseded. Build 17 functional lenses: primary [[Fibonacci Ground]] id 16, plus the sixteen derived static divisions ids 0..15. Ground is not a homogeneous seventeenth row in `lensCarrier[16]`, but it is the operative primary lens and every derived packet resolves through it. No Frame/Operator rows or 18-stack may be introduced.
+
+> **⚑ ONTOLOGY SUPERSEDED (2026-07-11, DR-FACE-7)** — The widget/registration framing
+> below is the dead Theia paradigm. Before executing ANY tranche in this file, read
+> [[M'-ENGINE-FACES-ONTOLOGY-2026-07-11]] and enter its frame: the carrier is one
+> playing organism (two poles — 1-2-3 cosmic instrument, 4-5-0 lived return — over
+> one kernel spine); the unit is the stateless **face**, not the widget. Sort every
+> tranche through the ontology §2 fate algorithm (carried-by-integration / face-gap /
+> spine-gap) and close per fate. The CONTENT-LAW below (data shapes, field lists,
+> pedagogy contracts, privacy rules) remains binding; the Theia nouns (WidgetFactory,
+> frontend-module, contributions, shell slots, "exactly six" chrome enumerations) do not.
+
+
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Closes the per-extension widget UX for the **M3' Mahāmāyā** surface — the alive-and-tarot-like Mahāmāyā wheel as it must actually appear, render, and behave inside Theia. The substrate (Tranche 04 / Wave-A M3) and the shell hosting (Tranche 11 / Wave-B Theia shell) and the foundation principles + composition contract (Tranche 15 / Wave-C Theia shell) are landed; this tranche closes the **depth** of what M3' shows and how it shows it.
 
 Two surface roles must close in lock-step:
@@ -77,7 +94,7 @@ Cycle 2 Track 05 named the substrate; cycle 3 Track 04 closes substrate reconcil
 
 ## Tranches
 
-### 24.1 — `M3CosmicWheelRenderService`: the alive-and-tarot-like default surface *(doc-ahead-landing; first-build of named component, no new contract)*
+### Tranche 24.1 — `M3CosmicWheelRenderService`: the alive-and-tarot-like default surface *(doc-ahead-landing; first-build of named component, no new contract)*
 
 Replace the flat `<dl>` render in `Body/M/epi-theia/extensions/m3-mahamaya/src/browser/m3-mahamaya-widget.tsx::render()` with `<M3CosmicWheelRenderService mode="full" surface={surface} />`. The new component is the single source of wheel rendering for ALL three Track-08 modes (`badge` | `mini-view` | `full`).
 
@@ -106,7 +123,7 @@ Replace the flat `<dl>` render in `Body/M/epi-theia/extensions/m3-mahamaya/src/b
   - `pnpm --filter @pratibimba/m3-mahamaya test` (typecheck-clean + component render test asserts: 64-cell ring renders at `mode === 'full'`; active cell highlighted at `codonId === surface.activeProjection.codonId`; readiness fallback when blocked).
   - `grep -rn "Body/S/S0\|portal-core" Body/M/epi-theia/extensions/m3-mahamaya/src/browser/` returns nothing (forbidden-import discipline holds).
 
-### 24.2 — `CosmicClockRenderService`: 385-node cosmic clock + angular/hop edge overlay *(doc-ahead-landing; depends on 24.1 cell layout)*
+### Tranche 24.2 — `CosmicClockRenderService`: 385-node cosmic clock + angular/hop edge overlay *(doc-ahead-landing; depends on 24.1 cell layout)*
 
 Land the 360-degree + 24-amino + 1-Axis Mundi cosmic clock as a depth-overlay component layered over the 24.1 wheel. Per CLAUDE.md MEMORY COSMIC CLOCK SPEC: "385 nodes total: 360 degree nodes + 24 amino acid backbone + 1 Axis Mundi/Quintessence". Replaces (in M3-domain) the CosmicClockPlugin role that supersedes M0Dashboard+M1Walk+M2Vibrational stubs (per MEMORY) — but only the M3 face of it; the cross-Mn `CosmicClockPlugin` is a separate concern.
 
@@ -141,41 +158,19 @@ Land the 360-degree + 24-amino + 1-Axis Mundi cosmic clock as a depth-overlay co
   - Component render test: degree-tick advance redraws node positions; aspect-edge layer renders honest-pending when `payload.cosmicClock.aspectEdges` absent.
   - `grep -rn "import.*portal-core\|Body/S/S0" Body/M/epi-theia/extensions/m3-mahamaya/src/browser/` returns nothing.
 
-### 24.3 — 16-lens aperture switcher (`M3LensApertureSwitcher`) *(spec-ahead-integration; depends on Wave-B kernel-bridge field WC-M3-SA-1)*
+### Tranche 24.3 — 16+1 functional lens switcher (`M3LensApertureSwitcher`) *(corrected 2026-07-15; depends on `kernelBridge.m3.lensCodonBinary(lensId)`)*
 
-Land the 16+1 Lens Annulus aperture switcher per M3'-SPEC §8.10 (the 16+1 Mahāmāyā lens-stack). The 16 lenses are simultaneous static apertures over the 360° clock (per CLAUDE.md MEMORY: "16 lenses = 16 sacred circle divisions (NOT pair matrix) mirroring Anuttara 16-fold void"). The +1 is the Level-0 meta-position (per §8.10).
+Land the **primary Ground + sixteen derived apertures** Lens Annulus switcher in `Body/M/pratibimba-app`. The 16 sacred-circle divisions are simultaneous derived readings over the 360° clock. [[Fibonacci Ground]] is functionally lens id 16: the 60-position, 6° primary lens that grounds them. It may render as the outer/underlying ring, but it is selected and queried through the same functional lens control; every derived projection declares `groundingLensId: 16` and carries its Fibonacci address.
 
-- **File:** `Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3LensApertureSwitcher.tsx`
-- **Widget id:** `pratibimba.m3-mahamaya:m3-lens-stack-aperture`.
-- **Type signature:**
-  ```ts
-  export interface MahamayaLensStackBoundary {
-      readonly activeLensId: number;                      // 0..16 (16 = Level-0 meta)
-      readonly lenses: readonly MahamayaLensApertureDescriptor[];  // length === 17
-  }
-  export interface MahamayaLensApertureDescriptor {
-      readonly id: number;
-      readonly label: string;
-      readonly degreeSpan: readonly [number, number];     // start, end (mod 360)
-      readonly sacredDivisionIndex: number;               // 0..15; 16 = meta
-  }
-  export interface M3LensApertureSwitcherProps {
-      readonly surface: M3ProjectionSurface;
-      readonly lensStack?: MahamayaLensStackBoundary;     // from payload.mahamayaLensStack
-      readonly onActivate: (lensId: number) => void;      // dispatched via SharedBridgeAdapter
-  }
-  ```
-- **Visual contract:** 17 concentric annular sectors (16 sacred-circle divisions as outer ring; +1 Level-0 meta-position as inner ring). Active aperture luminous; non-active apertures dimmed; hover surfaces the `degreeSpan`. Clicking an aperture dispatches `bridge.invokeGatewayRpc('s3.world_clock.aperture.activate', { lensId })` (named Wave-B method-family addition WC-M3-SA-6 sibling) — renderer never mutates locally.
-- **Namespace discipline (DR-WC-M3-2):** this switcher's data binding is `payload.mahamayaLensStack` (the M3 aperture lane); MUST NOT be conflated with `payload.codonRotationProjection.lens` (the M1' chromatic-lens lane, count 12). The component refuses to render if `lensStack === undefined` — falls through to a `pending-profile-field:mahamayaLensStack` badge. See 24.10 for the dual-lane discipline.
-- **Data bindings:** `payload.mahamayaLensStack.activeLensId`, `payload.mahamayaLensStack.lenses[].id`, `.label`, `.degreeSpan`, `.sacredDivisionIndex`.
-- **Wave-B handoff:** WC-M3-SA-1 names `mahamayaLensStack` as a required profile-field. Until it lands, the switcher renders honest-pending badge with the kernel-bridge readiness ledger surfacing the gap.
-- **Verification:**
-  - `test -f Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3LensApertureSwitcher.tsx`
-  - `grep -n 'M3LensApertureSwitcher\|mahamayaLensStack' Body/M/epi-theia/extensions/m3-mahamaya/src/browser/` returns matches.
-  - Render test: 17 apertures render when `lensStack` provided; honest-pending badge when absent.
-  - Namespace test: component never reads `payload.codonRotationProjection.lens` (the M1' chromatic-lens lane).
+- **Functional ids:** derived divisions `0..15`; primary Ground `16`; reject `17+`.
+- **Carrier binding:** call `kernelBridge.m3.lensCodonBinary(lensId)` through the real gateway. Ground returns 60 positions; derived divisions return their canonical C-backed boundary count. Do not invent a profile field, local division table, Frame lens, Operator lens, or 18-fold namespace.
+- **Default:** select Ground id 16 so the operative basis is visible before any derived aperture.
+- **Readout:** show `lensRole`, `groundingLensId`, boundary/position count, and per-degree Fibonacci position/digit from the strict packet.
+- **Namespace discipline:** M3's 16+1 functional hierarchy is distinct from the M1' 12×7 `(lens, mode)` tonality namespace. Neither may be inferred from the other.
+- **Cross-link:** the 16/9 second-spanda kinematics bind through `payload.pasuBeingPattern.m2_m3_relation`; no renderer-local 16/9 table.
+- **Verification:** portal-core exact Ground/derived projection tests; strict Zod and active-carrier parser tests; real spawned gateway test for ids 7, 16, and rejected 17; real Chromium test proving Ground is default and a derived aperture resolves through Ground 16. Any Frame/Operator or 18-cardinality assertion is a failure.
 
-### 24.4 — 9-walk traversal navigator (`M3WalkNavigator`) *(spec-ahead-integration; depends on Wave-B kernel-bridge field WC-M3-SA-4)*
+### Tranche 24.4 — 9-walk traversal navigator (`M3WalkNavigator`) *(spec-ahead-integration; depends on Wave-B kernel-bridge field WC-M3-SA-4)*
 
 Land the 9 sequential traversal-path walks distinct from the 16 simultaneous apertures (per CLAUDE.md MEMORY: "9 walks (sequential traversal paths) vs 16 lenses (simultaneous static apertures) — DISTINCT"). Per MEMORY, named walks include `WALK_SPANDA` (renamed from `WALK_TORUS`, M1 Paramasiva, 12-step/30°), `WALK_HEXAGRAM`, `WALK_LINE_CHANGE` (2^6 binary).
 
@@ -207,7 +202,7 @@ Land the 9 sequential traversal-path walks distinct from the 16 simultaneous ape
   - `grep -n 'WALK_SPANDA\|WALK_HEXAGRAM\|WALK_LINE_CHANGE' Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3WalkNavigator.tsx` returns three name-string matches.
   - Render test: 9 lanes rendered when `walks` provided.
 
-### 24.5 — 64-codon hexagram browser with line-change projection (`M3HexagramBrowser`) *(doc-ahead-landing; landed substrate fully sufficient)*
+### Tranche 24.5 — 64-codon hexagram browser with line-change projection (`M3HexagramBrowser`) *(doc-ahead-landing; landed substrate fully sufficient)*
 
 Land the 64-hexagram browser. Each hexagram is a selectable 6-line glyph; selection updates `bridge.invokeGatewayRpc('s2.codon.scalar_ref.read', { refKind: 'i-ching', scalarRef: hexagramId })`. Line-change projection rendered as transitions over the 384-graph (per M3'-SPEC §8.6 `384 = 64 × 6 line-change graph`).
 
@@ -227,7 +222,7 @@ Land the 64-hexagram browser. Each hexagram is a selectable 6-line glyph; select
   - `test -f Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3HexagramBrowser.tsx`
   - Render test: 64 hexagrams rendered; line-change toggle dispatches to bridge.
 
-### 24.6 — Tarot wheel (`M3TarotWheel`): 22 major arcana + 56 minor arcana *(doc-ahead-landing; depends on 19.5 substrate utility + Wave-B field WC-M3-SA-2)*
+### Tranche 24.6 — Tarot wheel (`M3TarotWheel`): 22 major arcana + 56 minor arcana *(doc-ahead-landing; depends on 19.5 substrate utility + Wave-B field WC-M3-SA-2)*
 
 Land the tarot wheel — the surface UX §1 axiom ("turning the card *is* changing the mode") needs.
 
@@ -256,7 +251,7 @@ Land the tarot wheel — the surface UX §1 axiom ("turning the card *is* changi
   - Render test: 22 + 56 cards rendered; STOP-codon honest-pending; suit-element colouring matches `ACE_ELEMENT_MAP` (consumed via `TarotDecanService` — see 24.7).
   - Forbidden-import test: NO direct import of `m3.c`, `oracle.rs`, `medicine.rs`, `m3_major_arcana_from_codon`.
 
-### 24.7 — Decan-tarot addressing chain breadcrumb (`M3DecanChainBreadcrumb`) + `TarotDecanService` *(doc-ahead-landing; depends on Wave-B `s2.codon.scalar_ref.read` returning chain elements)*
+### Tranche 24.7 — Decan-tarot addressing chain breadcrumb (`M3DecanChainBreadcrumb`) + `TarotDecanService` *(doc-ahead-landing; depends on Wave-B `s2.codon.scalar_ref.read` returning chain elements)*
 
 Land the full chain breadcrumb panel: card → suit → codon → decan → planet → element → chakra → body zone. Per CLAUDE.md MEMORY master-clarity-plan: "ONE LUT: CHAKRA_BODY_ZONES[8] indexed by Chakra_Id. All routes (planet/decan/tarot) arrive here."
 
@@ -294,7 +289,7 @@ Land the full chain breadcrumb panel: card → suit → codon → decan → plan
   - `grep -n 'CHAKRA_BODY_ZONES\|DECAN_BODY_PARTS\|PLANET_CHAKRA\|SIGN_ELEMENT' Body/M/epi-theia/extensions/m3-mahamaya/src/` returns nothing (no renderer-local LUT; consumed via service).
   - Render test: chain breadcrumb renders fully when service resolves; honest-pending chips when partial.
 
-### 24.8 — Hexagram body dynamics viewer (`M3HexagramBodyDynamicsViewer`) + `HexagramBodyDynamicsService` *(doc-ahead-landing; depends on Wave-B `s2.codon.scalar_ref.read` returning `HexagramBodyEntry`)*
+### Tranche 24.8 — Hexagram body dynamics viewer (`M3HexagramBodyDynamicsViewer`) + `HexagramBodyDynamicsService` *(doc-ahead-landing; depends on Wave-B `s2.codon.scalar_ref.read` returning `HexagramBodyEntry`)*
 
 Land the per-hexagram chakra-IDs + body-zones viewer. Per MEMORY: "HEXAGRAM_BODY_DYNAMICS[64]: HexagramBodyEntry per hexagram with chakra IDs + body_zones array".
 
@@ -316,14 +311,14 @@ Land the per-hexagram chakra-IDs + body-zones viewer. Per MEMORY: "HEXAGRAM_BODY
   }
   ```
 - **Visual contract:** sub-panel attached to 24.5 hexagram browser. Top zone: human-body silhouette with chakra-points lit by `primaryChakraId` + `secondaryChakraIds`; bottom zone: body-zones list + dynamic descriptor. Suit-element halo around the silhouette derived from the active hexagram's coupling to the codon-cell colour.
-- **Substrate canonical reference:** `Body/S/S0/epi-cli/src/nara/oracle.rs::HEXAGRAM_BODY_DYNAMICS[64]` + `hexagram_body_lookup`. Renderer NEVER imports; service routes through `bridge.invokeGatewayRpc('s2.codon.scalar_ref.read', { refKind: 'i-ching', scalarRef: hexagramId })`.
+- **Substrate canonical reference:** `Body/S/S0/epi-cli/src/nara/oracle_identity.rs::HEXAGRAM_BODY_DYNAMICS[64]` + `hexagram_body_lookup` (corrected 2026-07-28 — the path formerly read `oracle.rs`, which does not exist). The substrate was ALWAYS landed; only the gateway seam was missing, and it landed 2026-07-28 as `s2.codon.scalar_ref.read` (24.T24.7). Note the dataset carries ONE `secondary_chakra`, emitted as a single-element `secondaryChakraIds` list — the plural in the TS signature below is the consuming shape, not a claim that the dataset holds several. Renderer NEVER imports; service routes through `bridge.invokeGatewayRpc('s2.codon.scalar_ref.read', { refKind: 'i-ching', scalarRef: hexagramId })`.
 - **Wave-B handoff:** bridge method-family return-shape extension named under 24.7 / WC-M3-SA-6.
 - **Verification:**
   - `test -f Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3HexagramBodyDynamicsViewer.tsx`
   - `test -f Body/M/epi-theia/extensions/m3-mahamaya/src/browser/services/HexagramBodyDynamicsService.ts`
   - Render test: silhouette + chakra-lights render when service resolves; honest-pending when not.
 
-### 24.9 — TCT / Nine-of-Wands renderer-side surfacing rule + test fixture *(contradiction-downstream; closes DR-WC-M3-1; cross-link DR-M3-1)*
+### Tranche 24.9 — TCT / Nine-of-Wands renderer-side surfacing rule + test fixture *(contradiction-downstream; closes DR-WC-M3-1; cross-link DR-M3-1)*
 
 Renderer-side assertion: when `surface.activeProjection.codonId === 0x35` (TCT / Nine of Wands), `surface.activeProjection.rotationalStateCount` MUST equal 7. Per DR-M3-1: runtime authority is 7 non-dual (`classify_codon(0x35) → ImperfectPalindromic`); dataset reconciliation moves 8→7, NOT a code change. Wave-C extends `surfaceBlockers` to add `'tct-rotational-state-count-mismatch'` when the constraint is violated.
 
@@ -335,7 +330,7 @@ Renderer-side assertion: when `surface.activeProjection.codonId === 0x35` (TCT /
   - `pnpm --filter @pratibimba/m3-mahamaya test` (TCT-7 fixture passes; TCT-8 fixture fails with `tct-rotational-state-count-mismatch`).
   - `cargo test -p portal-core::codon::tests classify` (substrate-side sanity: `classify_codon(0x35) == ImperfectPalindromic` — confirms substrate alignment with renderer-side rule).
 
-### 24.10 — `M1_LENS` vs `M3_LENS_STACK` namespace discipline *(contradiction-downstream; closes DR-WC-M3-2; cross-link DR-M3-3)*
+### Tranche 24.10 — `M1_LENS` vs `M3_LENS_STACK` namespace discipline *(contradiction-downstream; closes DR-WC-M3-2; cross-link DR-M3-3)*
 
 Per DR-M3-3 ratified in Tranche 4.6: the M1' chromatic lens namespace (12 anchors, `LENS_COUNT = 12`) and the M3 Mahāmāyā lens-stack namespace (16+1 apertures) MUST NOT silently merge. Renderer-side, two distinct widget IDs coexist:
 
@@ -351,7 +346,7 @@ Per DR-M3-3 ratified in Tranche 4.6: the M1' chromatic lens namespace (12 anchor
   - `grep -rn 'lensCount.*17\|LENS_COUNT.*17\|M3_LENS_STACK_COUNT' Body/M/epi-theia/extensions/m3-mahamaya/src/` returns nothing (no silent 17-table introduced).
   - Namespace test: `M1ChromaticLensConsumer` refuses to read `payload.mahamayaLensStack`; `M3LensApertureSwitcher` refuses to read `payload.codonRotationProjection.lens`.
 
-### 24.11 — Quintessence / Akasha emergent balance indicator (`QuintessenceIndicator`) *(spec-ahead-integration; depends on Wave-B field WC-M3-SA-3 `mahamaya.chargeQuaternion`)*
+### Tranche 24.11 — Quintessence / Akasha emergent balance indicator (`QuintessenceIndicator`) *(spec-ahead-integration; depends on Wave-B field WC-M3-SA-3 `mahamaya.chargeQuaternion`)*
 
 Per CLAUDE.md MEMORY master-clarity-plan: "Quintessence/Akasha emerges from balance of 4 elements (low variance in nucleotide_balance)". Per M3'-SPEC §8.4 + §9 charge-quaternion display: codon = `{w=pp(Earth), x=mm(Fire), y=mp(Water), z=pm(Air)}` with invariant `pp+mm+mp+pm = 4X`. The Quintessence indicator IS the runtime visual audit of the invariant.
 
@@ -380,7 +375,7 @@ Per CLAUDE.md MEMORY master-clarity-plan: "Quintessence/Akasha emerges from bala
   - `grep -n 'chargeQuaternion\|pp+mm+mp+pm\|Quintessence\|Akasha' Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/QuintessenceIndicator.tsx` returns matches.
   - Render test: four-petal sizes match `(pp, mm, mp, pm)`; Quintessence glow ∝ low-variance; invariant violation badge renders when `chargeQuaternionInvariant === false`.
 
-### 24.12 — Third-Spanda matheme proof panel (`ThirdSpandaMathemeProofPanel`) *(doc-ahead-landing; closes DR-M3-6; cross-link Tranche 4.10 + 19.9 7-8-9 spine; depends on Wave-B field WC-M3-SA-5)*
+### Tranche 24.12 — Third-Spanda matheme proof panel (`ThirdSpandaMathemeProofPanel`) *(doc-ahead-landing; closes DR-M3-6; cross-link Tranche 4.10 + 19.9 7-8-9 spine; depends on Wave-B field WC-M3-SA-5)*
 
 Per DR-M3-6 ratified: Third Spanda canonical is `137 = 64 + 2(36) + 1`. Per M3-ARCHITECTURE.md, the five canonical forms + execution-order trace + translation rule are the canonical display. Per Tranche 4.10 coupling-flow / measurement-face inspector: source-warrant / provenance UI only — must NOT compute alpha or RG flow.
 
@@ -422,7 +417,7 @@ Per DR-M3-6 ratified: Third Spanda canonical is `137 = 64 + 2(36) + 1`. Per M3-A
   - String-audit test: panel prose does NOT contain `"QL derives alpha"`; contains `"measurement-face"` + `"source-warrant"` register-disciplined caveat language.
   - Render test: five canonical forms render; activation responds to `skeletonEventsActive`.
 
-### 24.13 — `M3CodonRotationProjectionForLensRing`: named reads-only export for cosmic-1-2-3 composition *(spec-ahead-integration; cross-link Tranche 15.4 + 11.2)*
+### Tranche 24.13 — `M3CodonRotationProjectionForLensRing`: named reads-only export for cosmic-1-2-3 composition *(spec-ahead-integration; cross-link Tranche 15.4 + 11.2)*
 
 Per Tranche 15.4 composition-pattern contract: M3 codon-rotation projects onto the K² lens-ring cells of the played K² torus rendered by `m1-paramasiva-played-torus`. The M3 widget exports a **reads-only** named contract the cosmic-1-2-3 composition consumes. M3-side never mutates K² geometry; composition-side never writes to M3 state.
 
@@ -434,7 +429,7 @@ Per Tranche 15.4 composition-pattern contract: M3 codon-rotation projects onto t
       readonly cellIndex: number;                          // 0..(K² ring cell count - 1)
       readonly codonId: number;                            // 0..63
       readonly rotation: number;                           // 0..(rotationalStateCount - 1)
-      readonly chargeQuaternion: readonly [number, number, number, number];  // [pp, mm, mp, pm]
+      readonly chargeQuaternion: readonly [number, number, number, number];  // [pp, nn, np, pn] — canonical name-set (DR-37-2); kernel aliases struct mm/mp/pm
       readonly lineChangeOperator: string;
       readonly tick: number;
       readonly degree720: number;
@@ -458,7 +453,7 @@ Per Tranche 15.4 composition-pattern contract: M3 codon-rotation projects onto t
   - Reads-only test: function is pure (same `surface` ⇒ same output; no side-effects; throws on unready).
   - Cross-layout state-identity test (extension of 11.6): toggle `daily-0-1` ↔ `ide-deep` with active codon — both surfaces consume `M3CodonRotationProjectionForLensRing` returning identical cell descriptors at the same profile generation.
 
-### 24.14 — 3-coin I-Ching cast ribbon (`M3IChingCastRibbon`) *(doc-ahead-landing; depends on Wave-B method-family addition WC-M3-SA-6)*
+### Tranche 24.14 — 3-coin I-Ching cast ribbon (`M3IChingCastRibbon`) *(doc-ahead-landing; depends on Wave-B method-family addition WC-M3-SA-6)*
 
 Land the 3-coin cast UI ribbon per CLAUDE.md master-clarity-plan: A=6 (Old Yin / Cups / Water), T=9 (Old Yang / Wands / Fire), C=7 (Young Yin / Pentacles / Earth), G=8 (Young Yang / Swords / Air). Per UX §3: "the 6/9/7/8 I-Ching values are the operative arithmetic of the whole system."
 
@@ -489,7 +484,7 @@ Land the 3-coin cast UI ribbon per CLAUDE.md master-clarity-plan: A=6 (Old Yin /
   - Render test: 6 lines render bottom-to-top; cast button dispatches RPC; freeze-state during pending response.
   - No-local-randomization test: `grep -n 'Math.random' Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3IChingCastRibbon.tsx` returns nothing.
 
-### 24.15 — Profile-tick discipline + inline-provenance audit across 24.x *(doc-ahead-landing; consumes Tranche 15.6)*
+### Tranche 24.15 — Profile-tick discipline + inline-provenance audit across 24.x *(doc-ahead-landing; consumes Tranche 15.6)*
 
 Per Foundation Principle 2 + Tranche 15.6: every Wave-C widget re-renders on `bridge.onProfile(profile => …)`, NOT internal RAF / timer. Per Foundation Principle 3 + the existing `surfaceBlockers` / `surfacePendingFields`: every datum binding shows inline readiness state (border colour, pending badge, blocked overlay). NO separate errors panel.
 
@@ -503,7 +498,7 @@ Per Foundation Principle 2 + Tranche 15.6: every Wave-C widget re-renders on `br
   - `grep -rn 'useM3ProfileTick\|useM3Readiness' Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/` returns matches in every Wave-C widget.
   - `pnpm --filter @pratibimba/m3-mahamaya test` — tick-discipline test asserts widget re-render fires on profile advance; provenance-state inline test passes per readiness class.
 
-### 24.16 — Renderer-service architecture (`services/` folder + DI symbol discipline) *(doc-ahead-landing; consumes Tranche 15-foundation forbidden-import contract)*
+### Tranche 24.16 — Renderer-service architecture (`services/` folder + DI symbol discipline) *(doc-ahead-landing; consumes Tranche 15-foundation forbidden-import contract)*
 
 Per Foundation Principle 5 (OmniPanel) + Foundation Principle 8 (Theia conventions) + 07-T0 `forbiddenDirectImports` + `bridgeAdapterSymbol: 'SHARED_BRIDGE_ADAPTER'`: every named service in this tranche lives in `Body/M/epi-theia/extensions/m3-mahamaya/src/browser/services/` and consumes `SHARED_BRIDGE_ADAPTER` via Inversify `@inject(SHARED_BRIDGE_ADAPTER)`. NO direct import of `oracle.rs` / `medicine.rs` / `m3.c` / `portal-core` / `Body/S/S0`.
 
@@ -523,7 +518,7 @@ Per Foundation Principle 5 (OmniPanel) + Foundation Principle 8 (Theia conventio
   - `grep -rn 'fetch(\|new WebSocket(' Body/M/epi-theia/extensions/m3-mahamaya/src/browser/` returns nothing.
   - `pnpm --filter @pratibimba/m3-mahamaya test` (Inversify binding test asserts every service resolves).
 
-### 24.17 — Parametrized renderer: one `M3CosmicWheelRenderService`, three modes (`badge` | `mini-view` | `full`) *(doc-ahead-landing; closes Track-08 mini-mode parity per `TRACK_08_CONTRIBUTION`)*
+### Tranche 24.17 — Parametrized renderer: one `M3CosmicWheelRenderService`, three modes (`badge` | `mini-view` | `full`) *(doc-ahead-landing; closes Track-08 mini-mode parity per `TRACK_08_CONTRIBUTION`)*
 
 Per `index.ts::TRACK_08_CONTRIBUTION.compactViews`: both `M3CodonChip` and `M3WheelMiniView` declare `miniModes: ["badge", "mini-view"]`. Per 15-foundation Surface Contracts: the `ide-deep` editor area hosts the full wheel; the cosmic-side of `daily-0-1` hosts the mini-view; the Track-08 badge appears in the OmniPanel / context-strip / dispatch-trace genealogy.
 
@@ -543,9 +538,82 @@ Per `index.ts::TRACK_08_CONTRIBUTION.compactViews`: both `M3CodonChip` and `M3Wh
   - Mini-mode render parity test: SAME `surface` produces compatible visual content at all three modes (badge active cell == mini-view active cell == full active cell).
   - Cross-layout state-identity test (extension of 11.6): toggling `daily-0-1` ↔ `ide-deep` with the same `surface` preserves all six state fields.
 
+### Tranche 24.18 — Pentadic relation inspector (`M3PentadicRelationInspector`) *(spec-ahead-integration; consumes 10.P5 + 4.14 + Track 36.3)*
+
+Land the M3 renderer surface for `AnuttaraPentadicRuntimeTrace`. This is the UI expression of the 0/1 -> 5 hinge inside Mahamaya, paired with the Maxwell/Mahamaya 15 witness named in Track 04.
+
+- **File:** `Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3PentadicRelationInspector.tsx`
+- **Service:** `M3PentadicTraceService` in `src/browser/services/`, consuming `SHARED_BRIDGE_ADAPTER` only.
+- **Placement:** full mode of `M3CosmicWheelRenderService`; mini-view shows a single pentadic hinge badge with pending/readiness state.
+- **Inputs:** `surface.profile.anuttara_pentadic_trace`, `surface.profile.coupling_flow_alignment`, and readiness/pending fields from the Track-10 ledger.
+- **Rendered facts:**
+  - `0/1 -> 5` substrate/hinge row, including whole-number endpoint 5 and natural-number endpoint 6.
+  - `72*5=360` Shem-degree/runtick row.
+  - `15 = 10+4+1` Maxwell/Kaluza-Klein relation-space row.
+  - paired Mahamaya fifteens row, sourced from helper-backed payload values.
+  - `24*15=360` backbone row and `360+24=384` line-change row.
+  - active `resonance72Index`, `mahamayaAddress64`, `codon`, `lineChangeOperator`, and `qCosmicRef`.
+- **Readiness discipline:** every unavailable subfield is rendered through `ReadinessChip`; the inspector never silently hides missing physics/computation payload.
+- **No-local-derivation discipline:** the component may format strings and labels only. It does not derive 72->64, codon, 15-pairing, line-change, or Q fields.
+
+Verification:
+- `test -f Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3PentadicRelationInspector.tsx`
+- `grep -rn 'M3PentadicRelationInspector\|M3PentadicTraceService\|anuttara_pentadic_trace' Body/M/epi-theia/extensions/m3-mahamaya/src/` returns component, service, exports, and tests.
+- `pnpm --filter @pratibimba/m3-mahamaya test` with a fixture emitted by portal-core; test asserts the rendered rows above and pending-state behaviour.
+- No-local-derivation grep: `rg -n 'Math\\.floor|resonance72.*8 / 9|24 \\* 15|72 \\* 5|360 \\+ 24' Body/M/epi-theia/extensions/m3-mahamaya/src/browser/` returns no production derivations outside static labels and test expectations.
+
+### Tranche 24.19 — Fibonacci Ground (Level 0) outermost ring of the cosmic clock *(spec-ahead-integration; lands [[35-fibonacci-ground-level-0-temporal-substrate]] §2.4; routes to DR-FIB-1; depends on Tranches 4.15 + 5.25)*
+
+Add the Level 0 render layer to the M3 cosmic-clock surface. The [[Fibonacci Ground]] may sit visually outside the 16 derived annular sectors, but functionally it is primary lens id 16: the substrate and address through which they are partitioned and read.
+
+**Render contract:**
+
+1. **60-position outer ring** — 60 wedges at 6° each, labelled with `fibonacci_digit` (0–9) from the backend-provided ground payload (`pisano_digit_lut` via profile/bridge — NO renderer-local Pisano table, per the no-local-derivation discipline).
+2. **Cardinal-zero highlights** — positions {0, 15, 30, 45} as filled circles (quadrant anchors 0°/90°/180°/270°), colour `var(--epi-cardinal-anchor)`.
+3. **Zodiacal-five secondary anchors** — positions {5, 10, 20, 25, 35, 40, 50, 55} as smaller open circles, colour `var(--epi-zodiacal-anchor)`.
+4. **Two live markers** — Natal Sun (gold ring) from the natal `KairosFrame`; Live Sun (moving silver dot) from the live accessor view, both projected `fibonacci_position = (sun_deg * 60 / 360) mod 60` backend-side; updates on `subscribeToProfileTick` (Level 1 tick12 boundary).
+5. **Backbone tick marks** — 24 short radial ticks at `CLOCK_BACKBONE[i].degree` positions, slightly inside the 60-ring; backbone-index 0 (midnight / 0° Aries cusp) emphasised.
+
+**Layer order (outer → inner):** Fibonacci Ground (new) → 24-backbone ticks (new) → 16-lens annular sectors (existing) → 9-walk overlay (existing) → torus core (existing).
+
+Why this matters: the substrate becomes visible — the `(00/00)` context frame as the clock's outer envelope; natal-vs-live Sun distance rendered as gold-ring-to-silver-dot geometric distance, directly inviting the lens/walk/contemplation surfaces that read the same ground.
+
+Verification: `pnpm --filter @pratibimba/m3-mahamaya test` — render test asserts 60 wedges, 4 cardinal anchors, 8 zodiacal anchors, 24 backbone ticks, gold natal ring + silver live dot from a portal-core-emitted fixture; readiness chips for ground payload absence (honest-pending, no fallback ring); no-local-derivation grep extended with `60 \* 6|Pisano|pisano` returning no production derivations.
+
+### Tranche 24.20 — `M3TranscriptionEngine`: the lens → codon → binary interactive surface *(spec-ahead-integration; COMPOSES 24.3 + 24.13 [DONE] + 37.8; consumes Track 37 §III findings; cross-link 23.18 / 23.20 / 29.16)*
+
+Land the **transcription engine** the design vision names: the single interactive surface that runs the complete chain *lens aperture → degree-segment → codon → binary computation → quaternion/element → rendered cells*, and reads it back up. This is NOT a new codon table or a static overlay — it is the **profile-tick-driven composition** of the already-landed lens switcher (24.3) and the already-DONE codon-rotation projection export (24.13, `M3CodonRotationProjectionForLensRing`), fed by one new typed kernel-bridge projection (37.8 `lensCodonBinary`). The findings (`plan.runs/2026-06-12-m0-presaging-pasu-and-codon-thread-findings.md` §III) establish that this chain is the runtime of M0-4's X#/N# seeds — the engine should make that visible (the four charges as the four X# permutations; the tick as the N# compute-at-zero pulse; the 2-bit nucleotide as Svabhava's `(0/1)`).
+
+- **File:** `Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3TranscriptionEngine.tsx`
+- **Widget id:** `pratibimba.m3-mahamaya:m3-transcription-engine`.
+- **Mechanics (reads-only):** the active lens (`payload.mahamayaLensStack.activeLensId`, 24.3) selects a degree-segment; the engine consumes `payload.lensCodonBinary` (37.8) for that aperture and renders, per degree in the segment:
+  - the **binary read-out** — 3 nucleotides as 2-bit pairs (`codonUpper`/`codonLower` + the third from the 6-bit codon), bit 0 = polarity (Yin/Yang), bit 1 = mobility (Moving/Resting), per [m3.h:64-88](../../../../../Body/S/S0/epi-lib/include/m3.h); the 6-bit codon (0–63) as the hexagram address.
+  - the **four charges** `{ pp, nn, np, pn }` (canonical name-set, DR-37-2), optionally annotated with their X#-permutation identity (`pp`=X2, `nn`=X1, `np`=X4, `pn`=X3) as a dev-mode lamp.
+  - the **charge quaternion** `[pp, nn, np, pn]` and its **element** (canonical-B, DR-37-3), forwarded to the personal cymatic renderer (25.6) / aural body where present.
+  - the **codon class** (perfect/imperfect palindromic / non-dual / dual) and the **line-change hops** to neighbouring degrees (the 64×6 = 384 closure).
+- **Tick choreography:** advances with `subscribeToProfileTick` — `tick12` (the N# Spanda pulse) is the clock that re-reads the active aperture's codons; no local rAF, no local biology math (every charge/quaternion/element comes from 37.8). When the `(-)` Operator aperture (id 17, no-frame) is active, the engine renders the codon relations as a pure graph (no degree-ring), consistent with 24.3's operator-no-frame metaKind.
+- **Discipline:** pure consumer. Refuses to render (honest-pending badge `pending-profile-field:lensCodonBinary`) when the projection is absent. Never recomputes charges/quaternion/element locally; never writes state; never imports `m2-parashakti` or `Body/S/S0`. The RNA layer renders only the `m3_codon_is_rna_capable` flag honestly (DR-37-4); `pending-rna-codon-family` / `pending-chromosome-graph` badges where the U-codon family / chromosome nodes would be.
+- **Type signature:**
+  ```ts
+  export interface M3TranscriptionEngineProps {
+      readonly surface: M3ProjectionSurface;
+      readonly lensCodonBinary?: LensCodonBinaryProjection;   // from payload.lensCodonBinary (37.8)
+      readonly activeLensId: number;                          // from payload.mahamayaLensStack (24.3)
+      readonly devModeXLogicLamps?: boolean;                  // annotate charges with X# permutation identity
+  }
+  ```
+- **Composition:** exports `M3TranscriptionEngineCard` (TRACK_08) into the cosmic-1-2-3 plugin; the per-degree codon cells reuse the same descriptors 24.13 emits for the K² lens-ring (no second projection).
+- **Verification:**
+  - `test -f Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3TranscriptionEngine.tsx`
+  - render test: for a fixture `lensCodonBinary`, the engine draws the active aperture's degree-segment with per-degree binary read-out, four charges keyed `pp/nn/np/pn`, charge quaternion, and canonical-B element.
+  - X-logic lamp test (dev-mode): `pp/nn/np/pn` annotate as `X2/X1/X4/X3`; the `pp+nn+np+pn == 4·X` invariant displays (sanity, sourced from the projection — not recomputed).
+  - tick test: advancing `tick12` re-reads the active aperture's codons; operator-aperture (17) renders the no-frame graph.
+  - no-local-math grep: `! grep -rn "NUCLEOTIDE_ICHING_VALUE\|m3_compute_charges\|epogdoon\|X + Y + Z\|>> 4 & 0x03" <component>` (all biology is kernel-side).
+  - pending-badge test: absent `lensCodonBinary` ⇒ `pending-profile-field:lensCodonBinary`; absent RNA family ⇒ `pending-rna-codon-family`.
+
 ## Cross-cutting notes for the controller
 
-- **Anti-greenfield posture is total.** All 17 tranches are `consume / extend / first-build-of-named-component-over-landed-contract`. No parallel runtime. No bypass of `SharedBridgeAdapter`. No reach into `Body/S/S0`. The `m3-mahamaya` extension contract `2026-06-01.07-T6` is honoured; its `buildM3ProjectionSurface` is the sole projection-builder; its `M3ScalarOracleRef` privacy guard is the sole scalar-ref resolution path.
+- **Anti-greenfield posture is total.** All 19 tranches are `consume / extend / first-build-of-named-component-over-landed-contract`. No parallel runtime. No bypass of `SharedBridgeAdapter`. No reach into `Body/S/S0`. The `m3-mahamaya` extension contract `2026-06-01.07-T6` is honoured; its `buildM3ProjectionSurface` is the sole projection-builder; its `M3ScalarOracleRef` privacy guard is the sole scalar-ref resolution path.
 - **Wave-B kernel-bridge handoffs (six)** named explicitly: WC-M3-SA-1 `mahamayaLensStack`, WC-M3-SA-2 `mahamaya.tarotMajorArcanaCardId`, WC-M3-SA-3 `mahamaya.chargeQuaternion`, WC-M3-SA-4 `cosmicClock.walks[]`, WC-M3-SA-5 `couplingFlowAlignment.thirdSpandaForms[]`, WC-M3-SA-6 method-family entries `s5.oracle.iching.cast` / `s5.oracle.tarot.cast` / `s3.world_clock.aperture.activate` / `s3.world_clock.walk.advance`. Until they land, Wave-C tranches render honest-pending badges through the existing readiness ledger — no parallel state.
 - **DR-WC-M3-1 / DR-WC-M3-2** are renderer-side surfacing rules downstream of DR-M3-1 / DR-M3-3; closed by tests, not by spec changes. No new decision-register entries needed.
 - **15.4 composition contract** is the sole compositional boundary; 24.13 honours it both ways. The M3 widget never renders K² geometry; the cosmic-1-2-3 composition never writes to M3 state.

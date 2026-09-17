@@ -1,0 +1,37 @@
+{
+  "runId": "20260710T132506Z-04-T4.15",
+  "taskId": "04.T4.15",
+  "startedAt": "2026-07-10T13:25:06.301Z",
+  "owner": "opus-a-m3",
+  "leaseExpiresAt": "2026-07-10T15:25:06.301Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T4.15",
+    "trackId": "04",
+    "tranche": "T4.15",
+    "title": "`Clock_Backbone_Node` typed primitive + `CLOCK_BACKBONE[24]` built at M3 boot",
+    "effort": null,
+    "file": "04-m3-mahamaya-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/04-m3-mahamaya-reconciliation.md",
+    "dependsOn": [
+      "04.T4.14"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M3' inspectors (18-aperture switcher, tarot wheel, hexagram browser, transcription engine) in pratibimba-app. SUBSTRATE: epi-lib m3 + portal-core m3_transcription_bridge. §2 track 04/24."
+  }
+}

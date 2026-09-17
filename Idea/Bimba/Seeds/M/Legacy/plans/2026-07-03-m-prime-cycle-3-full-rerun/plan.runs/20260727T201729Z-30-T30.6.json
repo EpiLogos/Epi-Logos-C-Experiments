@@ -1,0 +1,47 @@
+{
+  "runId": "20260727T201729Z-30-T30.6",
+  "taskId": "30.T30.6",
+  "startedAt": "2026-07-27T20:17:29.831Z",
+  "owner": "claude-opus5-t30-states-20260727",
+  "leaseExpiresAt": "2026-07-27T23:17:29.831Z",
+  "worktree": null,
+  "task": {
+    "id": "30.T30.6",
+    "trackId": "30",
+    "tranche": "T30.6",
+    "title": "Empty / loading / pending / blocked state grammar",
+    "effort": null,
+    "file": "30-design-language-layer.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/30-design-language-layer.md",
+    "dependsOn": [
+      "30.T30.5"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-27T18:21:27.078Z",
+        "text": "RECON ONLY — claim released with a clean tree, no code written. Recorded so the next agent starts from the inventory rather than re-deriving it. CARRIED ALREADY (src/ui/primitives.tsx): PendingBadge, ReadinessIndicator, BlockedOverlay all exist; ProvenanceBorder too. The nine-id readiness LAW is landed and typed in src/ui/bridgeReadiness.ts (BridgeReadinessId, BRIDGE_READINESS_IDS, readinessSeverity, readinessTier, needsWrappingShell, classifyReadiness) and re-declared verbatim as CHROME-CONTRACT §6, machine-checked by src/chromeContract.test.ts. REAL GAPS: (1) EmptyState — absent entirely; (2) LoadingPulse — absent entirely, and it carries a real law worth honouring, Foundation Principle 2: when the bridge is available the pulse advances with the profile tick and there is NO local timer, falling back to a local 200ms timer ONLY under bridge_unavailable (note the heartbeat pulses at 1Hz — see the 28.T28.4 finding about per-tick work); (3) the three existing primitives are UNTYPED against the taxonomy — PendingBadge takes  not BridgeReadinessId, ReadinessIndicator takes a loose three-value state, BlockedOverlay takes a bare reason string, and NONE of them surface ownerTrack, which the spec makes the point of the tooltip ('the user can identify which track owns the missing field'); (4) per-id semantic colour (readiness.id.<id>) is not tokenised — the spec is explicit that it must be per-id, not generic amber. AUTHORITIES FOR THE BUILD, both located: ownerTrack + per-id meaning live in the readinessTaxonomy array of Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json (frozen tree — do NOT import across the boundary; the carrier already owns a verbatim re-declaration of this taxonomy by design in CHROME-CONTRACT §6, so extending src/ui/bridgeReadiness.ts with ownerTrack/meaning continues that established pattern rather than inventing law), and src/engine/integratedReadiness.ts already carries per-FIELD ownerTrack strings as a precedent for the shape. VERIFY LINE demands 9 ids x 5 primitives = 45 cases plus a reason-routing test for ownerTrack, a deep-link test (s5_review_blocked opens the OmniPanel Review fold — that fold is live as ReviewBlocksPane), and a consume-not-fork lint; track 30 is class UF so it also needs real-surface proof. Depends on 30.T30.5 (done, 5a8ff33f) whose accessibility contract the new primitives must satisfy — EmptyState/LoadingPulse need aria text equivalents and LoadingPulse is CONTINUOUS motion, so under prefers-reduced-motion it must stop entirely per reducedMotionDurationMs()."
+      },
+      {
+        "at": "2026-07-27T18:21:51.715Z",
+        "text": "CORRECTION to the previous entry: one phrase was eaten by shell backtick substitution and read \"PendingBadge takes  not BridgeReadinessId\". It should read: PendingBadge takes a plain (id: string) parameter, NOT the typed BridgeReadinessId from src/ui/bridgeReadiness.ts. Everything else in that entry stands."
+      }
+    ],
+    "claimedAt": "2026-07-27T18:20:11.614Z",
+    "completedAt": null,
+    "owner": "opus-mdev-t30-states",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-27T18:20:11.614Z",
+    "runId": "20260727T182011Z-30-T30.6",
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: the ENTIRE design-token bundle + 15-primitive shelf + consumption lint, re-homed to CSS vars/TS for React/Tauri. Token law = 30.8 derivation-backed tiers; motion = ratified DR-UI-4 (400/240/320). DR-WC-DL-1 (family palette) still open — re-decide for carrier. §2 track 30."
+  }
+}

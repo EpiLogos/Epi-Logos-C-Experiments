@@ -48,6 +48,16 @@ fn evaluated(cpf: &str, cf: &str, cfp: &str, cs_direction: &str) -> Value {
     })
 }
 
+fn aletheia_entitlement(dispatch_tool: &str) -> Value {
+    json!({
+        "effectiveTools": [dispatch_tool],
+        "roles": ["anima.dispatcher"],
+        "session": {
+            "aletheiaModeActive": true
+        }
+    })
+}
+
 fn route_with(env: Value, evaluated_vak: Value) -> Value {
     let state = temp_env().home.join(".epi").join("gate");
     anima::mediation_route(
@@ -113,6 +123,7 @@ fn mediation_route_maps_required_vak_special_cases() {
 fn mediation_route_gates_moirai_fusion_and_anima_self_invoke() {
     let mut moirai_env = envelope();
     moirai_env["dispatchTool"] = json!("dispatch_moirai_night_pass");
+    moirai_env["entitlementContext"] = aletheia_entitlement("dispatch_moirai_night_pass");
     let moirai = route_with(
         moirai_env,
         evaluated("(4.0/1-4.4/5)", "(0/1/2)", "CFP3", "Night'"),
@@ -176,6 +187,116 @@ fn mediation_route_rejects_ungrounded_or_incomplete_envelopes() {
     )
     .expect_err("dispatch tool without upstream VAK evidence is rejected");
     assert!(err.contains("upstream"));
+}
+
+#[test]
+fn mediation_route_refuses_aletheia_internal_tool_without_active_entitlement_context() {
+    let state = temp_env().home.join(".epi").join("gate");
+    let mut protected_tool = envelope();
+    protected_tool["dispatchTool"] = json!("aletheia_crystallise");
+
+    let err = anima::mediation_route(
+        &state,
+        &json!({
+            "envelope": protected_tool,
+            "evaluatedVak": evaluated("(4.0/1-4.4/5)", "(0/1/2)", "CFP3", "Night'"),
+            "upstreamEvidence": ["vak-evaluate"]
+        }),
+    )
+    .expect_err("Aletheia internal tools require dispatch-time entitlement context");
+
+    assert!(err.contains("entitlement"), "unexpected error: {err}");
+    assert!(
+        err.contains("aletheia.mode.active"),
+        "unexpected error: {err}"
+    );
+}
+
+#[test]
+fn mediation_route_requires_every_aletheia_entitlement_grant() {
+    let state = temp_env().home.join(".epi").join("gate");
+    let evaluated_vak = evaluated("(4.0/1-4.4/5)", "(0/1/2)", "CFP3", "Night'");
+
+    let mut missing_tool = envelope();
+    missing_tool["dispatchTool"] = json!("aletheia_crystallise");
+    missing_tool["entitlementContext"] = json!({
+        "effectiveTools": [],
+        "roles": ["anima.dispatcher"],
+        "session": { "aletheiaModeActive": true }
+    });
+    let err = anima::mediation_route(
+        &state,
+        &json!({
+            "envelope": missing_tool,
+            "evaluatedVak": evaluated_vak,
+            "upstreamEvidence": ["vak-evaluate"]
+        }),
+    )
+    .expect_err("the effective tool grant is required");
+    assert!(err.contains("effectiveTools"), "unexpected error: {err}");
+
+    let mut missing_role = envelope();
+    missing_role["dispatchTool"] = json!("aletheia_crystallise");
+    missing_role["entitlementContext"] = json!({
+        "effectiveTools": ["aletheia_crystallise"],
+        "roles": [],
+        "session": { "aletheiaModeActive": true }
+    });
+    let err = anima::mediation_route(
+        &state,
+        &json!({
+            "envelope": missing_role,
+            "evaluatedVak": evaluated("(4.0/1-4.4/5)", "(0/1/2)", "CFP3", "Night'"),
+            "upstreamEvidence": ["vak-evaluate"]
+        }),
+    )
+    .expect_err("the Anima dispatcher role is required");
+    assert!(err.contains("anima.dispatcher"), "unexpected error: {err}");
+
+    let mut inactive_mode = envelope();
+    inactive_mode["dispatchTool"] = json!("aletheia_crystallise");
+    inactive_mode["entitlementContext"] = json!({
+        "effectiveTools": ["aletheia_crystallise"],
+        "roles": ["anima.dispatcher"],
+        "session": { "aletheiaModeActive": false }
+    });
+    let err = anima::mediation_route(
+        &state,
+        &json!({
+            "envelope": inactive_mode,
+            "evaluatedVak": evaluated("(4.0/1-4.4/5)", "(0/1/2)", "CFP3", "Night'"),
+            "upstreamEvidence": ["vak-evaluate"]
+        }),
+    )
+    .expect_err("active Aletheia mode is required");
+    assert!(
+        err.contains("aletheia.mode.active"),
+        "unexpected error: {err}"
+    );
+}
+
+#[test]
+fn mediation_route_accepts_aletheia_internal_tool_with_effective_entitlement() {
+    let state = temp_env().home.join(".epi").join("gate");
+    let mut protected_tool = envelope();
+    protected_tool["dispatchTool"] = json!("aletheia_crystallise");
+    protected_tool["entitlementContext"] = aletheia_entitlement("aletheia_crystallise");
+
+    let result = anima::mediation_route(
+        &state,
+        &json!({
+            "envelope": protected_tool,
+            "evaluatedVak": evaluated("(4.0/1-4.4/5)", "(0/1/2)", "CFP3", "Night'"),
+            "upstreamEvidence": ["vak-evaluate"]
+        }),
+    )
+    .expect("an entitled Aletheia internal tool routes through live mediation");
+
+    assert_eq!(
+        result["dispatchTool"].as_str(),
+        Some("aletheia_crystallise")
+    );
+    assert_eq!(result["outcome"].as_str(), Some("AletheiaDisclosure"));
 }
 
 #[test]

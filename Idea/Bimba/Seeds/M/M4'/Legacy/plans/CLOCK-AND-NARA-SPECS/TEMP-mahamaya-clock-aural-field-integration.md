@@ -286,7 +286,7 @@ The conversational-default UX philosophy holds: this is the user's *living self-
 
 ### What we need to find / design
 
-1. **The Diamond-QL shape** — confirmed (per user 2026-05-29): the shape lives outside the repo as a simple **diamond / double-square-base pyramid**. Standard octahedron-like solid (two square-based pyramids joined at their square bases), giving 6 vertices + 8 triangular faces + 12 edges. Maps naturally onto the 6 matheme positions (vertices) with the 12 MEF lenses or 12 chromatic notes potentially on the 12 edges. The "diamond" character makes it the natural figure for the personal-aural-Vitruvian rendering — the user's body-axis stands along the vertical axis (root-chakra at bottom-vertex, crown-chakra at top-vertex), with heart-chakra at the equatorial-square-base centre, planetary/chakral positions distributed around the equatorial square + at the top/bottom vertices.
+1. **The Diamond-QL shape** — confirmed (per user 2026-05-29): the shape lives outside the repo as a simple **diamond / double-square-base pyramid**. DR-IG-6 corrects the renderer mapping to the full 6+6 P/P' geometry: 2 apex poles P5/P5', 4 top/base vertices P1-P4, 4 inverted-base vertices P1'-P4' interleaved by mirror law `x + y' = 5`, plus the central axis-point P0/P0' (not a vertex). Maps the named P/P' anchors onto the personal-aural-Vitruvian field, with the 12 MEF lenses or 12 chromatic notes potentially on the shell relations. The "diamond" character makes it the natural figure for the personal-aural-Vitruvian rendering — the user's body-axis stands along the pole-to-pole axis, with the central axis-point at the equatorial-square-base centre and planetary/chakral positions distributed through the top/base and inverted-base anchors.
 
 2. **Chakral-planetary-bodily bridge at Parashakti's Earth point** — per the session-thread's note, "at the earth point bridge the solar and bodily systems at the level of spirit." Need to locate M2-5's earth-point structure and the solar↔bodily bridging mechanism. The 7 chakras × 10 planets × elemental-correspondences from M2-5 carry this; how they project onto a Vitruvian-figure-of-the-archetypal-self needs design.
 
@@ -311,7 +311,7 @@ The rendering is conversational-engaged-default in spirit: the Diamond-QL-Vitruv
 
 Listed in priority order for the next research pass:
 
-1. **The Diamond QL shape**: find existing references in bimba-map, deep-research material, gemini-blueprint docs. If non-existent, design from 6-fold QL geometry (probably a stellated octahedron or rhombic dodecahedron projected to display the 12 MEF lens-anchors as faces/vertices and the 84-state landscape as surface-coordinates).
+1. **The Diamond QL shape**: find existing references in bimba-map, deep-research material, gemini-blueprint docs. If non-existent, design from 6-fold QL geometry (probably a stellated octahedron or rhombic dodecahedron projected to display the 12 MEF lens-anchors as faces/vertices and the 84-state landscape as surface-coordinates). *(Since resolved — DR-IG-6: the shape is the full 6+6 P/P' dipyramid, not an octahedron; see §1 above and §6.8.)*
 
 2. **Parashakti's earth-point chakral-planetary-bodily bridge**: locate M2-5's earth-bridge architecture. The session-thread says it "bridges solar and bodily systems at the level of spirit." Need M2-5 source material (not just M2-5-X bimba-map summaries) — the underlying correspondence-table mapping planetary-frequencies → chakra-positions → body-zones → elemental-states. This is what makes the Vitruvian-rendering computationally specifiable.
 
@@ -347,7 +347,7 @@ None of these are written yet — this temp file holds the substance until the d
 The user's instruction was explicit: capture this before further digging. So flagging without yet resolving:
 
 - **MEF lens vs Mahāmāya-clock-lens priority** can now be assessed (per §0.C): they're orthogonal, not competing. MEF for epistemic-mode; Mahāmāya for clock-divisor-aperture. Both operative simultaneously.
-- **17th meta-lens speculation** was wrong; Fibonacci Ground at Level 0 is the meta-position (not a 17th lens).
+- **17th-lens wording is resolved:** Fibonacci Ground at Level 0 is functionally the primary seventeenth lens (id 16), not an additional static division row and never a Frame/Operator 18-stack.
 - **The session-thread's 384 = 24 × 16 reading** is correct and sharper than the existing 360 + 24 framing.
 - **The Pauli-clock-as-functional-grammar inheritance** is a real claim worth making explicit, but is decorative-pedagogical, not load-bearing-implementation. Brief mention in M'-SYSTEM-SPEC sufficient.
 - **The Diamond-QL aural-field Vitruvian rendering** is the most generative new idea and needs serious design work before any spec touch. §2 above captures the proposal.
@@ -504,20 +504,20 @@ The 9 cosmic frequencies entering the 8 embodied chakras IS the epogdoon-conjuga
 
 ### §6.8 Diamond geometry correction (octahedron = double-square-base pyramid)
 
-Double-square-base pyramid (octahedron) topology:
-- **6 vertices** — natural mapping: 6 matheme positions (P0..P5)
+Double-square-base pyramid renderer topology, DR-IG-6 corrected:
+- **Full 6+6 P/P' anchors** — 2 apex poles P5/P5', 4 top/base vertices P1-P4, 4 inverted-base vertices P1'-P4' interleaved by mirror law `x + y' = 5`, plus the central axis-point P0/P0' as the white/black 0/1 ground (not a shell vertex)
 - **12 edges** — natural mapping: 12 MEF lenses (each edge connects two positions; the 6×5/2 = 15 possible edges minus 3 inversion-pairs = 12)
 - **8 faces** — natural mapping: 8 chakras
 
-OR alternative: vertical-axis vertices are top (P5/crown chakra) + bottom (P0/root chakra); equatorial square has 4 vertices (P1, P2, P3, P4); 8 triangular faces each carry one chakra (with crown + root at the polar vertices and the 6 remaining chakras distributed across the 8 faces with some pratibimba-doubling).
+OR alternative *(retired per DR-IG-6 — see resolution note below)*: vertical-axis vertices are top (P5/crown chakra) + bottom (P0/root chakra); equatorial square has 4 vertices (P1, P2, P3, P4); 8 triangular faces each carry one chakra (with crown + root at the polar vertices and the 6 remaining chakras distributed across the 8 faces with some pratibimba-doubling).
 
-Both mappings are structurally available. Decision deferred to design pass.
+Both mappings are structurally available. Decision deferred to design pass. *(Since resolved — DR-IG-6 VALIDATED: the first mapping is canonical; the alternative is retired — P0/P0' is never a shell vertex and the base is the eight interleaved vertices, never a 4-vertex square.)*
 
 ### §6.9 The aural energy-body field rendering specification (sketched)
 
 Per subagent §3.5, the rendering plan:
 
-**Vertices (6 P-positions / OR 8 chakras depending on mapping)** → field amplitude at each vertex (activation 0-255)
+**Vertices (6 P-positions / OR 8 chakras depending on mapping)** → field amplitude at each vertex (activation 0-255) *(retired sketch count — DR-IG-6: the shell carries 2 apex poles + 8 interleaved base vertices with P0/P0' as central axis-point, never 6 position-vertices)*
 
 **Edges (12 MEF lenses)** → tension/colour modulation along each edge
 
@@ -554,7 +554,7 @@ The M4-0-0 through M4-0-5 layer-computation roadmap (Pythagorean encoding, decan
 
 The §6 questions are resolved. Real digging priorities for next session:
 
-1. **M1-5 toroidal recognition + Diamond-QL geometry** — the K² + T²_Mahāmāya double-torus formalism at the M1-5 / M1-5' layer, with the Diamond-QL shape (octahedron, 6V+12E+8F) as the visualisation surface inheriting both tori as foliations.
+1. **M1-5 toroidal recognition + Diamond-QL geometry** — the K² + T²_Mahāmāya double-torus formalism at the M1-5 / M1-5' layer, with the Diamond-QL shape (octahedron, 6V+12E+8F — retired count; DR-IG-6 corrects to the 6+6 P/P' dipyramid: 2 apex poles, 8 interleaved base vertices, central axis-point P0/P0') as the visualisation surface inheriting both tori as foliations.
 
 2. **M2-0 archetypal numerical ground + M2-5 planetary-chakral** — the Fibonacci Ground at #2-0 generating the clock, the 9:8 epogdoon planet-chakra bridge at M2-5, the 72-invariant flowing into the embodied user-state.
 

@@ -29,6 +29,7 @@ crossterm = "0.29"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serde_yaml = "0.9"
+toml = "0.8"
 dirs = "5"
 libc = "0.2"
 color-eyre = "0.6"
@@ -44,6 +45,7 @@ rpassword = "7"
 zeroize = { version = "1", features = ["zeroize_derive"] }
 static_assertions = "1"
 portal-core = { path = "../portal-core" }
+epi-lib = { path = "../epi-lib", features = ["m0_verifier"] }
 epi-kernel-contract = { path = "../../epi-kernel-contract" }
 epi-s2-graph-schema = { path = "../../S2/graph-schema" }
 epi-s2-graph-services = { path = "../../S2/graph-services" }
@@ -56,6 +58,7 @@ epi-s5-epii-review-core = { path = "../../S5/epii-review-core" }
 epi-s5-epii-autoresearch-core = { path = "../../S5/epii-autoresearch-core" }
 epi-s5-epii-agent-core = { path = "../../S5/epii-agent-core" }
 epi-s1-hen-compiler-core = { path = "../../S1/hen-compiler-core" }
+epi-s0-settings = { path = "../settings" }
 
 # Quaternion / matrix math for torus projection
 nalgebra = "0.33"
@@ -86,6 +89,15 @@ chrono = { version = "0.4", features = ["serde"] }
 
 [build-dependencies]
 cc = "1"
+
+# NO [dev-dependencies] S-stack edges. This block used to re-declare
+# `epi-s5-epii-autoresearch-core` with `features = ["resonance_ebm"]` purely so
+# ONE test could link the Candle ML stack and execute the model. That is a
+# forbidden S0→S5 import (`rustSStackBoundary`) and, unlike the `[dependencies]`
+# re-export edges above, it was never a ratcheted migration gap — it was a new
+# violation, and `lint-boundaries` failed on it. The assertion it enabled is
+# owned one layer down by `exported_checkpoint_round_trips_into_resonance_ebm_runtime`
+# in `Body/S/S5/epii-autoresearch-core`; see the note in `tests/pi_ebm_commands.rs`.
 
 [patch.crates-io]
 # quantette 0.5.1 currently declares rust-version = 1.90, but the epi-cli

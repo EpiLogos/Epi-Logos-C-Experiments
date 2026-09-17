@@ -1,5 +1,9 @@
 # Track 04 — M3 Mahāmāyā Reconciliation
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Reconciles [[M3']] across the four corpora. M3 is **structurally aligned at the contract surface**: the 472-state codon-rotation projection is materialised at `Body/S/S0/portal-core/src/codon_rotation_projection.rs` (`CODON_ROTATION_SURFACE_COUNT=472`, forward/reverse maps, `codon_charge_quaternion`); the m3-mahamaya extension (contract `2026-06-01.07-T6`) consumes it via `buildM3ProjectionSurface` and throws when `profile.codonRotationProjection` is missing; the 40 non-dual / 24 dual / 7-rotational split is exactly what `classify_codon` enforces. 8 of 18 load-bearing claims are ALIGNED. M3 has **no genuine CODE-PENDING** — all gaps are doc-ahead rendering work over landed substrate or contradictions for the decision register.
 
 ## Total-Shape Architecture (Phase A)
@@ -101,9 +105,100 @@ Consume as-is — `Body/S/S0/portal-core/src/codon_rotation_projection.rs` (mate
 
 12. **4.12 — Pre-DR-M3-2 wording sweep** *(doc-ahead-landing; DR-M3-2 VALIDATED)*
 
-    Sweep M3'-SPEC §10.1.899, Mahamaya UX, and related live cycle-3 plan rows for pre-DR-M3-2 partitioning/profile-field wording. Replace with the ratified epogdoon wording from 4.5. Historical notes may remain only when explicitly marked as superseded.
+    Sweep M3'-SPEC §10.1.899, Mahamaya UX, and related live cycle-3 plan rows for superseded pre-DR-M3-2 partitioning/profile-field wording. Replace active language with the ratified 9:8 epogdoon wording from 4.5. Historical notes may remain only when explicitly marked as superseded.
 
     Verification: live M3 spec / UX / tranche prose names the 9:8 epogdoon and contains no active request for an extra fold-state profile field.
+
+13. **4.13 — `m3_compute_charges` → oracle Rust FFI wiring** *(code-pending-closure; Stream A of [[33-harmonic-energy-channel-handoff.md]] §2.1)*
+
+    Replace the in-Rust reimplementation of quaternionic charge logic in `Body/S/S0/epi-cli/src/nara/oracle.rs:1236-1665` with an FFI binding to the canonical C function `m3_compute_charges(codon6bit, pp_out, nn_out, np_out, pn_out)` at [m3.h:755-767](Body/S/S0/epi-lib/include/m3.h:755). The C function is exported, fully tested in C, and currently has zero Rust callers (per [`Body/S/S0/epi-lib/.depwire/DEAD_CODE.md:92`](Body/S/S0/epi-lib/.depwire/DEAD_CODE.md:92) — note the depwire row's line citation `m3.h:687` is stale; live function is at `m3.h:755-767` and the depwire row must be updated on completion).
+
+    Scope to land:
+    - Add Rust FFI declaration for `m3_compute_charges(codon6bit: u8, pp_out: *mut i8, nn_out: *mut i8, np_out: *mut i8, pn_out: *mut i8)` in `epi-cli` (or the appropriate `epi-lib`-binding crate per the existing FFI conventions).
+    - Replace the in-Rust charge derivation at `oracle.rs:1236-1665` with the FFI call. Preserve the `OraclePayload.pp/nn/np/pn: f32` field shape (cast from `i8` at the boundary) — downstream consumers must not see a typing churn.
+    - Align payload typing across all consumers:
+      - Aletheia extension `OracleCast.oracle_charges` schema at [`Body/S/S4/ta-onta/S4-5p-aletheia/extension.ts:634-642`](Body/S/S4/ta-onta/S4-5p-aletheia/extension.ts:634) — confirm `pp/nn/np/pn` key set, names, and ranges match the FFI-sourced output.
+      - `parashakti-corpus-curation` charge consumers.
+      - Oracle resonance scoring path.
+      - Quintessence-hash XOR pipeline at [m4.h:683-694](Body/S/S0/epi-lib/include/m4.h:683).
+    - Startup assertion: invoke FFI over all 64 codons (0..64) and assert `sum(pp for codon in 0..64) == 360` per `Idea/Bimba/Seeds/M/M3'/m3-mahamaya-reference.md:700`. Land as a once-per-boot self-check or test-time guard, not a per-cast cost.
+    - Cross-check test: iterate all 64 codons through both the (to-be-removed) Rust path snapshot baseline and the FFI path; require zero-tolerance equality on `pp/nn/np/pn` for every codon. Snapshot baseline may be a frozen golden vector if the Rust path is fully removed in the same commit.
+    - Update [`Body/S/S0/epi-lib/.depwire/DEAD_CODE.md:92`](Body/S/S0/epi-lib/.depwire/DEAD_CODE.md:92) on completion: remove the `m3_compute_charges` row (function will have a live Rust dependent) and correct the line citation if other rows in the same file have drifted.
+
+    **Decisions already locked** (per [[33-harmonic-energy-channel-handoff.md]] frontmatter `dev_decisions`):
+    - C function `m3_compute_charges` is the canonical charge derivation; the Rust reimplementation is the deviation to remove, not vice-versa.
+    - Charge tuple naming `pp/nn/np/pn` is canonical (per `oracle.rs:1236-1665` payload doc + `extension.ts:634-642` schema). No rename.
+    - `OraclePayload.pp/nn/np/pn: f32` retained at the Rust API boundary; FFI returns `i8`, conversion happens inside the binding.
+
+    **Tranche dependencies / blocks-and-blocked-by** (per handoff §2.1):
+    - Blocked-by: none. Independent of Streams B-H.
+    - Blocks: none directly. Oracle Rust consumers continue to function during the swap; downstream payload typing is preserved.
+    - Independent of the §1 canon-spec amendments (no spec change required for this stream).
+
+    Verification: `cargo check -p epi-cli && cargo test -p epi-cli oracle`; new cross-check test passes (`sum(pp) == 360`, all-64-codon zero-tolerance match); `rg -n 'm3_compute_charges' Body/S/S0/epi-cli/` returns the FFI binding declaration and the call-site only (no Rust reimplementation remnants); depwire row for `m3_compute_charges` removed; OracleCast schema in `extension.ts` unchanged by name (typing alignment confirmed manually).
+
+14. **4.14 — Maxwell/Mahamaya 15 + Anuttara pentadic trace inspector binding** *(code-pending-closure; depends on 10.P5 + Track 36.1-36.3 + 24.18)*
+
+    Extend the existing M3 coupling-flow / physics inspector so the fifth-dimension relation surface is tied to Mahamaya computation instead of appearing as a sidecar analogy.
+
+    Scope to land:
+    - Add `M3PentadicRelationInspector` (or extend the Track-24 coupling-flow inspector component if already landed) to consume `profile.anuttara_pentadic_trace` and `profile.coupling_flow_alignment`.
+    - Render Maxwell/Kaluza-Klein `15 = 10 + 4 + 1` as the relation-space witness: 4D metric body, 4-vector connection field, scalar/fiber condition.
+    - Render Mahamaya paired fifteens from the M3 helper path: paired DNA-code / trigram / Pauli matrix combinations, not hard-coded display constants.
+    - Render the shared backbone identities: `24*15=360`, `72*5=360`, `360+24=384`, active 64-address, codon, line-change operator, and `q_cosmic_ref`.
+    - Wire pending-state chips for any unavailable trace subfield through the Track-10 readiness ledger; no renderer recomputation and no local fallback tables.
+
+    This tranche is the M3-facing implementation of Track 36.3. The Maxwell layer is treated as a physics/computation witness for "relation becomes geometry"; the Mahamaya layer is the live runtime witness for "relation becomes codon/charge/line-change address." Both are displayed through backend-provided facts and typed trace payloads.
+
+    Verification: `pnpm --filter @pratibimba/m3-mahamaya test`; new inspector test asserts `10+4+1`, paired `15+15`, `24*15=360`, `72*5=360`, `360+24=384`, active codon, and Q reference render from payload; `rg -n 'Math\\.floor\\|72 \\* 5\\|24 \\* 15\\|360 \\+ 24' Body/M/epi-theia/extensions/m3-mahamaya/src/browser/` returns no local derivation outside tests/labels; profile fixture test fails when `anuttara_pentadic_trace` is absent.
+
+15. **4.15 — `Clock_Backbone_Node` typed primitive + `CLOCK_BACKBONE[24]` built at M3 boot** *(code-pending-closure; lands [[35-fibonacci-ground-level-0-temporal-substrate]] §1.2 + §2.3; routes to DR-FIB-2 + DR-FIB-4; consumed by 5.24, 24.19)*
+
+    Two steps, one tranche (the struct without its populator is dead weight):
+
+    **Step 1 — typed primitive (handoff §1.2).** Add `Clock_Backbone_Node` (degree / backbone_index / hour_of_day / zodiac_sign / is_cusp / amino_acid_idx / is_palindromic / _pad; `_Static_assert(sizeof == 12)`) + `extern const Clock_Backbone_Node CLOCK_BACKBONE[24]` adjacent to the clock structures. **Residency resolution required at execution:** the handoff names `Body/M/M3/m3-mahamaya-core/include/m3/m3.h`, which does NOT exist in the repo; the canonical M3 kernel is [`Body/S/S0/epi-lib/include/m3.h`](Body/S/S0/epi-lib/include/m3.h) + [`src/m3.c`](Body/S/S0/epi-lib/src/m3.c). Default: land in epi-lib m3.h/m3.c per substrate-residency law; only create a new crate/module if the executing agent finds the cosmic-clock structures (`Clock_Degree_Node` per `docs/specs/M/2026-03-12-cosmic-clock-full-architecture.md`) being landed as a separate unit in the same tranche window. Record the residency decision in the ledger evidence string. Also add the companion structural law `_Static_assert(60 * 6 == 360, "Fibonacci ground period × 6°/step = full clock")` beside the existing `64 * 6 - 24 == 360` assert, and the `pisano_digit_lut[60]` table (consumed by 5.24).
+
+    **Step 2 — boot populator (handoff §2.3).** `m3_build_backbone(void)` populating all 24 nodes (degree = i*15, hour_of_day = i, zodiac_sign = i/2, is_cusp = (i%2==0), amino_acid_idx = i into the existing 24-entry amino/codon table, is_palindromic = 1), wired into the existing M3 init path. Contract test asserts the full table per handoff §2.3's `backbone_table_contract.c`.
+
+    GitNexus discipline: `gitnexus_impact({target: "m3_init", direction: "upstream"})` before wiring; the struct addition itself is additive (no existing symbol modified).
+
+    Verification: `make -C Body/S/S0/epi-lib test` green including new `backbone_table_contract`; `grep -nE 'Clock_Backbone_Node|CLOCK_BACKBONE\[24\]|60 \* 6 == 360|pisano_digit_lut' Body/S/S0/epi-lib/include/m3.h Body/S/S0/epi-lib/src/m3.c` returns struct, table, assert, and LUT; existing `m3_test_*` unchanged-green.
+
+16. **4.16 — M3 transcript-class + governance kernel surface (C-side mirror of `transcription.rs`)** *(code-pending-closure; depends on T19.5 comment-patch close; enables 4.17, 5.26, 5.27, CCT-14b; routes to DR-M3-TRANSCRIPT-1)*
+
+    [`Body/S/S0/portal-core/src/transcription.rs`](../../../../../Body/S/S0/portal-core/src/transcription.rs) already carries `START_CODON=0x07` (ATG/AUG), `STOP_CODONS=[0x10,0x13,0x1C]` (TAA/TAG/TGA), `is_start_codon`/`is_stop_codon`, `TranscriptionStep` with `is_start`/`is_stop` fields, `walk_transcription_chain`, and `extract_first_orf`. This tranche lands the **C-side kernel mirror** in [m3.h](Body/S/S0/epi-lib/include/m3.h) / [m3.c](Body/S/S0/epi-lib/src/m3.c) so the substrate carries the same primitives — closing the silent C/Rust drift the M3-Nara integration would otherwise inherit. The work is structural: the codon-space cardinalities (27 SHARED / 37 TRANSCRIBABLE / 1 START / 3 STOP) are mathematical invariants verified at boot, not tunable. The tunability lives downstream — at the *application* of these primitives, not their definition.
+
+    Scope to land:
+    - `M3_TranscriptClass` enum (`SHARED=0`, `TRANSCRIBABLE=1`) — two-class only; the 6-bit codon encoding holds one codon identity, "RNA-transcribed" is a *reading context* applied to a transcribable codon, not a separate class.
+    - `M3_GovernanceRole` enum (`NONE=0`, `START=1`, `STOP=2`).
+    - `m3_codon_t_count(codon) → uint8_t` (0..3, pure arithmetic, no LUT).
+    - `m3_codon_transcript_class(codon) → M3_TranscriptClass`.
+    - `m3_codon_governance_role(codon) → M3_GovernanceRole` — uses `M3_STOP_CODON_AA` for Stop detection, codon-equality for Start.
+    - Constants `M3_CODON_ATG_AUG = 0x07` and `M3_STOP_CODONS[3] = {0x10, 0x13, 0x1C}` with `_Static_assert` ties to the transcription.rs constants.
+    - `m3_verify_transcript_surface()` boot-time self-check: walks all 64 codons, asserts exactly 27 SHARED + 37 TRANSCRIBABLE = 64; exactly 1 START; exactly 3 STOP. Same shape as existing `m3_verify_integral_invariant` at [m3.c:586](Body/S/S0/epi-lib/src/m3.c:586).
+    - FFI-exportable non-inline wrappers (`m3_codon_t_count_ffi`, `m3_codon_transcript_class_ffi`, `m3_codon_governance_role_ffi`); transcription.rs migrates to consume them so the constants no longer drift across the C/Rust boundary.
+
+    **Tunability surface (forward-pointing — owned downstream, named here for the future tuning brainstorm):** No tunable knobs land in this tranche; the kernel surface IS structural. Downstream consumers (4.17 schemas, 5.26 session lifecycle, 5.27 Mythos reads, CCT-14b entity birth) expose the actual tunable surfaces (chain capacity, trigger cadence, seed composition, voice templates). This tranche's job is to make those knobs *possible* by providing a stable, FFI-honest substrate — not to choose values.
+
+    **Verification:** `make -C Body/S/S0/epi-lib test` includes new `transcript_surface_contract` and `m3_verify_transcript_surface_boot`; `cargo test -p portal-core transcription_c_rust_parity` (per-codon zero-tolerance equality across all 64 codons); `grep -nE 'M3_TranscriptClass|m3_codon_t_count|m3_codon_governance_role|M3_CODON_ATG_AUG|M3_STOP_CODONS' Body/S/S0/epi-lib/include/m3.h Body/S/S0/epi-lib/src/m3.c` returns the surface; transcription.rs imports and uses the FFI constants (silent drift closed); existing `m3_test_*` unchanged-green.
+
+17. **4.17 — `TranscriptionalClockPacket` + `SymbolicProtein` schema extension (additive to 4.11)** *(code-pending-closure; depends on 4.16, 4.11; enables 5.26, 5.27; routes to DR-M3-TRANSCRIPT-1)*
+
+    Strictly additive extension to the Rust/TS/Zod schemas landed by [4.11](#) — existing consumers default-None on every new field. The extension carries the M3 transcript-class / governance distinctions into the bridge so M4 session lifecycle (5.26) and Mythos reads (5.27) can address them without re-deriving from raw codons.
+
+    Scope to land — `TranscriptionalClockPacket` gains optional fields:
+    - `transcript_class: Option<TranscriptClass>` (mirror of M3_TranscriptClass).
+    - `governance_role: Option<GovernanceRole>` (mirror of M3_GovernanceRole).
+    - `chain_position: Option<u32>` (index within parent `SymbolicProtein` chain).
+    - `is_orf_seed: bool` (default false; true when `governance_role == START`).
+    - `is_orf_seal: bool` (default false; true when `governance_role == STOP`).
+    - `session_id_ref: Option<SessionId>` (back-ref to the M4 session that produced the packet, when applicable).
+
+    `SymbolicProtein` gains: `start_packet_ref`, `stop_packet_ref`, `kairos_open`, `kairos_close`, `mythos_archetype_reading: Option<MajorArcanaCardRef>` (Mythos's named pattern for the protein; nullable because session may close before any Mythos read fires).
+
+    **Tunability surface:** None at the schema level — the new fields are *carriers* of values chosen elsewhere. The `Option`-wrapping IS the tunability decorator: callers that don't care about transcript governance pass `None` and the existing semantics hold; callers that do (5.26, 5.27, CCT-14b) populate and read. Schema versioning follows the existing additive-extension policy of 4.11.
+
+    **Verification:** Rust/TS/Zod schemas extended; `cargo test -p portal-core transcriptional_clock_packet_schema_additive` (round-trip serialization confirms existing pre-4.17 packets deserialize cleanly with `None` on new fields); `cargo test -p portal-core symbolic_protein_chain_invariants` (start/stop refs internally consistent — chain_position monotone; ORF seed precedes ORF seal); m3-mahamaya + m4-nara extension builds clean against extended schemas (`pnpm --filter @pratibimba/m3-mahamaya build && pnpm --filter @pratibimba/m4-nara build`).
 
 ## Track 19 Cross-Reference
 

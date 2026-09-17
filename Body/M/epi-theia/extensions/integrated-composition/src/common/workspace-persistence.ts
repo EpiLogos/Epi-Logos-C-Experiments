@@ -4,6 +4,7 @@ import {
     IntegratedDeepLinkPluginId
 } from './integrated-deep-links';
 import { EpiiReviewPanelMode } from './epii-review-state';
+import { qPartitionViolationForKey } from './privacy-scrubber';
 
 /**
  * Workspace persistence — 08.T7 deliverable 3.
@@ -54,7 +55,7 @@ export const EMPTY_WORKSPACE_SNAPSHOT: IntegratedWorkspaceSnapshot = Object.free
  * the persistence boundary into disk-backed storage (Theia user data).
  */
 const WORKSPACE_FORBIDDEN_PATTERNS: readonly RegExp[] = [
-    /^q_personal/i,
+    /^q_(personal|identity|activity|composed)(_|$)/i,
     /^q_nara/i,
     /^bioquaternion/i,
     /^nara_(body|raw|private|journal)/i,
@@ -72,7 +73,8 @@ const WORKSPACE_FORBIDDEN_VALUE_PATTERNS: readonly RegExp[] = [
 ];
 
 function isForbiddenKey(key: string): boolean {
-    return WORKSPACE_FORBIDDEN_PATTERNS.some(re => re.test(key));
+    return qPartitionViolationForKey(key) !== null ||
+        WORKSPACE_FORBIDDEN_PATTERNS.some(re => re.test(key));
 }
 
 function scrubValue(value: unknown): unknown {
@@ -158,4 +160,393 @@ export function detectProtectedKeysInSnapshot(
     }
     walk(snapshot.extras, 'extras');
     return violations;
+}
+
+// ============================================================================
+// Tranche 29.10 — Composition-state persistence + cross-layout state
+// preservation.
+//
+// Composition state is deliberately smaller than the cross-layout CORE spine
+// owned by the kernel-bridge DI singleton. These fields are the integrated
+// composition extension that must survive layout, face, and process toggles.
+// ============================================================================
+
+/**
+ * The canonical OmniPanel tab ids. Mirrors the authoritative declaration in
+ * `@pratibimba/omnipanel-shell` (`OmniPanelTabId` / `OMNIPANEL_TABS`). This
+ * extension does not depend on that package, so the union is restated here as
+ * the persisted spine's notion of "which tab is active". Keep in sync with the
+ * eight-tab DR-WC-OP-1 collapse map.
+ */
+export type OmniPanelTabId =
+    | 'pi-chat'
+    | 'sessions'
+    | 'dispatch-trace'
+    | 'tool-stream'
+    | 'evidence'
+    | 'review'
+    | 'gateway'
+    | 'diagnostics';
+
+export const OMNI_PANEL_TAB_IDS: readonly OmniPanelTabId[] = Object.freeze([
+    'pi-chat',
+    'sessions',
+    'dispatch-trace',
+    'tool-stream',
+    'evidence',
+    'review',
+    'gateway',
+    'diagnostics'
+]);
+
+/**
+ * The canonical activity-bar modes. Mirrors the `modeId` set declared by
+ * `PRATIBIMBA_ACTIVITY_BAR_ICON_BINDINGS` in `icons-contribution.ts` (the
+ * `pratibimba.activity-bar.*` view bindings), reduced to the bare mode slug so
+ * the persisted spine can record which sidebar view is active across toggles.
+ */
+export type ActivityBarMode =
+    | 'coordinate-tree'
+    | 'bimba-graph-viewer'
+    | 'canon-studio'
+    | 'backend-studio'
+    | 'smart-connections';
+
+export const ACTIVITY_BAR_MODES: readonly ActivityBarMode[] = Object.freeze([
+    'coordinate-tree',
+    'bimba-graph-viewer',
+    'canon-studio',
+    'backend-studio',
+    'smart-connections'
+]);
+
+/**
+ * The cross-layout CORE spine per 15.7. Owned by the kernel-bridge DI
+ * singleton, NOT by this extension — declared here as the typed contract the
+ * composition state attaches to. It is deliberately layout-agnostic: a layout
+ * (daily-0-1 ↔ ide-deep) or face (0/1) toggle is an intra-process view change
+ * that never mutates this spine — every named field survives the toggle.
+ *
+ * 15.T15.7 extends the spine with the two chrome globals that must also survive
+ * the toggle: the active OmniPanel tab and the active activity-bar mode.
+ */
+export interface BimbaPratibimbaUiState {
+    readonly coordinate: string | null;
+    readonly lens: string | null;
+    readonly mode: string | null;
+    readonly profileGeneration: number;
+    readonly sessionKey: string | null;
+    readonly dayNow: string | null;
+    /** Active OmniPanel tab — survives both the 0/1 face and layout toggles. */
+    readonly activeOmniPanelTab: OmniPanelTabId | null;
+    /** Active activity-bar (left sidebar) mode — survives the layout switch. */
+    readonly activityBarMode: ActivityBarMode | null;
+}
+
+/** The field names of the cross-layout core spine — single source of truth. */
+export const BIMBA_PRATIBIMBA_UI_STATE_SPINE_FIELDS: readonly (keyof BimbaPratibimbaUiState)[] =
+    Object.freeze([
+        'coordinate',
+        'lens',
+        'mode',
+        'profileGeneration',
+        'sessionKey',
+        'dayNow',
+        'activeOmniPanelTab',
+        'activityBarMode'
+    ]);
+
+/** The zero-value spine — every field empty, generation 0. */
+export const EMPTY_BIMBA_PRATIBIMBA_UI_STATE: BimbaPratibimbaUiState = Object.freeze({
+    coordinate: null,
+    lens: null,
+    mode: null,
+    profileGeneration: 0,
+    sessionKey: null,
+    dayNow: null,
+    activeOmniPanelTab: null,
+    activityBarMode: null
+});
+
+export function isOmniPanelTabId(value: unknown): value is OmniPanelTabId {
+    return typeof value === 'string' && OMNI_PANEL_TAB_IDS.includes(value as OmniPanelTabId);
+}
+
+export function isActivityBarMode(value: unknown): value is ActivityBarMode {
+    return typeof value === 'string' && ACTIVITY_BAR_MODES.includes(value as ActivityBarMode);
+}
+
+/**
+ * Normalise an unknown parsed object into a fully-typed spine. Out-of-vocabulary
+ * tab ids / activity-bar modes collapse to `null` so disk or wire drift cannot
+ * widen the contract beyond the canonical sets above.
+ */
+export function normalizeBimbaPratibimbaUiState(
+    parsed: Partial<BimbaPratibimbaUiState> | null | undefined
+): BimbaPratibimbaUiState {
+    if (!parsed) {
+        return EMPTY_BIMBA_PRATIBIMBA_UI_STATE;
+    }
+    return Object.freeze({
+        coordinate: typeof parsed.coordinate === 'string' ? parsed.coordinate : null,
+        lens: typeof parsed.lens === 'string' ? parsed.lens : null,
+        mode: typeof parsed.mode === 'string' ? parsed.mode : null,
+        profileGeneration:
+            typeof parsed.profileGeneration === 'number' && Number.isFinite(parsed.profileGeneration)
+                ? parsed.profileGeneration
+                : 0,
+        sessionKey: typeof parsed.sessionKey === 'string' ? parsed.sessionKey : null,
+        dayNow: typeof parsed.dayNow === 'string' ? parsed.dayNow : null,
+        activeOmniPanelTab: isOmniPanelTabId(parsed.activeOmniPanelTab)
+            ? parsed.activeOmniPanelTab
+            : null,
+        activityBarMode: isActivityBarMode(parsed.activityBarMode) ? parsed.activityBarMode : null
+    });
+}
+
+/** Pure serialise — normalises every spine field before stringifying. */
+export function serializeBimbaPratibimbaUiState(state: BimbaPratibimbaUiState): string {
+    return JSON.stringify(normalizeBimbaPratibimbaUiState(state));
+}
+
+/** Pure deserialise — re-applies normalisation so drift cannot widen types. */
+export function deserializeBimbaPratibimbaUiState(raw: string): BimbaPratibimbaUiState {
+    const parsed = JSON.parse(raw) as Partial<BimbaPratibimbaUiState>;
+    return normalizeBimbaPratibimbaUiState(parsed);
+}
+
+/**
+ * Identity transform modelling the 0/1 face toggle AND the daily-0-1 ↔ ide-deep
+ * layout switch over the spine. A toggle is an intra-process view change; every
+ * named spine field — including `activeOmniPanelTab` and `activityBarMode` — must
+ * survive intact. Round-trips through the real serialise/deserialise codec so
+ * the invariant is exercised against persistence, not a bare object reference.
+ */
+export function preserveBimbaPratibimbaUiStateAcrossToggle(
+    state: BimbaPratibimbaUiState,
+    _toggle: CompositionToggleClass
+): BimbaPratibimbaUiState {
+    return deserializeBimbaPratibimbaUiState(serializeBimbaPratibimbaUiState(state));
+}
+
+export interface IntegratedCompositionPersistedState {
+    readonly compositionId: 'cosmic-engine.integrated' | 'jiva-siva.integrated';
+    // Cosmic state
+    readonly pinnedMatrixFamily: number | null; // Ananda_Matrix_Op 0..5
+    readonly pinnedTorusView: 'k2-surface' | 'tick-choreography' | 'geodesic';
+    readonly cosmicSelectedCoordinate: string | null;
+    readonly cosmicKleinToPersonalHinge: boolean; // true = open to personal
+    // Personal state
+    readonly pinnedRecognitionSlot: '4' | '5' | '0' | null;
+    readonly personalSelectedDayId: string | null;
+    readonly personalReviewQueueFilter: 'all' | 'acknowledged' | 'unread';
+    readonly personalKleinToCosmicHinge: boolean;
+}
+
+export const COMPOSITION_STATE_FIELDS: readonly (keyof IntegratedCompositionPersistedState)[] =
+    Object.freeze([
+        'compositionId',
+        'pinnedMatrixFamily',
+        'pinnedTorusView',
+        'cosmicSelectedCoordinate',
+        'cosmicKleinToPersonalHinge',
+        'pinnedRecognitionSlot',
+        'personalSelectedDayId',
+        'personalReviewQueueFilter',
+        'personalKleinToCosmicHinge'
+    ]);
+
+export type CompositionId = IntegratedCompositionPersistedState['compositionId'];
+export type PinnedTorusView = IntegratedCompositionPersistedState['pinnedTorusView'];
+export type PinnedRecognitionSlot = IntegratedCompositionPersistedState['pinnedRecognitionSlot'];
+export type PersonalReviewQueueFilter =
+    IntegratedCompositionPersistedState['personalReviewQueueFilter'];
+
+export const COMPOSITION_IDS: readonly CompositionId[] = Object.freeze([
+    'cosmic-engine.integrated',
+    'jiva-siva.integrated'
+]);
+
+/**
+ * The two toggle classes the composition state must survive (15.5 + 15.7). A
+ * toggle is an intra-process view change — it never transforms persisted state.
+ */
+export const COMPOSITION_TOGGLE_CLASSES = Object.freeze([
+    'layout:daily-0-1<->ide-deep',
+    'face:cosmic<->personal-0/1'
+] as const);
+
+export type CompositionToggleClass = typeof COMPOSITION_TOGGLE_CLASSES[number];
+
+export const PINNED_TORUS_VIEWS: readonly PinnedTorusView[] = Object.freeze([
+    'k2-surface',
+    'tick-choreography',
+    'geodesic'
+]);
+
+export const PINNED_RECOGNITION_SLOTS: readonly Exclude<PinnedRecognitionSlot, null>[] =
+    Object.freeze(['4', '5', '0']);
+
+export const PERSONAL_REVIEW_QUEUE_FILTERS: readonly PersonalReviewQueueFilter[] =
+    Object.freeze(['all', 'acknowledged', 'unread']);
+
+export function emptyCompositionState(
+    compositionId: CompositionId
+): IntegratedCompositionPersistedState {
+    return Object.freeze({
+        compositionId,
+        pinnedMatrixFamily: null,
+        pinnedTorusView: 'k2-surface',
+        cosmicSelectedCoordinate: null,
+        cosmicKleinToPersonalHinge: false,
+        pinnedRecognitionSlot: null,
+        personalSelectedDayId: null,
+        personalReviewQueueFilter: 'all',
+        personalKleinToCosmicHinge: false
+    });
+}
+
+function isPinnedTorusView(value: unknown): value is PinnedTorusView {
+    return typeof value === 'string' && PINNED_TORUS_VIEWS.includes(value as PinnedTorusView);
+}
+
+function isPinnedRecognitionSlot(value: unknown): value is Exclude<PinnedRecognitionSlot, null> {
+    return (
+        typeof value === 'string' &&
+        PINNED_RECOGNITION_SLOTS.includes(value as Exclude<PinnedRecognitionSlot, null>)
+    );
+}
+
+function isPersonalReviewQueueFilter(value: unknown): value is PersonalReviewQueueFilter {
+    return (
+        typeof value === 'string' &&
+        PERSONAL_REVIEW_QUEUE_FILTERS.includes(value as PersonalReviewQueueFilter)
+    );
+}
+
+function normalizeMatrixFamily(value: unknown): number | null {
+    return typeof value === 'number' && Number.isInteger(value) && value >= 0 && value <= 5
+        ? value
+        : null;
+}
+
+/** Normalise an unknown parsed object into a fully-typed composition state. */
+export function normalizeCompositionState(
+    compositionId: CompositionId,
+    parsed: Partial<IntegratedCompositionPersistedState> | null | undefined
+): IntegratedCompositionPersistedState {
+    const base = emptyCompositionState(compositionId);
+    if (!parsed) {
+        return base;
+    }
+    return Object.freeze({
+        compositionId, // id is authoritative from the caller, not the file body
+        pinnedMatrixFamily: normalizeMatrixFamily(parsed.pinnedMatrixFamily),
+        pinnedTorusView: isPinnedTorusView(parsed.pinnedTorusView)
+            ? parsed.pinnedTorusView
+            : base.pinnedTorusView,
+        cosmicSelectedCoordinate:
+            typeof parsed.cosmicSelectedCoordinate === 'string'
+                ? parsed.cosmicSelectedCoordinate
+                : null,
+        cosmicKleinToPersonalHinge: parsed.cosmicKleinToPersonalHinge === true,
+        pinnedRecognitionSlot: isPinnedRecognitionSlot(parsed.pinnedRecognitionSlot)
+            ? parsed.pinnedRecognitionSlot
+            : null,
+        personalSelectedDayId:
+            typeof parsed.personalSelectedDayId === 'string'
+                ? parsed.personalSelectedDayId
+                : null,
+        personalReviewQueueFilter: isPersonalReviewQueueFilter(parsed.personalReviewQueueFilter)
+            ? parsed.personalReviewQueueFilter
+            : base.personalReviewQueueFilter,
+        personalKleinToCosmicHinge: parsed.personalKleinToCosmicHinge === true
+    });
+}
+
+/** Pure serialise — normalises bounded fields before stringifying. */
+export function serializeCompositionState(
+    state: IntegratedCompositionPersistedState
+): string {
+    return JSON.stringify(normalizeCompositionState(state.compositionId, state));
+}
+
+/** Pure deserialise — re-applies normalisation so disk drift cannot widen types. */
+export function deserializeCompositionState(
+    compositionId: CompositionId,
+    raw: string
+): IntegratedCompositionPersistedState {
+    const parsed = JSON.parse(raw) as Partial<IntegratedCompositionPersistedState>;
+    return normalizeCompositionState(compositionId, parsed);
+}
+
+/**
+ * Identity transform modelling a layout/face toggle. A toggle is an
+ * intra-process view change; persistence must keep every named field intact.
+ */
+export function preserveCompositionStateAcrossToggle(
+    state: IntegratedCompositionPersistedState,
+    _toggle: CompositionToggleClass
+): IntegratedCompositionPersistedState {
+    // Round-trip through serialise/deserialise so the assertion exercises the
+    // real persistence codec, not a bare object reference.
+    return deserializeCompositionState(
+        state.compositionId,
+        serializeCompositionState(state)
+    );
+}
+
+/**
+ * Base directory for composition-state files. Defaults to `~/.epi-logos`; the
+ * `EPI_LOGOS_HOME` env var overrides it (used by tests for a hermetic temp dir
+ * and by alternate-home deployments). Mirrors the existing `~/.epi-logos/*`
+ * runtime-state convention (config.toml, portal/workspace.json).
+ */
+async function compositionDir(): Promise<string> {
+    const os = await import('node:os');
+    const path = await import('node:path');
+    const home = process.env.EPI_LOGOS_HOME ?? path.join(os.homedir(), '.epi-logos');
+    return path.join(home, 'composition');
+}
+
+/** Absolute path of the JSON file backing a composition id. */
+export async function compositionStatePath(compositionId: CompositionId): Promise<string> {
+    const path = await import('node:path');
+    return path.join(await compositionDir(), `${compositionId}.json`);
+}
+
+/**
+ * Persist composition state to `~/.epi-logos/composition/{compositionId}.json`.
+ */
+export async function persistCompositionState(
+    state: IntegratedCompositionPersistedState
+): Promise<void> {
+    const fs = await import('node:fs/promises');
+    const dir = await compositionDir();
+    const file = await compositionStatePath(state.compositionId);
+    const serialized = serializeCompositionState(state);
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(file, serialized, 'utf8');
+}
+
+/**
+ * Read composition state back from disk. Returns `null` when no file exists
+ * (first run); otherwise the normalised, fully-typed state. Survives restart by
+ * re-reading the durable file.
+ */
+export async function readCompositionState(
+    compositionId: CompositionId
+): Promise<IntegratedCompositionPersistedState | null> {
+    const fs = await import('node:fs/promises');
+    const file = await compositionStatePath(compositionId);
+    let raw: string;
+    try {
+        raw = await fs.readFile(file, 'utf8');
+    } catch (err) {
+        if ((err as NodeJS.ErrnoException)?.code === 'ENOENT') {
+            return null;
+        }
+        throw err;
+    }
+    return deserializeCompositionState(compositionId, raw);
 }

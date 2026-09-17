@@ -1,0 +1,33 @@
+{
+  "runId": "20260625T223130Z-18-T18.8",
+  "taskId": "18.T18.8",
+  "startedAt": "2026-06-25T22:31:30.353Z",
+  "owner": "codex-m-dev-18-t18-8-deposition-anchor",
+  "leaseExpiresAt": "2026-06-26T00:31:30.353Z",
+  "worktree": null,
+  "task": {
+    "id": "18.T18.8",
+    "trackId": "18",
+    "tranche": "T18.8",
+    "title": "Typed `deposition_anchor` field",
+    "effort": null,
+    "file": "18-typed-kernel-bridge-json-edge.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/18-typed-kernel-bridge-json-edge.md",
+    "dependsOn": [
+      "18.T18.7"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

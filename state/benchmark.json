@@ -1,0 +1,112 @@
+{
+  "generatedAt": "2026-06-08T15:08:51.358Z",
+  "graphHash": "80e4238f0d6b8da88056b1bd6963f113284722de38e6501405734b3eb840af48",
+  "corpusWords": 0,
+  "corpusTokens": 1,
+  "nodes": 0,
+  "edges": 0,
+  "avgQueryTokens": 233,
+  "reductionRatio": -232,
+  "sampleQuestions": [
+    "How does this vault connect the main concepts?",
+    "Which pages bridge the biggest communities?",
+    "What are the core abstractions in this vault?"
+  ],
+  "perQuestion": [
+    {
+      "question": "How does this vault connect the main concepts?",
+      "queryTokens": 175,
+      "reduction": -174,
+      "visitedNodeIds": [],
+      "visitedEdgeIds": [],
+      "pageIds": [
+        "graph:share-card",
+        "graph:report"
+      ]
+    },
+    {
+      "question": "Which pages bridge the biggest communities?",
+      "queryTokens": 280,
+      "reduction": -279,
+      "visitedNodeIds": [],
+      "visitedEdgeIds": [],
+      "pageIds": [
+        "graph:report",
+        "graph:share-card",
+        "dashboard:dashboards/research-map",
+        "dashboard:dashboards/recent-sources"
+      ]
+    },
+    {
+      "question": "What are the core abstractions in this vault?",
+      "queryTokens": 243,
+      "reduction": -242,
+      "visitedNodeIds": [],
+      "visitedEdgeIds": [],
+      "pageIds": [
+        "graph:share-card",
+        "graph:report",
+        "dashboard:dashboards/contradictions",
+        "dashboard:dashboards/open-questions"
+      ]
+    }
+  ],
+  "summary": {
+    "questionCount": 3,
+    "uniqueVisitedNodes": 0,
+    "finalContextTokens": 233,
+    "naiveCorpusTokens": 1,
+    "avgReduction": -232,
+    "reductionRatio": -232
+  },
+  "byClass": {
+    "first_party": {
+      "sourceClass": "first_party",
+      "sourceCount": 0,
+      "pageCount": 0,
+      "nodeCount": 0,
+      "godNodeCount": 0,
+      "corpusWords": 0,
+      "corpusTokens": 0,
+      "finalContextTokens": 0,
+      "reductionRatio": 0,
+      "perQuestion": []
+    },
+    "third_party": {
+      "sourceClass": "third_party",
+      "sourceCount": 0,
+      "pageCount": 0,
+      "nodeCount": 0,
+      "godNodeCount": 0,
+      "corpusWords": 0,
+      "corpusTokens": 0,
+      "finalContextTokens": 0,
+      "reductionRatio": 0,
+      "perQuestion": []
+    },
+    "resource": {
+      "sourceClass": "resource",
+      "sourceCount": 0,
+      "pageCount": 0,
+      "nodeCount": 0,
+      "godNodeCount": 0,
+      "corpusWords": 0,
+      "corpusTokens": 0,
+      "finalContextTokens": 0,
+      "reductionRatio": 0,
+      "perQuestion": []
+    },
+    "generated": {
+      "sourceClass": "generated",
+      "sourceCount": 0,
+      "pageCount": 0,
+      "nodeCount": 0,
+      "godNodeCount": 0,
+      "corpusWords": 0,
+      "corpusTokens": 0,
+      "finalContextTokens": 0,
+      "reductionRatio": 0,
+      "perQuestion": []
+    }
+  }
+}

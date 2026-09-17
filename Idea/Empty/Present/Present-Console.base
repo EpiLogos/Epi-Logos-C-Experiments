@@ -1,0 +1,70 @@
+coordinate: "Empty/Present"
+c_4_artifact_role: "base-view"
+c_5_reflects: "[[NOW]]"
+c_3_projected_from: "Idea/Empty/Present"
+c_3_projected_at: "2026-06-25"
+c_0_source_coordinates: ["[[NOW]]", "[[Daily-Note]]", "[[CT4b]]", "[[48-bases-cs-reflection-layer]]"]
+filters:
+  or:
+    - 'c_4_artifact_role == "now"'
+    - 'c_4_artifact_role == "daily-note"'
+    - 'c_4_artifact_role == "execution-plan"'
+    - 'c_4_artifact_role == "design-spec"'
+    - 'c_4_artifact_role == "canon-extract"'
+    - 'session_id != null'
+    - 'day_id != null'
+views:
+  - type: table
+    name: "Present console by day"
+    group_by: c_3_day_id
+    order:
+      - coordinate
+      - c_4_artifact_role
+      - c_2_session_id
+      - session_id
+      - c_3_day_id
+      - day_id
+      - c_3_created_at
+      - c_3_tranche_mode
+      - c_3_response_orbit
+      - c_5_reflection_complete
+      - p0_grounds
+      - p1_tasks_defined
+      - p2_operations
+      - p3_decisions
+      - p4_files_touched
+      - p5_synthesis
+    sort:
+      - { property: c_3_day_id, direction: DESC }
+      - { property: c_3_created_at, direction: DESC }
+  - type: table
+    name: "Open NOW sessions"
+    filters:
+      and:
+        - 'c_4_artifact_role == "now"'
+        - 'c_5_reflection_complete == false'
+    group_by: c_3_day_id
+    order:
+      - coordinate
+      - c_2_session_id
+      - c_3_day_id
+      - c_3_created_at
+      - c_3_tranche_mode
+      - c_3_response_orbit
+      - p0_grounds
+      - p1_tasks_defined
+      - p2_operations
+      - p5_synthesis
+  - type: table
+    name: "Reflection complete"
+    filters:
+      and:
+        - 'c_5_reflection_complete == true'
+    group_by: c_3_day_id
+    order:
+      - coordinate
+      - c_4_artifact_role
+      - c_3_day_id
+      - c_3_created_at
+      - p5_learnings
+      - p5_synthesis

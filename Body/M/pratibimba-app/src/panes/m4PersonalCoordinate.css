@@ -1,0 +1,67 @@
+/* 25.T25.7 — Personal Coordinate sidebar. Tokens only (Track 30 law). */
+
+.m4-personal-coordinate {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    overflow: auto;
+    height: 100%;
+}
+
+.m4-pc-head {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+}
+
+.m4-pc-coordinate {
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+}
+
+.m4-pc-title {
+    color: var(--ink);
+    font-size: var(--type-heading-3);
+}
+
+.m4-pc-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.m4-pc-score {
+    color: var(--ink);
+    font-size: var(--type-heading-2);
+    font-variant-numeric: tabular-nums;
+}
+
+.m4-pc-character {
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 2px 10px;
+    color: var(--ink-dim);
+    font-size: var(--type-caption);
+}
+
+.m4-pc-character-major {
+    border-color: var(--ring);
+    color: var(--ink);
+}
+
+.m4-pc-character-shadow {
+    border-color: var(--danger);
+}
+
+.m4-pc-element {
+    display: inline-block;
+    color: var(--ink);
+    font-size: var(--type-glyph);
+    transform: scale(var(--m4-pc-glyph-scale, 1));
+    transform-origin: center;
+}
+
+.m4-pc-row .pane-message {
+    font-size: var(--type-body-small);
+}

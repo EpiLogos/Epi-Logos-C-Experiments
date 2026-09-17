@@ -35,11 +35,11 @@ fn knowing_json_outputs_dossier_facets() {
     assert_eq!(json["coordinate_anchor"]["coordinate"], "C1");
     assert_eq!(json["coordinate_anchor"]["kernel"]["source"], "s0.kernel");
     assert_eq!(
-        json["coordinate_anchor"]["pointer_web"]["pointer_count"],
+        json["coordinate_anchor"]["coordinate_reference_projection"]["reference_count"],
         36
     );
     assert_eq!(
-        json["coordinate_anchor"]["pointer_web"]["family_refs"]["c_ref"],
+        json["coordinate_anchor"]["coordinate_reference_projection"]["family_refs"]["c_ref"],
         "C1"
     );
     assert_eq!(

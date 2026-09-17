@@ -33,7 +33,13 @@ Chronos is the **temporal authority** of the agent system. It owns the Day/NOW l
 | `chronos_now_init` | Trigger Hen to create NOW folder within today |
 | `chronos_archive_day` | Rotate Day folder to Pratibimba History archive |
 | `chronos_cron_register` | Register a cron job via gateway `cron.add` |
+| `chronos_cron_fire` | Route a fired gateway cron payload through [[Anima]] with a [[VakAddress]] |
+| `chronos_aeon_register` | Bind an [[Aeon]] CT4b `schedule` to gateway `cron.add` after CPF consent grant |
+| `chronos_aeon_fire` | Invoke a scheduled [[Aeon]] with bound [[VakAddress]] args and CPF consent enforcement |
+| `chronos_aeon_on_event_fire` | Invoke an [[Aeon]] when a matching Khora result-drop `on_event` wake lands |
 | `chronos_temporal_status` | Current Day, active NOWs, archive backlog |
+| `chronos_response_orbit` | Schedule `immediate`, `hours:N`, `next-morning`, or `saturnine` through the gateway cron store and return the binding response token |
+| `chronos_reentry` | On rhythm re-entry, join Hen content delta, Janus spread delta, and Mercurius kairos delta, then request a top `retrospective-surfacing` inscription from Khora |
 
 ---
 
@@ -86,6 +92,8 @@ Week directory (`W{WW}`) is canonical. Archive blocked unless `reflection_comple
 ---
 
 ## Temporal Lifecycle Events
+
+- `agent:team:dispatch:complete` with `{ agentId, taskId, c, evidence, task_spec, vak_frame, parent_slice }` is Chronos's 12.T12.31 c=1/c=0 bifurcation channel. [[Anima]] emits it only after a successful native `epi --json agent team dispatch` report; a child may declare `EPI_SUBGOAL_STATUS={"c":0,"evidence":"..."}` for continuation. `c=1` folds the child evidence into the existing parent-session continuation; `c=0` continues the same agent through Anima with the same redaction-governed parent slice and appended micro-history.
 
 | Event | Trigger | Action |
 |-------|---------|--------|
@@ -144,6 +152,7 @@ Z-Thread = Chronos's view of the heartbeat runner. Not a separate mechanism — 
 5. Z-Thread = heartbeat runner — do not implement as a separate threading mechanism
 6. Tranche A (filesystem) is always available; Tranche B requires S3 gateway
 7. TOMORROW.md content seeds next day's #0 then is archived — not a permanent file
+8. [[Aeon]] autonomous fire requires granted CPF `(4.0/1-4.4/5)` consent; dialogical `(00/00)` forms must re-enter user dialogue instead of auto-dispatch.
 
 ---
 

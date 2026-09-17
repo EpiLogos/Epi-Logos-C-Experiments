@@ -119,7 +119,7 @@ Note: the **65 kernel-core relations** in `M0_CORE_RELATIONS` (`Body/S/S0/epi-li
 - L2/L3/L4 lens (lines 1184-1535): `l_2_therapeutic_properties`, `_temperament_balance`, `_healing_specialty`, `_chakra_correspondence`, `_breath_pattern`, `_elemental_nature`, `l_3_seasonal_position`, `l_4_mef_condition`, `_interpretive_role`, `_modality`, `_reflection_table`.
 - S4'/S5' subsystem (lines 1240-1290, 1536-1582): `s_4_function_role`, `_input_contracts`, `_output_contracts`, `_queryable_properties`, `_function_description`, `_translation_schema`, `_safety_class`, `_eligible_formats`; `s_5_agent`, `_tool_affinity`, `_system_prompt`, `_capabilities`.
 - T1/T3/T5 thought (lines 1288-1350, 1584-1598): `t_1_epistemic_function`, `t_3_developmental_stage`, `_process_realization`, `t_5_next_evolution_phase`.
-- Q-family quickview (lines 1304-1359): `q_1_theoretical_thesis`, `q_2_sophia_logos_dialectic`, `_instantiation_mode`, `q_3_dialectical_movement`, `q_4_historical_diagnosis`, `q_5_integration_template`, `_conjunctive_threshold`.
+- Q-family quickview (lines 1304-1359): `q_1_theoretical_thesis`, `q_2_sophia_logos_dialectic`, `_instantiation_mode`, `q_3_dialectical_movement`, `q_4_historical_diagnosis`, `q_5_integration_template`, `_conjunctive_threshold`. These are the **registered/typed** quickview slots; the `q_`/`qm_` register family is **open** — any well-formed `q_<0-5>['][_<slot>]_<lower_snake_case>` validates by shape (`validate_coordinate_prefix_property`), the slug being a free facet name, not a fixed vocabulary. See [[q-vocabulary-canon]].
 - C1 anuttara-language (lines 1408-1431) — the **DR-M0-2 surface**: `c_1_symbol`, `c_1_formulation_type`, `c_1_complete_formulation`, `c_1_formulation_breakdown`, `c_1_key_principles`, `c_1_primary_designation`.
 
 **Relationship property specs (similar volume, scattered ~2100-2680 of the file):**
@@ -303,6 +303,7 @@ S2 currently has **one profile-bus surface** — kernel resonance, written throu
 
 | Gap | Surface | Tranche |
 |---|---|---|
+| Lazy [[M0]] residual browse | Gateway method `s2.graph.list`: six `M0-0`..`M0-5` branches, fixed 20-row pages, live 108-row count, compiled `ARCHETYPE_COORDINATE_LUT[12]` subtraction, and explicit `M0` root | 21.T21.14 — landed |
 | `gds_tangent_overlay` to M0-3' | Gateway method `s2.graph.gds.tangent_overlay` | 09.5 |
 | `c_1_relation_family` enum | Schema constant `RELATION_FAMILY_VALUES: &[&str]` + property spec entry | 09.1 (DR-IG-1) |
 | `c_1_asset_uri` / `c_1_asset_kind` on Anuttara | `node_spec` entries at `lib.rs:1408-1431` | 1.5 |
@@ -589,6 +590,7 @@ The `epi-s2-graph-schema` crate has only `serde` — minimal, correct.
 ### 7.1 Existing kernel-bridge methods
 
 Per `Body/S/S3/gateway-contract/src/lib.rs:139-144`:
+- `s2.graph.list` — typed lazy browse of the live [[M0]] residual set; constrained to the six M0 subbranches rather than arbitrary query passthrough.
 - `s2.graph.query` — browser extensions call this for read-mostly queries.
 - `s2.graph.node` — single-node lookup.
 - `s2.graph.traverse` — bounded traversal for M0' relation rendering.

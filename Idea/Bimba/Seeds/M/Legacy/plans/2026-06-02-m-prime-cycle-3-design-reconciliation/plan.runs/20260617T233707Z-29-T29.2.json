@@ -1,0 +1,37 @@
+{
+  "runId": "20260617T233707Z-29-T29.2",
+  "taskId": "29.T29.2",
+  "startedAt": "2026-06-17T23:37:07.843Z",
+  "owner": "codex-m-dev-29-t29-2",
+  "leaseExpiresAt": "2026-06-18T01:37:07.843Z",
+  "worktree": null,
+  "task": {
+    "id": "29.T29.2",
+    "trackId": "29",
+    "tranche": "T29.2",
+    "title": "Cosmic 1-2-3 composition geometry: K²-surface + cymatic-texture + codon-cell-state composition *(spec-ahead-integration; DR-WC-IP-2 ratifying; CP-WC-IP-1/2/3 consumers)*",
+    "effort": null,
+    "file": "29-integrated-plugins-composition-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md",
+    "dependsOn": [
+      "29.T29.16"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/cosmic-engine-composition.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/plugin-integrated-1-2-3-widget.tsx",
+      "Body/M/epi-theia/extensions/plugin-integrated-1-2-3/tests/cosmic-engine-composition.test.mjs"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

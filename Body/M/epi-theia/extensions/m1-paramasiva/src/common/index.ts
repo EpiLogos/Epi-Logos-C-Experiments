@@ -1,14 +1,20 @@
-// Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
+// Generated from Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json.
+// Boundary authority: forbiddenImports / forbiddenImportsFromLayer live in that JSON.
+// Do not hand-edit.
 import {
     CROSS_EXTENSION_ROUTE_CONTRACTS,
     MExtensionContributionContract,
     MExtensionMiniMode,
     REQUIRED_OBSERVABILITY_PAYLOAD_FIELDS
 } from '@pratibimba/m-extension-runtime';
+import type { PrimitiveReadinessState } from '@pratibimba/integrated-composition/design-primitives';
+export * from './deep-widget-ui-state';
+
+export type M1PrimitiveReadinessState = PrimitiveReadinessState;
 
 export const EXTENSION_ID = 'm1-paramasiva';
 export const PRIMARY_VIEW_ID = 'm1.paramasiva.clockInstrument';
-export const ALL_VIEW_IDS = ["m1.paramasiva.clockInstrument","m1.paramasiva.kleinTopology","m1.paramasiva.audioBusInspector"] as const;
+export const ALL_VIEW_IDS = ["m1.paramasiva.clockInstrument","m1.paramasiva.kleinTopology","m1.paramasiva.audioBusInspector","m1.paramasiva.cl42SignatureInspector","m1.paramasiva.kleinFlipEventStrip"] as const;
 export const OPEN_COMMAND_ID = 'm1.startWalk';
 export const READ_ONLY_COMMAND_ID = 'm1.startWalk.readOnly';
 export const DEPOSIT_ONLY_COMMAND_ID = 'm1.startWalk.depositOnly';

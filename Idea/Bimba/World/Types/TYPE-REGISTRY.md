@@ -50,6 +50,7 @@ Coordinate authority comes first. If a semantic concern already has a coordinate
 | View | Coordinate-Native Source |
 | --- | --- |
 | Templates | `Coordinates/C/C1/C1'/CT/**`, flat [[World]] CT forms, [[Hen]] contracts |
+| Aeon templates | Flat [[Aeon]] form plus `Coordinates/C/C1/C1'/CT/CT4b/**`; [[CT4b]] residency, [[CT1]] definition span, [[CT5]] return |
 | Forms / definitions | `Coordinates/C/C1/Forms-And-Templates/**`, flat [[World]] forms |
 | Entity candidates / entities | `Coordinates/C/C2/Entities-Properties-Tags/Entity-Candidates`, `Entities` |
 | Aliases / tags / properties | `Coordinates/C/C2/Entities-Properties-Tags/Aliases`, `Tags`, `Properties` |

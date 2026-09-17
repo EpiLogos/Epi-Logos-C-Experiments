@@ -1,0 +1,128 @@
+/*
+ * Coordinate: M5-3' Frontend Studio presentation (rerun 51.T51.2)
+ * Residency: Body/M/pratibimba-app/src/panes/frontendStudio/frontendStudio.css
+ * Position (#n): #1 — Definition: the studio's visual grammar only.
+ * Actualises: the co-located pane stylesheet convention set by
+ *   `panes/m3SurfaceContext.css` — one TSX, one same-named CSS, the CSS owning
+ *   presentation and never state. Uses the shell's existing design tokens; it
+ *   declares no new colour vocabulary.
+ * Public surface: .frontend-studio and its descendants.
+ * Does NOT own: any token definition (`styles.css`), any pane behaviour.
+ * Contract: rerun tranche [[51.T51.2]].
+ */
+
+.frontend-studio {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    overflow: auto;
+    height: 100%;
+    font-size: var(--type-body);
+}
+
+.frontend-studio-header h2 {
+    margin: 0.2rem 0;
+    font-size: var(--type-glyph);
+}
+
+.frontend-studio-coordinate {
+    font-family: var(--mono, monospace);
+    opacity: 0.7;
+    letter-spacing: 0.08em;
+}
+
+.frontend-studio-essence {
+    margin: 0;
+    opacity: 0.75;
+    max-width: 62ch;
+    line-height: 1.45;
+}
+
+.frontend-studio-sections {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.frontend-studio-sections button {
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--hairline, rgba(128, 128, 128, 0.35));
+    border-radius: 3px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+}
+
+.frontend-studio-sections button[aria-pressed='true'] {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.frontend-studio table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono, monospace);
+    font-size: var(--type-body-small);
+}
+
+.frontend-studio th,
+.frontend-studio td {
+    text-align: left;
+    padding: 0.22rem 0.45rem;
+    border-bottom: 1px solid var(--hairline, rgba(128, 128, 128, 0.22));
+    vertical-align: top;
+}
+
+.frontend-studio .fs-mounts,
+.frontend-studio .fs-declared {
+    opacity: 0.78;
+    max-width: 34ch;
+    word-break: break-word;
+}
+
+.frontend-studio ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.frontend-studio li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--hairline, rgba(128, 128, 128, 0.22));
+    padding-bottom: 0.3rem;
+}
+
+.fs-chip {
+    display: inline-block;
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--hairline, rgba(128, 128, 128, 0.35));
+    font-size: var(--type-caption);
+    white-space: nowrap;
+}
+
+.fs-chip-live {
+    border-color: var(--ready);
+}
+
+.fs-chip-mounted,
+.fs-chip-transient,
+.fs-chip-declared {
+    opacity: 0.75;
+}
+
+.fs-chip-blocked {
+    border-color: var(--danger);
+}
+
+.fs-note {
+    opacity: 0.7;
+}

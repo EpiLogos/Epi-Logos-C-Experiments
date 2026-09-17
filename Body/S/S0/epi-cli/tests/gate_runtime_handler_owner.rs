@@ -1,5 +1,5 @@
-//! 13.T3 live-gateway smoke test (S0 side — companion to
-//! `Body/S/S3/gateway/tests/live_gateway_smoke.rs`).
+//! 13.T3 live-gateway smoke test (S0 side — the REAL live-server counterpart to
+//! the in-process `Body/S/S3/gateway/tests/s3_runtime_inproc_contract.rs`).
 //!
 //! Per the 13.T3 task spec:
 //!
@@ -71,10 +71,7 @@ async fn handler_owner_sentinel_propagates_through_live_gateway() {
     // (1Password-CLI / varlock secret resolution is an S0 process concern).
     // We assert only that the dispatch succeeds and returns the channels
     // surface; the handler-owner sentinel does NOT apply here.
-    let channels = client
-        .request("channels.status", json!({}))
-        .await
-        .unwrap();
+    let channels = client.request("channels.status", json!({})).await.unwrap();
     assert!(
         channels.get("channels").is_some(),
         "channels.status must return the channels surface"

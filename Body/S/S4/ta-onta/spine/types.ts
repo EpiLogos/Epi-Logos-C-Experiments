@@ -9,6 +9,63 @@ export interface InjectionSlot {
   content: string;
   /** Estimated char count (used for budget enforcement) */
   charEstimate: number;
+  /** Phase-qualified coordinate dereference emitted when this slot overflows. */
+  vakReference?: {
+    coord: string;
+    dereference: "s5'.gnostic.resolve" | "s0'.anuttara.trace";
+  };
+}
+
+/**
+ * What became of one carrier's slot during assembly.
+ *
+ * `failed` exists because a contribution that throws used to be swallowed by a
+ * `console.warn` and vanish — the block simply was not there, and nothing
+ * downstream could tell an absent carrier from a broken one.
+ */
+export type ContextPackBlockStatus =
+  | "included"
+  | "overflowed"
+  | "excluded-cold"
+  | "failed";
+
+/** One carrier's contribution to the assembled session context, with provenance. */
+export interface ContextPackBlock {
+  /** S-coordinate of the contributing carrier e.g. "S1/S1'". */
+  coordinate: string;
+  cost: "hot" | "warm" | "cold";
+  status: ContextPackBlockStatus;
+  /** UTF-8 byte size of this block's content (0 when the carrier failed). */
+  bytes: number;
+  /** The carrier's own charEstimate — what the char budget was spent against. */
+  charEstimate: number;
+  /** Epoch ms at which THIS carrier's slot resolved. Per-carrier freshness. */
+  producedAtMs: number;
+  /** Exactly the text this block contributes to `injection`; null unless included. */
+  rendered: string | null;
+  /** The dereference token emitted in its place when the block overflowed. */
+  vakToken: string | null;
+  /** Why the carrier failed — previously invisible. */
+  error: string | null;
+}
+
+/**
+ * The assembled session-context pack.
+ *
+ * `injection` IS the string handed to the model — not a re-rendering of it.
+ * Both the `before_agent_start` seam and `s4'.context.assemble` read this one
+ * object, so the reported pack cannot drift from the injected pack.
+ */
+export interface ContextPack {
+  version: 1;
+  sessionKey: string;
+  assembledAtMs: number;
+  budget: {
+    limitChars: number;
+    usedChars: number;
+  };
+  blocks: ContextPackBlock[];
+  injection: string;
 }
 
 export interface LedgerChannel {

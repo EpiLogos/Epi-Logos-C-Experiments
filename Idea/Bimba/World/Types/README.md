@@ -22,7 +22,9 @@ Every type-authority folder that can classify or incubate forms should contain:
 - `{FolderName}.canvas` as the visual MOC.
 - A clear `Scope`, `What Belongs Here`, `What Does Not Belong Here`, `Coordinate Crosswalk`, `Seed Evidence`, `Graph Label Intent`, and `Open Gaps`.
 
-Container-only folders are allowed, but they should be explicit containers rather than silent half-MOCs. A container becomes a type authority only after it has the same-name `.md` and `.canvas` pair.
+The MOC pair can become a triad when [[Hen]] emits a reflection: `Template (C1·CT) → MOC (C4) → Base (C5·CS)`. In that triad, `{FolderName}.md` narrates the belonging-law, `{FolderName}.canvas` arranges the spatial MOC, and `{FolderName}.base` is a `base-view` reflection that enumerates current membership from frontmatter/query state. A `.base` is reflection-only Pratibimba residency: it may sit beside the MOC it reflects or at a zone root, and it must never be used as a flat [[World]] canon-write.
+
+Container-only folders are allowed, but they should be explicit containers rather than silent half-MOCs. A container becomes a type authority only after it has the same-name `.md` and `.canvas` pair; the optional `.base` completes the computed reflection, not the authority.
 
 ## Coordinate Mirror
 

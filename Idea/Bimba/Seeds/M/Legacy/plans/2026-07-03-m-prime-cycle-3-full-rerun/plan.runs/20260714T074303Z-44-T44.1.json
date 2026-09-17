@@ -1,0 +1,36 @@
+{
+  "runId": "20260714T074303Z-44-T44.1",
+  "taskId": "44.T44.1",
+  "startedAt": "2026-07-14T07:43:03.285Z",
+  "owner": "fable-c",
+  "leaseExpiresAt": "2026-07-14T09:43:03.285Z",
+  "worktree": null,
+  "task": {
+    "id": "44.T44.1",
+    "trackId": "44",
+    "tranche": "T44.1",
+    "title": "Block contract + CTX-framing + live catalog *(doc-ahead-landing; blocks 44.2..44.10)",
+    "effort": "doc-ahead-landing; blocks 44.2..44.10",
+    "file": "44-pratibimba-surface-standard.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/44-pratibimba-surface-standard.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER — Pratibimba surface standard: THE LARGEST structural gap. No block contract, registry, catalog, verdict/annotate loop, s3'.temporal.* live transport, or block-doc persistence. §1 Blocks are carrier-independent LAW. Re-derive natively (React/Tauri), spec-first. §2 track 44."
+  }
+}

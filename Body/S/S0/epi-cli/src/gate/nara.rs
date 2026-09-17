@@ -3,9 +3,30 @@
 //! Bridges the CLI nara module into the gateway's JSON-RPC dispatch.
 //! Every method returns JSON (json=true) since the gateway is a structured transport.
 
+use std::path::{Path, PathBuf};
+
 use chrono::Utc;
+use epi_s3_gateway::dispatch::{
+    contemplate_session_close, route_nara_session_close, route_nara_session_open,
+    ContemplationObject, NaraSessionCloseRequest, NaraSessionConfig, NaraSessionOpenRequest,
+    NARA_CONTEMPLATION_OBJECT_READ_METHOD, NARA_SESSION_CLOSE_READ_METHOD,
+};
+use epi_s3_gateway::spacetime::{CardKind, LiveState, OracleSpreadPosition};
+use portal_core::personal_identity::{
+    detect_identity_augment_from_activity, IdentityAugmentProposal, IdentityAugmentProposalState,
+    IdentityAugmentProposalView, IdentityAugmentReviewVerdict, PersonalIdentityProfile,
+    IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+};
+use portal_core::{
+    CpfState, CsDirection, CsField, NaraPatternPacketStamp, VakAddress, VamaShaktiClass,
+};
 use serde_json::{json, Value};
 
+use crate::gate::nara_close_bundle::{
+    aggregate_audio_octet, aggregate_m1_closure, persist_close_bundle, read_close_bundle,
+    read_contemplation_object, read_request_from_params, AudioOctetTraversalEvidence,
+    M1SessionClosureEvidence,
+};
 use crate::nara::{
     clock, identity, kairos, lens, logos, medicine, oracle, pratibimba, transform, weights, wind,
 };
@@ -69,12 +90,131 @@ fn opt_u32(params: &Value, key: &str) -> Option<u32> {
     params.get(key).and_then(|v| v.as_u64()).map(|n| n as u32)
 }
 
+fn opt_u64(params: &Value, key: &str) -> Option<u64> {
+    params.get(key).and_then(|v| v.as_u64())
+}
+
 fn opt_f32(params: &Value, key: &str) -> Option<f32> {
     params.get(key).and_then(|v| v.as_f64()).map(|n| n as f32)
 }
 
 fn deferred_stub(method: &str) -> Result<Value, (String, String)> {
     Ok(json!({"status": format!("{}: deferred to agent pipeline", method)}))
+}
+
+fn publish_oracle_spread(
+    receipt: &oracle::OracleCastReceipt,
+    session_key: &str,
+) -> Result<(), String> {
+    let positions = receipt
+        .positions
+        .iter()
+        .map(|position| {
+            let card_kind = match position.card_kind.as_str() {
+                "tarot-major" => CardKind::TarotMajor,
+                "tarot-pip" => CardKind::TarotPip,
+                "tarot-court" => CardKind::TarotCourt,
+                "hexagram" => CardKind::Hexagram,
+                other => return Err(format!("unknown oracle card kind {other}")),
+            };
+            Ok(OracleSpreadPosition::new(
+                receipt.spread_id.clone(),
+                position.position_index,
+                position.card_id,
+                card_kind,
+                receipt.cast_at,
+                session_key,
+                None,
+            ))
+        })
+        .collect::<Result<Vec<_>, String>>()?;
+    spacetime_client().record_oracle_spread(&receipt.spread_id, &positions)
+}
+
+fn nara_session_config_from_params(params: &Value) -> NaraSessionConfig {
+    let mut config = load_nara_session_config().unwrap_or_default();
+    let source = params.get("config").unwrap_or(params);
+    if let Some(capacity) =
+        opt_u32(source, "protein_capacity").or_else(|| opt_u32(source, "proteinCapacity"))
+    {
+        config.protein_capacity = capacity;
+    }
+    if let Some(policy) =
+        opt_str(source, "stop_codon_policy").or_else(|| opt_str(source, "stopCodonPolicy"))
+    {
+        config.stop_codon_policy = policy;
+    }
+    if let Some(mode) =
+        opt_str(source, "write_through_mode").or_else(|| opt_str(source, "writeThroughMode"))
+    {
+        config.write_through_mode = mode;
+    }
+    if let Some(strict) = source
+        .get("protected_handle_strict")
+        .or_else(|| source.get("protectedHandleStrict"))
+        .and_then(|v| v.as_bool())
+    {
+        config.protected_handle_strict = strict;
+    }
+    if let Some(allow) = source
+        .get("allow_raw_protein_bus")
+        .or_else(|| source.get("allowRawProteinBus"))
+        .and_then(|v| v.as_bool())
+    {
+        config.allow_raw_protein_bus = allow;
+    }
+    config
+}
+
+fn load_nara_session_config() -> Result<NaraSessionConfig, String> {
+    let path = dirs::home_dir()
+        .ok_or_else(|| "HOME not available for ~/.epi-logos/config.toml".to_owned())?
+        .join(".epi-logos")
+        .join("config.toml");
+    if !path.exists() {
+        return Ok(NaraSessionConfig::default());
+    }
+    let text =
+        std::fs::read_to_string(&path).map_err(|err| format!("read {}: {err}", path.display()))?;
+    let root: toml::Value =
+        toml::from_str(&text).map_err(|err| format!("parse {}: {err}", path.display()))?;
+    let mut config = NaraSessionConfig::default();
+    let session = root.get("nara").and_then(|v| v.get("session"));
+    if let Some(value) = session
+        .and_then(|v| v.get("protein_capacity"))
+        .and_then(|v| v.as_integer())
+    {
+        if value >= 0 {
+            config.protein_capacity = value as u32;
+        }
+    }
+    if let Some(value) = session
+        .and_then(|v| v.get("stop_codon_policy"))
+        .and_then(|v| v.as_str())
+    {
+        config.stop_codon_policy = value.to_owned();
+    }
+    if let Some(value) = session
+        .and_then(|v| v.get("write_through_mode"))
+        .and_then(|v| v.as_str())
+    {
+        config.write_through_mode = value.to_owned();
+    }
+    if let Some(value) = session
+        .and_then(|v| v.get("protected_handle_strict"))
+        .and_then(|v| v.as_bool())
+    {
+        config.protected_handle_strict = value;
+    }
+    if let Some(value) = root
+        .get("dev")
+        .and_then(|v| v.get("unsafe"))
+        .and_then(|v| v.get("allow_raw_protein_bus"))
+        .and_then(|v| v.as_bool())
+    {
+        config.allow_raw_protein_bus = value;
+    }
+    Ok(config)
 }
 
 /// Return a SpacetimePresence client pointed at the default local SpacetimeDB URL.
@@ -134,6 +274,48 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
             }
             Ok(out)
         }
+        "nara.session_open" => {
+            let session_id = required_param(params, "session_id")
+                .or_else(|_| required_param(params, "sessionId"))?;
+            let kairos = opt_u64(params, "kairos")
+                .unwrap_or_else(|| Utc::now().timestamp_millis().max(0) as u64);
+            let response = route_nara_session_open(NaraSessionOpenRequest {
+                session_id,
+                kairos,
+                config: nara_session_config_from_params(params),
+            })
+            .map_err(|err| ("nara-error".to_owned(), err))?;
+            serde_json::to_value(response).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+        }
+        "nara.session_close" => {
+            let session_id = required_param(params, "session_id")
+                .or_else(|_| required_param(params, "sessionId"))?;
+            let protein_handle = required_param(params, "protein_handle")
+                .or_else(|_| required_param(params, "proteinHandle"))?;
+            let kairos_close = opt_u64(params, "kairos_close")
+                .or_else(|| opt_u64(params, "kairosClose"))
+                .unwrap_or_else(|| Utc::now().timestamp_millis().max(0) as u64);
+            let response = route_nara_session_close(NaraSessionCloseRequest {
+                session_id,
+                protein_handle,
+                kairos_close,
+                config: nara_session_config_from_params(params),
+            })
+            .map_err(|err| ("nara-error".to_owned(), err))?;
+            serde_json::to_value(response).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+        }
+        "nara.contemplate_session_close" => {
+            let object: ContemplationObject =
+                serde_json::from_value(params.clone()).map_err(|err| {
+                    (
+                        "invalid-params".to_owned(),
+                        format!("invalid contemplation object: {err}"),
+                    )
+                })?;
+            let response =
+                contemplate_session_close(object).map_err(|err| ("nara-error".to_owned(), err))?;
+            serde_json::to_value(response).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+        }
 
         // ── Clock ───────────────────────────────────────────────────────
         "nara.clock.status" => cli_to_rpc(clock::show(true)),
@@ -143,6 +325,8 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
         }
 
         // ── Kairos ──────────────────────────────────────────────────────
+        "nara.kairos.probe_kerykeion" => serde_json::to_value(kairos::probe_kerykeion())
+            .map_err(|error| ("nara-error".to_owned(), error.to_string())),
         "nara.kairos.current" => cli_to_rpc(kairos::show(true, false)),
         "nara.kairos.sync" => {
             let result = kairos::sync_current();
@@ -203,6 +387,38 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
         }
 
         // ── Oracle ──────────────────────────────────────────────────────
+        "nara.oracle.cast_iching" => {
+            let question = required_param(params, "question")?;
+            let yes = opt_bool(params, "yes");
+            let receipt = oracle::cast_iching_typed(&question, yes)
+                .map_err(|error| ("nara-error".to_owned(), error))?;
+            let session_key = opt_str(params, "sessionKey")
+                .or_else(|| opt_str(params, "session_key"))
+                .unwrap_or_else(|| "oracle-unscoped".to_owned());
+            let spacetime_published = publish_oracle_spread(&receipt, &session_key).is_ok();
+            let mut value = serde_json::to_value(receipt)
+                .map_err(|error| ("nara-error".to_owned(), error.to_string()))?;
+            value["spacetimePublished"] = json!(spacetime_published);
+            Ok(value)
+        }
+        "nara.oracle.cast_tarot" => {
+            let system = required_param(params, "system")?;
+            let question = required_param(params, "question")?;
+            let spread_size = opt_u8(params, "spreadSize")
+                .or_else(|| opt_u8(params, "spread_size"))
+                .unwrap_or(3);
+            let yes = opt_bool(params, "yes");
+            let receipt = oracle::cast_tarot_typed(&system, &question, spread_size, yes)
+                .map_err(|error| ("nara-error".to_owned(), error))?;
+            let session_key = opt_str(params, "sessionKey")
+                .or_else(|| opt_str(params, "session_key"))
+                .unwrap_or_else(|| "oracle-unscoped".to_owned());
+            let spacetime_published = publish_oracle_spread(&receipt, &session_key).is_ok();
+            let mut value = serde_json::to_value(receipt)
+                .map_err(|error| ("nara-error".to_owned(), error.to_string()))?;
+            value["spacetimePublished"] = json!(spacetime_published);
+            Ok(value)
+        }
         "nara.oracle.cast" => {
             let system = required_param(params, "system")?;
             let question = required_param(params, "question")?;
@@ -237,6 +453,52 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
             Ok(json!({"decan": k.active_decan, "element": k.dominant_element}))
         }
         "nara.oracle.history" => cli_to_rpc(oracle::show_history()),
+        "nara.oracle.history.read" => {
+            let limit = opt_u64(params, "limit").unwrap_or(10) as usize;
+            let from_epoch = opt_u64(params, "fromEpoch").or_else(|| opt_u64(params, "from_epoch"));
+            let to_epoch = opt_u64(params, "toEpoch").or_else(|| opt_u64(params, "to_epoch"));
+            serde_json::to_value(
+                oracle::read_history_typed(limit, from_epoch, to_epoch)
+                    .map_err(|error| ("nara-error".to_owned(), error))?,
+            )
+            .map_err(|error| ("nara-error".to_owned(), error.to_string()))
+        }
+        "nara.oracle.update_position_state" => {
+            let spread_id = required_param(params, "spreadId")
+                .or_else(|_| required_param(params, "spread_id"))?;
+            let position_index = opt_u8(params, "positionIndex")
+                .or_else(|| opt_u8(params, "position_idx"))
+                .ok_or_else(|| {
+                    (
+                        "invalid-params".to_owned(),
+                        "missing required numeric param 'positionIndex'".to_owned(),
+                    )
+                })?;
+            let state_text = required_param(params, "liveState")
+                .or_else(|_| required_param(params, "live_state"))?;
+            let state = match state_text.as_str() {
+                "generating" => oracle::OracleLiveState::Generating,
+                "muting" => oracle::OracleLiveState::Muting,
+                "mute" => oracle::OracleLiveState::Mute,
+                _ => {
+                    return Err((
+                        "invalid-params".to_owned(),
+                        "liveState must be generating, muting, or mute".to_owned(),
+                    ))
+                }
+            };
+            let receipt = oracle::update_position_state(&spread_id, position_index, state)
+                .map_err(|error| ("nara-error".to_owned(), error))?;
+            let s3_state = LiveState::from_u8(state.as_s3_value())
+                .map_err(|error| ("nara-error".to_owned(), error))?;
+            let spacetime_published = spacetime_client()
+                .update_position_state(&spread_id, position_index, s3_state)
+                .is_ok();
+            let mut value = serde_json::to_value(receipt)
+                .map_err(|error| ("nara-error".to_owned(), error.to_string()))?;
+            value["spacetimePublished"] = json!(spacetime_published);
+            Ok(value)
+        }
         "nara.oracle.payload" => {
             // Perform a live I-Ching cast and return the full OraclePayload
             // (four faces + eval4 quaternionic charges) as structured JSON.
@@ -305,6 +567,29 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
         }
 
         // ── Medicine ────────────────────────────────────────────────────
+        "nara.medicine.snapshot" => {
+            let sun_degree = opt_f32(params, "sunDegree")
+                .or_else(|| opt_f32(params, "sun_degree"))
+                .ok_or_else(|| {
+                    (
+                        "invalid-params".to_owned(),
+                        "missing required numeric param 'sunDegree'".to_owned(),
+                    )
+                })?;
+            serde_json::to_value(
+                medicine::medicine_snapshot(sun_degree)
+                    .map_err(|error| ("nara-error".to_owned(), error))?,
+            )
+            .map_err(|error| ("nara-error".to_owned(), error.to_string()))
+        }
+        "nara.medicine.pin" => {
+            let materia = required_param(params, "materia")?;
+            serde_json::to_value(
+                medicine::pin_materia(&materia)
+                    .map_err(|error| ("nara-error".to_owned(), error))?,
+            )
+            .map_err(|error| ("nara-error".to_owned(), error.to_string()))
+        }
         "nara.medicine.balance" => cli_to_rpc(medicine::balance(true)),
         "nara.medicine.chakra" => cli_to_rpc(medicine::chakra(true)),
         "nara.medicine.materia" => cli_to_rpc(medicine::materia(true)),
@@ -318,6 +603,37 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
         }
 
         // ── Transform ───────────────────────────────────────────────────
+        "nara.transform.start" => {
+            let container = required_param(params, "container")?;
+            serde_json::to_value(
+                transform::start_container(&container)
+                    .map_err(|error| ("nara-error".to_owned(), error))?,
+            )
+            .map_err(|error| ("nara-error".to_owned(), error.to_string()))
+        }
+        "nara.transform.advance" => {
+            let container = required_param(params, "container")?;
+            let expected_stage = required_param(params, "expectedStage")
+                .or_else(|_| required_param(params, "expected_stage"))?;
+            let direction =
+                transform::TransformDirection::parse(opt_str(params, "direction").as_deref())
+                    .map_err(|error| ("invalid-params".to_owned(), error))?;
+            let confirmed_backstep = params
+                .get("confirmedBackstep")
+                .or_else(|| params.get("confirmed_backstep"))
+                .and_then(Value::as_bool)
+                .unwrap_or(false);
+            serde_json::to_value(
+                transform::advance_container(
+                    &container,
+                    &expected_stage,
+                    direction,
+                    confirmed_backstep,
+                )
+                .map_err(|error| ("nara-error".to_owned(), error))?,
+            )
+            .map_err(|error| ("nara-error".to_owned(), error.to_string()))
+        }
         "nara.transform.status" => cli_to_rpc(transform::status(true)),
         "nara.transform.cycle.open" => {
             let note = opt_str(params, "note");
@@ -411,6 +727,14 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
             cli_to_rpc(logos::run(date.as_deref(), stage, true))
         }
         "nara.logos.status" => cli_to_rpc(logos::status(true)),
+        "nara.logos.advance" => {
+            let date = opt_str(params, "date");
+            cli_to_rpc(logos::advance(date.as_deref(), true))
+        }
+        "nara.logos.regress" => {
+            let date = opt_str(params, "date");
+            cli_to_rpc(logos::regress(date.as_deref(), true))
+        }
         "nara.logos.stage" => {
             let stage = params
                 .get("stage")
@@ -468,5 +792,1628 @@ pub fn dispatch_nara(method: &str, params: &Value) -> Result<Value, (String, Str
             "unimplemented".to_owned(),
             format!("{} is not a known nara method", method),
         )),
+    }
+}
+
+pub fn dispatch_nara_with_state_root(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    method: &str,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    match method {
+        "nara.session_close" => close_with_persisted_bundle(state_root, peer_is_loopback, params),
+        NARA_SESSION_CLOSE_READ_METHOD => {
+            read_persisted_bundle(state_root, peer_is_loopback, params)
+        }
+        NARA_CONTEMPLATION_OBJECT_READ_METHOD => {
+            read_persisted_contemplation_object(state_root, peer_is_loopback, params)
+        }
+        // 25.T25.14 (DR-WC-M4-4) — the personal-coordinate surface. All are
+        // protected-local: they require a loopback peer, exactly like the
+        // session-close bundle above. `nara.pasu.show` is the handle-only read
+        // (the natal-chart raw body never transits — only its path string).
+        "nara.pasu.show" => show_pasu_record(peer_is_loopback),
+        // 25.T25.3 — the NOW-inscription timeline. Protected-local like the
+        // PASU reads: day ids, NOW timestamps, session keys and artifact KINDS
+        // cross the wire; no artifact body ever does.
+        "nara.journal.timeline" => journal_timeline(peer_is_loopback, params),
+        "nara.pasu.set" => set_pasu_field(peer_is_loopback, params),
+        "nara.pasu.consents.append" => append_pasu_consent(peer_is_loopback, params),
+        "nara.identity.proposals.detect" => {
+            detect_identity_proposal(state_root, peer_is_loopback, params)
+        }
+        "nara.identity.proposals.submit" => {
+            submit_identity_proposal(state_root, peer_is_loopback, params)
+        }
+        "nara.identity.proposals.list" => list_identity_proposals(state_root, peer_is_loopback),
+        "nara.identity.proposals.decide" => {
+            decide_identity_proposal(state_root, peer_is_loopback, params)
+        }
+        "nara.identity.proposals.apply" => {
+            apply_identity_proposal(state_root, peer_is_loopback, params)
+        }
+        "nara.activity.show" => show_activity_trajectory(state_root, peer_is_loopback),
+        _ => dispatch_nara(method, params),
+    }
+}
+
+/// Store path for the M5' identity-augment review ledger — protected-local,
+/// under the gateway state root (loopback-gated like the close bundle).
+fn identity_proposal_store_path(state_root: &Path) -> PathBuf {
+    state_root.join("nara").join("identity-proposals.json")
+}
+
+/// Store path for the persisted per-user Q_activity accumulator — protected-local
+/// under the gateway state root, parallel to the identity-proposal ledger. This
+/// is the real driver the `detect` producer reads and the session-close
+/// auto-trigger accumulates into.
+fn activity_trajectory_store_path(state_root: &Path) -> PathBuf {
+    state_root.join("nara").join("activity-trajectory.json")
+}
+
+/// Store path for the CURRENT applied identity augment — protected-local under
+/// the gateway state root. When present, `load_personal_identity_profile` layers
+/// it over the natal baseline so the EFFECTIVE identity is the augmented one. The
+/// raw `q_identity` bytes live only in this state-root-local file (DR-M4-3).
+fn applied_identity_store_path(state_root: &Path) -> PathBuf {
+    state_root.join("nara").join("applied-identity.json")
+}
+
+/// The Vama Shakti perturbation class used for personal session-close activity.
+/// A session-close activity packet is a transient, kairos-delta-sensitive
+/// perturbation of the personal Q_activity accumulator, so it uses the Sprite
+/// law: the elapsed-kairos gap between session closes is the dominant drift
+/// driver (longer gaps nudge the accumulator harder), which is the semantically
+/// right behaviour for accumulated personal activity. Documented, not derived —
+/// the exact class is a product/taste decision at the M4' boundary.
+const SESSION_ACTIVITY_VAMA_CLASS: VamaShaktiClass = VamaShaktiClass::Sprite;
+
+/// The kairos window (ms) one unit of `kairos_delta` spans — a 30-minute window,
+/// so an inter-session gap of a few hours yields a bounded delta near the
+/// perturbation law's internal clamp (8.0).
+const KAIROS_WINDOW_MS: f64 = 1_800_000.0;
+
+/// `nara.activity.show`: the persisted per-user Q_activity accumulator, for
+/// observability + panel rendering. Protected-local — loopback peer required.
+fn show_activity_trajectory(
+    state_root: &Path,
+    peer_is_loopback: bool,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.activity.show requires a loopback peer".to_owned(),
+        ));
+    }
+    let trajectory =
+        crate::nara::activity_trajectory::current(&activity_trajectory_store_path(state_root));
+    Ok(json!({
+        "qActivity": trajectory.q_activity,
+        "turnCount": trajectory.turn_count,
+        "packetRefs": trajectory.packet_refs,
+        "updatedAt": trajectory.updated_at,
+    }))
+}
+
+/// Derive a bounded `kairos_delta` for a session-close activity packet: the
+/// elapsed kairos between this close and the accumulator's last turn, expressed
+/// in [`KAIROS_WINDOW_MS`] units and clamped to `[0, 8]`. The first turn (no
+/// prior close) yields `0.0`.
+fn bounded_kairos_delta(kairos_close: u64, last_kairos_close: Option<u64>) -> f32 {
+    match last_kairos_close {
+        Some(prev) if kairos_close > prev => {
+            let elapsed_ms = (kairos_close - prev) as f64;
+            ((elapsed_ms / KAIROS_WINDOW_MS) as f32).clamp(0.0, 8.0)
+        }
+        _ => 0.0,
+    }
+}
+
+/// Construct ONE real activity packet from the session-close signal.
+///
+/// * `packet_ref` names the REAL sealed protein + session
+///   (`activity://session/{session_id}/{protein_handle}`).
+/// * `vak_address.cp` carries the REAL engaged session coordinate discovered on
+///   the `ContemplationObject` (`engaged_coordinates[0].coordinate`), and `ct`
+///   carries the REAL session codon-trace. When no engaged coordinate is
+///   present the address degrades HONESTLY to the documented `#4.0` personal
+///   baseline (the returned `bool` flags the degrade); the remaining reflective
+///   coordinates are the personal-substrate frame constants `(4.0/1-4.4/5)`.
+/// * `kairos_delta` is derived from `kairos_close` vs the accumulator's last
+///   turn ([`bounded_kairos_delta`]).
+fn session_activity_packet(
+    session_id: &str,
+    protein_handle: &str,
+    kairos_close: u64,
+    session_coordinate: Option<&str>,
+    session_codons: &[String],
+    last_kairos_close: Option<u64>,
+) -> (NaraPatternPacketStamp, bool) {
+    let (cp, degraded) = match session_coordinate {
+        Some(coordinate) if !coordinate.trim().is_empty() => (coordinate.to_owned(), false),
+        _ => ("4.0".to_owned(), true),
+    };
+    let vak_address = VakAddress {
+        cpf: CpfState::Mechanistic,
+        ct: session_codons.to_vec(),
+        cp,
+        cf: "(4.0/1-4.4/5)".to_owned(),
+        cfp: "4.4".to_owned(),
+        cs: CsField {
+            code: "M4".to_owned(),
+            direction: CsDirection::Day,
+            recognized: false,
+        },
+    };
+    let kairos_delta = bounded_kairos_delta(kairos_close, last_kairos_close);
+    (
+        NaraPatternPacketStamp {
+            packet_ref: format!("activity://session/{session_id}/{protein_handle}"),
+            vak_address,
+            kairos_delta,
+        },
+        degraded,
+    )
+}
+
+/// Persist a detected/produced proposal into the review store at `Proposed` and
+/// return its handle-only view. Shared by the `detect` RPC and the session-close
+/// auto-trigger. NEVER applies — Q_identity stays untouched.
+fn persist_detected_proposal(
+    store_path: &Path,
+    proposal: &IdentityAugmentProposal,
+) -> Result<IdentityAugmentProposalView, String> {
+    let view = proposal.view();
+    let persisted = crate::nara::identity_proposals::PersistedProposal {
+        proposal_handle: proposal.proposal_handle.clone(),
+        state: IdentityAugmentProposalState::Proposed,
+        summary: proposal.summary.clone(),
+        source_adapter_handle: proposal.source_adapter_handle.clone(),
+        created_at: proposal.created_at.clone(),
+        reviewed_at: None,
+        decided_at: None,
+        applied_at: None,
+        q_identity_candidate: proposal.q_identity_candidate(),
+    };
+    crate::nara::identity_proposals::submit_proposal(store_path, persisted)?;
+    Ok(view)
+}
+
+/// Run the drift detector on an accumulated `q_activity` against the natal
+/// `profile` and, on drift below the alignment floor, SUBMIT a `Proposed`
+/// identity-augment proposal into the review store. Returns the produced view
+/// (or `None` when still aligned / on a swallowed submit error). Identity
+/// transit (no live transit is threaded at session-close) and the schema drift
+/// floor are used. NEVER mutates Q_identity — the detector holds `&profile`.
+fn auto_detect_and_submit(
+    proposal_store: &Path,
+    profile: &PersonalIdentityProfile,
+    q_activity: [f32; 4],
+    now: &str,
+) -> Option<IdentityAugmentProposalView> {
+    let handle = format!(
+        "identity-proposal://activity-auto/{}",
+        Utc::now().timestamp_millis()
+    );
+    let proposal = detect_identity_augment_from_activity(
+        profile,
+        q_activity,
+        [1.0, 0.0, 0.0, 0.0],
+        IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+        handle,
+        "adapter://m4/session-close-activity-drift",
+        now.to_owned(),
+    )?;
+    persist_detected_proposal(proposal_store, &proposal).ok()
+}
+
+/// The session-close AUTO-TRIGGER (side-effect; best-effort — never fails the
+/// close). Build the real activity packet, accumulate it into the persisted
+/// per-user Q_activity, then run the drift detector on the accumulated
+/// trajectory vs the loaded natal profile and auto-submit a proposal on drift.
+/// Inserts the additive response fields (`activityTrajectory`,
+/// `identityAugmentProposed`, and `identityAugmentProposalHandle` when produced)
+/// into `object`. On any internal IO error the close still succeeds, only the
+/// additive fields are omitted.
+fn apply_activity_autotrigger(
+    state_root: &Path,
+    session_id: &str,
+    protein_handle: &str,
+    kairos_close: u64,
+    session_coordinate: Option<&str>,
+    session_codons: &[String],
+    object: &mut serde_json::Map<String, Value>,
+) {
+    let activity_store = activity_trajectory_store_path(state_root);
+    let previous = crate::nara::activity_trajectory::current(&activity_store);
+    let (packet, _degraded) = session_activity_packet(
+        session_id,
+        protein_handle,
+        kairos_close,
+        session_coordinate,
+        session_codons,
+        previous.last_kairos_close,
+    );
+    let now = Utc::now().to_rfc3339();
+    let Ok(trajectory) = crate::nara::activity_trajectory::accumulate(
+        &activity_store,
+        std::slice::from_ref(&packet),
+        SESSION_ACTIVITY_VAMA_CLASS,
+        &now,
+        Some(kairos_close),
+    ) else {
+        return;
+    };
+    object.insert(
+        "activityTrajectory".to_owned(),
+        json!({ "qActivity": trajectory.q_activity, "turnCount": trajectory.turn_count }),
+    );
+
+    // Auto-detect: measure the freshly-accumulated Q_activity drift vs the natal
+    // identity. Honest degradation — no natal/PASU baseline means we accumulate
+    // (still useful) but propose nothing.
+    let mut proposed = false;
+    if let Ok(Some(profile)) = load_personal_identity_profile(state_root) {
+        let proposal_store = identity_proposal_store_path(state_root);
+        if let Some(view) =
+            auto_detect_and_submit(&proposal_store, &profile, trajectory.q_activity, &now)
+        {
+            proposed = true;
+            object.insert(
+                "identityAugmentProposalHandle".to_owned(),
+                json!(view.proposal_handle),
+            );
+        }
+    }
+    object.insert("identityAugmentProposed".to_owned(), json!(proposed));
+}
+
+/// `nara.pasu.show`: the handle-only PASU record (birth handles, natal-chart
+/// PATH string only, derived quintessence reflections, and the atlas-sync
+/// consent ledger). Protected-local — loopback peer required.
+fn show_pasu_record(peer_is_loopback: bool) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.pasu.show requires a loopback peer".to_owned(),
+        ));
+    }
+    let vault_root = crate::vault::resolve_vault_root();
+    // `exists` is the file-level presence signal (spec: absence = no PASU.md).
+    // pasu_record resolves a missing file to an all-empty record, so cold-start
+    // (32.T32.2) needs this flag to tell "no PASU.md" from "present but blank".
+    let exists = crate::vault::pasu::pasu_path(&vault_root).exists();
+    let record = crate::vault::pasu::pasu_record(&vault_root);
+    let mut value =
+        serde_json::to_value(record).map_err(|err| ("nara-error".to_owned(), err.to_string()))?;
+    if let Some(object) = value.as_object_mut() {
+        object.insert("exists".to_owned(), Value::Bool(exists));
+    }
+    Ok(value)
+}
+
+// ─── 25.T25.6 — nara.field.handle ────────────────────────────────────────────
+
+/// The three foregroundable quaternion handles (25.17's time-axis law). An
+/// unknown name is refused — a typo'd foregrounding must not silently render
+/// the default axis while claiming another.
+const FIELD_FOREGROUND_HANDLES: &[&str] = &["qIdentityHandle", "qTransitHandle", "qActivityHandle"];
+
+/// `nara.field.handle` ({sessionKey?, foregroundedHandle?}): the OPAQUE
+/// psychoid-cymatic renderer handle (DR-IG-6 geometry law, DR-M4-3 strict
+/// invariant — no raw bodies cross the bus; the widget mounts the handle and
+/// never reads renderer state). The profile it digests is built from the ONE
+/// live spanda anchor — the same source the heartbeat samples — so the handle
+/// names the field of the tick the caller is actually living in.
+/// Protected-local-handle-only: loopback peer required.
+pub fn field_handle(
+    anchor: Option<portal_core::spanda_anchor::SpandaPhaseAnchor>,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.field.handle requires a loopback peer".to_owned(),
+        ));
+    }
+    let session_key = params
+        .get("sessionKey")
+        .and_then(Value::as_str)
+        .unwrap_or("agent:main:main")
+        .to_owned();
+    let foregrounded = match params.get("foregroundedHandle") {
+        None | Some(Value::Null) => None,
+        Some(Value::String(name)) if FIELD_FOREGROUND_HANDLES.contains(&name.as_str()) => {
+            Some(name.clone())
+        }
+        Some(other) => {
+            return Err((
+                "invalid-params".to_owned(),
+                format!(
+                    "foregroundedHandle must be one of {FIELD_FOREGROUND_HANDLES:?}, got {other}"
+                ),
+            ))
+        }
+    };
+    let Some(anchor) = anchor else {
+        return Err((
+            "nara-error".to_owned(),
+            "no live spanda anchor yet — the gateway heartbeat has not installed the clock"
+                .to_owned(),
+        ));
+    };
+    let now_ms = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as u64;
+    let projection = portal_core::KernelTemporalProjection::from_phase_anchor(&anchor, now_ms, 0);
+    let handle = portal_core::psychoid_cymatic::build_psychoid_cymatic_renderer_handle(
+        &projection.harmonic_profile,
+        portal_core::psychoid_cymatic::PsychoidCymaticSolverStrategy::OptionF,
+    );
+    let mut value = serde_json::to_value(handle)
+        .map_err(|error| ("nara-error".to_owned(), error.to_string()))?;
+    if let Some(object) = value.as_object_mut() {
+        object.insert("sessionKey".to_owned(), json!(session_key));
+        object.insert(
+            "foregroundedHandle".to_owned(),
+            foregrounded.map_or(Value::Null, Value::String),
+        );
+    }
+    Ok(value)
+}
+
+// ─── 25.T25.3 — nara.journal.timeline ───────────────────────────────────────
+
+/// Sessions are datetime-prefixed by law (`{YYYYMMDD-HHmmss}-{suffix}`, no
+/// counters); the prefix IS the NOW inscription time, so the timeline never
+/// opens a now.md to learn when it was written.
+const SESSION_STAMP_FORMAT: &str = "%Y%m%d-%H%M%S";
+const JOURNAL_TIMELINE_DEFAULT_DAY_RANGE: u32 = 30;
+const JOURNAL_TIMELINE_MAX_DAY_RANGE: u32 = 90;
+/// Frontmatter scan cap per artifact — the role key sits in the header block.
+const ARTIFACT_ROLE_SCAN_LINES: usize = 40;
+
+/// `nara.journal.timeline` ({dayRange}): the NOW-inscription timeline across
+/// Present days. One row per session — day id, NOW timestamp (from the
+/// session-dir stamp), session key, and the artifact KINDS the session
+/// inscribed (each sibling artifact's `c_4_artifact_role`, never its body).
+/// Rows come newest-first. Protected-local — loopback peer required.
+fn journal_timeline(peer_is_loopback: bool, params: &Value) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.journal.timeline requires a loopback peer".to_owned(),
+        ));
+    }
+    let day_range = match params.get("dayRange") {
+        None | Some(Value::Null) => JOURNAL_TIMELINE_DEFAULT_DAY_RANGE,
+        Some(raw) => {
+            let parsed = raw.as_u64().and_then(|n| u32::try_from(n).ok());
+            match parsed {
+                Some(n) if (1..=JOURNAL_TIMELINE_MAX_DAY_RANGE).contains(&n) => n,
+                _ => {
+                    return Err((
+                        "nara-error".to_owned(),
+                        format!("dayRange must be an integer 1..={JOURNAL_TIMELINE_MAX_DAY_RANGE}"),
+                    ))
+                }
+            }
+        }
+    };
+
+    let vault_root = crate::vault::resolve_vault_root();
+    let present = crate::vault::paths::present_root(&vault_root);
+    let today = crate::vault::paths::day_of(Utc::now());
+    let oldest = today - chrono::Duration::days(i64::from(day_range) - 1);
+
+    let mut rows: Vec<Value> = Vec::new();
+    let mut days_seen = 0u32;
+    let day_entries = std::fs::read_dir(&present)
+        .map(|it| it.flatten().collect::<Vec<_>>())
+        .unwrap_or_default();
+    for day_entry in day_entries {
+        let day_name = day_entry.file_name().to_string_lossy().into_owned();
+        let Ok(day) =
+            chrono::NaiveDate::parse_from_str(&day_name, crate::vault::paths::DAY_ID_FORMAT)
+        else {
+            continue; // not a day folder (FLOW notes, stray files)
+        };
+        if day < oldest || day > today || !day_entry.path().is_dir() {
+            continue;
+        }
+        days_seen += 1;
+        let session_entries = std::fs::read_dir(day_entry.path())
+            .map(|it| it.flatten().collect::<Vec<_>>())
+            .unwrap_or_default();
+        for session_entry in session_entries {
+            let session_key = session_entry.file_name().to_string_lossy().into_owned();
+            let session_path = session_entry.path();
+            if !session_path.is_dir() || !session_path.join("now.md").exists() {
+                continue;
+            }
+            let Some(now_timestamp) = session_now_timestamp(&session_key) else {
+                continue; // no datetime prefix — not a session dir
+            };
+            rows.push(json!({
+                "day": day_name,
+                "nowTimestamp": now_timestamp,
+                "sessionKey": session_key,
+                "artifactKinds": session_artifact_kinds(&session_path),
+            }));
+        }
+    }
+
+    // Newest first: the datetime-prefixed session key sorts chronologically
+    // WITHIN a day; across days the day id must be compared as a date (the
+    // month-first id does not sort lexically across years).
+    rows.sort_by(|a, b| {
+        let key = |v: &Value| -> (String, String) {
+            let day = v["day"].as_str().unwrap_or_default();
+            let iso = chrono::NaiveDate::parse_from_str(day, crate::vault::paths::DAY_ID_FORMAT)
+                .map(|d| d.format("%Y-%m-%d").to_string())
+                .unwrap_or_default();
+            (iso, v["sessionKey"].as_str().unwrap_or_default().to_owned())
+        };
+        key(b).cmp(&key(a))
+    });
+
+    Ok(json!({
+        "dayRange": day_range,
+        "daysScanned": days_seen,
+        "rows": rows,
+        "privacyClass": "protected-local",
+        "authority": "epi-cli::vault::paths (Present day law) + c_4_artifact_role frontmatter",
+    }))
+}
+
+/// `{YYYYMMDD-HHmmss}` session-dir prefix → RFC3339 UTC timestamp string.
+fn session_now_timestamp(session_key: &str) -> Option<String> {
+    let stamp = session_key.get(0..15)?;
+    let parsed = chrono::NaiveDateTime::parse_from_str(stamp, SESSION_STAMP_FORMAT).ok()?;
+    // A stamp with no `-suffix` after it is a plain file name, not a session.
+    if session_key.len() > 15 && !session_key[15..].starts_with('-') {
+        return None;
+    }
+    Some(parsed.and_utc().to_rfc3339())
+}
+
+/// The DISTINCT artifact kinds a session inscribed: `now` for now.md itself,
+/// plus each sibling `.md`'s `c_4_artifact_role` (frontmatter scan, capped),
+/// `unclassified` when an artifact declares no role. Bodies are never read
+/// past the frontmatter fence.
+fn session_artifact_kinds(session_path: &Path) -> Vec<String> {
+    let mut kinds: Vec<String> = vec!["now".to_owned()];
+    let entries = std::fs::read_dir(session_path)
+        .map(|it| it.flatten().collect::<Vec<_>>())
+        .unwrap_or_default();
+    for entry in entries {
+        let name = entry.file_name().to_string_lossy().into_owned();
+        if name == "now.md" || !name.ends_with(".md") || !entry.path().is_file() {
+            continue;
+        }
+        let kind = artifact_role_of(&entry.path()).unwrap_or_else(|| "unclassified".to_owned());
+        if !kinds.contains(&kind) {
+            kinds.push(kind);
+        }
+    }
+    kinds
+}
+
+/// Read `c_4_artifact_role` out of an artifact's frontmatter block. Returns
+/// None when the file has no fence, the key is absent, or the value is empty.
+fn artifact_role_of(path: &Path) -> Option<String> {
+    let content = std::fs::read_to_string(path).ok()?;
+    let mut lines = content.lines();
+    if lines.next()?.trim() != "---" {
+        return None;
+    }
+    for line in lines.take(ARTIFACT_ROLE_SCAN_LINES) {
+        let trimmed = line.trim();
+        if trimmed == "---" {
+            break;
+        }
+        if let Some(value) = trimmed.strip_prefix("c_4_artifact_role:") {
+            let role = value.trim().trim_matches('"').trim_matches('\'').trim();
+            if !role.is_empty() {
+                return Some(role.to_owned());
+            }
+        }
+    }
+    None
+}
+
+/// `nara.pasu.consents.append` (DR-WC-M4-4): append a typed ConsentRecord to the
+/// PASU `c_4_atlas_sync_consents` array. Accepts the record either at the params
+/// root or under a `consent` key. Returns the full updated ledger.
+fn append_pasu_consent(peer_is_loopback: bool, params: &Value) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.pasu.consents.append requires a loopback peer".to_owned(),
+        ));
+    }
+    let consent_value = params
+        .get("consent")
+        .cloned()
+        .unwrap_or_else(|| params.clone());
+    let consent: crate::vault::pasu::ConsentRecord = serde_json::from_value(consent_value)
+        .map_err(|err| {
+            (
+                "invalid-params".to_owned(),
+                format!("invalid consent record: {err}"),
+            )
+        })?;
+    let vault_root = crate::vault::resolve_vault_root();
+    let consents = crate::vault::pasu::pasu_append_consent(&vault_root, consent)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+    let count = consents.len();
+    Ok(json!({ "consents": consents, "count": count }))
+}
+
+/// `nara.pasu.set` (DR-WC-M4-3): set one of the six editable PASU identity
+/// scalars by its full frontmatter key (e.g. `c_2_jungian`) via the canonical
+/// `pasu_set_key` write path — the identity wizard (25.T25.4) routes every write
+/// here, never the `epi vault pasu set` CLI. Derived/unknown keys are rejected
+/// by `pasu_set_key`. Protected-local — loopback peer required. Returns the key
+/// plus the write receipt.
+fn set_pasu_field(peer_is_loopback: bool, params: &Value) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.pasu.set requires a loopback peer".to_owned(),
+        ));
+    }
+    let key = required_param(params, "key")?;
+    let value = required_param(params, "value")?;
+    let vault_root = crate::vault::resolve_vault_root();
+    let receipt = crate::vault::pasu::pasu_set_key(&vault_root, &key, &value)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+    Ok(json!({ "key": key, "receipt": receipt }))
+}
+
+/// Parse an optional `q_identity_candidate` (a `[f32; 4]`) from params, falling
+/// back to the identity quaternion `[1, 0, 0, 0]`. The candidate is NEVER
+/// surfaced (the review view is handle-only) — it exists only so the persisted
+/// record can be reconstructed against the canonical state machine.
+fn parse_quaternion_candidate(params: &Value) -> [f32; 4] {
+    let default = [1.0, 0.0, 0.0, 0.0];
+    let Some(raw) = params
+        .get("q_identity_candidate")
+        .or_else(|| params.get("qIdentityCandidate"))
+        .and_then(|value| value.as_array())
+    else {
+        return default;
+    };
+    if raw.len() != 4 {
+        return default;
+    }
+    let mut out = [0.0f32; 4];
+    for (index, item) in raw.iter().enumerate() {
+        match item.as_f64() {
+            Some(number) => out[index] = number as f32,
+            None => return default,
+        }
+    }
+    out
+}
+
+/// Parse a REQUIRED-shaped `[f32; 4]` quaternion param under any of `keys`,
+/// returning `None` when absent or malformed (unlike [`parse_quaternion_candidate`]
+/// which defaults to identity). The detect producer uses this to distinguish
+/// "no accumulated q_activity supplied" (honest degradation) from a real value.
+fn parse_quaternion_param(params: &Value, keys: &[&str]) -> Option<[f32; 4]> {
+    let raw = keys
+        .iter()
+        .find_map(|key| params.get(*key))
+        .and_then(|value| value.as_array())?;
+    if raw.len() != 4 {
+        return None;
+    }
+    let mut out = [0.0f32; 4];
+    for (index, item) in raw.iter().enumerate() {
+        out[index] = item.as_f64()? as f32;
+    }
+    Some(out)
+}
+
+/// `nara.identity.proposals.submit` (25.T25.14): open the identity-augment
+/// lifecycle by creating a NEW proposal in the review store at state `Proposed`.
+/// This is the SUBMISSION SEAM a producer/agent (or the e2e loop) drives so that
+/// `list` can then surface the proposal and the user can `decide` (accept|reject).
+/// The upstream PRODUCER that DECIDES whether to propose an identity augment is
+/// genuinely separate/future — this lands the seam and proves the loop, it is not
+/// itself a proposal generator.
+///
+/// INVARIANT: submit creates a `Proposed` proposal ONLY. It NEVER mutates
+/// Q_identity — `apply` stays a separate governed path (UX 10.1), exactly as
+/// `decide` (accept|reject) never applies. Duplicate handles are refused by the
+/// underlying `submit_proposal` seam.
+fn submit_identity_proposal(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.identity.proposals.submit requires a loopback peer".to_owned(),
+        ));
+    }
+    let proposal_handle = required_param(params, "proposal_handle")
+        .or_else(|_| required_param(params, "proposalHandle"))?;
+    let summary = required_param(params, "summary")?;
+    let source_adapter_handle = required_param(params, "source_adapter_handle")
+        .or_else(|_| required_param(params, "sourceAdapterHandle"))?;
+    let created_at = opt_str(params, "created_at")
+        .or_else(|| opt_str(params, "createdAt"))
+        .unwrap_or_else(|| Utc::now().to_rfc3339());
+    let q_identity_candidate = parse_quaternion_candidate(params);
+
+    // Validate the (non-empty) fields and derive the canonical handle-only view
+    // via the portal-core constructor. It is BORN `Proposed` and normalises the
+    // candidate; constructing it NEVER applies — mirroring the decide path's
+    // no-apply invariant. The view is what `list` would later surface.
+    let proposal = IdentityAugmentProposal::proposed(
+        proposal_handle.clone(),
+        summary.clone(),
+        source_adapter_handle.clone(),
+        created_at.clone(),
+        q_identity_candidate,
+    )
+    .map_err(|err| ("invalid-params".to_owned(), err.to_string()))?;
+    let view = proposal.view();
+
+    // Persist the parallel review-ledger record at `Proposed` — the persistence
+    // seam the `list`/`decide` RPCs read and advance. Duplicate handles fail
+    // closed inside `submit_proposal`.
+    let persisted = crate::nara::identity_proposals::PersistedProposal {
+        proposal_handle,
+        state: IdentityAugmentProposalState::Proposed,
+        summary,
+        source_adapter_handle,
+        created_at,
+        reviewed_at: None,
+        decided_at: None,
+        applied_at: None,
+        q_identity_candidate,
+    };
+    crate::nara::identity_proposals::submit_proposal(
+        &identity_proposal_store_path(state_root),
+        persisted,
+    )
+    .map_err(|err| ("nara-error".to_owned(), err))?;
+
+    serde_json::to_value(view).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+}
+
+/// Load the current PROTECTED-LOCAL personal identity profile — the #4.0 natal
+/// baseline the drift detector measures accumulated activity against. This is the
+/// canonical construction path (per M4-ARCHITECTURE §7.5: PASU natal chart →
+/// `KerykeionResult` → `PersonalIdentityProfile::from_kerykeion_json`). Honest
+/// degradation: `Ok(None)` when either the persisted natal chart or the local
+/// PASU identity is absent — the producer then emits nothing rather than
+/// fabricating a baseline.
+///
+/// AUGMENT LAYERING (the SINGLE layering point): after the natal profile is
+/// built, if a persisted applied identity exists (a governed `applied` verdict
+/// landed one), it is layered via `profile.apply_identity_augment(q_identity)` so
+/// the EFFECTIVE identity — used by both the drift detector and the pane — is the
+/// augmented one. This is what makes an applied augment DURABLE and absorbs the
+/// drift: subsequent detect measures accumulated activity against the augmented
+/// baseline, so the same drift no longer re-proposes.
+fn load_personal_identity_profile(
+    state_root: &Path,
+) -> Result<Option<PersonalIdentityProfile>, String> {
+    let Some(natal) = crate::nara::kairos::load_natal()? else {
+        return Ok(None);
+    };
+    let Some(profile_json) = identity::load_profile()? else {
+        return Ok(None);
+    };
+    let hash = identity::blake3_identity_hash(&profile_json);
+    let identity_hash: String = hash.iter().map(|byte| format!("{byte:02x}")).collect();
+    let natal_json =
+        serde_json::to_string(&natal).map_err(|err| format!("re-serialize natal chart: {err}"))?;
+    let mut profile = PersonalIdentityProfile::from_kerykeion_json(
+        "protected://nara/kairos/natal/identity-augment-detect",
+        identity_hash,
+        &natal_json,
+    )
+    .map_err(|err| err.to_string())?;
+
+    // Layer the current applied augment over the natal baseline (if any).
+    if let Some(applied) =
+        crate::nara::applied_identity::current(&applied_identity_store_path(state_root))
+    {
+        profile.apply_identity_augment(applied.q_identity);
+    }
+    Ok(Some(profile))
+}
+
+/// `nara.identity.proposals.detect` (25.T25.14): the REAL identity-augment
+/// PRODUCER seam that makes panel (c) live in a live system. It loads the natal
+/// identity baseline, measures the accumulated-Q_activity drift via
+/// `PersonalResonance`, and — ONLY when the accumulated activity has drifted
+/// below the tunable alignment floor — SUBMITS a `Proposed` identity-augment
+/// proposal into the SAME review store that `list`/`decide` read. It NEVER
+/// mutates Q_identity (the detector holds a shared profile ref; only the governed
+/// `applied` verdict mutates identity, downstream of a human accept). Aligned
+/// activity produces nothing (`produced:false`).
+///
+/// DRIVER: the accumulated Q_activity is read from the PERSISTED per-user
+/// accumulator (`activity_trajectory.rs`) — the real driver. An explicit
+/// `q_activity` param still OVERRIDES the persisted value (for tests / explicit
+/// calls). The persisted accumulator is fed AUTOMATICALLY at the personal
+/// activity checkpoint (`nara.session_close` → [`apply_activity_autotrigger`]),
+/// so this producer now fires on real accumulated activity without any param.
+///
+/// AUTO-TRIGGER (now WIRED): the automatic firing point is the session-close
+/// checkpoint. `close_with_persisted_bundle` builds a real
+/// [`NaraPatternPacketStamp`] from the close signal, folds it through
+/// `apply_pattern_packet_chain` into the persisted accumulator, and runs the SAME
+/// drift detector on the accumulated trajectory — auto-submitting a proposal on
+/// drift. This RPC and the auto-trigger share one submit seam
+/// ([`persist_detected_proposal`]); the accumulate→detect flow is the genuine
+/// producer path, no longer a flagged-but-unwired hook.
+fn detect_identity_proposal(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.identity.proposals.detect requires a loopback peer".to_owned(),
+        ));
+    }
+    let profile = match load_personal_identity_profile(state_root) {
+        Ok(Some(profile)) => profile,
+        Ok(None) => {
+            return Ok(json!({
+                "produced": false,
+                "reason": "no protected-local identity baseline (natal chart + PASU identity) available"
+            }));
+        }
+        Err(err) => return Err(("nara-error".to_owned(), err)),
+    };
+    // The real driver: the PERSISTED accumulated Q_activity. An explicit
+    // `q_activity` param overrides it inside the core.
+    let persisted =
+        crate::nara::activity_trajectory::current(&activity_trajectory_store_path(state_root));
+    detect_identity_proposal_core(
+        &identity_proposal_store_path(state_root),
+        &profile,
+        params,
+        persisted.q_activity,
+    )
+}
+
+/// The env-free core of [`detect_identity_proposal`]: given a loaded profile,
+/// review store, and the PERSISTED accumulated Q_activity fallback, measure drift
+/// and submit a `Proposed` proposal on drift. Split out so the
+/// produces/submits/lists/identity-untouched invariants (and the persisted-vs-
+/// override read) are unit testable without seeding process-global env
+/// (`EPI_NARA_HOME`, natal.json, the accumulator ledger).
+fn detect_identity_proposal_core(
+    store_path: &Path,
+    profile: &PersonalIdentityProfile,
+    params: &Value,
+    persisted_q_activity: [f32; 4],
+) -> Result<Value, (String, String)> {
+    // Accumulated Q_activity: an explicit param OVERRIDES; otherwise the
+    // persisted per-user accumulator is the real driver.
+    let q_activity = parse_quaternion_param(params, &["q_activity", "qActivity"])
+        .unwrap_or(persisted_q_activity);
+    // q_transit is optional — default identity (no transit perturbation).
+    let q_transit =
+        parse_quaternion_param(params, &["q_transit", "qTransit"]).unwrap_or([1.0, 0.0, 0.0, 0.0]);
+    // Tunable drift floor (mirrors the resonance-threshold injection pattern);
+    // defaults to the schema constant flagged for Architect tuning.
+    let drift_threshold = opt_f32(params, "drift_threshold")
+        .or_else(|| opt_f32(params, "driftThreshold"))
+        .unwrap_or(IDENTITY_AUGMENT_DRIFT_THRESHOLD);
+
+    let created_at = opt_str(params, "created_at")
+        .or_else(|| opt_str(params, "createdAt"))
+        .unwrap_or_else(|| Utc::now().to_rfc3339());
+    let source_adapter_handle = opt_str(params, "source_adapter_handle")
+        .or_else(|| opt_str(params, "sourceAdapterHandle"))
+        .unwrap_or_else(|| "adapter://m4/activity-drift-detector".to_owned());
+    let proposal_handle = opt_str(params, "proposal_handle")
+        .or_else(|| opt_str(params, "proposalHandle"))
+        .unwrap_or_else(|| {
+            format!(
+                "identity-proposal://activity-drift/{}",
+                Utc::now().timestamp_millis()
+            )
+        });
+
+    let Some(proposal) = detect_identity_augment_from_activity(
+        profile,
+        q_activity,
+        q_transit,
+        drift_threshold,
+        proposal_handle,
+        source_adapter_handle,
+        created_at,
+    ) else {
+        return Ok(json!({
+            "produced": false,
+            "reason": "accumulated activity is still aligned with the natal identity; no drift proposal"
+        }));
+    };
+
+    // Persist into the SAME review store `list`/`decide` read, so the produced
+    // proposal surfaces in panel (c). Candidate = the activity-composed
+    // quaternion (never a q_identity write).
+    let view = persist_detected_proposal(store_path, &proposal)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+
+    let view_value =
+        serde_json::to_value(view).map_err(|err| ("nara-error".to_owned(), err.to_string()))?;
+    Ok(json!({ "produced": true, "proposal": view_value }))
+}
+
+/// `nara.identity.proposals.list`: the pending (proposed|reviewed) review views.
+fn list_identity_proposals(
+    state_root: &Path,
+    peer_is_loopback: bool,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.identity.proposals.list requires a loopback peer".to_owned(),
+        ));
+    }
+    let views =
+        crate::nara::identity_proposals::list_pending(&identity_proposal_store_path(state_root))
+            .map_err(|err| ("nara-error".to_owned(), err))?;
+    Ok(json!({ "proposals": views }))
+}
+
+/// `nara.identity.proposals.decide`: accept|reject through the M5' review gate.
+/// Never mutates Q_identity (no `apply`) — accept only moves the proposal to
+/// Accepted; the identity mutation stays a separate governed path.
+fn decide_identity_proposal(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.identity.proposals.decide requires a loopback peer".to_owned(),
+        ));
+    }
+    let handle = required_param(params, "proposal_handle")
+        .or_else(|_| required_param(params, "proposalHandle"))?;
+    let verdict = match required_param(params, "verdict")?.as_str() {
+        "accept" => IdentityAugmentReviewVerdict::Accept,
+        "reject" => IdentityAugmentReviewVerdict::Reject,
+        other => {
+            return Err((
+                "invalid-params".to_owned(),
+                format!("verdict must be accept|reject, got `{other}`"),
+            ))
+        }
+    };
+    let now = Utc::now().to_rfc3339();
+    let view = crate::nara::identity_proposals::decide(
+        &identity_proposal_store_path(state_root),
+        &handle,
+        verdict,
+        &now,
+    )
+    .map_err(|err| ("nara-error".to_owned(), err))?;
+    serde_json::to_value(view).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+}
+
+/// `nara.identity.proposals.apply` (25.T25.14): the GOVERNED final step of the
+/// identity-augment lifecycle (`proposed -> reviewed -> accepted|rejected ->
+/// applied`). This is the ONLY nara.* surface that MUTATES the user's core
+/// Q_identity, so it is strictly gated: it applies ONLY an ACCEPTED proposal
+/// (the human accept through the M5' gate is the authorisation), it is
+/// loopback-gated like every protected-local personal surface, and it is
+/// handle-only over the wire (the raw q_identity quaternion is NEVER returned —
+/// DR-M4-3).
+///
+/// The governed sequence:
+///   (a) load the CURRENT profile (natal baseline + any prior applied augment —
+///       the single layering point), refusing when no protected-local baseline
+///       exists (nothing to mutate);
+///   (b) `apply_proposal` on the identity-proposals store — REQUIRES the persisted
+///       state to be `Accepted` (else refuses and mutates NOTHING), drives the
+///       canonical Accepted→Applied transition + `apply_identity_augment`
+///       (replaces q_identity with the candidate, recomputes q_personal), and
+///       persists the proposal's terminal `Applied` state;
+///   (c) persist the profile's NEW q_identity to the applied-identity store so the
+///       augment is DURABLE (a later load layers it back in);
+///   (d) RESET the activity accumulator — the drift is now ABSORBED into identity,
+///       so it must not re-propose;
+///   (e) return the `Applied` view (handle-only) + `appliedAt` + `accumulatorReset`.
+fn apply_identity_proposal(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.identity.proposals.apply requires a loopback peer".to_owned(),
+        ));
+    }
+    let handle = required_param(params, "proposal_handle")
+        .or_else(|_| required_param(params, "proposalHandle"))?;
+    let now = Utc::now().to_rfc3339();
+
+    // (a) The current EFFECTIVE profile (natal + any prior applied augment). apply
+    // mutates core identity, so a baseline is required — refuse the governed
+    // mutation when there is nothing to mutate.
+    let mut profile = match load_personal_identity_profile(state_root) {
+        Ok(Some(profile)) => profile,
+        Ok(None) => {
+            return Err((
+                "nara-error".to_owned(),
+                "nara.identity.proposals.apply requires a protected-local identity baseline (natal chart + PASU identity)".to_owned(),
+            ))
+        }
+        Err(err) => return Err(("nara-error".to_owned(), err)),
+    };
+
+    // (b)–(e) run the env-free governed core against the state-root stores.
+    apply_identity_proposal_core(
+        &identity_proposal_store_path(state_root),
+        &applied_identity_store_path(state_root),
+        &activity_trajectory_store_path(state_root),
+        &mut profile,
+        &handle,
+        &now,
+    )
+}
+
+/// The env-free core of [`apply_identity_proposal`]: given the three state-root
+/// stores and the LOADED current profile, run the governed apply. Split out so
+/// the governed-gate, applied-persistence, accumulator-reset, layering, and
+/// handle-only invariants are unit testable without seeding process-global env
+/// (`EPI_NARA_HOME`, natal.json, PASU).
+///
+/// (b) `apply_proposal` REQUIRES the persisted state be `Accepted` — it refuses
+/// and mutates NOTHING otherwise (the governed gate). On success it mutates
+/// `profile.q_identity` and persists the proposal's `Applied` state. (c) the new
+/// q_identity is persisted to the applied-identity store (durable). (d) the
+/// activity accumulator is RESET (drift absorbed). (e) the Applied view is
+/// returned handle-only — the raw q_identity quaternion is NEVER serialised.
+fn apply_identity_proposal_core(
+    proposal_store: &Path,
+    applied_store: &Path,
+    activity_store: &Path,
+    profile: &mut PersonalIdentityProfile,
+    handle: &str,
+    now: &str,
+) -> Result<Value, (String, String)> {
+    // (b) GOVERNED GATE: apply the ACCEPTED proposal (mutates q_identity).
+    let view =
+        crate::nara::identity_proposals::apply_proposal(proposal_store, handle, now, profile)
+            .map_err(|err| ("nara-error".to_owned(), err))?;
+
+    // (c) Persist the NEW q_identity as the current applied identity — durable,
+    // state-root local, never bused raw.
+    crate::nara::applied_identity::store(
+        applied_store,
+        &crate::nara::applied_identity::AppliedIdentity {
+            q_identity: profile.q_identity,
+            applied_proposal_handle: handle.to_owned(),
+            applied_at: now.to_owned(),
+        },
+    )
+    .map_err(|err| ("nara-error".to_owned(), err))?;
+
+    // (d) RESET the activity accumulator — the drift is now absorbed into
+    // identity and must not re-propose.
+    crate::nara::activity_trajectory::reset(activity_store, now)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+
+    // (e) Handle-only response — the Applied view (never the raw q_identity).
+    let view_value =
+        serde_json::to_value(view).map_err(|err| ("nara-error".to_owned(), err.to_string()))?;
+    Ok(json!({
+        "applied": view_value,
+        "appliedAt": now,
+        "accumulatorReset": true,
+    }))
+}
+
+fn close_with_persisted_bundle(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.session_close requires a loopback peer".to_owned(),
+        ));
+    }
+    let session_id =
+        required_param(params, "session_id").or_else(|_| required_param(params, "sessionId"))?;
+    let contemplation_object =
+        required_object_param(params, &["contemplation_object", "contemplationObject"]).and_then(
+            |value| {
+                serde_json::from_value::<ContemplationObject>(value).map_err(|err| {
+                    (
+                        "invalid-params".to_owned(),
+                        format!("invalid contemplation_object: {err}"),
+                    )
+                })
+            },
+        )?;
+    if contemplation_object.session_id != session_id {
+        return Err((
+            "invalid-params".to_owned(),
+            "contemplation_object.session_id must exactly match session_id".to_owned(),
+        ));
+    }
+    // Extract the REAL session-activity signal for the accumulator BEFORE the
+    // contemplation object is consumed by `contemplate_session_close`: the first
+    // engaged coordinate (the session's coordinate) and the codon-trace.
+    let session_coordinate = contemplation_object
+        .engaged_coordinates
+        .first()
+        .map(|engaged| engaged.coordinate.clone());
+    let session_codons: Vec<String> = contemplation_object
+        .trajectory
+        .iter()
+        .filter_map(|tick| tick.codon.clone())
+        .collect();
+    let m1_evidence =
+        required_object_param(params, &["m1_closure", "m1Closure"]).and_then(|value| {
+            serde_json::from_value::<M1SessionClosureEvidence>(value).map_err(|err| {
+                (
+                    "invalid-params".to_owned(),
+                    format!("invalid m1_closure: {err}"),
+                )
+            })
+        })?;
+    let audio_evidence =
+        required_object_param(params, &["audio_octet", "audioOctet"]).and_then(|value| {
+            serde_json::from_value::<AudioOctetTraversalEvidence>(value).map_err(|err| {
+                (
+                    "invalid-params".to_owned(),
+                    format!("invalid audio_octet: {err}"),
+                )
+            })
+        })?;
+    let m1_closure =
+        aggregate_m1_closure(&m1_evidence).map_err(|err| ("invalid-params".to_owned(), err))?;
+    let audio_octet =
+        aggregate_audio_octet(&audio_evidence).map_err(|err| ("invalid-params".to_owned(), err))?;
+    let protein_handle = required_param(params, "protein_handle")
+        .or_else(|_| required_param(params, "proteinHandle"))?;
+    let kairos_close = opt_u64(params, "kairos_close")
+        .or_else(|| opt_u64(params, "kairosClose"))
+        .unwrap_or_else(|| Utc::now().timestamp_millis().max(0) as u64);
+    let response = route_nara_session_close(NaraSessionCloseRequest {
+        session_id: session_id.clone(),
+        protein_handle: protein_handle.clone(),
+        kairos_close,
+        config: nara_session_config_from_params(params),
+    })
+    .map_err(|err| ("nara-error".to_owned(), err))?;
+    let contemplation = contemplate_session_close(contemplation_object)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+    let pasu_scope = active_pasu_scope("nara.session_close")?;
+    let bundle = persist_close_bundle(
+        state_root,
+        &pasu_scope,
+        &session_id,
+        &m1_closure,
+        &audio_octet,
+        &contemplation,
+    )
+    .map_err(|err| ("nara-error".to_owned(), err))?;
+    let mut value =
+        serde_json::to_value(response).map_err(|err| ("nara-error".to_owned(), err.to_string()))?;
+    if let Some(object) = value.as_object_mut() {
+        object.insert("close_ref".to_owned(), json!(bundle.close_ref));
+        // AUTO-TRIGGER (side-effect): fold this close's real activity packet into
+        // the persisted per-user Q_activity accumulator and auto-detect identity
+        // drift. Best-effort — the close never fails on the accumulator.
+        apply_activity_autotrigger(
+            state_root,
+            &session_id,
+            &protein_handle,
+            kairos_close,
+            session_coordinate.as_deref(),
+            &session_codons,
+            object,
+        );
+    }
+    Ok(value)
+}
+
+fn read_persisted_bundle(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.session_close.read requires a loopback peer".to_owned(),
+        ));
+    }
+    let pasu_scope = active_pasu_scope("nara.session_close.read")?;
+    let request =
+        read_request_from_params(params).map_err(|err| ("invalid-params".to_owned(), err))?;
+    let bundle = read_close_bundle(state_root, &pasu_scope, &request)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+    serde_json::to_value(bundle).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+}
+
+fn read_persisted_contemplation_object(
+    state_root: &Path,
+    peer_is_loopback: bool,
+    params: &Value,
+) -> Result<Value, (String, String)> {
+    if !peer_is_loopback {
+        return Err((
+            "nara-error".to_owned(),
+            "protected-local nara.session_close.contemplation.read requires a loopback peer"
+                .to_owned(),
+        ));
+    }
+    let pasu_scope = active_pasu_scope("nara.session_close.contemplation.read")?;
+    let request =
+        read_request_from_params(params).map_err(|err| ("invalid-params".to_owned(), err))?;
+    let contemplation = read_contemplation_object(state_root, &pasu_scope, &request)
+        .map_err(|err| ("nara-error".to_owned(), err))?;
+    serde_json::to_value(contemplation).map_err(|err| ("nara-error".to_owned(), err.to_string()))
+}
+
+fn required_object_param(params: &Value, keys: &[&str]) -> Result<Value, (String, String)> {
+    for key in keys {
+        if let Some(value) = params.get(*key) {
+            if value.is_object() {
+                return Ok(value.clone());
+            }
+            return Err((
+                "invalid-params".to_owned(),
+                format!("{key} must be an object"),
+            ));
+        }
+    }
+    Err((
+        "invalid-params".to_owned(),
+        format!("missing required param '{}'", keys[0]),
+    ))
+}
+
+fn active_pasu_scope(method: &str) -> Result<String, (String, String)> {
+    let profile = identity::load_profile()
+        .map_err(|err| {
+            (
+                "nara-error".to_owned(),
+                format!("{method} cannot load active PASU: {err}"),
+            )
+        })?
+        .ok_or_else(|| {
+            (
+                "nara-error".to_owned(),
+                format!("{method} requires an active local PASU identity"),
+            )
+        })?;
+    let hash = identity::blake3_identity_hash(&profile);
+    Ok(hash.iter().map(|byte| format!("{byte:02x}")).collect())
+}
+
+#[cfg(test)]
+mod identity_augment_detect_tests {
+    use super::*;
+    use portal_core::personal_identity::PersonalIdentityProfile;
+
+    const IDENTITY_HASH: &str = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+
+    /// A complete 10-planet natal chart JSON (the shape `from_kerykeion_json`
+    /// consumes). The specific degrees do not matter to the drift proof: with an
+    /// identity transit, resonance score == |q_activity[0]| for ANY unit natal
+    /// identity, so [0,1,0,0] always drifts and [1,0,0,0] always aligns.
+    fn natal_json() -> String {
+        let planets: Vec<String> = (0..10)
+            .map(|id| {
+                format!(
+                    r#"{{"planet_id":{id},"name":"P{id}","degree":{deg},"retrograde":false}}"#,
+                    deg = (15.0 + id as f32 * 31.5) % 360.0
+                )
+            })
+            .collect();
+        format!(r#"{{"planets":[{}]}}"#, planets.join(","))
+    }
+
+    fn fixture_profile() -> PersonalIdentityProfile {
+        PersonalIdentityProfile::from_kerykeion_json(
+            "protected://nara/kairos/natal/test",
+            IDENTITY_HASH,
+            &natal_json(),
+        )
+        .expect("fixture natal derives a protected identity")
+    }
+
+    fn temp_store() -> std::path::PathBuf {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static SEQ: AtomicU64 = AtomicU64::new(0);
+        std::env::temp_dir().join(format!(
+            "detect-store-{}-{}.json",
+            std::process::id(),
+            SEQ.fetch_add(1, Ordering::Relaxed)
+        ))
+    }
+
+    // The identity quaternion — the aligned persisted fallback for tests that
+    // exercise the explicit-param path (the fallback is unused when a param is
+    // present).
+    const ALIGNED_FALLBACK: [f32; 4] = [1.0, 0.0, 0.0, 0.0];
+
+    fn temp_activity_store() -> std::path::PathBuf {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static SEQ: AtomicU64 = AtomicU64::new(0);
+        std::env::temp_dir().join(format!(
+            "detect-activity-{}-{}.json",
+            std::process::id(),
+            SEQ.fetch_add(1, Ordering::Relaxed)
+        ))
+    }
+
+    fn temp_applied_store() -> std::path::PathBuf {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static SEQ: AtomicU64 = AtomicU64::new(0);
+        std::env::temp_dir().join(format!(
+            "detect-applied-{}-{}.json",
+            std::process::id(),
+            SEQ.fetch_add(1, Ordering::Relaxed)
+        ))
+    }
+
+    #[test]
+    fn detect_produces_submits_on_drift_and_appears_in_list_without_touching_identity() {
+        let profile = fixture_profile();
+        let before_identity = profile.q_identity;
+        let store = temp_store();
+        let params = json!({
+            "q_activity": [0.0, 1.0, 0.0, 0.0],
+            "proposal_handle": "identity-proposal://drift-test"
+        });
+
+        let out = detect_identity_proposal_core(&store, &profile, &params, ALIGNED_FALLBACK)
+            .expect("detect ok");
+        assert_eq!(out["produced"], json!(true));
+        assert_eq!(
+            out["proposal"]["proposalHandle"],
+            json!("identity-proposal://drift-test")
+        );
+        assert_eq!(out["proposal"]["state"], json!("proposed"));
+
+        // It surfaces in the SAME store `list` reads (panel c).
+        let pending = crate::nara::identity_proposals::list_pending(&store).expect("list pending");
+        assert!(pending
+            .iter()
+            .any(|view| view.proposal_handle == "identity-proposal://drift-test"));
+
+        // Identity is untouched by the producer.
+        assert_eq!(profile.q_identity, before_identity);
+        std::fs::remove_file(&store).ok();
+    }
+
+    #[test]
+    fn detect_produces_nothing_when_activity_is_aligned() {
+        let profile = fixture_profile();
+        let store = temp_store();
+        let params = json!({ "q_activity": [1.0, 0.0, 0.0, 0.0] });
+
+        let out = detect_identity_proposal_core(&store, &profile, &params, ALIGNED_FALLBACK)
+            .expect("detect ok");
+        assert_eq!(out["produced"], json!(false));
+        assert!(crate::nara::identity_proposals::list_pending(&store)
+            .unwrap_or_default()
+            .is_empty());
+        std::fs::remove_file(&store).ok();
+    }
+
+    #[test]
+    fn detect_with_no_param_reads_persisted_activity() {
+        let profile = fixture_profile();
+        let store = temp_store();
+
+        // A DRIFTED persisted accumulator (no q_activity param) drives a
+        // proposal — this is the real accumulate→detect driver path.
+        let out = detect_identity_proposal_core(
+            &store,
+            &profile,
+            &json!({ "proposal_handle": "identity-proposal://persisted-drift" }),
+            [0.0, 1.0, 0.0, 0.0],
+        )
+        .expect("detect ok");
+        assert_eq!(out["produced"], json!(true));
+        assert_eq!(
+            out["proposal"]["proposalHandle"],
+            json!("identity-proposal://persisted-drift")
+        );
+        std::fs::remove_file(&store).ok();
+    }
+
+    #[test]
+    fn detect_no_param_with_aligned_persisted_produces_nothing() {
+        let profile = fixture_profile();
+        let store = temp_store();
+        // An un-accumulated persisted accumulator is the identity quaternion —
+        // aligned, so no drift proposal.
+        let out = detect_identity_proposal_core(&store, &profile, &json!({}), ALIGNED_FALLBACK)
+            .expect("detect ok");
+        assert_eq!(out["produced"], json!(false));
+        assert!(out["reason"].is_string());
+        std::fs::remove_file(&store).ok();
+    }
+
+    #[test]
+    fn detect_param_overrides_persisted_activity() {
+        let profile = fixture_profile();
+        let store = temp_store();
+        // The persisted accumulator has DRIFTED, but an explicit aligned
+        // q_activity param OVERRIDES it → no proposal.
+        let out = detect_identity_proposal_core(
+            &store,
+            &profile,
+            &json!({ "q_activity": [1.0, 0.0, 0.0, 0.0] }),
+            [0.0, 1.0, 0.0, 0.0],
+        )
+        .expect("detect ok");
+        assert_eq!(out["produced"], json!(false));
+        std::fs::remove_file(&store).ok();
+    }
+
+    #[test]
+    fn session_close_activity_sequence_accumulates_and_auto_submits_a_proposal() {
+        // The AUTO-TRIGGER core: a drifting sequence of session-close activity
+        // packets accumulates the persisted per-user Q_activity away from
+        // identity and, once drifted below the alignment floor, auto-submits a
+        // proposal that surfaces in `nara.identity.proposals.list` — WITHOUT any
+        // q_activity param. Q_identity is NEVER mutated.
+        let profile = fixture_profile();
+        let before_identity = profile.q_identity;
+        let activity_store = temp_activity_store();
+        let proposal_store = temp_store();
+
+        let mut produced_handle: Option<String> = None;
+        let mut last_kairos: Option<u64> = None;
+        for turn in 0..15u64 {
+            // Spaced ~6h apart so the bounded kairos_delta saturates the
+            // perturbation clamp — a constant coordinate + saturated delta gives
+            // linear drift.
+            let kairos_close = 1_700_000_000_000 + turn * 21_600_000;
+            let (packet, _degraded) = session_activity_packet(
+                "sess-auto",
+                "protein://sealed/auto",
+                kairos_close,
+                Some("M4.session-activity"),
+                &["I".to_owned()],
+                last_kairos,
+            );
+            last_kairos = Some(kairos_close);
+            let now = format!("2026-07-22T09:{:02}:00.000Z", turn);
+            let trajectory = crate::nara::activity_trajectory::accumulate(
+                &activity_store,
+                std::slice::from_ref(&packet),
+                SESSION_ACTIVITY_VAMA_CLASS,
+                &now,
+                Some(kairos_close),
+            )
+            .expect("accumulate ok");
+            assert_eq!(trajectory.turn_count, turn + 1);
+
+            if let Some(view) =
+                auto_detect_and_submit(&proposal_store, &profile, trajectory.q_activity, &now)
+            {
+                produced_handle = Some(view.proposal_handle);
+                break;
+            }
+        }
+
+        let handle = produced_handle.expect(
+            "a drifting session-close sequence must auto-submit a proposal within 15 turns",
+        );
+        // It surfaces in the SAME list panel (c) reads.
+        let pending =
+            crate::nara::identity_proposals::list_pending(&proposal_store).expect("list pending");
+        assert!(pending.iter().any(|view| view.proposal_handle == handle));
+        // Identity NEVER mutated by the accumulate/auto-detect path.
+        assert_eq!(profile.q_identity, before_identity);
+
+        std::fs::remove_file(&activity_store).ok();
+        std::fs::remove_file(&proposal_store).ok();
+    }
+
+    #[test]
+    fn apply_core_governs_full_lifecycle_resets_accumulator_and_stays_handle_only() {
+        // ── Producer: a drifted activity submits a Proposed proposal ──────────
+        let mut profile = fixture_profile();
+        let natal_identity = profile.q_identity;
+        let proposal_store = temp_store();
+        let applied_store = temp_applied_store();
+        let activity_store = temp_activity_store();
+
+        // Pre-accumulate real drift so the post-apply reset is observable.
+        let (packet, _degraded) = session_activity_packet(
+            "sess-apply",
+            "protein://sealed/apply",
+            2_000,
+            Some("M4.session-activity"),
+            &["I".to_owned()],
+            Some(1_000),
+        );
+        crate::nara::activity_trajectory::accumulate(
+            &activity_store,
+            std::slice::from_ref(&packet),
+            SESSION_ACTIVITY_VAMA_CLASS,
+            "2026-07-23T09:00:00.000Z",
+            Some(2_000),
+        )
+        .unwrap();
+        assert_eq!(
+            crate::nara::activity_trajectory::current(&activity_store).turn_count,
+            1
+        );
+
+        // detect (the real producer) submits a Proposed proposal on drift.
+        let produced = detect_identity_proposal_core(
+            &proposal_store,
+            &profile,
+            &json!({ "q_activity": [0.0, 1.0, 0.0, 0.0], "proposal_handle": "id://apply-drift" }),
+            ALIGNED_FALLBACK,
+        )
+        .expect("detect ok");
+        assert_eq!(produced["produced"], json!(true));
+
+        // ── Human accept through the M5' gate (decide) ───────────────────────
+        crate::nara::identity_proposals::decide(
+            &proposal_store,
+            "id://apply-drift",
+            IdentityAugmentReviewVerdict::Accept,
+            "2026-07-23T09:05:00.000Z",
+        )
+        .expect("accept ok");
+
+        // ── Governed APPLY ───────────────────────────────────────────────────
+        let out = apply_identity_proposal_core(
+            &proposal_store,
+            &applied_store,
+            &activity_store,
+            &mut profile,
+            "id://apply-drift",
+            "2026-07-23T09:06:00.000Z",
+        )
+        .expect("accepted proposal applies");
+
+        // Applied view (terminal), accumulator-reset flag.
+        assert_eq!(out["applied"]["state"], json!("applied"));
+        assert_eq!(out["accumulatorReset"], json!(true));
+
+        // q_identity MUTATED away from the natal baseline.
+        assert_ne!(profile.q_identity, natal_identity);
+
+        // (c) applied-identity store round-trips the NEW q_identity.
+        let applied = crate::nara::applied_identity::current(&applied_store)
+            .expect("applied identity persisted");
+        assert_eq!(applied.q_identity, profile.q_identity);
+        assert_eq!(applied.applied_proposal_handle, "id://apply-drift");
+
+        // (d) the accumulator is RESET to identity (drift absorbed).
+        let reset = crate::nara::activity_trajectory::current(&activity_store);
+        assert_eq!(reset.q_activity, [1.0, 0.0, 0.0, 0.0]);
+        assert_eq!(reset.turn_count, 0);
+
+        // LAYERING: a fresh natal profile layered with the applied augment (the
+        // exact operation `load_personal_identity_profile` performs) reflects the
+        // AUGMENTED q_identity — durable across a reload.
+        let mut reloaded = fixture_profile();
+        reloaded.apply_identity_augment(applied.q_identity);
+        assert_eq!(reloaded.q_identity, profile.q_identity);
+        assert_ne!(reloaded.q_identity, natal_identity);
+
+        // ABSORBED: with the accumulator reset, detect against the augmented
+        // baseline no longer proposes (the drift was absorbed into identity).
+        let absorbed =
+            detect_identity_proposal_core(&temp_store(), &reloaded, &json!({}), reset.q_activity)
+                .expect("detect ok");
+        assert_eq!(absorbed["produced"], json!(false));
+
+        // HANDLE-ONLY: the RPC response never surfaces the raw q_identity.
+        let json_text = serde_json::to_string(&out).unwrap();
+        assert!(!json_text.contains("qIdentity"));
+        assert!(!json_text.contains("q_identity"));
+        assert!(!json_text.contains("candidate"));
+
+        std::fs::remove_file(&proposal_store).ok();
+        std::fs::remove_file(&applied_store).ok();
+        std::fs::remove_file(&activity_store).ok();
+    }
+
+    #[test]
+    fn apply_core_refuses_a_proposed_proposal_and_mutates_nothing() {
+        let mut profile = fixture_profile();
+        let natal_identity = profile.q_identity;
+        let proposal_store = temp_store();
+        let applied_store = temp_applied_store();
+        let activity_store = temp_activity_store();
+
+        // A Proposed (never accepted) proposal.
+        detect_identity_proposal_core(
+            &proposal_store,
+            &profile,
+            &json!({ "q_activity": [0.0, 1.0, 0.0, 0.0], "proposal_handle": "id://never-accepted" }),
+            ALIGNED_FALLBACK,
+        )
+        .expect("detect ok");
+
+        // GOVERNED GATE: apply refuses a non-Accepted proposal and mutates nothing.
+        let err = apply_identity_proposal_core(
+            &proposal_store,
+            &applied_store,
+            &activity_store,
+            &mut profile,
+            "id://never-accepted",
+            "2026-07-23T09:06:00.000Z",
+        )
+        .expect_err("a Proposed proposal cannot be applied");
+        assert!(err.1.contains("cannot be applied"));
+
+        // Nothing mutated: identity unchanged, no applied store, no accumulator write.
+        assert_eq!(profile.q_identity, natal_identity);
+        assert!(crate::nara::applied_identity::current(&applied_store).is_none());
+        assert_eq!(
+            crate::nara::activity_trajectory::current(&activity_store).turn_count,
+            0
+        );
+        // The proposal is still Proposed (pending), not Applied.
+        let pending = crate::nara::identity_proposals::list_pending(&proposal_store).unwrap();
+        assert!(pending
+            .iter()
+            .any(|view| view.proposal_handle == "id://never-accepted"));
+
+        std::fs::remove_file(&proposal_store).ok();
+        std::fs::remove_file(&applied_store).ok();
+        std::fs::remove_file(&activity_store).ok();
+    }
+
+    #[test]
+    fn session_activity_packet_degrades_honestly_without_a_coordinate() {
+        let (packet, degraded) = session_activity_packet(
+            "sess-x",
+            "protein://sealed/x",
+            2_000,
+            None,
+            &[],
+            Some(1_000),
+        );
+        assert!(degraded, "absent engaged coordinate must flag the degrade");
+        assert_eq!(packet.vak_address.cp, "4.0");
+        assert_eq!(
+            packet.packet_ref,
+            "activity://session/sess-x/protein://sealed/x"
+        );
+
+        let (packet, degraded) = session_activity_packet(
+            "sess-y",
+            "protein://sealed/y",
+            2_000,
+            Some("M3.COMP"),
+            &["II".to_owned()],
+            None,
+        );
+        assert!(!degraded, "a real coordinate must not degrade");
+        assert_eq!(packet.vak_address.cp, "M3.COMP");
+        // First turn (no prior kairos) → zero delta.
+        assert_eq!(packet.kairos_delta, 0.0);
     }
 }

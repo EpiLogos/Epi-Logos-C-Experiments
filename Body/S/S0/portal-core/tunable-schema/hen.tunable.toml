@@ -1,0 +1,100 @@
+# Tranche CCT-14b — Hen birth-codon knobs.
+
+[[tunable]]
+key = "hen.birth_codon.seed_composition"
+type = "string_array"
+default = ["content_hash", "kairos", "creator_identity", "coordinate_path"]
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M3"
+owning_carrier = "hen"
+authoritative_doc = "Tranche CCT-14b"
+
+[[tunable]]
+key = "hen.birth_codon.derivation_policy"
+type = "enum"
+default = "blake3_first_6_bits"
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M3"
+owning_carrier = "hen"
+authoritative_doc = "Tranche CCT-14b"
+[tunable.range]
+enum_values = ["blake3_first_6_bits", "blake3_modulo_64", "blake3_xor_fold"]
+
+[[tunable]]
+key = "hen.birth_codon.provisional_recompute_on_edit"
+type = "bool"
+default = true
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M3"
+owning_carrier = "hen"
+authoritative_doc = "Tranche CCT-14b"
+
+[[tunable]]
+key = "hen.birth_codon.governance_role_assignment"
+type = "enum"
+default = "auto"
+residency_class = "freeze-on-session-start"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M3"
+owning_carrier = "hen"
+authoritative_doc = "Tranche CCT-14b"
+[tunable.range]
+enum_values = ["auto", "manual", "policy-driven"]
+
+[[tunable]]
+key = "hen.birth_codon.candidate_codon_visible_in_orphan_review"
+type = "bool"
+default = true
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M3"
+owning_carrier = "hen"
+authoritative_doc = "Tranche CCT-14b"
+
+[[tunable]]
+key = "hen.birth_codon.visualisation_density_normalisation"
+type = "enum"
+default = "log"
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M3"
+owning_carrier = "hen"
+authoritative_doc = "Tranche CCT-14b"
+[tunable.range]
+enum_values = ["raw", "log", "sqrt"]
+
+[[tunable]]
+key = "hen.birth_codon.collision_policy"
+type = "enum"
+default = "warn-and-allow"
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M3"
+owning_carrier = "hen"
+authoritative_doc = "Tranche CCT-14b"
+[tunable.range]
+enum_values = ["first-wins", "salted-retry", "warn-and-allow"]

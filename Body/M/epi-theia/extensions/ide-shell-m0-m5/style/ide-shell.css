@@ -16,6 +16,8 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
     border-bottom: 1px solid var(--theia-editorWidget-border, #444);
     padding-bottom: 0.5rem;
 }
@@ -23,6 +25,62 @@
 .ide-shell-widget-header h3 {
     margin: 0;
     font-size: 1rem;
+}
+
+.ide-shell-psyche-facet-legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    flex-wrap: wrap;
+    font-size: 0.72rem;
+}
+
+.ide-shell-psyche-facet-badge {
+    --psyche-facet-colour: var(--theia-focusBorder, #007acc);
+    display: inline-flex;
+    align-items: center;
+    min-height: 1rem;
+    margin-left: 0.35rem;
+    padding: 0.04rem 0.38rem;
+    border: 1px solid var(--psyche-facet-colour);
+    border-radius: 3px;
+    color: var(--psyche-facet-colour);
+    background: color-mix(in srgb, var(--psyche-facet-colour) 12%, transparent);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.ide-shell-psyche-facet-legend .ide-shell-psyche-facet-badge {
+    margin-left: 0;
+}
+
+.ide-shell-psyche-facet-anima {
+    --psyche-facet-colour: #a89c8e;
+}
+
+.ide-shell-psyche-facet-eros {
+    --psyche-facet-colour: #e8a3a3;
+}
+
+.ide-shell-psyche-facet-logos {
+    --psyche-facet-colour: #6b7588;
+}
+
+.ide-shell-psyche-facet-mythos {
+    --psyche-facet-colour: #d4a14a;
+}
+
+.ide-shell-psyche-facet-nous {
+    --psyche-facet-colour: #5a73a8;
+}
+
+.ide-shell-psyche-facet-psyche {
+    --psyche-facet-colour: #8a7355;
+}
+
+.ide-shell-psyche-facet-sophia {
+    --psyche-facet-colour: #d4a574;
 }
 
 .ide-shell-widget-detail dl {
@@ -44,6 +102,45 @@
 
 .ide-shell-error {
     color: var(--theia-errorForeground, #f48771);
+}
+
+.ide-shell-aletheia-subagent-trace {
+    margin: 0.35rem 0;
+    padding: 0.45rem 0.55rem;
+    border-left: 3px solid var(--theia-focusBorder, #007acc);
+    background: var(--theia-editorWidget-background, rgba(255, 255, 255, 0.03));
+}
+
+.ide-shell-aletheia-veto-banner {
+    margin: 0.45rem 0;
+    padding: 0.45rem 0.55rem;
+    border: 1px solid var(--theia-errorForeground, #f48771);
+    border-left-width: 4px;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--theia-errorForeground, #f48771) 12%, transparent);
+    font-weight: 700;
+}
+
+.ide-shell-aletheia-lineage-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin: 0.45rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ide-shell-aletheia-lineage-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.35rem;
+    padding: 0.05rem 0.38rem;
+    border: 1px solid var(--theia-badge-background, #4d4d4d);
+    border-radius: 3px;
+    background: var(--theia-badge-background, rgba(255, 255, 255, 0.08));
+    color: var(--theia-badge-foreground, inherit);
+    font-size: 0.68rem;
+    font-weight: 700;
 }
 
 .ide-shell-bridge-pending {
@@ -77,4 +174,211 @@
 .ide-shell-evidence-fields {
     margin-top: 0.25rem;
     margin-left: 1rem;
+}
+
+/* === Autoresearch pane — Task 28.T28.10 === */
+
+.ide-shell-dry-run-badge {
+    margin-left: auto;
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--theia-errorForeground, #f48771);
+    border-radius: 3px;
+    color: var(--theia-errorForeground, #f48771);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.ide-shell-autoresearch-as-concept {
+    margin: 0.5rem 0;
+    padding: 0.5rem 0.6rem;
+    border-left: 3px solid var(--theia-focusBorder, #007acc);
+    background: var(--theia-editorWidget-background, rgba(255, 255, 255, 0.03));
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.ide-shell-autoresearch-as-concept .ide-shell-forbidden-authority {
+    margin: 0.4rem 0 0;
+    font-size: 0.72rem;
+    opacity: 0.8;
+}
+
+.ide-shell-mobius-pass-ribbon {
+    margin: 0.5rem 0;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
+    background: var(--theia-titleBar-activeBackground, rgba(0, 122, 204, 0.08));
+}
+
+.ide-shell-mobius-pass-ribbon-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+}
+
+.ide-shell-mobius-pass-number {
+    font-weight: 700;
+}
+
+.ide-shell-mobius-pass-stages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin: 0.4rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ide-shell-mobius-stage {
+    padding: 0.05rem 0.4rem;
+    border: 1px solid var(--theia-panel-border, #444);
+    border-radius: 10px;
+    font-size: 0.68rem;
+    opacity: 0.6;
+}
+
+.ide-shell-mobius-stage-active {
+    border-color: var(--theia-focusBorder, #007acc);
+    color: var(--theia-focusBorder, #007acc);
+    font-weight: 700;
+    opacity: 1;
+}
+
+.ide-shell-capacity-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0.5rem 0;
+    font-size: 0.78rem;
+}
+
+.ide-shell-capacity-filter label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.ide-shell-capacity-chip {
+    font-size: 0.7rem;
+    opacity: 0.75;
+}
+
+.ide-shell-gold-badge {
+    margin: 0 0.4rem;
+    padding: 0.05rem 0.45rem;
+    border: 1px solid #d4af37;
+    border-radius: 3px;
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.ide-shell-gold-badge:hover {
+    background: rgba(212, 175, 55, 0.3);
+}
+
+/* === Pi Axiom Translation Inspector — Task 26.T26.14 === */
+
+.ide-shell-subpane-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.ide-shell-subpane-header h4 {
+    margin: 0;
+}
+
+.ide-shell-identity-narrative {
+    margin: 0.35rem 0 0.65rem;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    opacity: 0.82;
+}
+
+.ide-shell-verification-badge {
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.ide-shell-verification-human {
+    background: rgba(78, 201, 176, 0.18);
+    color: #4ec9b0;
+}
+
+.ide-shell-verification-pi {
+    background: rgba(204, 167, 0, 0.18);
+    color: var(--theia-warningForeground, #cca700);
+}
+
+.ide-shell-verification-pending {
+    background: rgba(244, 135, 113, 0.16);
+    color: var(--theia-errorForeground, #f48771);
+}
+
+.ide-shell-pi-axiom-session-meta {
+    margin: 0 0 0.5rem;
+}
+
+.ide-shell-pi-axiom-headings,
+.ide-shell-pi-axiom-chain {
+    display: grid;
+    grid-template-columns: minmax(8rem, 1fr) 1.2rem minmax(8rem, 1fr) 1.2rem minmax(8rem, 1fr) 1.2rem minmax(8rem, 1fr);
+    gap: 0.35rem;
+    align-items: stretch;
+}
+
+.ide-shell-pi-axiom-headings {
+    grid-template-columns: repeat(4, minmax(8rem, 1fr));
+    margin: 0.4rem 0;
+    font-size: 0.72rem;
+    opacity: 0.75;
+}
+
+.ide-shell-pi-axiom-steps {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.ide-shell-pi-axiom-step-button {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ide-shell-pi-axiom-cell {
+    min-height: 3rem;
+    padding: 0.45rem;
+    border: 1px solid var(--theia-panel-border, #444);
+    border-radius: 4px;
+    font-family: var(--theia-editor-font-family, monospace);
+    font-size: 0.72rem;
+    overflow-wrap: anywhere;
+}
+
+.ide-shell-pi-axiom-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--theia-focusBorder, #007acc);
+    font-weight: 700;
+}
+
+.ide-shell-pi-axiom-reasoning {
+    margin: 0.45rem 0 0.75rem;
+    padding: 0.5rem;
+    border-left: 3px solid var(--theia-focusBorder, #007acc);
+    background: var(--theia-editorWidget-background, rgba(255, 255, 255, 0.03));
 }

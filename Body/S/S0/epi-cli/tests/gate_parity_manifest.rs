@@ -4,6 +4,7 @@ fn gateway_method_manifest_is_complete() {
     assert!(methods.contains(&"chat.send"));
     assert!(methods.contains(&"skills.install"));
     assert!(methods.contains(&"sessions.compact"));
+    assert!(methods.contains(&"s2.graph.harmonic_relations.materialize"));
     assert!(methods.contains(&"s2.graph.pointer_web.compute"));
     assert!(methods.contains(&"s2.graph.pointer_web.refresh"));
     assert!(methods.contains(&"s2.graph.kernel_resonance.record"));
@@ -13,7 +14,7 @@ fn gateway_method_manifest_is_complete() {
 }
 
 #[tokio::test]
-async fn pointer_web_compute_dispatch_is_s2_owned_without_neo4j_connection() {
+async fn pointer_web_compute_dispatch_is_deprecated_projection_without_neo4j_connection() {
     let value = epi_logos::gate::graph::dispatch_graph_method(
         "s2.graph.pointer_web.compute",
         &serde_json::json!({ "coordinate": "#2" }),
@@ -23,19 +24,64 @@ async fn pointer_web_compute_dispatch_is_s2_owned_without_neo4j_connection() {
 
     assert_eq!(value["resolution"]["canonical"], "M2");
     assert_eq!(value["coordinate_anchor"]["kernel"]["source"], "s0.kernel");
-    assert_eq!(value["pointerWeb"]["pointer_count"], 36);
-    assert_eq!(value["pointerWeb"]["family_refs"]["m_ref"], "M2");
+    assert_eq!(
+        value["coordinateReferenceProjection"]["reference_count"],
+        36
+    );
+    assert_eq!(
+        value["coordinateReferenceProjection"]["family_refs"]["m_ref"],
+        "M2"
+    );
+    assert_eq!(
+        value["deprecatedPointerWeb"]["status"],
+        "deprecated_compatibility_only"
+    );
+}
+
+#[test]
+fn canon_update_family_registers_in_the_parity_manifest() {
+    // 40.T40.1: the s5'.canon_update.* family is parity-visible even though it
+    // lives outside METHOD_NAMES (like m4.arena.*), driven by the gateway
+    // runtime + `epi bimba` CLI over one substrate.
+    use epi_logos::gate::parity::{coordinate_family_for_gateway_method, CoordinateParityStatus};
+
+    for method in epi_s3_gateway_contract::S5_CANON_UPDATE_METHODS {
+        assert_eq!(
+            coordinate_family_for_gateway_method(method),
+            Some("s5'.canon_update.*"),
+            "{method} must map to the canon-update parity family"
+        );
+    }
+
+    let record = epi_logos::gate::parity::coordinate_parity_records()
+        .iter()
+        .find(|record| record.canonical_method == "s5'.canon_update.*")
+        .expect("canon-update parity record");
+    assert_eq!(record.owner, "S5'");
+    assert_eq!(record.status, CoordinateParityStatus::Native);
+    assert_eq!(record.cli_mirror, Some("epi bimba"));
+    assert_eq!(record.body_path, "Body/S/S3/gateway::canon_update");
 }
 
 #[test]
 fn every_product_gateway_method_has_coordinate_mapping() {
-    for method in epi_logos::gate::parity::method_names() {
-        let mapped = epi_logos::gate::parity::coordinate_family_for_gateway_method(method);
-        assert!(
-            mapped.is_some(),
-            "product gateway method must have coordinate parity mapping: {method}"
-        );
-    }
+    // Collect every unmapped method rather than asserting inside the loop: a
+    // first-failure assert reports one name per run, so closing a batch of
+    // missing mappings costs one full rebuild each. The gap set is the finding.
+    let unmapped: Vec<&str> = epi_logos::gate::parity::method_names()
+        .iter()
+        .copied()
+        .filter(|method| {
+            epi_logos::gate::parity::coordinate_family_for_gateway_method(method).is_none()
+        })
+        .collect();
+
+    assert!(
+        unmapped.is_empty(),
+        "product gateway methods without a coordinate parity mapping ({}): {}",
+        unmapped.len(),
+        unmapped.join(", ")
+    );
 }
 
 #[test]
@@ -194,7 +240,7 @@ fn s1_prime_manifest_points_at_rust_hen_compiler_contract() {
         .contains(&"hen-compiler-core/tests/frontmatter.rs"));
     assert!(record.test_evidence.contains(&"vault_frontmatter.rs"));
 
-    let _timestamp = epi_logos::hen::HenTimestamp::new(2026, 4, 25, 0, 0, 0);
+    let _timestamp = epi_s1_hen_compiler_core::HenTimestamp::new(2026, 4, 25, 0, 0, 0);
 }
 
 #[test]
@@ -285,8 +331,8 @@ fn non_s0_method_with_s0_adapter_has_body_native_authority_path() {
     let mut checked = 0_usize;
 
     for record in records {
-        let is_s0_method = record.canonical_method.starts_with("s0.")
-            || record.canonical_method == "s0.*";
+        let is_s0_method =
+            record.canonical_method.starts_with("s0.") || record.canonical_method == "s0.*";
 
         // Records where S0 truly is the authority can legitimately skip
         // authority_path; everything else must declare one when an adapter
@@ -350,5 +396,8 @@ fn temporary_live_host_status_is_used_for_known_transitional_runtimes() {
     use epi_logos::gate::parity::CoordinateParityStatus;
     let host = CoordinateParityStatus::TemporaryLiveHost;
     assert_eq!(host.label(), "TemporaryLiveHost");
-    assert!(host.describe_for_portal().to_lowercase().contains("temporary"));
+    assert!(host
+        .describe_for_portal()
+        .to_lowercase()
+        .contains("temporary"));
 }

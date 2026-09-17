@@ -112,7 +112,7 @@ The semantic labels applied below — ground, definition, operation, pattern, co
 
 **The P4 Lemniscate and Internal Structure**: P4 is distinguished from all other positions by generating the **.0 through .5 internal positions** that become the working material of the L-lenses. The integral structure's capacity to hold all prior structures simultaneously — archaic presentiment (.0), magical attunement (.1), mythical symbolization (.2), mental-rational systematization (.3), integral concretion (.4), and supermental recognition (.5) — creates the *recursive internality* that the 12 lenses then refract into their specific domains. This is why L lenses have 6-fold inner breakdowns but P positions do not: the internal differentiation *originates* at P4 and is *received* by the L-family.
 
-**P5 — Supermental / Samāveśa [MÖBIUS RETURN]** — QL Unit: **Image**
+**P5 — Quintessence — Supermental / Samāveśa [MÖBIUS RETURN]** — QL Unit: **Image** — Element: **Salt**
 - Question: Why-for / Why-not?
 - Semantic dual: Synthesis / Integration
 - Gebser: Beyond the five structures → Aurobindo's Supramental
@@ -444,7 +444,7 @@ The Night complement of L1 (Causal): where L1 maps the *objective structure* of 
 **Element:** Aether (this IS the element root)
 **Möbius Return:** L2' → L3
 
-L2' is designated "THE ELEMENT-BEARING LENS" because it assigns elemental charges to all other coordinates. The four classical elements (Earth, Water, Air, Fire) plus Aether (Quintessence) represent fundamental modes of being and transformation, with Mineral as the crystallized end-product of the alchemical *opus*. Jung understood alchemy as projected psychology — the alchemical work as symbolic description of individuation. The *Transcendent Function* (the psychic mechanism producing a third thing from the union of conscious and unconscious) is the psychological equivalent of the alchemical *coniunctio*.
+L2' is designated "THE ELEMENT-BEARING LENS" because it assigns elemental charges to all other coordinates. The four classical elements (Earth, Water, Air, Fire) plus Aether represent fundamental modes of being and transformation, with **Salt** as the crystallized end-product of the alchemical *opus* (the fixed body; formerly tabulated as Mineral). Jung understood alchemy as projected psychology — the alchemical work as symbolic description of individuation. The *Transcendent Function* (the psychic mechanism producing a third thing from the union of conscious and unconscious) is the psychological equivalent of the alchemical *coniunctio*.
 
 **6-fold:**
 
@@ -453,7 +453,7 @@ L2' is designated "THE ELEMENT-BEARING LENS" because it assigns elemental charge
 - **L2-2' — Water**: Fluidity, dissolution, feeling. The *solutio*, the *aqua permanens*. The unconscious, the emotional.
 - **L2-3' — Air**: Thought, breath, connection. The *sublimatio*, the volatile principle. Ideation, abstraction.
 - **L2-4' — Fire**: Transmutation, energy, will. The *calcinatio*, the transformative heat. Burning away the inessential.
-- **L2-5' — Mineral**: The *lapis philosophorum* — earth *transformed* through all elements. The integrated Self, the diamond body. Not raw matter but matter perfected.
+- **L2-5' — Salt**: The *lapis philosophorum* — earth *transformed* through all elements. The integrated Self, the diamond body, the fixed body of the work. Not raw matter but matter perfected. (Formerly tabulated as Mineral.)
 
 ---
 

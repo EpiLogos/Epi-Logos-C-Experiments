@@ -1,0 +1,37 @@
+{
+  "runId": "20260610T201408Z-10-T10.5",
+  "taskId": "10.T10.5",
+  "startedAt": "2026-06-10T20:14:08.873Z",
+  "owner": "codex-m-dev-10-t10-5",
+  "leaseExpiresAt": "2026-06-10T22:14:08.873Z",
+  "worktree": null,
+  "task": {
+    "id": "10.T10.5",
+    "trackId": "10",
+    "tranche": "T10.5",
+    "title": "Audit `s2_anchor` / `s3_anchor` future-anchor placeholder fields",
+    "effort": null,
+    "file": "10-kernel-bridge-profile-contract.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+    "dependsOn": [
+      "10.T10.4"
+    ],
+    "writeScopes": [
+      ".omx/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

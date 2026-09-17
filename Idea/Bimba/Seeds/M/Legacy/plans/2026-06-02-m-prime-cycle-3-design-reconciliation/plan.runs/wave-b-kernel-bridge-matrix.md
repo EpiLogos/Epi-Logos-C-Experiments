@@ -74,8 +74,8 @@ For each load-bearing shared-spine field, status of doc-claim ↔ spec-authority
 
 - Wave A M1 2.2 claim `klein_flip absent from kernel.rs entirely` — **VERIFIED**. `grep` against `kernel.rs` returns zero matches for `klein_flip`.
 - Wave A M2 3.1 same — **VERIFIED**.
-- Wave A M0 1.4 `MathemeBedrockProjection.dataset_lut_state = 'pending-dataset-lut'` — **VERIFIED** at `kernel.rs:797` (note: literal lives on `MathemeBinaryProjection`, not `MathemeBedrockProjection` — Wave A digest may have mis-attributed the host struct; flag forward).
-- Wave A M0 1.4 `MathemeBedrockProjection.m3_codec_provenance` — same: actually on `MathemeBinaryProjection` at `kernel.rs:805`. Cross-reference correction for cycle-3 decision register.
+- Wave A M0 1.4 `dataset_lut_state = 'pending-dataset-lut'` — **VERIFIED** at the Wave-B anchor `kernel.rs:797`; host-struct correction: the literal lives on `MathemeBinaryProjection` (current line drift `kernel.rs:1208`). Cross-reference DR-KB-3 / Tranche 10.9.
+- Wave A M0 1.4 `m3_codec_provenance` — same host-struct correction: the literal lives on `MathemeBinaryProjection` at the Wave-B anchor `kernel.rs:805` (current line drift `kernel.rs:1216`). Cross-reference DR-KB-3 / Tranche 10.9.
 
 ## Proposed Cycle-3 Closing Tranches (kernel-bridge domain, 10.x)
 
@@ -123,7 +123,7 @@ All tranches honor the anti-greenfield rule: they consume/audit/extend named exi
 
 ### 10.9 — Cross-reference correction: bridge struct-host of `dataset_lut_state` / `m3_codec_provenance`
 - **Classification:** doc-ahead-landing (decision-register correction)
-- **Deliverable:** Wave A M0 1.4 attributes `dataset_lut_state` to `MathemeBedrockProjection`, but the literal actually lives on `MathemeBinaryProjection` at `kernel.rs:797,805`. Cycle-3 decision-register notes the correction so M0/M3 closure tranches name the right struct.
+- **Deliverable:** Wave A M0 1.4 names the Bedrock projection as host, but the literal actually lives on `MathemeBinaryProjection` at `kernel.rs:797,805`. Cycle-3 decision-register notes the correction so M0/M3 closure tranches name the right struct.
 - **Verification:** decision-register entry references `kernel.rs:797`
 
 ---

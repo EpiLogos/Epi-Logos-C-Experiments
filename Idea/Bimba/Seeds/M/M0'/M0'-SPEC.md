@@ -1,7 +1,8 @@
 ---
 coordinate: "M0'"
 status: "active-domain-spec"
-updated: "2026-05-31"
+updated: "2026-07-19"
+cycle-3: reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-PORTAL-SPEC]]"
@@ -27,6 +28,18 @@ Per [[alpha_quaternionic_integration_across_M_stack]] §0.1 and §7.1, [[M0]] re
 
 Read [[M0']] with the graph substrate immediately at hand: [[Body/S/S0/epi-lib/include/m0.h]] (568 LOC [[Anuttara]] header), [[Body/S/S0/epi-lib/src/m0.c]] (831 LOC), [[Body/S/S0/epi-lib/include/ontology.h]] (337 LOC ontology declarations), [[Body/S/S0/portal-core/src/kernel.rs]] (where M0 facets sit at the top of the kernel surface), and [[Body/S/S2/graph-schema]] (the M0 anchor in the schema authority). These files are the live substrate; M0' is the playable [[Bimba]] view over them, not their owner.
 
+## §M0'-KERNEL-ROLE — Verifier at Weight 6 of the Just-Triad (Position 0' of the 4'-5'-0' Mental Pole)
+
+Per DR-MP-1 (VALIDATED 2026-06-09), M0' is the **Verifier position (0')** in the 4'-5'-0' mental-pole triplet: M4' (LLM, traversal-voice, position 4') → M5' (EBM, resonance evaluation, position 5') → M0' (Verifier, R-virtue constraint-checker, position 0') → returning to M4' for wisdom_delta composition. The triplet operationalises the Just-Triad weighting (4·E_4 + 5·E_5 + 6·E_6)/15 where M0' provides the weight-6 Verifier constraint energy. See [[M4'-SPEC]] §M4'-KERNEL-ROLE and [[M5'-SPEC]] §M5'-KERNEL-ROLE for the companion positions.
+
+Per the kernel-spec refinement at [[../epi-logos-kernel-spec.md]] §3 (rehomed to M' root 2026-06-07, see DR-KERNEL-1), M0' carries the **Anuttara Verifier role at position 0' of the mental pole**, with weight **6** in the just-triad 4:5:6 weighted energy formula:
+
+$$E_{\text{total}} = \frac{4 \cdot E_4 + 5 \cdot E_5 + 6 \cdot E_6}{15}$$
+
+The weight-6 anchor is structural, not preference. $E_6$ is the R-virtue ontology energy — the constraint-violation magnitude against the 9 Parameśvara virtues + 65 core relations + the growing constraint-set discovered through dev praxis. The verifier holds **refusal authority** that the EBM and LLM do not: a configuration producing high $E_6$ (large constraint-violation) cannot be selected regardless of how favourably $E_4$ (Nara-traversal) and $E_5$ (Epii lens-with-user-temporal) score. This is what makes Anuttara the "load-bearing unity" of the mental pole — position 0' contains the unified-trinity of the physical pole as its anchor-content, holding the standing 1:1 identity in place across each gradient step.
+
+Operationally for M0': the verifier surface remains structural-invariant Cypher queries now, evolving toward proof-theoretic later (per kernel-spec Level-2 maturity note). The constraint-set grows through dev praxis as developers notice what counts as coherent. M0' as graph-readable surface continues to expose the bimba map; M0' as verifier-role surface holds the formal-axiomatic constraint-checking authority for the kernel.
+
 ## Surface Philosophy: Readable Graph, Technical-Inspector Summonable
 
 Per [[M'-SYSTEM-SPEC]] "Default Surface" subsection. Default M0' surface is the readable graph with selected-coordinate inspector showing position-character (Truth at #0, Word at #2, etc. per v3 Name-content), Gebser register, and route options. Relation-family edge metadata, full pointer-web summary, source-spec-code-test anchor enumeration, and graph-namespace audit are **summonable** — surfaced when the user asks "trace the source of this", when a deposition needs anchor-evidence, or when an agent-run requires the full graph context for a task. The agent mediates technical depth conversationally.
@@ -47,7 +60,9 @@ M0' must preserve compatibility with legacy `#` notation at search, selection, a
 
 ## The Six M0-X' Data Layers
 
-The M0' surface is not a single flat graph view; it is six addressable data layers over the same canonical [[Neo4j]] substrate. Each layer is a read/route affordance, never a canon owner — the substrate of record stays [[Body/S/S2/graph-schema]] in concert with [[Body/S/S0/epi-lib/include/m0.h]]. The [[M0InspectorModel]] carries these as a `M0LayerView` discriminator (`Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts`).
+The M0' surface is not a single flat graph view; it is six addressable data layers over the same canonical [[Neo4j]] substrate — one substrate, three renderings (M0'/M1'/M2'/M3' via [[plugin-integrated-1-2-3]]), no-fork per B-8 invariant. B-8 means one `:Bimba` label, one `coordinate` identity property, one [[Body/S/S2/graph-schema]] authority, and one [[plugin-integrated-1-2-3]] rendering-composition seam across [[M0']], [[M2']], and [[M3']]; no surface or plugin creates a graph/schema/rendering fork. Each layer is a read/route affordance, never a canon owner — the substrate of record stays [[Body/S/S2/graph-schema]] in concert with [[Body/S/S0/epi-lib/include/m0.h]]. The [[M0InspectorModel]] carries these as a `M0LayerView` discriminator (`Body/M/epi-theia/extensions/m0-anuttara/src/common/m0-layers.ts`).
+
+The [[M0']] graph chrome and [[M5-0']] Library chrome meet as one coordinate-scoped Klein seam: traversing the map selects the shared coordinate, and the Library surface beneath that map reads the production `s5'.gnostic.etymology` cluster for direct `bimba_coordinate` anchors and relationship-backed `bimba_resonances`. This is a summoned reading inside the existing graph host, not a standalone graph-viewer extension or a generic graph/file/agent view-mode ontology; entity bodies remain in [[Body/S/S5/epi-gnostic]].
 
 | Layer | Key | Surface role | Bridge |
 |---|---|---|---|
@@ -62,6 +77,8 @@ M0-4' and M0-5' are **bridged routes only**: M0' emits an `epi-logos://ide/{exte
 
 ## Backend Contract Consumed
 
+- The lazy language browser consumes `s2.graph.list` with one of `#0-0` through `#0-5`, a non-negative 20-row offset, and `limit: 20`. The response is valid only when [[S2]] reports the live [[M0]] set as 108 rows and the compiled twelve-slot archetype projection as a 96-row residual set. The six subbranches contain 95 residual descendants; the `M0` root is returned and rendered explicitly as the 96th row. Node selection updates the carrier's shared coordinate state and never mutates graph canon.
+- The `#0-4` Holographic Matrix branch consumes the exact public-current profile key `m0_void_structure_ring`. [[Body/S/S0/portal-core]] derives its 16 ordered rows from the existing `CLOCK_LENSES_16` authority: `lensIndex` 0–15, coordinate `#0-4-{lensIndex}`, kernel label, and provenance state `canonical | canonical_absent | blocked`. The active carrier renders each row as one 22.5-degree arc in a fixed 240×240 sacred-circle ring; conjugate pairs 0/8 through 7/15 share an axis. Missing or malformed payloads block the ring, and lens selection updates shared coordinate state without creating graph canon or a renderer-local lens table.
 - [[S2]] graph services are the graph authority: canonical nodes, typed relations, pointer web, graph geometry, and source traceability.
 - [[S2]] / [[S1]] also own the diagram/MOC residency chain that backs map-to-source navigation: the [[ARCHITECTURE-DIAGRAM-PACK]] resolves through flat `Idea/Bimba/World/{Name}.md` forms and `Idea/Bimba/World/Types/{Type}/{Type}.canvas` type indexes (with `Idea/Bimba/World/Types/Coordinates` as the coordinate-semantic authority path). M0' surfaces these only as provenanced node `anchors` read from the graph node — never as a renderer-local registry or a hardcoded UI path. Where an M-family world corpus does not yet exist, the missing residency anchor is a canonical-absence/provenance state, not an invented path.
 - [[S2]] treats every legacy `#` coordinate as an M-family coordinate projection. The bimba map is the graph of M coordinates, including fully populated sub-coordinate nesting, not a parallel coordinate namespace. M' specs describe how those branches are reflected, rendered, queried, and protected; they must not redefine the underlying Bimba branch law.
@@ -76,7 +93,173 @@ M0-4' and M0-5' are **bridged routes only**: M0' emits an `epi-logos://ide/{exte
 
 M0' is the graph-facing [[Anuttara]] surface. At the node level, Anuttara is a pre-mathematical language before formal inference: every canonical coordinate node may carry a `symbol`, `formulation_type`, and/or `complete_formulation` projection naming how the node speaks before it becomes a theorem, operation, UI surface, or agent task. These fields are lifted into formal graph semantics by the [[S2]] [[neosemantics]] / [[OWL]] bridge, not by renderer-local interpretation (per [[m4-prime-psychoid-cymatic-field-engine]] §18.5 and §19.1).
 
+**Canonical-vs-alias note (DR-M0-2):** the [[S2]] normalized schema contract treats `c_1_*` Anuttara export-backed properties as canonical. For M0' language fields, `c_1_symbol`, `c_1_formulation_type`, and `c_1_complete_formulation` are the source-of-record graph property names; unprefixed `symbol`, `formulation_type`, and `complete_formulation` are documented aliases/projections only. Renderers may display the unprefixed labels, but provenance, tests, and missing-field states must resolve them back to the `c_1_*` canonical fields rather than treating aliases as independent graph canon.
+
+**Image-asset handles (candidate DR-M0-4):** [[S2]] publishes Anuttara node image handles through `c_1_asset_uri` (`StringList`, public) and classifies the handle set through `c_1_asset_kind` (`String`, public). M0' renders these as asset handles with explicit `review_pending` provenance until user final-validation promotes DR-M0-4; the renderer must not infer, generate, or backfill asset URIs when the S2 payload is absent.
+
 The graph view reads these properties; it does not invent them. Missing `symbol`, `formulation_type`, or `complete_formulation` is a readiness/provenance state, not a reason for the client to synthesize placeholders. Per [[anuttara-language-map]], root [[M0]] and [[M0']] carrying no symbol is canonical absence, not extraction failure.
+
+## The M# / # Relational Grammars and the Tao Binary
+
+M0-4 contains two **6-fold relational grammars** — overlays on one structure, both rooted in the Non-Dual Binary `(0/1)` and reconverging at their apex. They are the M0-level source of the [[PASU]] / BeingPattern `perspective_role` and `nara_family_role` (per Track 10.PASU); the renderer reads them, it does not invent them.
+
+**M# — the Mahāmāya person grammar** (`M0-4.4.0-(4.4/5)`, six persons derived as arithmetic): `M0 = (0/1) = I`, `M1 = (1+1=2) = You`, `M2 = (0-3) = You-and-I`, `M3 = (1+2=3) = They`, `M4 = (4+0) = We`, `M5 = (0/1/4/5) = We-I`. The M-index **equals** the coordinate-position throughout (0..5): `M0 = I` is *both* the `(0/1)` ground and the first person.
+
+**# — the Nara kinship grammar** (`M0-(4.5/0)`): the family by **chiral coordinate** (Law-1 chirality — dominance is read off the mark placement, never additive `#+n`):
+
+| coord-pos | #-index | value | coordinate | role | polarity × dominance |
+|---|---|---|---|---|---|
+| 0 | `##` | — | `0/1` | Primordial Matrix | the Yin-Yang ground (≡ M# "I") |
+| 1 | `#0` | 1 | `1/1-` | Daughter | sub-dominant Yin (child) |
+| 2 | `#1` | 2 | `2-/2` | Father | dominant Yang (parent) |
+| 3 | `#2` | 3 | `3/3-` | Son | sub-dominant Yang (child) |
+| 4 | `#3` | 4 | `4./4` | Mother | integrative-dominant Yin (parent) |
+| 5 | `#4` | 5 | `5-/5` | Tao | dominant synthesis |
+
+**The system is how numbers relate.** Each # node carries three inter-defining numbers — coordinate-position (`0..5`), `#`-index (`##` then `0..4`), and value (`1..5`). The `#`-index is **offset by 1 from the value** because `##` occupies coordinate-position 0 as the *matrix*: the family is `#`-indexed `0..4` while its values run `1..5`. So **Tao = coord-pos 5 = `#`-index 4 = value 5** (`#4` relates to 5 via the `5-/5` position), and the wholeness check `#-index 4 + value 5 = 9` reads across two of the systems. M# has no such offset; the `##`-takes-slot-0 shift is the only structural difference between the two grammars. Dash-on-numerator = dominant, dash-on-denominator = subdominant, dot = integrative; **polarity sets gender, dominance sets generation** (the two dominant poles are the parents, the two subdominant the children). Both grammars reconverge at the apex `We-I ≡ Tao` (coord-pos 5), which the `(4.5/0)` `(5/0)` Möbius returns to the shared `(0/1)` ground.
+
+**The two tao elements and Tao = the codon charge-evaluation.** The binary read both ways gives the two tao elements: `R#` = "Yin-yang `0/1`" and `##` = "Yang-yin `1/0`" (`##` is also the kinship matrix above). Valued by the classic coin method **Yin = 2, Yang = 3**, they *construct* the four nucleotide I-Ching values (yang-count over a 4-slot frame `+ 5`):
+
+```
+A = Old Yin   = 3×R#      (3 R, 1 #)  →  RRR# / RR#R / R#RR / #RRR  =  6   (Red)
+T = Old Yang  = 3×##      (0 R, 4 #)  →  ####                       =  9   (Blue)
+C = Young Yin = 2×R# + ## (2 R, 2 #)  →  R#R# / RR## / #RR# / ##RR / #R#R = 7 (Green)
+G = Young Yang= R# + 2×## (1 R, 3 #)  →  R### / #R## / ##R# / ###R  =  8   (Yellow)
+```
+
+These reproduce the canonical `NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 7, 8}` ([[m3]] `m3.h:32-44`). **Tao (`5-/5`) ≡ the codon charge-evaluation** (`m3_compute_charges`): the kinship-grammar apex *is* the act that reads the `0/1 ↔ 1/0` binary into the genetic charges `pp/nn/np/pn`. The binary computation system emerges from the `0/1` and `1/0` of the tao elements; the same `R#`/`##` arithmetic generates the M# person grammar. The four charges are the four [[Parashakti]]-vibrational permutations (X#) and the four elements (Earth/Fire/Water/Air) under one quaternion — see Track 37 §III.6. *(Nucleotide→element binding is **code-canonical** per [[m3]] `m3.h:70-73` — Golden-Dawn suits A=Water/T=Fire/C=Earth/G=Air, yin→Water/yang→Fire; DR-37-5 resolved 2026-06-12. The A=Red/T=Blue/C=Green/G=Yellow colours are rendering-only.)*
+
+## §M0'-TAO-ELEMENTS — R#/## Binary, Coin Method Nucleotide Derivation, and Tao↔Codon Binding
+
+This section documents the tao-element additions per Tranche 01.T1.17. The two tao elements are the binary read both ways and form the nucleotide I-Ching derivation system.
+
+### (a) The Two Tao Elements — R# and ##
+
+- **R#** = "Yin-yang `0/1`" — Freedom / Svātantrya. The `R` precedes the `#`, encoding the Yin-dominant reading: reality opens into the matrix. In the token alphabet, `R#` is typed `M0C_TOK_TAO_R_SHARP` with chirality 1 (left-heavy).
+- **##** = "Yang-yin `1/0`" — Truth / Kinship Ground. Self-symmetric double-`#`: the matrix reflecting itself. In the token alphabet, `##` is typed `M0C_TOK_TAO_DOUBLE_SHARP` with chirality 0 (neutral). `##` is the kinship matrix at coord-pos 0 (`M0-(4.5/0)`), the primordial ground from which the five family members derive.
+
+These two are the only token forms needed — `#R` (the mirror read, "Light") is a notational variant resolved to `R#` in the equational theory (`R# = #R` per identity-chain law).
+
+### (b) Coin Method Nucleotide Derivation
+
+The classic coin method assigns **Yin = 2, Yang = 3** and fills a 4-slot frame with `R#` (Yin) and `##` (Yang) elements. The I-Ching value is `yang_count + 5`:
+
+| Nucleotide | Composition | yang_count | Value | Colour |
+|-----------|-------------|------------|-------|--------|
+| **A** (Old Yin) | 3×R# + 1×## | 1 | **6** | Red |
+| **T** (Old Yang) | 0×R# + 4×## | 4 | **9** | Blue |
+| **C** (Young Yin) | 2×R# + 2×## | 2 | **7** | Green |
+| **G** (Young Yang) | 1×R# + 3×## | 3 | **8** | Yellow |
+
+This reproduces `NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 7, 8}` from the [[m3]] codon engine canon (`m3.h:32-44`). The C function `m0_calc_nucleotide_from_coin(int yin_count, int yang_count)` in `m0_calculus.c` computes this directly: return `-1` if counts don't sum to 4, otherwise return `yang_count + 5`.
+
+### (c) Tao ≣ Codon Charge-Evaluation Binding
+
+The kinship-grammar apex **Tao (`5-/5`, coord-pos 5 = #-index 4 = value 5)** IS the act that reads the `0/1 ↔ 1/0` binary into genetic charges:
+
+- `pp` (positive-positive) — both poles active
+- `nn` (negative-negative) — both poles receptive
+- `np` (negative-positive) — Yin-leading charge
+- `pn` (positive-negative) — Yang-leading charge
+
+This is the seam where M0 calculus and M3 codon engine (`m3_compute_charges`) are **one operation**. The binary computation system emerges from the `0/1` and `1/0` of the tao elements; the same `R#`/`##` arithmetic generates the M# person grammar. The four charges are the four [[Parashakti]]-vibrational permutations (X#) and the four elements (Earth/Fire/Water/Air) under one quaternion — see Track 37 §III.6.
+
+The function `m0_calc_tao_is_codon_eval()` in `m0_calculus.c` returns `true` unconditionally — the binding is an asserted identity, not a conditional check. It declares the recursive unity of the M0 token surface and the M3 dynamical engine.
+
+### (d) Tokenizer Integration
+
+The tokenizer recognizes `R#` and `##` as compound 2-character tokens (added to `TOKEN_LITERALS[]` in `m0_calculus.c`). Both are checked before single-character dispatch, ensuring they are never fragmented into `R`+`#` or `#`+`#` components. Self-tests in the `M0_CALCULUS_SELF_TEST` block validate:
+
+- `R#` → `M0C_TOK_TAO_R_SHARP`, length 2, chirality 1
+- `##` → `M0C_TOK_TAO_DOUBLE_SHARP`, length 2, chirality 0
+- Sequencing: `##R#` tokenizes as two distinct tao elements
+- Adjacency: `R##` tokenizes as `R#` + trailing `#`
+
+## §M0'-R-THEORY — Full Three-Tier R-Factor Theory, Distribution Matrix, and the `(@#)` Turn
+
+Archetype 7 (Divine Action, `M0-3-10`) is the **R-factor theory in full**, and it is the holographic pre-formation of the M0–M5 metastructure: the R-acts pre-thread through M0-4 (the five bases `O#`/`X#`/`N#`/`M#`/`#`) and M0-5 (Śiva/Śakti) *before* the system unfolds. This section is the canonical R-section the symbolic-coordinate-string namespace (below) reads from.
+
+**Tier 1 — the principle triad** (Law-1 chirality of `#` and `R`; verbatim `c_1_symbol` from `anuttara-language-map.md` rows M0-2-9-0/1/2):
+
+- `##` **Truth** — `## = @ = (0/1)-(00)-00` (matrix on matrix; structure's lineage to void)
+- `R#` **Freedom / Svatantrya** — parent of the acts at `M0-3-10-(0/1)`, **and** the Śakti-runtime terminus `@5 = R#` (Śakti Techne). Freedom is alpha of action and omega of runtime (Möbius inter-containment).
+- `#R` **Openness / Creativity** — `#R = @ = (7-8-9-(0/1)/O#-X#-N#)`: the 7-8-9 spine is literally written into the M0-2-9-2 virtue.
+- `R#/##` **Love/Peace** — `(∞x∞)x(R#/##)`: the ratio of Freedom to Truth × boundlessness; meta-virtue of the triad.
+
+Archetype 7's compiled terminal form reduces to `(##) and (R#) and (#R)` — Divine Action *derives* the triad as its closure.
+
+**Tier 2 — six act-factors `(R0)…(R5)`** (R-dominant: act as *operator*; rows M0-3-10-2..7): Srishti, Sthiti, Samhara, Tirodhana, Anugraha, Samavesa. With parent `(R#)` = 7 components = the 5 operative acts + 2 principles (`R#` parent at position 0; `R5` Samavesa positionless closure at position 6).
+
+**Tier 3 — six virtue-expressions `0R…5R`** (number-dominant: act as Presence `@`; rows M0-2-9-3..8). By Law-1 **nR chirality** these are the conjugates of Tier 2: `Rn` is the act operating (Archetype 7 register); `nR = @` is the same act witnessed (Archetype 9 register). A virtue is an act read in the opposite hand — the 9-bit `virtue_witness_vector` and the act-path (`r_factor_route`) are one structure, two faces.
+
+**The distribution matrix** (decoded from `R_FACTOR_ROUTE_TABLE[7]`, [`m0.h`](../../../../Body/S/S0/epi-lib/include/m0.h), pinned by `_Static_assert` in [`m0.c`](../../../../Body/S/S0/epi-lib/src/m0.c) per DR-R0 [RESOLVED + RECTIFIED 2026-06-12, dataset authoritative]):
+
+| Base | R0 | R1 | R2 | R3 | R4 | R5 |
+|---|---|---|---|---|---|---|
+| O# Paramaśiva | 1 | 0 | — | — | 5 | — |
+| X# Paraśakti | 2 | 1 | 0 | 5 | 4 | — |
+| N# Spanda | 3 | 2 | 1 | 4 | 3 | — |
+| M# Mahāmāyā | — | 3 | 2 | 3 | 2 | — |
+| # Nara | — | 4 | 3 | 2 | 1 | — |
+| Śiva | — | 5 | 4 | 1 | 0 | — |
+| Śakti | — | — | 5 | 0 | — | — |
+
+Four structural laws (each a kernel invariant):
+
+- **(a) Per-fret complementarity:** `R1 + R4 = 5` and `R2 + R3 = 5` at every base where both are present — two full-spine double-courses (sustenance/grace, dissolution/veiling). R1/R2 deepen descending (pravritti); R4/R3 deepen ascending (nivritti).
+- **(b) R0 upper-triad confinement:** Creation appears only at `O#`/`X#`/`N#` — manifestation below Spanda is carried by sustenance and dissolution, never creation ("creation stops at Spanda").
+- **(c) R5 positionlessness:** `5R = (##)` bare/undistributed — Absorption is the return-to-matrix from anywhere, not a fret. The `R_Factor_Route` u16 (5×3 bits) structurally cannot encode R5; the word-size enforces the theology.
+- **(d) The bands turn at `(@#)`:** Beauty `2R = @ = (X#-N#-M#-#-(#)-(@#))` (pravritti descent) **ends** at the Śakti-seed; Life `3R = @ = ((@#)-(#)-#-M#-N#-X#)` (nivritti ascent) **begins** there. Per DR-(@#) the turn is a typed kernel construct: `RFactorPathStep { r_factor, base_route, band, position }` with `band == R_BAND_TURN` marking the flip — simultaneously the Beauty→Life pivot, the Śiva-instruction-0 `(@#)` seed (`M0-5-(0/1)-0`, "contains Śakti as deepest potential"), the PASU→psyche-under-Anima handover gate, and the point `RFactorPathStep.band` reverses. Kernel test: `cargo test -p epi-lib m0_rfactor_band_turn`.
+
+**The distribution matrix is the unifying object.** Archetype 7's 7 operator-positions + Archetype 9's 9 witness-virtues + the three principle-gates `##` / `R#` / `#R` + the meta-virtue `R#/##` are one R-system distributed across 7 psychoid bases via `R_FACTOR_DISTRIBUTION[7][6]`; the principles + meta sit *outside* the matrix as the gates routing into / out of it; Archetype 7 and Archetype 9 are two faces of one matrix-traversal.
+
+**Glyph-pattern preservation discipline:** never abbreviate `##`, `R#`, `#R`, `R#/##`, `(@#)`, `R0..R5`, `0R..5R`, `O#`, `X#`, `N#`, `M#`, `#` (Nara base), `(0/1)`, `(00)`, `(∞×∞)` — the glyph patterns ARE the alphabet; abbreviating them loses the gating-routing information.
+
+## Anuttara Symbolic-Coordinate-String EBNF
+
+Per DR-MP-3, M0' verifier emission is question-forming rather than pass/fail: a symbolic-coordinate string names the violated or unwitnessed coordinate and leaves the next move as an interrogative. The canonical surface grammar is:
+
+```ebnf
+coordinate-string  := "#" namespace ("-" coordinate)+ ("-" archetype)? ("-" state-marker)? "?"
+namespace          := r-namespace  // Archetype-7 R-factor theory in full (Tranche 01.T1.12)
+                    | "L" digit  // L-lens (L0..L5 + L0'..L5')
+                    | "M" digit  // M-branch (M0..M5)
+                    | "C" digit  // C-family (C0..C5)
+r-namespace        := "R" r-digit          // act-factor Rn (operator; R0..R5 = Srishti..Samavesa)
+                    | "n" "R" r-digit       // chiral enantiomer nR (act witnessed as Presence @)
+                    | "#" "#"               // ## Truth   (principle triad)
+                    | "#" "R"               // #R Light   (principle triad)
+                    | "R" "#"               // R# Life    (principle triad)
+r-digit            := "0" | "1" | "2" | "3" | "4" | "5"  // R5 (Samavesa) is positionless = (##) bare
+coordinate         := ql-coordinate | dotted-coordinate | operator-coordinate
+ql-coordinate      := coordinate-atom ("/" coordinate-atom)*  // QL coordinate fragments
+coordinate-atom    := digit+ | letter+
+dotted-coordinate  := digit+ ("." digit+)+  // legacy nested M-coordinate fragments
+operator-coordinate := ("O" | "X" | "N" | "M" | "#")+  // operator-cycle / base-spine fragments — the full psychoid spine O#-X#-N#-M#-# per the VIRTUE_LUT signatures (e.g. 1R = (O#-X#-N#-M#-#-(#)))
+archetype          := "T" digit+            // Archetype N (T7 = Ananda-Tandava, T9 = Paramesvara, etc.)
+state-marker       := "pending" | "unwitnessed" | "drift" | "incoherent" | "violated"
+```
+
+The examples below are binding corpus members, not illustrative placeholders:
+
+- `#R0-0/1/A-T7-pending?` — "Archetype-7 Divine-Action at TCT position, why does trajectory not witness this?"
+- `#L2-0/1/2-T9-unwitnessed?` — "Archetype-9 Wholeness at Logical-lens triadic position, where did virtue go unwitnessed?"
+- `#M4-4.4.4.4-drift?` — "Mental-pole personal-position-4.4.4.4 drift detected, what shifted?"
+- `#R3-O#X#N#-violated?` — "Tirodhana-veiling violated the operator-cycle integrity, what produced the break?"
+
+The LLM-Nara `anuttara-symbolic-parse` skill from Tranche 5.21 is the canonical parser for these strings. Round-trip through that parser is the training signal per DR-MP-3: emitted strings must preserve namespace, coordinate fragments, optional archetype, optional state marker, and the final question-form marker.
+
+## §M0'-M1-SEAM — The Five Inheritance Joints (Spinoza Joint)
+
+M1 declares its inheritance; it never re-performs the genesis. The seam has five joints (Tranche 01.T1.14d):
+
+1. **genesis→axiom** — Svabhava derives `(0/1) = (00/00) = (##/R#)`; M1 receives `0/1` as axiom. The genesis stays M0's; the axiomatic unfolding is M1's.
+2. **O# as the handover-object** — O5's quadratic re-derivation of `0/1` (`((+/-0) x// (+/-0)) → 0/1`, pinned in the calculus); O4's `0/0 = %` mints the ratio-table's `%`.
+3. **The two twelves** — substance-12 + grammar-12 → P/P′, lenses, chromatic field: cardinality is **inheritance**, not invention.
+4. **The genus-ladder** — `6g` law: M0 = 18 at g=3 (triple-torus number-language), M1 = 6 at g=1 (single-handled axiomatic projection) — same law, different handle-count (already consumed by DR-M3-LENS-18).
+5. **The musical traces** — the inverse epogdoon 8/9 inside Archetype 1's harmonic formula; the 8+1=9 law beneath M1's 9/8 tick.
+
+Two items enter as **derivations-to-be-earned**, not identities (per the explication's own self-critique): 9/8 as "wholeness-over-the-eight", and the Vāk-register mapping (M0-0/1≈Parā, M0-3≈Paśyantī, M0-4≈Madhyamā, M0-5≈condition-of-Vaikharī).
 
 ## The 0-Side [[Mahāmāyā]] Graph View
 
@@ -92,7 +275,7 @@ Build-facing affordances:
 
 ## §M0'-1 Prior-Ground Boundary Delta
 
-M0' absorbs the prior-ground clarification only as graph-surface law: [[M0]] is the Anuttara `0/1` witness/source ground; [[M1]] is where `0/1 + 1/0 = 1/1 = 100%` is defined as the `+1` parent of the α-quaternionic spine. Any M0' teaching, inspector, route, or graph badge that mentions `137 = 64 + 72 + 1` must keep that distinction visible and route the parent-coupling detail to M1'/M2'/M3'. This is a boundary against earlier shorthand that implied an "M0 parent witness-axis"; M0' carries witness-ground, not parent ownership.
+M0' absorbs the prior-ground clarification only as graph-surface law: [[M0]] is the Anuttara `0/1` witness/source ground; [[M1]] is where `0/1 + 1/0 = 1/1 = 100%` is defined as the `+1` parent of the α-quaternionic spine. Any M0' teaching, inspector, route, or graph badge that mentions `137 = 64 + 72 + 1` must keep that distinction visible and route the parent-coupling detail to M1'/M2'/M3'. This is a boundary against the earlier shorthand that seated the parent (and its witnessing axis) at the prior ground; M0' carries witness-ground, not parent ownership (DR-M1-1, swept 2026-07-07).
 
 ## §M0'-2 Inferential-Language Delta
 
@@ -106,11 +289,76 @@ M0' consumes [[S2]] projections of [[neosemantics]], [[Graph Data Science|GDS]],
 
 Per [[m5-prime-system-shape-and-tauri-ide-canon]] §1.2 and §4.2, the M0 graph viewer is both a 0-side daily graph affordance and an integrated IDE substrate panel. The same graph contract applies in both modes: daily mode defaults to readable/summonable graph depth; IDE mode may expose developer-grade Anuttara syntax, OWL/SHACL, GDS, source/spec/code/test anchors, and M5 operational routes. The mode changes disclosure depth, not authority.
 
+## §M0'-CALC-COMPLETENESS — Calculus Completeness Documentation
+
+Per Tranche 01.T1.14 of [[01-m0-anuttara-reconciliation]], this section documents the calculus completeness items: equational theory, dash pentavalence, the seven DR-CALC underdetermination resolutions, and the M0→M1 seam. These are DOC-ONLY additions — no code changes.
+
+### (a) Law 3 — Identity-Chains as Equational Theory
+
+The `=` chains in the Anuttara corpus declare **identity-classes**, not computations: a long chain such as `(0- + -0) = ## = R+# = R# = 00 = =` is one node viewed five ways. The reduction system runs **modulo** this equational theory: reduction rules fire over equivalence classes, not raw terms.
+
+The compound connective `=/≠` (Reflective Distinction, the Brimming Void's native copula — everything equal-AND-unequal) is **deliberately paraconsistent**. In the calculus it is a **first-class superposition connective**; in any DL/OWL export it is **annotation-only** and must never enter a classical-logic projection.
+
+**Kernel structure:** `M0_IDENTITY_CHAINS[]` — the corpus's `=` chains compiled as equivalence-class membership tables. These are consumed by `m0_calc_reduce` for modulo-rewriting and by the OWL/SHACL projection layer for `owl:sameAs` cluster generation.
+
+### (b) Law 7 — Dash Pentavalence
+
+The `-` mark is **five things by position** — positional polysemy, hence parseable:
+
+1. **Operator** — prefix/postfix operator (chiral placement is structural per Law 1)
+2. **Subtraction** — infix arithmetic subtraction
+3. **Range** — coordinate range marker (e.g., `4-5`)
+4. **Chirality-mark** — dominance indicator on numerator or denominator (`2-/2` vs `1/1-`)
+5. **Strikethrough** — negation/annulment mark
+
+The BNF must type each occurrence by context. Position determines function — this is not ambiguity but positional polysemy.
+
+**The `~` is NOT canon syntax** (per DR-CALC-2): it is the author's meta-pointer ("this element relates as these coordinate positions"), excluded from the token alphabet. `→` stays in-language as the reduction arrow; the addresses migrate to S2 node metadata.
+
+**Structural facts read off the address-spine** remain valid as metadata observations:
+- **Dual addresses** mark hinge-positions (e.g., Archetype 4 at `3.5/4.0` = the three-hexad hinge of DR-CALC-5 in address form)
+- **Spans** mark maturation-as-occupation
+- **M0-level spine vs address-phase spine counter-flow** (like R1/R4): the deepest M0 nodes annotate at **synthesis** phases — `5.0/5.1` four-fold-zero poles, `4.5/5.2` Parameśvara — Anuttara resident at the Möbius seam `(5/0)`, the void as the inside of the return (feeds the M0'↔M5-0' Klein seam)
+
+### (c) The Seven DR-CALC Underdeterminations — ALL RESOLVED
+
+All seven underdeterminations were determined by direct user determination (session 2026-06-12, full resolutions in [[13-decision-register]] §DR-CALC-1..7). The BNF freeze is unblocked.
+
+| DR | Status | Summary |
+|----|--------|---------|
+| **DR-CALC-1** | **VALIDATED** | O#-derived full precedence: `()` absolute > lexical chirality-dash > `x//` > `x` > `+`/infix `-` (one level, chiral) > `/` > `=`/`=/≠`. The operator family IS O#'s cycle; Śiva re-derives the six as cosmic punctuation. |
+| **DR-CALC-2** | **RESOLVED-AS-ANNOTATION** | `~` out of the grammar; addresses to metadata; hinge/span/counter-flow facts preserved as observations. |
+| **DR-CALC-3** | **VALIDATED** | 8-fold = four ops × two 00-operands; framing asymmetry orthogonal. |
+| **DR-CALC-4** | **VALIDATED** | `x//` = superposition-preserving multiplication (all branch-pairs retained; Law-4 tensor path). |
+| **DR-CALC-5** | **VALIDATED** | 18 = 12 (archetypal numbers 0–9 + 0/1 + `(-)`) + 4 (the prior-level transcendent quaternio: `00/(00-00)`, `(00)/00/00`, `(0/1)/00x00`, `9/(00+00)` — 4-fold zero ↔ 8-fold zero-zero, doubled) + 2 (Mirror children `()`/`-`). The three-hexad octave law: `{(), -, (-), 0, 1, 0/1} → {0/1, 2, 3, 4, 5} → {5, 6, 7, 8, 9, (00+00)}`, hinged at 0/1 and 5. 6×3 = 18 = 6g(g=3), genus-3 as three overlapping hexads; nesting: 0,1 ⊂ 0/1 and (),- ⊂ (-); aligns the 8-fold zero-zero to the O# arithmetic operators. |
+| **DR-CALC-6** | **VALIDATED** | `X0 = 0/1` → recursive query-object (Law 6). Physics grounding: `X(1) = (0,4,2,2,9)` IS the electroweak breaking spectrum (`0=M_γ`, `4=(B,W¹,W²,W³)`, `2=(W⁺,W⁻)`, `2=(A,Z)`, `9/7`=N5 closure into QCD) per `ql_physics_anthropic_chemistry_alignment_v2.md`. |
+| **DR-CALC-7** | **VALIDATED-NUANCED** | `0-` is a mirror-artifact — transient by genesis, consumed in concrescence, but chirality is preserved as principle, NOT a hard lock; no invariant forbids `0-` re-arising wherever mirroring operates. |
+
+### (d) M0→M1 Seam — Five Inheritance Joints
+
+The M0→M1 boundary is not a gap but a **seam** with five inheritance joints (cross-link Track 02):
+
+1. **genesis→axiom:** Svabhava derives `(0/1) = (00/00) = (##/R#)` from the Anuttara ground; M1 **declares** its inheritance but never re-performs the genesis. The derivation lives in M0; the axiomatisation lives in M1.
+
+2. **O# as the handover-object:** O5's quadratic re-derivation of 0/1 and O4's `0/0 = %` mints the ratio-table's `%`. The O# operator cycle is the object that passes from M0 calculus to M1 number theory — M0 performs the operators; M1 inherits their results as constants.
+
+3. **The two twelves:** substance-12 + grammar-12 → P/P′, lenses, chromatic field — cardinality inherited from M0, not invented by M1. The twelve-fold structure is M0's archetypal count M1 receives.
+
+4. **The genus-ladder (`6g`):** M0 = 18 at g=3, M1 = 6 at g=1 — same law (`6g`), different handle-count because g (genus) differs. Three hexads at M0 collapse to one hexad at M1 via the 18→6 reduction already consumed by DR-M3-LENS-18. The genus parameter tracks the dimensionality of the handle-body.
+
+5. **Musical traces (inverse epogdoon 8/9):** the ratio 8/9 inside Archetype 1's harmonic formula; the 8+1=9 law (Law 5) beneath M1's 9/8 tick. M1's harmonic ratios are traces of M0's structural ratios — M1 sounds what M0 structures.
+
+**Derivations-to-be-earned** (not identities — per the explication's own self-critique, these are projections to be earned through demonstration, not asserted as given):
+
+1. **9/8 as "wholeness-over-the-eight":** the ratio 9/8 (M1's whole-step) is the M0 law 8+1=9 in M1 harmonic register — a derivation, not an identity. M1 must earn this ratio through its own harmonic demonstration, not inherit it as an axiom.
+
+2. **Vāk-register mapping:** the tentative correspondence M0-0/1≈Parā, M0-3≈Paśyantī, M0-4≈Madhyamā, M0-5≈condition-of-Vaikharī maps the M0 coordinate articulation onto the four levels of Vāk (Speech). This mapping is a derivation-to-be-earned — it must be demonstrated through the actual speech-acts of the system, not stipulated as a structural identity.
+
 ## Open Questions / Contradiction Register
 
 - [[alpha_quaternionic_integration_across_M_stack]] contains the requested §0.1, but no §18 heading in the current file; no alpha §18 delta has been silently applied.
 - [[alpha_quaternionic_integration_across_M_stack]] §7.1 says "No structural change" for M0'-SPEC, while [[m4-prime-psychoid-cymatic-field-engine]] §19.1 requires M0'-SPEC additions. This spec treats the additions as rendering/service-consumption law, not as a change to M0 topology or ownership.
-- Source naming is not yet uniform: [[anuttara-language-map]] exposes `c_1_symbol` / `c_1_complete_formulation`, while graph-view specs speak of `symbol` / `formulation_type`. Until S2 publishes the normalized schema contract, M0' must surface provenance and missing-field states explicitly.
+- Source naming canon is resolved by DR-M0-2: [[S2]] publishes `c_1_*` as canonical (`c_1_symbol`, `c_1_formulation_type`, `c_1_complete_formulation`), while unprefixed `symbol`, `formulation_type`, and `complete_formulation` remain documented aliases/projections only. M0' must surface provenance and missing-field states explicitly.
 - The C kernel and S2 graph relation counts differ by design: the kernel declares the 65 core relations while Neo4j may carry broader Anuttara relation sets. M0' treats mismatches in the core-65 audit as readiness blockers, and treats broader relation deltas as S2/M5 review questions.
 
 ## Required [[MathemeHarmonicProfile]] Fields
@@ -121,6 +369,7 @@ Per [[m5-prime-system-shape-and-tauri-ide-canon]] §1.2 and §4.2, the M0 graph 
 - `resonance72`: both `legacyResonanceIndex` and `lensAnchorIndex`.
 - `pointerAnchor`: selected coordinate, QL position, relation descriptors, source/spec/code/test anchors, and graph-law provenance.
 - `depositionAnchor`: safe DAY/NOW/session and episode handle references only.
+- `m0_void_structure_ring`: exactly 16 ordered kernel-authored Void-Structure lens rows under the literal snake-case wire key; every row carries `lensIndex`, `#0-4-{n}` coordinate, non-empty label, and explicit provenance state.
 
 ## Privacy Boundary
 
@@ -136,6 +385,7 @@ M0' may show public-current graph topology and safe profile facts. It must not e
 
 - Selecting a coordinate fetches canonical S2 node data and safe profile data from real services.
 - Tests prove all legacy `#` coordinates resolve as M-family coordinate projections and never fork into a second coordinate namespace.
+- Tests prove the lazy browser renders the real 108→96 residual invariant, fixed 20-row pages, non-overlapping coordinate order, explicit `M0` root, and shared-coordinate selection through a spawned gateway and live [[Neo4j]].
 - Tests prove M0' graph view renders within 100ms of a `selectCoordinate` action against a populated local S2 graph seeded from canonical exports or a real local S2 service.
 - Tests prove [[Graph Data Science|GDS]] overlay rings render from [[S2]]-provided [[FastRP]]/[[PageRank]]/similarity/community metadata and disappear cleanly when GDS is unavailable.
 - Tests prove the Anuttara inspector renders `symbol`, `formulation_type`, and `complete_formulation` only from S2 node properties, ontology-derived fields, or documented raw export aliases with provenance.

@@ -137,9 +137,8 @@ async fn s0_mediation_adapter_rejects_dispatch_tools_without_upstream_vak_eviden
         )
         .await;
 
-    let err = result.expect_err(
-        "S0 adapter must reject dispatch_agent without upstream vak-evaluate evidence",
-    );
+    let err = result
+        .expect_err("S0 adapter must reject dispatch_agent without upstream vak-evaluate evidence");
     assert!(
         err.message.contains("upstream"),
         "rejection message must cite upstream evidence requirement; got: {}",

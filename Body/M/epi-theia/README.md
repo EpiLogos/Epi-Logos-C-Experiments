@@ -8,8 +8,8 @@ UX-facing architecture and subsystem documentation lives in `Idea/Pratibimba/Sys
 
 | Path | Role |
 | --- | --- |
-| `theia-app/` | The Theia application host |
-| `electron-app/` | Electron packaging/runtime shell |
+| `electron-app/` | Canonical full-fidelity Electron application target |
+| `theia-app/` | Browser-mode target derived from the same extensions for gateway/remote use |
 | `extensions/` | Theia extensions for M' subsystems, layouts, bridge, plugins, and acceptance harness |
 | `patches/`, `scripts/`, package manifests | Build and workspace tooling |
 | `node_modules/` | Local dependency install; runtime artifact, not vault knowledge |
@@ -38,7 +38,19 @@ pnpm test
 pnpm start
 ```
 
+`pnpm start` launches the Electron target. Use `pnpm start:browser` when
+testing the gateway-served browser-mode target.
+
 Use `pnpm test:contracts` for the contract and acceptance test set declared in `package.json`.
+
+## Target Discipline
+
+Electron is the primary development and acceptance surface for the full
+Pratibimba System. It carries both layouts: `daily-0-1` for the first-mounted
+0/1 Nara/body surface and `ide-deep` for the summoned 4+2 workbench. Browser
+mode is derived from the same source tree and must not become the only target
+that carries a Pratibimba surface package; it is the gateway-mediated remote
+profile for hosted, mobile, or on-the-go access.
 
 ## Residency Guardrails
 

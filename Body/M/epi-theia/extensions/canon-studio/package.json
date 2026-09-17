@@ -1,0 +1,44 @@
+{
+  "name": "@pratibimba/canon-studio",
+  "version": "0.1.0",
+  "description": "Canon Studio Theia extension: Monaco markdown editing with QL/Bimba decorations, Smart Connections autocomplete via s1'.semantic.*, and Hen vault writes via s1'.vault.*.",
+  "license": "MIT",
+  "files": [
+    "lib",
+    "src",
+    "style"
+  ],
+  "main": "lib/common/index.js",
+  "types": "lib/common/index.d.ts",
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module"
+    }
+  ],
+  "keywords": [
+    "theia-extension",
+    "epi-logos",
+    "canon-studio",
+    "markdown",
+    "s1-semantic",
+    "s1-vault"
+  ],
+  "dependencies": {
+    "@theia/core": "1.56.0",
+    "@theia/monaco": "1.56.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.4.5"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -b -w",
+    "clean": "rimraf lib",
+    "test": "pnpm build && node --test tests/canon-contract.test.mjs"
+  }
+}

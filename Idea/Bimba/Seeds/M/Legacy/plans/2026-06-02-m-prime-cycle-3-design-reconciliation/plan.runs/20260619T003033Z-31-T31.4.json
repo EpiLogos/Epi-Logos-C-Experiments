@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T003033Z-31-T31.4",
+  "taskId": "31.T31.4",
+  "startedAt": "2026-06-19T00:30:33.966Z",
+  "owner": "codex-m-dev-31-t31-4",
+  "leaseExpiresAt": "2026-06-19T02:30:33.966Z",
+  "worktree": null,
+  "task": {
+    "id": "31.T31.4",
+    "trackId": "31",
+    "tranche": "T31.4",
+    "title": "Activity-bar mode contributions",
+    "effort": null,
+    "file": "31-chrome-contributions-catalog.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/31-chrome-contributions-catalog.md",
+    "dependsOn": [
+      "31.T31.3"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/pratibimba-layouts/src/common/activity-bar-modes.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

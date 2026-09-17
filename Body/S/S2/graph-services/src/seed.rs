@@ -155,6 +155,16 @@ pub fn seed_relationship_types() -> &'static [&'static str] {
     SEED_REL_TYPES
 }
 
+/// Baseline snapshots compared before/after a seed run.
+///
+/// `family_coordinates` accepts BOTH representations of `c_4_layer` on purpose.
+/// The seeder writes the kind tag `'COORDINATE'`, but the 84 `:Coordinate:Stack`
+/// nodes carry the S-layer index `0`-`5` as an INTEGER instead — a second
+/// semantic on the same key, left in place by DR-S2-LAYER-1 because the integer
+/// is not a bad cast. Counting only the string silently under-reported the 12
+/// S-family roots, which looks like seed loss and is not. An INTEGER `c_4_layer`
+/// occurs only on those Stack coordinates, so admitting it is exact, not a
+/// widening.
 pub fn seed_baseline_snapshot_queries() -> Vec<SeedBaselineQuery> {
     vec![
         SeedBaselineQuery {
@@ -167,7 +177,9 @@ pub fn seed_baseline_snapshot_queries() -> Vec<SeedBaselineQuery> {
                             count(DISTINCT CASE WHEN n.coordinate STARTS WITH 'Weave_' THEN n END) AS weaves,
                             count(DISTINCT CASE WHEN n.coordinate STARTS WITH 'CF_' THEN n END) AS context_frames,
                             count(DISTINCT CASE WHEN n.coordinate STARTS WITH 'Family_' THEN n END) AS family_meta_nodes,
-                            count(DISTINCT CASE WHEN n.c_4_layer = 'COORDINATE' THEN n END) AS family_coordinates,
+                            count(DISTINCT CASE WHEN n.c_4_layer = 'COORDINATE'
+                                                  OR valueType(n.c_4_layer) STARTS WITH 'INTEGER'
+                                             THEN n END) AS family_coordinates,
                             count(DISTINCT CASE WHEN n.c_4_layer = 'VAK' THEN n END) AS vak_nodes",
         },
         SeedBaselineQuery {
@@ -203,7 +215,7 @@ async fn merge_node(
     type_label: &str,
     name: &str,
     family: &str,
-    layer: &str,
+    layer: Option<&str>,
     ql_position: i64,
     topo_mode: &str,
     weave_state: f64,
@@ -211,26 +223,52 @@ async fn merge_node(
     flags: i64,
 ) -> Result<(), String> {
     let uuid = coord_uuid(coordinate);
+    // `c_4_layer` is written ONLY when the kind discriminates. An ordinary
+    // coordinate used to get the literal 'COORDINATE', which says nothing on a
+    // coordinate graph and duplicated the `:Coordinate` label it already has.
+    let layer_clause = if layer.is_some() {
+        "n.c_4_layer = $layer, "
+    } else {
+        ""
+    };
     let cypher = format!(
+        // ON CREATE SET, never a bare SET.
+        //
+        // This is a BOOTSTRAP fixture: its job is to bring the root coordinate
+        // nodes into existence on a NEW graph instance. It is not an upgrade
+        // path and it has no business editing a coordinate that already exists.
+        //
+        // With a bare `SET` this MERGE was silently destructive without any
+        // DELETE involved: run against a populated graph it MATCHED the real
+        // ontology's root coordinates and overwrote nine properties on each.
+        // The documented casualty is `c_4_layer` on the `:Coordinate:Stack`
+        // nodes (S0-S5, S0'-S5'), which carry the S-layer index as an INTEGER
+        // per DR-S2-LAYER-1 (see `seed_baseline_snapshot_queries` below) and
+        // had it replaced by the string 'COORDINATE' on every seeder run.
+        //
+        // The label is applied unconditionally because adding a label is
+        // additive and idempotent; only the PROPERTY writes are create-only.
         "MERGE (n:Bimba {{coordinate: $coord}}) \
-         SET n:{}, \
+         ON CREATE SET \
+             {layer_clause}\
              n.c_2_uuid = $uuid, \
              n.c_1_name = $name, \
              n.c_4_family = $family, \
-             n.c_4_layer = $layer, \
              n.c_4_ql_position = $pos, \
              n.c_4_topo_mode = $topo, \
              n.c_4_weave_state = $weave, \
              n.c_4_inversion_state = $inv, \
-             n.c_4_flags = $flags",
-        type_label
+             n.c_4_flags = $flags \
+         SET n:{type_label}",
+        layer_clause = layer_clause,
+        type_label = type_label
     );
     let q = query(&cypher)
         .param("coord", coordinate)
         .param("uuid", uuid.as_str())
         .param("name", name)
         .param("family", family)
-        .param("layer", layer)
+        .param("layer", layer.unwrap_or(""))
         .param("pos", ql_position)
         .param("topo", topo_mode)
         .param("weave", weave_state)
@@ -254,8 +292,10 @@ async fn merge_family_node(
 ) -> Result<(), String> {
     let uuid = coord_uuid(coordinate);
     let q = query(
+        // Create-only, for the same reason as the coordinate seeder above: a
+        // bootstrap fixture must never edit a node that already exists.
         "MERGE (n:Bimba {coordinate: $coord}) \
-         SET n:Family, \
+         ON CREATE SET \
              n.c_2_uuid = $uuid, \
              n.c_1_name = $name, \
              n.c_1_description = $domain, \
@@ -265,7 +305,8 @@ async fn merge_family_node(
              n.c_4_topo_mode = 'NONE', \
              n.c_4_weave_state = 0.0, \
              n.c_4_inversion_state = 0, \
-             n.c_4_flags = 0",
+             n.c_4_flags = 0 \
+         SET n:Family",
     )
     .param("coord", coordinate)
     .param("uuid", uuid.as_str())
@@ -342,7 +383,7 @@ pub async fn seed_coordinate_space(client: &Neo4jClient) -> Result<String, Strin
         "Root",
         "Non-Dual Self-Inversion",
         "NONE",
-        "PSYCHOID",
+        Some("PSYCHOID"),
         -1,
         "KLEIN",
         0.0,
@@ -387,7 +428,7 @@ while never ceasing to be itself.",
             "Psychoid",
             PSYCHOID_NAMES[pos],
             "NONE",
-            "PSYCHOID",
+            Some("PSYCHOID"),
             pos as i64,
             PSYCHOID_TOPO[pos],
             pos as f64,
@@ -403,7 +444,7 @@ while never ceasing to be itself.",
     // ------------------------------------------------------------------
     for (name, weave) in WEAVE_COORDS {
         merge_node(
-            client, name, "Weave", name, "NONE", "WEAVE", -1, "TORUS", *weave, 0, 0x00,
+            client, name, "Weave", name, "NONE", Some("WEAVE"), -1, "TORUS", *weave, 0, 0x00,
         )
         .await?;
         node_count += 1;
@@ -419,7 +460,7 @@ while never ceasing to be itself.",
             "ContextFrame",
             name,
             "NONE",
-            "CONTEXT_FRAME",
+            Some("CONTEXT_FRAME"),
             idx as i64,
             "LEMNISCATE",
             0.0,
@@ -461,7 +502,7 @@ while never ceasing to be itself.",
                 "Coordinate",
                 name,
                 family_letter,
-                "COORDINATE",
+                None,
                 pos as i64,
                 PSYCHOID_TOPO[pos],
                 pos as f64,
@@ -480,7 +521,7 @@ while never ceasing to be itself.",
                 "Coordinate",
                 &inv_name,
                 family_letter,
-                "COORDINATE",
+                None,
                 pos as i64,
                 PSYCHOID_TOPO[pos],
                 pos as f64,
@@ -502,7 +543,7 @@ while never ceasing to be itself.",
             "VakCoordinate",
             name,
             "NONE",
-            "VAK",
+            Some("VAK"),
             idx as i64,
             "LEMNISCATE",
             0.0,

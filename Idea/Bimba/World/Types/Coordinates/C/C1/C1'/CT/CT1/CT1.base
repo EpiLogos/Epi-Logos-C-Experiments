@@ -1,0 +1,40 @@
+coordinate: "CT1"
+c_4_artifact_role: "base-view"
+c_1_ct_type: "CT1"
+c_5_reflects: "[[CT1]]"
+c_0_source_coordinates: ["[[CT1]]", "[[CT]]", "[[C5]]"]
+filters:
+  or:
+    - 'c_1_ct_type == "CT1"'
+    - 'ctx_type == "CT1"'
+views:
+  - type: table
+    name: "Day substance library"
+    group_by: c_4_artifact_role
+    order:
+      - coordinate
+      - c_4_artifact_role
+      - c_3_ctx_frame
+      - c_3_created_at
+      - c_3_updated_at
+      - c_5_crystallisation_state
+      - c_0_source_coordinates
+      - p0_grounds
+      - p1_definitions
+    sort:
+      - { property: coordinate, direction: ASC }
+  - type: table
+    name: "Night' definition gaps"
+    filters:
+      or:
+        - 'c_5_reflection_complete == false'
+        - 'c_5_crystallisation_state == "incubating_type_index"'
+        - 'c_5_crystallisation_state == "incubating"'
+    group_by: c_5_crystallisation_state
+    order:
+      - coordinate
+      - c_4_artifact_role
+      - c_5_crystallisation_state
+      - c_0_source_coordinates
+      - p0_grounds
+      - p1_definitions

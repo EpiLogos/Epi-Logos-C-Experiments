@@ -143,6 +143,19 @@ export const BODY_LITE_WIDGET_IDS = {
     SAFE_SOURCE_HANDLE_ROW: 'pratibimba.body.safe-source-handle-row'
 } as const;
 
+/** Projection-lenses owned by body-lite-surface but rendered through existing Theia surfaces. */
+export const BODY_LITE_PROJECTION_LENSES = {
+    LIBRARY_PROJECTION: 'pratibimba.daily.library-projection'
+} as const;
+
+export const BODY_LITE_LIBRARY_PROJECTION_LENS = Object.freeze({
+    id: BODY_LITE_PROJECTION_LENSES.LIBRARY_PROJECTION,
+    lensKind: 'coordinate-overlay',
+    targetSurface: 'theia-file-tree',
+    ownerExtension: 'body-lite-surface',
+    standaloneExtension: false
+});
+
 /**
  * Truncate a label to the safe rendering length. The lite surface never
  * shows raw bodies — even labels are clamped to avoid leaking sentence-

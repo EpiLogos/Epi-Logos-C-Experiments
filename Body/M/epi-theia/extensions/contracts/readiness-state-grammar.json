@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "authority": {
+    "contractTaxonomy": "Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json#readinessTaxonomy",
+    "runtimeSurface": "Body/M/epi-theia/extensions/m-extension-runtime/src/common/readiness.ts",
+    "decision": "DR-WC-OB-1",
+    "rule": "The nine readiness states remain the contract taxonomy; flavours are render-time variants only."
+  },
+  "states": [
+    {
+      "state": "bridge_unavailable",
+      "cssClass": "mext-banner-state-bridge_unavailable",
+      "uxResponse": {
+        "presentation": "overlay",
+        "label": "Bridge unavailable",
+        "detail": "Reconnect through OmniPanel Gateway, then retry the readiness source.",
+        "affordances": ["reconnect", "retry"],
+        "deepLinks": ["omnipanel.gateway"]
+      }
+    },
+    {
+      "state": "profile_missing_field",
+      "cssClass": "mext-banner-state-profile_missing_field",
+      "uxResponse": {
+        "presentation": "inline_badge",
+        "label": "awaiting profile.<field>",
+        "detail": "A required profile field has not arrived in the readiness ledger.",
+        "affordances": ["readiness-ledger"],
+        "deepLinks": ["readiness.ledger"]
+      }
+    },
+    {
+      "state": "s2_graph_blocked",
+      "cssClass": "mext-banner-state-s2_graph_blocked",
+      "uxResponse": {
+        "presentation": "overlay",
+        "label": "S2 graph unreachable",
+        "detail": "The S2 graph authority is not reachable; inspect diagnostics and Neo4j status.",
+        "affordances": ["diagnostic"],
+        "deepLinks": ["diagnostics.neo4j-status"]
+      }
+    },
+    {
+      "state": "s3_subscription_blocked",
+      "cssClass": "mext-banner-state-s3_subscription_blocked",
+      "uxResponse": {
+        "presentation": "overlay",
+        "label": "S3 gateway down",
+        "detail": "The S3 gateway subscription path is blocked.",
+        "affordances": ["retry", "status-link"],
+        "deepLinks": ["gateway.status"]
+      }
+    },
+    {
+      "state": "s5_review_blocked",
+      "cssClass": "mext-banner-state-s5_review_blocked",
+      "uxResponse": {
+        "presentation": "inline_badge",
+        "label": "atelier review pending",
+        "detail": "Review authority has not cleared this surface yet.",
+        "affordances": ["omnipanel-review"],
+        "deepLinks": ["omnipanel.review"]
+      }
+    },
+    {
+      "state": "authority_payload_missing",
+      "cssClass": "mext-banner-state-authority_payload_missing",
+      "uxResponse": {
+        "presentation": "inline_badge",
+        "label": "authority payload pending",
+        "detail": "A named owner must publish the payload before this surface can render fully.",
+        "affordances": ["payload-owner"],
+        "deepLinks": ["readiness.ledger"]
+      }
+    },
+    {
+      "state": "privacy_blocked",
+      "cssClass": "mext-banner-state-privacy_blocked",
+      "uxResponse": {
+        "presentation": "inline_shimmer",
+        "label": "protected_local - consent required",
+        "detail": "Protected local material needs explicit opt-in before crossing the UI boundary.",
+        "affordances": ["privacy-opt-in"],
+        "deepLinks": ["privacy.opt-in"]
+      }
+    },
+    {
+      "state": "degraded_but_readable",
+      "cssClass": "mext-banner-state-degraded_but_readable",
+      "uxResponse": {
+        "presentation": "inline_degraded",
+        "label": "degraded but readable",
+        "detail": "The surface can render read-only chrome while an upstream authority catches up.",
+        "affordances": ["read-only-chrome"],
+        "deepLinks": ["readiness.ledger"]
+      }
+    },
+    {
+      "state": "ready_public_current",
+      "cssClass": "mext-banner-state-ready_public_current",
+      "uxResponse": {
+        "presentation": "normal_render",
+        "label": "ready public current",
+        "detail": "The public current payload is ready for normal rendering.",
+        "affordances": [],
+        "deepLinks": []
+      }
+    }
+  ],
+  "flavours": [
+    {
+      "flavour": "pending_first_tick",
+      "parentState": "bridge_unavailable",
+      "cssClass": "mext-banner-flavour-pending_first_tick",
+      "uxResponse": {
+        "presentation": "inline_shimmer",
+        "label": "Awaiting first profile-tick...",
+        "detail": "The bridge is up, but no profile tick has reached the runtime yet.",
+        "affordances": ["shimmer"],
+        "deepLinks": ["omnipanel.gateway"]
+      }
+    },
+    {
+      "flavour": "s3_gateway_unreachable",
+      "parentState": "s3_subscription_blocked",
+      "cssClass": "mext-banner-flavour-s3_gateway_unreachable",
+      "uxResponse": {
+        "presentation": "overlay",
+        "label": "S3 gateway unreachable",
+        "detail": "Render alias for the S3 subscription blocked contract state.",
+        "affordances": ["retry", "status-link"],
+        "deepLinks": ["gateway.status"]
+      }
+    },
+    {
+      "flavour": "s5_atelier_blocked",
+      "parentState": "s5_review_blocked",
+      "cssClass": "mext-banner-flavour-s5_atelier_blocked",
+      "uxResponse": {
+        "presentation": "inline_badge",
+        "label": "S5 atelier blocked",
+        "detail": "Render alias for an S5 review block pending atelier action.",
+        "affordances": ["omnipanel-review"],
+        "deepLinks": ["omnipanel.review"]
+      }
+    },
+    {
+      "flavour": "pending_dataset",
+      "parentState": "authority_payload_missing",
+      "cssClass": "mext-banner-flavour-pending_dataset",
+      "uxResponse": {
+        "presentation": "inline_badge",
+        "label": "pending dataset",
+        "detail": "A named dataset is still absent from the authority payload.",
+        "affordances": ["dataset-chip"],
+        "deepLinks": ["readiness.ledger"]
+      }
+    },
+    {
+      "flavour": "ready_protected_local",
+      "parentState": "ready_public_current",
+      "cssClass": "mext-banner-flavour-ready_protected_local",
+      "uxResponse": {
+        "presentation": "normal_render",
+        "label": "ready protected local",
+        "detail": "Normal render with protected_local privacy-class marker and border tint.",
+        "affordances": ["privacy-class-marker"],
+        "deepLinks": ["privacy.opt-in"]
+      }
+    }
+  ]
+}

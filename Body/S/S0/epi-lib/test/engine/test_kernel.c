@@ -114,7 +114,7 @@ int main(void) {
         assert(nearf(squares[2], 0.0f));
     } PASS;
 
-    TEST(energy_decomposition_combines_latent_lens_and_r_energy) {
+    TEST(energy_total_is_456_weighted_lens_and_r_diagnostic_excluded) {
         Kernel_Bioquaternion state = kernel_bioquaternion_init(
             (Quaternion){ .w = 1.0f, .x = 0.0f, .y = 0.0f, .z = 0.0f },
             (Quaternion){ .w = 0.0f, .x = 1.0f, .y = 0.0f, .z = 0.0f }
@@ -129,11 +129,16 @@ int main(void) {
         assert(nearf(energy.bimba_pratibimba_energy, 2.0f));
         assert(nearf(energy.lens_energy, 1.0f / 72.0f));
         assert(nearf(energy.r_energy, 0.25f));
-        assert(nearf(energy.total_energy, 2.0f + (1.0f / 72.0f) + 0.25f));
+        /* Canonical (4·E4 + 5·E5 + 6·E6)/15 with E4 = 0; the 2.0 latent
+           misalignment is diagnostic-only and must NOT enter the total. */
+        assert(nearf(
+            energy.total_energy,
+            ((5.0f * (1.0f / 72.0f)) + (6.0f * 0.25f)) / 15.0f
+        ));
 
         Kernel_Energy null_lens_energy = kernel_energy_evaluate(state, NULL, NULL, 0.25f);
         assert(nearf(null_lens_energy.lens_energy, 0.0f));
-        assert(nearf(null_lens_energy.total_energy, 2.0f + 0.25f));
+        assert(nearf(null_lens_energy.total_energy, (6.0f * 0.25f) / 15.0f));
     } PASS;
 
     TEST(tick_phase_maps_12_epogdoons_to_8_elements) {

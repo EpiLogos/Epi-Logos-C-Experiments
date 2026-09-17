@@ -1,6 +1,8 @@
 use clap::{Subcommand, ValueEnum};
 use neo4rs::query;
 
+use portal_core::{E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs};
+
 pub mod alignment_validator;
 pub mod analyse;
 pub mod anuttara;
@@ -266,9 +268,9 @@ pub use epi_s2_graph_services::{
     maybe_refresh_semantic_embeddings, option1_projection_plan, parse_yaml_frontmatter,
     seed::seed_baseline_coordinates, seed::seed_baseline_snapshot_queries,
     seed::seed_relationship_types, GraphMethodParams, GraphMethodService, GraphNodeRequest,
-    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest, HybridFusionConfig,
-    KernelResonanceObservationRequest, LiveGraphBackedEvidence, PointerWebRefreshRequest,
-    RetrievalResult,
+    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+    HarmonicRelationMaterializationRequest, HybridFusionConfig, KernelResonanceObservationRequest,
+    LiveGraphBackedEvidence, PointerWebRefreshRequest, RetrievalResult,
 };
 
 fn compose_file_path() -> Result<String, String> {
@@ -921,6 +923,14 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
             let neo4j = client::Neo4jClient::connect(&config)
                 .map_err(|e| format!("connect failed: {}", e))?;
             let result = cypher::run(&neo4j, query, &parsed, mode, *limit).await?;
+            // CCT-16 (v): the --write/--admin arms MUST bump graph_revision
+            // — without it the Redis cold tier serves stale coordinate
+            // lookups for up to the TTL after a manual Cypher write.
+            if *write || *admin {
+                if let Err(error) = epi_s2_graph_services::meta::bump_graph_revision(&neo4j).await {
+                    eprintln!("[graph] graph_revision bump failed: {error}");
+                }
+            }
             serde_json::to_string_pretty(&result).map_err(|e| e.to_string())
         }
         GraphCmd::Ingest {
@@ -960,8 +970,9 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
                     [1.0, 0.0, 0.0, 0.0],
                     [0.5, 0.5, 0.5, 0.5],
                     Some(&analysis.resonance_vector),
-                    None,
-                    0.0,
+                    &E4PersonalInputs::default(),
+                    &E5HarmonicInputs::default(),
+                    &E6VerifierInputs::default(),
                 );
                 let envelope =
                     epi_kernel_contract::KernelTickEnvelope::from_kernel_projection(1, &projection)
@@ -1020,8 +1031,9 @@ pub async fn dispatch_with_format(cmd: &GraphCmd, json: bool) -> Result<String, 
                     [1.0, 0.0, 0.0, 0.0],
                     [0.5, 0.5, 0.5, 0.5],
                     Some(&analysis.resonance_vector),
-                    None,
-                    0.0,
+                    &E4PersonalInputs::default(),
+                    &E5HarmonicInputs::default(),
+                    &E6VerifierInputs::default(),
                 );
                 let envelope =
                     epi_kernel_contract::KernelTickEnvelope::from_kernel_projection(2, &projection)

@@ -1,0 +1,50 @@
+{
+  "runId": "20260714T182135Z-06-T6.1",
+  "taskId": "06.T6.1",
+  "startedAt": "2026-07-14T18:21:35.772Z",
+  "owner": "fable-c",
+  "leaseExpiresAt": "2026-07-14T19:21:35.772Z",
+  "worktree": null,
+  "task": {
+    "id": "06.T6.1",
+    "trackId": "06",
+    "tranche": "T6.1",
+    "title": "Register `s5'.gnostic.*` over production epi-gnostic — EXPANDED to ONE substrate layer",
+    "effort": null,
+    "file": "06-m5-epii-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/06-m5-epii-reconciliation.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+      "vendor/legacy/epi-tauri/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-13T18:51:43.206Z",
+        "text": "PARTIAL (verify-first audit, fable-c 2026-07-13): LANDED on current substrate — 7 unique s5'.gnostic.* gateway methods (ingest/query/resolve/notebook/status/models/musical_transcript; gateway-contract protocol.rs:169-175) + s0'.anuttara.trace (protocol.rs:54, dispatch_plan.rs:932) + epi techne gnosis CLI family (8 subcommands incl. IngestGnostic/QueryGnostic/Enrich shelling to Python epi-gnostic). MISSING vs tranche minimum — 6 named methods (candidates, etymology, list_notebooks, episode_search, evidence_trace, query_with_layers), the s5_one_substrate_e2e_acceptance gateway test (absent), and epi-CLI parity for the missing methods. Canonical execution tranche for this EXPANDED scope is 12.T12.2 (pending) — track 12 is leased to session B2; building the missing routes here would invade that lane. Requeue for close after 12.T12.2 lands; then 6.1 closes as the M5'-side verification. NOW: [[Idea/Empty/Present/13-07-2026/20260713-164306-b0e228/now.md]]"
+      },
+      {
+        "at": "2026-07-14T13:23:59.578Z",
+        "text": "BLOCKED on dependency chain (flip from review, fable-c 2026-07-14): substrate audit unchanged (7 gnostic methods + s0'.anuttara.trace + techne-gnosis CLI landed; 6 named methods + e2e acceptance test missing). Canonical execution tranche 12.T12.2 is dependency-gated 12.T12.2←12.T12.19←12.T12.18←12.T12.17; 12.T12.17 closed this session, 12.T12.18/12.T12.19 remain to build. 6.1 closes as the M5-prime-side verification once 12.T12.2 lands. NOW: [[Idea/Empty/Present/14-07-2026/20260714-001500-1a58f7/now.md]]"
+      },
+      {
+        "at": "2026-07-14T18:21:35.573Z",
+        "text": "REQUEUE from blocked (fable-c 2026-07-14): the dependency cleared — 12.T12.2 closed done this session (11 gnostic methods live, all five ONE-substrate surfaces, e2e round-trip with live Redis proof). 6.1 now closes as the M5-prime-side verification."
+      }
+    ],
+    "claimedAt": "2026-07-13T18:51:43.014Z",
+    "completedAt": null,
+    "owner": "fable-c",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-14T13:15:45.949Z",
+    "runId": "20260713T185143Z-06-T6.1",
+    "worktree": null,
+    "carrier": "CARRIER: M5' EBM observatory (72-grid, Klein-V4 tritone squares, Logos Atelier) in pratibimba-app. SUBSTRATE: epii-autoresearch-core resonance_ebm + portal-core. §2 track 06/26."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "epi-s4-agent-runtime",
+  "private": true,
+  "type": "module",
+  "description": "S4 agent runtime (ta-onta carriers + pi-agent). ESM marker for the node:test corpus — run from the REPO ROOT (tests read Body/S/S5/... fixtures via root-relative paths): node --test 'Body/S/S4/**/*.test.ts' 'Body/S/S4/**/*.test.mjs'. Gated as the 'ta-onta' suite in .codex/scripts/verify-all.mjs (Track 00 T9). `node --test` STRIPS types rather than checking them, so the 'ta-onta-types' suite runs the strict tsc gate below over the dependency-free layer.",
+  "scripts": {
+    "typecheck": "node ../../../.codex/scripts/typecheck-ta-onta.mjs"
+  },
+  "devDependencies": {
+    "@earendil-works/pi-ai": "^0.80.7",
+    "@earendil-works/pi-coding-agent": "0.80.7",
+    "@earendil-works/pi-tui": "^0.80.7",
+    "@types/node": "^22.10.0",
+    "typebox": "1.1.38",
+    "typescript": "^5.7.0",
+    "yaml": "2.9.0"
+  }
+}

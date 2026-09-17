@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/onboarding",
+  "plan": "track-32-t32.14-onboarding-visual-regression",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "viewports": [
+    { "id": "electron-default", "width": 1440, "height": 900, "deviceScaleFactor": 2, "mode": "electron" },
+    { "id": "browser-ci", "width": 1280, "height": 800, "deviceScaleFactor": 1, "mode": "browser" }
+  ],
+  "suites": [
+    {
+      "id": "cold-start-splash",
+      "frames": [
+        { "id": "bridge_unavailable", "domSnapshot": "dom/cold-start-bridge_unavailable.html", "screenshot": "screenshots/cold-start-bridge_unavailable.png" },
+        { "id": "pending_first_tick", "domSnapshot": "dom/cold-start-pending_first_tick.html", "screenshot": "screenshots/cold-start-pending_first_tick.png" },
+        { "id": "ready_public_current", "domSnapshot": "dom/cold-start-ready_public_current.html", "screenshot": "screenshots/cold-start-ready_public_current.png" }
+      ]
+    },
+    {
+      "id": "walkthrough-overlay",
+      "frames": [
+        { "id": "walkthrough.0-1-toggle", "anchor": "layout-toggle", "domSnapshot": "dom/walkthrough-overlay.html", "screenshot": "screenshots/walkthrough-0-1-toggle.png" },
+        { "id": "walkthrough.omnipanel", "anchor": "omnipanel", "domSnapshot": "dom/walkthrough-overlay.html", "screenshot": "screenshots/walkthrough-omnipanel.png" },
+        { "id": "walkthrough.activity-bar", "anchor": "activity-bar", "domSnapshot": "dom/walkthrough-overlay.html", "screenshot": "screenshots/walkthrough-activity-bar.png" },
+        { "id": "walkthrough.status-bar", "anchor": "status-bar", "domSnapshot": "dom/walkthrough-overlay.html", "screenshot": "screenshots/walkthrough-status-bar.png" },
+        { "id": "walkthrough.day-now-anchor", "anchor": "day-now", "domSnapshot": "dom/walkthrough-overlay.html", "screenshot": "screenshots/walkthrough-day-now-anchor.png" },
+        { "id": "walkthrough.cosmic-personal", "anchor": "cosmic-personal", "domSnapshot": "dom/walkthrough-overlay.html", "screenshot": "screenshots/walkthrough-cosmic-personal.png" }
+      ]
+    },
+    {
+      "id": "per-mn-empty-states",
+      "frames": [
+        { "id": "m0-anuttara", "domSnapshot": "dom/empty-state-m0-anuttara.html", "screenshot": "screenshots/empty-state-m0-anuttara.png" },
+        { "id": "m1-paramasiva", "domSnapshot": "dom/empty-state-m1-paramasiva.html", "screenshot": "screenshots/empty-state-m1-paramasiva.png" },
+        { "id": "m2-parashakti", "domSnapshot": "dom/empty-state-m2-parashakti.html", "screenshot": "screenshots/empty-state-m2-parashakti.png" },
+        { "id": "m3-mahamaya", "domSnapshot": "dom/empty-state-m3-mahamaya.html", "screenshot": "screenshots/empty-state-m3-mahamaya.png" },
+        { "id": "m4-nara", "domSnapshot": "dom/empty-state-m4-nara.html", "screenshot": "screenshots/empty-state-m4-nara.png" },
+        { "id": "m5-epii", "domSnapshot": "dom/empty-state-m5-epii.html", "screenshot": "screenshots/empty-state-m5-epii.png" }
+      ]
+    },
+    {
+      "id": "pasu-wizard",
+      "frames": [
+        { "id": "birth-date", "domSnapshot": "dom/pasu-wizard.html", "screenshot": "screenshots/pasu-birth-date.png" },
+        { "id": "birth-location", "domSnapshot": "dom/pasu-wizard.html", "screenshot": "screenshots/pasu-birth-location.png" },
+        { "id": "natal-chart", "domSnapshot": "dom/pasu-wizard.html", "screenshot": "screenshots/pasu-natal-chart.png" },
+        { "id": "jungian", "domSnapshot": "dom/pasu-wizard.html", "screenshot": "screenshots/pasu-jungian.png" },
+        { "id": "gene-keys", "domSnapshot": "dom/pasu-wizard.html", "screenshot": "screenshots/pasu-gene-keys.png" },
+        { "id": "human-design", "domSnapshot": "dom/pasu-wizard.html", "screenshot": "screenshots/pasu-human-design.png" }
+      ]
+    },
+    {
+      "id": "xor-ceremony",
+      "frames": [
+        { "id": "pulse", "domSnapshot": "dom/xor-ceremony-pulse.html", "screenshot": "screenshots/xor-ceremony-pulse.png" }
+      ]
+    },
+    {
+      "id": "reduced-motion",
+      "preference": "epi-logos.motion.reduced",
+      "expectedNoMotionClasses": ["no-shimmer", "no-pulse", "no-fold"],
+      "frames": [
+        { "id": "motion-suppressed", "domSnapshot": "dom/reduced-motion.html", "screenshot": "screenshots/reduced-motion.png" }
+      ]
+    }
+  ],
+  "screenshotManifest": "screenshots/baseline.manifest.json"
+}

@@ -1,0 +1,76 @@
+{
+  "id": "2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+  "title": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+  "goal": "Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+  "status": "completed",
+  "createdAt": "2026-07-04T09:44:35.853Z",
+  "updatedAt": "2026-07-04T10:29:56.251Z",
+  "contextPackIds": [
+    "2026-07-04T09-44-35-854Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+  ],
+  "sessionIds": [],
+  "sourceIds": [
+    "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+  ],
+  "pageIds": [
+    "output:12-fold-tick-spanda-kerykeion-temporality-substrate",
+    "output:major-arcana-codon-chromosome-transcription-m3",
+    "output:rotational-state-protocol-minor-arcana-37-27-split",
+    "graph:share-card",
+    "graph:report",
+    "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+    "dashboard:dashboards/research-map",
+    "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+    "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+    "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+  ],
+  "nodeIds": [
+    "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+    "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+    "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+  ],
+  "changedPaths": [
+    "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/00-verification-harness.md",
+    "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md",
+    "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/plan.runs/t2.11-tick-biology-physics-scoping.md"
+  ],
+  "gitRefs": [],
+  "notes": [
+    {
+      "id": "note:2026-07-04T09-45-10-303Z:1",
+      "text": "Added T2.11 (Spanda dual-oscillator primitive / tick floor) to rerun Track 02 + red test (g) to Track-00 T4. Diagnosis: (0/1)/(1/0) is STATIC algebra (SPANDA_POLE_A/B m1.h:162-166, SEED_BITS=0x03, spanda_invert=11-n) with NO oscillator; 12-ring bare LUT, 720 cover asserted (engine.c:71) not derived. Primitive = Haken-Kelso-Bunz relative-phase field; bistable 0/pi = fused/opposed poles; sin+2sin coupling = fundamental+octave = 16/9 hook; 12-tick = sampled projection. Freq anchor conserved-delta ~2.5Hz (Buzsaki 2013 non-allometric; PLOS 2026 98-species 2.7Hz), not fake-2.0. Guardrail: HKB != spinor, 720 stays M1-5 quaternionic. All 3 spanda equations mapped. Removed superseded handoff prompt.",
+      "createdAt": "2026-07-04T09:45:10.303Z"
+    },
+    {
+      "id": "note:2026-07-04T10-13-18-704Z:2",
+      "text": "Opus biology/physics scoping landed -> plan.runs/t2.11-tick-biology-physics-scoping.md. LOAD-BEARING NEGATIVE: delta ~2.5Hz (neural) vs codon THz (molecular) = ~12 orders apart, NO coupling. Tick<->codon relation is a SHARED DISCRETE CLOCK INDEX (codon=6-bit addr m3.h:65-89, kernel.rs:407-409), not resonance. Frequency lives at M2 (Cousto audio Hz 126-221 m2.h:320-331), not M3. Caught+fixed over-claim in MY T2.11 ('makes M1->M3 alignment physical' -> corrected to shared-clock-index). Fixed citation (Buzsaki/Logothetis/Singer 2013 + Mizuseki 2014). Flagged real canon bug: physical-pole-stack-architecture.md:37 '12 Hz natural breath-rate' = a UI DISPLAY FRAMERATE mislabeled as biology, conflated w/ 1Hz heartbeat + 2.5Hz beat (three distinct rates).",
+      "createdAt": "2026-07-04T10:13:18.704Z"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "decision:2026-07-04T09-45-10-303Z:1",
+      "text": "Rooting confirmed M1-0(0/1)/M1-1(1/0)/M1-3(Trika); Ananda separate not the locus. Residency OPEN for Architect (recommended split-authority: C owns discrete invariants, Rust portal-core/spanda.rs owns continuous HKB field). Tranche marked proposed/PENDING VALIDATION.",
+      "createdAt": "2026-07-04T09:45:10.303Z"
+    },
+    {
+      "id": "decision:2026-07-04T10-03-40-875Z:2",
+      "text": "LOCKED in-session 2026-07-04 (no out-of-session ratification): residency = C-authority (epi-lib m1.c/m1.h authors HKB phi-field + flowering + twelvefold) propagating to portal-core/spanda.rs surface. Twelvefold is INTRINSIC to spanda flowering (M1-3), prior to+generative of QL — NOT a ring sampled from above; current RING_SIZE 12 '6x2' has causality backwards. Recorded in CHARTER 'Resolved by plan authority'. Removed all PENDING/OPEN framing from T2.11 (CHARTER already says 'nothing to re-decide'; the deferral was self-inflicted, not the harness). Track-00 code-verification untouched — it gates code-closure, never design. Opus subagent scoping biology<->M3-physics/codon async -> plan.runs/t2.11-tick-biology-physics-scoping.md (informs, non-blocking).",
+      "createdAt": "2026-07-04T10:03:40.875Z"
+    },
+    {
+      "id": "decision:2026-07-04T10-13-18-704Z:3",
+      "text": "OPEN design questions from memo (non-blocking, for Architect): (1) codon advances on phi-crossing/beat vs discrete tick12? (2) is M2->M3 9:8 resonance72->64 the right symbolic bridge for a delta-anchored tick? Q on twelvefold-derives-from-flowering already DECIDED (derives; tick12_flowers_from_oscillation red test).",
+      "createdAt": "2026-07-04T10:13:18.704Z"
+    },
+    {
+      "id": "decision:2026-07-04T10-29-56-251Z:4",
+      "text": "CODON ADVANCEMENT locked (Architect 2026-07-04): codon advances on the real quaternionic-rotational state + clock + epogdoon, NOT on discrete tick12 (which is a readout, the toy-like layer being moved off). Stepping rule DERIVED from quaternion.rs/hopf.rs/RING_QUATERNION_LUT + epogdoon + M1-5/M3 canon, never a build-time choice. EPOGDOON (9:8) is structurally/theoretically essential and preserved everywhere (kernel_tick_from_epogdoon, 12-epogdoon cycle, 16/9 gap, resonance72=8x9->64) — the earlier 'is 9:8 the right bridge' question was misframed and withdrawn. Added 'Decisions locked' + 'Must be derived not invented' blocks to T2.11 so no context-less agent decides load-bearing choices. New red test codon_advances_on_rotational_state_not_tick12 in T4(g). Meta-rule from Architect: make ALL decisions now with context so context-less build agents only execute.",
+      "createdAt": "2026-07-04T10:29:56.251Z"
+    }
+  ],
+  "outcome": "T2.11 + T4(g) integrated as proposals; residency (split-authority recommended) + build-start await Architect ratification",
+  "followUps": [],
+  "artifactPath": "/Users/admin/Documents/Epi-Logos C Experiments/state/memory/tasks/2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02.json",
+  "markdownPath": "/Users/admin/Documents/Epi-Logos C Experiments/wiki/memory/tasks/2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02.md"
+}

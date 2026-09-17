@@ -22,6 +22,7 @@ fn sample_vak() -> VakAddress {
         cs: CsField {
             code: "CS0".to_owned(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     }
 }

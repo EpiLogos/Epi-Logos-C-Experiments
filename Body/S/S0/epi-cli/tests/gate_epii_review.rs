@@ -9,7 +9,8 @@ use support::TestGatewayClient;
 /// gate-root subtree fail loudly.
 #[test]
 fn gate_review_store_subpath_is_stable_at_s0_s5_boundary() {
-    use epi_logos::gate::review;
+    // T53.07: the s5'.review.* law lives at its coordinate now.
+    use epi_s5_epii_review_core::s5_handlers as review;
     use std::path::PathBuf;
 
     assert_eq!(review::STORE_SUBPATH, ["s5", "epii-review"]);

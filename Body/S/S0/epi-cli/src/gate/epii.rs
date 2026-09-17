@@ -3,9 +3,10 @@
 //!
 //! 13.T7 audit (2026-06-02):
 //!
-//! - `status`, `deposit`, `runtime_context` are **thin adapters** over
+//! - `status` and `runtime_context` are cross-coordinate composites over
 //!   `epi_s5_epii_agent_core::EpiiAgentAccess` plus already-S3/S2-owned
-//!   session/temporal/spacetimedb helpers. No S5 DTO construction in S0.
+//!   session/temporal/spacetimedb helpers. The S5-owned `deposit` and
+//!   `deposit.list` handlers live in `epii-agent-core`; S0 keeps no duplicate.
 //! - `gnosis_context_retrieve` is the S0-exposed `epi techne` surface for
 //!   read-only Gnosis/kbase queries. Per the plan: S0 may expose
 //!   `epi techne`/compatibility commands, **S5 owns governance**, **S2 owns
@@ -19,18 +20,18 @@
 //!   they re-attach the S3'/S5'/S2 ownership markers but make no governance
 //!   decisions.
 //!
-//! Follow-up flag (anima's lane, 09.T7 active):
+//! Follow-up flag:
 //! - `capability_envelope` encodes the per-agent capability matrix
 //!   (`mayMutateIdentity`, `mayPromoteInterpretation`, `requiresEpiiReview`)
 //!   inline in S0. This is S5 governance policy and should move into
 //!   `epii-agent-core` as `EpiiAgentAccess::capability_envelope(agent_id)`.
-//!   Do not move during anima's active edit on 09.T7 — flagged for a
-//!   follow-up task. S0 will then delegate to that helper.
+//!   S0 should eventually delegate to that helper once its public surface is
+//!   architect-ratified.
 
 use std::path::Path;
 
 use epi_s3_gateway_contract::{GRAPHITI_INVOCATION_OWNER, GRAPHITI_RUNTIME_AUTHORITY};
-use epi_s5_epii_agent_core::{DepositRequest, EpiiAgentAccess};
+use epi_s5_epii_agent_core::EpiiAgentAccess;
 use serde_json::{json, Value};
 
 use crate::nara::kairos;
@@ -45,12 +46,6 @@ pub async fn status(state_root: impl AsRef<Path>) -> Result<Value, String> {
         serde_json::to_value(access(state_root).snapshot()?).map_err(|err| err.to_string())?;
     snapshot["world_return"] = world_return_status().await;
     Ok(snapshot)
-}
-
-pub fn deposit(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {
-    let request: DepositRequest =
-        serde_json::from_value(params.clone()).map_err(|err| err.to_string())?;
-    serde_json::to_value(access(state_root).deposit(request)?).map_err(|err| err.to_string())
 }
 
 pub fn runtime_context(state_root: impl AsRef<Path>, params: &Value) -> Result<Value, String> {

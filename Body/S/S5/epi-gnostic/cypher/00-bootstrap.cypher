@@ -3,6 +3,12 @@
 CREATE CONSTRAINT bimba_coordinate_unique IF NOT EXISTS
   FOR (n:BimbaNode) REQUIRE n.coordinate IS UNIQUE;
 
+CREATE INDEX gnostic_bimba_coordinate IF NOT EXISTS
+  FOR (n:Gnostic) ON (n.bimba_coordinate);
+
+CREATE INDEX gnostic_bimba_resonances IF NOT EXISTS
+  FOR (n:Gnostic) ON (n.bimba_resonances);
+
 CREATE INDEX bimba_family IF NOT EXISTS
   FOR (n:BimbaNode) ON (n.c_4_family);
 

@@ -10,13 +10,17 @@
 // extensions/test/jiva-siva-no-local-tables.test.mjs (added with this slice).
 
 import * as React from 'react';
-import {
+import type {
     MathemeHarmonicProfileBoundary
 } from '@pratibimba/m-extension-runtime';
-import {
+import type {
     ConsentAction,
     JivaSivaPaneAvailability
 } from '@pratibimba/integrated-composition';
+import { useCompositionProfile } from '@pratibimba/integrated-composition/composition-profile-context';
+import { buildPersonalBeingPatternView } from './personal-recognition-composition';
+
+export { buildPersonalBeingPatternView };
 
 interface PaneShellProps {
     readonly title: string;
@@ -100,7 +104,7 @@ const PaneShell: React.FC<PaneShellProps> = ({
 };
 
 export interface JivaSivaPanesProps {
-    readonly profile: MathemeHarmonicProfileBoundary | null;
+    readonly profile?: MathemeHarmonicProfileBoundary | null;
     readonly m4Foreground: JivaSivaPaneAvailability;
     readonly m0Backdrop: JivaSivaPaneAvailability;
     readonly m5Side: JivaSivaPaneAvailability;
@@ -116,22 +120,24 @@ export const JivaSivaPanes: React.FC<JivaSivaPanesProps> = ({
     onDeepOpen,
     isActionPermitted
 }) => {
-    const bedrockLink = readPayloadString(profile, 'bedrock_link');
-    const selectedCoordinate = readPayloadString(profile, 'selected_coordinate');
-    const activityDots = readPayloadString(profile, 'activity_resonance_dots');
-    const fieldSummary = readPayloadString(profile, 'field_state_summary');
-    const gdsClusters = readPayloadString(profile, 'gds_clusters');
-    const m0Provenance = readPayloadString(profile, 'm0_coordinate_provenance');
-    const reviewCount = readPayloadString(profile, 'review_queue_count');
-    const continuityHandle = readPayloadString(profile, 'continuity_handle');
-    const lastCanon = readPayloadString(profile, 'last_canon_recognition_event');
+    const shared = useCompositionProfile();
+    const paneProfile = profile ?? shared.profile;
+    const bedrockLink = readPayloadString(paneProfile, 'bedrock_link');
+    const selectedCoordinate = readPayloadString(paneProfile, 'selected_coordinate');
+    const activityDots = readPayloadString(paneProfile, 'activity_resonance_dots');
+    const fieldSummary = readPayloadString(paneProfile, 'field_state_summary');
+    const gdsClusters = readPayloadString(paneProfile, 'gds_clusters');
+    const m0Provenance = readPayloadString(paneProfile, 'm0_coordinate_provenance');
+    const reviewCount = readPayloadString(paneProfile, 'review_queue_count');
+    const continuityHandle = readPayloadString(paneProfile, 'continuity_handle');
+    const lastCanon = readPayloadString(paneProfile, 'last_canon_recognition_event');
     return (
         <div className="jiva-siva-layout">
             <PaneShell
                 title="Personal Field Foreground"
                 extensionLabel="M4 Nara (public-safe handles)"
                 availability={m4Foreground}
-                profile={profile}
+                profile={paneProfile}
                 deepActions={[
                     { action: 'open-m4-field-deep', label: 'Open deep M4 field' },
                     { action: 'open-identity-quaternion', label: 'Open identity quaternion' },
@@ -156,7 +162,7 @@ export const JivaSivaPanes: React.FC<JivaSivaPanesProps> = ({
                 title="Canonical Graph / City Backdrop"
                 extensionLabel="M0 Anuttara (prior ground)"
                 availability={m0Backdrop}
-                profile={profile}
+                profile={paneProfile}
                 deepActions={[]}
             >
                 <dl>
@@ -170,7 +176,7 @@ export const JivaSivaPanes: React.FC<JivaSivaPanesProps> = ({
                 title="Epii Review / Continuity Side"
                 extensionLabel="M5 Epii (governed metadata)"
                 availability={m5Side}
-                profile={profile}
+                profile={paneProfile}
                 deepActions={[
                     { action: 'publish-shared-archetype', label: 'Publish shared archetype event' }
                 ]}

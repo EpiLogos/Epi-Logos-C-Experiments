@@ -89,7 +89,7 @@ The Crystal / Diamond. **Dispatch:** Atropos (Reflect). CF: Sophia `(5/0)`.
 
 ### CP 4.4 -> P4' Discovery: What sources inform?
 
-The Source / Well. **Dispatch:** Lachesis (Query). CF: Psyche `(4.0/1-4.4/5)`.
+The Source / Well. **Dispatch:** Lachesis (Query). CF: Anima `(4.0/1-4.4/5)`.
 
 ### CP 4.3 -> P3' Patterns: What repeats?
 
@@ -106,7 +106,7 @@ The Scribe / Witness. **Dispatch:** Klotho (Assert). CF: Logos `(0/1)`.
 
 ### CP 4.0 -> P0' Questions: What don't we know?
 
-The Unknown / Void. CF: Nous `(0000)`. Fresh context invocation.
+The Unknown / Void. CF: Nous `(00/00)`. Fresh context invocation.
 P0' Questions complete the Night' cycle and open the next Day cycle via Mobius return.
 
 ---
@@ -130,7 +130,7 @@ MOBIUS_RETURN: [P5' insight summary] | [P0' questions list]
 | P' Position | Moira | CF Code | Functional Role |
 |-------------|-------|---------|-----------------|
 | P1' Traces | **Klotho** | `(0/1/2)` Eros | Assert -- embed traces into graph |
-| P4' Discovery | **Lachesis** | `(4.0/1-4.4/5)` Psyche | Query -- retrieve context sources |
+| P4' Discovery | **Lachesis** | `(4.0/1-4.4/5)` Anima | Query -- retrieve context sources |
 | P5' Insight | **Atropos** | `(5/0)` Sophia | Reflect -- cut to essential synthesis |
 
 ---

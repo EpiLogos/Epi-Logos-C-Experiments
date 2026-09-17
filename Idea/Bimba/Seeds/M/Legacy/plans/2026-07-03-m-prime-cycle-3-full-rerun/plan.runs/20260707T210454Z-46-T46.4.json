@@ -1,0 +1,35 @@
+{
+  "runId": "20260707T210454Z-46-T46.4",
+  "taskId": "46.T46.4",
+  "startedAt": "2026-07-07T21:04:54.320Z",
+  "owner": "fable-b2",
+  "leaseExpiresAt": "2026-07-07T22:34:54.320Z",
+  "worktree": null,
+  "task": {
+    "id": "46.T46.4",
+    "trackId": "46",
+    "tranche": "T46.4",
+    "title": "Z-to-Aeon graduation",
+    "effort": null,
+    "file": "46-aeon-loop-unit-paradigm.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/46-aeon-loop-unit-paradigm.md",
+    "dependsOn": [
+      "46.T46.3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/46-aeon-loop-unit-paradigm.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

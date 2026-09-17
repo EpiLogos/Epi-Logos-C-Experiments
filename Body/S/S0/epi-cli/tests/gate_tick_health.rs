@@ -62,7 +62,7 @@ async fn agent_and_chat_events_reach_all_connected_clients() {
             ))
             .await
             .expect("connect request should send");
-        let _connect = next_json(socket).await;
+        let _connect = wait_for_response(socket, 1).await;
     }
 
     first
@@ -81,7 +81,7 @@ async fn agent_and_chat_events_reach_all_connected_clients() {
         ))
         .await
         .expect("agent should send");
-    let accepted_agent = next_json(&mut first).await;
+    let accepted_agent = wait_for_response(&mut first, 2).await;
     let agent_run_id = accepted_agent["result"]["runId"]
         .as_str()
         .expect("agent should return run id")
@@ -104,16 +104,47 @@ async fn agent_and_chat_events_reach_all_connected_clients() {
         ))
         .await
         .expect("chat.send should send");
-    let accepted = next_json(&mut first).await;
+    let accepted = wait_for_response(&mut first, 3).await;
     let run_id = accepted["result"]["runId"]
         .as_str()
-        .expect("chat.send should return run id")
+        .unwrap_or_else(|| panic!("chat.send should return run id; got {accepted}"))
         .to_owned();
 
     let first_chat = wait_for_run_event(&mut first, "chat", &run_id).await;
     let second_chat = wait_for_run_event(&mut second, "chat", &run_id).await;
     assert_eq!(first_chat["payload"]["runId"], run_id);
     assert_eq!(second_chat["payload"]["runId"], run_id);
+}
+
+/// Read frames until the `res` frame answering request `id` arrives.
+///
+/// The socket is a MULTIPLEXED stream: `tick` / `health` / `heartbeat` are
+/// broadcast on a timer and `agent` / `chat` run events are pushed to every
+/// connected client, so the next text frame after a request is very often NOT
+/// its response. Taking `next_json` as "the response" made this test depend on
+/// the broadcaster losing a race — the `chat.send` read landed on a trailing
+/// `agent` run event from the previous request and read a null `result.runId`.
+/// Matching on `type == "res"` AND the request id is the only honest read.
+async fn wait_for_response(
+    socket: &mut tokio_tungstenite::WebSocketStream<
+        tokio_tungstenite::MaybeTlsStream<tokio::net::TcpStream>,
+    >,
+    id: u64,
+) -> Value {
+    timeout(Duration::from_secs(5), async {
+        loop {
+            let frame = next_json(socket).await;
+            if frame["type"] == "res" && frame["id"].as_u64() == Some(id) {
+                assert!(
+                    frame.get("error").map(Value::is_null).unwrap_or(true),
+                    "gateway returned an error for request {id}: {frame}"
+                );
+                return frame;
+            }
+        }
+    })
+    .await
+    .unwrap_or_else(|_| panic!("expected a response frame for request {id} before timeout"))
 }
 
 async fn wait_for_event(

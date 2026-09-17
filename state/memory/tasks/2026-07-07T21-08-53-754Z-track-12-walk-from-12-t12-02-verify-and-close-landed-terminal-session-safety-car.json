@@ -1,0 +1,62 @@
+{
+  "id": "2026-07-07T21-08-53-754Z-track-12-walk-from-12-t12-02-verify-and-close-landed-terminal-session-safety-car",
+  "title": "Memory Task: Track 12 walk from 12.T12.02: verify-and-close landed terminal-sessio...",
+  "goal": "Track 12 walk from 12.T12.02: verify-and-close landed terminal-session-safety carryovers",
+  "status": "completed",
+  "createdAt": "2026-07-07T21:08:53.754Z",
+  "updatedAt": "2026-07-07T21:09:06.337Z",
+  "contextPackIds": [
+    "2026-07-07T21-08-53-764Z-track-12-walk-from-12-t12-02-verify-and-close-landed-terminal-session-safety-car"
+  ],
+  "sessionIds": [],
+  "sourceIds": [
+    "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+  ],
+  "pageIds": [
+    "output:quaternionic-computational-core-truth-ledger",
+    "output:quaternionic-computational-core-truth-ledger-kernel-tests",
+    "output:major-arcana-codon-chromosome-transcription-m3",
+    "output:12-fold-tick-spanda-kerykeion-temporality-substrate",
+    "output:rotational-state-protocol-minor-arcana-37-27-split",
+    "output:track-00-verification-harness-hardening-t8-backend-gate",
+    "graph:report",
+    "graph:share-card",
+    "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+    "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+    "dashboard:dashboards/research-map",
+    "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+    "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+    "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+    "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+    "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+    "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+    "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+    "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+    "memory:2026-07-07T21-08-15-542Z-track-12-walk-from-12-t12-02-verify-and-close-landed-terminal-session-safety-car"
+  ],
+  "nodeIds": [
+    "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+    "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+    "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+    "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+    "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+    "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+    "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+    "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+    "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+    "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+    "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+    "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+    "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+    "decision:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha:decision:2026-07-06T12-37-17-167Z:1",
+    "memory:2026-07-07T21-08-15-542Z-track-12-walk-from-12-t12-02-verify-and-close-landed-terminal-session-safety-car"
+  ],
+  "changedPaths": [],
+  "gitRefs": [],
+  "notes": [],
+  "decisions": [],
+  "outcome": "Closed 9 tranches in the cycle-3 full-rerun ledger under owner fable-b2 with independent fable-b2-verifier W-gate PASS records: [[12.T12.02]]-[[12.T12.08]] (TerminalBinding/TerminalLease substrate: gateway session fields, tmux persist launch, subagent/team authority, projection surfaces, Pleroma techne_terminal tools, monitor contract, e2e harness; 49-pass targeted epi-cli run + 8/8 terminal_tools node tests), [[12.T12.1]] (Pi/Anima/Aletheia 3-tier architecture audit), [[46.T46.4]] (Z-to-Aeon graduation, 7/7 incl real [[Aeon]] /World form accrual). BLOCKED: [[12.T12.9]] audit is verified-ready (audit doc + 16/16 moirai tests + PASS record) but the ledger walks track 12 in numeric-decimal order so 12.9 sorts LAST; [[12.T12.2]] (DR-S5-ONE-1 ONE-substrate expansion) is the first real build gap: 7/13 gateway methods, no epi gnostic CLI parity, no GNOSTIC_LABEL, no one-substrate round-trip e2e.",
+  "followUps": [],
+  "artifactPath": "/Users/admin/Documents/Epi-Logos C Experiments/state/memory/tasks/2026-07-07T21-08-53-754Z-track-12-walk-from-12-t12-02-verify-and-close-landed-terminal-session-safety-car.json",
+  "markdownPath": "/Users/admin/Documents/Epi-Logos C Experiments/wiki/memory/tasks/2026-07-07T21-08-53-754Z-track-12-walk-from-12-t12-02-verify-and-close-landed-terminal-session-safety-car.md"
+}

@@ -1,0 +1,37 @@
+{
+  "runId": "20260625T080441Z-05-T5.3",
+  "taskId": "05.T5.3",
+  "startedAt": "2026-06-25T08:04:41.090Z",
+  "owner": "codex-m-dev-05-t5-3-graphiti-nara",
+  "leaseExpiresAt": "2026-06-25T10:04:41.090Z",
+  "worktree": null,
+  "task": {
+    "id": "05.T5.3",
+    "trackId": "05",
+    "tranche": "T5.3",
+    "title": "Graphiti runtime Nara relations insertion API",
+    "effort": null,
+    "file": "05-m4-nara-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+    "dependsOn": [
+      "05.T5.27"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/**",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

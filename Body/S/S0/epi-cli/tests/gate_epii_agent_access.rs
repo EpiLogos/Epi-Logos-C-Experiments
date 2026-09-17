@@ -340,10 +340,21 @@ async fn s5_epii_runtime_context_resolves_gateway_session_and_projection_readine
         context["temporal"]["kernel"]["harmonicProfile"]["binary"],
         context["temporal"]["kernel"]["harmonicProfile"]["mahamaya"]
     );
-    assert_eq!(
-        context["temporal"]["kernel"]["harmonicProfile"]["binary"]["transcriptionState"],
-        "provisional-gap"
-    );
+    // transcriptionState is tick-derived: non-exact on 64 epogdoon
+    // round trips, anchored on the 8 exact multiples of 9
+    // (luts/mahamaya.rs epogdoon_has_round_trip_loss). Hard-pinning one value is a
+    // wall-clock lottery — assert the LAW: state matches the frame's own
+    // roundTripLoss flag.
+    let binary = &context["temporal"]["kernel"]["harmonicProfile"]["binary"];
+    let expected_state = if binary["roundTripLoss"]
+        .as_bool()
+        .expect("roundTripLoss is a bool")
+    {
+        "compressed-nonexact-round-trip"
+    } else {
+        "round-trip-anchor"
+    };
+    assert_eq!(binary["transcriptionState"], expected_state);
     assert!(
         context["temporal"]["kernel"].get("bioquaternion").is_none(),
         "Epii/Anima runtime context must not expose protected bioquaternion state"
@@ -448,9 +459,12 @@ async fn s5_graphiti_session_memory_methods_are_bounded_and_runtime_honest() {
             json!({
                 "sourceAgent": "anima",
                 "sessionKey": "agent:main:main",
-                "dayId": "19-05-2026",
+                // Month-first per `vault::paths::DAY_ID_FORMAT` (CHARTER:28) —
+                // this fixture spelled 19 May day-first, contradicting its own
+                // `20260519` NOW stamp on the very next line.
+                "dayId": "05-19-2026",
                 "namespaceRef": "pratibimba-test",
-                "vaultNowPath": "Idea/Empty/Present/19-05-2026/20260519-120000-main/now.md",
+                "vaultNowPath": "Idea/Empty/Present/05-19-2026/20260519-120000-main/now.md",
                 "sourceCoordinate": "M2",
                 "tick12": 10,
                 "degree720": 600,
@@ -578,6 +592,9 @@ async fn live_graphiti_runtime_round_trips_session_memory_through_gateway() {
         episodes["episodes"].to_string().contains(&token),
         "live Graphiti episode storage should preserve the exact proof token; episodes={episodes:#?}"
     );
+
+    // Delete exactly what this test created.
+    purge_graphiti_group(&session_key).await;
 }
 
 #[tokio::test]
@@ -639,4 +656,117 @@ async fn s5_gnosis_context_retrieval_uses_distinct_anima_and_epii_capability_env
     assert_eq!(epii["access"]["mayPromoteInterpretation"], true);
     assert_eq!(epii["access"]["requiresHumanForIdentityMutation"], true);
     assert_eq!(epii["results"][0]["source_type"], "Canonical");
+}
+
+#[tokio::test]
+async fn s5_gnostic_gateway_methods_call_production_epi_gnostic_surface() {
+    let env = TestEnv::with_fake_pi();
+    let manifest_dir = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let epi_gnostic_root = manifest_dir
+        .join("../../S5/epi-gnostic")
+        .canonicalize()
+        .unwrap();
+    let python_bin = epi_gnostic_root.join(".venv/bin/python");
+    assert!(
+        python_bin.exists(),
+        "production epi-gnostic venv python missing at {}",
+        python_bin.display()
+    );
+
+    let harness = env.root.join("bin").join("epi-gnostic-real");
+    std::fs::create_dir_all(harness.parent().unwrap()).unwrap();
+    std::fs::write(
+        &harness,
+        format!(
+            "#!/bin/sh\nPYTHONPATH=\"{root}${{PYTHONPATH:+:$PYTHONPATH}}\" exec \"{python}\" -m epi_gnostic.cli \"$@\"\n",
+            root = epi_gnostic_root.display(),
+            python = python_bin.display()
+        ),
+    )
+    .unwrap();
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+
+        let mut permissions = std::fs::metadata(&harness).unwrap().permissions();
+        permissions.set_mode(0o755);
+        std::fs::set_permissions(&harness, permissions).unwrap();
+    }
+
+    let working_dir = env.home.join(".epi-logos/gnostic-production");
+    let env = env
+        .with_env("EPI_GNOSTIC_PYTHON", harness.display().to_string())
+        .with_env("GNOSTIC_WORKING_DIR", working_dir.display().to_string())
+        .with_env("GNOSTIC_WORKSPACE", "gateway-production-test")
+        .with_env("GNOSTIC_EMBEDDING_MODEL", "test-embedding-production")
+        .with_env("GNOSTIC_LLM_MODEL", "test-llm-production")
+        .with_env("GNOSTIC_EMBEDDING_DIM", "3072");
+
+    let mut client = TestGatewayClient::connect(env, 18921).await;
+    client.request("connect", json!({})).await.unwrap();
+
+    let status = client
+        .request("s5'.gnostic.status", json!({}))
+        .await
+        .expect("gnostic status should come from production epi-gnostic");
+    assert_eq!(status["status"], "ok");
+    assert_eq!(status["workspace"], "gateway-production-test");
+
+    let models = client
+        .request("s5'.gnostic.models", json!({}))
+        .await
+        .expect("gnostic models should come from production epi-gnostic");
+    assert_eq!(models["embedding_model"], "test-embedding-production");
+    assert_eq!(models["llm_model"], "test-llm-production");
+    assert_eq!(models["embedding_dim"], 3072);
+
+    let created = client
+        .request(
+            "s5'.gnostic.notebook",
+            json!({"action": "create", "name": "Research"}),
+        )
+        .await
+        .expect("gnostic notebook create should persist through production epi-gnostic");
+    assert_eq!(created["notebook"]["name"], "Research");
+
+    let listed = client
+        .request("s5'.gnostic.notebook", json!({"action": "list"}))
+        .await
+        .expect("gnostic notebook list should read the production registry");
+    assert_eq!(listed["notebooks"][0]["name"], "Research");
+
+    let deleted = client
+        .request(
+            "s5'.gnostic.notebook",
+            json!({"action": "delete", "name": "Research"}),
+        )
+        .await
+        .expect("gnostic notebook delete should update the production registry");
+    assert_eq!(deleted["deleted"], true);
+}
+
+/// Delete exactly the Graphiti group this test created, and nothing else.
+///
+/// See the twin in `gate_spacetimedb_bridge.rs`. A test that mints a per-run
+/// `group_id` owns it, and owning it means removing it — otherwise the graph
+/// accumulates fixture residue no one is responsible for, which is what
+/// happened here until 2026-07-30. Scoped to this run's group id, and it can
+/// never touch a `:Bimba` node.
+async fn purge_graphiti_group(session_key: &str) {
+    let group_id = session_key.replace(':', "_");
+    let Ok(client) = epi_s2_graph_services::Neo4jClient::connect(
+        &epi_s2_graph_services::Neo4jConfig::from_env(),
+    ) else {
+        return; // no live graph here; nothing was written either
+    };
+    let _ = client
+        .graph()
+        .run(
+            neo4rs::query(
+                "MATCH (n) WHERE (n:Entity OR n:Episodic) AND NOT n:Bimba \
+                 AND n.group_id = $group_id DETACH DELETE n",
+            )
+            .param("group_id", group_id),
+        )
+        .await;
 }

@@ -14,3 +14,12 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serde_yaml = "0.9"
 sha2 = "0.10"
+blake3 = "1"
+portal-core = { path = "../../S0/portal-core" }
+# S1 -> S-root is DOWNWARD and legal. This is the method-handler port S1
+# implements so S3 can route `s1'.*` here without importing S1's implementation
+# (Track 53 T53.01/T53.04).
+epi-kernel-contract = { path = "../../epi-kernel-contract" }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt"] }

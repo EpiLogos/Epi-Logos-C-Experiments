@@ -565,6 +565,7 @@ S2/S2' serves these [[Envelope]] layers:
 
 ### Gaps
 
+- `s2.graph.list` is now the constrained [[M0]] residual-browser contract: `{coordinatePrefix:'#0-0'..'#0-5', offset, limit:20}`. [[S2]] counts the live `M0`/`M0-*` set, subtracts the twelve identities projected from compiled [[M0]] `ARCHETYPE_COORDINATE_LUT`, returns stable coordinate-ordered pages plus an explicit root row, and reports `canonical` only for the 108→96 invariant. The route does not accept caller Cypher and the active [[M']] carrier owns presentation only.
 - Implement coordinate-native gateway/API parity for all `s2.graph.*` and `s2'.*` methods.
 - Complete `s1.sync.flush` or equivalent S1/S2 queue drain so vault writes reach Neo4j automatically.
 - Implement the old `bimbaCoordinate` / `#` to new [[M]] coordinate-branch migration rule consistently across Rust, TypeScript, tests, and graph data.

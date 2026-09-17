@@ -1,0 +1,39 @@
+{
+  "runId": "20260727T162124Z-50-T50.13",
+  "taskId": "50.T50.13",
+  "startedAt": "2026-07-27T16:21:24.631Z",
+  "owner": "claude-opus5-t50-vakeval-20260727",
+  "leaseExpiresAt": "2026-07-27T18:21:24.631Z",
+  "worktree": null,
+  "task": {
+    "id": "50.T50.13",
+    "trackId": "50",
+    "tranche": "T50.13",
+    "title": "`portal.vak_eval` score event: render and evaluate the run against the derived music (implement DR-VAK-6)",
+    "effort": "implement DR-VAK-6",
+    "file": "50-code-mode-orchestration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+    "dependsOn": [
+      "50.T50.12"
+    ],
+    "writeScopes": [
+      "Body/S/S0/portal-core/src/kernel/projections/diatonic.rs",
+      "Idea/Bimba/Seeds/M/M5'/ql-musical-derivation-v3.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "SUBSTRATE — Code-Mode orchestration (JSON->TS program synthesis). Body/S/S4/pi-agent base tool-scripting + Body/S/S4/ta-onta/S4-4p-anima VAK six-coordinate executor (unified spawn(pi) seam, CP-nesting, tilldone CFP4 gate, (00/00)->score lifecycle) + Body/S/S4/ta-onta/S4-5p-aletheia Mercurius ELO trial + Body/S/S3 gateway method + Body/S/S0 portal-core vak_eval/diatonic + epi-cli CF table. NEW self-contained track; briefs inline. No pratibimba-app surface of its own (score/trace is gateway-observable; a session/score pane is a later UF follow-on)."
+  }
+}

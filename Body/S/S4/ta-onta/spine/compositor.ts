@@ -1,10 +1,26 @@
 // spine/compositor.ts
 
-import type { SpineContribution, SessionContext, InjectionSlot } from "./types.ts";
+import type {
+  SpineContribution,
+  SessionContext,
+  InjectionSlot,
+  ContextPack,
+  ContextPackBlock,
+} from "./types.ts";
+import { phaseQualifiedVakToken } from "../shared/coordinate_phase.ts";
+import { contextPackSessionKey } from "./context-pack-store.ts";
 import { mkdirSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 
 const INJECT_CHAR_BUDGET = 18_000; // leave headroom under vendor's 20k
+
+/** Separator between rendered blocks and overflow tokens in the injection. */
+const BLOCK_SEPARATOR = "\n\n---\n\n";
+
+/** Render one included slot exactly as it appears in the injection. */
+function renderSlot(slot: InjectionSlot): string {
+  return `### [[${slot.coordinate}]]\n\n${slot.content}`;
+}
 
 export class SpineCompositor {
   private contributions: SpineContribution[] = [];
@@ -13,16 +29,40 @@ export class SpineCompositor {
     this.contributions.push(contribution);
   }
 
-  /** Seam 1: session_start — assemble injection package */
-  async assembleInjection(): Promise<string> {
-    const slots: InjectionSlot[] = [];
+  /**
+   * Seam 1: `before_agent_start` — assemble the session context pack.
+   *
+   * THE assembler. `assembleInjection()` and the `s4'.context.assemble`
+   * gateway surface both read this one object, so what the model is given and
+   * what an operator is shown cannot be two things. Nothing here re-renders
+   * the injection from the blocks: `pack.injection` is built once, and each
+   * block's `rendered` is the very substring that went into it.
+   */
+  async assembleContextPack(sessionKey?: string): Promise<ContextPack> {
+    const assembledAtMs = Date.now();
+
+    // Resolve every carrier first, recording failures as blocks rather than
+    // dropping them: an exploded carrier must be visible, not merely absent.
+    const resolved: {
+      contribution: SpineContribution;
+      slot: InjectionSlot | null;
+      error: string | null;
+      producedAtMs: number;
+    }[] = [];
     for (const c of this.contributions) {
       try {
-        slots.push(await c.injectionSlot());
+        const slot = await c.injectionSlot();
+        resolved.push({ contribution: c, slot, error: null, producedAtMs: Date.now() });
       } catch (e) {
+        const error = e instanceof Error ? e.message : String(e);
         console.warn(`[spine] injection slot failed for ${c.coordinate}: ${e}`);
+        resolved.push({ contribution: c, slot: null, error, producedAtMs: Date.now() });
       }
     }
+
+    const slots = resolved
+      .map(entry => entry.slot)
+      .filter((slot): slot is InjectionSlot => slot !== null);
 
     // Sort: hot first, warm second, cold excluded
     const hot = slots.filter(s => s.cost === "hot");
@@ -32,15 +72,73 @@ export class SpineCompositor {
     // Budget enforcement
     let used = 0;
     const included: InjectionSlot[] = [];
+    const overflowTokens: string[] = [];
+    const overflowTokenBySlot = new Map<InjectionSlot, string>();
     for (const slot of ordered) {
-      if (used + slot.charEstimate > INJECT_CHAR_BUDGET) break;
+      if (used + slot.charEstimate > INJECT_CHAR_BUDGET) {
+        const token = overflowVakToken(slot);
+        overflowTokens.push(token);
+        overflowTokenBySlot.set(slot, token);
+        continue;
+      }
       included.push(slot);
       used += slot.charEstimate;
     }
 
-    return included
-      .map(s => `### [[${s.coordinate}]]\n\n${s.content}`)
-      .join("\n\n---\n\n");
+    const rendered = included.map(renderSlot).join(BLOCK_SEPARATOR);
+    const injection = [rendered, ...overflowTokens].filter(Boolean).join(BLOCK_SEPARATOR);
+
+    const includedSet = new Set(included);
+    const blocks: ContextPackBlock[] = resolved.map(entry => {
+      const { contribution, slot, error, producedAtMs } = entry;
+      if (slot === null) {
+        return {
+          coordinate: contribution.coordinate,
+          cost: "cold",
+          status: "failed",
+          bytes: 0,
+          charEstimate: 0,
+          producedAtMs,
+          rendered: null,
+          vakToken: null,
+          error,
+        };
+      }
+      const status: ContextPackBlock["status"] = includedSet.has(slot)
+        ? "included"
+        : slot.cost === "cold"
+          ? "excluded-cold"
+          : "overflowed";
+      return {
+        coordinate: slot.coordinate,
+        cost: slot.cost,
+        status,
+        bytes: Buffer.byteLength(slot.content, "utf8"),
+        charEstimate: slot.charEstimate,
+        producedAtMs,
+        rendered: status === "included" ? renderSlot(slot) : null,
+        vakToken: overflowTokenBySlot.get(slot) ?? null,
+        error: null,
+      };
+    });
+
+    return {
+      version: 1,
+      sessionKey: sessionKey ?? contextPackSessionKey(),
+      assembledAtMs,
+      budget: { limitChars: INJECT_CHAR_BUDGET, usedChars: used },
+      blocks,
+      injection,
+    };
+  }
+
+  /**
+   * Seam 1 (string form) — the exact text injected as the session system
+   * prompt. A thin read of {@link assembleContextPack}; there is deliberately
+   * no second assembly path.
+   */
+  async assembleInjection(): Promise<string> {
+    return (await this.assembleContextPack()).injection;
   }
 
   /** Seam 2: session_shutdown — extract to ledger */
@@ -85,6 +183,18 @@ export class SpineCompositor {
         return `[${coord}] ${(r as PromiseFulfilledResult<string>).value}`;
       })
       .join("\n\n");
+  }
+}
+
+function overflowVakToken(slot: InjectionSlot): string {
+  const ref = slot.vakReference ?? {
+    coord: slot.coordinate,
+    dereference: "s5'.gnostic.resolve" as const,
+  };
+  try {
+    return phaseQualifiedVakToken(ref.dereference, ref.coord);
+  } catch {
+    return `<vak: method="${ref.dereference}" coord="${ref.coord}" phase="unknown" handle="${ref.dereference}(${ref.coord})">`;
   }
 }
 

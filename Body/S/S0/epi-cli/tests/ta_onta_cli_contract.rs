@@ -1,5 +1,6 @@
 mod common;
 
+use chrono::{DateTime, Local, Utc};
 use common::{run_epi, TestEnv};
 use serde_json::Value;
 
@@ -9,12 +10,20 @@ fn vault_now_path_matches_now_init_layout() {
     let vault_root = base_env.root.join("vault");
     let env = base_env.with_env("EPILOGOS_VAULT", vault_root.display().to_string());
 
+    // The day folder is the LOCAL calendar day of `--now`, spelled MONTH-FIRST,
+    // and Present is FLAT (`src/vault/paths.rs`, CHARTER:28). Derived from the
+    // same instant the CLI is given so this holds in every timezone; the session
+    // id is an explicit argument, so it is carried through verbatim.
+    let now: DateTime<Utc> = "2026-03-10T09:08:07Z".parse().unwrap();
+    let day_id = now.with_timezone(&Local).format("%m-%d-%Y").to_string();
+    let session_id = "20260310-090807-abc123";
+
     let result = run_epi(
         [
             "vault",
             "now-path",
             "--session-id",
-            "20260310-090807-abc123",
+            session_id,
             "--now",
             "2026-03-10T09:08:07Z",
         ]
@@ -30,7 +39,7 @@ fn vault_now_path_matches_now_init_layout() {
     assert_eq!(
         result.stdout.trim(),
         env.root
-            .join("vault/Empty/Present/10-03-2026/20260310-090807-abc123/now.md")
+            .join(format!("vault/Empty/Present/{day_id}/{session_id}/now.md"))
             .display()
             .to_string()
     );

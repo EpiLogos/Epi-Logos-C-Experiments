@@ -1,6 +1,8 @@
 use portal_core::{
-    ActivityStateEffect, EventPrivacyClass, NaraActivityKind, NaraEmotionalValenceHint,
-    NaraJournalParseError, NaraJournalParseInput, NaraJournalParser, NaraObservationKind,
+    period_reading, ActivityStateEffect, EventPrivacyClass, NaraActivityKind,
+    NaraEmotionalValenceHint, NaraJournalParseError, NaraJournalParseInput, NaraJournalParser,
+    NaraObservationKind, NaraPeriodDayRange, NaraPeriodGraphitiEpisode, NaraPeriodReadingInput,
+    VamaShaktiClass,
 };
 
 fn valid_input(kind: NaraActivityKind, body: &str) -> NaraJournalParseInput {
@@ -15,8 +17,19 @@ fn valid_input(kind: NaraActivityKind, body: &str) -> NaraJournalParseInput {
         matheme_handle: "matheme-profile-118".to_owned(),
         raw_body_handle: "protected://nara/activity-1".to_owned(),
         body: body.to_owned(),
+        category: None,
         source_ref: Some("[[Daily Note]]".to_owned()),
         kairos_snapshot: Some("kairos://snapshot/118".to_owned()),
+    }
+}
+
+fn valid_highlight_input(category: &str) -> NaraJournalParseInput {
+    NaraJournalParseInput {
+        category: Some(category.to_owned()),
+        ..valid_input(
+            NaraActivityKind::Highlight,
+            "Highlight from reading: Lens 3 at position 2.",
+        )
     }
 }
 
@@ -110,6 +123,165 @@ fn serialized_activity_never_leaks_raw_body_or_private_identity_fields() {
 }
 
 #[test]
+fn period_reading_computes_vama_internally_and_surfaces_only_on_request() {
+    let first = NaraJournalParser::parse(valid_input(
+        NaraActivityKind::Journal,
+        "M4-4 moved through Lens 3 at position 2 and felt heavy.",
+    ))
+    .expect("journal parse succeeds");
+    let second = NaraJournalParser::parse(valid_input(
+        NaraActivityKind::Journal,
+        "Lens 5 at position 3 felt tense and heavy before it became clear.",
+    ))
+    .expect("second journal parse succeeds");
+
+    let hidden = period_reading(NaraPeriodReadingInput {
+        period_id: "period:2026-W22".to_owned(),
+        day_range: None,
+        observations: vec![
+            first.symbolic_observation.clone(),
+            second.symbolic_observation.clone(),
+        ],
+        graphiti_episodes: Vec::new(),
+        chronos_handles: Vec::new(),
+        kairos_handles: Vec::new(),
+        history_handles: Vec::new(),
+        include_vama_classifier: false,
+    })
+    .expect("long-period reading computes from real observations");
+
+    assert!(hidden.vama_classifier_computed);
+    assert!(hidden.vama_classifier_available_on_request);
+    assert_eq!(hidden.internal_vama_classifier(), VamaShaktiClass::Daemon);
+    assert_eq!(hidden.visible_vama_classifier, None);
+    let hidden_json = serde_json::to_string(&hidden).expect("period reading serializes");
+    assert!(!hidden_json.contains("Daemon"));
+    assert!(!hidden_json.contains("daemon"));
+
+    let visible = period_reading(NaraPeriodReadingInput {
+        period_id: "period:2026-W22".to_owned(),
+        day_range: None,
+        observations: vec![first.symbolic_observation, second.symbolic_observation],
+        graphiti_episodes: Vec::new(),
+        chronos_handles: Vec::new(),
+        kairos_handles: Vec::new(),
+        history_handles: Vec::new(),
+        include_vama_classifier: true,
+    })
+    .expect("requested long-period reading surfaces classifier");
+
+    assert_eq!(visible.internal_vama_classifier(), VamaShaktiClass::Daemon);
+    assert_eq!(
+        visible.visible_vama_classifier,
+        Some(VamaShaktiClass::Daemon)
+    );
+}
+
+#[test]
+fn period_reading_reconstructs_hopf_projected_trajectory_from_handles_without_raw_bodies() {
+    let first = NaraJournalParser::parse(valid_input(
+        NaraActivityKind::Journal,
+        "M4-4 moved through Lens 3 at position 2 and felt heavy.",
+    ))
+    .expect("journal parse succeeds");
+    let second = NaraJournalParser::parse(valid_input(
+        NaraActivityKind::Oracle,
+        "Oracle cast with hexagram 24 and tarot mirror felt clear.",
+    ))
+    .expect("oracle parse succeeds");
+
+    let reading = period_reading(NaraPeriodReadingInput {
+        period_id: "period:2026-W22".to_owned(),
+        day_range: Some(NaraPeriodDayRange {
+            start_day_id: "01-06-2026".to_owned(),
+            end_day_id: "03-06-2026".to_owned(),
+        }),
+        observations: vec![first.symbolic_observation, second.symbolic_observation],
+        graphiti_episodes: vec![
+            NaraPeriodGraphitiEpisode {
+                episode_handle: "graphiti://episode/002".to_owned(),
+                day_id: "02-06-2026".to_owned(),
+                chronos_handle: "chronos://day/02-06-2026/seq-2".to_owned(),
+                kairos_handle: "kairos://snapshot/002".to_owned(),
+                history_handle: "history://nara/artifact-002".to_owned(),
+                q_composed: [0.0, 1.0, 0.0, 0.0],
+            },
+            NaraPeriodGraphitiEpisode {
+                episode_handle: "graphiti://episode/001".to_owned(),
+                day_id: "01-06-2026".to_owned(),
+                chronos_handle: "chronos://day/01-06-2026/seq-1".to_owned(),
+                kairos_handle: "kairos://snapshot/001".to_owned(),
+                history_handle: "history://nara/artifact-001".to_owned(),
+                q_composed: [1.0, 0.0, 0.0, 0.0],
+            },
+        ],
+        chronos_handles: vec!["chronos://period/2026-W22".to_owned()],
+        kairos_handles: vec!["kairos://period/2026-W22".to_owned()],
+        history_handles: vec!["history://nara/week-22".to_owned()],
+        include_vama_classifier: false,
+    })
+    .expect("period trajectory reconstructs from protected handles");
+
+    assert_eq!(reading.graphiti_episode_count, 2);
+    assert_eq!(reading.trajectory_observation_count, 2);
+    assert_eq!(
+        reading.hopf_trajectory_handle.handle,
+        "protected://nara/period/period:2026-W22/hopf-trajectory"
+    );
+    assert_eq!(reading.hopf_projection.len(), 2);
+    assert_eq!(
+        reading.hopf_projection[0].episode_handle,
+        "graphiti://episode/001"
+    );
+    assert_eq!(reading.hopf_projection[0].sequence_index, 0);
+    assert_eq!(reading.hopf_projection[0].hopf_degree, 0.0);
+    assert_eq!(reading.hopf_projection[0].hopf_fiber, 0);
+    assert_eq!(
+        reading.hopf_projection[1].episode_handle,
+        "graphiti://episode/002"
+    );
+    assert_eq!(reading.hopf_projection[1].sequence_index, 1);
+    assert_eq!(reading.hopf_projection[1].hopf_degree, 180.0);
+    assert_eq!(reading.hopf_projection[1].hopf_fiber, 1);
+    assert_eq!(
+        reading.chronos_handles,
+        vec![
+            "chronos://period/2026-W22".to_owned(),
+            "chronos://day/01-06-2026/seq-1".to_owned(),
+            "chronos://day/02-06-2026/seq-2".to_owned()
+        ]
+    );
+    assert_eq!(
+        reading.kairos_handles,
+        vec![
+            "kairos://period/2026-W22".to_owned(),
+            "kairos://snapshot/001".to_owned(),
+            "kairos://snapshot/002".to_owned()
+        ]
+    );
+    assert_eq!(
+        reading.history_handles,
+        vec![
+            "history://nara/week-22".to_owned(),
+            "history://nara/artifact-001".to_owned(),
+            "history://nara/artifact-002".to_owned()
+        ]
+    );
+    assert!(reading.reconstructed_from_persisted_handles);
+    assert!(!reading.protected_bodies_returned);
+
+    let reading_json = serde_json::to_value(&reading).expect("reading serializes");
+    let reading_text = serde_json::to_string(&reading).expect("reading stringifies");
+    assert!(reading_json.get("rawBody").is_none());
+    assert!(reading_json.get("body").is_none());
+    assert!(reading_json.get("qComposed").is_none());
+    assert!(reading_json.get("q_composed").is_none());
+    assert!(!reading_text.contains("M4-4 moved"));
+    assert!(!reading_text.contains("Oracle cast"));
+    assert!(!reading_text.contains("[0.0,1.0,0.0,0.0]"));
+}
+
+#[test]
 fn empty_body_returns_an_explicit_parse_error() {
     let err = NaraJournalParser::parse(valid_input(NaraActivityKind::DailyNote, " \n\t "))
         .expect_err("whitespace-only body should be rejected");
@@ -119,6 +291,18 @@ fn empty_body_returns_an_explicit_parse_error() {
 
 #[test]
 fn dream_oracle_and_highlight_inputs_remain_distinguished() {
+    let highlight_categories = [
+        "daily-note",
+        "oracle",
+        "dream",
+        "expand",
+        "recognition",
+        "prospective-surfacing",
+        "retrospective-surfacing",
+        "kairos-touch",
+        "somatic-mark",
+        "live-spread",
+    ];
     let dream = NaraJournalParser::parse(valid_input(
         NaraActivityKind::Dream,
         "Dream fragment with M1-2 and moon-water residue.",
@@ -134,6 +318,14 @@ fn dream_oracle_and_highlight_inputs_remain_distinguished() {
         "Highlight from reading: Lens 3 at position 2.",
     ))
     .expect("highlight parse succeeds");
+    let categorized_highlights = highlight_categories
+        .iter()
+        .map(|category| {
+            let parsed = NaraJournalParser::parse(valid_highlight_input(category))
+                .expect("categorized highlight parse succeeds");
+            (category, parsed)
+        })
+        .collect::<Vec<_>>();
 
     assert_eq!(
         dream.symbolic_observation.detected_activity_kind,
@@ -162,6 +354,26 @@ fn dream_oracle_and_highlight_inputs_remain_distinguished() {
     assert_eq!(
         highlight.activity_event.state_effect,
         ActivityStateEffect::EphemeralContextOnly
+    );
+    assert_eq!(categorized_highlights.len(), 10);
+    for (category, parsed) in categorized_highlights {
+        assert_eq!(
+            parsed.symbolic_observation.detected_activity_kind,
+            NaraActivityKind::Highlight
+        );
+        assert_eq!(parsed.activity_event.category.as_deref(), Some(*category));
+        assert_eq!(
+            parsed.activity_event.state_effect,
+            ActivityStateEffect::EphemeralContextOnly
+        );
+    }
+    assert_eq!(
+        serde_json::to_value(NaraActivityKind::FileReentry).expect("variant serializes"),
+        "FileReentry"
+    );
+    assert_eq!(
+        serde_json::to_value(NaraActivityKind::TrancheComplete).expect("variant serializes"),
+        "TrancheComplete"
     );
 }
 

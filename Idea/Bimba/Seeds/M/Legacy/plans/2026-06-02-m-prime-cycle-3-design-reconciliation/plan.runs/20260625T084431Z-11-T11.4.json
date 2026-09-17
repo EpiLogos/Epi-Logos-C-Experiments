@@ -1,0 +1,36 @@
+{
+  "runId": "20260625T084431Z-11-T11.4",
+  "taskId": "11.T11.4",
+  "startedAt": "2026-06-25T08:44:31.996Z",
+  "owner": "codex-m-dev-11-t11-4-smart-connections-pending",
+  "leaseExpiresAt": "2026-06-25T10:44:31.996Z",
+  "worktree": null,
+  "task": {
+    "id": "11.T11.4",
+    "trackId": "11",
+    "tranche": "T11.4",
+    "title": "`smart-connections-sidebar` layout-claim code-pending marker",
+    "effort": null,
+    "file": "11-theia-shell-surface-hosting.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+    "dependsOn": [
+      "11.T11.3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

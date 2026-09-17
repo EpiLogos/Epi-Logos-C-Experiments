@@ -1,9 +1,19 @@
 """Configuration for the Gnostic RAG namespace."""
 import os
+
+from epi_gnostic.embedding import CANONICAL_EMBEDDING_MODEL
 from dataclasses import dataclass, field
 from pathlib import Path
 
-VALID_EMBEDDING_DIMS = {128, 256, 384, 512, 768, 1024, 1536, 2048, 3072}
+# The Gnostic embedding dimension is a single value, not a tunable.
+#
+# Gnosis and Bimba share one Neo4j vector index (`coord_embedding`, 3072/COSINE)
+# and one cross-namespace edge (`MAPS_TO_COORDINATE`), so a config that loads at
+# any other width writes vectors that index cannot hold and quietly splits the
+# shared space in two. The old nine-value allowlist advertised a choice the
+# substrate never offered; the only accepted width is the canonical one.
+CANONICAL_EMBEDDING_DIM = 3072
+VALID_EMBEDDING_DIMS = {CANONICAL_EMBEDDING_DIM}
 VALID_FAMILIES = {"M", "S", "P", "T", "L", "C", "#"}
 
 
@@ -34,7 +44,12 @@ class GnosticConfig:
     )
     embedding_model: str = field(
         default_factory=lambda: os.getenv(
-            "GNOSTIC_EMBEDDING_MODEL", "gemini-embedding-2-preview"
+            # gemini-embedding-2 is the STABLE multimodal model (confirmed against
+            # the live models.list surface). The old default pinned the -preview
+            # id. Note: vectors from gemini-embedding-001 and gemini-embedding-2
+            # occupy DIFFERENT coordinate spaces — changing this invalidates every
+            # stored vector, so the corpus must be re-embedded, never topped up.
+            "GNOSTIC_EMBEDDING_MODEL", CANONICAL_EMBEDDING_MODEL
         )
     )
     llm_model: str = field(
@@ -48,7 +63,9 @@ class GnosticConfig:
     def __post_init__(self):
         if self.embedding_dim not in VALID_EMBEDDING_DIMS:
             raise ValueError(
-                f"embedding_dim must be one of {sorted(VALID_EMBEDDING_DIMS)}, "
-                f"got {self.embedding_dim}. Canonical is 3072."
+                f"embedding_dim must be {CANONICAL_EMBEDDING_DIM}, got "
+                f"{self.embedding_dim}. The Gnostic namespace shares the "
+                f"3072/COSINE `coord_embedding` index with Bimba; no other "
+                f"width is storable."
             )
         Path(self.working_dir).mkdir(parents=True, exist_ok=True)

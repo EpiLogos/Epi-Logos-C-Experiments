@@ -1,0 +1,39 @@
+{
+  "runId": "20260718T000333Z-17-T17.25",
+  "taskId": "17.T17.25",
+  "startedAt": "2026-07-18T00:03:33.568Z",
+  "owner": "codex-mdev-continuous",
+  "leaseExpiresAt": "2026-07-18T02:03:33.568Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.25",
+    "trackId": "17",
+    "tranche": "T17.25",
+    "title": "Capability matrix schema co-location",
+    "effort": null,
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.24"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [
+      "17.T17.24"
+    ],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — S-stack facade-split discipline (METHOD_DISPATCH_PLAN canonical DR-S3-3 co-PR rule, Hen rename-reconciliation authority, 17.28 canon byte-identity). Body/S/*. Worst-audited infra track. §2 track 17."
+  }
+}

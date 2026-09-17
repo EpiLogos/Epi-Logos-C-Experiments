@@ -1,0 +1,36 @@
+{
+  "runId": "20260713T215804Z-41-T41.9",
+  "taskId": "41.T41.9",
+  "startedAt": "2026-07-13T21:58:04.832Z",
+  "owner": "fable-c",
+  "leaseExpiresAt": "2026-07-13T23:28:04.832Z",
+  "worktree": null,
+  "task": {
+    "id": "41.T41.9",
+    "trackId": "41",
+    "tranche": "T41.9",
+    "title": "Moirai closure-distillation with classifier-modulated edge patterns *(code-pending-closure; depends on 41.6, 41.8; cross-link CCT-17)",
+    "effort": "code-pending-closure; depends on 41.6, 41.8; cross-link CCT-17",
+    "file": "41-vama-shakti-factory-and-dialogical-arena.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/41-vama-shakti-factory-and-dialogical-arena.md",
+    "dependsOn": [
+      "41.T41.8"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/41-vama-shakti-factory-and-dialogical-arena.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — Vama Shakti factory (portal-core vama_shakti.rs, m4.arena.* gateway family, epi nara arena CLI parity, SpacetimeDB tables — VERIFY they exist AT ALL; four closed classifiers Egregore/Sprite/Daemon/Mantra, BLAKE3 identity). CARRIER: arena pane (large future); 41.7 widget spec is portable design law. Highest fraud-risk file (done=12, zero verification). §2 track 41."
+  }
+}

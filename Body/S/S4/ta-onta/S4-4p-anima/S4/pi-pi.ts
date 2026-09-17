@@ -15,14 +15,14 @@
  * Usage: pi -e extensions/pi-pi.ts
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
-import { Text, truncateToWidth, visibleWidth } from "@mariozechner/pi-tui";
-import { spawn } from "child_process";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
+import { Text, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import { readdirSync, readFileSync, existsSync, mkdirSync } from "fs";
 import { join, resolve } from "path";
-import { applyExtensionDefaults } from "../../pleroma/S2/themeMap.ts";
-import { childPiRuntimeArgs } from "../../khora/S0'/child-extension-propagation.ts";
+import { applyExtensionDefaults } from "../../S4-2p-pleroma/S2/themeMap.ts";
+import { dispatchChildPi, ChildPiDispatchRefused } from "../lib/child-pi-executor.ts";
+import { parseCommaList } from "../../shared/entitlement.ts";
 
 // ── Types ────────────────────────────────────────
 
@@ -277,97 +277,71 @@ export default function (pi: ExtensionAPI) {
 			? `${ctx.model.provider}/${ctx.model.id}`
 			: "openrouter/google/gemini-3-flash-preview";
 
-		const args = [
-			"--mode", "json",
-			"-p",
-			"--no-session",
-			...childPiRuntimeArgs(),
-			"--model", model,
-			"--tools", state.def.tools,
-			"--thinking", "off",
-			"--append-system-prompt", state.def.systemPrompt,
-			question,
-		];
-
 		const textChunks: string[] = [];
+		let buffer = "";
 
-		return new Promise((resolve) => {
-			const proc = spawn("pi", args, {
-				stdio: ["ignore", "pipe", "pipe"],
-				cwd: process.env.EPI_REPO_ROOT || ctx.cwd || process.cwd(),
-				env: { ...process.env },
-			});
+		// The `pi --mode json` stream is parsed here, in the seam that owns this
+		// widget; the executor owns the process, the guards and the argv.
+		const consume = (line: string): void => {
+			if (!line.trim()) return;
+			try {
+				const event = JSON.parse(line);
+				if (event.type === "message_update") {
+					const delta = event.assistantMessageEvent;
+					if (delta?.type === "text_delta") textChunks.push(delta.delta || "");
+				}
+			} catch {}
+		};
 
-			let buffer = "";
-
-			proc.stdout!.setEncoding("utf-8");
-			proc.stdout!.on("data", (chunk: string) => {
+		// 50.T50.02: routed through the ONE gated child-pi executor. `--tools` is
+		// now resolved through the entitlement resolver instead of being passed
+		// raw, so a team ceiling or deny list binds on this seam too.
+		return dispatchChildPi({
+			seam: "pi-pi",
+			agentName: state.def.name,
+			task: question,
+			systemPrompt: state.def.systemPrompt,
+			model,
+			toolUniverse: parseCommaList(state.def.tools),
+			cwd: ctx.cwd,
+			onStdout: (chunk: string) => {
 				buffer += chunk;
 				const lines = buffer.split("\n");
 				buffer = lines.pop() || "";
-				for (const line of lines) {
-					if (!line.trim()) continue;
-					try {
-						const event = JSON.parse(line);
-						if (event.type === "message_update") {
-							const delta = event.assistantMessageEvent;
-							if (delta?.type === "text_delta") {
-								textChunks.push(delta.delta || "");
-								const full = textChunks.join("");
-								const last = full.split("\n").filter((l: string) => l.trim()).pop() || "";
-								state.lastLine = last;
-								updateWidget();
-							}
-						}
-					} catch {}
-				}
-			});
-
-			proc.stderr!.setEncoding("utf-8");
-			proc.stderr!.on("data", () => {});
-
-			proc.on("close", (code) => {
-				if (buffer.trim()) {
-					try {
-						const event = JSON.parse(buffer);
-						if (event.type === "message_update") {
-							const delta = event.assistantMessageEvent;
-							if (delta?.type === "text_delta") textChunks.push(delta.delta || "");
-						}
-					} catch {}
-				}
-
-				clearInterval(state.timer);
-				state.elapsed = Date.now() - startTime;
-				state.status = code === 0 ? "done" : "error";
-
+				for (const line of lines) consume(line);
 				const full = textChunks.join("");
 				state.lastLine = full.split("\n").filter((l: string) => l.trim()).pop() || "";
 				updateWidget();
+			},
+		}).then((result) => {
+			if (buffer.trim()) consume(buffer);
 
-				ctx.ui.notify(
-					`${displayName(state.def.name)} ${state.status} in ${Math.round(state.elapsed / 1000)}s`,
-					state.status === "done" ? "success" : "error"
-				);
+			clearInterval(state.timer);
+			state.elapsed = result.elapsed;
+			state.status = result.exitCode === 0 ? "done" : "error";
 
-				resolve({
-					output: full,
-					exitCode: code ?? 1,
-					elapsed: state.elapsed,
-				});
-			});
+			const full = textChunks.join("") || result.output;
+			state.lastLine = full.split("\n").filter((l: string) => l.trim()).pop() || "";
+			updateWidget();
 
-			proc.on("error", (err) => {
-				clearInterval(state.timer);
-				state.status = "error";
-				state.lastLine = `Error: ${err.message}`;
-				updateWidget();
-				resolve({
-					output: `Error spawning expert: ${err.message}`,
-					exitCode: 1,
-					elapsed: Date.now() - startTime,
-				});
-			});
+			ctx.ui.notify(
+				`${displayName(state.def.name)} ${state.status} in ${Math.round(state.elapsed / 1000)}s`,
+				state.status === "done" ? "success" : "error"
+			);
+
+			return { output: full, exitCode: result.exitCode, elapsed: state.elapsed };
+		}).catch((err: unknown) => {
+			clearInterval(state.timer);
+			state.status = "error";
+			const message = err instanceof Error ? err.message : String(err);
+			const refused = err instanceof ChildPiDispatchRefused;
+			state.lastLine = `${refused ? "Refused" : "Error"}: ${message}`;
+			updateWidget();
+			return {
+				output: `${refused ? `Dispatch refused (${err.code})` : "Error spawning expert"}: ${message}`,
+				exitCode: 1,
+				elapsed: Date.now() - startTime,
+			};
 		});
 	}
 
@@ -610,7 +584,7 @@ Ask specific questions about what you need to BUILD. Each expert will return doc
 			render(width: number): string[] {
 				const model = _ctx.model?.id || "no-model";
 				const usage = _ctx.getContextUsage();
-				const pct = usage ? usage.percent : 0;
+				const pct = usage?.percent ?? 0;
 				const filled = Math.round(pct / 10);
 				const bar = "#".repeat(filled) + "-".repeat(10 - filled);
 

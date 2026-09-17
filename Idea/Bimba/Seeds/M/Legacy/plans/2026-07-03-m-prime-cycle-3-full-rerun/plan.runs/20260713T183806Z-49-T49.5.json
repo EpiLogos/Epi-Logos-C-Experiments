@@ -1,0 +1,36 @@
+{
+  "runId": "20260713T183806Z-49-T49.5",
+  "taskId": "49.T49.5",
+  "startedAt": "2026-07-13T18:38:06.693Z",
+  "owner": "uc-4002",
+  "leaseExpiresAt": "2026-07-13T20:38:06.693Z",
+  "worktree": null,
+  "task": {
+    "id": "49.T49.5",
+    "trackId": "49",
+    "tranche": "T49.5",
+    "title": "M3 World-Clock And Codon Chime Binding",
+    "effort": null,
+    "file": "49-modal-resonator-bell-kernel-implementation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/49-modal-resonator-bell-kernel-implementation.md",
+    "dependsOn": [
+      "49.T49.4"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/49-modal-resonator-bell-kernel-implementation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — modal resonator bell kernel (bell/modal interpretive over the existing 8+4 bus; kernel/gateway/Zod core LANDED & independently verified: ModalResonatorProfile, M123ChimeFrame, kernelBridge.m2.epogdoonProjection). CARRIER: 49.6 integrated coherence gate + 49.7 privacy/drift Zod guards + epogdoon capability parity. §2 track 49."
+  }
+}

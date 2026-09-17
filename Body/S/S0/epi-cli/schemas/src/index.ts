@@ -9,3 +9,4 @@ export * from "./frontmatter.js";
 export * from "./relations.js";
 export * from "./readiness.js";
 export * from "./kernel-bridge.js";
+export * from "./gateway-bus.js";

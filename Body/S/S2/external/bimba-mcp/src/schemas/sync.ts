@@ -26,6 +26,18 @@ export const SyncDirectionSchema = z.enum([
 
 export type SyncDirection = z.infer<typeof SyncDirectionSchema>;
 
+/**
+ * Sync scope.
+ *
+ * - default: general vault<->graph file sync.
+ * - map-index: the Track 45 Neo4j->repo *reflection* projection into `/map` (`c_4_artifact_role:
+ *   map-index`). Downward-only — the graph is the source of truth and map-index rows are never
+ *   re-promoted upward (see api/map-index.ts).
+ */
+export const SyncScopeSchema = z.enum(['default', 'map-index']);
+
+export type SyncScope = z.infer<typeof SyncScopeSchema>;
+
 // =============================================================================
 // Sync Statistics
 // =============================================================================
@@ -161,6 +173,11 @@ export const GraphSyncInputSchema = z.object({
     .optional()
     .default('obsidian_to_neo4j')
     .describe('Direction of sync: obsidian_to_neo4j (default), neo4j_to_obsidian, or bidirectional'),
+
+  scope: SyncScopeSchema
+    .optional()
+    .default('default')
+    .describe('Sync scope: "default" (vault<->graph files) or "map-index" (Neo4j->repo /map reflection, downward-only)'),
 
   dry_run: z.boolean()
     .optional()

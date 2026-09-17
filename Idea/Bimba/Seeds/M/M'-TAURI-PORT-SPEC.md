@@ -1,7 +1,7 @@
 ---
 coordinate: "M'.desktop"
-status: "active-spec"
-updated: "2026-05-31"
+status: "historical-reference"
+updated: "2026-07-17"
 depends_on:
   - "[[M'-PORTAL-SPEC]]"
   - "[[M'-SYSTEM-SPEC]]"
@@ -27,11 +27,13 @@ depends_on:
   - "[[m5-prime-system-shape-and-tauri-ide-canon]]"
 ---
 
-# [[M']] Tauri Port Spec
+# [[M']] Legacy Epi-Tauri Port Reference — SUPERSEDED
 
-The [[Tauri]] v2 port of `Body/S/S3/epi-app` should preserve the useful renderer/domain work from the current Electron app while replacing Electron main-process authority with Rust-backed Tauri commands, gateway RPC, and [[SpaceTimeDB]] subscriptions.
+> **Historical reference, corrected by Tranche 11.7 (2026-07-17).** The active M' carrier is `Body/M/pratibimba-app/`; `Body/M/epi-tauri/` is a deprecated migration source and `Body/M/epi-theia/` is frozen reference-only. The current carrier retains a Tauri native boundary, but it is not the legacy Epi-Tauri port specified below. The 0/1/4+2 discipline, profile-bus consumption, and S-layer bindings remain law only as restated in [[M'-SYSTEM-SPEC]], the M0'-M5' specs, and [[2026-07-02-pratibimba-app-phase-1]]. Every Tauri/Electron implementation directive below records deprecated genealogy, not an active target; frozen Theia shapes are contract sources, not hosting instructions.
 
-The port is not a fresh desktop rewrite. It is the desktop mirror of the [[M'-PORTAL-SPEC]] grammar and the [[Theia]]/M-extension shape canonised by [[2026-05-31-theia-ide-shell-and-m-plugin-architecture]] and [[m5-prime-system-shape-and-tauri-ide-canon]].
+The superseded design proposed a [[Tauri]] v2 port of `Body/S/S3/epi-app` that would preserve useful renderer/domain work from the Electron app while replacing Electron main-process authority with Rust-backed Tauri commands, gateway RPC, and [[SpaceTimeDB]] subscriptions.
+
+That port was conceived as a desktop mirror of the [[M'-PORTAL-SPEC]] grammar and the [[Theia]]/M-extension shape canonised by [[2026-05-31-theia-ide-shell-and-m-plugin-architecture]] and [[m5-prime-system-shape-and-tauri-ide-canon]]. Current implementation authority instead rests with `Body/M/pratibimba-app`; surviving shapes apply there only through the active umbrella and layer specs.
 
 ### Two-Layer Page Architecture
 
@@ -66,7 +68,7 @@ The desktop port must also consume the harmonic/musical profile defined by [[M'-
 
 The renderer must also read the profile's diatonic CF/[[VAK]] projection: diatonic degree, mode, mode-anchor CF, VAK register, and agent/function label. This is how the desktop app keeps the musical instrument, pointer web, and VAK execution language in one contract instead of treating agent routing and harmonic rendering as separate taxonomies.
 
-## Preserve From Electron
+## Historical Preserve-From-Electron Inventory
 
 The current app already has valuable M' shape:
 
@@ -93,7 +95,7 @@ Specific Epii seed to revise:
 - The older [[Epii]] archaeology plan requires conversational exploration and [[QL]] community crystallisation before backend [[Bimba]] resonance, [[MEF]] lensing, and knowledge sedimentation are surfaced.
 - The current `Library` / `Atelier` / `Epii Agent` triad is a useful first shell, but the full M5' subsystem must expose the six IDE strata defined in [[M5'-SPEC]].
 
-## Replace From Electron
+## Historical Replace-From-Electron Plan
 
 Electron main-process APIs should be replaced with Tauri commands/events that bind to the same S-layer contracts:
 
@@ -128,7 +130,7 @@ Known parity issue to resolve during implementation: current renderer session pa
 
 Shell `0` is the structural operational preview of the integrated 1-2-3 systems. It surfaces [[M1']] relational movement, [[M2']] harmonic/correspondential matrix, and [[M3']] clock/cosmos transcription as one cymatic harmonic clock surface. Open the app, see the harmonic state, temporal field, current relation/correspondence/transcription, and selected coordinate — without navigating into a subsystem.
 
-Current implementation: `CosmicPage` renders `HopfClock` (Hopf fibration / temporal field), `ClockHUD` (degree, tick, codon, aspects), and `StrataOverlay` (temporal strata panel). In the 0/1 split view, the cosmic side occupies the left half with the clock and its overlays.
+Historical implementation snapshot: `CosmicPage` rendered `HopfClock` (Hopf fibration / temporal field), `ClockHUD` (degree, tick, codon, aspects), and `StrataOverlay` (temporal strata panel). In the proposed 0/1 split view, the cosmic side occupied the left half with the clock and its overlays.
 
 Shell `0` should show:
 
@@ -167,7 +169,7 @@ Musical instrument requirement (applies to all structural subsystem pages):
 
 Shell `1` is the personal daily-driver surface. It surfaces the 4/5/0 lived-return face: [[M4']] journal/continuity, [[M5']] [[Epii]] pedagogy/review, and the [[M0']] [[Bimba]] data structures relevant to the user's current return-to-ground. It lets the user write, reflect, see identity, invoke help, receive Bimba/Epii resonance, and return to ground without requiring the full subsystem deep-dive. Click-anywhere-to-write remains the fastest path from thought to record.
 
-Current implementation: In the 0/1 split view, the personal side occupies the right half with `FlowEditor` (TipTap journal), `IdentitySidebar` (quintessence, wound status, elemental balance, identity layer cards). `PersonalPage` is the dedicated full-route for the personal shell surface.
+Historical implementation snapshot: in the proposed 0/1 split view, the personal side occupied the right half with `FlowEditor` (TipTap journal) and `IdentitySidebar` (quintessence, wound status, elemental balance, identity layer cards). `PersonalPage` was the dedicated full route for the personal shell surface.
 
 Shell `1` should show:
 
@@ -351,7 +353,7 @@ The exact mathematical commitments are:
 - `etymology` for Logos Atelier roots, cognates, semantic drift, and crystallised constellations.
 - protected reviewed `pratibimba` handles for personal resonances when the review boundary permits.
 
-## Current-State Gap Table
+## Historical Current-State Gap Table (2026-05-19)
 
 Assessment from `Body/M/epi-tauri` as of 2026-05-19:
 
@@ -367,7 +369,7 @@ Assessment from `Body/M/epi-tauri` as of 2026-05-19:
 | S0' `/` membrane | `OmniPanel.tsx`, gateway/temporal/agent clients, and command surfaces exist. | Readiness API must report profile availability, S2 law availability, S3 deposition, Graphiti privacy, pending LUT, and private-block states. | Display taxonomy for readiness states needs alignment with this amendment. | Partly: field-level readiness depends on backend tranches. |
 | Privacy boundary | `kernelProjection.ts` blocks exposed `bioquaternion` / `resonanceSquareEmphasis` from safe public-current consumer readiness. | Backend profile must formalize public-current vs protected-local fields and Graphiti/Nara privacy classes. | Per-domain UI copy/states need consistent protected projection language. | Yes for formal privacy classes; current foothold is renderer-side only. |
 
-## Testing Contract
+## Historical Port Testing Contract
 
 The port is not complete until tests prove:
 
@@ -386,19 +388,19 @@ The port is not complete until tests prove:
 - Epii graph viewer preserves `bimba`, `gnosis`, `etymology`, and protected reviewed handle boundaries.
 - Epii agentic IDE runs preserve file/source/graph/task provenance and require review before promotion.
 - VAK execution page exercises a real bounded agent invocation path with diagnostics and completion evidence.
-- current app typecheck remains clean before and after port steps.
+- the then-current Electron app typecheck remained clean before and after port steps.
 
 Use the current Electron app as behavior reference, but make the Tauri port conform to the corrected S3/Khora session-runtime contract.
 
-## Canonical Source Traceability
+## Historical Source Traceability
 
 Implementation agents must consult these sources before changing the app shape:
 
-- Current app: `Body/S/S3/epi-app/renderer/domains/M4_Nara/ui/NaraDashboard.tsx`
-- Current app: `Body/S/S3/epi-app/renderer/domains/M4_Nara/ui/NaraEditor.tsx`
-- Current app: `Body/S/S3/epi-app/renderer/domains/M4_Nara/editor/components/FloatingMenu.tsx`
-- Current app: `Body/S/S3/epi-app/renderer/components/OmniPanel.tsx`
-- Current app: `Body/S/S3/epi-app/renderer/domains/M0_Anuttara/ui/GraphWorkspace.tsx`
+- Archived Electron source: `Body/S/S3/epi-app/renderer/domains/M4_Nara/ui/NaraDashboard.tsx`
+- Archived Electron source: `Body/S/S3/epi-app/renderer/domains/M4_Nara/ui/NaraEditor.tsx`
+- Archived Electron source: `Body/S/S3/epi-app/renderer/domains/M4_Nara/editor/components/FloatingMenu.tsx`
+- Archived Electron source: `Body/S/S3/epi-app/renderer/components/OmniPanel.tsx`
+- Archived Electron source: `Body/S/S3/epi-app/renderer/domains/M0_Anuttara/ui/GraphWorkspace.tsx`
 - Old canonical plan: `/Users/admin/Documents/Epi-Logos/docs/prompts/02-agent-bootstrap-vak-integration-review.md`
 - Old canonical plan: `/Users/admin/Documents/Epi-Logos/docs/prompts/03-t-coordinate-thoughts-integration.md`
 - Old canonical plan: `/Users/admin/Documents/Epi-Logos/docs/plans/2026-02-22-nara-fix-critical-issues.md`

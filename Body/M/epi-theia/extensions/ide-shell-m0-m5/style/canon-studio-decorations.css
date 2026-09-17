@@ -1,0 +1,76 @@
+.ide-shell-canon-monaco {
+    min-height: 480px;
+    height: 58vh;
+    border: 1px solid var(--theia-border-color1);
+    background: var(--theia-editor-background);
+}
+
+.ql-coordinate {
+    background: rgba(212, 165, 116, 0.28);
+    border-bottom: 1px solid rgba(212, 165, 116, 0.66);
+}
+
+.bimba-wikilink {
+    color: var(--theia-textLink-foreground);
+    text-decoration: underline;
+    text-decoration-color: #4f8cc9;
+    text-underline-offset: 2px;
+}
+
+.frontmatter-key {
+    font-weight: 600;
+    color: var(--theia-editor-foreground);
+}
+
+.canon-studio-editor-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.canon-studio-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.canon-studio-pasu-editors {
+    border-bottom: 1px solid var(--theia-border-color1);
+    padding: 10px 0 12px;
+}
+
+.canon-studio-pasu-editors header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.canon-studio-pasu-editors h4 {
+    margin: 0;
+}
+
+.canon-studio-pasu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px;
+}
+
+.canon-studio-pasu-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.canon-studio-pasu-grid span {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.canon-studio-pasu-grid input {
+    width: 100%;
+    box-sizing: border-box;
+}

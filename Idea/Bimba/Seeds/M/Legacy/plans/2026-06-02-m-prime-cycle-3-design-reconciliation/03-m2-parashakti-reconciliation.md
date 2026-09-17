@@ -1,5 +1,9 @@
 # Track 03 — M2 Paraśakti Reconciliation
 
+<!-- carrier-retarget-banner v1 -->
+> ⚑ **RETARGET — cycle-3 full rerun.** This file is the design-recon **SOURCE** (the tranche brief the rerun stubs send you to). Every `Body/M/epi-theia/…` path below is **FROZEN reference only**. **Build / verify target = `Body/M/pratibimba-app`** (the carrier) **+ substrate crates** (`epi-lib` / `portal-core` / `epi-cli` / `graph-*` / gateway — these carry unchanged). Any Verify line that names `epi-theia` (e.g. `cd Body/M/epi-theia && pnpm --filter …build`) is **retargeted**: run the **pratibimba-app carrier equivalent** (or the substrate crate's own runner), **never** the epi-theia build. Law: [`CHARTER.md`](../2026-07-03-m-prime-cycle-3-full-rerun/CHARTER.md) §13–18 · single-source map [`carrier-contract.json`](../2026-07-03-m-prime-cycle-3-full-rerun/carrier-contract.json) · per-track CARRIER: [recapture register](../../../plans/2026-07-03-cycle-3-recapture-register.md) §2.
+
+
 Reconciles [[M2']] across the four corpora. The harmonic-correspondential instrument is well-grounded: `m2.h` enforces the 72-invariant via `_Static_assert` and lands all six 72-cardinality LUTs (MEF, tattva, decan, Shem, maqam, M2→M3 cymatic projection) plus the planet-LUT[10], Asma 99+1, mantra 100. `vimarsha_reading.rs` implements M2-1' Vimarśa correctly, producing `audio_octet[8]` + `nodal_quartet[4]`. The Theia extension's meaning-packet builder lands the full `M2PrimeMeaningPacket` shape with cymatic frame, deterministic standing-wave, and personal-scope blocking. The chief gaps are: the F_routing carrier (every LUT and Kerykeion CLI landed, but no chained-traversal function in portal-core) and the S2 graph-correspondence kernel-bridge adapter.
 
 ## Total-Shape Architecture (Phase A)
@@ -71,3 +75,17 @@ Consume as-is — `epi-lib/include/m2.h` six 72-cardinality LUTs + planet-LUT[10
    Remove the planet-count open question from M2'-SPEC §9.8 now that DR-M2-1 has closed it. Cross-link §9.8 to §9.5 Earth-at-centre semantics instead of leaving DCC-03 as a live decision.
 
    Verification: `grep -n "DCC-03\|planet-count" Idea/Bimba/Seeds/M/M2'/M2'-SPEC.md` returns only historical/caveated references; §9.5 names Earth as centre / 10th planet.
+
+10. **3.10 — Asma mirror overlay + kernel phase-flip integration** *(code-pending-closure; DR-FLIP-1 bound; depends on 3.1, 3.2, 3.4, 3.6, CCT-20)*
+
+   Land Parashakti's dense mirror corpus as the concrete M2 proving fixture for the global `#` phase-flip law. This is not a seventh 72-axis and not a generic mirror subsystem. The Asma 99+1 overlay remains a sonic/domain overlay per DR-M2-2; its `mirror_idx` fields instantiate the kernel phase law locally.
+
+   **Integration targets:**
+
+   - **Klein-flip interpretation:** the existing three-variant `KleinFlipEvent` remains the runtime event carrier. For M2, `M2CymaticValenceInvert` is the Parashakti event-form of `#`: same `address72`, flipped interpretive phase / surface valence. No new event enum.
+   - **F_routing trace enrichment:** extend the 3.2 `RoutingTrace` shape so the `asma_name` selection carries `{name_idx, group, index_in_group, mirror_idx, has_mirror, phase}` sourced from `M2_ASMA_LUT[100]` / `Asma_Name_Desc`. `mirror_idx = 0xFF` means no declared domain mirror; it is not an error.
+   - **S2 correspondence adapter:** extend `s2.parashaktiCorrespondences(address72)` so `sacredSonic.asma` returns the Asma overlay record including `mirror_idx`, `mirror_name` when present, `mirror_relation: "domain_mirror"`, and `phase_law: "#/inversion_spanda"`. The adapter reads kernel/LUT data; it does not recompute mirrors or invent fallback pairs.
+   - **Overlay/UI contract:** WC-M2.09 and WC-M2.23.5 render Asma 99+1 as an overlay tab with its mirror pair, Jalal/Kamal/Jamal group, 36/64 mask routing, and active phase. The UI must not promote Asma mirror pairs into a seventh axis.
+   - **Double-cover discipline:** when an active Klein flip is present, the overlay shows the conjugate reading of the same address rather than replacing `address72`. The address is conserved; phase changes.
+
+   **Verification:** `cargo test -p epi-lib m2_asma_mirror_idx_round_trip` asserts populated `mirror_idx` values resolve to valid Asma entries and `0xFF` remains explicit absence; `cargo test -p portal-core --test f_routing_asma_phase_trace` asserts `RoutingTrace.asma` carries mirror metadata and phase; `cargo test -p epi-s2-graph-services --test parashakti_correspondences_asma_mirror_overlay` asserts `s2.parashaktiCorrespondences(address72).sacredSonic.asma.mirror_idx` round-trips from substrate; Theia overlay test asserts Asma mirror display changes phase on `M2CymaticValenceInvert` while preserving `address72`.

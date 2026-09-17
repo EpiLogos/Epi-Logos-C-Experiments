@@ -1,0 +1,65 @@
+coordinate: "CT5"
+c_4_artifact_role: "base-view"
+c_1_ct_type: "CT5"
+c_5_reflects: "[[CT5]]"
+c_0_source_coordinates: ["[[CT5]]", "[[CT]]", "[[C5]]", "[[Thought]]", "[[P0']]"]
+filters:
+  or:
+    - 'c_1_ct_type == "CT5"'
+    - 'ctx_type == "CT5"'
+    - 'artifact_role == "thought"'
+    - 'c_4_artifact_role == "thought"'
+    - 't_0_thought_type != null'
+    - 'ql_position != null'
+views:
+  - type: table
+    name: "Day insight crystal"
+    group_by: t_0_thought_type
+    order:
+      - coordinate
+      - title
+      - c_4_artifact_role
+      - t_0_thought_type
+      - ql_position
+      - c_3_created_at
+      - c_5_crystallisation_state
+      - c_0_source_coordinates
+      - p0_grounds
+      - p1_definitions
+      - p2_operations
+      - p3_patterns
+      - p4_concepts_engaged
+      - p5_integrations
+      - p5_synthesis
+    sort:
+      - { property: c_3_created_at, direction: DESC }
+      - { property: coordinate, direction: ASC }
+  - type: table
+    name: "Thought arc by QL position"
+    group_by: ql_position
+    order:
+      - coordinate
+      - title
+      - ql_position
+      - t_0_thought_type
+      - c_4_artifact_role
+      - c_0_source_coordinates
+  - type: table
+    name: "Night' P0' questions"
+    filters:
+      or:
+        - "ql_position == \"#0'\""
+        - 'coordinate == "P0''"'
+        - 'coordinate == "L4.0''"'
+        - 'title == "T0''"'
+    group_by: ql_position
+    order:
+      - coordinate
+      - title
+      - ql_position
+      - t_0_thought_type
+      - c_4_artifact_role
+      - c_0_source_coordinates
+      - p0_grounds
+      - p5_integrations
+      - p5_synthesis

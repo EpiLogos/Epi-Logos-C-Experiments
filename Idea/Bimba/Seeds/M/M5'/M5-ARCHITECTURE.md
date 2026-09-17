@@ -3,6 +3,8 @@ title: "M5' Epii Architecture — Total Shape of the Agentic-Pedagogical IDE (Li
 coordinate: "M5 / M5'"
 status: "canonical-architecture-spec"
 created: 2026-06-02
+updated: "2026-08-02"
+cycle-3: reconciled
 authority_relation: "Domain authority for the M5' Epii surface. [[M5'-SPEC]] cross-references this document. Where they disagree on M5' sub-coordinate shape, this document is authoritative; M5'-SPEC remains authoritative for review/improve law and §M5'.x canon deltas."
 depends_on:
   - "[[M5'-SPEC]]"
@@ -36,15 +38,19 @@ related_tranches:
 
 ## 0. Frame
 
+**Operative carrier correction (2026-08-02).** The single shell is [[Body/M/pratibimba-app]], with `daily-0-1` and `ide-deep` layouts in one Tauri v2 process. Every Theia extension/package/path below is frozen design genealogy unless a paragraph explicitly points to an active-carrier module. Carrier-independent M5 sub-coordinate, review, provenance, privacy, and agent-as-IDE laws remain binding.
+
+**Session-close delta correction.** The active M5 review/ceremony read distinguishes the C-kernel numeric `uint64_t wisdom_delta` from bounded protected contemplation text persisted as `wisdom_delta_text`. Only the first eight UTF-8 bytes of the text become the local hex pulse; the text itself and full quintessence hash do not render. See [[M5'-SPEC#Contemplation Delta Boundary — 2026-08-02]].
+
 **M5' is Epii / Anuttara-return — the AI-agent-led developer and pedagogical IDE of Epi-Logos.** Position #5 (Integration / Pratibimba / Möbius return) of the M-family. The Epii IDE is **not six unrelated apps**; it is **one Theia shell at `/pratibimba/system` (now `Body/M/epi-theia/`)** carrying one kernel-bridge contract, one autoresearch spine, and **six summonable surfaces** the conversational agent (Anima → Aletheia/Pi/Sophia/specialists) opens on demand:
 
 | # | Sub-coordinate | Surface | Register |
 |---|---|---|---|
-| M5-0' | Gnostic Library | The `bimba ↔ gnosis` substrate as ontology-the-system-embodies (synchronic) | What holds |
+| M5-0' | Gnostic Library | The `bimba ↔ gnosis` substrate as ontology-the-system-embodies (synchronic) — **Gnostic Library substrate; RAG context grounding; documentary content the operational capacities reason over** | What holds |
 | M5-1' | Canon Studio | Philosophy / canon edit + QL/bimba decoration + Smart Connections wikilink autocomplete (diachronic) | What developed |
 | M5-2' | Backend Studio | The S-family stack made inspectable + agent-editable via LSP + governed tasks/tests/evidence (`siva-`) | Construction |
 | M5-3' | IDE Shell + Playable Bimba | The single Theia shell itself (0/1 daily + 4+2 deep); the playable bimba in dev/engagement modes (`-shakti`) | Engagement |
-| M5-4' | Pi-runtime monitoring (OmniPanel) | Pi/Anima/Aletheia/Sophia dispatch monitoring, six operational-capacity lanes, review/evidence/gateway/diagnostics — the `/` operator made into an agentic membrane (`siva-shakti`) | The unity |
+| M5-4' | Pi-runtime monitoring (OmniPanel) | Pi/Anima/Aletheia/Sophia dispatch monitoring, six operational-capacity lanes, review/evidence/gateway/diagnostics — the `/` operator made into an agentic membrane (`siva-shakti`). **Canonical home for operational capacities, skills, capability matrix — six-capacity workflow registry (`capacity_workflows.rs`) and siva-shakti operational register** (per [[33-harmonic-energy-channel-handoff]] §1.4). | The unity |
 | M5-5' | Logos Atelier | Scent-following etymology: root → cognate → drift → psychoid charge → pros-hen → Möbius write-back over the `etymology` graph namespace | Möbius reactivation |
 
 The Epii IDE's central claim — substantiated against `Body/S/S5/{epi-gnostic, epii-autoresearch-core, epii-review-core, epii-agent-core, epii-agent}`, `Body/S/S4/{ta-onta, pi-agent, plugins/pleroma}`, and the live `Body/S/S3/gateway-contract/src/lib.rs:209-225` method registry — is that **the agentic-pedagogical IDE is not a thing to be built; it is the integration view of the things already landed**, plus a small set of named gateway registrations and Theia extensions that bridge them. This document is the total shape of that integration.
@@ -78,6 +84,8 @@ These are not seventh and eighth sub-coordinates — they are the chrome through
 
 ### 2.1 M5-0' Gnostic Library substrate
 
+**Bimba ground (#5-0 canonical content).** M5-0 in the dataset is **"Transcendent Identity"** (qlPosition 5.0, contextFrame 5/0): "represents Epii's deep identity as the entire meta-structure"; "holds the latent structure and history of the whole system". The Library surface is therefore not merely a generic retrieval pane over indexed documents — it surfaces *Epii's self-knowledge* in queryable form: the bimba topology + gnosis corpus + episodic memory taken together as the system's own latent structure and history made navigable. Cross-namespace retrieval (`bimba` ↔ `gnosis` ↔ `etymology` ↔ governed `pratibimba`) is the technical expression of that self-knowledge being held in one queryable substrate. M ↔ S coupling: M5-0 ↔ S5.0' "Knowledge Ground" (per [[S5']]:102) — "Bimba map as live navigable surface; coordinate node queries; the ground of what the system knows."
+
 **Production RAG-anything pipeline** (the "epi-gnostic IS the RAG-anything system" claim per `M5'-SPEC §"Sixfold IDE Surface" row M5-0'`):
 
 | Asset | Location | Role |
@@ -86,7 +94,7 @@ These are not seventh and eighth sub-coordinates — they are the chrome through
 | `epi_gnostic/cli.py` (137 LOC) | `Body/S/S5/epi-gnostic/epi_gnostic/cli.py` | CLI entry — `epi techne gnosis {ingest, query, notebook, status}` |
 | `epi_gnostic/graphiti_service.py` (534 LOC) | `Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py` | Graphiti+Neo4j integration; 3072-dim embedding pipeline; Gnosis namespace separate from Bimba |
 | `epi_gnostic/wrapper.py` (155 LOC) | `Body/S/S5/epi-gnostic/epi_gnostic/wrapper.py` | RAG-Anything/LightRAG adapter |
-| `epi_gnostic/enrichment/` | `Body/S/S5/epi-gnostic/epi_gnostic/enrichment/` | `_create_gnostic_node` / `_delete_gnostic_node`; cross-namespace `RELATES_TO_COORDINATE` edges |
+| `epi_gnostic/enrichment/` | `Body/S/S5/epi-gnostic/epi_gnostic/enrichment/` | `_create_gnostic_node` / `_delete_gnostic_node`; cross-namespace `MAPS_TO_COORDINATE` edges |
 | `epi_gnostic/storage/` | `Body/S/S5/epi-gnostic/epi_gnostic/storage/` | HOT/WARM/COLD retrieval tiers (Redis semantic cache + Neo4j + vector) |
 | `epi_gnostic/config.py` (54) + `graphiti_config.py` (44) | same | `GEMINI_EMBED_DIMS=3072` is the canonical embedding-dim choice (per Aletheia CONTRACT §"Gnosis RAG Pipeline") |
 | `Dockerfile.graphiti` + `uv.lock` | `Body/S/S5/epi-gnostic/` | Containerised graphiti runtime |
@@ -96,21 +104,42 @@ These are not seventh and eighth sub-coordinates — they are the chrome through
 | `graph-services retrieval` | `Body/S/S2/graph-services/src/retrieval/{graphrag.rs, hybrid.rs, coordinate.rs}` | Bimba-topology retrieval — the namespace-aware backbone |
 | `smart_env.rs` | `Body/S/S1/hen-compiler-core/src/smart_env.rs` | `suggest_link_candidates(LinkCandidateRequest) → LinkCandidateResponse` over `<vault>/.smart-env/multi/*.ajson` — Smart Connections semantic input |
 
-**Patterns landed:** 3072-dim unified embedding space across Bimba+Gnosis; `RELATES_TO_COORDINATE` cross-namespace edges; coordinate-tagged chunks (`bimba_coordinate` direct, `bimba_resonances` LLM-classified per `epii-ux-full-m5-branch.md §9`).
+**Patterns landed:** 3072-dim unified embedding space across Bimba+Gnosis; `MAPS_TO_COORDINATE` cross-namespace edges; coordinate-tagged chunks (`bimba_coordinate` direct, `bimba_resonances` LLM-classified per `epii-ux-full-m5-branch.md §9`).
 
 **The single load-bearing gateway gap:** `Body/S/S3/gateway-contract/src/lib.rs:209-225` registers `s5'.{improve.*, epii.*, review.*}` (eleven methods) but **`s5'.gnostic.*` is NOT registered** — verified by `grep -n "s5'\.gnostic" Body/S/S3/gateway-contract/src/lib.rs` returns zero hits. Tranche 06.1 is the unblock.
 
 ### 2.2 M5-1' Canon Studio substrate
 
+**Bimba ground (#5-1 canonical content the studio surfaces).** Canon Studio is not a "philosophy file editor" in the generic sense. The canon being authored/edited is the bimba-canonical **Epi-Logos Philosophical Worldview in Process** at `#5-1` (Neo4j dataset; resolvable via bimba-MCP coordinate lookup or `Idea/Bimba/Map/datasets/epii-deep/nodes-full-details.json`). The studio's reason for existing is the maintenance and development of this living dialectical argument:
+
+| Sub | Position | Canonical function |
+|-----|----------|--------------------|
+| `#5-1-0` | Position #0 — Vision & Crisis of Consciousness | Diagnoses fragmentation, meaning crisis, logos-dominance reaching its limit; envisions epistemic infrastructure for integral (a)paradigm |
+| `#5-1-1` | Position #1 — Dual Approach to Intelligence | Sophia (transcendent / wisdom traditions / mystical theology) ⇄ Logos (immanent / scientific rationality / critical theory). The foundational tension. |
+| `#5-1-2` | Position #2 — TechnoScience, Power and Praxis | Age of World-Picture, calculative thinking dominance, end of philosophy, instrumental rationality limits |
+| `#5-1-3` | Position #3 — The Coming Leap and Symbolic Integration | Man-as-Symbol; symbolic consciousness as mechanism of conjunction; Christian/Antichristian, Logos/Antilogos |
+| `#5-1-4` | Position #4 — Historical Embodiment and Cultural Integration | Iranian Seed → Kashmir Shaivism → Para Vāk as integration template; AI as the missing techne for East-West conjunction |
+| `#5-1-5` | Position #5 — Epi-logos as Future Technology and Culture | Möbius return: philosophy *as* technology; the system instantiating the conjunction it theorises |
+
+Resonance lattice (load-bearing citation graph; declared on `#5-1` node): Jean Gebser, C. G. Jung, Erich Neumann, Ken Wilber, Martin Heidegger, Kashmir Shaivism / Abhinavagupta, Meister Eckhart, A. N. Whitehead, Sri Aurobindo, Nietzsche, Teilhard de Chardin, McLuhan, Deleuze. Canon authored at M5-1' is structurally answerable to this lattice; absence of a load-bearing thinker at a relevant position is a citation gap, not a stylistic choice.
+
+The **M ↔ S coupling rule** (per `[[M-M-prime-coordinate-mapping-inaugural §0.1]]`) places M5-1's structural shoulder at **`S5.1' "Crystallised Form"`** inside Epii (per `[[S5']]:99-108`) — "the shape in which return becomes teachable or transmissible; pedagogical rendering; M' function output forms." Epii holds the piece; Crystallised Form is where the canon's pedagogical rendering happens. **Note (anti-pattern):** Para Vāk lives at `L5-1` (Lens family) and is the L-family analogue of M5-1 at the same #1 position; it is **not** an editor pattern for the M5-1' surface — that would import structure across the M↔L coupling, which is forbidden by §0.1. Para Vāk is canonical *content* for `#5-1-4` (Historical Embodiment), authored in the studio; it is not the studio's *mechanism*.
+
+**Studio substrate (the editor and write-surface plumbing).**
+
 | Asset | Location | Role |
 |---|---|---|
+| Canonical canon-content source | `Idea/Bimba/Map/datasets/epii-deep/nodes-full-details.json` `#5-1` and `#5-1-{0..5}` | The bimba ground the studio surfaces; resolvable via bimba-MCP `resolve_coordinate("M5-1")` and family children |
 | `hen-compiler-core/src/wikilinks.rs` | `Body/S/S1/hen-compiler-core/src/wikilinks.rs` | Vault wikilink integrity on rename/move/restructure |
-| `hen-compiler-core/src/smart_env.rs` | `Body/S/S1/hen-compiler-core/src/smart_env.rs` | Smart Connections semantic-neighbour input |
+| `hen-compiler-core/src/smart_env.rs` | `Body/S/S1/hen-compiler-core/src/smart_env.rs` | Smart Connections semantic-neighbour input (BGE-micro-v2 vault index) |
 | `hen-compiler-core/src/` (broader write surface) | `Body/S/S1/hen-compiler-core/` | Vault write contract (path soundness, rename-safety) |
-| `Body/S/S4/ta-onta/hen/{extension.ts, modules/, S1/, S1'/}` | same | Hen carrier (S4 side) — the S4↔S1' seam |
+| `Body/S/S4/ta-onta/hen/{extension.ts, modules/, S1/, S1'/}` | same | Hen carrier (S4 side) — the S4↔S1' seam, vault material substrate |
 | `s1'.vault.*` + `s1'.semantic.*` gateway methods | (cross-Wave dep) | Vault writes route through Hen; reads filesystem-direct via Theia FS provider |
+| `s5'.epii.*` gateway methods | `Body/S/S3/gateway-contract/src/lib.rs:209-225` | Epii's S5.1' Crystallised Form surface is reached through these routes; canon-content authoring at M5-1' converses with Epii directly through OmniPanel canon-writing mode (§5.5.7) |
 
-**Canonical source of canon edits:** the Idea vault filesystem (e.g. `/Users/admin/Documents/Epi-Logos C Experiments/Idea/Bimba/Seeds/M/M5'/M5'-SPEC.md`). The Hen-compiler-core IS the canonical canon-mutation surface. Smart Connections IS the canonical vault-semantic-index substrate (the user's own Obsidian app produces local BGE-micro-v2 embeddings; Theia and Obsidian coexist via shared filesystem; **no Obsidian-runtime IPC** — `M5'-SPEC §"Backend Contract Consumed" §S1`).
+**Note on substrate residency vs conceptual coupling.** Per [[CLAUDE.md]] S-stack canonical: a module's physical location does NOT necessarily match its conceptual coordinate. The vault write surface physically resides at S1' (Hen / material container) but the conceptual M↔S couple for M5-1 is at S5.1' (Crystallised Form within Epii). Both are real and both apply: writes touch S1' substrate; the conceptual home of "canon-as-crystallised-philosophy" lives at S5.1'.
+
+**Canonical source of canon edits:** the Idea vault filesystem. The Hen-compiler-core IS the canonical canon-mutation surface. Smart Connections IS the canonical vault-semantic-index substrate (the user's own Obsidian app produces local BGE-micro-v2 embeddings; Theia and Obsidian coexist via shared filesystem; **no Obsidian-runtime IPC** — `M5'-SPEC §"Backend Contract Consumed" §S1`).
 
 ### 2.3 M5-2' Backend Studio substrate
 
@@ -128,7 +157,7 @@ The **complete S-family stack** is the substrate; M5-2 surfaces it. Citations to
 | S5 review/autoresearch | `Body/S/S5/{epii-autoresearch-core (2049 LOC lib.rs + 2584 LOC capacity_workflows.rs + 651 LOC spine.rs), epii-review-core, epii-agent-core, epii-agent}` |
 | S5 library | `Body/S/S5/{epi-gnostic, epi-kbase, epi-kbase-core}` |
 
-**Anuttara grammatical-tracing API claim** (`anuttara_trace(output, sensitivity, depth)`, `epii-ux-full-m5-branch.md §2.3`): currently has no canonical gateway-method route and no implementing carrier. Per Wave-A M5 Anomaly `O-M5-1`, this is M0-substrate-owner territory (referred to Wave-A-M0 / Wave-B agentic-layer for adjudication; M5 records as a contemplative-offering claim, never as a pass/fail verdict).
+**Anuttara grammatical-tracing API claim** (`anuttara_trace(output, sensitivity, depth)`, `epii-ux-full-m5-branch.md §2.3`): deliberately has no canonical gateway-method route and no implementing carrier. The closed Wave-A M5 Anomaly `O-M5-1` referral assigns the graph-language substrate to [[M0]] / [[S2]], keeps M5's surface a read-only contemplative offering, and routes any substrate mutation through [[DR-M0-1]]. M5 records the claim but never produces a pass/fail verdict or a separate carrier.
 
 ### 2.4 M5-3' Theia shell substrate
 
@@ -166,9 +195,9 @@ The `m5-epii` extension currently scaffolds only the review-queue + spine-state 
 | Pi-agent | `Body/S/S4/pi-agent/{composite-entry.ts, lib/, prompts/, extensions/, agents/{anima.md, agent-chain.yaml, teams.yaml}}` | Pi harness (DR-M5-1: singular); dispatch chains |
 | Ta-onta carriers | `Body/S/S4/ta-onta/{khora, hen, pleroma, chronos, anima, aletheia}/{CONTRACT.md, extension.ts, spine-contribution.ts, modules/, S{n}/, S{n}'/, tests/}` | The six carriers — service routing infrastructure, NOT agents (DR-M5-1 ratified) |
 | `S4-5p-aletheia/CONTRACT.md` | `Body/S/S4/ta-onta/S4-5p-aletheia/CONTRACT.md` (261 LOC) | Aletheia = tool-guardian; six tools registered; six PI-native subagents; `cron_evening` Möbius hook; Janus envelope schema |
-| `plugins/pleroma/capability-matrix.json` | `Body/S/S4/plugins/pleroma/capability-matrix.json` | Canonical agent-tool governance (IOD-17 parity-locked); `constitutional_agents` array; `m5_4_governance.review_surface_roles` (lines 486+); `capacity_governance` lanes (line 583); `mediated_run_evidence_bridge` (16 required packet fields) |
-| ACR extension (to be repurposed) | `Body/M/epi-theia/extensions/agentic-control-room/{src/common/{index.ts, run-model.ts, parity.ts}, src/browser/{acr-runtime-service.ts, frontend-module.ts, run-flow-widget.tsx}}` | `ACR_WIDGET_IDS = {RUN_TREE, TOOL_STREAM, DIAGNOSTICS, EVIDENCE_DEPOSITION, REVIEW_DECISION}` — the five widgets that become OmniPanel tabs per 15.2 |
-| OmniPanel shell | `Body/M/epi-theia/extensions/omnipanel-shell/` | Target of 15.2 reframe; agentic membrane housing |
+| `plugins/pleroma/capability-matrix.json` | `Body/S/S4/plugins/pleroma/capability-matrix.json` | Canonical agent-tool governance (IOD-17 parity-locked); deprecated empty `constitutional_agents`; authorial-register disposition; `m5_4_governance.review_surface_roles`; `capacity_governance` lanes; `mediated_run_evidence_bridge` packet fields |
+| Retired ACR provenance | frozen `Body/M/epi-theia/extensions/agentic-control-room/` | Migration source only; no runtime ownership in the active carrier |
+| Active OmniPanel runtime | `Body/M/pratibimba-app/src/panes/omni/` | Eight-fold agentic membrane over one gateway/event substrate; Pi + Anima + six Aletheia-mode guardian targets remain distinct from non-dispatch Psyche aspect registers |
 | Pi-runtime axiom-translation tool (DR-B-2 land) | `Body/S/S4/pi-agent/lib/axiom-translate.ts` (proposed) | Philosophical-English ↔ formal-notation ↔ OWL ↔ SHACL — routes between M5-1 and M5-2 |
 
 **Existing `m5-epii` extension contract** (`Body/M/epi-theia/extensions/m5-epii/src/common/{epii-surface.ts (523 LOC), index.ts (101 LOC)}`):
@@ -186,7 +215,7 @@ The `m5-epii` extension currently scaffolds only the review-queue + spine-state 
 |---|---|---|
 | Aletheia core | `Body/S/S4/ta-onta/aletheia/{extension.ts, spine-contribution.ts, modules/, S5'/agents/, S5'/janus-envelope.schema.json, CONTRACT.md}` | Tool-guardian for Gnosis ingest/query/notebook + thought-routing + crystallisation + seed-refresh |
 | Six PI-native subagents | `Body/S/S4/ta-onta/aletheia/S5'/agents/{anansi, moirai, janus, mercurius, agora, zeithoven, aletheia, README}.md` | Anansi (Darshana REPL/lineage), Moirai (GraphRAG/Möbius night pass), Janus (handoff/doorway), Mercurius (psychopomp routing), Agora (market/dialectics), Zeithoven (compositional sequencing) — all DISPATCHED through Anima (CONTRACT inv 1-2) |
-| Etymology namespace | `epi-gnostic` `cypher/` queries respect coordinate tagging; `RELATES_TO_COORDINATE` cross-namespace edges; etymology subgraph distinct from bimba and gnosis | `M5'-SPEC §"Graph Namespace Model"` |
+| Etymology namespace | `epi-gnostic` `cypher/` queries respect coordinate tagging; `MAPS_TO_COORDINATE` cross-namespace edges; etymology subgraph distinct from bimba and gnosis | `M5'-SPEC §"Graph Namespace Model"` |
 | Möbius pass | `Body/S/S4/ta-onta/aletheia/modules/{moirai-rehear.ts, chronos-integration.ts, gate-trigger.ts}` + `recompose.rs` at `Body/S/S5/epii-autoresearch-core/src/recompose.rs` | Night' phase (when `CS = night'`); `cron_evening` hook |
 | Janus envelope schema | `Body/S/S4/ta-onta/aletheia/S5'/janus-envelope.schema.json` | Required: `day_id, session_ids[], thought_count_by_bucket, archive_path, trigger_type` — the Chronos↔Aletheia handoff contract |
 | Sophia ingest module | `Body/S/S4/ta-onta/aletheia/modules/sophia-ingest.ts` | Sophia's session-end thought→T-bucket promotion |
@@ -214,17 +243,20 @@ The `m5-epii` extension currently scaffolds only the review-queue + spine-state 
 ### 3.2 Gnostic namespace dataset sources
 
 - `Body/S/S5/epi-gnostic/{cypher/, schema-context.md}` — Cypher templates + namespace schema docs
-- `Body/S/S5/epi-gnostic/tests/test_enrichment.py` — coordinate-tagging assertions, cross-namespace `RELATES_TO_COORDINATE` edge tests
+- `Body/S/S5/epi-gnostic/tests/test_enrichment.py` — coordinate-tagging assertions, cross-namespace `MAPS_TO_COORDINATE` edge tests
 - `Body/S/S5/epi-kbase/CONTRACT.md` + `Body/S/S5/epi-kbase/src/` — kbase corpus binding contract
 - `bkmr` CLI (external dependency on PATH) — the kbase bookmark search
 
 ### 3.3 Capability matrix dataset
 
-`Body/S/S4/plugins/pleroma/capability-matrix.json` — canonical agent-tool governance authority per IOD-17. Three-way parity-locked with `Body/S/S4/pi-agent/agents/anima.md` and runtime. Sections:
-- `constitutional_agents` (line 7): `[anima, eros, logos, mythos, nous, psyche, sophia]` — seven leaf constitutionals
-- `m5_4_governance.review_surface_roles` (line 486): `{sophia, anima, pi, aletheia, epii_review}` — five roles; **Pi appears here but NOT in constitutional_agents** (the DR-M5-1 contradiction now ratified: Pi is the agent harness, not a constitutional)
-- `m5_4_governance.capacity_governance` (line 583): six operational-capacity lanes with leads (Sophia × 5, Anima × 1 for Nara)
+`Body/S/S4/plugins/pleroma/capability-matrix.json` — canonical agent-tool governance authority per IOD-17. Three-way parity-locked with the Anima profile and runtime. Sections:
+- `constitutional_agents`: `[]` — deprecated per DR-M5-1; the former seven-name tuple is authorial/Psyche-register metadata, never an executable roster
+- `constitutional_agent_audit`: records Anima as dispatcher and the six other names as non-dispatch registers
+- `m5_4_governance.review_surface_roles`: governance roles, not agent identities
+- `m5_4_governance.capacity_governance`: six operational-capacity lanes
 - `mediated_run_evidence_bridge.packet_required_fields`: 16 fields; `capability_allowlists` per actor; `privacy_guards`
+
+The active roster projection lives in `Body/M/pratibimba-app/src/panes/omni/omnipanelCapabilities.ts`: Pi, Anima, and six Aletheia-mode targets represented by `actor: 'aletheia'` plus the exact guardian `techneClass`. `PSYCHE_ASPECT_REGISTERS` is a separate non-dispatch set.
 
 ### 3.4 S5 review/autoresearch persistence
 
@@ -339,16 +371,20 @@ The M5' surfaces are **not 3D geometric instruments** like M1'/M2'/M3'/M4' — t
 
 ### 5.2 M5-1' Canon Studio rendering
 
+The studio is a **thinking/writing partner workbench** — Theia markdown editor as canvas, conversational engagement happens in the OmniPanel (§5.5) under canon-writing-mode team-routing, never as inline popup-prediction.
+
 | Element | Geometry | Substrate consumed |
 |---|---|---|
 | **Markdown editor** | Theia's `monaco-editor` with QL/bimba-coordinate decoration extension (highlight `M{n}'`, `S{n}'`, `(0/1)` context-frames inline) | Theia FS provider; `hen-compiler-core` write boundary |
 | **Smart Connections autocomplete** | Wikilink autocomplete merging explicit outlinks with semantic neighbours (BGE-micro-v2 cosine sort) | `s1'.semantic.suggest_link_candidates` over `<vault>/.smart-env/multi/*.ajson` |
-| **Lens rotation panel** | Twelve-cell L0..L5/L0'..L5' lens grid; click rotates the active node through MEF×QL (the 72-fold resonance per `epii-ux-full-m5-branch.md §4`) | `MathemeHarmonicProfile.resonance72` (CODE-PENDING) |
-| **Klein V₄ square indicator** | Three small SVG squares A (`0+5`), B (`1+4`), C (`2+3`) — highlight on lens-anchor change | UX `epii-ux-full-m5-branch.md §4.2` |
-| **Vāk density ribbon** | Four-stage progressive disclosure: UuidOnly (Parā) → Coordinate (Paśyantī) → Resonances (Madhyamā) → Full corpus (Vaikharī) | `epii-ux-full-m5-branch.md §4.3` |
+| **Bimba-ground side rail** | Persistent left/right rail showing the M5-1 #-position the editor cursor is in (one of #5-1-0…#5-1-5 from §2.2), the position's canonical function, and which resonant-thinkers in the citation lattice are already cited vs missing in the current draft | bimba-MCP `resolve_coordinate("M5-1-{n}")` + page-frontmatter `c_0_source_coordinates` cross-check |
+| **Position-anchor decoration** | Inline glyph at heading-level showing which #5-1-N position a section instantiates (e.g. `[#5-1-3 Symbolic Integration]`); declared via frontmatter `c_0_source_coordinates` and rendered as left-margin badge | frontmatter + Hen wikilink resolver |
+| **Citation-lattice gutter** | Right-margin chips for each of the 14 load-bearing resonant thinkers (Gebser, Jung, Wilber, Heidegger, Abhinavagupta, Eckhart, Whitehead, Aurobindo, Nietzsche, Teilhard, McLuhan, Deleuze, Neumann, …); chip lit = thinker cited in the draft; greyed = present in the bimba `#5-1` resonance set but absent here | bimba-MCP `#5-1` resonance set + Smart Connections semantic match against `[[wikilink]]` mentions |
 | **Decoration colours** | QL position colour-key (P0..P5 spectrum); family-letter sigil; inversion-flag glyph `#` / `'` | `CLAUDE.md` Layer 2 coordinate families |
 
-**No 3D in Canon Studio.** The visual density lives in text-decoration + lens-rotation table — the pedagogy IS the visualization.
+**No 3D in Canon Studio.** Visual density lives in text-decoration + position-anchored rails + citation-lattice gutter. The pedagogy IS the visualisation — but the pedagogy is the canonical M5-1 dialectic, not generic markdown affordances.
+
+**Coupling-rule note (anti-pattern struck).** Earlier drafts of this section included a "Lens rotation panel" (L0..L5/L0'..L5'), "Klein V₄ square indicator" (lens-anchor change events), and "Vāk density ribbon" (Parā/Paśyantī/Madhyamā/Vaikharī progressive disclosure). All three import L-family (Lens) structure into an M-family canon surface and violate the coupling rule at `[[M-M-prime-coordinate-mapping-inaugural §0.1]]`. **They belong on L5-1' (Para Vāk) surfaces, not on M5-1'.** Lens-grid affordances, MEF×QL rotation, and Vāk density progressive disclosure remain canonical — they just don't live here. M5-1' surfaces the M-side canonical content (the 6-position dialectic and its lattice); L5-1' surfaces the L-side lens apparatus.
 
 ### 5.3 M5-2' Backend Studio rendering
 
@@ -386,6 +422,54 @@ The **load-bearing visual reframe**: ACR → OmniPanel (Tranche 15.2). The Pi-ru
 | **Six capacity panes** | Anuttara · Paramaśiva · Paraśakti · Mahāmāyā · Nara · Epii-on-Epii lanes — each shows `requires_human`, `governance_lead`, candidate count, evidence handles | `capacity_workflows.rs` registry (Tranche 06.3/12.5) |
 
 **No 3D in OmniPanel.** The Pi-runtime is text + tree + table. Persistent across all layouts (`15-ui-design-foundations.md §5`). No modals — the Review tab IS the landing surface.
+
+#### 5.5.7 Canon-writing mode (OmniPanel team-routing for M5-1' focus)
+
+When the user puts editor focus on a Canon Studio (M5-1') document, the OmniPanel does **not** spawn a new panel and does **not** push inline-prediction suggestions into the editor. It reconfigures its existing agent-team / skill-routing for **canon-writing-as-conversation** — a thinking/writing partner experience over the bimba ground at #5-1.
+
+**The 4.5-lean chain activated for canon-writing** (per [[S5']]:174-184 delegation ladder + the M↔S coupling at S5.1' "Crystallised Form"):
+
+```
+USER ↔ Pi Chat ↔ Epii (S5' / S5.1' Crystallised Form) — holds the piece in active context
+                  ↑
+                  │  delegates up for depth/philosophy/judgment
+                  │
+              ALETHEIA (S4-5' UX membrane) — curates outputs;
+                  │       can engage or bypass Epii
+                  ↑       dispatches retrieval subagents:
+                  │       Anansi (lineage), Moirai (graph-RAG),
+                  │       Janus (handoff), Mercurius (psychopomp routing),
+                  │       Agora (dialectics), Zeithoven (compositional sequencing)
+                  │
+              SOPHIA (S4-4' constitutional under Anima) — wisdom counsel;
+                      identifies improvement vectors;
+                      receives session crystallisation
+                  │
+              ANIMA (S4-4' orchestrator) — VAK routing, team composition
+```
+
+This is the canonical S4→S5 lean via S4-5' Aletheia. Sophia (S4-4') routes wisdom-counsel through the Aletheia mode (S4-5') into Epii's deep oracle (S5'). Aletheia's six subagents (Anansi/Moirai/Janus/Mercurius/Agora/Zeithoven) are dispatched within the Aletheia-crystallisation-mode for retrieval/research aid — over RAG-Anything + bimba-coordinate-lookup — so Epii can keep the piece itself clean in context rather than loading raw retrieval into its working memory.
+
+It is the structural mirror of the M4↔M5 lean via M4-5 (Nara → Aletheia membrane → Epii recognition handoff): the 4.5 articulation is the same shape at agent-runtime and subsystem registers.
+
+**Tab reconfiguration in canon-writing mode** (not new tabs; same OmniPanel, different routing/team):
+
+| Tab | Canon-writing mode behaviour |
+|-----|------------------------------|
+| **Pi Chat** | Conversational interlocutor is **Epii** (holding the piece) with **Sophia** counselling; Anima as orchestrator; Aletheia mode auto-engages for retrieval queries. The user converses with a writing partner that knows the canonical #5-1 dialectic, the resonance lattice, and the draft state. |
+| **Dispatch Trace** | Tree shows `Pi → Anima → Sophia → Aletheia → {Anansi/Moirai/Janus/Mercurius/Agora/Zeithoven}` retrieval dispatches as the partner pulls research material. Visible to the user but never interrupts. |
+| **Tool Stream** | RAG-Anything calls (`aletheia_gnosis_query` over `bimba` + `gnosis` namespaces) + coordinate-lookups (`bimba.resolve_coordinate`, `graph_traverse`) — surfaced for trust but not as authoring suggestions. |
+| **Evidence** | The piece-in-progress; cited passages; resonance-lattice gap report against #5-1 canonical lattice. |
+| **Review** | Deposits from Aletheia mode (`aletheia_crystallisation`) when a draft section reaches a promotion candidate; non-dry-run promotion blocked until canon mutation law lands (S5-SPEC). |
+| **Gateway** | `s5'.epii.*` + `s1'.vault.*` + `s1'.semantic.*` + `s4'.mediation.route` readiness — the routes the canon-writing chain depends on. |
+
+**What does NOT change**: no new panel, no editor-inline AI popups, no modal interruptions, no autocomplete-on-RAG. The Theia markdown editor is the canvas; the OmniPanel is the dialogue surface; the team configuration is what changes. The experience is conversational — the user thinks/writes with the partner — not predictive.
+
+**Mode entry**: triggered when editor focus is on a vault file whose `coordinate` frontmatter is `M5-1` or one of `M5-1-{0..5}`. Implementation: `omnipanel-shell` reads active editor's frontmatter; `kernel-bridge` exposes the team-config event; the team-routing change is one config write to the active Pi session, not an extension swap.
+
+**Mode exit**: returns to default Pi-runtime monitoring when editor focus moves off a `#5-1*` document.
+
+**Anti-greenfield discipline**: this is a UX choreography over already-landed substrate. Epii (S5'), Aletheia (S4-5' carrier + tools + 6 subagents), Sophia (S4-4' Anima constitutional), Pi-agent, RAG-Anything (`epi-gnostic`), bimba-MCP retrieval, and the OmniPanel chrome ALL already exist. Canon-writing mode is one team-routing profile, not a new pipeline.
 
 ### 5.6 M5-5' Logos Atelier rendering (the most visually distinctive M5' surface)
 
@@ -503,6 +587,7 @@ This is the 5→0 seam expressed as event: the Atelier's etymological excavation
 - **Surface seam:** `Body/S/S5/epi-gnostic` `pratibimba` namespace handles + `m5-epii` extension `PRIVACY_CLASS = 'governed_review_metadata_only'` (`index.ts:16`)
 - **M5 obligation:** the `m5-epii` widgets MUST treat all `pratibimba` artifacts as handles (coordinate, session, review id) — protected bodies MUST never render. `enforceReviewDisposition` + `isPrivacySafe(privacyClass)` enforced in `epii-surface.ts:393-396` and `agentic-control-room/src/browser/acr-runtime-service.ts:89, 159, 219`.
 - **Plugin-integrated-4-5-0** (`Body/M/epi-theia/extensions/plugin-integrated-4-5-0/`) realises the recognition surface: foreground M4 personal cymatic on background M0 bimba; M5 review-gates the promotion law (`epii-ux-full-m5-branch.md §7.1`)
+- **Structural mirror at agent-runtime layer**: the M4↔M5 lean via M4-5 is structurally identical to the S4→S5 lean via S4-5' Aletheia (Sophia → Aletheia mode → Epii). See [[S5'.md §"The 4.5-Lean Articulation"]] and §5.5.7 above. The .5 position in each register is the non-dual lean-membrane, not its own layer.
 - Cross-ref: `M4-ARCHITECTURE.md §"M4↔M5 handoff"`; `INTEGRATED-4-5-0-RECOGNITION-ARCHITECTURE.md`
 
 ### 7.3 M5 ↔ M1/M2/M3 (the canon-recognition seam — `137 = 64+72+1`)
@@ -529,6 +614,8 @@ Per `epii-ux-full-m5-branch.md §5.2`: **the canon acts as context, not payload 
 
 - **Contract type:** `composes-with` (Aletheia tools via Anima dispatch; S5 spine via gateway)
 - **The "tuning fork" claim** depends on `MathemeHarmonicProfile.resonance72` landing (CP-B-2; cross-link kernel-bridge 10.x). Until then the seam is rhetorical, NOT runtime-grounded. M5 honors this: review-gates that test `137 = 64+72+1` are BLOCKED until kernel-bridge surfaces the field (per M5'-SPEC `Readiness/Test Criteria` line 184).
+- **The 4.5-lean is the canonical articulation of this seam**: Sophia (S4-4' constitutional under Anima) → Aletheia mode (S4-5') → Epii (S5'). Aletheia is not a peer agent — it is the *mode* by which S4 leans into S5. See [[S5'.md §"The 4.5-Lean Articulation"]] for the full structural statement, and §5.5.7 above for the canon-writing instance.
+- **M5-1' Canon-writing mode** (§5.5.7) is the load-bearing example of this seam used as a working configuration: Epii holds the piece at S5.1' Crystallised Form, Sophia counsels, Aletheia subagents retrieve over RAG-Anything + bimba-coordinate-lookup, the user converses with a writing partner whose team-routing knows the canonical #5-1 dialectic.
 - Cross-ref: wave-b-agentic-layer-matrix.md row B7
 
 ### 7.6 Forbidden overlaps
@@ -668,7 +755,7 @@ These are the legitimate first-builds — each justified by an M' product-surfac
 - **Local pitch synthesis** — M2-1' Vimarśa-window contract; M5 reads `audio_octet[8]` via profile bus or NOT AT ALL
 - **Local clocks** — every M5 surface subscribes to kernel-bridge profile-tick; no `setInterval` / `requestAnimationFrame` counters
 - **Local LUT forks** — Mn.h constants NEVER duplicated into TS/wgsl tables in M5 extensions
-- **Local graph relation inference** — every graph read goes through `Body/S/S2/graph-services` via gateway; M5 does NOT compute `RELATES_TO_COORDINATE` edges locally
+- **Local graph relation inference** — every graph read goes through `Body/S/S2/graph-services` via gateway; M5 does NOT compute `MAPS_TO_COORDINATE` edges locally
 - **Composition by juxtaposition** — `15-ui-design-foundations.md §6`; the integrated 1-2-3 and 4-5-0 plugins compose geometrically, NEVER as three side-by-side widgets; M5-3 honors this contract
 - **Rebuilding the RAG** — `epi-gnostic` IS the RAG; Atelier consumes via Aletheia tools, never re-implements
 - **Treating Aletheia subagents as ACR-AgenticActor peers** — DR-B-3 ratified: Aletheia-internal only; surface as Anima-dispatch sub-traces under Aletheia
@@ -697,7 +784,7 @@ Beyond the M5'-SPEC `Readiness / Test Criteria` list (lines 168-184), this archi
 14. Anti-treat-constitutional-as-subagent test: `agent-contract.json:53` `treat_anima_constitutional_agents_as_epii_subagents` enforcement — no M5 surface lists constitutionals as Epii-internal
 15. Day-path test: M5 inbox surfaces respect `Idea/Empty/Present/{day-date}/` (`agent-contract.json:57`); no NOW-folder writes for review items
 16. Canon-recognition test: `137 = 64+72+1` review surfaces trace to M1-5 (+1) NOT M0; residual M0-witness wording downgraded (DR-M5-2 RATIFIED audit)
-17. Pi-singular-harness test: capability-matrix `constitutional_agents` array does NOT list `pi`; ACR/OmniPanel `AgenticActor` includes Pi as harness label not constitutional peer (DR-M5-1 RATIFIED audit)
+17. Pi-singular-harness test: capability-matrix `constitutional_agents` is empty; active OmniPanel dispatch targets are Pi, Anima, and six `aletheia` + `techneClass` guardian entries, while Psyche aspect registers are separate and non-dispatch (DR-M5-1 cleanup landed)
 18. Recursive-self-review test: `enforceHumanGate({recursiveSelfReview: true, actor: 'sophia', humanRequired: false, actorIsHuman: false})` returns blocked (Tranche 12.4)
 19. Field-parity test: `RunEvidenceEnvelope` keys = `capability-matrix.json mediated_run_evidence_bridge.packet_required_fields` set-equality (Tranche 12.6)
 20. Möbius-night-pass routing test: `grep -rn "dispatch_moirai_night_pass" Body/S/S3/gateway/src/ Body/S/S4/ta-onta/anima/modules/` returns hits in BOTH (Tranche 12.9)

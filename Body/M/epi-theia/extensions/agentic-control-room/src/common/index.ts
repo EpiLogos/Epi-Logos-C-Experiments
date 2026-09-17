@@ -17,6 +17,7 @@ export const ACR_WIDGET_IDS = {
     RUN_TREE: 'pratibimba.acr.run-tree',
     TOOL_STREAM: 'pratibimba.acr.tool-stream',
     DIAGNOSTICS: 'pratibimba.acr.diagnostics',
+    PI_RUNTIME_MONITOR: 'pratibimba.acr.pi-runtime-monitor',
     EVIDENCE_DEPOSITION: 'pratibimba.acr.evidence-deposition',
     REVIEW_DECISION: 'pratibimba.acr.review-decision'
 } as const;

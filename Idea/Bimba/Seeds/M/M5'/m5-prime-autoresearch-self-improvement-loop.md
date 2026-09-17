@@ -59,8 +59,8 @@ This spec fills the consolidation slot. It is M-side (M5'-level) because the spi
 - `EvaluationEvidence` with `dimensions × baseline/challenger scores × weights × notes × source_refs × optional kernel_evidence`
 - `KernelEvidence` carries privacy-class, computation-source, advisory-only flag, interpretation-boundary, and a `KernelTrajectoryRef` (session_key, day_id, now_path, spacetimedb surfaces, graphiti arc)
 - Persistence: JSON-on-disk at `${root}/s5-improvement-state.json`
-- `InboxStore` (in `src/inbox.rs`): receives Aletheia's JSONL handoff per the wire format mirrored from `Body/S/S4/ta-onta/S4-5p-aletheia/modules/sophia-ingest.ts`; storage at `${VAULT}/Pratibimba/Epii/inbox/${session_id}.jsonl`
-- `recompose_pass()` (in `src/recompose.rs`): the Möbius seam closure (C6); for each pending inbox entry emits `NextComposeHint { session_seed, proposed_p0_questions, challenger_artifacts }` + `RecomposeDecision`; **first-pass policy is universal `HumanReview`** — no autonomous keep/discard allowed at the recompose seam
+- `InboxStore` (in `src/inbox.rs`): receives Aletheia's JSONL handoff per the wire format mirrored from `Body/S/S4/ta-onta/S4-5p-aletheia/modules/sophia-ingest.ts`; storage at `${VAULT}/Empty/Present/{day_id}/${session_id}.jsonl`; preserves Sophia `q_proposals` as pair-development candidates
+- `recompose_pass()` (in `src/recompose.rs`): the Möbius seam closure (C6); for each pending inbox entry emits `NextComposeHint { session_seed, proposed_p0_questions, challenger_artifacts }` + `RecomposeDecision`; it carries each q_ proposal's `opens_questions` into `proposed_p0_questions`; **first-pass policy is universal `HumanReview`** — no autonomous keep/discard allowed at the recompose seam
 
 **`epii-review-core/`** (~420 LOC):
 
@@ -895,6 +895,10 @@ Each sibling should add a brief cross-reference to this spine spec, noting that 
 ### §14.4 New companion to produce
 
 - `Idea/Bimba/Seeds/S/S5/autoresearch-loop-seed.md` — the S-side seed working paper mirroring this M-side articulation from the implementation-register
+
+### §14.5 Operational / typed-VAK view of the spine (evolver / DGM integration)
+
+The four-phase spine specified in §2–§7 is the **structural / phase-flow view** of the autoresearch loop. Its operational / typed-VAK view — i.e., how each evolver / Darwinian-Gödel-Machine loop step decomposes into a typed VAK invocation `(CPF, CT, CP, CF, CFP, CS)` over existing primitives — is captured in cycle-3 plan-tranche **Tranche 12.25** at [[../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5]] (search: "12.25 — Evolver / DGM integration as typed VAK choreography"). The tranche's full 10-row integration mapping (Sample parent / Sample stepping-stone parent / Mutate-propose / Score / Admissibility gate / Promotion / Crossover / Stepping-stone archive / Cross-cycle differential signal / Recognition-closure) names each evolver-step's existing primitive and its VAK address per the S4' VAK reading-frame law. Tranche 12.25's spec deliverable is the canonical operational reference for how the spine **runs** as choreography over the live cores cited in §1.1, while this M5' document remains canonical for the spine's **structure** and four-phase flow. The two views are non-overlapping; the tranche cites this document as the structural ground, and this document cites the tranche as the operational expansion. See also: [[../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/33-harmonic-energy-channel-handoff]] §2.8 for the originating handoff scope and the locked decisions (frontmatter `dev_decisions` block) that the tranche inherits without re-debate.
 
 ---
 

@@ -1,16 +1,21 @@
-// Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
+// Generated from Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json.
+// Boundary authority: forbiddenImports / forbiddenImportsFromLayer live in that JSON.
+// Do not hand-edit.
 import {
     CROSS_EXTENSION_ROUTE_CONTRACTS,
     MExtensionContributionContract,
     MExtensionMiniMode,
     REQUIRED_OBSERVABILITY_PAYLOAD_FIELDS
 } from '@pratibimba/m-extension-runtime';
+import type { PrimitiveReadinessState } from '@pratibimba/integrated-composition/design-primitives';
 
 export * from './m0-inspector';
+export type M0PrimitiveReadinessState = PrimitiveReadinessState;
 
 export const EXTENSION_ID = 'm0-anuttara';
 export const PRIMARY_VIEW_ID = 'm0.anuttara.languageMap';
-export const ALL_VIEW_IDS = ["m0.anuttara.languageMap","m0.anuttara.owlShaclInspector","m0.anuttara.rVirtuePanel"] as const;
+export const COMMUNITY_CLOCK_OVERLAY_VIEW_ID = 'm0.anuttara.communityClockOverlay';
+export const ALL_VIEW_IDS = ["m0.anuttara.languageMap","m0.anuttara.owlShaclInspector","m0.anuttara.rVirtuePanel",COMMUNITY_CLOCK_OVERLAY_VIEW_ID] as const;
 export const OPEN_COMMAND_ID = 'm0.openCoordinate';
 export const READ_ONLY_COMMAND_ID = 'm0.openCoordinate.readOnly';
 export const DEPOSIT_ONLY_COMMAND_ID = 'm0.openCoordinate.depositOnly';
@@ -47,6 +52,11 @@ export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.free
             id: 'm0-anuttara.currentEvidenceContext',
             source: 'shared-bridge',
             reads: Object.freeze(['coordinateContext', 'profileGeneration', 'privacyClass'])
+        }),
+        Object.freeze({
+            id: 'm0-anuttara.activeLayer',
+            source: 'shared-bridge',
+            reads: Object.freeze(['activeLayer', 'implicateExplicate', 'mode'])
         })
     ]),
     evidenceSerializers: Object.freeze([

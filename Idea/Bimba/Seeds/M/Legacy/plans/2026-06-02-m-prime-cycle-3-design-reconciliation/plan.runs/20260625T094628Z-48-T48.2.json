@@ -1,0 +1,33 @@
+{
+  "runId": "20260625T094628Z-48-T48.2",
+  "taskId": "48.T48.2",
+  "startedAt": "2026-06-25T09:46:28.253Z",
+  "owner": "codex-m-dev-48-t48-2-ct-ladder-bases",
+  "leaseExpiresAt": "2026-06-25T11:46:28.253Z",
+  "worktree": null,
+  "task": {
+    "id": "48.T48.2",
+    "trackId": "48",
+    "tranche": "T48.2",
+    "title": "The CT-ladder base set (one CS-reflection per content type) *(L1; depends 48.1)*",
+    "effort": null,
+    "file": "48-bases-cs-reflection-layer.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+    "dependsOn": [
+      "48.T48.1"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

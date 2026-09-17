@@ -40,3 +40,19 @@ index 58c01ea9d4d9c2bb5e42e5fec2ca0b5a523806f5..2b9952aef1ac7344a6a9785d876ce094
      }
      promisify(command, p) {
          return new Promise((resolve, reject) => {
+diff --git a/lib/application-package-manager.js b/lib/application-package-manager.js
+index e58fb7e9b26f44a6d94b1f5489a7b77977cf85bc..a9f6ea137f99d90757471b7e5192c0ab9c07616d 100644
+--- a/lib/application-package-manager.js
++++ b/lib/application-package-manager.js
+@@ -179,6 +179,11 @@ class ApplicationPackageManager {
+         if (!theiaElectron.electronVersion || !semver.satisfies(theiaElectron.electronVersion, currentRange)) {
+             throw new AbortError('Dependencies are out of sync, please run "install" again');
+         }
++        if (process.env.EPI_SKIP_FFMPEG_REPLACE === '1') {
++            console.log('EPI_SKIP_FFMPEG_REPLACE=1 — leaving Electron-bundled libffmpeg in place.');
++            console.log('EPI_SKIP_FFMPEG_REPLACE=1 — skipping codec check.');
++            return;
++        }
+         const ffmpeg = await Promise.resolve().then(() => require('@theia/ffmpeg'));
+         await ffmpeg.replaceFfmpeg();
+         await ffmpeg.checkFfmpeg();

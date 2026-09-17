@@ -156,7 +156,7 @@ The colour-quaternion projects at multiple scopes simultaneously:
 - **Global field tint** — overall field colouration driven by dominant element of `Q_composed`
 - **Per-chakra colour** — each chakra's local cymatic pattern coloured by its locally-dominant element (heart-chakra projects through Air register, sacral through Water, etc., modulated by current `Q_transit` at that chakra)
 - **Particle colours in toroidal currents** — particles in flow carry the colour-quaternion projected through their local field-region
-- **Equatorial belt** — the diamond's equatorial vertices render the four elemental colours as the canonical quaternionic basis-vectors made visible
+- **Equatorial belt** — the diamond's eight interleaved equatorial base vertices (P1-P4 + P1'-P4', per §7.1) render the four elemental colours as the canonical quaternionic basis-vectors made visible — four colours across the eight-vertex belt
 - **Polar caps** — Aether-cap at crown radiates violet-luminous when active; Mineral-cap at root radiates gold-crystalline when the user's state is heavily crystallised/structured
 
 ### §4.2 Why this matters
@@ -252,7 +252,7 @@ Per the QL site `ql-bipyramid-torus-v20.jsx` research (`alpha_quaternionic_integ
 ### §7.1 The diamond/bipyramid bounding shell
 
 - **Dipyramid + full 6+6 P/P' mapping** (deliberately non-regular — apex height ≠ half-base, per the QL site research; corrected by DR-IG-6)
-- Position anchors: 2 apex poles P5/P5', 4 top/base vertices P1-P4, 4 inverted-base vertices P1'-P4' interleaved by pairing rule **x + y' = 5**, and 1 central axis-point P0/P0' (white/black = 0/1 ground) projected through the pole-to-pole axis
+- Position anchors: 2 apex poles P5/P5', 4 top/base vertices P1-P4, 4 inverted-base vertices P1'-P4' interleaved by mirror law **x + y' = 5**, and 1 central axis-point P0/P0' (white/black = 0/1 ground) projected through the pole-to-pole axis
 - The geometry carries 12 named QL positions (6 + 6') without treating P0/P0' as a vertex and without collapsing the 8 base positions into a 4-vertex square
 - The dipyramid is the **bounding shell** of the psychoid field, not a frame around a figure
 - Renders faint, geometric, as field-container

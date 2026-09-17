@@ -83,3 +83,126 @@
     margin-top: 8px;
     padding: 4px 10px;
 }
+
+.bridge-readiness-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    margin-left: 8px;
+    padding: 2px 7px;
+    border: 1px solid var(--theia-sideBar-border);
+    border-radius: 4px;
+    background-color: var(--theia-editorWidget-background, rgba(255, 255, 255, 0.03));
+    color: var(--theia-foreground);
+    font-family: var(--theia-monospace-font-family);
+    font-size: var(--theia-ui-font-size0);
+    line-height: 1.35;
+    vertical-align: middle;
+}
+
+.bridge-readiness-green {
+    border-color: var(--theia-successForeground, #59c75a);
+}
+
+.bridge-readiness-amber {
+    border-color: var(--theia-warningForeground, #cca700);
+}
+
+.bridge-readiness-red {
+    border-color: var(--theia-errorForeground, #f48771);
+}
+
+.bridge-readiness-binding {
+    opacity: 0.72;
+}
+
+.bridge-readiness-pending-badge {
+    color: var(--theia-badge-foreground);
+    background-color: var(--theia-badge-background);
+    border-radius: 3px;
+    padding: 0 4px;
+}
+
+.bridge-readiness-blocked-overlay {
+    color: var(--theia-errorForeground, #f48771);
+    font-weight: 700;
+}
+
+.mext-cold-start-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 560px;
+}
+
+.mext-kairos-onboarding {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid var(--theia-sideBar-border);
+    border-radius: 6px;
+    background: var(--theia-editorWidget-background, var(--theia-editor-background));
+    color: var(--theia-foreground);
+}
+
+.mext-kairos-header,
+.mext-kairos-actions,
+.mext-kairos-controls,
+.mext-kairos-switch,
+.mext-kairos-interval {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mext-kairos-header {
+    justify-content: space-between;
+}
+
+.mext-kairos-title,
+.mext-kairos-card-title {
+    margin: 0;
+    font-size: var(--theia-ui-font-size2);
+    font-weight: 600;
+}
+
+.mext-kairos-progress,
+.mext-kairos-glyph {
+    color: var(--theia-descriptionForeground);
+}
+
+.mext-kairos-card-body,
+.mext-kairos-feature-list {
+    margin: 8px 0 0;
+}
+
+.mext-kairos-feature-list {
+    padding-left: 18px;
+}
+
+.mext-kairos-controls {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-top: 2px;
+}
+
+.mext-kairos-interval input {
+    width: 76px;
+}
+
+.mext-kairos-relay {
+    padding: 6px 8px;
+    border-radius: 4px;
+    background: var(--theia-inputValidation-infoBackground, transparent);
+    color: var(--theia-descriptionForeground);
+}
+
+.mext-kairos-relay-active {
+    color: var(--theia-successForeground, #59c75a);
+}
+
+.mext-kairos-relay-unavailable {
+    color: var(--theia-errorForeground, #f48771);
+}

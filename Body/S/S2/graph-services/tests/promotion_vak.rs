@@ -12,6 +12,7 @@ fn make_vak(cpf: CpfState, cs_direction: CsDirection) -> VakAddress {
         cs: CsField {
             code: "CS1".into(),
             direction: cs_direction,
+            recognized: false,
         },
     }
 }

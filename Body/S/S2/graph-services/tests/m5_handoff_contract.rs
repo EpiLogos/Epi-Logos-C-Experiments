@@ -29,7 +29,7 @@ fn m5_handoff_contract_publishes_every_consumer_fixture_from_s2_sources() {
         fixture_ids,
         vec![
             "m0_node_anuttara_gds",
-            "m1_pointer_relation_walk",
+            "m1_relation_walk",
             "m2_correspondence_provenance",
             "m3_graph_wheel_dual",
             "m5_namespace_viewer",
@@ -77,34 +77,39 @@ fn m0_fixture_carries_s2_owned_anuttara_gds_and_source_anchors() {
 }
 
 #[test]
-fn m1_and_m2_fixtures_reuse_pointer_descriptors_without_family_labels() {
-    let m1 = fixture_by_id("m1_pointer_relation_walk");
-    let pointer = &m1["payload"]["pointerWeb"];
+fn m1_and_m2_fixtures_use_graph_relations_not_pointer_descriptors() {
+    let m1 = fixture_by_id("m1_relation_walk");
+    let projection = &m1["payload"]["coordinateReferenceProjection"];
 
-    assert_eq!(pointer["coordinate"], "M2");
-    assert_eq!(pointer["pointer_count"], 36);
-    assert_eq!(pointer["family_refs"]["m_ref"], "M2");
+    assert_eq!(projection["coordinate"], "M2");
+    assert_eq!(projection["reference_count"], 36);
+    assert_eq!(projection["family_refs"]["m_ref"], "M2");
+    assert_eq!(
+        m1["payload"]["deprecatedPointerWeb"]["status"],
+        "deprecated_compatibility_only"
+    );
     assert!(
-        pointer.get("labels").is_none(),
+        projection.get("labels").is_none(),
         "family must not move into labels"
     );
-
-    let steps = m1["payload"]["relationWalk"]["steps"].as_array().unwrap();
-    assert_eq!(steps.len(), 2);
-    assert!(steps.iter().any(|step| {
-        step["reason_code"] == "inversion_spanda"
-            && step["privacy_policy"] == "public-coordinate-topology-only"
-    }));
 
     let m2 = fixture_by_id("m2_correspondence_provenance");
     assert_eq!(
         m2["payload"]["provenance"]["clientMappingPolicy"],
-        "render-only"
+        "consume Neo4j relations; do not rederive graph law locally"
     );
     assert_eq!(
-        m2["payload"]["relationDescriptors"][0]["deposition_policy"],
-        "read-only descriptor; downstream evidence deposit is S5-governed"
+        m2["payload"]["relationMaterialization"]["relationCount"],
+        36
     );
+    let sample = m2["payload"]["relationMaterialization"]["sample"]
+        .as_array()
+        .unwrap();
+    assert!(sample.iter().any(|relation| {
+        relation["source_coordinate"] == "P0"
+            && relation["target_coordinate"] == "L1"
+            && relation["relation_type"] == "ADJACENTLY_ARTICULATES"
+    }));
 }
 
 #[test]

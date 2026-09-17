@@ -1,0 +1,35 @@
+{
+  "runId": "20260618T185311Z-25-T25.20",
+  "taskId": "25.T25.20",
+  "startedAt": "2026-06-18T18:53:11.343Z",
+  "owner": "codex-m-dev-25-t25-20",
+  "leaseExpiresAt": "2026-06-18T20:53:11.343Z",
+  "worktree": null,
+  "task": {
+    "id": "25.T25.20",
+    "trackId": "25",
+    "tranche": "T25.20",
+    "title": "Tarot psyche-anchor coherence panel *(spec-ahead-integration; consumes 19.4 + 19.5)*",
+    "effort": null,
+    "file": "25-m4-nara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md",
+    "dependsOn": [
+      "25.T25.2"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/psyche-anchor-coherence.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

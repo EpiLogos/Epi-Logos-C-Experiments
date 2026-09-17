@@ -14,12 +14,34 @@ coordinate: "C0"
 family: "C"
 artifact_role: "seed"
 c_0_links_to: "[[Bimba/Seeds/C/C0]]"
+c_0_source_coordinates:
+  - "[[C0]]"
+  - "[[World-Ontology]]"
+p0_grounds:
+  - "Grounded in the owning CTx contract"
 "#,
     )
     .unwrap();
 
     let result = validate_frontmatter(&yaml);
     assert!(result.errors.is_empty(), "{:?}", result.errors);
+}
+
+#[test]
+fn c_0_source_coordinates_must_be_string_sequence() {
+    let yaml: Value = serde_yaml::from_str(
+        r#"
+coordinate: "C0"
+c_0_source_coordinates: "[[C0]]"
+"#,
+    )
+    .unwrap();
+
+    let result = validate_frontmatter(&yaml);
+    assert!(result
+        .errors
+        .iter()
+        .any(|error| error.contains("c_0_source_coordinates")));
 }
 
 #[test]
@@ -121,6 +143,55 @@ l_alignments:
         .errors
         .iter()
         .any(|error| error.contains("klein_square") && error.contains("4-element")));
+}
+
+#[test]
+fn now_frontmatter_accepts_fibonacci_ground_integer_ranges() {
+    let valid: Value = serde_yaml::from_str(
+        r#"
+coordinate: "M4"
+artifact_role: "now"
+session_id: "20260617-120000-test"
+day_id: "17-06-2026"
+c_3_fibonacci_position: 59
+c_3_fibonacci_digit: 9
+c_3_tick12: 11
+c_3_backbone_index: 23
+"#,
+    )
+    .unwrap();
+    assert!(validate_frontmatter(&valid).errors.is_empty());
+
+    let invalid: Value = serde_yaml::from_str(
+        r#"
+coordinate: "M4"
+artifact_role: "now"
+session_id: "20260617-120000-test"
+day_id: "17-06-2026"
+c_3_fibonacci_position: 60
+c_3_fibonacci_digit: 10
+c_3_tick12: 12
+c_3_backbone_index: 24
+"#,
+    )
+    .unwrap();
+    let result = validate_frontmatter(&invalid);
+    assert!(result
+        .errors
+        .iter()
+        .any(|error| error.contains("c_3_fibonacci_position") && error.contains("0-59")));
+    assert!(result
+        .errors
+        .iter()
+        .any(|error| error.contains("c_3_fibonacci_digit") && error.contains("0-9")));
+    assert!(result
+        .errors
+        .iter()
+        .any(|error| error.contains("c_3_tick12") && error.contains("0-11")));
+    assert!(result
+        .errors
+        .iter()
+        .any(|error| error.contains("c_3_backbone_index") && error.contains("0-23")));
 }
 
 #[test]

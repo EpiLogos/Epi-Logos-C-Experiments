@@ -36,7 +36,11 @@ impl TestEnv {
             home,
             repo_root,
             fake_pi_log: PathBuf::new(),
-            extra_env: Vec::new(),
+            // Tests must never implicitly spawn a DETACHED real gateway
+            // daemon (the agent-lane preflight does exactly that and leaked
+            // orphan `epi gate start` processes that poisoned later runs).
+            // Tests that want a real gateway spawn one explicitly and guard it.
+            extra_env: vec![("EPI_AGENT_GATEWAY_PREFLIGHT".to_owned(), "skip".to_owned())],
             path_prefixes: Vec::new(),
         }
     }
@@ -50,6 +54,10 @@ impl TestEnv {
             "# PI Agent Foundation\n",
         )
         .unwrap();
+        write_file(
+            env.repo_root.join("Body/S/S4/ta-onta/composite-entry.ts"),
+            "export default async function taOntaCompositeEntry() {}\n",
+        );
         fs::write(
             env.repo_root.join("Body/S/S4/pi-agent/composite-entry.ts"),
             "export async function main() {\n  await import(\"./extensions/epi-citta.ts\");\n  await import(\"./extensions/cross-agent.ts\");\n  await import(\"./extensions/subagent-widget.ts\");\n  await import(\"./extensions/agent-team.ts\");\n  await import(\"./extensions/agent-chain.ts\");\n  await import(\"./extensions/child-extension-propagation.ts\");\n  await import(\"./extensions/prompt-url-widget.ts\");\n  await import(\"./extensions/redraws.ts\");\n  await import(\"./extensions/themeMap.ts\");\n}\n",
@@ -208,7 +216,11 @@ impl TestEnv {
     }
 
     pub fn apply_to_process(&self) -> ProcessEnvGuard {
-        let lock = process_env_lock().lock().unwrap();
+        // Recover from poisoning: one panicking test must not cascade into
+        // every later apply_to_process() in the binary (Track 00 T1 triage).
+        let lock = process_env_lock()
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
         let mut saved = Vec::new();
         for key in [
             "HOME",
@@ -321,7 +333,34 @@ pub fn run_epi(args: &[&str], env: &TestEnv) -> TestOutput {
 }
 
 pub fn read_to_string(path: impl AsRef<Path>) -> String {
-    fs::read_to_string(path).unwrap()
+    let path = path.as_ref();
+    fs::read_to_string(path).unwrap_or_else(|err| {
+        // A bare `Os { code: 2, kind: NotFound }` names nothing, and this helper
+        // is where every day-path / stamp regression in this crate lands first:
+        // the 2026-07-27 day-path consolidation (`src/vault/paths.rs`) moved day
+        // folders to flat month-first `{MM-DD-YYYY}` and moved stamps onto LOCAL
+        // wall clock, and each stale expectation surfaced here as an anonymous
+        // NotFound. Name the file that was missing and show what the directory
+        // actually holds, so the next drift is one line of output away from
+        // diagnosed instead of a bisect.
+        let listing = path
+            .parent()
+            .and_then(|parent| fs::read_dir(parent).ok())
+            .map(|entries| {
+                let mut names: Vec<String> = entries
+                    .filter_map(|entry| {
+                        Some(entry.ok()?.file_name().to_string_lossy().into_owned())
+                    })
+                    .collect();
+                names.sort();
+                format!("[{}]", names.join(", "))
+            })
+            .unwrap_or_else(|| "<parent directory does not exist>".to_owned());
+        panic!(
+            "failed to read {}: {err}\n  parent directory holds: {listing}",
+            path.display()
+        )
+    })
 }
 
 pub fn write_file(path: impl AsRef<Path>, contents: &str) -> PathBuf {

@@ -1,7 +1,8 @@
 ---
 coordinate: "M3'"
 status: "active-domain-spec"
-updated: "2026-05-31"
+updated: "2026-07-18"
+cycle-3: reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-TAURI-PORT-SPEC]]"
@@ -12,6 +13,7 @@ depends_on:
   - "[[M2'-SPEC]]"
   - "[[alpha_rasa_bridge_ql]]"
   - "[[m3-prime-symbolic-transcription-research]]"
+  - "[[m3-prime-ql-transcriptional-bridge]]"
   - "[[full_theoretical_alignments_ql_physics]]"
   - "[[alpha_quaternionic_integration_across_M_stack]]"
   - "[[m4-prime-psychoid-cymatic-field-engine]]"
@@ -25,6 +27,8 @@ depends_on:
 # [[M3']] Domain Spec — [[Mahāmāyā]] as Clock-Cosmos and Codon-Rotation Surface
 
 > **M ↔ M' distinction.** [[M3]] is [[Mahāmāyā]] — the binary symbolic transcription engine and measurement-world grammar: 64 DNA codons, 64 [[I-Ching]] hexagrams, 384 line-change operators, 472 rotational codon states, 56+8 [[Tarot]] compression, [[M2]] → [[M3]] epogdoon compression, and the M# relational passage from system/partner/interaction/event/world/invariant. [[M3']] is that engine made playable: clock-pulse surface, codon-tarot wheel, sonic/cymatic timing, coupling-flow / measurement-face inspector, and the **codon-rotation projection of [[M1']] / [[M2-1']] 84-state (lens, mode) playing landscape into the 472-state (codon, rotation) modal-inversion surface**.
+
+> **⚠ Pending canon update (2026-07-14) — codon active-state law + expression seam.** The environment-modulated codon active-state (`m3_quat_active_state`) now reads the **full rotation angle** `2·atan2(|v|, w)` so all three matrix axes (i = Complementary, j = Moving-Resting, k = Same-Quality) contribute — replacing the retired i-only half-angle `atan2(x, w)` that discarded the codon's Mod (k = sum%6) and any j environmental torque; state 7 (Environmental composite) is now reachable, and the 3-matrix group law `i·j=k` is pinned. This is a **quaternionic-core law change** governed by [[M'-AMBIENT-EPIGENETIC-TRANSFORM-SPEC]] (P3.2, commit `b4a6cb8c`) and **awaits truth-ledger classification (GREEN-name / RED-owner)**. New sibling seam: the env-selected codon states express as ordered codon→RNA→amino-acid sequences + Major-Arcana pathways + Euler-prime (41/43) checkpoints (`portal-core::expression`, P5.1, `cfb31d82`), expression-only (DR-ENV-3 — never mutation).
 
 > **Authority boundary.** Clock substrate lives at [[S0]] / `portal-core`; the Vimarśa audio bus is produced by [[M2-1']] and carried in the shared profile; codon classification lives below [[M3']] in the [[M3]]/[[S0]] codec path. M3' is the clock/transcription/wheel renderer that consumes those contracts. It does not own the audio bus or invent codon-classification math locally.
 
@@ -43,17 +47,18 @@ Six commitments hold this domain:
 1. **Paramaśiva's tick is the harmonic clock**, not a display timer. M3' visualises and sonifies the kernel-computed tick; it does not run a private renderer-clock.
 2. **The 64-codon / 472-rotational-state surface is the modal-inversion landscape of the shared 84 playing-states surfaced by [[M1']] and read by [[M2-1']].** Each tarot card is a tonal signature; its 7-or-8 rotational positions are its modal inversions. See §7.
 3. **M3' is the codon-classifier downstream of [[M2]]'s DET projection.** [[M2-5']] projects 72-space vibration into a 64-bit symbolic signature; [[M3]] classifies that signature into the codon-and-rotation surface; M3' renders it.
-4. **[[M3-0]] is the reception/transduction threshold.** [[Paraśakti]]'s 72-fold vibration, including [[M2-5]] planetary/chakral evidence, compresses through the 9:8 DET into [[Mahāmāyā]]'s 64-bit binary substrate. M3' renders the transduction provenance and gap-state; it does not infer private chakral meaning locally.
+4. **[[M3-0]] is the reception/transduction threshold.** [[Paraśakti]]'s 72-fold vibration, including [[M2-5]] planetary/chakral evidence, compresses through the 9:8 DET into [[Mahāmāyā]]'s 64-bit binary substrate. M3' renders typed block, collision, and round-trip provenance; it does not collapse those distinct facts into a generic gap-state or infer private chakral meaning locally.
 5. **[[M3-5]] is the co-foliated world-clock synthesis.** The double-torus [[K²]] × [[T²_Mahāmāyā]] lives at M3-5 as the visible cosmic-wheel rendering downstream of [[M1-5]]'s single-torus 4π recognition and [[M2]]'s 72-fold bridge. M3' must not relocate the +1 parent or collapse M3-5 back into M1-5.
-6. **M3' has three app placements over one substrate.** The default wheel, the standalone `m3-mahamaya` [[Theia]] extension, and the integrated 1-2-3 cosmic-engine plugin all consume the same kernel/profile/[[SpaceTimeDB]] stream via the kernel-bridge named in [[m5-prime-system-shape-and-tauri-ide-canon]].
+6. **M3' has three app placements over one substrate.** The default wheel, the standalone `m3-mahamaya` [[Theia]] extension, and the integrated 1-2-3 cosmic-engine plugin all consume the same kernel/profile/[[SpaceTimeDB]] stream via the kernel-bridge named in [[m5-prime-system-shape-and-tauri-ide-canon]]. Per the B-8 no-fork invariant shared with [[M0']] and [[M2']], all placements read one `:Bimba` label, one `coordinate` identity property, one [[Body/S/S2/graph-schema]] authority, and one [[plugin-integrated-1-2-3]] rendering-composition seam; no placement owns a graph, schema, or rendering fork.
 7. **The physics bridge is a register-disciplined inspector, not a claim engine.** Per [[full_theoretical_alignments_ql_physics]], M3' may show the shared skeletons `137 = 64 + 72 + 1 = 64 + 2(36) + 1 = 128 + 8 + 1`, `0,4,2,2,9`, and the Standard Model coupling-flow descent as a symbolic/physics alignment surface. It must always distinguish exact QL symbolic arithmetic from measured physics values such as `alpha_EM(0)^-1 ~= 137.036` and `alpha_EM(M_Z)^-1 ~= 128`.
+8. **Third Spanda is live cumulative process before it is proof overlay.** The active carrier reads one `anuttaraPentadicTrace.thirdSpanda` generation containing M1 rotational state, M2's six-axis address, epogdoon evidence, and M3 reception/transcription. Static Mersenne, 128, 137, QCD, and measured-physics forms follow as explicitly labelled reference registers; they cannot stand in for the process record.
 
 ## §1 — User-Facing Surface
 
 - **Harmonic clock panel**: absolute tick, `tick12`, cycle, `degree720`, `degree360`, SU(2) layer, phase, `position6`, ratio role, pulse readiness. The 720° double-cover is shown as primary/shadow without collapsing into a 360-only display.
 - **Codon/I-Ching/Tarot wheel**: 64 codon addresses arranged with 7-or-8 rotational positions per card, nucleotide bits, DNA/RNA phase, hexagram, trigrams, line-change operator, tarot compression state, shadow codon state, transcription status. The active card and its current rotational position pulse with the kernel tick.
 - **(lens, mode) → (codon, rotation) projection display**: the M1' active playing-state projected onto the codon-rotation surface, showing which of the 472 (codon, rotation) cells is currently sounding.
-- **M3-0 transduction provenance strip**: the M2 72-index, M2-5 planetary/chakral source handle, DET `floor(index72 * 8 / 9)` result, 64-address, gap/readiness state, and codon-quaternion summary. This strip is evidence display, not interpretation of the user's private body state.
+- **M3-0 transduction provenance strip**: the M2 72-index, M2-5 planetary/chakral source handle, DET `floor(index72 * 8 / 9)` result, 64-address, block/collision/round-trip evidence, and codon-quaternion summary. This strip is evidence display, not interpretation of the user's private body state.
 - **Solar/cosmos panel**: planetary/chakral projection inherited from M2 profile metadata.
 - **M3-5 double-torus world-clock view**: a depth mode showing the co-foliation of [[K²]] audio-genesis substrate with [[T²_Mahāmāyā]] inscription × lens substrate, using the same active tick/codon/lens data as the flat wheel.
 - **Coupling-flow / measurement-face inspector**: a summonable technical panel showing the `Anuttara -> Paramasiva -> Parashakti -> Spanda -> Mahāmāyā -> Nara -> Epii` descent, the physics stack `G_SM -> D_mu -> (g3,g2,gY) -> RG -> EW breaking -> e(mu) -> alpha_EM(mu) -> alpha_EM(0)`, and the Mahāmāyā measurement-world status of the active packet. This is an explanatory/provenance surface; it does not compute physical constants.
@@ -76,7 +81,8 @@ Six commitments hold this domain:
 ## §3 — Required `MathemeHarmonicProfile` Fields
 
 - `tick`: absolute tick, cycle, `tick12`, `degree720`, `degree360`, `su2Layer`, `phase`, `position6`.
-- `mahamaya` / M3 projection: `mahamayaAddress64`, `hexagramId`, `upperTrigram`, `lowerTrigram`, `codonId`, `codon`, `nucleotideBits`, `dnaRnaPhase`, `lineChangeOperator`, `lineChangeOperatorAddress`, `tarotMinorId`, `tarotShadowCodon`, `aminoAcidCode`, `evolutionaryGap`, `datasetLutState`, `transcriptionState`, **`codonClass`** (`PERFECT_PALINDROMIC` / `IMPERFECT_PALINDROMIC` / `NON_PALINDROMIC_NONDUAL` / `DUAL`), **`rotationalStateCount`** (7 or 8), **`rotationalIndex`** (0 to rotationalStateCount−1).
+- `mahamaya` / M3 projection: `mahamayaAddress64`, `hexagramId`, **`kingWen`** (King-Wen ordinal 1..64), `upperTrigram`, `lowerTrigram`, `codonId`, `codon`, `nucleotideBits`, `dnaRnaPhase`, `lineChangeOperator`, `lineChangeOperatorAddress`, `tarotMinorId`, `tarotShadowCodon`, `aminoAcidCode`, `roundTripLoss`, `datasetLutState`, `transcriptionState`, **`codonClass`** (`PERFECT_PALINDROMIC` / `IMPERFECT_PALINDROMIC` / `NON_PALINDROMIC_NONDUAL` / `DUAL`), **`rotationalStateCount`** (7 or 8), **`rotationalIndex`** (0 to rotationalStateCount−1). The Fu-Xi `mahamayaAddress64`/`hexagramId` (0..63) and the King-Wen `kingWen` (1..64) are two orderings of the same 64-hexagram state, bused together so a consumer can render either sequence honestly; the translation is the kernel-owned `KING_WEN_FROM_ADDRESS64` LUT (+ inverse `ADDRESS64_FROM_KING_WEN`) carried on `MahamayaCodecProjection` in [[Body/S/S0/portal-core/src/luts/mahamaya.rs]], never recomputed renderer-side (landed 24.T24.5).
+- `anuttaraPentadicTrace.thirdSpanda`: nested `m1`, `m2`, `epogdoon`, and `m3` records. M3 carries both `detReceptionAddress64` (from the active M2 compression) and `worldClockAddress64` (from degree360 clock addressing); these are separate authorities and may coincide without being conflated.
 - `resonance72`: M2 source index used by `floor(m2_vibration_index * 8 / 9)`.
 - `planetaryChakral`: read-only projection used by cosmos/solar panels.
 - `audio_octet[8]` and `nodal_quartet[4]` for pulse display and standing-wave rendering.
@@ -86,7 +92,7 @@ Six commitments hold this domain:
 
 ## §4 — Privacy Boundary
 
-M3' can show safe public-current clock and symbolic address data. It must not expose raw bioquaternion state, private Nara cast interpretation, journal content, or unreconciled Graphiti body text. `pending-dataset-lut` and `provisional-gap` states are honest UI states, not reasons to compute arbitrary mappings in the renderer.
+M3' can show safe public-current clock and symbolic address data. It must not expose raw bioquaternion state, private Nara cast interpretation, journal content, or unreconciled Graphiti body text. `pending-dataset-lut`, `compressed-nonexact-round-trip`, and `round-trip-anchor` are honest states, not reasons to compute arbitrary mappings in the renderer.
 
 Oracle artifacts from [[m4-prime-nara-day-episodes-and-oracle-artifacts]] may carry scalar M3 Tarot/I-Ching/codon references. M3' may resolve those scalar references into canonical library details when the user opens a reading inspector, but the protected-local artifact body and interpretation remain outside the M3' boundary.
 
@@ -99,12 +105,14 @@ Oracle artifacts from [[m4-prime-nara-day-episodes-and-oracle-artifacts]] may ca
 ## §6 — Readiness / Test Criteria
 
 - Tests prove `degree360 → 64` and `m2 → m3` address fields are consumed from backend profile once present.
-- Tests prove `evolutionaryGap`, `pending-dataset-lut`, and `provisional-gap` states render distinctly.
+- Tests prove `roundTripLoss`, `pending-dataset-lut`, `compressed-nonexact-round-trip`, and `round-trip-anchor` states render distinctly.
+- Tests drive the production epogdoon evidence over all 72 source addresses and separately prove block size 9, eight collision pairs, eight exact anchors, and 64 non-exact round trips.
+- Tests prove one live trace generation mirrors the C M1 ring, all six M2 axes, M3 DET reception, independent M3 world-clock address, and kernel codon-rotation projection.
 - Tests prove the renderer does not contain hardcoded private codon, hexagram, tarot, or planetary mapping tables.
 - Tests prove M3' can run with data-ready / audio-deferred readiness.
 - Tests prove `codonClass` and `rotationalStateCount` produce the expected 40 non-dual / 24 dual split totalling 472 rotational states (`40 × 7 + 24 × 8 = 472`).
 - Tests prove the bidirectional `(lens, mode) ↔ (codon, rotation)` projection per §7 is consistent: same input always projects to same output; reverse map is single-valued where canonical.
-- Tests prove the M3-0 provenance strip renders backend-provided 72-index, DET result, 64-address, and gap/readiness state without deriving private planetary/chakral meaning locally.
+- Tests prove the M3-0 provenance strip renders backend-provided 72-index, DET result, 64-address, and distinct block/collision/round-trip evidence without deriving private planetary/chakral meaning locally.
 - Tests prove the M3-5 double-torus view and the flat wheel view render the same active `tick`, `degree720`, `(codon, rotation)`, and lens state, and neither view forks the canonical Neo4j graph substrate.
 - Tests prove M3' can resolve scalar Tarot/I-Ching/codon references from protected Nara artifacts without loading protected-local artifact bodies.
 - Tests prove kernel-bridge consumption is shared across default M3' surface, `m3-mahamaya` extension, and integrated 1-2-3 plugin: one backend profile stream, no duplicate private clock.
@@ -174,7 +182,7 @@ The forward and reverse maps must live in the kernel/profile contract as part of
 
 ## §7.5 — Surface Philosophy: Conversational Default, Technical on Request
 
-The full multi-matrix architecture detailed in §8 below is **load-bearing for specified outputs** (codon-class classification, rotational-state determination, DET projection, evolutionary-gap flagging, Tarot exact-cover verification, codon-quaternion charge audits). It is **not** the default user-facing rendering.
+The full multi-matrix architecture detailed in §8 below is **load-bearing for specified outputs** (codon-class classification, rotational-state determination, DET projection, epogdoon round-trip evidence, Tarot exact-cover verification, codon-quaternion charge audits). It is **not** the default user-facing rendering.
 
 Default M3' surface is the codon-tarot wheel with the current cell active, the harmonic clock panel, and the readiness-and-provenance display. The technical inspectors (dinucleotide-matrix grid, charge-quaternion display with pp/mm/mp/pm + 4X-invariant audit, 24-spoke lattice with 12-deep ring-buffer history, suit-integral breakdown, Major Arcana chromosome panel, DNA/RNA phase mask visualisation) are **summonable** — surfaced when the user asks "what's structurally happening at this codon?" or when an operational output requires them (review evidence, dataset reconciliation, audit trail). The agent (`M5-4'` Anima/Aletheia or domain-specialist) mediates the technical depth conversationally.
 
@@ -183,6 +191,33 @@ This keeps M3' feeling alive and tarot-like in default use, with the multi-matri
 ## §8 — The Full M3 Multi-Matrix Architecture
 
 M3' renders far more than a codon-tarot wheel. The [[Bimba]] [[M3]] layer carries a multi-matrix symbolic-transcription engine that the M3' surface must expose faithfully. The colloquial reduction to "64 codons + 472 rotational states" understates the actual structure.
+
+### §8.0 — Level 0: The Fibonacci Ground (Primary Lens)
+
+*(Inserted 2026-06-09 per [[35-fibonacci-ground-level-0-temporal-substrate]] §1.1, ratified DR-FIB-1.)*
+
+The M3 Mahamaya lens architecture is a four-level hierarchy. **Level 0 is the Fibonacci Ground at `#2-0` (Parashakti Archetypal Numerical Ground)** — the primary lens, pre-walk and pre-tick. The 16 simultaneous apertures of §8.10 are Level 2 lenses derived OVER and addressed THROUGH this Ground; they do not constitute or operate independently of it.
+
+The Fibonacci Ground period is `LCM(6, 5, 12) = 60` — the synchronization period of QL(6) × pentad(5) × zodiacal(12). The Pisano period `π(10) = 60` is its digital unfolding in base-10. Laid over the clock face at 6° per step: **60 × 6° = 360°**. Structural law (companion to `_Static_assert(64 * 6 - 24 == 360)`):
+
+```c
+_Static_assert(60 * 6 == 360, "Fibonacci ground period × 6°/step = full clock");
+```
+
+Every `Clock_Degree_Node` carries intrinsic `fibonacci_position: u8` (0–59) and `fibonacci_digit: u8` (0–9). These are properties of the ground, not derived from any lens or walk. (Residency: the typed C hostsite lands via cycle-3 Tranche 4.15 in the canonical M3 kernel at `Body/S/S0/epi-lib/`; see DR-FIB-2.)
+
+**Four-level hierarchy:**
+
+| Level | Name | Cardinality | Derivation | Subsystem |
+|---|---|---|---|---|
+| 0 | Fibonacci Ground (primary lens id 16) | 60 | LCM(6,5,12), Pisano π(10) | M2 (`#2-0`) |
+| 1 | tick12 (spanda) | 12 | 60 / 5 (pentadic quantization) | M1 |
+| 2 | 16 derived lenses | 16 | exhaustive factor-pairs of 360 | M3 |
+| 3 | 9 walks | 9 | sequential degree-space traversal | M1–M3 |
+
+The `+1` of the canonical `16+1` count is Level 0: **functionally the seventeenth and primary lens, assigned id 16 after derived ids 0..15**. It is not a seventeenth *static division row* at Level 2; the homogeneous `lensCarrier[16]` matrix remains complete at that derived level while `fibonacciGround` carries the primary lens identity and address.
+
+The full hierarchy is specified in `Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/02-16-lenses-backbone-temporal.md` §0 and §"Lenses vs Walk Modes vs Tick vs Fibonacci Ground".
 
 ### §8.1 The 2-Bit Nucleotide Logic (Polarity ⊕ Mobility)
 
@@ -237,9 +272,9 @@ Beyond the dinucleotide-evaluation matrix, M3 carries three operational 64-entry
 
 - **`M3_COMP_MATRIX[64]` (Complementarity)**: `comp[i] = i ^ 0x3F` — flips all 6 lines of hexagram i, mapping to its full complement (the 180° I-Ching rotation).
 - **`M3_MOVE_MATRIX[64]` (Movement / Trigram Swap)**: `move[i] = ((i & 0x07) << 3) | ((i >> 3) & 0x07)` — swaps the upper and lower trigrams. Structurally a kaleidoscopic flip preserving line-count.
-- **`M3_RES_MATRIX[64]` (Resonance with 56+8)**: 56 valid entries + 8 gaps marked `0xFF`. The 8 gaps are evolutionary-discontinuity markers — they trigger `STATUS_PROVISIONAL` during runtime and represent the M2→M3 epogdoon-compression slack-points where the 9:8 ratio cannot quite close.
+- **`M3_RES_MATRIX[64]` (partial resonance operator)**: 56 codon addresses have resolved targets; eight carry the legacy-named `M3_RESONANCE_GAP` (`0xFF`) sentinel and set `STATUS_PROVISIONAL`. This is a partial operator on the 64-address [[M3]] domain. It is not the total [[M2]] 72→64 epogdoon map and does not mean that eight M2 vibrations fail to manifest.
 
-The 56+8 resonance structure of M3_RES_MATRIX is the **same 56+8 partition** that the [[Tarot]] compression uses (see §8.7). The two are different views of the same structural fact: 56 fully-resonant addresses + 8 transitional-shadow addresses cover the 64-codon space.
+Three independent mechanisms happen to contain an eight: the resonance table has eight unresolved codon targets; epogdoon compression has eight source-collision pairs; and the [[Tarot]] exact cover has eight dual-codon courts. Their domains, mappings, and runtime evidence differ. No equation may identify them without an additional proved morphism. The live Third-Spanda carrier currently proves only the epogdoon law: all 72 sources map, eight pairs collide, eight anchors round-trip exactly, and 64 sources round-trip non-exactly.
 
 These 64-entry matrices are the hexagram-scale action of the same three matrix families named at §8.2. The pair-scale signature and the 64-element transformation tables are not two unrelated M3 matrix systems; they are the same i/j/k matrix architecture acting at dinucleotide scale and hexagram scale.
 
@@ -431,7 +466,7 @@ M3' should support four representational views as depth modes over the same data
 - **Toroidal / World Clock**: `K² × T²_Mahāmāyā` double-torus rendering, with the Várlaki/Rudas Pauli-Jung World Clock source available as provenance for the M3-5 rendering grammar.
 - **Hopf Identity**: identity trajectory projected through the SU(2) / Hopf surface into visible state.
 
-Open issue: the TEMP holding context is inconsistent about the "17th lens" language. Canonical M3' should not silently add a new lens. Treat the current law as **16 lens positions plus a Level-0 meta-position** until the companion spec normalises the terminology.
+Resolved 2026-07-15: the formerly inconsistent "17th lens" wording names the Level-0 primary [[Fibonacci Ground]], not an extra static division. Canonical M3' therefore exposes 17 functional lenses: Ground id 16 plus sixteen derived division ids 0..15. It must never infer Frame/Operator rows or an 18-fold model.
 
 ## §8.11 Janus Temporal Doorway
 
@@ -505,11 +540,11 @@ MathemeHarmonicProfile / kernel tick
 
 ### Clock aperture namespaces
 
-The chain keeps three "lens" surfaces separate:
+The chain keeps the M2 tonality namespace distinct from the M3 functional hierarchy:
 
 - **`M2_MEF_LENS`**: the 12 Vimarśa / chromatic MEF lens positions in the 72-fold M2 field. The `LENS_COUNT=12` constant in `codon_rotation_projection.rs` belongs here.
-- **`M3_LENS_STACK`**: the 16 static Mahāmāyā clock apertures over the 360° / 720° field. These are frequency-filter shells and reading apertures for M3-5, not replacements for the M2 MEF lenses.
-- **`M3_LENS_STACK_GROWTH`**: the +1 Fibonacci/Pisano dynamic-growth aperture. It is the Level-0/meta reading aperture over the 16 static apertures, not a seventeenth static lens silently merged into `LENS_COUNT`.
+- **`M3_LENS_STACK`**: the 16 derived static Mahāmāyā clock apertures over the 360° / 720° field. These are frequency-filter shells and reading apertures for M3-5, not replacements for the M2 MEF lenses.
+- **`M3_LENS_STACK_GROWTH`**: the +1 Fibonacci/Pisano dynamic-growth Ground, functionally primary lens id 16. It grounds and addresses the 16 static apertures; it is not inserted into their homogeneous static-division array.
 
 The Lens Annulus view must render this namespace split explicitly. A 12×7 `(lens, mode)` modal surface may project into the 472 codon-rotation surface, but it does not exhaust the 16+1 Mahāmāyā clock-aperture stack.
 
@@ -863,6 +898,93 @@ dynamical_rigor:
 
 Until measured nonlinear evidence exists, the default is `symbolic_phase_portrait`. This still gives Nara a powerful relational grammar: bounded recurrence, basin of attraction, perturbation, bifurcation candidate, and phase portrait. It prevents the lazy move of turning "strange attractor" into a vibe-label.
 
+## §8.17 — Codon → Major Arcana Transcriptional Bridge and the T→U Classification Layer
+
+### Code-Canonical Bridge: `m3_major_arcana_from_codon()`
+
+The codon → Major Arcana transcriptional bridge exists as operational C code at [[Body/S/S0/epi-lib/src/m3.c]] (lines 329–355) with its declaration at [[Body/S/S0/epi-lib/include/m3.h]] (lines 923–931). The composition path is:
+
+```text
+codon (6-bit, 0–63)
+  → M3_CODON_TO_AA[codon] (amino-acid index, 0–23)
+  → reverse-lookup against M3_MAJOR_ARCANA[].amino_acid_index
+  → Major Arcana card index (0–21), or 0xFF for STOP / unassigned
+```
+
+STOP codons (amino-acid index 10 → TAA/TAG/TGA) return `0xFF`: they carry no arcana and mark the governance boundary where transcription ends. Any amino-acid index without a Major Arcana assignment also returns `0xFF`. The [[M5]] Möbius return walks each codon of a session's M3 trace through this transcription — see `m3_major_arcana_from_codon()`'s header comment in m3.h.
+
+The `M3_MAJOR_ARCANA[22]` table ([[Body/S/S0/epi-lib/src/m3.c]]:304–327, declared in m3.h:644–651) maps the 22 Major Arcana cards to chromosome pairs (1–22) and amino-acid indices (0–21), implementing the autosomal-completion law: 22 Major Arcana = 22 human autosomes. The 2 transcendent Tarot operators (card IDs 22–23, beyond the 22-fold autosomal cycle) correspond to the X/Y sex chromosomes, completing the 80-card Tarot quaternion-point set (56 Minor + 22 Major + 2 Transcendent).
+
+### T→U Transcriptional Classification Layer
+
+Per [[m3-prime-ql-transcriptional-bridge]] (research warrant), the T→U shift is the formal mechanism by which DNA storage form becomes RNA expression form. The code-level supports:
+
+- **DNA/RNA phase toggle** (`get_polarity_phased(nuc, is_rna)` in [[Body/S/S0/epi-lib/include/m3.h|m3.h]]:101–103): XORs polarity bit across the codon, implementing T↔U substitution as a single bit-flip.
+
+- **RNA functional/dark mask partition** ([[Body/S/S0/epi-lib/src/m3.c|m3.c]]:164–170, [[Body/S/S0/epi-lib/include/m3.h|m3.h]]:666–667):
+  ```text
+  M3_RNA_FUNCTIONAL_MASK & M3_RNA_DARK_MASK == 0
+  M3_RNA_FUNCTIONAL_MASK | M3_RNA_DARK_MASK == 0xFFFFFFFFFFFFFFFF
+  ```
+  These two 64-bit masks partition all 64 codons into RNA-functional (codons that participate in transcription) and RNA-dark (codons unchanged by transcription), with no overlap and complete cover.
+
+- **T-containing codon detection** (`m3_codon_is_rna_capable()` in [[Body/S/S0/epi-lib/include/m3.h|m3.h]]:802–806): returns true if any codon position carries T (nucleotide 0x01). These 37 T-containing codons are the ones that transform under T→U, gaining RNA U-variant nodes per the 37/27/101 research.
+
+### The 37/27/101 Research Structure
+
+Per [[m3-prime-ql-transcriptional-bridge]] §2:
+
+| Value | Derivation | Identity |
+|------:|:-----------|:---------|
+| **27** | 3³ = T-free codons | Shared DNA/RNA; unchanged by transcription |
+| **37** | 4³ − 3³ = T-containing codons | Transform under T→U; gain U-variants |
+| **64** | 4³ = total DNA codons | [[Mahāmāyā]] number; 27 shared + 37 DNA-specific |
+| **101** | 64 + 37 = total unique nodes | Full transcriptional graph |
+
+This partition is the formal bridge between [[I-Ching]] (DNA, 64 hexagrams) and [[Tarot]] (RNA, 80-card space). The 37 U-nodes created by T→U transcription are NEW nodes not present in the DNA codon set — they are the expressional vocabulary that [[Nara]] reads as card orientations. The research document §3 gives the full architecture:
+
+```text
+I CHING (64 hexagrams)
+    ↕  Three pairing matrices (exhaustive nucleotide pair partitions)
+DNA (64 codons, alphabet {A,T,G,C})
+    ↕  T → U transcription (+37 U-variant nodes)
+RNA (64 codons, alphabet {A,U,G,C})
+    ↕  Rotational states (codon genealogy → card orientation)
+TAROT (80 cards with 7/8-fold rotational states)
+```
+
+### Third Spanda Equation Manifestation
+
+The Third Spanda Equation `137 = 64 + 72 + 1` manifests in the transcriptional bridge through multiple canonical forms — see [[m3-prime-ql-transcriptional-bridge]] §2.3 and the Phase-J 2026-06-15 canonical identity extension (Track 40 ledger, CU-FORM-1, CU-IDENTITY-1 through CU-IDENTITY-4):
+
+```text
+M3-native transcriptional forms (Phase-J 2026-06-15):
+  64 + 73 = 137    where 73 = 36 + 37 (structural-mātric + transcriptional-transformable)
+  101 + 36 = 137   full transcriptional graph + structural-mātric accounting
+  101 + 27 = 128   full graph + T-free shared → α-rasa doubled Mahāmāyā shell
+
+From the α-rasa bridge (alpha_rasa_bridge_ql.md):
+  137 = 64 + 72 + 1    M3(64) + M2(72) + M1(+1) canonical spine
+  137 = 64 + 2(36) + 1  doubled-bridge form
+  137 = 128 + 8 + 1     doubled Mahāmāyā + octet gap + parent
+  137 = 1 + 2×32 + 2×36  Pauli-Jung World Clock skeleton (Várlaki/Rudas)
+```
+
+The transcriptional bridge provides the M3-native re-expression: `73 = 72 + 1` where the `+1` parent is supplied by the productive asymmetry `37 − 36 = 1`. The 36 structural-mātric (see §8.8: suit integrals 84+96+88+92=360, with 360/10=36 per decan) and the 37 transcriptional-transformable (T-containing codons) together yield `73 = 36 + 37 = 72 + 1`, making the transcriptional bridge an M3-local witness of the full M1(+1)→M2(72)→M3(64) spine.
+
+Governance itself is transcriptional ([[m3-prime-ql-transcriptional-bridge]] §3.4): all four governance codons (AUG Start, UAA/UAG/UGA Stop) are U-containing. Start and stop signals REQUIRE transcription — they exist only in the U-containing RNA form. The 2 start/stop endpoints that complete the Tarot space (78 + 2 = 80) are specific U-containing codons.
+
+### Research Warrant and Unresolved Items
+
+The transcriptional bridge research lives at [[m3-prime-ql-transcriptional-bridge]]. Open items from that document's §8 remain relevant to M3':
+
+- **Explicit U-node → Tarot card mapping**: which of the 37 U-nodes map to which tarot cards' rotational states, cross-referenced with the Mahāmāyā matrix specifications.
+- **The 21 processual intermediates**: the purely transcriptional nodes that don't map to Tarot cards (101 − 80 = 21). Whether these represent the transcriptional *process itself* — transitions rather than states.
+- **Cone geometry**: formalizing the T→U charge distribution on the cone, and whether the charge gradient matches the Vāk descent (Parā Vāk = maximum T/storage → Vaikharī = maximum U/expression).
+- **999 = 10³ − 1**: the multiplicative annihilation of 37 × 27 in mod9 and its operational connection to the Ānanda matrix structure. The two faces of transcription (changed + unchanged) are additive complements within 64 and multiplicative annihilators in mod9.
+
+M3' renders the bridge as a backend-provided fact through `MathemeHarmonicProfile` fields; it does not compute U-node mappings, cone geometry, or mod9 Ānanda relations locally. The Major Arcana chromosome panel (§9), the DNA/RNA phase toggle (§9), and the transcription clock-chain inspector (§9) are the surface affordances that expose this bridge to the user.
+
 ## §9 — How M3' Renders This Multi-Layer Architecture
 
 M3' exposes the full multi-matrix surface as a coherent user-facing wheel + matrix-inspectors. Key panels added beyond the basic clock + codon wheel:
@@ -884,22 +1006,28 @@ M3' exposes the full multi-matrix surface as a coherent user-facing wheel + matr
 
 ## §10 — Implementation Notes
 
+`ModalResonatorProfile`, serialized as `MathemeHarmonicProfile.modalResonator`, is the standing resonant state that the M3 chime inscription binds to clock/codon proof.
+
 The harmonisation pass of 2026-05-22 added §7 to M3'-SPEC as load-bearing law: M3' is the codon-rotation modal-inversion surface, not merely a clock-and-wheel display. The `codonClass` / `rotationalStateCount` / `rotationalIndex` / `codonRotationProjection` profile fields are now required for full M3' rendering; before they exist in the backend, M3' renders the wheel with pending-LUT honest states.
 
 The `(lens, mode) ↔ (codon, rotation)` map specification is **the next concrete kernel/profile-contract work** that follows from this harmonisation pass. Until the LUT is materialised, the projection is a documentation contract; once materialised, it becomes the load-bearing surface that joins the shared 84-state playing landscape to M3's 472-state modal-inversion surface — and the instrument becomes capable of playing the full modal extension that dual codons unlock.
 
-The 2026-05-30 alpha-quaternionic pass adds that M3' is also the 0-side temporal rendering of [[Mahāmāyā]] alongside [[M0']] graph rendering. Future implementation must keep those as two views over the same canonical substrate, with the unresolved Level-0 / "17th lens" wording flagged for companion-spec normalisation rather than buried in UI code.
+The 2026-05-30 alpha-quaternionic pass adds that M3' is also the 0-side temporal rendering of [[Mahāmāyā]] alongside [[M0']] graph rendering. Implementation keeps those as two views over the same canonical substrate. The Level-0 wording is resolved: [[Fibonacci Ground]] is primary functional lens 16; the static division array remains sixteen rows.
 
 The 2026-05-31 canon update absorbs four additional M3' deltas: M3-0 as 72→64 reception/transduction provenance; M3-5 as the co-foliated double-torus world-clock view; `m3-mahamaya` / integrated 1-2-3 app placement through the kernel-bridge; and M5 pipeline overlays as read-only renderer evidence rather than local training logic.
+
+Bell-kernel foothold, 2026-07-02 (per [[m123-modal-resonator-bell-kernel-spec]] §13): M3' is declared the **world-clock / codon INSCRIPTION of the chime event**. `M123ChimeFrame` (1 Hz `m123.chime` gateway event, contract `S0.kernel-bridge.m123-chime-frame`) carries in its `m3` section the profile's `codonRotationProjection` plus an explicit `worldClockBinding` with `tickMatchesProfile` / `degree720MatchesProfile` booleans — the temporal proof that the chime happened at this address. Any mismatch makes the frame incoherent and MUST block integrated readiness (the pratibimba-app carrier blocks the bell strike on it). The frame's `m2Address72` is the `resonance72.lensAnchorIndex` value (tick12·6+position) — the M2 72-address, distinct from and never conflated with the 84-state `(lens, mode)` landscape index.
+
+Lens-transcription foothold, 2026-07-15 (37.T37.8): `kernelBridge.m3.lensCodonBinary(lensId)` is a live on-demand gateway method over [[Body/S/S0/portal-core/src/lens_codon_binary.rs|portal-core::lens_codon_binary_projection]]. It accepts ids 0–15 for the derived static divisions and id 16 for the primary [[Fibonacci Ground]] lens. Ground returns its 60 positions at 6° steps; a division with slice `S` and `N` sections returns the `N` C-authored boundary degrees `k*S`. Every packet declares `lensRole` and `groundingLensId: 16`; every degree carries its Ground position/digit/phase along with exact 720° degree, codon, canonical `pp/nn/np/pn` charges, C quaternion, bridge-normalized canonical-B element, hexagram/active-line operator, and tick12. The on-demand projection stays off the 1 Hz profile bus, while the continuous profile carries the same primary identity in `phaseSpace.fibonacciGround`. Renderers never recompute biology.
 
 ### §10.1 Open Questions and Held Contradictions
 
 - [[m3-prime-symbolic-transcription-research]] reports a dataset/code mismatch: `TCT` / Nine of Wands is marked 8/full-rotational in the JSON but is 7/non-dual in current code/spec/tests. M3' keeps code/spec/tests as runtime authority and treats the dataset value as reconciliation work.
-- [[alpha_quaternionic_integration_across_M_stack]] consistently places the `+1` parent at M1 in §0, §1, and §6.1, but §1.1 still contains wording that can read as M0 witness-axis-as-+1. M3' follows the M1(+1) / M2(72) / M3(64) spine and flags the M0/M1 wording for companion normalisation.
-- The 72→64 M3-0 reception source says chakral-vibrational state compresses to a unique codon at a tick, while DET is also an epogdoon compression with fold-back/gap behaviour. The profile contract must define the uniqueness scope before UI or tests assume global injectivity.
+- [[alpha_quaternionic_integration_across_M_stack]] consistently places the `+1` parent at M1 in §0, §1, and §6.1, and the §1.1 wording that could read as a prior-ground +1 was normalised 2026-07-07 (DR-M1-1 sweep, Tranche 02.T2.1). M3' follows the M1(+1) / M2(72) / M3(64) spine; the companion normalisation flag is closed.
+- **DR-M3-2 amended by functional evidence (2026-07-18):** the no-extra-top-level-field decision stands, but the ambiguous `is_evolutionary_gap` surface is superseded. The existing `anuttaraPentadicTrace` now carries typed epogdoon evidence: block size 9, eight collision pairs, eight exact anchors, and 64 non-exact round trips. The scalar Mahāmāyā projection exposes `roundTripLoss`; UI and tests must not call that predicate a fold-point count.
 - [[m4-prime-psychoid-cymatic-field-engine]] §10.2 labels L3/L3' with causal-Aristotelian/process-causal language, while the current MEF table assigns causal law to L1, processual becoming to L3, and chronological arc to L3'. M3' keeps Janus as temporal-processual orientation without relocating causal law.
-- The "17th lens" / "16+1" wording remains unresolved. M3' treats the law as 16 lens positions plus a Level-0 / Fibonacci-Pisano meta-position until M0'/M3'/M4' companion specs converge.
-- The exact kernel/profile home for `codonRotationProjection`, M3-0 provenance, kernel-trace handles, and Janus-bidirectional trace shape remains unapplied. Candidate homes remain `S0-HARMONIC-POINTER-WEB36-SPEC`, a dedicated S0 codon-rotation/provenance spec, or M3 codec data with S2 graph provenance.
+- **Resolved by 35.T35.1 / DR-FIB-1..2 and corrected 2026-07-15:** the clock law is primary Level-0 [[Fibonacci Ground]] lens id 16 grounding sixteen derived static divisions ids 0..15. Ground may surround the division ring visually, but functionally it is their primary lens and address. No Frame/Operator rows extend the namespace.
+- The M3-0 runtime provenance home is resolved as `MathemeHarmonicProfile.anuttaraPentadicTrace.thirdSpanda`; `codonRotationProjection` remains its own profile projection and is mirrored into the trace for generation identity. Janus-bidirectional trace shape remains open.
 
 ## Canonical Source Lock - 2026-06-02
 
@@ -911,8 +1039,8 @@ M3' is Mahamaya symbolic transcription: clock/cosmos/codon wheel, 64-address law
 | docs/plans | `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/01-kernel-bridge-and-s0-foundation.md` mtime 2026-05-31 20:57:23; `02-s2-bimba-map-population.md` mtime 2026-05-31 20:36:57; `03-s3-gateway-and-spacetimedb.md` mtime 2026-06-01 18:27:27; `07-m-extension-individual-tracks.md` mtime 2026-06-01 00:23:25 (`07-T6`); `08-integrated-plugin-tracks.md` mtime 2026-06-01 00:25:11; `09-agentic-mediation-and-operational-capacities.md` mtime 2026-06-02 00:16:51 |
 | Body substrate | `Body/S/S0/epi-lib/**`, `Body/S/S2/graph-services/**`, `Body/S/S3/gateway-contract/**`; `Body/M/epi-tauri/**` only as deprecated migration-source evidence |
 | Idea/Theia substrate | `Idea/Pratibimba/System/extensions/m3-mahamaya/**`, `m-extension-runtime/**`, `kernel-bridge/**`, `plugin-integrated-1-2-3/**` |
-| sibling seeds | `M'-SYSTEM-SPEC.md`, `M3'/m3-prime-symbolic-transcription-research.md`, `M3'/alpha_rasa_bridge_ql.md`, `alpha_quaternionic_integration_across_M_stack.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-mahamaya-process-reward-rl.md` |
+| sibling seeds | `M'-SYSTEM-SPEC.md`, `M3'/m3-prime-symbolic-transcription-research.md`, `M3'/m3-prime-ql-transcriptional-bridge.md`, `M3'/alpha_rasa_bridge_ql.md`, `alpha_quaternionic_integration_across_M_stack.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-mahamaya-process-reward-rl.md` |
 | nominal tracks | Track 07.T6 M3' extension; Track 08 integrated plugin; Track 01 codon/profile; Track 02 symbolic library; Track 03 world clock; Track 09 Mahamaya capacity |
-| open decisions | TCT/Nine of Wands mismatch, 17th lens wording, 72->64 uniqueness scope, Janus/provenance home, codonRotationProjection ownership |
+| open decisions | TCT/Nine of Wands mismatch, Janus/provenance home, codonRotationProjection ownership; the 17th-lens wording is resolved as primary Ground id 16, while DR-M3-2 ratifies the 72->64 bridge as the 9:8 epogdoon and leaves no extra fold-state profile field open |
 
 World coordinate note: M3' uses shared World `P/P'`, `CT`, and `L/L'` lens corpora through the umbrella specs; no M-specific World coordinate markdown exists yet.

@@ -6,6 +6,7 @@ use epi_logos::gate::{
     sessions,
     team_store::{TeamMemberRecord, TeamRecord, TeamStore},
 };
+use epi_s3_gateway_contract::{TerminalBinding, TerminalLease, TerminalStatus};
 
 #[test]
 fn session_surfaces_expose_team_and_cmux_metadata() {
@@ -23,6 +24,19 @@ fn session_surfaces_expose_team_and_cmux_metadata() {
                 cmux_workspace: Some(Some("epi-team-alpha".to_owned())),
                 cmux_surface: Some(Some("leader".to_owned())),
                 cmux_pane_id: Some(Some("pane-main".to_owned())),
+                terminal_binding: Some(Some(TerminalBinding {
+                    terminal_identifier: Some("tmux:team-alpha:%1".to_owned()),
+                    session_anchor: Some("team-alpha".to_owned()),
+                    tmux_pane_id: Some("%1".to_owned()),
+                    attached_session_key: Some(created.canonical_key.clone()),
+                    terminal_status: Some(TerminalStatus::Attached),
+                    lease: Some(TerminalLease {
+                        lease_owner: Some("pi.vak".to_owned()),
+                        lease_purpose: Some("subagent-runtime".to_owned()),
+                        lease_expires_at_ms: Some(4_102_444_800_000),
+                    }),
+                    capture_policy: None,
+                })),
                 ..SessionPatch::default()
             },
         )
@@ -35,6 +49,7 @@ fn session_surfaces_expose_team_and_cmux_metadata() {
     assert_eq!(value["cmuxWorkspace"], "epi-team-alpha");
     assert_eq!(value["cmuxSurface"], "leader");
     assert_eq!(value["cmuxPaneId"], "pane-main");
+    assert_eq!(value["terminalBinding"]["tmuxPaneId"], "%1");
 
     let row = sessions::session_row(&patched);
     assert_eq!(row["teamId"], "team-alpha");
@@ -43,6 +58,7 @@ fn session_surfaces_expose_team_and_cmux_metadata() {
     assert_eq!(row["cmuxWorkspace"], "epi-team-alpha");
     assert_eq!(row["cmuxSurface"], "leader");
     assert_eq!(row["cmuxPaneId"], "pane-main");
+    assert_eq!(row["terminalBinding"]["tmuxPaneId"], "%1");
 }
 
 #[test]

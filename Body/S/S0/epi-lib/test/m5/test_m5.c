@@ -224,6 +224,65 @@ static void test_sub_branch_structs(void) {
 
 
 /* ===================================================================
+ * CONTEMPLATION OBJECT CONTRACT
+ * =================================================================== */
+
+static void test_contemplation_object_contract(void) {
+    M5_Q_BioQuaternion_Tick q_tick = {0};
+    q_tick.tick = 7;
+    q_tick.w = 1.0;
+    TEST("q trajectory tick set", q_tick.tick == 7);
+    TEST("q trajectory w set", q_tick.w == 1.0);
+
+    M5_Codon_Trace codons[2] = {
+        { .codon = 9, .label = "Additive137", .m3_route = "m3-mahamaya/codon/9" },
+        { .codon = 45, .label = "KaprekarPedagogyHit", .m3_route = "m3-mahamaya/codon/45" }
+    };
+    M5_Vak_Profile_Pair pair = {
+        .dispatch = "Pi+Anima",
+        .profile_generation = 26,
+        .profile_anchor = "profile://26.7/session",
+        .acr_route = "acr://dispatch/pi-anima"
+    };
+    M5_Skeleton_Event events[2] = {
+        { .name = "Additive137" },
+        { .name = "KaprekarPedagogyHit" }
+    };
+    M5_ContemplationObject object = {0};
+    object.session_id = "session-26-12";
+    object.kairos_at_open.realtime.planet_degrees[0] = 108;
+    object.kairos_at_close.realtime.planet_degrees[0] = 144;
+    object.tarot_psyche_anchor.drawn[0] = 3;
+    object.tarot_psyche_anchor.draw_count = 1;
+    object.q_composed_trajectory = &q_tick;
+    object.q_composed_trajectory_count = 1;
+    object.codon_trace = codons;
+    object.codon_trace_count = 2;
+    object.vak_profile_pairs = &pair;
+    object.vak_profile_pair_count = 1;
+    object.m1_charge_state = (M5_ArchNineChargeState){ .pp = 3, .nn = 3, .np = 3, .pn = 3, .outer = 3 };
+    object.m1_2_skeleton_events_fired = events;
+    object.m1_2_skeleton_event_count = 2;
+    object.four_syntax_compliance_seeds[0].prompt = "speech-3";
+    object.four_syntax_compliance_seeds[1].prompt = "relationship-5";
+    object.four_syntax_compliance_seeds[2].prompt = "action-7";
+    object.four_syntax_compliance_seeds[3].prompt = "completion-9";
+
+    TEST("contemplation session id", strcmp(object.session_id, "session-26-12") == 0);
+    TEST("contemplation uses M4 kairos", object.kairos_at_open.realtime.planet_degrees[0] == 108);
+    TEST("contemplation uses M4 tarot draw", object.tarot_psyche_anchor.drawn[0] == 3);
+    TEST("contemplation codon count", object.codon_trace_count == 2);
+    TEST("contemplation vak generation", object.vak_profile_pairs[0].profile_generation == 26);
+    TEST("contemplation arch-nine invariant",
+         object.m1_charge_state.pp + object.m1_charge_state.nn +
+         object.m1_charge_state.np + object.m1_charge_state.pn ==
+         4 * object.m1_charge_state.outer);
+    TEST("contemplation syntax seed count", M5_CONTEMPLATION_SYNTAX_SEED_COUNT == 4);
+    TEST("contemplation syntax completion", strcmp(object.four_syntax_compliance_seeds[3].prompt, "completion-9") == 0);
+}
+
+
+/* ===================================================================
  * M5_ROOT + SUB-FSMs
  * =================================================================== */
 
@@ -398,6 +457,59 @@ static void test_m5_mobius_return(void) {
     teardown_test_arena();
 }
 
+typedef struct {
+    bool called;
+    const char* session_id;
+    uint32_t trajectory_count;
+    uint32_t codon_count;
+    uint8_t tarot_draw_count;
+} M5_Contemplation_Callback_Capture;
+
+static uint64_t capture_m5_contemplation(const M5_ContemplationObject* object,
+                                         void* user_data) {
+    M5_Contemplation_Callback_Capture* capture =
+        (M5_Contemplation_Callback_Capture*)user_data;
+    capture->called = true;
+    capture->session_id = object->session_id;
+    capture->trajectory_count = object->q_composed_trajectory_count;
+    capture->codon_count = object->codon_trace_count;
+    capture->tarot_draw_count = object->tarot_psyche_anchor.draw_count;
+    return 0x0000000000000042ULL;
+}
+
+static void test_m5_mobius_return_composes_through_callback(void) {
+    setup_test_arena();
+    M5_Root* m5 = m5_init(&test_arena, test_mirrors[5]);
+    M4_Identity_Matrix identity = {0};
+    M4_Epii_Integration epii = {0};
+    M5_Contemplation_Callback_Capture capture = {0};
+    uint64_t initial_hash = 0x0123456789ABCDEFULL;
+    memcpy(identity.quintessence_hash, &initial_hash, sizeof(initial_hash));
+    identity.computed = true;
+    epii.return_ready = true;
+
+    M5_Mobius_Return_Target target = m5_mobius_return_target(
+        &epii, &identity, capture_m5_contemplation, &capture);
+    for (int i = 0; i < 11; i++) m5_advance_logos(m5);
+
+    TEST("mobius callback accepted at tick 11", m5_execute_mobius_return(m5, &target) == 0);
+    TEST("mobius callback receives composed object", capture.called);
+    TEST("mobius callback receives session id", capture.session_id != NULL && capture.session_id[0] != '\0');
+    TEST("mobius callback receives trajectory", capture.trajectory_count == 2u);
+    TEST("mobius callback receives codon trace", capture.codon_count == 2u);
+    TEST("mobius callback receives tarot anchor", capture.tarot_draw_count == 1u);
+    TEST("mobius callback delta installed", epii.wisdom_delta == 0x0000000000000042ULL);
+
+    uint64_t actual_hash = 0;
+    memcpy(&actual_hash, identity.quintessence_hash, sizeof(actual_hash));
+    TEST("mobius callback delta XORs identity", actual_hash == (initial_hash ^ epii.wisdom_delta));
+    TEST("mobius callback reseeds identity", !identity.computed);
+    TEST("mobius callback resets tick", m5->logos.pipeline_tick == 0u);
+
+    m5_teardown(m5);
+    teardown_test_arena();
+}
+
 
 /* ===================================================================
  * M5_LOOKUP (Quintessential View Self-API)
@@ -560,10 +672,12 @@ int main(void) {
     test_logos_fsm_types();
     test_quintessential_view();
     test_sub_branch_structs();
+    test_contemplation_object_contract();
     test_m5_root_and_subfsms();
     test_m5_init_teardown();
     test_m5_advance_logos();
     test_m5_mobius_return();
+    test_m5_mobius_return_composes_through_callback();
     test_m5_lookup();
     test_m5_verify();
     test_m5_cli_dispatch();

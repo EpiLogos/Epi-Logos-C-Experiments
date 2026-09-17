@@ -1,0 +1,36 @@
+{
+  "runId": "20260710T221545Z-39-T12.33",
+  "taskId": "39.T12.33",
+  "startedAt": "2026-07-10T22:15:45.150Z",
+  "owner": "opus-d-mech",
+  "leaseExpiresAt": "2026-07-11T00:15:45.150Z",
+  "worktree": null,
+  "task": {
+    "id": "39.T12.33",
+    "trackId": "39",
+    "tranche": "T12.33",
+    "title": "coordinate-tagging lint lands",
+    "effort": null,
+    "file": "39-s5-prime-one-substrate-layer.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/39-s5-prime-one-substrate-layer.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/39-s5-prime-one-substrate-layer.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — S5' one-substrate (five access patterns over ONE Indras Net; three arenas Siva/Shakti/Prana; s5'.gnostic.* + s0'.anuttara.trace + s1'.entity.* + epi gnostic CLI parity). CARRIER: Library pane over list_notebooks is the entry. §2 track 39."
+  }
+}

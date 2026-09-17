@@ -196,7 +196,8 @@ typedef struct {
 
 The `compute_rotational_state(p1_idx, p2_idx)` function sums the S and D values
 of two pair matrix entries. The safe version `compute_rotational_state_safe()`
-detects evolutionary gaps (0xFF sentinel) and sets `STATUS_PROVISIONAL_BIT`.
+detects an unresolved input (`0xFF` sentinel) and sets
+`STATUS_PROVISIONAL_BIT`.
 
 ---
 
@@ -291,14 +292,16 @@ Double movement = identity.
 extern const uint8_t M3_RES_MATRIX[64];    /* 56 valid + 8 gaps (0xFF) */
 ```
 
-56 entries map to valid resonance targets. 8 entries are **evolutionary gaps**
-marked with `M3_RESONANCE_GAP` (0xFF). When a gap is encountered, the coordinate's
-`STATUS_PROVISIONAL_BIT` is set, signaling that the system has reached an
-epogdoon compression boundary.
+56 entries map to resolved resonance targets. Eight codon addresses carry the
+legacy-named `M3_RESONANCE_GAP` (`0xFF`) sentinel; lookup at one of those
+addresses sets `STATUS_PROVISIONAL_BIT`. The sentinels occur at Kan/Li crossings
+and related complementary-trigram positions.
 
-The 8 gaps occur at Kan/Li crossings and related complementary trigram positions,
-reflecting the 72 -> 64 compression where 8 M2 vibrational states cannot manifest
-as distinct M3 symbols.
+This table is a partial operator on the **64-address M3 domain**. It is not the
+**72→64 epogdoon compression**, which is total: all 72 M2 source addresses reach
+an M3 address, with eight collision pairs, eight exact round-trip anchors, and
+64 non-exact round trips. The shared number eight does not establish identity
+between those mechanisms.
 
 ---
 

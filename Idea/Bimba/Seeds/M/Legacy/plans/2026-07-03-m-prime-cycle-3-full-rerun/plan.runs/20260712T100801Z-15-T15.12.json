@@ -1,0 +1,36 @@
+{
+  "runId": "20260712T100801Z-15-T15.12",
+  "taskId": "15.T15.12",
+  "startedAt": "2026-07-12T10:08:01.883Z",
+  "owner": "thread-9",
+  "leaseExpiresAt": "2026-07-12T13:08:01.883Z",
+  "worktree": null,
+  "task": {
+    "id": "15.T15.12",
+    "trackId": "15",
+    "tranche": "T15.12",
+    "title": "Visual-regression harness for the 0/1 toggle + tick choreography",
+    "effort": null,
+    "file": "15-ui-design-foundations.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/15-ui-design-foundations.md",
+    "dependsOn": [
+      "15.T15.11"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: pratibimba-app design foundations (nine principles + surface contracts §1). §2 track 15."
+  }
+}

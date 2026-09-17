@@ -1,7 +1,8 @@
 //! Parent-role kernel-aligned contract layer for Epi-Logos.
 //!
-//! This crate sits at `Body/S/` (sibling to S0..S5) and provides the
-//! cross-stack typed shapes the kernel specification names load-bearing:
+//! This crate sits at `Body/S/` as the parent crate and parent-role envelope
+//! of the S-stack. It provides the cross-stack typed shapes the kernel
+//! specification names load-bearing:
 //!
 //! - [`BioQuaternionState`], [`ResonanceVector72`], [`EnergyDecomposition`],
 //!   [`KernelTick`], [`HarmonicPulse`], [`KernelProjection`],
@@ -26,10 +27,10 @@
 
 pub use portal_core::{
     apply_epogdoon_compression, codon_rotation_from_lens_mode, codon_rotation_surface,
-    epogdoon_log, epogdoon_ratio, harmonic_ratio_fraction_for_sub_tick, is_evolutionary_gap,
-    kernel_energy_evaluate, kernel_resonance_index, kernel_resonance_square_emphasis,
-    kernel_tick_from_epogdoon, lens_mode_from_codon_rotation, line_change_operator,
-    mahamaya_address64_from_degree, quat_distance_sq, slash_flip_bimba_prime,
+    epogdoon_has_round_trip_loss, epogdoon_log, epogdoon_ratio,
+    harmonic_ratio_fraction_for_sub_tick, kernel_energy_evaluate, kernel_resonance_index,
+    kernel_resonance_square_emphasis, kernel_tick_from_epogdoon, lens_mode_from_codon_rotation,
+    line_change_operator, mahamaya_address64_from_degree, quat_distance_sq, slash_flip_bimba_prime,
     tritone_square_for_lens, vimarsha_read_profile, ActivityStateEffect, BioQuaternionState,
     CodonRotationProjection, CodonRotationSurfaceCell, ConjugateFormCharacter, ElementalBalance,
     EnergyDecomposition, EventPrivacyClass, HarmonicPulse, KernelElement, KernelPhase,
@@ -54,8 +55,11 @@ pub mod constraint;
 pub mod deposit;
 pub mod diagnostic;
 pub mod envelope;
+pub mod graphiti_residency;
 pub mod ingestion;
+pub mod method_handler;
 pub mod poles;
+pub mod redis_residency;
 
 pub use analysis::{DominantPosition, PrehensiveExtractions, ResonanceAnalysis};
 pub use constraint::{
@@ -64,8 +68,21 @@ pub use constraint::{
 pub use deposit::{TrajectoryDeposit, TrajectoryDepositRef, TrajectoryElement};
 pub use diagnostic::{AnuttaraDiagnostic, AnuttaraExpression, AnuttaraParseError};
 pub use envelope::{KernelTickEnvelope, ENVELOPE_COORDINATE_OWNER, ENVELOPE_PRIVACY_CLASS};
+pub use graphiti_residency::{
+    GraphitiAdapterContract, GraphitiAdapterMode, GRAPHITI_INVOCATION_OWNER,
+    GRAPHITI_RUNTIME_AUTHORITY,
+};
 pub use ingestion::{IngestionSession, IngestionStatus};
+pub use method_handler::{
+    BoxFuture, DuplicateMethod, FollowUp, MethodError, MethodHandler, MethodOutcome,
+    MethodRegistry, MethodRequest, MethodResult,
+};
 pub use poles::{
     ChakralActivation, CodonClockCell, LensWeights12, MentalPoleState, NaraArticulation,
     PhysicalPoleState, TorusPoint, VerifierOutcome, WindingNumber, CHAKRAL_COUNT, LENS_WEIGHT_DIM,
+};
+pub use redis_residency::{
+    redisvl_service_script, redisvl_setup_script, CacheTier, RedisConfig, RedisRuntimeRole,
+    REDISVL_BRIDGE_OWNER, REDISVL_SERVICE_RELATIVE_PATH, REDISVL_SETUP_RELATIVE_PATH,
+    REDIS_RUNTIME_OWNER, S2_GRAPH_SEMANTIC_NAMESPACE, S3_TEMPORAL_NAMESPACE,
 };

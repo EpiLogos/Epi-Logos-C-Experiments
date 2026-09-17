@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 
@@ -22,6 +22,17 @@ struct GatewayRuntimeInner {
     chat_processes: Mutex<HashMap<String, Arc<AsyncMutex<tokio::process::Child>>>>,
     aborted_chat_runs: Mutex<HashSet<String>>,
     subscriptions: Mutex<HashMap<String, GatewaySubscriptionRecord>>,
+    verifier_questions: Mutex<VecDeque<(u64, HashSet<String>)>>,
+    /// 02.T2.13 / DR-M1-5 — the ONE engine-owned spanda phase anchor this
+    /// gateway process hosts. The heartbeat samples it; the `m1.spanda.*`
+    /// walk family mutates it; every subscriber sees the same organism.
+    /// `None` until the heartbeat installs the config-anchored instance.
+    spanda_anchor: Mutex<Option<portal_core::spanda_anchor::SpandaPhaseAnchor>>,
+    /// Latest VAK evaluation admitted through the session transport, paired
+    /// with the S2 retrieval policy's observed empty-bias state. The shared
+    /// profile heartbeat samples this correlate; absence means no evaluation
+    /// has crossed this gateway process yet.
+    vak_profile_state: Mutex<Option<(portal_core::VakAddress, bool)>>,
 }
 
 /// Per-gateway record of an active live subscription (s3'.temporal.subscribe or
@@ -73,6 +84,94 @@ impl GatewayEventSubscription {
 }
 
 impl GatewayRuntimeState {
+    const VERIFIER_QUESTION_GENERATIONS: usize = 16;
+
+    /// Install the process's ONE spanda phase anchor (heartbeat spawn,
+    /// config-anchored rate). Idempotent by intent: later installs replace,
+    /// but only the heartbeat calls this.
+    pub fn install_spanda_anchor(&self, anchor: portal_core::spanda_anchor::SpandaPhaseAnchor) {
+        *self
+            .inner
+            .spanda_anchor
+            .lock()
+            .expect("gateway runtime spanda anchor lock should not poison") = Some(anchor);
+    }
+
+    /// Copy out the current anchor (it is a few plain numbers). `None`
+    /// before the heartbeat installs it.
+    pub fn spanda_anchor(&self) -> Option<portal_core::spanda_anchor::SpandaPhaseAnchor> {
+        *self
+            .inner
+            .spanda_anchor
+            .lock()
+            .expect("gateway runtime spanda anchor lock should not poison")
+    }
+
+    /// Mutate the ONE anchor through a transport act (`m1.spanda.*` walk
+    /// family). Returns the post-act anchor, or `None` when no anchor is
+    /// installed yet (the honest not-ready state, never a fabricated one).
+    pub fn with_spanda_anchor(
+        &self,
+        act: impl FnOnce(&mut portal_core::spanda_anchor::SpandaPhaseAnchor),
+    ) -> Option<portal_core::spanda_anchor::SpandaPhaseAnchor> {
+        let mut guard = self
+            .inner
+            .spanda_anchor
+            .lock()
+            .expect("gateway runtime spanda anchor lock should not poison");
+        match guard.as_mut() {
+            Some(anchor) => {
+                act(anchor);
+                Some(*anchor)
+            }
+            None => None,
+        }
+    }
+
+    pub fn install_vak_profile_state(
+        &self,
+        vak_address: portal_core::VakAddress,
+        bias_weights_empty: bool,
+    ) {
+        *self
+            .inner
+            .vak_profile_state
+            .lock()
+            .expect("gateway runtime VAK profile lock should not poison") =
+            Some((vak_address, bias_weights_empty));
+    }
+
+    pub fn vak_profile_state(&self) -> Option<(portal_core::VakAddress, bool)> {
+        self.inner
+            .vak_profile_state
+            .lock()
+            .expect("gateway runtime VAK profile lock should not poison")
+            .clone()
+    }
+
+    pub fn cache_verifier_questions(&self, generation: u64, questions: &[String]) {
+        let mut snapshots = self
+            .inner
+            .verifier_questions
+            .lock()
+            .expect("gateway verifier-question lock should not poison");
+        snapshots.push_back((generation, questions.iter().cloned().collect()));
+        while snapshots.len() > Self::VERIFIER_QUESTION_GENERATIONS {
+            snapshots.pop_front();
+        }
+    }
+
+    pub fn is_recent_verifier_question(&self, generation: u64, question: &str) -> bool {
+        self.inner
+            .verifier_questions
+            .lock()
+            .expect("gateway verifier-question lock should not poison")
+            .iter()
+            .any(|(candidate_generation, questions)| {
+                *candidate_generation == generation && questions.contains(question)
+            })
+    }
+
     pub fn register_run(&self, context: RunContext) {
         self.inner
             .runs
@@ -312,5 +411,27 @@ impl GatewayRuntimeState {
             .collect::<Vec<_>>();
         records.sort_by(|left, right| left.opened_at_ms.cmp(&right.opened_at_ms));
         records
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::GatewayRuntimeState;
+
+    #[test]
+    fn verifier_questions_are_generation_bound_and_bounded() {
+        let runtime = GatewayRuntimeState::default();
+        let canonical = "#R0-0/1/A-T7-pending?".to_owned();
+        runtime.cache_verifier_questions(1, std::slice::from_ref(&canonical));
+
+        assert!(runtime.is_recent_verifier_question(1, &canonical));
+        assert!(!runtime.is_recent_verifier_question(1, "#R0-0/1/A-T9-pending?"));
+        assert!(!runtime.is_recent_verifier_question(2, &canonical));
+
+        for generation in 2..=18 {
+            runtime.cache_verifier_questions(generation, std::slice::from_ref(&canonical));
+        }
+        assert!(!runtime.is_recent_verifier_question(1, &canonical));
+        assert!(runtime.is_recent_verifier_question(18, &canonical));
     }
 }

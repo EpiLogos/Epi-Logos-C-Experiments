@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T143405Z-21-T21.10",
+  "taskId": "21.T21.10",
+  "startedAt": "2026-06-10T14:34:05.435Z",
+  "owner": "codex-m-dev-21-t21-10",
+  "leaseExpiresAt": "2026-06-10T16:34:05.435Z",
+  "worktree": null,
+  "task": {
+    "id": "21.T21.10",
+    "trackId": "21",
+    "tranche": "T21.10",
+    "title": "Virtue Witness panel (the 9-bit witness vector)",
+    "effort": "the 9-bit witness vector",
+    "file": "21-m0-anuttara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md",
+    "dependsOn": [
+      "21.T21.1"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m0-anuttara/src/browser/panels/virtue-witness-panel.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

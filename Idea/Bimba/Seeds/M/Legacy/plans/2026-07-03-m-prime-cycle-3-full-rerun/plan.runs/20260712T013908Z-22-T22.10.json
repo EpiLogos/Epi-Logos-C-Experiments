@@ -1,0 +1,36 @@
+{
+  "runId": "20260712T013908Z-22-T22.10",
+  "taskId": "22.T22.10",
+  "startedAt": "2026-07-12T01:39:08.614Z",
+  "owner": "thread-2",
+  "leaseExpiresAt": "2026-07-12T04:39:08.614Z",
+  "worktree": null,
+  "task": {
+    "id": "22.T22.10",
+    "trackId": "22",
+    "tranche": "T22.10",
+    "title": "Standalone vs composed dispatch contract",
+    "effort": null,
+    "file": "22-m1-paramasiva-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/22-m1-paramasiva-frontend-deep.md",
+    "dependsOn": [
+      "22.T22.1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/22-m1-paramasiva-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M1' instrument strata in pratibimba-app (see track 02) — raw 12x12 vortex face must come from the Vortex Modulae CSV before Ananda is complete. §2 track 22."
+  }
+}

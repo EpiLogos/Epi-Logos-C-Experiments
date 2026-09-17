@@ -1,0 +1,87 @@
+{
+  "_comment": "50.T50.03 — the ONE cross-language VakAddress parity fixture. Read by BOTH sides: the TS mirror test (Body/S/S4/ta-onta/S4-4p-anima/tests/vak_orchestration_surface.test.ts) validates every case against ta-onta/shared/vak_address.ts, and the Rust test (Body/S/S0/portal-core/tests/vak_address_ts_parity.rs) deserializes the same cases into portal_core::VakAddress with serde. Neither side greps the other's source: parity is proven by both accepting or both rejecting the identical bytes. Add a case here to bind a new coordinate value across languages.",
+  "canonical": [
+    {
+      "name": "dialogical-day-nous",
+      "address": {
+        "cpf": "(00/00)",
+        "ct": ["CT0"],
+        "cp": "CP4.0",
+        "cf": "(00/00)",
+        "cfp": "CFP0",
+        "cs": { "code": "CS1", "direction": "Day" }
+      }
+    },
+    {
+      "name": "mechanistic-night-prime-anima",
+      "address": {
+        "cpf": "(4.0/1-4.4/5)",
+        "ct": ["CT4b", "CT5"],
+        "cp": "CP4.4",
+        "cf": "(4.0/1-4.4/5)",
+        "cfp": "CFP1",
+        "cs": { "code": "CS5", "direction": "Night'", "recognized": true }
+      }
+    },
+    {
+      "name": "lemniscate-stage-5-psyche",
+      "address": {
+        "cpf": "(4.0/1-4.4/5)",
+        "ct": ["CT3"],
+        "cp": "CP4.5",
+        "cf": "(4.5/0)",
+        "cfp": "CFP2",
+        "cs": { "code": "CS4", "direction": "Day" }
+      }
+    },
+    {
+      "name": "mobius-return-sophia-z-thread",
+      "address": {
+        "cpf": "(4.0/1-4.4/5)",
+        "ct": ["CT4a"],
+        "cp": "CP4.3",
+        "cf": "(5/0)",
+        "cfp": "Z",
+        "cs": { "code": "CS0", "direction": "Night'" }
+      }
+    }
+  ],
+  "rejected": [
+    {
+      "name": "epi-cli-loose-vak-coordinates",
+      "why": "`epi agent vak evaluate` (Body/S/S0/epi-cli/src/agent/vak.rs) emits this separate loose VakCoordinates shape. It is NOT the canonical envelope: cpf is a C-family label rather than a review polarity, cp lacks its 4.x position, ct is a scalar rather than an array, and cs is flat rather than a { code, direction } field. Kept here so both languages agree it is refused rather than silently coerced.",
+      "address": {
+        "cpf": "C2",
+        "ct": "CT4b",
+        "cp": "CP4",
+        "cf": "(4.0/1-4.4/5)",
+        "cfp": "CFP0",
+        "cs": "Day"
+      }
+    },
+    {
+      "name": "unprimed-night-direction",
+      "why": "The Night pass is canonically primed (Night'). An unprimed \"Night\" is phase-erasing and must not round-trip.",
+      "address": {
+        "cpf": "(00/00)",
+        "ct": ["CT0"],
+        "cp": "CP4.0",
+        "cf": "(00/00)",
+        "cfp": "CFP0",
+        "cs": { "code": "CS1", "direction": "Night" }
+      }
+    },
+    {
+      "name": "non-canonical-context-frame",
+      "why": "(4/5/0) is not one of the seven canonical context frames.",
+      "address": {
+        "cpf": "(00/00)",
+        "ct": ["CT0"],
+        "cp": "CP4.0",
+        "cf": "(4/5/0)",
+        "cfp": "CFP0",
+        "cs": { "code": "CS1", "direction": "Day" }
+      }
+    }
+  ]
+}

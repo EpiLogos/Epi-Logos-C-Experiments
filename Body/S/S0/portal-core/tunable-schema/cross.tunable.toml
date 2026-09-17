@@ -1,0 +1,32 @@
+# Cross-cutting knobs migrated to schema-backed.
+
+[[tunable]]
+key = "cross.spawn_timeout_ms"
+type = "u32"
+default = 30000
+residency_class = "hot-reload"
+scope_class = "global"
+tuning_risk_class = "C"
+ml_trainable = false
+privacy_class = "non-sensitive"
+structural_invariant = false
+owning_subsystem = "cross"
+authoritative_doc = "Track 38 §7.3"
+description = "Default timeout for spawnSync calls across ta-onta carrier extensions."
+[tunable.range]
+min = 1000
+max = 300000
+
+[[tunable]]
+key = "kairos.enabled"
+type = "bool"
+default = false
+residency_class = "restart-required"
+scope_class = "global"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "cross"
+owning_carrier = "chronos"
+authoritative_doc = "MEMORY canon - KAIROS_ENABLED env var promotion"
+description = "Master kill-switch for kerykeion-backed kairos features. Replaces env var KAIROS_ENABLED."

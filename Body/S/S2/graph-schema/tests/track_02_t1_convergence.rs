@@ -36,9 +36,8 @@ const SEED_EMITTED_TOPOLOGY: &[&str] = &[
 #[test]
 fn every_seed_emitted_relation_is_a_canonical_registry_entry() {
     for rel_type in SEED_EMITTED_TOPOLOGY {
-        let spec = relationship_spec(rel_type).unwrap_or_else(|err| {
-            panic!("seed-emitted {rel_type} is not canonical: {err}")
-        });
+        let spec = relationship_spec(rel_type)
+            .unwrap_or_else(|err| panic!("seed-emitted {rel_type} is not canonical: {err}"));
         assert_eq!(spec.rel_type, *rel_type);
         assert!(
             !spec.compatibility,
@@ -117,7 +116,11 @@ fn deep_dataset_classifier_does_not_capture_registered_or_lowercase_or_malformed
 
 #[test]
 fn anuttara_language_node_properties_are_canonical_on_c1() {
-    for key in ["c_1_symbol", "c_1_formulation_type", "c_1_complete_formulation"] {
+    for key in [
+        "c_1_symbol",
+        "c_1_formulation_type",
+        "c_1_complete_formulation",
+    ] {
         let spec = node_property_spec(key)
             .unwrap_or_else(|| panic!("Anuttara field {key} missing from node property registry"));
         assert_eq!(spec.key, key, "property key mismatch");
@@ -127,7 +130,10 @@ fn anuttara_language_node_properties_are_canonical_on_c1() {
             matches!(spec.disclosure, GraphPropertyDisclosure::Public),
             "{key} must be Public disclosure (S2 owns the storage contract)"
         );
-        assert!(!spec.compatibility, "{key} must not be a compatibility entry");
+        assert!(
+            !spec.compatibility,
+            "{key} must not be a compatibility entry"
+        );
     }
 }
 

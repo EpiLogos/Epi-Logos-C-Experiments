@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T113506Z-12-T12.13",
+  "taskId": "12.T12.13",
+  "startedAt": "2026-06-19T11:35:06.883Z",
+  "owner": "codex-m-dev-12-t12-13",
+  "leaseExpiresAt": "2026-06-19T13:35:06.883Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.13",
+    "trackId": "12",
+    "tranche": "T12.13",
+    "title": "S4 ↔ S5 shared-intelligence seam runtime audit",
+    "effort": null,
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.12"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/agentic-control-room/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

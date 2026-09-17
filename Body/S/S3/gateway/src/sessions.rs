@@ -8,8 +8,9 @@
 //! the WebSocket/Tokio host process.
 //!
 //! `handler_owner` field is added to surfaces produced by this module so the
-//! live-gateway smoke test in `Body/S/S3/gateway/tests/live_gateway_smoke.rs`
-//! can prove the handler owner is S3.
+//! S3-runtime in-process contract in
+//! `Body/S/S3/gateway/tests/s3_runtime_inproc_contract.rs` can prove the
+//! handler owner is S3.
 //!
 //! State-root layout `~/.epi/gate/sessions/<slug>.json` is preserved unchanged.
 //!
@@ -57,6 +58,7 @@ pub fn record_to_value(record: &SessionRecord) -> Value {
         "cmuxWorkspace": record.cmux_workspace,
         "cmuxSurface": record.cmux_surface,
         "cmuxPaneId": record.cmux_pane_id,
+        "terminalBinding": record.terminal_binding,
         "activeAgentId": record.active_agent_id,
         "subagentLineage": record.subagent_lineage,
         "workspaceRoot": record.workspace_root,
@@ -132,6 +134,7 @@ pub fn session_row(record: &SessionRecord) -> Value {
         "cmuxWorkspace": record.cmux_workspace,
         "cmuxSurface": record.cmux_surface,
         "cmuxPaneId": record.cmux_pane_id,
+        "terminalBinding": record.terminal_binding,
         "thinkingLevel": record.thinking_level,
         "verboseLevel": record.verbose_level,
         "reasoningLevel": record.reasoning_level,

@@ -31,6 +31,50 @@ export function convertHashToMFamily(coord: string): string {
   return coord;
 }
 
+const DOUBLING_RAW = '4.4.0-4.4/5';
+const DOUBLING_TOK = '';
+const DOUBLING_CANON = '4.(4.0/1-4.4/5)';
+
+/**
+ * Normalise context-frame structure to canonical form. Idempotent.
+ *
+ * MUST stay in parity with the Rust generator `wrap_context_frames`
+ * (Body/S/S2/graph-services/src/coordinate.rs) and the projector `canonical()`
+ * (Idea/Bimba/Map/datasets/scripts/project-map-index.mjs). See [[45-bimba-map-indexing-and-dox-okf-unification]].
+ *
+ * - simple frame (no leading `N.`) parenthesises whole: `0/1` -> `(0/1)`, `5/0` -> `(5/0)`
+ * - position-N frame keeps its `N.` OUTSIDE via dot-notation: `4.0/1` -> `4.(0/1)`, `4.5/0` -> `4.(5/0)`
+ * - the QL fractal-doubling frame (dataset-encoded `4.4.0-4.4/5`, a bare `-`) -> `4.(4.0/1-4.4/5)`
+ *   (the resulting `-` lives inside the parens; the split below is paren-aware so it stays atomic)
+ */
+export function wrapContextFrames(coord: string): string {
+  const protectedCoord = coord.split(DOUBLING_RAW).join(DOUBLING_TOK);
+  const segs: string[] = [];
+  let depth = 0;
+  let cur = '';
+  for (const ch of protectedCoord) {
+    if (ch === '(') { depth += 1; cur += ch; }
+    else if (ch === ')') { depth -= 1; cur += ch; }
+    else if (ch === '-' && depth === 0) { segs.push(cur); cur = ''; }
+    else cur += ch;
+  }
+  segs.push(cur);
+  return segs
+    .map((seg) => {
+      if (seg === DOUBLING_TOK) return DOUBLING_CANON;
+      if (!seg.includes('/')) return seg;
+      if (seg.startsWith('(') && seg.endsWith(')')) return seg; // already a simple frame
+      const dot = seg.indexOf('.');
+      if (dot > 0 && /^\d+$/.test(seg.slice(0, dot))) {
+        const rest = seg.slice(dot + 1);
+        if (rest.startsWith('(') && rest.endsWith(')')) return seg; // already `N.(…)`
+        return `${seg.slice(0, dot)}.(${rest})`;
+      }
+      return `(${seg})`;
+    })
+    .join('-');
+}
+
 export function isCanonicalCoordinateSyntax(input: string): boolean {
   if (!input || typeof input !== 'string') {
     return false;

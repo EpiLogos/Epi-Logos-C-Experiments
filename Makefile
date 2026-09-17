@@ -24,10 +24,12 @@ ALL_SRC    = $(LIB_SRC) $(EPI_LIB)/src/main.c
 BIN = epi-logos
 
 # Test suites
-TESTS = test_m0_init test_m0_rfactor test_m0_tick12 test_m1 test_m1_ananda test_m2 test_m2_planets test_m2_aspects test_m3 test_m3_clock_lut test_m3_codon_class test_m4 test_m4_hash32 test_m4_oracle_faces test_m5 test_pillar1 test_vak test_engine_walk_mode test_kernel test_pointer_web
+TESTS = test_m0_init test_m0_rfactor test_m0_tick12 test_m0_tune_invariant_constraint test_m0_anuttara_lint test_m1 test_m1_ananda test_m2 test_m2_planets test_m2_aspects test_m3 test_m3_clock_lut test_m3_codon_class test_m4 test_m4_hash32 test_m4_oracle_faces test_m5 test_pillar1 test_vak test_engine_walk_mode test_kernel test_pointer_web test_m_canonical
 TEST_BIN_DIR = $(EPI_LIB)/test/bin
+M0_ANUTTARA_LINT_BIN = $(TEST_BIN_DIR)/m0_anuttara_lint
+TUNABLE_AUDIT_REPORT = $(EPI_LIB)/tunable-audit-report.md
 
-.PHONY: all lib test test-artifact-paths debug clean rust-test rust-clean rust-target-size verify-graphiti-live lut $(TESTS) test_m1_ananda test_m2_planets test_m2_aspects test_m3_codon_class test_m4_hash32 test_m4_oracle_faces test_engine_walk_mode test_kernel test_pointer_web
+.PHONY: all lib test test-artifact-paths debug clean rust-test rust-clean rust-target-size verify-graphiti-live lut tunable-audit-report $(TESTS) test_m1_ananda test_m2_planets test_m2_aspects test_m3_codon_class test_m4_hash32 test_m4_oracle_faces test_engine_walk_mode test_kernel test_pointer_web test_m_canonical
 
 all: $(BIN)
 
@@ -57,6 +59,15 @@ $(TEST_BIN_DIR)/test_m0_rfactor: $(LIB_SRC) $(EPI_LIB)/test/m0/test_m0_rfactor.c
 
 $(TEST_BIN_DIR)/test_m0_tick12: $(LIB_SRC) $(EPI_LIB)/test/m0/test_m0_tick12.c | $(TEST_BIN_DIR)
 	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^
+
+$(TEST_BIN_DIR)/test_m0_tune_invariant_constraint: $(LIB_SRC) $(EPI_LIB)/tests/m0_tune_invariant_constraint.c | $(TEST_BIN_DIR)
+	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^
+
+$(TEST_BIN_DIR)/test_m0_anuttara_lint: $(EPI_LIB)/tests/m0_anuttara_lint.c $(EPI_LIB)/src/m0_anuttara_lint.c | $(TEST_BIN_DIR)
+	$(CC) $(CFLAGS) $(SANFLAGS) -o $@ $(EPI_LIB)/tests/m0_anuttara_lint.c
+
+$(M0_ANUTTARA_LINT_BIN): $(EPI_LIB)/src/m0_anuttara_lint.c | $(TEST_BIN_DIR)
+	$(CC) $(CFLAGS) $(SANFLAGS) -o $@ $<
 
 $(TEST_BIN_DIR)/test_m1: $(LIB_SRC) $(EPI_LIB)/test/m1/test_m1.c | $(TEST_BIN_DIR)
 	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^ -lm
@@ -109,6 +120,10 @@ $(TEST_BIN_DIR)/test_vak: $(LIB_SRC) $(EPI_LIB)/test/vak/test_vak.c | $(TEST_BIN
 $(TEST_BIN_DIR)/test_pointer_web: $(LIB_SRC) $(EPI_LIB)/test/infrastructure/test_pointer_web.c | $(TEST_BIN_DIR)
 	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^
 
+# Header-only canonical element-ID harmonisation test (links no library sources)
+$(TEST_BIN_DIR)/test_m_canonical: $(EPI_LIB)/test/test_m_canonical.c | $(TEST_BIN_DIR)
+	$(CC) $(CFLAGS) $(BLAKE3) $(SANFLAGS) -o $@ $^
+
 test_m0_init: $(TEST_BIN_DIR)/test_m0_init
 	./$<
 
@@ -116,6 +131,12 @@ test_m0_rfactor: $(TEST_BIN_DIR)/test_m0_rfactor
 	./$<
 
 test_m0_tick12: $(TEST_BIN_DIR)/test_m0_tick12
+	./$<
+
+test_m0_tune_invariant_constraint: $(TEST_BIN_DIR)/test_m0_tune_invariant_constraint
+	./$<
+
+test_m0_anuttara_lint: $(TEST_BIN_DIR)/test_m0_anuttara_lint
 	./$<
 
 test_m1: $(TEST_BIN_DIR)/test_m1
@@ -169,8 +190,15 @@ test_kernel: $(TEST_BIN_DIR)/test_kernel
 test_pointer_web: $(TEST_BIN_DIR)/test_pointer_web
 	./$<
 
+test_m_canonical: $(TEST_BIN_DIR)/test_m_canonical
+	./$<
+
 lut: ## Regenerate CLOCK_DEGREE_LUT from Neo4j dataset (requires NEO4J_URI + NEO4J_PASSWORD)
 	python3 tools/build_clock_degree_lut.py > $(EPI_LIB)/src/m3_clock_lut.c
+
+tunable-audit-report: $(M0_ANUTTARA_LINT_BIN)
+	./$< $(TUNABLE_AUDIT_REPORT) $(EPI_LIB)/src $(EPI_LIB)/include
+	perl -pi -e 's/[ \t]+$$//' $(TUNABLE_AUDIT_REPORT)
 
 # Run all tests
 test-artifact-paths:

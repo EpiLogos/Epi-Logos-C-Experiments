@@ -1,0 +1,36 @@
+{
+  "runId": "20260714T103222Z-23-T23.10",
+  "taskId": "23.T23.10",
+  "startedAt": "2026-07-14T10:32:22.546Z",
+  "owner": "opus-outer-planet",
+  "leaseExpiresAt": "2026-07-14T12:32:22.546Z",
+  "worktree": null,
+  "task": {
+    "id": "23.T23.10",
+    "trackId": "23",
+    "tranche": "T23.10",
+    "title": "Three outer-planet (Uranus/Neptune/Pluto) stubs with pending-dataset badge",
+    "effort": null,
+    "file": "23-m2-parashakti-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/23-m2-parashakti-frontend-deep.md",
+    "dependsOn": [
+      "23.T23.1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/23-m2-parashakti-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M2' Chladni chi shader (octet-drive/quartet-constrain), six-axis decoder m2.decodeAxisAt, 72-fold breadcrumb with 9:8 indicator, descent engine 23.18, elemental feed 23.19, MonoPoly classifier 23.20 in pratibimba-app engine. §2 track 23."
+  }
+}

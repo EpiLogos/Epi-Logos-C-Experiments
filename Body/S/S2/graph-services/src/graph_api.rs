@@ -4,9 +4,12 @@ use neo4rs::{query, Query};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
+use crate::core65_audit::{core_65_audit_payload, core_65_audit_plan, Core65AuditSummary};
+use crate::ontology::anuttara_property_mappings;
+use crate::row_projection::{row_columns, row_to_json};
 use crate::{
-    kernel_coordinate_anchor_from_parts, CoordinateArrayParser, KernelCoordinateAnchor,
-    Neo4jClient, PointerWeb,
+    canonical_harmonic_bimba_relations, kernel_coordinate_anchor_from_parts, CoordinateArrayParser,
+    CoordinateReferenceProjection, HarmonicBimbaRelation, KernelCoordinateAnchor, Neo4jClient,
 };
 use crate::{GDS_OPTION1_PROJECTION_NAME, GDS_OPTION1_PROJECTION_VERSION, GDS_PRIVACY_BOUNDARY};
 use epi_s2_graph_schema::{
@@ -99,6 +102,13 @@ impl GraphMethodParams {
         }
     }
 
+    pub fn get_string_list(&self, key: &str) -> Option<&[String]> {
+        match self.values.get(key) {
+            Some(GraphParamValue::StringList(value)) => Some(value),
+            _ => None,
+        }
+    }
+
     fn apply_to_query(&self, mut q: Query) -> Query {
         for (key, value) in &self.values {
             q = match value {
@@ -145,6 +155,104 @@ impl GraphNodeRequest {
         GraphMethodService::resolve_coordinate_string(&self.coordinate)
             .map(|resolved| resolved.canonical)
     }
+}
+
+pub fn m0_archetype_lut_coordinates() -> Vec<String> {
+    portal_core::m0_archetype_lut_coordinates()
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct M0ResidualListRequest {
+    pub coordinate_prefix: String,
+    pub offset: i64,
+    pub limit: i64,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct M0ResidualListPlan {
+    pub requested_prefix: String,
+    pub canonical_prefix: String,
+    pub offset: i64,
+    pub limit: i64,
+    pub page_cypher: String,
+    pub count_cypher: String,
+    pub page_params: GraphMethodParams,
+    pub count_params: GraphMethodParams,
+}
+
+/// Build the S2-owned query plan for the M0 residual data set: all 108 live
+/// M0 graph rows minus the exact twelve rows projected by ARCHETYPE_LUT.
+pub fn m0_residual_list_plan(
+    request: &M0ResidualListRequest,
+) -> Result<M0ResidualListPlan, String> {
+    let requested_prefix = request.coordinate_prefix.trim().to_owned();
+    let canonical_prefix = crate::convert_hash_to_m_family(&requested_prefix);
+    let valid_prefixes = ["M0-0", "M0-1", "M0-2", "M0-3", "M0-4", "M0-5"];
+    if !valid_prefixes.contains(&canonical_prefix.as_str()) {
+        return Err("coordinatePrefix must be one of #0-0 through #0-5".into());
+    }
+    if request.offset < 0 || request.offset % 20 != 0 {
+        return Err("offset must be a non-negative multiple of 20".into());
+    }
+    if request.limit != 20 {
+        return Err("limit must be 20 for the M0 residual browser".into());
+    }
+
+    let excluded = m0_archetype_lut_coordinates();
+    let page_params = GraphMethodParams::from_json(json!({
+        "coordinate_prefix": canonical_prefix,
+        "excluded_lut_coordinates": excluded,
+        "offset": request.offset,
+        "limit": request.limit,
+    }))?;
+    let count_params = GraphMethodParams::from_json(json!({
+        "coordinate_prefix": canonical_prefix,
+        "excluded_lut_coordinates": excluded,
+    }))?;
+    let page_cypher = "\
+MATCH (n:Bimba)
+WHERE n.coordinate STARTS WITH $coordinate_prefix
+  AND NOT n.coordinate IN $excluded_lut_coordinates
+RETURN n.coordinate AS coordinate,
+       coalesce(n.c_1_name, n.name, n.title, n.coordinate) AS name,
+       n.c_1_symbol AS symbol,
+       n.c_1_form AS form
+ORDER BY n.coordinate ASC
+SKIP $offset LIMIT $limit"
+        .to_owned();
+    let count_cypher = "\
+MATCH (dataset:Bimba)
+WHERE dataset.coordinate = 'M0' OR dataset.coordinate STARTS WITH 'M0-'
+WITH count(dataset) AS dataset_total
+MATCH (residual:Bimba)
+WHERE (residual.coordinate = 'M0' OR residual.coordinate STARTS WITH 'M0-')
+  AND NOT residual.coordinate IN $excluded_lut_coordinates
+WITH dataset_total, count(residual) AS residual_total
+OPTIONAL MATCH (branch:Bimba)
+WHERE branch.coordinate STARTS WITH $coordinate_prefix
+  AND NOT branch.coordinate IN $excluded_lut_coordinates
+WITH dataset_total, residual_total, count(branch) AS branch_total
+OPTIONAL MATCH (root:Bimba {coordinate: 'M0'})
+RETURN dataset_total,
+       residual_total,
+       branch_total,
+       root.coordinate AS root_coordinate,
+       coalesce(root.c_1_name, root.name, root.title, root.coordinate) AS root_name,
+       root.c_1_symbol AS root_symbol,
+       root.c_1_form AS root_form"
+        .to_owned();
+
+    Ok(M0ResidualListPlan {
+        requested_prefix,
+        canonical_prefix,
+        offset: request.offset,
+        limit: request.limit,
+        page_cypher,
+        count_cypher,
+        page_params,
+        count_params,
+    })
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -209,7 +317,22 @@ pub struct PointerWebRefreshRequest {
 pub struct PointerWebRefreshPlan {
     pub resolution: CoordinateResolution,
     pub coordinate_anchor: KernelCoordinateAnchor,
-    pub pointer_web: PointerWeb,
+    pub coordinate_reference_projection: CoordinateReferenceProjection,
+    pub deprecation_notice: String,
+    pub cypher: String,
+    pub params: GraphMethodParams,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct HarmonicRelationMaterializationRequest {
+    pub timestamp_ms: u64,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct HarmonicRelationMaterializationPlan {
+    pub namespace: String,
+    pub relation_count: usize,
+    pub relations: Vec<HarmonicBimbaRelation>,
     pub cypher: String,
     pub params: GraphMethodParams,
 }
@@ -320,7 +443,7 @@ impl<'a> GraphMethodService<'a> {
              MERGE (source)-[r:{kernel_relation}]->(obs)
              SET r.c_0_source_coordinate = source.coordinate,
                  r.c_0_target_coordinate = obs.coordinate,
-                 r.c_1_relation_family = 'kernel-resonance',
+                 r.c_1_relation_family = '{relation_family_kernel_core}',
                  r.c_2_relation_type = '{kernel_relation}',
                  r.c_3_created_at = datetime({{epochMillis: $timestamp_ms}}),
                  r.c_4_provenance = $provenance,
@@ -333,6 +456,11 @@ impl<'a> GraphMethodService<'a> {
                     obs.c_4_ql_position AS ql_position",
             kernel_label = KERNEL_RESONANCE_LABEL,
             kernel_relation = KERNEL_RESONANCE_RELATION,
+            // CCT-13 / DR-IG-1: the family literal is the TYPED canonical
+            // constant (kernel_core) — the 'kernel-resonance' hyphen literal
+            // was the Phase-C drift, corrected 2026-07-10.
+            relation_family_kernel_core =
+                epi_s2_graph_schema::relationships::RELATION_FAMILY_KERNEL_CORE,
             resonance_index_property = KERNEL_RESONANCE_INDEX_PROPERTY,
             resonance_score_property = KERNEL_RESONANCE_SCORE_PROPERTY,
             resonance_square_property = KERNEL_RESONANCE_SQUARE_PROPERTY,
@@ -367,9 +495,10 @@ impl<'a> GraphMethodService<'a> {
             &resolution.input,
             resolution.compatibility_property.clone(),
         )?;
-        let pointer_web = coordinate_anchor.pointer_web.clone();
-        let pointer_web_json =
-            serde_json::to_string(&pointer_web).map_err(|err| err.to_string())?;
+        let coordinate_reference_projection =
+            coordinate_anchor.coordinate_reference_projection.clone();
+        let pointer_web_json = serde_json::to_string(&coordinate_reference_projection)
+            .map_err(|err| err.to_string())?;
         let harmonic_pointer_anchor_json = coordinate_anchor
             .harmonic_pointer
             .as_ref()
@@ -382,13 +511,13 @@ impl<'a> GraphMethodService<'a> {
             "source_input": resolution.input,
             "pointer_web_json": pointer_web_json,
             "harmonic_pointer_anchor_json": harmonic_pointer_anchor_json,
-            "pointer_count": pointer_web.pointer_count as i64,
-            "family_refs": pointer_ref_values(&pointer_web.family_refs),
-            "reflective_refs": pointer_ref_values(&pointer_web.reflective_refs),
-            "inversion_refs": pointer_ref_values(&pointer_web.inversion_refs),
-            "position_refs": pointer_ref_values(&pointer_web.position_refs),
-            "lens_refs": pointer_ref_values(&pointer_web.lens_refs),
-            "lens_inversion_refs": pointer_ref_values(&pointer_web.lens_inversion_refs),
+            "pointer_count": coordinate_reference_projection.reference_count as i64,
+            "family_refs": pointer_ref_values(&coordinate_reference_projection.family_refs),
+            "reflective_refs": pointer_ref_values(&coordinate_reference_projection.reflective_refs),
+            "inversion_refs": pointer_ref_values(&coordinate_reference_projection.inversion_refs),
+            "position_refs": pointer_ref_values(&coordinate_reference_projection.position_refs),
+            "lens_refs": pointer_ref_values(&coordinate_reference_projection.lens_refs),
+            "lens_inversion_refs": pointer_ref_values(&coordinate_reference_projection.lens_inversion_refs),
             "timestamp_ms": request.timestamp_ms as i64,
         }))?;
         let cypher = format!(
@@ -425,12 +554,41 @@ impl<'a> GraphMethodService<'a> {
         Ok(PointerWebRefreshPlan {
             resolution,
             coordinate_anchor,
-            pointer_web,
+            coordinate_reference_projection,
+            deprecation_notice:
+                "deprecated compatibility projection; consume S2 Neo4j relations instead".to_owned(),
             cypher,
             params,
         })
     }
 
+    pub fn harmonic_relation_materialization_plan(
+        request: &HarmonicRelationMaterializationRequest,
+    ) -> Result<HarmonicRelationMaterializationPlan, String> {
+        if request.timestamp_ms == 0 {
+            return Err("timestamp_ms is required for harmonic relation materialization".into());
+        }
+        let relations = canonical_harmonic_bimba_relations();
+        let params = GraphMethodParams::from_json(json!({
+            "timestamp_ms": request.timestamp_ms as i64,
+        }))?;
+        let cypher = harmonic_relation_materialization_cypher(&relations);
+
+        Ok(HarmonicRelationMaterializationPlan {
+            namespace: "bimba".to_owned(),
+            relation_count: relations.len(),
+            relations,
+            cypher,
+            params,
+        })
+    }
+
+    /// Raw Cypher, projected as the CALLER asked for it (`S2-SPEC.md:159-185`).
+    ///
+    /// This method is the one place where the caller owns the statement, so it
+    /// is the one place that must not own the projection. Every RETURN alias
+    /// survives under its own name with its own type; `columns` echoes the
+    /// driver's real result keys. See `row_projection.rs` for why.
     pub async fn query(&self, request: GraphQueryRequest) -> Result<Value, String> {
         request.validate()?;
         let rows = self
@@ -438,10 +596,14 @@ impl<'a> GraphMethodService<'a> {
             .run_query(request.params.apply_to_query(query(&request.cypher)))
             .await
             .map_err(|err| format!("s2.graph.query failed: {err}"))?;
+        // Columns come from the first row the driver produced. An empty result
+        // has no columns to report — `[]`, never a fabricated list.
+        let columns = rows.first().map(row_columns).unwrap_or_default();
         Ok(json!({
             "contract": graph_contract("s2.graph.query", None),
+            "columns": columns,
             "rowCount": rows.len(),
-            "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
+            "rows": rows.iter().map(row_to_json).collect::<Vec<_>>(),
         }))
     }
 
@@ -463,7 +625,8 @@ impl<'a> GraphMethodService<'a> {
                     collect(DISTINCT {
                       type: type(r),
                       direction: CASE WHEN startNode(r) = n THEN 'outbound' ELSE 'inbound' END,
-                      coordinate: m.coordinate
+                      coordinate: m.coordinate,
+                      properties: properties(r)
                     }) AS relations",
         )
         .param("canonical", resolved.canonical.clone())
@@ -483,9 +646,63 @@ impl<'a> GraphMethodService<'a> {
         };
         Ok(json!({
             "contract": graph_contract("s2.graph.node", Some(&resolved)),
-            "node": known_row_json(row),
-            "relations": row.get::<Vec<BTreeMap<String, String>>>("relations").unwrap_or_default(),
+            "node": bimba_node_row(row),
+            "relations": relations_json(row)?,
             "resolution": resolved,
+        }))
+    }
+
+    pub async fn list_m0_residual(&self, request: M0ResidualListRequest) -> Result<Value, String> {
+        let plan = m0_residual_list_plan(&request)?;
+        let count_rows = self
+            .client
+            .run_query(plan.count_params.apply_to_query(query(&plan.count_cypher)))
+            .await
+            .map_err(|err| format!("s2.graph.list count failed: {err}"))?;
+        let count_row = count_rows
+            .first()
+            .ok_or_else(|| "s2.graph.list count returned no row".to_owned())?;
+        let dataset_total = count_row.get::<i64>("dataset_total").unwrap_or_default();
+        let residual_total = count_row.get::<i64>("residual_total").unwrap_or_default();
+        let branch_total = count_row.get::<i64>("branch_total").unwrap_or_default();
+        let root_entry = count_row
+            .get::<String>("root_coordinate")
+            .ok()
+            .filter(|coordinate| !coordinate.is_empty())
+            .map(|coordinate| {
+                json!({
+                    "coordinate": coordinate,
+                    "name": count_row.get::<String>("root_name").unwrap_or_else(|_| "M0".to_owned()),
+                    "symbol": count_row.get::<String>("root_symbol").ok(),
+                    "form": count_row.get::<String>("root_form").ok(),
+                    "state": "canonical",
+                })
+            });
+
+        let page_rows = self
+            .client
+            .run_query(plan.page_params.apply_to_query(query(&plan.page_cypher)))
+            .await
+            .map_err(|err| format!("s2.graph.list page failed: {err}"))?;
+        let invariant_holds = dataset_total == 108 && residual_total == 96;
+        Ok(json!({
+            "contract": graph_contract("s2.graph.list", None),
+            "coordinatePrefix": plan.requested_prefix,
+            "canonicalPrefix": plan.canonical_prefix,
+            "offset": plan.offset,
+            "limit": plan.limit,
+            "entries": page_rows.iter().map(m0_residual_row_json).collect::<Vec<_>>(),
+            "rootEntry": root_entry,
+            "total": branch_total,
+            "residualTotal": residual_total,
+            "datasetTotal": dataset_total,
+            "state": if invariant_holds { "canonical" } else { "blocked" },
+            "invariant": {
+                "expectedDatasetTotal": 108,
+                "expectedResidualTotal": 96,
+                "holds": invariant_holds,
+                "source": "Body/S/S0/epi-lib/docs/m0-dataset-audit.md + ARCHETYPE_LUT[12]"
+            }
         }))
     }
 
@@ -528,7 +745,7 @@ impl<'a> GraphMethodService<'a> {
             "from": resolved,
             "depth": depth,
             "direction": request.direction,
-            "nodes": rows.iter().map(known_row_json).collect::<Vec<_>>(),
+            "nodes": rows.iter().map(bimba_node_row).collect::<Vec<_>>(),
         }))
     }
 
@@ -556,7 +773,7 @@ impl<'a> GraphMethodService<'a> {
                 "coordinate_anchor": plan.coordinate_anchor,
             },
             "rowCount": rows.len(),
-            "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
+            "rows": rows.iter().map(bimba_node_row).collect::<Vec<_>>(),
         }))
     }
 
@@ -574,11 +791,174 @@ impl<'a> GraphMethodService<'a> {
             "contract": graph_contract("s2.graph.pointer_web.refresh", Some(&plan.resolution)),
             "source": plan.resolution,
             "coordinate_anchor": plan.coordinate_anchor,
-            "pointerWeb": plan.pointer_web,
+            "coordinateReferenceProjection": plan.coordinate_reference_projection,
+            "deprecatedPointerWeb": {
+                "status": "deprecated_compatibility_only",
+                "notice": plan.deprecation_notice
+            },
             "rowCount": rows.len(),
-            "rows": rows.iter().map(known_row_json).collect::<Vec<_>>(),
+            "rows": rows.iter().map(bimba_node_row).collect::<Vec<_>>(),
         }))
     }
+
+    pub async fn materialize_harmonic_relations(
+        &self,
+        request: HarmonicRelationMaterializationRequest,
+    ) -> Result<Value, String> {
+        let plan = Self::harmonic_relation_materialization_plan(&request)?;
+        let rows = self
+            .client
+            .run_query(plan.params.apply_to_query(query(&plan.cypher)))
+            .await
+            .map_err(|err| format!("s2.graph.harmonic_relations.materialize failed: {err}"))?;
+        Ok(json!({
+            "contract": graph_contract("s2.graph.harmonic_relations.materialize", None),
+            "namespace": plan.namespace,
+            "relationCount": plan.relation_count,
+            "relations": plan.relations,
+            "rowCount": rows.len(),
+            // This query RETURNs `count(rel) AS relation_count`, not a node.
+            // It used to be forced through the node projector, so every row
+            // came back an empty stub and `relationCount` above was reported
+            // from the compiled-in plan rather than from the database. The
+            // caller-honest projector reports what the write actually did.
+            "rows": rows.iter().map(row_to_json).collect::<Vec<_>>(),
+        }))
+    }
+
+    pub async fn core_65_audit(&self) -> Result<Value, String> {
+        let plan = core_65_audit_plan()?;
+        let rows = self
+            .client
+            .run_query(plan.params.apply_to_query(query(&plan.cypher)))
+            .await
+            .map_err(|err| format!("s2.graph.core65.audit failed: {err}"))?;
+        let summary = rows
+            .first()
+            .map(|row| {
+                Core65AuditSummary::from_observation(
+                    row.get::<i64>("declared_count")
+                        .ok()
+                        .and_then(|count| usize::try_from(count).ok())
+                        .unwrap_or(plan.kernel_declared_count),
+                    row.get::<i64>("observed_count")
+                        .ok()
+                        .and_then(|count| usize::try_from(count).ok())
+                        .unwrap_or_default(),
+                    row.get::<Vec<String>>("relation_types").unwrap_or_default(),
+                    row.get::<Vec<String>>("neo4j_types").unwrap_or_default(),
+                    row.get::<Vec<String>>("source_coordinates")
+                        .unwrap_or_default(),
+                    row.get::<Vec<String>>("target_coordinates")
+                        .unwrap_or_default(),
+                )
+            })
+            .unwrap_or_else(|| {
+                Core65AuditSummary::from_observation(
+                    plan.kernel_declared_count,
+                    0,
+                    Vec::new(),
+                    Vec::new(),
+                    Vec::new(),
+                    Vec::new(),
+                )
+            });
+
+        Ok(core_65_audit_payload(
+            graph_contract("s2.graph.core65.audit", None),
+            summary,
+        ))
+    }
+
+    #[allow(non_snake_case)]
+    pub async fn core65Audit(&self) -> Result<Value, String> {
+        self.core_65_audit().await
+    }
+}
+
+fn harmonic_relation_materialization_cypher(relations: &[HarmonicBimbaRelation]) -> String {
+    let relation_maps = relations
+        .iter()
+        .map(|relation| {
+            format!(
+                "{{edge_id: '{}', source_coordinate: '{}', target_coordinate: '{}', relation_type: '{}', harmonic_family: '{}', harmonic_register: '{}', harmonic_depth: {}, harmonic_d_face: '{}', harmonic_base_pair: '{}', harmonic_active_lenses: [{}], harmonic_primary_anchor: '{}', harmonic_interval_signature: '{}', source_anchor: '{}'}}",
+                cypher_literal(&relation.edge_id),
+                cypher_literal(&relation.source_coordinate),
+                cypher_literal(&relation.target_coordinate),
+                cypher_literal(&relation.relation_type),
+                cypher_literal(&relation.harmonic_family),
+                cypher_literal(&relation.harmonic_register),
+                relation.harmonic_depth,
+                cypher_literal(&relation.harmonic_d_face),
+                cypher_literal(&relation.harmonic_base_pair),
+                relation
+                    .harmonic_active_lenses
+                    .iter()
+                    .map(|lens| format!("'{}'", cypher_literal(lens)))
+                    .collect::<Vec<_>>()
+                    .join(", "),
+                cypher_literal(&relation.harmonic_primary_anchor),
+                cypher_literal(&relation.harmonic_interval_signature),
+                cypher_literal(&relation.source_anchor),
+            )
+        })
+        .collect::<Vec<_>>()
+        .join(",\n  ");
+    let merge_blocks = [
+        "ADJACENTLY_ARTICULATES",
+        "MIRRORS_COMPLEMENT",
+        "CROSSES_KNOWING_LIMIT",
+        "INVERTS_THROUGH_FIRST",
+        "INVERTS_THROUGH_SECOND",
+        "INVERTS_THROUGH_PAIR",
+    ]
+    .iter()
+    .map(|relation_type| {
+        format!(
+            "FOREACH (_ IN CASE WHEN rel.relation_type = '{relation_type}' THEN [1] ELSE [] END |
+  MERGE (source)-[edge:{relation_type} {{c_2_edge_id: rel.edge_id}}]->(target)
+  SET {set_clause}
+)",
+            set_clause = harmonic_relation_set_clause("edge"),
+        )
+    })
+    .collect::<Vec<_>>()
+    .join("\n");
+
+    format!(
+        "UNWIND [
+  {relation_maps}
+] AS rel
+MATCH (source:Bimba {{coordinate: rel.source_coordinate}})
+MATCH (target:Bimba {{coordinate: rel.target_coordinate}})
+{merge_blocks}
+RETURN count(rel) AS relation_count"
+    )
+}
+
+fn harmonic_relation_set_clause(edge: &str) -> String {
+    [
+        format!("{edge}.c_0_source_coordinate = source.coordinate"),
+        format!("{edge}.c_0_target_coordinate = target.coordinate"),
+        format!("{edge}.c_1_relation_family = rel.harmonic_family"),
+        format!("{edge}.c_2_relation_type = rel.relation_type"),
+        format!("{edge}.c_2_edge_id = rel.edge_id"),
+        format!("{edge}.c_3_created_at = datetime({{epochMillis: $timestamp_ms}})"),
+        format!("{edge}.c_4_harmonic_family = rel.harmonic_family"),
+        format!("{edge}.c_4_harmonic_register = rel.harmonic_register"),
+        format!("{edge}.c_4_harmonic_depth = rel.harmonic_depth"),
+        format!("{edge}.c_4_harmonic_d_face = rel.harmonic_d_face"),
+        format!("{edge}.c_4_harmonic_base_pair = rel.harmonic_base_pair"),
+        format!("{edge}.c_4_harmonic_active_lenses = rel.harmonic_active_lenses"),
+        format!("{edge}.c_4_harmonic_primary_anchor = rel.harmonic_primary_anchor"),
+        format!("{edge}.c_5_harmonic_interval_signature = rel.harmonic_interval_signature"),
+        format!("{edge}.c_4_provenance = rel.source_anchor"),
+    ]
+    .join(",\n      ")
+}
+
+fn cypher_literal(value: &str) -> String {
+    value.replace('\\', "\\\\").replace('\'', "\\'")
 }
 
 fn kernel_resonance_index(lens: u8, ascent_helix: bool, position: u8) -> Result<i64, String> {
@@ -621,14 +1001,55 @@ fn coordinate_fragment(value: &str) -> String {
     }
 }
 
-fn known_row_json(row: &neo4rs::Row) -> Value {
+/// Read a property that is a STRING on most nodes but an INTEGER on some, and
+/// render it as a string either way.
+///
+/// `c_4_layer` is the live case: it is a controlled node-kind vocabulary
+/// (`COORDINATE`, `PSYCHOID`, `VAK`, `WEAVE`, `CONTEXT_FRAME`, `FAMILY_META`)
+/// on 1956 nodes, but the 84 `:Coordinate:Stack` nodes written by the S/S'
+/// lattice migration carry the S-layer index `0`-`5` instead. Those 84 stay
+/// mixed by decision (2026-07-25: the integer is a second semantic, not a bad
+/// cast, so readers tolerate both rather than the data being flattened).
+/// A bare `row.get::<String>()` returns `Err` for them, and `unwrap_or_default()`
+/// silently turned that into `""` — so every S-stack coordinate served an empty
+/// layer. Same silent-empty-string failure mode the RETURN projector had.
+fn string_or_int_field(row: &neo4rs::Row, key: &str) -> String {
+    row.get::<String>(key)
+        .or_else(|_| row.get::<i64>(key).map(|n| n.to_string()))
+        .unwrap_or_default()
+}
+
+/// Project `s2.graph.node`'s `relations` collection.
+///
+/// WHY THIS IS NOT A `row.get::<Vec<BTreeMap<String, String>>>`. The query
+/// collects `{type, direction, coordinate, properties: properties(r)}` — the
+/// `properties` value is itself a MAP, so the whole column fails to deserialize
+/// into a string map, and the `unwrap_or_default()` that used to guard it turned
+/// that failure into `[]`. Measured consequence (2026-07-27): `s2.graph.node`
+/// reported ZERO relations for `M1`, a node carrying 13 live edges, so the M0'
+/// layer rail read `canonical_absent` for its relation layer and the Walk pane
+/// silently fell back to `traverse`. The relation properties were added the same
+/// day the RETURN projector was fixed — one dead read closed, another opened, by
+/// the same silent-swallow pattern.
+///
+/// So the same law applies here as in `row_projection.rs`: project the driver's
+/// real value, and let a genuinely unreadable column FAIL rather than read as
+/// "this node has no relations".
+fn relations_json(row: &neo4rs::Row) -> Result<Value, String> {
+    let bolt = row
+        .get::<neo4rs::BoltType>("relations")
+        .map_err(|err| format!("s2.graph.node: relations column unreadable: {err}"))?;
+    Ok(crate::row_projection::bolt_to_json(&bolt))
+}
+
+fn bimba_node_row(row: &neo4rs::Row) -> Value {
     let coordinate = row.get::<String>("coordinate").unwrap_or_default();
     json!({
         "coordinate": coordinate,
         "uuid": row.get::<String>("uuid").unwrap_or_default(),
         "name": row.get::<String>("name").unwrap_or_default(),
         "family": row.get::<String>("family").unwrap_or_default(),
-        "layer": row.get::<String>("layer").unwrap_or_default(),
+        "layer": string_or_int_field(row, "layer"),
         "ql_position": row.get::<i64>("ql_position").unwrap_or(-1),
         "depth": row.get::<i64>("depth").ok(),
         "anchors": source_traceability_anchors(&coordinate),
@@ -636,18 +1057,17 @@ fn known_row_json(row: &neo4rs::Row) -> Value {
     })
 }
 
-pub fn graph_contract(method: &str, resolution: Option<&CoordinateResolution>) -> Value {
-    let pointer_descriptors = resolution
-        .and_then(|resolved| {
-            kernel_coordinate_anchor_from_parts(
-                &resolved.canonical,
-                &resolved.input,
-                resolved.compatibility_property.clone(),
-            )
-            .ok()
-        })
-        .map(|anchor| anchor.pointer_web.harmonic_relation_descriptors)
-        .unwrap_or_default();
+fn m0_residual_row_json(row: &neo4rs::Row) -> Value {
+    json!({
+        "coordinate": row.get::<String>("coordinate").unwrap_or_default(),
+        "name": row.get::<String>("name").unwrap_or_default(),
+        "symbol": row.get::<String>("symbol").ok(),
+        "form": row.get::<String>("form").ok(),
+        "state": "canonical",
+    })
+}
+
+pub fn graph_contract(method: &str, _resolution: Option<&CoordinateResolution>) -> Value {
     json!({
         "method": method,
         "namespace": "bimba",
@@ -666,7 +1086,16 @@ pub fn graph_contract(method: &str, resolution: Option<&CoordinateResolution>) -
             "coordinateSemanticAuthority": "Idea/Bimba/World/Types/Coordinates",
             "missingResidencyPolicy": "canonical_absent; never synthesize client-renderer paths"
         },
-        "pointerWebDescriptors": pointer_descriptors,
+        "deprecatedPointerWeb": {
+            "status": "deprecated_compatibility_only",
+            "replacement": "s2.graph.harmonic_relations.materialize + s2.graph.traverse",
+            "reason": "S2 pointer_web is a coordinate reference projection, not the S0 HC_PointerWeb36 or the Bimba relation substrate"
+        },
+        "harmonicRelations": {
+            "source": "s2.graph.harmonic_relations.materialize",
+            "namespace": "bimba",
+            "materialization": "Neo4j Bimba edges between P/P' source coordinates and L/L' target coordinates"
+        },
         "ontologyReadiness": {
             "n10sOwner": "S2/S2'",
             "status": "reported-by-doctor-or-live-neo4j",
@@ -787,27 +1216,16 @@ fn coordinate_type_canvas_path(coordinate: &str) -> Option<String> {
 }
 
 fn anuttara_fields_json(row: &neo4rs::Row) -> Value {
-    let fields = [
-        ("symbol", "c_1_symbol", row.get::<String>("symbol").ok()),
-        (
-            "formulation_type",
-            "c_1_formulation_type",
-            row.get::<String>("formulation_type").ok(),
-        ),
-        (
-            "complete_formulation",
-            "c_1_complete_formulation",
-            row.get::<String>("complete_formulation").ok(),
-        ),
-    ];
-    let present = fields
+    let mappings = anuttara_property_mappings();
+    let present = mappings
         .iter()
-        .filter_map(|(alias, property, value)| {
-            let value = value.as_ref()?.trim();
+        .filter_map(|mapping| {
+            let value = row.get::<String>(mapping.alias.as_str()).ok()?;
+            let value = value.trim();
             if value.is_empty() {
                 return None;
             }
-            Some((*alias, *property, value.to_owned()))
+            Some((mapping, value.to_owned()))
         })
         .collect::<Vec<_>>();
     if present.is_empty() {
@@ -816,20 +1234,15 @@ fn anuttara_fields_json(row: &neo4rs::Row) -> Value {
 
     let mut values = serde_json::Map::new();
     let mut provenance = serde_json::Map::new();
-    for (alias, property, value) in present {
-        values.insert(alias.to_owned(), json!(value));
+    for (mapping, value) in present {
+        values.insert(mapping.alias.clone(), json!(value));
         provenance.insert(
-            alias.to_owned(),
+            mapping.alias.clone(),
             json!({
                 "source": "s2.neo4j",
                 "status": "s2_supplied",
-                "property": property,
-                "ontologyProperty": match alias {
-                    "symbol" => "epi:hasSymbol",
-                    "formulation_type" => "epi:hasFormulationType",
-                    "complete_formulation" => "epi:hasCompleteFormulation",
-                    _ => "epi:unknown",
-                },
+                "property": mapping.neo4j_property,
+                "ontologyProperty": mapping.ontology_property,
             }),
         );
     }

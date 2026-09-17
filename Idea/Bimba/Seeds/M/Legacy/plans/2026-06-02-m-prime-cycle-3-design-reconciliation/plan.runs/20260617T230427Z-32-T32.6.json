@@ -1,0 +1,36 @@
+{
+  "runId": "20260617T230427Z-32-T32.6",
+  "taskId": "32.T32.6",
+  "startedAt": "2026-06-17T23:04:27.787Z",
+  "owner": "codex-m-dev-32-t32-6",
+  "leaseExpiresAt": "2026-06-18T01:04:27.787Z",
+  "worktree": null,
+  "task": {
+    "id": "32.T32.6",
+    "trackId": "32",
+    "tranche": "T32.6",
+    "title": "Empty-state grammar per extension",
+    "effort": null,
+    "file": "32-onboarding-settings-empty-states.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md",
+    "dependsOn": [
+      "32.T32.5"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/common/empty-state-registry.ts",
+      "Body/M/epi-theia/extensions/{m0-anuttara,m1-paramasiva,m2-parashakti,m3-mahamaya,m4-nara,m5-epii}/src/browser/empty-state.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -4,8 +4,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const repoRoot = path.resolve(import.meta.dirname, "../../..");
-const datasetsRoot = path.join(repoRoot, "docs/datasets");
+// this script lives at Idea/Bimba/Map/datasets/scripts/ — datasets is its parent.
+const repoRoot = path.resolve(import.meta.dirname, "../../../../..");
+const datasetsRoot = path.resolve(import.meta.dirname, ".."); // Idea/Bimba/Map/datasets
 const outputDir = path.join(repoRoot, "Body/S/S5/epi-gnostic/cypher/generated");
 
 const branches = [
@@ -57,13 +58,54 @@ export const registeredTargets = new Set([
   "m_3_degree",
   "m_4_two_stroke_doctrine",
   "m_5_lacanian_interface",
+  // 2026-07-29 recovery registration — read by the live gateway, previously
+  // unregistered, therefore unrecoverable after the unscoped delete.
+  "c_0_modal_signature",
+  "l_2_vedic_mantra",
+  "l_3_spiritual_function",
+  "s_4_english_translation",
+  // 2026-08-01 registration ahead of the write (Tranche 09.T9.14). The `/World`
+  // namespace promotion mints this CCT-17b wikilink span-pointer on `:World`
+  // nodes. Registering it BEFORE the migration is ever applied is the whole
+  // lesson of the 2026-07-28 wipe: an unregistered property is unrecoverable
+  // afterwards, and the moment to fix that is before it exists, not after it
+  // is lost. Hen populates the values; this line is what makes them restorable.
+  "c_1_source_artifact_span",
 ]);
+
+// RECOVERY BOUNDARY — read this before assuming the standard restore chain is
+// total. This generator restores *node properties* on `:Bimba` nodes and
+// nothing else: it emits `MATCH (n:Bimba {coordinate: …}) SET n += {…}`, so it
+// can carry no LABEL and no RELATIONSHIP. Tranche 09.T9.14 mints both — the
+// `:World` / `:Archetypal` / `:Gnostic` labels and the `WORLD_FORM_OF` /
+// `WORLD_ONTOLOGY_OF` relations — and their in-repo restore authority is the
+// migration itself, which is idempotent precisely so it can be re-run as a
+// recovery step:
+//     Body/S/S2/graph-services/migrations/2026-08-01-world-gnostic-namespace-promotion.cypher
+// Its literals are machine-bound to the schema registries by
+// `cargo test -p epi-s2-graph-services --test world_namespace_migration`.
+
+// NAMED STALENESS, not fixed here because it is a canon decision.
+// `mappings.m_prime` emits the LOOSE global form (`arabicText -> m_2_arabic_text`,
+// `abjadValue -> m_2_abjad_value`), but deep-property-map.md's M/M-prime rule and
+// the live graph both use the sub-coordinate form for the M2-4 name matrix
+// (`m_2_4_arabic_text`, `m_2_4_abjad_value`, `m_2_4_hebrew_text`). That is why
+// this generator's output never contained the properties the gateway reads.
+// Making m_prime coordinate-aware changes a canon serialization rule, so it is
+// flagged for the Architect rather than taken unilaterally. Until then,
+// `m_2_4_hebrew_text` is restored by the recovery script beside this file and is
+// deliberately absent from the mapping table above.
 
 export const stringListTargets = new Set([
   "c_4_ql_operator_types",
   "c_5_resonances",
   "l_2_therapeutic_properties",
   "s_5_tool_affinity",
+  // StringList per `SOURCE_ARTIFACT_SPAN_PROPERTY` in Body/S/S2/graph-schema
+  // (`GraphPropertyType::StringList`, cardinality Many). Registering the type
+  // alongside the target is what keeps a restore from writing a comma-joined
+  // scalar where the schema declares a list.
+  "c_1_source_artifact_span",
 ]);
 
 export const mappings = {
@@ -72,6 +114,8 @@ export const mappings = {
     description: "c_1_description",
     coreNature: "c_0_core_nature",
     operationalEssence: "c_0_essence",
+    modalSignature: "c_0_modal_signature", // 2026-07-29 recovery registration
+
     internalStructure: "c_1_structure",
     lastUpdated: "c_3_updated_at",
     updatedAt: "c_3_updated_at",
@@ -88,6 +132,7 @@ export const mappings = {
     keyPrinciples: "c_1_key_principles",
     practicalApplications: "c_3_practical_applications",
     relatedCoordinates: "c_3_related_coordinates",
+    sourceArtifactSpan: "c_1_source_artifact_span", // 2026-08-01, Tranche 09.T9.14
   },
   p: {
     qlVariant: "p_1_variant",
@@ -102,6 +147,15 @@ export const mappings = {
     healingSpecialty: "l_2_healing_specialty",
     chakraCorrespondence: "l_2_chakra_correspondence",
     breathPattern: "l_2_breath_pattern",
+    // 2026-07-29 recovery registration. These were read by the LIVE gateway
+    // (Body/S/S0/epi-cli/src/gate/graph.rs) but were never registered here, so
+    // when the 2026-07-28 unscoped `MATCH (n:Bimba) DETACH DELETE n` wiped the
+    // graph, replaying the generated regional cypher restored everything on the
+    // allowlist and silently left these behind — the M2 correspondence face
+    // stayed dark for a day with no repo-side source to recover from.
+    // Registering them makes the standard restore chain cover them.
+    vedicMantra: "l_2_vedic_mantra",
+    spiritualFunction: "l_3_spiritual_function",
     mefCondition: "l_4_mef_condition",
     interpretiveRole: "l_4_interpretive_role",
     elementalNature: "l_2_elemental_nature",
@@ -122,6 +176,7 @@ export const mappings = {
     f_capabilities: "s_5_capabilities",
     safetyClass: "s_4_safety_class",
     eligibleFormats: "s_4_eligible_formats",
+    englishTranslation: "s_4_english_translation", // 2026-07-29 recovery registration
   },
   t: {
     epistemicFunction: "t_1_epistemic_function",
@@ -220,6 +275,42 @@ export function mCoordinate(coordinate) {
   return coordinate;
 }
 
+const DOUBLING_RAW = "4.4.0-4.4/5";
+const DOUBLING_TOK = "";
+const DOUBLING_CANON = "4.(4.0/1-4.4/5)";
+
+// Normalise context frames to canonical form. MUST stay in parity with the Rust generator
+// `wrap_context_frames` (Body/S/S2/graph-services/src/coordinate.rs), the TS bimba-mcp
+// `wrapContextFrames`, and the projector `canonical()` (../scripts/project-map-index.mjs).
+// Idempotent. position-N frame keeps `N.` outside (`4.0/1` -> `4.(0/1)`); doubling stays atomic.
+export function wrapContextFrames(coordinate) {
+  const protectedCoord = coordinate.split(DOUBLING_RAW).join(DOUBLING_TOK);
+  const segs = [];
+  let depth = 0;
+  let cur = "";
+  for (const ch of protectedCoord) {
+    if (ch === "(") { depth += 1; cur += ch; }
+    else if (ch === ")") { depth -= 1; cur += ch; }
+    else if (ch === "-" && depth === 0) { segs.push(cur); cur = ""; }
+    else cur += ch;
+  }
+  segs.push(cur);
+  return segs
+    .map((seg) => {
+      if (seg === DOUBLING_TOK) return DOUBLING_CANON;
+      if (!seg.includes("/")) return seg;
+      if (seg.startsWith("(") && seg.endsWith(")")) return seg;
+      const dot = seg.indexOf(".");
+      if (dot > 0 && /^\d+$/.test(seg.slice(0, dot))) {
+        const rest = seg.slice(dot + 1);
+        if (rest.startsWith("(") && rest.endsWith(")")) return seg;
+        return `${seg.slice(0, dot)}.(${rest})`;
+      }
+      return `(${seg})`;
+    })
+    .join("-");
+}
+
 export function cypherString(value) {
   return `'${String(value)
     .replace(/\\/g, "\\\\")
@@ -305,7 +396,7 @@ export function buildRegionalOutputs() {
 
     for (const node of nodes) {
       const props = node.filteredProps ?? node.filtered_props ?? {};
-      const coordinate = mCoordinate(node.coordinate ?? props.bimbaCoordinate);
+      const coordinate = wrapContextFrames(mCoordinate(node.coordinate ?? props.bimbaCoordinate));
       if (!coordinate) continue;
 
       for (const [region, regionMappings] of Object.entries(mappings)) {

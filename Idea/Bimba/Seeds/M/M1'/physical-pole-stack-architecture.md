@@ -34,7 +34,7 @@ Everything else depends on this. The Paramaśiva tick is not a frame-rate — it
 
 ### Tick rate specification
 
-The fundamental tick-rate is a configurable parameter, but the *harmonic structure* is fixed. One complete kernel-cycle traverses 12 epogdoon-steps (8 element-positions plus 4 transitional epogdoons that fold the matheme). At a default user-facing tick-rate of 12 ticks per second, one complete kernel-cycle takes exactly 1 second — the kernel's natural breath-rate. This gives:
+The fundamental tick-rate is a configurable parameter, but the *harmonic structure* is fixed. One complete kernel-cycle traverses 12 epogdoon-steps (8 element-positions plus 4 transitional epogdoons that fold the matheme). At a default user-facing tick-rate of 12 ticks per second, one complete kernel-cycle takes exactly 1 second. **Corrected (T2.11, 2026-07-08):** this 12 Hz is a UI **display framerate** — a rendering convenience, NOT "the kernel's natural breath-rate" as an earlier draft mislabeled it. The kernel's beat anchor is the spanda dual-oscillator's conserved-delta band, ~2.5 Hz cited (see [[02-m1-paramasiva-reconciliation]] T2.11 and `spanda_hkb_frequency_citation` in epi-lib m1.c); three rates are never conflated — the ~2.5 Hz oscillation beat ≠ the 1 Hz `profile.update` heartbeat ≠ this 12 Hz display framerate. The 12-per-second default gives:
 
 - **Element-rate**: 8 elements per second (the operator advances through one matheme-position every 125ms)
 - **Sub-tick rate**: 12 per second (each epogdoon-step takes 1/12 second = ~83.3ms)
@@ -108,7 +108,7 @@ y = (R + r·cos(θ)) · sin(φ)
 z = r · sin(θ)
 ```
 
-where R is the major radius (distance from torus centre to small-circle centre) and r is the minor radius. The aspect ratio R/r is structurally significant: setting R/r = φ (the golden ratio, ~1.618) produces the *Clifford-symmetric torus* whose intrinsic geometry is closest to flat; setting R/r = 9/8 (the epogdoon!) produces a torus whose geometric proportions literally encode the kernel's tick-quantum.
+where R is the major radius (distance from torus centre to small-circle centre) and r is the minor radius. The aspect ratio R/r is structurally significant. *(Illustrative options in the original draft — φ for the Clifford-symmetric torus, 9/8 for a tick-quantum-shaped body — were asides, not derivations; the 9/8 option was later mistakenly hardened into rendering canon. RESOLVED 2026-07-06 by [[ql-musical-derivation-v3]] register law, see [[M1'-SPEC]] §13.6: the canonical aspect is R/r = 16/9 with R + r = 1 — the standing identity 100% = 64 + 36 as body proportions; the epogdoon 9/8 lives on that body as the 30°/tick stepping arc and the double-cover relation 2r/R = 72/64 = 9/8, never as the aspect.)*
 
 ### The bioquaternionic state on the torus
 

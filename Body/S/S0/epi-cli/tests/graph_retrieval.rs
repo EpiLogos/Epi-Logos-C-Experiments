@@ -5,19 +5,34 @@ use epi_logos::graph::schema;
 use epi_logos::graph::seed;
 use epi_logos::graph::semantic;
 
-/// Helper: connect, clean, schema, seed — returns client for tests.
+/// Helper: connect, schema, seed — returns client for tests.
+///
+/// There is deliberately NO wipe here. This helper used to run
+/// `MATCH (n:Bimba) DETACH DELETE n` as a "clean slate"; on 2026-07-28 a test of
+/// that shape ran against the live development Neo4j and destroyed the Bimba
+/// ontology. The seeder is `MERGE`-based and idempotent, so an empty graph was
+/// never a precondition — the wipe bought nothing and cost everything.
 async fn setup() -> Neo4jClient {
     let config = Neo4jConfig::from_env();
     let client = Neo4jClient::connect(&config).expect("connect failed");
-    client.run("MATCH (n:Bimba) DETACH DELETE n").await.unwrap();
     schema::create_schema(&client).await.unwrap();
     seed::seed_coordinate_space(&client).await.unwrap();
     client
 }
 
-/// Helper: remove all Bimba nodes.
+/// Helper: remove the scratch properties this suite wrote, and nothing else.
+///
+/// The seeded coordinates are the ontology's root nodes — the seeder MERGEs onto
+/// whatever already exists rather than creating them — so this test is not
+/// entitled to delete them, no matter how narrow the WHERE clause. The one thing
+/// it genuinely creates is the `extra_detail` probe property on `#4`, used to
+/// prove the semantic document EXCLUDES non-`q_` keys. That, and only that, is
+/// cleaned up.
 async fn teardown(client: &Neo4jClient) {
-    client.run("MATCH (n:Bimba) DETACH DELETE n").await.unwrap();
+    client
+        .run("MATCH (n:Bimba {coordinate: '#4'}) REMOVE n.extra_detail")
+        .await
+        .expect("remove the extra_detail probe property this test set on #4");
 }
 
 // ---------------------------------------------------------------------------

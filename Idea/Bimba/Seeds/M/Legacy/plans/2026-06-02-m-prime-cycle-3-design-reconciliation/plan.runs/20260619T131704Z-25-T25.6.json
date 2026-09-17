@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T131704Z-25-T25.6",
+  "taskId": "25.T25.6",
+  "startedAt": "2026-06-19T13:17:04.715Z",
+  "owner": "codex-m-dev-25-t25-6-personal-field",
+  "leaseExpiresAt": "2026-06-19T15:17:04.715Z",
+  "worktree": null,
+  "task": {
+    "id": "25.T25.6",
+    "trackId": "25",
+    "tranche": "T25.6",
+    "title": "Personal cymatic field widget body *(spec-ahead-integration; closes `m4.nara.personalField` ORPHAN; DR-WC-M4-2; first-build under M4-ARCHITECTURE §5.3.1 + DR-IG-6)*",
+    "effort": null,
+    "file": "25-m4-nara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/25-m4-nara-frontend-deep.md",
+    "dependsOn": [
+      "25.T25.5"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m4-nara/src/browser/widgets/personal-cymatic-field.tsx"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

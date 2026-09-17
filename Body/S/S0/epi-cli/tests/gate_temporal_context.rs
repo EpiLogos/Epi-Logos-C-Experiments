@@ -3,8 +3,11 @@ mod support;
 use std::fs;
 
 use epi_logos::gate::sessions::{SessionPatch, SessionStore};
+use epi_s3_gateway_contract::{
+    TerminalBinding, TerminalCaptureMode, TerminalCapturePolicy, TerminalLease, TerminalStatus,
+};
 use redis::AsyncCommands;
-use serde_json::json;
+use serde_json::{json, Value};
 use support::{spawn_epi, temp_env, TestEnv, TestGatewayClient};
 
 fn env_with_now_file() -> (TestEnv, String, String) {
@@ -50,6 +53,25 @@ fn temp_env_placeholder_vault_marker() -> &'static str {
     "__set_after_repo_root_exists__"
 }
 
+/// A terminal lease that is LIVE at the moment the patch is applied.
+///
+/// `session_store::validate_terminal_capture_policy` refuses any capture
+/// policy beyond metadata-only whose lease has already expired — real
+/// production law, and a real caller (`agent/tmux.rs::lease_expires_at`)
+/// mints `created_at + ttl`. A hardcoded absolute millisecond stamp is a
+/// lease with a calendar death date: the previous literal
+/// `1_785_000_000_000` was 2026-07-25T09:20:00Z, so this test began failing
+/// once the wall clock passed it. Deriving from `SystemTime::now()` mirrors
+/// the real caller and never rots.
+fn live_lease_expires_at_ms() -> u128 {
+    const LEASE_TTL_MS: u128 = 12 * 60 * 60 * 1000; // agent::tmux::DEFAULT_LEASE_TTL_SECONDS
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock is after the unix epoch")
+        .as_millis()
+        + LEASE_TTL_MS
+}
+
 #[test]
 fn cli_temporal_context_resolves_day_now_history_and_agent_orientation() {
     let (env, day_id, session_id) = env_with_now_file();
@@ -82,11 +104,11 @@ fn cli_temporal_context_resolves_day_now_history_and_agent_orientation() {
     assert_eq!(value["day"]["wikilink"], "[[07-05-2026]]");
     assert_eq!(
         value["redis"]["sessionNowKey"],
-        "s3:gateway:temporal:session:session-temporal-main:now:md"
+        "cache:hot:s3:gateway:temporal:session:session-temporal-main:now:md"
     );
     assert_eq!(
         value["redis"]["agentOrientationKey"],
-        "s3:gateway:temporal:agent:anima:session:session-temporal-main:orientation"
+        "cache:hot:s3:gateway:temporal:agent:anima:session:session-temporal-main:orientation"
     );
     assert_eq!(value["kairos"]["available"], true);
     assert_eq!(value["kairos"]["activeDecan"], 17);
@@ -117,15 +139,15 @@ fn cli_temporal_context_resolves_day_now_history_and_agent_orientation() {
     );
     assert_eq!(
         value["redis"]["dayKairosKey"],
-        "s3:gateway:temporal:day:07-05-2026:kairos"
+        "cache:hot:s3:gateway:temporal:day:07-05-2026:kairos"
     );
     assert_eq!(
         value["redis"]["sessionKairosKey"],
-        "s3:gateway:temporal:session:session-temporal-main:kairos"
+        "cache:hot:s3:gateway:temporal:session:session-temporal-main:kairos"
     );
     assert_eq!(
         value["redis"]["personalOrientationKey"],
-        "s3:gateway:temporal:personal:pratibimba-abcd1234:orientation"
+        "cache:hot:s3:gateway:temporal:personal:pratibimba-abcd1234:orientation"
     );
     assert_eq!(
         value["spacetimedb"]["kairosProjectionTable"],
@@ -136,10 +158,31 @@ fn cli_temporal_context_resolves_day_now_history_and_agent_orientation() {
     assert!(value["now"]["wikilink"].as_str().unwrap().contains(
         "[[Empty/Present/07-05-2026/session-temporal-main/now|NOW session-temporal-main]]"
     ));
-    assert!(value["history"]["archivePath"]
-        .as_str()
-        .unwrap()
-        .contains("Pratibimba/Self/Action/History/2026/05/W19/07"));
+    // History IS legitimately nested (`{YYYY}/{MM}/W{week}/{DD}`) — only Present
+    // is flat. What changed is how the day id READS: it is MONTH-FIRST
+    // (`vault::paths::DAY_ID_FORMAT` = "%m-%d-%Y", CHARTER:28, ratified
+    // 2026-07-02), so the fixture day `07-05-2026` is 5 July 2026 and archives
+    // under `2026/07/W27/05`. The old expectation `2026/05/W19/07` is the same
+    // id read day-first as 7 May 2026 — the pre-consolidation law.
+    // W27: `temporal_context::iso_week_number` = ((ordinal + 6) / 7).max(1),
+    // and 5 July 2026 is ordinal 186 (2026 is not a leap year) → 192 / 7 = 27.
+    let expected_archive_segment = {
+        let day = epi_logos::vault::paths::parse_day_id(&day_id).expect("canonical day id parses");
+        assert_eq!(
+            day,
+            chrono::NaiveDate::from_ymd_opt(2026, 7, 5).unwrap(),
+            "the canonical parser must read the fixture day id month-first"
+        );
+        "Pratibimba/Self/Action/History/2026/07/W27/05"
+    };
+    assert!(
+        value["history"]["archivePath"]
+            .as_str()
+            .unwrap()
+            .contains(expected_archive_segment),
+        "archivePath {} must nest the month-first day under History",
+        value["history"]["archivePath"]
+    );
     assert!(value["now"]["content"]
         .as_str()
         .unwrap()
@@ -151,6 +194,36 @@ async fn gateway_rpc_temporal_context_is_available_to_agent_surfaces() {
     let (env, day_id, session_id) = env_with_now_file();
     let mut client = TestGatewayClient::connect(env, 18794).await;
     client.request("connect", json!({})).await.unwrap();
+    client
+        .request(
+            "s4'.psyche.update",
+            json!({
+                "sessionKey": "agent:main:main",
+                "patch": {
+                    "renderer": {
+                        "activeBlockIds": ["block:review-item:44"],
+                        "currentSelection": "block:review-item:44",
+                        "pendingVerdict": Value::Null,
+                        "appliedOperations": [],
+                        "blocks": [{
+                            "id": "block:review-item:44",
+                            "type": "review-item",
+                            "ctx": {"cf": "(0/1/2)", "ct": "CT2", "cp": "4.2"},
+                            "coordinate": "M5'",
+                            "privacyClass": "protected",
+                            "provenance": {
+                                "kind": "evidence-envelope",
+                                "handle": "review-44"
+                            },
+                            "data": {"title": "Live transport"},
+                            "affordances": ["verdict", "annotate"]
+                        }]
+                    }
+                }
+            }),
+        )
+        .await
+        .unwrap();
 
     let value = client
         .request(
@@ -168,17 +241,106 @@ async fn gateway_rpc_temporal_context_is_available_to_agent_surfaces() {
     assert_eq!(value["session"]["sessionId"], session_id);
     assert_eq!(
         value["redis"]["agentOrientationKey"],
-        "s3:gateway:temporal:agent:epii:session:session-temporal-main:orientation"
+        "cache:hot:s3:gateway:temporal:agent:epii:session:session-temporal-main:orientation"
     );
     assert_eq!(value["graphiti"]["runtimeOwner"], "S3'");
     assert_eq!(value["graphiti"]["invocationOwner"], "S5/S5'");
     assert_eq!(value["kairos"]["available"], true);
     assert_eq!(value["pratibimba"]["stewardshipOwner"], "S5'");
     assert_safe_kernel_projection(&value);
+    assert_eq!(value["blocks"]["transport"], "day-now-runtime");
+    assert_eq!(value["blocks"]["source"], "s4'.psyche.state.renderer");
+    assert_eq!(value["blocks"]["activeBlockIds"][0], "block:review-item:44");
+    assert_eq!(value["blocks"]["items"][0]["type"], "review-item");
+    assert_eq!(
+        value["blocks"]["items"][0]["data"]["title"],
+        "Live transport"
+    );
+    assert_eq!(
+        value["redis"]["blocksKey"],
+        "cache:hot:s3:gateway:temporal:session:session-temporal-main:blocks"
+    );
+}
+
+#[test]
+fn temporal_context_exposes_terminal_metadata_and_redis_payload_without_pane_body() {
+    let (env, _, session_id) = env_with_now_file();
+    let _guard = env.apply_to_process();
+    let gate_root = env.home.join(".epi").join("gate");
+    let store = SessionStore::new(&gate_root).unwrap();
+    let lease_expires_at_ms = live_lease_expires_at_ms();
+    store
+        .patch(
+            "agent:main:main",
+            SessionPatch {
+                terminal_binding: Some(Some(TerminalBinding {
+                    terminal_identifier: Some("tmux:session-temporal-main:%7".to_owned()),
+                    session_anchor: Some("session-temporal-main".to_owned()),
+                    tmux_pane_id: Some("%7".to_owned()),
+                    attached_session_key: Some("agent:main:main".to_owned()),
+                    terminal_status: Some(TerminalStatus::Attached),
+                    lease: Some(TerminalLease {
+                        lease_owner: Some("pi.anima".to_owned()),
+                        lease_purpose: Some("interactive-session".to_owned()),
+                        lease_expires_at_ms: Some(lease_expires_at_ms),
+                    }),
+                    capture_policy: Some(TerminalCapturePolicy {
+                        mode: TerminalCaptureMode::Stream,
+                        max_lines: Some(40),
+                        redaction_policy: Some("test-redactor".to_owned()),
+                    }),
+                })),
+                diagnostics: Some(vec![json!({
+                    "message": "terminal body fixture must stay out of Redis",
+                    "rawPaneBody": "SECRET_PANE_BODY_SHOULD_NOT_BE_CACHED"
+                })]),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+
+    let context =
+        epi_logos::gate::temporal::context_value(&gate_root, &store, "agent:main:main", "anima")
+            .unwrap();
+    let metadata_key =
+        format!("cache:hot:s3:gateway:temporal:session:{session_id}:terminal:metadata");
+    let capture_handle =
+        format!("s3:gateway:temporal:session:{session_id}:terminal:capture-handle");
+
+    assert_eq!(context["terminal"]["terminalBacked"], true);
+    assert_eq!(context["terminal"]["provider"], "tmux");
+    assert_eq!(context["terminal"]["status"], "attached");
+    assert_eq!(context["terminal"]["redisMetadataKey"], metadata_key);
+    assert_eq!(context["terminal"]["captureHandleRef"], capture_handle);
+    assert_eq!(context["redis"]["terminalMetadataKey"], metadata_key);
+    assert_eq!(context["redis"]["terminalCaptureHandleRef"], capture_handle);
+    assert_eq!(context["terminal"]["rawPaneBodyIncluded"], false);
+
+    let redis_payload = epi_logos::gate::temporal::terminal_redis_payload_from_context(&context)
+        .expect("terminal metadata should produce a Redis payload");
+    assert_eq!(redis_payload["sessionKey"], "agent:main:main");
+    assert_eq!(redis_payload["provider"], "tmux");
+    assert_eq!(redis_payload["status"], "attached");
+    assert_eq!(
+        redis_payload["leaseExpiresAtMs"].as_u64(),
+        Some(u64::try_from(lease_expires_at_ms).expect("lease expiry fits in u64"))
+    );
+    assert_eq!(redis_payload["captureHandleRef"], capture_handle);
+    assert_eq!(redis_payload["rawPaneBodyStored"], false);
+    assert!(
+        redis_payload.get("tmuxPaneId").is_none(),
+        "Redis terminal metadata must not store direct pane authority"
+    );
+    assert!(
+        !redis_payload
+            .to_string()
+            .contains("SECRET_PANE_BODY_SHOULD_NOT_BE_CACHED"),
+        "Redis terminal metadata must never contain raw pane bodies"
+    );
 }
 
 #[tokio::test]
-#[ignore] // requires Docker: docker compose -f docker-compose.epi-s2.yml up -d redis
+#[ignore] // requires the live Redis + Neo4j services from docker-compose.epi-s2.yml
 async fn live_redis_temporal_context_hydration_uses_s3_namespace() {
     let (env, _, session_id) = env_with_now_file();
     let mut client = TestGatewayClient::connect(env, 18794).await;
@@ -197,11 +359,24 @@ async fn live_redis_temporal_context_hydration_uses_s3_namespace() {
         .unwrap();
 
     assert_eq!(value["redis"]["hydrated"], true);
+    let graph = epi_s2_graph_services::Neo4jClient::connect(
+        &epi_s2_graph_services::Neo4jConfig::from_env(),
+    )
+    .unwrap();
+    let graph_meta = epi_s2_graph_services::read_graph_meta(&graph)
+        .await
+        .unwrap()
+        .expect("live graph must carry GraphMeta");
+    assert_eq!(
+        value["kernel"]["graphRevision"].as_i64(),
+        Some(graph_meta.graph_revision),
+        "temporal hydration must stamp the actual S2 GraphMeta revision"
+    );
     let key = value["redis"]["sessionNowKey"]
         .as_str()
         .unwrap()
         .to_string();
-    assert!(key.starts_with("s3:gateway:temporal:session:"));
+    assert!(key.starts_with("cache:hot:s3:gateway:temporal:session:"));
     assert!(key.contains(&session_id));
 
     let redis_uri =
@@ -258,7 +433,11 @@ fn assert_safe_kernel_projection(value: &serde_json::Value) {
     assert!(profile["chromatic"]["mirrorNote"].as_str().unwrap().len() > 0);
     assert_eq!(profile["profileSchemaVersion"], 1);
     assert_eq!(profile["binary"], profile["mahamaya"]);
-    assert_eq!(profile["binary"]["transcriptionState"], "provisional-gap");
+    assert!(
+        ["compressed-nonexact-round-trip", "round-trip-anchor"]
+            .contains(&profile["binary"]["transcriptionState"].as_str().unwrap()),
+        "live kernel projection must expose a recognized Mahamaya transcription state"
+    );
     assert!(
         value["kernel"].get("bioquaternion").is_none(),
         "gateway temporal context must not publish protected bioquaternion detail"

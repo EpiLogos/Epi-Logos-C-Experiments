@@ -1,0 +1,36 @@
+{
+  "runId": "20260625T083414Z-47-T47.2",
+  "taskId": "47.T47.2",
+  "startedAt": "2026-06-25T08:34:14.335Z",
+  "owner": "codex-m-dev-47-t47-2-chronos-anima",
+  "leaseExpiresAt": "2026-06-25T10:34:14.335Z",
+  "worktree": null,
+  "task": {
+    "id": "47.T47.2",
+    "trackId": "47",
+    "tranche": "T47.2",
+    "title": "Chronos fire-job to Anima dispatch",
+    "effort": null,
+    "file": "47-autonomous-loop-scheduling.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/47-autonomous-loop-scheduling.md",
+    "dependsOn": [
+      "47.T47.1"
+    ],
+    "writeScopes": [
+      "Body/S/S4/ta-onta/S4-3p-chronos/extension.ts",
+      "Body/S/S4/ta-onta/S4-4p-anima/extension/dispatch.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

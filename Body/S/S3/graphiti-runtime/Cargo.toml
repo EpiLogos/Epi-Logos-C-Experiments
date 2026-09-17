@@ -5,13 +5,17 @@ edition = "2021"
 description = "S3 Graphiti runtime adapter contracts and compatibility HTTP client"
 license = "MIT OR Apache-2.0"
 
+[features]
+default = ["native_library_client", "http_compatibility_client"]
+native_library_client = []
+http_compatibility_client = []
+
 [lib]
 name = "epi_s3_graphiti_runtime"
 path = "src/lib.rs"
 
 [dependencies]
 chrono = { version = "0.4", features = ["serde"] }
-epi-s3-gateway-contract = { path = "../gateway-contract" }
 portal-core = { path = "../../S0/portal-core" }
 reqwest = { version = "0.12", features = ["json"] }
 serde = { version = "1", features = ["derive"] }

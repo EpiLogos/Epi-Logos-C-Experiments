@@ -16,15 +16,18 @@ fn flow_api_envelope_and_ts_contract_name_kernel_temporal_projection() {
         root.join("Idea/Bimba/Seeds/S/FLOW-2026-04-22-ENVELOPE-FIELD-SCHEMA.md"),
     )
     .expect("envelope schema should be readable");
-    let api =
-        fs::read_to_string(root.join("Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md"))
-            .expect("PI agent API should be readable");
+    let api = fs::read_to_string(
+        root.join("Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-24-PI-AGENT-API-v0.1.md"),
+    )
+    .expect("PI agent API should be readable");
     let ts = fs::read_to_string(
         root.join("Idea/Bimba/Seeds/S/S4/S4'/FLOW-2026-04-25-TS-INTERFACE-DEFINITIONS.md"),
     )
     .expect("TS interface definitions should be readable");
-    let tauri_ts = fs::read_to_string(root.join("vendor/legacy/epi-tauri/src/services/types.ts"))
-        .expect("Tauri TS types should be readable");
+    // The legacy epi-tauri carrier is git-history-only (Body/M/AGENTS.md,
+    // DR-FACE-4); the living projection mirror is portal-core kernel.rs.
+    let kernel_rs = fs::read_to_string(root.join("Body/S/S0/portal-core/src/kernel.rs"))
+        .expect("portal-core kernel projection source should be readable");
 
     for expected in [
         "c_0_kernel_projection",
@@ -59,14 +62,13 @@ fn flow_api_envelope_and_ts_contract_name_kernel_temporal_projection() {
     }
 
     for expected in [
-        "export interface KernelTemporalProjection",
-        "coordinateOwner: 'S0/QL-meta'",
-        "privacy: 'safe-public-current-kernel-tick'",
-        "kernel: KernelTemporalProjection | null",
+        "pub struct KernelTemporalProjection",
+        "safe-public-current-kernel-tick",
+        "pub coordinate_owner: String",
     ] {
         assert!(
-            tauri_ts.contains(expected),
-            "Tauri TS type mirror should declare {expected}"
+            kernel_rs.contains(expected),
+            "portal-core kernel projection mirror should declare {expected}"
         );
     }
 }

@@ -96,6 +96,16 @@
           "degraded_but_readable",
           "ready_public_current"
         ]
+      },
+      {
+        "name": "M2CymaticTextureContribution",
+        "purpose": "M2 data-shape contribution consumed by plugin-integrated-1-2-3 to texture the M1 K2 torus surface; M2 contributes data only and never imports the renderer engine.",
+        "module": "Body/M/epi-theia/shared/m2-cymatic-texture-contribution.ts",
+        "runtime_import": "@pratibimba/m2-parashakti/common/composition",
+        "producer": "Body/M/epi-theia/extensions/m2-parashakti/src/common/composition.ts",
+        "consumer": "Body/M/epi-theia/extensions/plugin-integrated-1-2-3/src/browser/cosmic-engine-composition.tsx",
+        "forbidden_direct_consumer_glob": "Body/M/epi-theia/extensions/m2-parashakti/src/browser/**",
+        "required_fields": ["chladniField", "colourBinary", "heatmap72", "surfaceVariant", "activeCellIndex", "kleinFlipPhase", "provenance"]
       }
     ]
   },
@@ -136,11 +146,20 @@
         {"field": "S2.GDS_overlay", "owner_track": "02", "fallback_readiness": "s2_graph_blocked", "blocker_id": "IOD-07"},
         {"field": "S3.world_clock + pratibimba_presence stream", "owner_track": "03", "fallback_readiness": "s3_subscription_blocked"},
         {"field": "S5.review_alerts for {1,2,3}-affecting candidates", "owner_track": "04", "fallback_readiness": "s5_review_blocked"},
+        {"field": "M2CymaticTextureContribution.{chladniField,colourBinary,heatmap72,surfaceVariant,activeCellIndex,kleinFlipPhase,provenance}", "owner_track": "23.12", "fallback_readiness": "authority_payload_missing", "consumer": "plugin-integrated-1-2-3", "producer": "@pratibimba/m2-parashakti/common/composition"},
         {"field": "M1/M2/M3 individual extension contributions (Track 07 outputs)", "owner_track": "07", "fallback_readiness": "degraded_but_readable", "out_of_scope_for_08": true}
       ],
       "explicit_out_of_scope_for_08": ["per-extension UI internals", "single-extension command palette entries", "individual readiness micro-states"]
     },
     "plugin-integrated-4-5-0": {
+      "editorAreaComposition": {
+        "rule": "Per Track 15 §personal-side + CR 15.4: the personal-side editor area is ONE editor-area composition with three composition-member slots, NOT three side-by-side panels. Slot widgets mount inside the shared editor-area surface (compositionMode=editor-area-inline); juxtaposition is forbidden.",
+        "slots": [
+          {"id": "m4.nara.journal", "role": "journal", "position": "left", "contributor": "m4-nara", "added_by": "Track 15"},
+          {"id": "m0.anuttara.cymaticField", "role": "personal-cymatic-field", "position": "center", "contributor": "m0-anuttara", "added_by": "Track 15"},
+          {"id": "m5.epii.recognitionLayer", "role": "mahamaya-recognition-layer", "position": "right", "contributor": "m5-epii", "added_by": "26.11", "sources": "WC-M5-11", "gates": "10.M5", "cr": "15.4", "file": "Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src/browser/recognition-layer-slot.tsx", "consumes": ["CanonRecognitionAnchor", "Q_composed", "codon_rotation_projection@personal-scale", "KleinV4Square@26.1"], "crossLinks": ["26.13", "19.7"]}
+        ]
+      },
       "needs": [
         {"field": "MathemeHarmonicProfile.{public-current fields only}", "owner_track": "01", "fallback_readiness": "profile_missing_field"},
         {"field": "M0 prior-ground graph (Anuttara graph view, namespace=bimba)", "owner_track": "02 + 07.M0", "fallback_readiness": "s2_graph_blocked"},
@@ -158,6 +177,7 @@
     "Both integrated plugins consume S0/S2/S3/S5 only through the same shared KernelBridgeAPI adapter declared in 07-t0-extension-contract-preflight.json#sharedBridgeAdapter — Track 08 does NOT introduce a parallel bridge.",
     "No integrated plugin imports raw S0/S2/S3/S5/SpaceTimeDB/neo4j/redis/portal-core/epii-review-core modules directly — same forbidden-import set as 07.T0.",
     "Composition orchestration lives in Body/M/epi-theia/shared (favored over per-plugin-package or ide-shell ownership) to avoid divergent layout arbitration — see track-08.composition-ownership open decision.",
+    "M2CymaticTextureContribution is a shared data-shape: plugin-integrated-1-2-3 consumes it from @pratibimba/m2-parashakti/common/composition; standalone M2 browser widgets must not consume it directly; M2 must not import Bevy/wgpu renderer modules.",
     "M4 protected-local body NEVER enters the integrated 4/5/0 composition — only opaque Graphiti handles + S5 review evidence.",
     "Alpha 137 = 64 + 72 + 1 teaching belongs to the integrated 1-2-3 cosmic spine (M1/M2/M3), NOT to plugin-integrated-4-5-0 — M0 remains prior ground.",
     "Tracks 07-owned per-extension internals are explicitly NOT contracted by 08.T0 — Track 08 only contracts the composition seam."

@@ -17,7 +17,7 @@ The public square where many voices can be held together without erasing their d
 Agora is not mere collation. It is the psyche-like gathering face of Aletheia: retrieval before coordination, plurality before consensus, ocean before the drops forget where they rest. Its work is to let many lines of inquiry become one legible field.
 
 ## 3. Frame Contract
-CF: `CF4a (4/5/0)` for retrieval and `CF4b (4.0/1-4.4/5)` for coordination.
+CF: `CF4a (4.5/0)` for retrieval and `CF4b (4.0/1-4.4/5)` for coordination.
 CPF: mostly mechanistic, but can surface dialogically for explicit alignment choices.
 CT: `CT4` contextual and `CT5` aggregative synthesis.
 CP: 4.4 context with a bridge into 4.5 integration.

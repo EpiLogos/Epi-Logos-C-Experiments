@@ -199,7 +199,9 @@ mod tests {
         ChakralActivation, CodonClockCell, LensWeights12, MentalPoleState, NaraArticulation,
         PhysicalPoleState, TorusPoint, VerifierOutcome, WindingNumber,
     };
-    use portal_core::{KernelElement, KernelProjection};
+    use portal_core::{
+        E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs, KernelElement, KernelProjection,
+    };
 
     fn projection() -> KernelProjection {
         KernelProjection::from_clock_state(
@@ -208,8 +210,9 @@ mod tests {
             [1.0, 0.0, 0.0, 0.0],
             [0.5, 0.5, 0.5, 0.5],
             None,
-            None,
-            0.0,
+            &E4PersonalInputs::default(),
+            &E5HarmonicInputs::default(),
+            &E6VerifierInputs::default(),
         )
     }
 
@@ -263,8 +266,9 @@ mod tests {
             BioQuaternionState::new([1.0, 0.0, 0.0, 0.0], [1.0, 0.0, 0.0, 0.0]),
             EnergyDecomposition {
                 bimba_pratibimba_energy: 0.0,
-                lens_energy: 0.0,
-                r_energy: 0.0,
+                e_4_personal_energy: 0.0,
+                e_5_harmonic_energy: 0.0,
+                e_6_verifier_energy: 0.0,
                 total_energy: 0.0,
             },
         )

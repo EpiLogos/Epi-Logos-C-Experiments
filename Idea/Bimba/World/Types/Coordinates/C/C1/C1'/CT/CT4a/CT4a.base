@@ -1,0 +1,47 @@
+coordinate: "CT4a"
+c_4_artifact_role: "base-view"
+c_1_ct_type: "CT4a"
+c_5_reflects: "[[CT4a]]"
+c_0_source_coordinates: ["[[CT4a]]", "[[CT]]", "[[C5]]"]
+filters:
+  or:
+    - 'c_1_ct_type == "CT4a"'
+    - 'ctx_type == "CT4a"'
+views:
+  - type: table
+    name: "Day preview shelf"
+    group_by: c_4_artifact_role
+    order:
+      - coordinate
+      - c_4_artifact_role
+      - c_3_ctx_frame
+      - c_3_created_at
+      - c_3_updated_at
+      - c_5_crystallisation_state
+      - c_0_source_coordinates
+      - p4_temporals
+      - p4_files_touched
+      - p4_concepts_engaged
+      - p5_learnings
+      - p5_synthesis
+      - p0_grounds
+    sort:
+      - { property: c_3_updated_at, direction: DESC }
+      - { property: c_3_created_at, direction: DESC }
+  - type: table
+    name: "Night' previews awaiting return"
+    filters:
+      or:
+        - 'c_5_reflection_complete == false'
+        - 'c_5_crystallisation_state == "active-reflection"'
+        - 'c_5_crystallisation_state == "present-design"'
+        - 'c_5_crystallisation_state == "present-plan"'
+    group_by: c_5_crystallisation_state
+    order:
+      - coordinate
+      - c_4_artifact_role
+      - c_3_ctx_frame
+      - c_5_crystallisation_state
+      - p4_concepts_engaged
+      - p5_synthesis
+      - p0_grounds

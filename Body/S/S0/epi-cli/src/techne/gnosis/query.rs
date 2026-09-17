@@ -173,12 +173,23 @@ pub fn query_gnostic(
     config: &GnosisConfig,
     question: &str,
     mode: Option<&str>,
+    top_k: Option<u32>,
+    notebook: Option<&str>,
 ) -> Result<String, String> {
     let mut cmd = std::process::Command::new(&config.python_bin);
+    for (key, value) in super::config::gnostic_bridge_env() {
+        cmd.env(key, value);
+    }
     cmd.arg("query").arg(question);
 
     if let Some(m) = mode {
         cmd.arg("--mode").arg(m);
+    }
+    if let Some(k) = top_k {
+        cmd.arg("--top-k").arg(k.to_string());
+    }
+    if let Some(pool) = notebook {
+        cmd.arg("--notebook").arg(pool);
     }
 
     let output = cmd
@@ -188,6 +199,30 @@ pub fn query_gnostic(
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr);
         return Err(format!("epi-gnostic query failed: {stderr}"));
+    }
+
+    Ok(String::from_utf8_lossy(&output.stdout).to_string())
+}
+
+/// 12.T12.2 CLI parity: shell an arbitrary epi-gnostic subcommand (the same
+/// production Python the gateway routes dispatch to — ONE substrate, no
+/// duplicated logic host-side).
+pub fn run_gnostic_passthrough(config: &GnosisConfig, args: &[&str]) -> Result<String, String> {
+    let mut cmd = std::process::Command::new(&config.python_bin);
+    cmd.args(args);
+    for (key, value) in super::config::gnostic_bridge_env() {
+        cmd.env(key, value);
+    }
+    let output = cmd
+        .output()
+        .map_err(|e| format!("Failed to run epi-gnostic: {e}"))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(format!(
+            "epi-gnostic {} failed: {stderr}",
+            args.first().unwrap_or(&"")
+        ));
     }
 
     Ok(String::from_utf8_lossy(&output.stdout).to_string())

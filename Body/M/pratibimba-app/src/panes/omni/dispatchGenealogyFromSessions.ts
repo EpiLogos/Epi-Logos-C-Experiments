@@ -1,0 +1,185 @@
+/**
+ * Coordinate: M' `/` membrane (dispatch-genealogy live feed — Track 27.T27.3)
+ * Residency: Body/M/pratibimba-app/src/panes/omni
+ * Position (#n): the wire->record producer dispatchGenealogy.ts declares 27.3 owns.
+ * Actualises: the ONE allowed agentic path — Pi -> subagent — folded from REAL
+ *   session lineage. The gateway (Body/S/S3/gateway/src/subagents.rs) keys
+ *   subagent sessions `agent:<parent>:subagent:<child>` and records `spawnedBy`
+ *   + `subagent_lineage` (one level: subagents cannot spawn subagents). This
+ *   fold projects those real sessions into `DispatchGenealogyRecord`s so the
+ *   Dispatch tab renders the genealogy tree — subagents nested UNDER their
+ *   dispatcher (DR-B-3), never top-level peers. Subagents are dispatched
+ *   through `s4'.mediation.route` (the only allowed path); that IS their route
+ *   method. Nothing is synthesised: unknown timing/status default honestly and
+ *   evidence/source refs stay null until a real per-invocation feed lands.
+ * Public surface: dispatchGenealogyFromSessions.
+ * Does NOT own: the dataset foldings (dispatchGenealogy.ts), the tab body
+ *   (DispatchTracePanel), or the gateway session authority (S3 SessionStore).
+ */
+
+import type { SessionRecord } from '../../bridge/sessionClient';
+import type { ActorIdentity, ActorRole, AletheiaFacetReturn, RunStatus } from './omnipanelRuntime';
+import type { AletheiaSubagentId, PsycheFacet } from './evidenceShapes';
+import type { DispatchGenealogyRecord } from './dispatchGenealogy';
+import { ALETHEIA_SUBAGENT_IDS } from './aletheiaSubagents';
+import { resolveDispatchIdentity } from './psycheFacet';
+
+const RUN_STATUSES: ReadonlySet<RunStatus> = new Set([
+    'pending',
+    'running',
+    'succeeded',
+    'failed',
+    'refused'
+]);
+
+/** The canonical s4'.mediation.route method — the ONLY allowed dispatch path. */
+const MEDIATION_ROUTE = "s4'.mediation.route";
+
+/**
+ * The six Aletheia techne-guardian subagents (S4-5'), PROJECTED from the one
+ * register rather than re-enumerated — 26.T26.9. A seventh guardian added to
+ * `aletheiaSubagents.ts` is recognised here without a second edit, and a local
+ * list can no longer drift out of agreement with what the surfaces render.
+ */
+const ALETHEIA_SUBAGENTS: ReadonlySet<string> = new Set<string>(ALETHEIA_SUBAGENT_IDS);
+
+function readString(record: SessionRecord, keys: readonly string[]): string | null {
+    for (const key of keys) {
+        const value = record[key];
+        if (typeof value === 'string' && value.length > 0) {
+            return value;
+        }
+    }
+    return null;
+}
+
+function readNumber(record: SessionRecord, keys: readonly string[]): number | null {
+    for (const key of keys) {
+        const value = record[key];
+        if (typeof value === 'number' && Number.isFinite(value)) {
+            return value;
+        }
+    }
+    return null;
+}
+
+/**
+ * Parse `agent:<id>[:subagent:<child>]` into the actor, its subagent id, and
+ * the psyche facet the dispatch speaks in.
+ *
+ * DR-WC-M5-3 (26.T26.8): the raw agent id is NOT the actor. It is resolved
+ * through `resolveDispatchIdentity` first, so a session the gateway keys
+ * `agent:sophia:*` folds to the **Pi harness row carrying a Sophia badge** —
+ * the decision's own words — instead of minting the peer actor row the decision
+ * forbids. Nothing is dropped: the register is preserved as the facet.
+ */
+function parseSessionKey(sessionKey: string): {
+    actor: ActorIdentity;
+    subagentId: string | null;
+    psycheFacet?: PsycheFacet;
+} {
+    const parts = sessionKey.split(':');
+    const subagentAt = parts.indexOf('subagent');
+    if (subagentAt !== -1 && subagentAt + 1 < parts.length) {
+        const child = parts[subagentAt + 1];
+        return { actor: { actor: child, role: 'subagent' }, subagentId: child };
+    }
+    const agentId = parts[0] === 'agent' && parts.length > 1 ? parts[1] : parts[0] || sessionKey;
+    const identity = resolveDispatchIdentity(agentId);
+    const role: ActorRole = identity.actor === 'anima' ? 'anima' : 'pi';
+    return {
+        actor: { actor: identity.actor, role },
+        subagentId: null,
+        psycheFacet: identity.psycheFacet
+    };
+}
+
+function readStatus(record: SessionRecord, endedAtMs: number | null): RunStatus {
+    const raw = readString(record, ['status', 'state', 'lifecycle']);
+    if (raw && RUN_STATUSES.has(raw as RunStatus)) {
+        return raw as RunStatus;
+    }
+    // No real status field: a session with a close timestamp settled; an open
+    // one is running. Never fabricate a richer verdict than the data supports.
+    return endedAtMs === null ? 'running' : 'succeeded';
+}
+
+/**
+ * An Aletheia veto (12.19), read ONLY from real record fields — never faked.
+ *
+ * 26.T26.9: a veto belongs to a FACET, per the substrate contract
+ * (`gateway-contract/src/aletheia.rs::FacetReturn::Veto { facet, .. }`). So this
+ * fold refuses to mint one for a session that is not an Aletheia subagent
+ * session: an anonymous veto is exactly what produced the anonymous banner this
+ * tranche removed. The seam is registered honestly — `vetoReason` /
+ * `veto_reason` occur nowhere in `Body/S`, so no live record carries one today
+ * (`aletheiaSubagents.ts::ALETHEIA_SURFACING_SEAMS` `facet-return-feed`).
+ */
+function readFacetReturn(
+    record: SessionRecord,
+    facet: AletheiaSubagentId | undefined
+): AletheiaFacetReturn | undefined {
+    const reason = readString(record, ['vetoReason', 'veto_reason']);
+    if (reason && facet) {
+        return {
+            kind: 'veto',
+            facet,
+            reason,
+            whatIsMissed: readString(record, ['vetoMissed', 'veto_missed']) ?? ''
+        };
+    }
+    return undefined;
+}
+
+/**
+ * Fold real `sessions.list` records into the Pi -> subagent dispatch genealogy.
+ * A subagent session (`spawnedBy` present, or an `:subagent:` key) nests under
+ * its dispatcher; a root agent session (Pi/Anima) has `parentId: null`. Orphans
+ * (parent absent from the list) keep their `parentId` and surface as visible
+ * roots via `foldGenealogyTree` rather than being dropped.
+ */
+export function dispatchGenealogyFromSessions(
+    sessions: readonly SessionRecord[]
+): DispatchGenealogyRecord[] {
+    return sessions.map(record => {
+        const { actor, subagentId, psycheFacet } = parseSessionKey(record.sessionKey);
+        const parentId = readString(record, ['spawnedBy', 'spawned_by', 'parent']);
+        const capability = subagentId ? `s4.subagent.${subagentId}` : null;
+        const startedAtMs =
+            readNumber(record, ['startedAtMs', 'createdAtMs', 'created_at_ms', 'openedAtMs']) ?? 0;
+        const endedAtMs = readNumber(record, ['endedAtMs', 'closedAtMs', 'closed_at_ms']);
+        const aletheiaSubagent =
+            subagentId && ALETHEIA_SUBAGENTS.has(subagentId)
+                ? (subagentId as AletheiaSubagentId)
+                : undefined;
+        return {
+            id: record.sessionKey,
+            parentId,
+            actor,
+            route: {
+                // Subagents ride s4'.mediation.route (the only allowed path);
+                // root agents surface their own session identity.
+                method: subagentId ? MEDIATION_ROUTE : record.sessionKey,
+                capability
+            },
+            status: readStatus(record, endedAtMs),
+            startedAtMs,
+            endedAtMs,
+            // The session exists => its spawn passed the gate (subagents.rs
+            // validates spawnedBy before the session materialises).
+            gate: { capability, allowed: true },
+            evidenceRef: readString(record, ['evidenceRef', 'evidence_ref']),
+            sourceRef: readString(record, ['sourceRef', 'source_ref']),
+            // 27.3 enrichment from real fields only. The facet comes from the
+            // SESSION's own identity (DR-WC-M5-3 resolution above), not from the
+            // resolved actor — reading it back off `actor.actor` would lose the
+            // register the moment the row collapses onto the Pi harness.
+            psycheFacet,
+            aletheiaSubagent,
+            aletheiaCrystallisationIntent:
+                readString(record, ['crystallisationIntent', 'crystallisation_intent']) ?? undefined,
+            aletheiaFacetReturn: readFacetReturn(record, aletheiaSubagent),
+            tickAtInvoke: readNumber(record, ['tickAtInvoke', 'tick_at_invoke']) ?? undefined
+        };
+    });
+}

@@ -12,6 +12,8 @@ c_0_source_coordinates:
 
 # L' — Night Lens Family MOC
 
+The L' lenses are the **retrospective face** of [[L0]]–[[L5]]. Day and Night name the atmosphere of two arcs; prospective and retrospective name the capacity itself — the two **senses of sight** held on every point of the Klein surface at once. Read prospectively, a lens looks forward into what is forming; read retrospectively, the same lens looks backward across what has gathered. The `#` inversion operator is the sense-switch on a single point — not a jump between zones — and the Möbius pair invariant (L0↔L5', L1↔L4', L2↔L3') is the two senses of sight on each Klein V4 square axis. Per the prospective/retrospective canvas spec ([[2026-06-04-prospective-retrospective-canvas-spec]] §1) the arcs are co-equal readings of one surface, not sequential zones.
+
 The Night arc of the L-hexad. Each L' is the Klein-twist refraction of its Day partner across the Möbius pair-invariant Ln ↔ L(5-n)':
 
 - [[L0']] — Archetypal-Numerical (refracts [[P0']])

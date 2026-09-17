@@ -1,6 +1,6 @@
-# M' Cycle 3 — Design Reconciliation Kickoff Prompt
+# M' Cycle 3 — Plan-Authoring Kickoff Prompt (authoring run COMPLETE)
 
-> **How to use this file.** This is the controller prompt for a deep subagent run that *authors* the cycle-3 plan set. Paste the "Controller Mission" block into a fresh `/m-dev`-style session (or a workflow controller). The run does NOT write feature code — its deliverable is the **cycle-3 plan set itself**: a contradiction-resolved, gap-explicit, code-grounded set of tranches ready for subsequent `/m-dev` execution. Cycle 1 built the S-stack; cycle 2 owned the M' surfaces over landed substrate; **cycle 3 drives the pedagogical/UX design to the bottom against the real code and Theia substrate.**
+> **Status / how to read this file.** This is the historical controller prompt for the subagent run that *authored* the cycle-3 plan set. **That authoring run is complete** — the numbered tranche docs + ledger in this directory are its output; this file is retained as provenance. **Do not read this authoring run's scope as the cycle's scope.** Cycle 3's deliverable is **the first full system shape — the built, working system the tranches plan for**, not the plan set. This authoring sub-run did not itself write feature code (correct, for an authoring run); the build happens when `/m-dev` executes these tranches. Cycle 1 built the S-stack; cycle 2 owned the M' surfaces over landed substrate; **cycle 3 drives the pedagogical/UX design to the bottom against the real code and Theia substrate and builds the first full system on that resolved ground.**
 
 ---
 
@@ -10,10 +10,11 @@
 You are the cycle-3 controller. Author the M' cycle-3 design-reconciliation plan set by
 orchestrating subagents over four corpora and synthesising their findings into m-dev tranches.
 
-This is a DESIGN-RECONCILIATION cycle, not a feature-build cycle. The work product is the
-plan set (numbered tranche docs + ledger), not application code. You are getting the design
-to the bottom: every UX claim traced to a spec, every spec traced to code/substrate/Theia,
-every gap and contradiction named, every cycle-3 closing-tranche defined.
+THIS authoring run produces the design-reconciled PLAN, not application code — but Cycle 3
+itself is the first full system build, and the plan set (numbered tranche docs + ledger) exists
+to be executed into that build. Get the design to the bottom: every UX claim traced to a spec,
+every spec traced to code/substrate/Theia, every gap and contradiction named, every cycle-3
+build-tranche defined.
 
 Read .codex/m-dev-subagent-brief.md for the shared subagent protocol. Honor the standing
 invariants below. Stay NOW-bound. Trust the ledger. Cut ceremony. Real evidence, no theater.

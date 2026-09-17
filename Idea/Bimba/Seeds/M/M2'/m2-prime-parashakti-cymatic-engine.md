@@ -14,7 +14,7 @@
 > - [`M2'-SPEC.md`](M2'-SPEC.md) - current domain authority: M2-1' reads the S0/M1 substrate and writes the shared 8+4 bus; M1' walks that output as melody
 > - [`ql-musical-derivation.md`](../M5'/ql-musical-derivation.md) - especially §6.5 and §6.75, the 8+4 cymatic correspondence and 12 x 7 mode-tonic landscape
 > - [`physical-pole-stack-architecture.md`](../M1'/physical-pole-stack-architecture.md) - the Tauri/Bevy/wgpu rendering substrate and Chladni equation surface
-> - [`epi-logos-kernel-spec.md`](../M0'/epi-logos-kernel-spec.md) - the bioquaternionic JEPA-EBM operator over the full matheme
+> - [`epi-logos-kernel-spec.md`](../epi-logos-kernel-spec.md) - the bioquaternionic JEPA-EBM operator over the full matheme
 > - [`M2'-SPEC.md`](M2'-SPEC.md) - current domain UI/backend contract for M2' as harmonic/correspondential profile surface
 
 > **Code anchors:** `epi-lib/include/m2.h` (72-invariant union, MEF/Tattva/Decan/Shem/Maqam/Asma/Mantra tables, DET M2->M3 projection), `epi-lib/include/m1.h` (QL processual constants inherited by M2), `epi-lib/include/m3.h` (64-codon bitboard, 40/24 codon classification, 472 rotational states), `physical-pole-stack-architecture.md` §5 (Chladni/wgpu rendering).
@@ -238,7 +238,7 @@ void m2_prime_medium_from_chakra(uint8_t chakra,
 
 1. Elemental medium constants are range-bounded and stable under repeated frame evaluation.
 2. `P-position element` and `L2' element-bearing value` remain distinct fields, matching the existing M2' domain spec.
-3. Earth remains the geocentric observer/clock anchor, not an ordinary planet row in `M2_PLANET_LUT`.
+3. `M2_PLANET_LUT[10]` is canon: Earth is the 10th planet as geocentric observer/clock centre, and the `9:8` epogdoon counts the nine non-Earth planets against eight chakral or nodal reception points.
 4. If graph-law provenance for a correspondence is absent, the medium is marked pending rather than hardcoded.
 
 ### §2.M2-3' - Harmonic-Correspondential Modulator

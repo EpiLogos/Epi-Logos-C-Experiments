@@ -1,0 +1,35 @@
+{
+  "runId": "20260618T193021Z-12-T12.29",
+  "taskId": "12.T12.29",
+  "startedAt": "2026-06-18T19:30:21.432Z",
+  "owner": "codex-m-dev-12-t12-29",
+  "leaseExpiresAt": "2026-06-18T21:30:21.432Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.29",
+    "trackId": "12",
+    "tranche": "T12.29",
+    "title": "Constitutional CT0-CT5 mapping + CF1-CF5 team-composition gates canonical",
+    "effort": null,
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.28"
+    ],
+    "writeScopes": [
+      "Body/S/S4/plugins/pleroma/capability-matrix.json"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

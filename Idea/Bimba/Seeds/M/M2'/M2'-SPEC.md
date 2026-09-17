@@ -1,7 +1,8 @@
 ---
 coordinate: "M2'"
 status: "active-domain-spec"
-updated: "2026-05-31"
+updated: "2026-07-18"
+cycle-3: reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-TAURI-PORT-SPEC]]"
@@ -40,6 +41,7 @@ Three commitments hold this domain:
 1. **[[M2']] preserves the 72-invariant.** Every M2' surface (lens material, chakra sphere, decan face, cymatic Chladni pattern) is addressable in canonical 72-space: `12 lenses × 6 positions = 36 tattvas × 2 phases = 8 choirs × 9 names = 72`. This is the **72** in the system's `137 = 64 + 72 + 1` architecture, the [[Paraśakti]] bridge between [[M1]]'s +1 parent and [[M3]]'s 64-fold binary substrate. The [[Body/S/S0/epi-lib/include/m2.h|M2 header]] and [[Body/S/S0/epi-lib/src/m2.c]] enforce this at compile time via `_Static_assert`s; M2' inherits the invariant.
 2. **M2' is the L ↔ L' meaning-translator surface.** When the walk crosses a tritone-mirror lens-pair boundary (Lens N ↔ Lens N+3, signalled by [[M1']] per [[M1'-SPEC]] §6), M2' enacts the **[[Klein bottle|Klein-bottle]] enharmonic flip**: same struck pitch, opposite emotional valence, opposite surface colour, opposite material response. This is the structural mechanism by which the instrument plays *meanings* and not just tones. See §7 below.
 3. **M2' is the bridge surface toward [[M3]]/[[M3']], but not the codon classifier.** The [[Body/S/S0/epi-lib/include/m2.h|M2 header]] defines the [[Discrete Epistemic Transform]] (DET): `M2_TO_M3_CYMATIC_PROJECTION[72]`, `transduce_vibration_to_symbol`, and the 72 → 64 epogdoon compression `72 × 8 / 9 = 64`. M2' renders the 72-correspondential profile and produces the standing-wave signature that M3/M3' projects into 64-bit codon-rotation. M2' does not classify codons; M3'/[[M3'-SPEC]] §7 owns that surface.
+4. **The Third-Spanda runtime carries M2 as a whole addressed field, not as the scalar 72.** `anuttaraPentadicTrace.thirdSpanda.m2` carries the active `address72` and the six mutually coherent `RoutingAxisViews` for MEF, tattva, decan, Shem, maqam, and DET. Every view must re-encode the same address. The adjoining epogdoon record describes that active transition; static `64+72+1` arithmetic does not replace this functional evidence.
 
 ## §1 — The Six M2-0' to M2-5' Strata (1:1 with M2 bimba)
 
@@ -59,7 +61,7 @@ Three commitments hold this domain:
 - **Element panel** distinguishing P-position element from L2' element-bearing value.
 - **Planetary/chakral/musical alignment panel** showing body/centre, element, ratio role, scale/mode colour, and canonical S2 graph-law provenance.
 - **Mode/scale panel** showing diatonic CF/VAK projection as the contextual rotation over the chromatic substrate; the (lens, mode) cell currently active is highlighted on the 12 × 7 grid.
-- **Cymatic surface** rendering Chladni standing-wave patterns from the shared M2-1' 8+4 bus: antinodal motion from `audio_octet[8]`, nodal mode-constraints from `nodal_quartet[4]`. The visible Chladni pattern is the intersection of the two streams: motion structured by stillness.
+- **Cymatic surface** rendering Chladni standing-wave patterns from the shared M2-1' 8+4 bus: antinodal motion from `audio_octet[8]`, nodal mode-constraints from `nodal_quartet[4]`. The visible Chladni pattern is the intersection of the two streams: motion structured by stillness. *Archetypal grounding (FR 2.1.10, 2026-07-19):* the 8+4 CARDINALITY is grounded in the [[M0-3]] number-dozen's hidden formula `4/(8)/3/(4)` — masculine octet (4 zero-elements + 4 Adam evens) / feminine quartet (3 Eve odds + Wholeness 9) — carried as `seatSemantics.busRole` on the [[M1-2-ANANDA-VORTEX-ARCHITECTURE|M1-2]] vortex projection (§2.1b there). Binding is by cardinality+role only; the 7+5 diatonic/silent partition of the modal resonator is a sibling, distinct cut of the same twelve — never conflate them and never bind either by pitch-class index equality.
 - **Dual cymatic registers**: the existing cosmic-facing cymatic register and the personal-Pratibimba field at `#4.4.4.4` both read the same M2-1' audio bus. The latter is rendered only inside protected M4' / Nara surfaces.
 - **L↔L' flip indicator** at Klein-crossing moments — the panel visibly inverts its surface valence when M1' signals a tritone-mirror lens transition (see §7).
 - **Meaning-packet inspector** exposing the active [[M2PrimeMeaningPacket]]: 72-address views, [[MEF]] semantic frame, elemental-medium frame, sacred-sonic frame, maqam/mode frame, cymatic signature, [[M3]] projection evidence, provenance, and pending fields. This is the canonical user/developer inspection unit named by [[m2-prime-frequency-meaning-research]].
@@ -155,7 +157,7 @@ Without §7 operative, M2' is a correspondence-lookup surface. With §7 operativ
 
 ## §8 — The Full 72-Fold Parashakti Correspondence-Tree
 
-[[M2]]'s harmonic-correspondential surface is not abstract. It carries six concrete 72-fold sub-systems already encoded in [[Body/S/S0/epi-lib/include/m2.h]] as `.rodata`. Each addresses the same 72-space via a different correspondence-axis. The integration of all six is what makes M2' a real musical-metaphysical-astrological instrument and not just a frequency renderer.
+[[M2]]'s harmonic-correspondential surface is not abstract. It carries six concrete 72-fold addressing-axes already encoded in [[Body/S/S0/epi-lib/include/m2.h]] as `.rodata`: MEF lens-position, tattva phase, decan face, Shem name, maqam mode, and DET projection. Mantra 100 and Asma'ul-Husna 99+1 are sonic overlays routed onto this field; planetary keying is read through the decan-linked `M2_PLANET_LUT[10]`. The six axes plus two overlays are what make M2' a real musical-metaphysical-astrological instrument and not just a frequency renderer.
 
 ### §8.1 The 10 Maqam Families × 72 modes
 
@@ -197,9 +199,9 @@ A parallel **24-station spiritual maqamat** system ([[M2_MAQAM_SPIRITUAL]]) carr
 
 Each Shem name carries `(choir, position, element_id, decan_link, planet_link, meaning_id)`. The 72 names cover the full 360° zodiac at 5° per name (72 × 5° = 360°). Each decan links to **2 Shem names** (the 2:1 decan-to-Shem mapping), giving the light/shadow doubled-face per decan.
 
-### §8.3 The Asma'ul-Husna 99+1 Names with 36:64 Split
+### §8.3 Sonic Overlay: The Asma'ul-Husna 99+1 Names with 36:64 Split
 
-[[M2_ASMA_LUT]] encodes the 99 divine names plus the hidden Al-Ism al-A'zham at index 99. The names partition by quality-group:
+[[M2_ASMA_LUT]] encodes the 99 divine names plus the hidden Al-Ism al-A'zham at index 99. This is a routed sonic overlay, not a seventh 72-axis and not the same register as the Shem 72 names. The names partition by quality-group:
 
 - **Jalal (Majesty)**: indices 0-32
 - **Kamal (Perfection)**: indices 33-65
@@ -219,9 +221,9 @@ ASMA_36_INTERNAL_MASK.high_64 = 0x0000000000003FFC
 
 Each name carries `(name_idx, group, index_in_group, element_id, digital_root, mirror_idx, abjad_value, meaning_id)`. The digital-root (1-9) encodes vibrational signature.
 
-### §8.4 The Mantra LUT 100 = 50 Matrika (Bimba/Descent) + 50 Malini (Pratibimba/Ascent)
+### §8.4 Sonic Overlay: The Mantra LUT 100 = 50 Matrika (Bimba/Descent) + 50 Malini (Pratibimba/Ascent)
 
-[[M2_MANTRA_LUT]] carries Sanskrit phonemic mantras with explicit frequencies spanning **144 Hz (Muladhara) to 432 Hz (Sahasrara)**:
+[[M2_MANTRA_LUT]] carries Sanskrit phonemic mantras with explicit frequencies spanning **144 Hz (Muladhara) to 432 Hz (Sahasrara)**. This is a 100-entry overlay routed onto the 72-field, not a seventh addressing-axis:
 
 **Matrika (indices 0-49, Descent/Bimba)**:
 - 16 Sanskrit vowels (Akasha element, 432→372 Hz descending)
@@ -259,9 +261,9 @@ Each mantra carries `(mantra_idx, matrika_group, element_id, phase, fundamental_
 
 The `elem_sig` byte packs `(element_id, chakra_id, phase)` per planet. **Venus carries the 9:8 epogdoon** that operates the M2→M3 transformation — Venus is the *beauty-operator* of the system, the structural compressor that bridges 72-space to 64-space through the act of aesthetic-refinement.
 
-### §8.6 Cross-Axis Resonance: How the Six Sub-Systems Speak Together
+### §8.6 Cross-Axis Resonance: How the Six Axes and Two Overlays Speak Together
 
-Every active matheme-event on [[K²]] (per [[M1'-SPEC]] §10) carries **simultaneously** addressable coordinates in all six sub-systems. A single (lens, mode) playing-state implicates:
+Every active matheme-event on [[K²]] (per [[M1'-SPEC]] §10) carries **simultaneously** addressable coordinates in all six 72-axes, with mantra and Asma routed as overlays. A single (lens, mode) playing-state implicates:
 
 ```text
 (lens, mode)                         from M1' 84-state landscape
@@ -269,10 +271,16 @@ Every active matheme-event on [[K²]] (per [[M1'-SPEC]] §10) carries **simultan
   ├─ MEF lens-position               from M2-1 12×6=72 matrix
   ├─ Tattva phase                    from M2-2 36×2=72 phase-doubled
   ├─ Decan face                      from M2-3 36×2=72 light/shadow
-  ├─ Shem name pair                  from M2-4 8 choirs × 9 names = 72
+  ├─ Shem name                       from M2-4 8 choirs × 9 names = 72
   ├─ Maqam mode                      from M2-4 10 families × varying = 72
-  ├─ Mantra entry                    from M2-4 50+50 = 100 (96 active + 4 control)
-  └─ Planetary correspondence        from M2-5 10 planet LUT
+  └─ DET projection                  from M2-5 72→64 cymatic projection
+
+  overlays:
+  ├─ Mantra entry                    from M2-4 50+50 = 100
+  └─ Asma'ul-Husna                   from M2-4 99+1, 36 internal / 64 projective
+
+  planetary key:
+  └─ Decan-linked planet             from M2-5 M2_PLANET_LUT[10]
 ```
 
 The cross-axis correspondence-tree is the **structural backbone** of the [[Ficinian-Kerykeion routing|Ficinian]] integration: when the system asks "what tonal-context inhabits the current playing-state?", the answer is a tuple drawn from all six sub-systems simultaneously, with each tuple-element grounding the others.
@@ -355,7 +363,17 @@ The active routing-state is **always visible** in the M2' surface: the user can 
 
 [[M2-5']] carries the planetary-chakral bridge where the `9:8` epogdoon is enacted as [[M2]]-[[M3]] conjugation: nine planetary bodies / rulership handles compress across eight chakral or nodal reception points, matching the [[Discrete Epistemic Transform|DET]] identity `72 × 8 / 9 = 64`. This is the same beauty-operator that lets [[Paraśakti]]'s 72-fold vibrational bridge become [[Mahāmāyā]]'s 64-fold binary substrate.
 
-Earth-as-observer-ground is therefore not a decorative extra planet. It is the bodily-cosmic witness-anchor where the user's somatic ground touches the planetary-chakral coupling. Any implementation that renders planetary/chakral state without an Earth observer handle has lost the embodied side of the M2-M3 bridge.
+`M2_PLANET_LUT[10]` is canon. Earth is the 10th planet in that table as observer-centre: the clock/map centre from which the planetary-chakral coupling is read, not a separate handle added on top of a 10-planet list. The `9:8` epogdoon is therefore nine non-Earth planets to eight chakral or nodal reception points, while Earth holds the embodied centre of observation. An `earthObserverHandle` may carry provenance for that centre, but no new bridge field is required to make the planet count valid.
+
+The integer runtime law has three different cardinalities and they must never share one "gap" or "fold-point" name:
+
+| Quantity | Runtime meaning |
+|---|---|
+| `9` | source-block size; `blockIndex = address72 / 9`, `blockPhase = address72 % 9` |
+| `8` | number of 9-address blocks and number of adjacent source pairs that collide under `floor(address72 × 8 / 9)` |
+| `64` | number of source addresses whose compress/expand round trip is non-exact; the eight block anchors `0,9,...,63` round-trip exactly |
+
+For each source address `i`, the trace carries `compressed64=floor(8i/9)`, `expanded72=floor(9·compressed64/8)`, `roundTripExact`, and `roundTripLoss=i-expanded72` (`0` or `1`). A collision record exists only for the two sources `[9b,9b+1]` that share the first compressed address in block `b`. This evidence sits inside the existing cumulative trace, not in a second top-level fold-state field.
 
 ### §9.6 Routing Traces as Epii Learning Evidence
 
@@ -368,7 +386,6 @@ In the [[Theia]]/[[Tauri]] architecture clarified by [[m5-prime-system-shape-and
 ### §9.8 Open Questions / Contradiction Holds
 
 - **Audio-genesis wording vs renderer synthesis.** Current canon says M2-1' writes the shared 8+4 bus, while M2' renderer surfaces must not locally synthesise. Until the kernel profile tranche lands, implementation APIs must keep this split explicit: Vimarśa bus-writing is M2-1'; local oscillators in renderer panels are not allowed.
-- **Planet count for the 9:8 bridge.** [[M2_PLANET_LUT]] includes Sun as stable identity root and excludes Earth into `EarthBodyState`; [[alpha_quaternionic_integration_across_M_stack]] §6.3 speaks of nine orbital planets against eight chakras; this spec names nine planetary/rulership handles plus Earth observer-ground. Production mapping remains open until [[S2]] graph-law reconciles the 10-entry LUT, Sun-exclusion/identity-root status, and Earth witness handle without collapsing them into one planet table.
 - **Mantra and maqam frequencies.** The frequency values in `M2_MANTRA_LUT[100]` and maqam interval tables are canonical correspondence/tuning data, but whether any given value becomes an active synthesis target is decided by the shared audio profile contract, not by M2' panels.
 - **M2→M3 symbolic finality.** M2' emits DET bitboard evidence, compressed indices, and cymatic symmetry features. Final codon class, rotation, Tarot/I-Ching identity, and 472-state law remain M3'/M3 authority.
 
@@ -383,7 +400,7 @@ In the [[Theia]]/[[Tauri]] architecture clarified by [[m5-prime-system-shape-and
 - Tests prove `audio_octet` and `nodal_quartet` consumed by the cymatic renderer match the kernel profile exactly (no M2' re-synthesis).
 - Tests prove the M2-1' audio bus drives both cosmic-facing cymatic rendering and the personal-Pratibimba cymatic field, with the personal register blocked outside protected M4' surfaces.
 - Tests prove the 72-invariant is labelled as the 72 term of `137 = 64 + 72 + 1` in canonical/provenance surfaces without assigning the +1 to M0.
-- Tests prove M2-5' exposes the 9:8 / `72 × 8 / 9 = 64` bridge and Earth observer-ground as separate, required profile/provenance facts.
+- Tests prove M2-5' exposes the 9:8 / `72 × 8 / 9 = 64` bridge with `M2_PLANET_LUT[10]` as canon: Earth is the 10th planet as observer-centre, and the epogdoon counts nine non-Earth planets against eight chakral/nodal reception points.
 - Tests prove the Klein-flip signal from M1' produces the documented surface-valence inversions on every active panel, and that the flip reverses cleanly on the return crossing.
 - Tests prove MIDI/music-tech integration, where enabled, uses real event streams and real tuning conversion (MPE, MIDI 2.0, MTS/Scala/MTS-ESP, OSC, or equivalent) for maqam/microtonal data rather than 12-TET-only mocks.
 - Tests prove CPU reference Chladni / standing-wave calculations produce deterministic numeric nodal lines or symmetry features over real grids before GPU visual output is accepted.
@@ -391,6 +408,7 @@ In the [[Theia]]/[[Tauri]] architecture clarified by [[m5-prime-system-shape-and
 - Tests prove M2' routing traces exported to Epii contain typed M2 stratum edges and provenance handles while excluding protected-local personal body content; graph-relational ML outputs remain derived and cannot mutate canonical M2 facts.
 - Tests prove the `m2-parashakti` extension and integrated `1-2-3` plugin consume profile/state through the kernel-bridge API rather than duplicate S-stack subscriptions.
 - Tests prove cymatic-renderer addresses live in `[0, 71]`.
+- Tests prove the daily-0-1 spheres variant receives exactly eight canonical chakra identities, Earth ordinal 10 as observer-centre, Sun, and the active [[F_routing]] planetary-hour ruler through one typed profile projection; malformed or absent projection data renders a provenance-aware blocker, never a plate fallback.
 - Readiness is blocked by the kernel profile tranche until `resonance72`, `elements`, `planetaryChakral`, `audio_octet`, `nodal_quartet`, and `kleinFlipState` are backend fields.
 
 ## §11 — Implementation Notes
@@ -410,11 +428,22 @@ The canon-update pass of 2026-05-31 adds four explicit M2' deltas:
 1. **Frequency-to-meaning packet law**: [[M2PrimeMeaningPacket]] is the canonical annotation/handoff unit for portal, music-tech, cymatic, and [[M3]] evidence surfaces.
 2. **Routing trace law**: [[Ficinian-Kerykeion routing|Ficinian-Kerykeion]] traversals may feed [[Epii]]'s graph-relational ML only as provenance-safe derived evidence; [[Embeddings]] and [[Lens-LoRAs]] remain rebuildable, governed, and non-canonical.
 3. **IDE placement law**: the [[m2-parashakti]] extension and integrated [[1-2-3]] plugin expose M2' through the [[kernel-bridge]]; duplicate direct [[S-stack]] wiring inside M2' panels is non-canonical.
-4. **Open-question discipline**: unresolved tensions in audio ownership, planetary-count semantics, active mantra/maqam synthesis, and M3 final classification remain explicit §9.8 open questions until their owning specs close them.
+4. **Open-question discipline**: unresolved tensions in audio ownership, active mantra/maqam synthesis, and M3 final classification remain explicit §9.8 open questions until their owning specs close them.
+5. **One-substrate / no-fork invariant (B-8)**: [[M2']] shares the single `:Bimba` label, single `coordinate` property, single [[Body/S/S2/graph-schema]] authority, and single [[plugin-integrated-1-2-3]] rendering-composition seam with [[M0']] and [[M3']] — no per-module graph fork, no per-extension schema fork, no per-plugin rendering fork. The Bimba map is the system made walkable, not a duplication surface.
 
-## Canonical Source Lock - 2026-06-02
+These corrections are now domain authority for M2'.
 
 M2' is the harmonic-correspondential meaning engine. It preserves the 72 invariant and hands governed meaning packets to M3', M4', M5', and S5 review surfaces.
+
+Decan-ruler correction, 2026-07-02 (Sprint-8 E1 cross-LUT test): `DECAN_RULERS_36` in `portal-core/src/parashakti/f_routing.rs` carried a Vedic drekkana table grouped by triplicity (fire signs' nine decans first) while every consumer — `DecanAxisView.ruling_planet` on the 72-axis and the live-planet resonance events — indexes it by zodiac degree (`floor(degree/10)`). Corrected to the zodiac-ordered descending Chaldean cycle (Mars→Sun→Venus→Mercury→Moon→Saturn→Jupiter from Aries I, closing on Mars at Pisces III), agreeing with the C `CLOCK_DEGREE_LUT` and the m2 portal plugin's table; pinned kernel-wide by `portal-core/tests/phase_space_profile_field.rs`. If the 72-fold decan-face axis ever requires a triplicity-grouped drekkana ordering, that is a SEPARATE table with its own index law — never this one.
+
+Bell-kernel foothold, 2026-07-02 (per [[m123-modal-resonator-bell-kernel-spec]] §13): M2' is declared the **modal / cymatic / bell-partial INTERPRETER over the exact 8+4 bus**, and that interpretation is now KERNEL state, not renderer labelling: `MathemeHarmonicProfile.modalResonator` (S0-derived, additive on schema v1) carries the 12-slot composable `chromaticBody`, `liveOctet[8]` with `hz` exactly equal to `audio_octet[i]`, the four nodal anchors as boundary authority, the 7+5 diatonic/silent partition (the silent complement as structured constraint state, never an absence bucket), the eight `bellPartials` role labels, and `m2Address72` pinned to `resonance72.lensAnchorIndex` — never derived from `lensMode.mode`. The chime frame's `m2` section transports the full resonator plus a deterministic `cymaticFrameHandle` digest (no raw field bodies). Renderers — including the pratibimba-app instrument — consume these labels; a local role table may exist only as an explicitly-reported fallback.
+
+Cymatic-dynamics foothold, 2026-07-02 (Sprint-8 E4, pratibimba-app): the carrier's cymatic surface now actually SOLVES the seed equation of this spec's 8+4 contract — `chi(u,v) = a·sin(mπu)·sin(nπv) + b·cos(mπu)·cos(nπv)` per constraint, with the 8 `audioOctet` carriers driving `a`/`b`/temporal-phase in pairs `(octet[2k], octet[2k+1])` and the 4 `nodalQuartet` `(m,n)` as the boundary conditions — replacing the pre-E4 approximation that damped an 8-wave product by an envelope (that approximate twin is retired). The CPU reference (`src/engine/cymaticField.ts`) is byte-hash-pinned (quantised FNV-1a; "GPU frame generation must be reproducible from CPU frame state") and the GLSL is a marked line-for-line transcription of it. Klein valence inverts SURFACE VALENCE only — the sand mapping swaps antinodal↔nodal gathering; the field itself is never faked. The silent complement renders as the five structured constraint anchors it IS (chromatic-ring markers from `modalResonator.silentComplement`, kernel data only, hidden when the contract is absent); `resonance72.lensAnchorIndex` keeps routing the 72-axis colour shell. All inputs arrive through the ONE modulation graph (E3) — the cymatic layer is a registered carrier, not a self-computing renderer. The plate-to-torus GPU-readback parity remains open.
+
+Solar-chakral spheres closure, 2026-07-19 (23.T23.9): the third Layer-C variant is implemented in the active `Body/M/pratibimba-app` carrier as eight concentric Three.js spheres with real spherical-harmonic deformation. `MathemeHarmonicProfile.cymaticSpheres` is the single typed boundary: [[S0]] projects the eight owning M2 chakra identities and profile-resolved modes, while the [[S3]] heartbeat attaches Earth observer-centre, Sun, and the active planetary-hour ruler only from a fresh complete [[Kerykeion]] sky routed through [[F_routing]]. The carrier has no planet/chakra LUT and no timer; profile generation alone replaces scene state. Missing or malformed provenance blocks explicitly. No new gateway method was needed because this is additive `profile.update` state. Canon transport flags: [[S0-SPEC]] and [[S3-SPEC]].
+
+`ModalResonatorProfile`, serialized as `MathemeHarmonicProfile.modalResonator`, is the kernel-owned standing interpretation consumed here.
 
 | Required coverage | Canonical citations |
 |---|---|
@@ -424,6 +453,6 @@ M2' is the harmonic-correspondential meaning engine. It preserves the 72 invaria
 | Idea/Theia substrate | `Idea/Pratibimba/System/extensions/m2-parashakti/**`, `m-extension-runtime/**`, `kernel-bridge/**`, `plugin-integrated-1-2-3/**` |
 | sibling seeds | `M'-SYSTEM-SPEC.md`, `M2'/m2-prime-parashakti-cymatic-engine.md`, `M2'/m2-prime-frequency-meaning-research.md`, `M5'/epii-operational-capacities/m5-prime-epii-on-parashakti-graph-relational-ml.md`, `alpha_quaternionic_integration_across_M_stack.md` |
 | nominal tracks | Track 07.T5 M2' extension; Track 08 integrated 1-2-3 plugin; Track 01 profile/audio; Track 02 mapping; Track 03 Kerykeion/world-clock; Track 09 Parashakti capacity |
-| open decisions | audio ownership, planet/Earth observer count, mantra/maqam synthesis, M3 classification handoff, 72->64 provenance scope |
+| open decisions | audio ownership, mantra/maqam synthesis, M3 classification handoff, 72->64 provenance scope |
 
 World coordinate note: M2' uses shared World `P/P'`, `CT`, and `L/L'` lens corpora through the umbrella specs; no M-specific World coordinate markdown exists yet.

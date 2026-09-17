@@ -8,7 +8,7 @@
 - `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md` (BOTH pages — full read, lines 0-505 then 505-669)
 - `Idea/Bimba/Seeds/M/M0'/M0'-SPEC.md` (full read, 152 lines)
 - `Idea/Bimba/Seeds/M/M0'/m0-prime-anuttara-research.md` (full read, 97 lines)
-- `Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md` (full read, 496 lines)
+- `Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md` (full read, 496 lines)
 - `Idea/Bimba/Seeds/M/M0'/the-matheme-of-the-field-differential.md` (read, first 200 lines covering 0/1 → 4+2 → 5→0 explication — substrate-level philosophical canon)
 - `Idea/Bimba/Seeds/M/M'-SYSTEM-SPEC.md` (full read, 611 lines)
 - `Idea/Pratibimba/System/Subsystems/Anuttara/anuttara-ux-full-m0-branch.md` (full read, 244 lines)
@@ -59,7 +59,7 @@
 
 ### 01.4 — Kernel-bridge profile-contract readiness ledger entries for M0 *(cross-link to Tranche 10)*
 - **Status:** ALIGNED (with own internal correction noted)
-- **Cited:** `10-kernel-bridge-profile-contract.md:86-90` (Tranche 10.9 "Correction: `dataset_lut_state` / `m3_codec_provenance` host struct" — these literals live on `MathemeBinaryProjection` not `MathemeBedrockProjection`); `M0'-SPEC.md:120-135` (Readiness / Test Criteria)
+- **Cited:** `10-kernel-bridge-profile-contract.md:86-90` (Tranche 10.9 "Correction: `dataset_lut_state` / `m3_codec_provenance` host struct" — host is `MathemeBinaryProjection`); `M0'-SPEC.md:120-135` (Readiness / Test Criteria)
 - **Current framing in tranche:** Pass-through to Tranche 10; names exact pending sites with line numbers, and self-corrects Wave-A's misattribution via Tranche 10.9.
 - **Recommendation:** KEEP-AS-IS
 - **Recommendation detail:** Correctly downgraded to a code-pending-closure cross-link, not a greenfield item. Self-correction discipline is good.

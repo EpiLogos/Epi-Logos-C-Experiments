@@ -1,7 +1,7 @@
 use portal_core::{
     codon_charge_quaternion, codon_rotation_from_lens_mode, codon_rotation_surface,
-    kernel_tick_from_epogdoon, lens_mode_from_codon_rotation, MathemeHarmonicProfile,
-    ProfilePrivacyClass,
+    kernel_tick_from_epogdoon, lens_mode_from_codon_rotation, BedrockProvenanceHandle,
+    MathemeHarmonicProfile, ProfilePrivacyClass,
 };
 
 #[test]
@@ -25,8 +25,24 @@ fn public_current_profile_serializes_versioned_bridge_shape_without_protected_fi
     assert_eq!(json["position6"], 4);
     assert_eq!(json["privacyClass"], "public-current-context");
     assert_eq!(json["binary"], json["mahamaya"]);
-    assert!(json["s2Anchor"].is_null());
-    assert!(json["s3Anchor"].is_null());
+    assert_eq!(json["s2Anchor"]["coordinate"], "M4'");
+    assert_eq!(
+        json["s2Anchor"]["readiness"],
+        "cycle-2-s2-coordinate-anchor"
+    );
+    assert_eq!(
+        json["s2Anchor"]["provenance"],
+        "Body/S/S2/graph-services/src/pointers.rs::kernel_coordinate_anchor_for"
+    );
+    assert_eq!(json["s3Anchor"]["coordinate"], "M4'");
+    assert_eq!(
+        json["s3Anchor"]["readiness"],
+        "cycle-2-s3-profile-observation-anchor"
+    );
+    assert_eq!(
+        json["s3Anchor"]["provenance"],
+        "Body/S/S0/portal-core/src/events/kernel_events.rs::KernelProfileObservationEvent::from_profile"
+    );
 
     for required in [
         "phase",
@@ -48,6 +64,7 @@ fn public_current_profile_serializes_versioned_bridge_shape_without_protected_fi
         "bedrock",
         "pointerAnchor",
         "contextFrames",
+        "harmonicGrammar",
     ] {
         assert!(
             json.get(required).is_some(),
@@ -99,6 +116,128 @@ fn public_profile_contract_covers_all_12_ticks_and_pointer_web_invariants() {
         );
         assert_eq!(profile.binary, profile.mahamaya);
     }
+}
+
+#[test]
+fn public_profile_populates_s2_s3_future_anchors_from_cycle2_surfaces() {
+    for tick12 in 0..12 {
+        let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(5, tick12));
+        let expected_coordinate = if tick12 < 6 {
+            format!("M{}", tick12 % 6)
+        } else {
+            format!("M{}'", tick12 % 6)
+        };
+
+        let s2_anchor = profile.s2_anchor.as_ref().expect("S2 anchor is populated");
+        assert_eq!(s2_anchor.coordinate, expected_coordinate);
+        assert_eq!(s2_anchor.readiness, "cycle-2-s2-coordinate-anchor");
+        assert_eq!(
+            s2_anchor.provenance,
+            "Body/S/S2/graph-services/src/pointers.rs::kernel_coordinate_anchor_for"
+        );
+
+        let s3_anchor = profile.s3_anchor.as_ref().expect("S3 anchor is populated");
+        assert_eq!(s3_anchor.coordinate, expected_coordinate);
+        assert_eq!(s3_anchor.readiness, "cycle-2-s3-profile-observation-anchor");
+        assert_eq!(
+            s3_anchor.provenance,
+            "Body/S/S0/portal-core/src/events/kernel_events.rs::KernelProfileObservationEvent::from_profile"
+        );
+    }
+}
+
+#[test]
+fn public_profile_readiness_ledger_carries_typed_bedrock_link_chain() {
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(5, 4));
+    let fact = profile
+        .readiness_ledger
+        .iter()
+        .find(|fact| fact.field == "bedrock")
+        .expect("bedrock readiness fact is present");
+
+    assert_eq!(
+        fact.bedrock_link,
+        BedrockProvenanceHandle::KernelMathemeBedrockProjectionV1
+    );
+    assert!(
+        fact.provenance_chain
+            .contains("Body/S/S0/portal-core/src/kernel.rs:"),
+        "chain names the source file/line: {}",
+        fact.provenance_chain
+    );
+    assert!(
+        fact.provenance_chain
+            .contains(".rodata -> MathemeHarmonicProfile.bedrock -> readinessLedger.bedrock_link"),
+        "chain carries the rodata-to-readiness path: {}",
+        fact.provenance_chain
+    );
+
+    let json = serde_json::to_value(&profile).expect("profile serializes");
+    let bedrock_fact = json["readinessLedger"]
+        .as_array()
+        .expect("readiness ledger serializes")
+        .iter()
+        .find(|fact| fact["field"] == "bedrock")
+        .expect("bedrock fact serializes");
+
+    assert_eq!(
+        bedrock_fact["bedrock_link"],
+        "kernel-matheme-bedrock-projection-v1"
+    );
+    assert_eq!(bedrock_fact["state"], "authoritative");
+}
+
+#[test]
+fn public_profile_exposes_corrected_lens_harmonic_grammar() {
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(3, 2));
+    let json = serde_json::to_value(&profile).expect("profile serializes");
+    let grammar = &json["harmonicGrammar"];
+
+    assert_eq!(grammar["positionSubstance"], "P/P'=0");
+    assert_eq!(grammar["lensRefraction"], "L/L'=/");
+    assert_eq!(grammar["harmonicRelation"], "A/B/C+D=1");
+    assert_eq!(grammar["basePair"], "L2/L3");
+    assert_eq!(grammar["primaryAnchor"], "Day");
+    assert_eq!(grammar["dFace"], "NONE");
+    assert_eq!(grammar["depth"], 2);
+    assert_eq!(grammar["families"][0]["family"], "A");
+    assert_eq!(grammar["families"][0]["register"], "Being");
+    assert_eq!(
+        grammar["families"][0]["relationType"],
+        "ADJACENTLY_ARTICULATES"
+    );
+    assert_eq!(grammar["families"][1]["family"], "B");
+    assert_eq!(grammar["families"][1]["register"], "Becoming");
+    assert_eq!(grammar["families"][1]["relationType"], "MIRRORS_COMPLEMENT");
+}
+
+#[test]
+fn public_profile_covers_directed_a_b_c_family_pairs_across_ticks() {
+    let cases = [
+        (0, "L0/L1", "A", "Being", "ADJACENTLY_ARTICULATES"),
+        (1, "L1/L2", "C", "KnowingUnknowing", "CROSSES_KNOWING_LIMIT"),
+        (3, "L3/L4", "C", "KnowingUnknowing", "CROSSES_KNOWING_LIMIT"),
+        (5, "L5/L0", "C", "KnowingUnknowing", "CROSSES_KNOWING_LIMIT"),
+    ];
+
+    for (tick12, base_pair, family, register, relation_type) in cases {
+        let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(1, tick12));
+        let grammar =
+            serde_json::to_value(&profile).expect("profile serializes")["harmonicGrammar"].clone();
+
+        assert_eq!(grammar["basePair"], base_pair);
+        assert_eq!(grammar["families"][0]["family"], family);
+        assert_eq!(grammar["families"][0]["register"], register);
+        assert_eq!(grammar["families"][0]["relationType"], relation_type);
+    }
+
+    let mirror = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(1, 6));
+    let grammar =
+        serde_json::to_value(&mirror).expect("profile serializes")["harmonicGrammar"].clone();
+    assert_eq!(grammar["basePair"], "L0/L5");
+    assert_eq!(grammar["families"][0]["family"], "B");
+    assert_eq!(grammar["families"][0]["register"], "Becoming");
+    assert_eq!(grammar["families"][0]["relationType"], "MIRRORS_COMPLEMENT");
 }
 
 #[test]

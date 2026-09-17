@@ -21,14 +21,14 @@
  * Usage: pi -e extensions/agent-chain.ts
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
-import { Text, truncateToWidth, visibleWidth } from "@mariozechner/pi-tui";
-import { spawn } from "child_process";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
+import { Text, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import { readFileSync, existsSync, readdirSync, mkdirSync, unlinkSync } from "fs";
 import { join, resolve } from "path";
-import { applyExtensionDefaults } from "../../pleroma/S2/themeMap.ts";
-import { childPiRuntimeArgs } from "../../khora/S0'/child-extension-propagation.ts";
+import { applyExtensionDefaults } from "../../S4-2p-pleroma/S2/themeMap.ts";
+import { dispatchChildPi, ChildPiDispatchRefused } from "../lib/child-pi-executor.ts";
+import { parseCommaList } from "../../shared/entitlement.ts";
 
 // ── Types ────────────────────────────────────────
 
@@ -369,67 +369,51 @@ export default function (pi: ExtensionAPI) {
 			? `${agentDef.systemPrompt}\n\n---\n\n## Current Session\n${sessionCtxLines.join("\n")}\n\nAll vault writes must use the now_path above as the session anchor. Reference [[NOW-${process.env.EPI_SESSION_ID}]] in any artifact you create.`
 			: agentDef.systemPrompt;
 
-		// Spawn pi directly — same pattern as pi-pi.ts
-		const args = [
-			"--mode", "json",
-			"-p",
-			"--no-session",
-			...childPiRuntimeArgs(),
-			...(agentDef.tools ? ["--tools", agentDef.tools] : []),
-			...(model ? ["--model", model] : []),
-			"--thinking", "off",
-			"--append-system-prompt", fullSystemPrompt,
+		// 50.T50.02: routed through the ONE gated child-pi executor. This seam
+		// previously passed `agentDef.tools` straight to `--tools` with NO
+		// entitlement gate at all; the allow-list is now resolved through the
+		// entitlement resolver, so a team ceiling or deny list binds here too.
+		const timer = setInterval(() => {
+			state.elapsed = Date.now() - startTime;
+			updateWidget();
+		}, 1000);
+
+		return dispatchChildPi({
+			seam: "agent-chain",
+			agentName: agentDef.name,
 			task,
-		];
+			systemPrompt: fullSystemPrompt,
+			model,
+			toolUniverse: parseCommaList(agentDef.tools),
+			cwd: ctx.cwd,
+		}).then((result) => {
+			clearInterval(timer);
+			state.elapsed = result.elapsed;
+			let payload: any = null;
+			try {
+				// pi --mode json outputs a JSON result
+				payload = result.stdout.trim() ? JSON.parse(result.stdout) : null;
+			} catch {}
+			const output = payload?.result || payload?.output || result.stdout || result.stderr;
+			state.lastWork = output.split("\n").filter((l: string) => l.trim()).pop() || "";
+			updateWidget();
 
-		return new Promise((resolve) => {
-			const proc = spawn("pi", args, {
-				stdio: ["ignore", "pipe", "pipe"],
-				env: { ...process.env },
-				cwd: process.env.EPI_REPO_ROOT || ctx.cwd || process.cwd(),
-			});
-
-			const timer = setInterval(() => {
-				state.elapsed = Date.now() - startTime;
-				updateWidget();
-			}, 1000);
-
-			let stdout = "";
-			let stderr = "";
-
-			proc.stdout!.setEncoding("utf-8");
-			proc.stdout!.on("data", (chunk: string) => {
-				stdout += chunk;
-			});
-
-			proc.stderr!.setEncoding("utf-8");
-			proc.stderr!.on("data", (chunk: string) => {
-				stderr += chunk;
-			});
-
-			proc.on("close", (code) => {
-				clearInterval(timer);
-				const elapsed = Date.now() - startTime;
-				state.elapsed = elapsed;
-				let payload: any = null;
-				try {
-					// pi --mode json outputs a JSON result
-					payload = stdout.trim() ? JSON.parse(stdout) : null;
-				} catch {}
-				const output = payload?.result || payload?.output || stdout || stderr;
-				state.lastWork = output.split("\n").filter((l: string) => l.trim()).pop() || "";
-
-				resolve({ output, exitCode: payload?.exitCode ?? code ?? 1, elapsed });
-			});
-
-			proc.on("error", (err) => {
-				clearInterval(timer);
-				resolve({
-					output: `Error spawning agent: ${err.message}`,
-					exitCode: 1,
-					elapsed: Date.now() - startTime,
-				});
-			});
+			return {
+				output,
+				exitCode: payload?.exitCode ?? result.exitCode,
+				elapsed: result.elapsed,
+			};
+		}).catch((err: unknown) => {
+			clearInterval(timer);
+			const message = err instanceof Error ? err.message : String(err);
+			const refused = err instanceof ChildPiDispatchRefused;
+			state.lastWork = `${refused ? "Refused" : "Error"}: ${message}`;
+			updateWidget();
+			return {
+				output: `${refused ? `Dispatch refused (${err.code})` : "Error spawning agent"}: ${message}`,
+				exitCode: 1,
+				elapsed: Date.now() - startTime,
+			};
 		});
 	}
 
@@ -779,7 +763,7 @@ ${agentCatalog}
 			render(width: number): string[] {
 				const model = _ctx.model?.id || "no-model";
 				const usage = _ctx.getContextUsage();
-				const pct = usage ? usage.percent : 0;
+				const pct = usage?.percent ?? 0;
 				const filled = Math.round(pct / 10);
 				const bar = "#".repeat(filled) + "-".repeat(10 - filled);
 

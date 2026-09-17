@@ -6,14 +6,24 @@ import {
     FrontendApplicationContribution,
     bindViewContribution
 } from '@theia/core/lib/browser';
+import type { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser/keybinding';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
+    Disposable,
+    EMPTY_STATE_REGISTRY,
+    EmptyStateRegistry,
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
     parseExtensionRoute,
     registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
+import {
+    M2ParashaktiEmptyState,
+    M2ParashaktiEmptyStateWidget
+} from './empty-state';
+import { M2CymaticEngineWidget } from './m2-cymatic-engine-widget';
+import { M2CorrespondenceTreeWidget } from './m2-correspondence-tree-widget';
 import { M2ParashaktiWidget } from './m2-parashakti-widget';
 import {
     EXTENSION_ID,
@@ -31,8 +41,11 @@ export const M2_PARASHAKTI_PUBLISHER = Symbol(
 @injectable()
 export class M2ParashaktiContribution
     extends AbstractViewContribution<M2ParashaktiWidget>
-    implements CommandContribution, FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution, KeybindingContribution
 {
+    @inject(SHARED_BRIDGE_ADAPTER)
+    protected readonly bridge!: SharedBridgeAdapter;
+
     constructor() {
         super({
             widgetId: M2ParashaktiWidget.ID,
@@ -51,6 +64,10 @@ export class M2ParashaktiContribution
         super.registerCommands(commands);
         commands.registerCommand(
             { id: OPEN_COMMAND_ID, label: `${EXTENSION_ID}: open primary view` },
+            { execute: () => this.openView({ activate: true, reveal: true }) }
+        );
+        commands.registerCommand(
+            { id: 'm2-parashakti.openCoordinate', label: `${EXTENSION_ID}: open coordinate` },
             { execute: () => this.openView({ activate: true, reveal: true }) }
         );
         commands.registerCommand(
@@ -74,6 +91,19 @@ export class M2ParashaktiContribution
                 }
             }
         );
+        // 31.2 / CC-02 command-palette catalog — stage-1 wave-C commands for
+        // m2-parashakti (23.x). Dispatch routes through the shared bridge only.
+        commands.registerCommand({ id: 'm2-parashakti.cymatic.view-switch', label: `${EXTENSION_ID}: switch cymatic view` }, { execute: () => this.dispatchPaletteCommand('m2-parashakti.cymatic.view-switch') });
+        commands.registerCommand({ id: 'm2-parashakti.proof-identity.toggle', label: `${EXTENSION_ID}: toggle proof identity` }, { execute: () => this.dispatchPaletteCommand('m2-parashakti.proof-identity.toggle') });
+        commands.registerCommand({ id: 'm2-parashakti.breadcrumb.address72', label: `${EXTENSION_ID}: breadcrumb 72-fold address` }, { execute: () => this.dispatchPaletteCommand('m2-parashakti.breadcrumb.address72') });
+        commands.registerCommand({ id: 'm2-parashakti.outer-planet.toggle', label: `${EXTENSION_ID}: toggle outer planet` }, { execute: () => this.dispatchPaletteCommand('m2-parashakti.outer-planet.toggle') });
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'meaning-packet',
+            'M2 Parashakti: Open Meaning Packet',
+            () => this.openView({ activate: true, reveal: true })
+        );
         registerIntentTarget(
             commands,
             EXTENSION_ID,
@@ -81,6 +111,43 @@ export class M2ParashaktiContribution
             'M2 Parashakti: Open Resonance Packet',
             () => this.openView({ activate: true, reveal: true })
         );
+        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            'correspondenceTree',
+            'M2 Parashakti: Open Correspondence Tree',
+            () => this.openView({ activate: true, reveal: true })
+        );
+    }
+
+    override registerKeybindings(keybindings: KeybindingRegistry): void {
+        super.registerKeybindings(keybindings);
+        keybindings.registerKeybinding({
+            command: 'm2-parashakti.openCoordinate',
+            keybinding: 'cmd+shift+2'
+        });
+        keybindings.registerKeybinding({
+            command: 'm2-parashakti.cymatic.view-switch',
+            keybinding: 'cmd+alt+v'
+        });
+        keybindings.registerKeybinding({
+            command: 'm2-parashakti.proof-identity.toggle',
+            keybinding: 'cmd+alt+t',
+            when: 'epi-logos.m2.devMode === true'
+        });
+    }
+
+    /**
+     * 31.2 / CC-02: command-palette entries route through the shared bridge so
+     * the OmniPanel parity layer can observe and forward the dispatch. Feature
+     * behaviour lands in the owning feature tranche (23.x).
+     */
+    protected dispatchPaletteCommand(commandId: string, params: Record<string, unknown> = {}): void {
+        this.bridge.updateCurrentStateSelectorPayload(commandId, {
+            commandId,
+            extensionId: EXTENSION_ID,
+            ...params
+        });
     }
 }
 
@@ -104,12 +171,49 @@ class M2ParashaktiPublisher implements MObservabilityPublisher {
     }
 }
 
+@injectable()
+class M2ParashaktiEmptyStateRegistration implements FrontendApplicationContribution {
+    @inject(EMPTY_STATE_REGISTRY)
+    protected readonly emptyStates!: EmptyStateRegistry;
+
+    protected disposable?: Disposable;
+
+    onStart(): void {
+        this.disposable = this.emptyStates.register({
+            extensionId: EXTENSION_ID,
+            viewId: 'm2-parashakti.primary',
+            activationCondition: snapshot => snapshot.state !== 'ready_public_current',
+            component: M2ParashaktiEmptyState
+        });
+    }
+
+    onStop(): void {
+        this.disposable?.dispose();
+        this.disposable = undefined;
+    }
+}
+
 export default new ContainerModule(bind => {
     bind(M2ParashaktiWidget).toSelf();
+    bind(M2ParashaktiEmptyStateWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
             id: M2ParashaktiWidget.ID,
             createWidget: () => createWidget(ctx.container)
+        }))
+        .inSingletonScope();
+    bind(M2CymaticEngineWidget).toSelf();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: M2CymaticEngineWidget.ID,
+            createWidget: () => createCymaticEngineWidget(ctx.container)
+        }))
+        .inSingletonScope();
+    bind(M2CorrespondenceTreeWidget).toSelf();
+    bind(WidgetFactory)
+        .toDynamicValue(ctx => ({
+            id: M2CorrespondenceTreeWidget.ID,
+            createWidget: () => createCorrespondenceTreeWidget(ctx.container)
         }))
         .inSingletonScope();
     bindViewContribution(bind, M2ParashaktiContribution);
@@ -119,6 +223,8 @@ export default new ContainerModule(bind => {
     bind(M2_PARASHAKTI_PUBLISHER).toService(
         M2ParashaktiPublisher
     );
+    bind(M2ParashaktiEmptyStateRegistration).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(M2ParashaktiEmptyStateRegistration);
 
     // ROUTE_PATH reference keeps the constant load-bearing; route resolution
     // happens via the registered command above.
@@ -129,4 +235,16 @@ function createWidget(container: interfaces.Container): M2ParashaktiWidget {
     const child = container.createChild();
     child.bind(M2ParashaktiWidget).toSelf();
     return child.get(M2ParashaktiWidget);
+}
+
+function createCymaticEngineWidget(container: interfaces.Container): M2CymaticEngineWidget {
+    const child = container.createChild();
+    child.bind(M2CymaticEngineWidget).toSelf();
+    return child.get(M2CymaticEngineWidget);
+}
+
+function createCorrespondenceTreeWidget(container: interfaces.Container): M2CorrespondenceTreeWidget {
+    const child = container.createChild();
+    child.bind(M2CorrespondenceTreeWidget).toSelf();
+    return child.get(M2CorrespondenceTreeWidget);
 }

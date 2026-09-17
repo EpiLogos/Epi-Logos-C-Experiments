@@ -238,6 +238,60 @@ static void test_harmonic_helpers_match_ql_math(void) {
     assert(hc_lens_pratibimba_pitch_class(6u, 3u) == 1u);
 }
 
+static void test_harmonic_family_lut_names_corrected_abc_registers(void) {
+    uint8_t families[2];
+
+    assert(hc_harmonic_families_for_pair(0u, 1u, families, 2u) == 1u);
+    assert(families[0] == HC_HARMONIC_FAMILY_A);
+    assert(strcmp(hc_harmonic_family_name(families[0]), "A") == 0);
+    assert(strcmp(hc_harmonic_register_name(hc_harmonic_register_for_family(families[0])), "Being") == 0);
+
+    assert(hc_harmonic_families_for_pair(0u, 5u, families, 2u) == 1u);
+    assert(families[0] == HC_HARMONIC_FAMILY_B);
+    assert(strcmp(hc_harmonic_family_name(families[0]), "B") == 0);
+    assert(strcmp(hc_harmonic_register_name(hc_harmonic_register_for_family(families[0])), "Becoming") == 0);
+
+    assert(hc_harmonic_families_for_pair(1u, 2u, families, 2u) == 1u);
+    assert(families[0] == HC_HARMONIC_FAMILY_C);
+    assert(strcmp(hc_harmonic_family_name(families[0]), "C") == 0);
+    assert(strcmp(hc_harmonic_register_name(hc_harmonic_register_for_family(families[0])), "KnowingUnknowing") == 0);
+}
+
+static void test_l2_l3_is_both_being_and_becoming_hinge(void) {
+    uint8_t families[2];
+
+    assert(hc_harmonic_families_for_pair(2u, 3u, families, 2u) == 2u);
+    assert(families[0] == HC_HARMONIC_FAMILY_A);
+    assert(families[1] == HC_HARMONIC_FAMILY_B);
+    assert(hc_harmonic_relation_type(families[0], HC_D_FACE_NONE) == HC_REL_ADJACENTLY_ARTICULATES);
+    assert(hc_harmonic_relation_type(families[1], HC_D_FACE_NONE) == HC_REL_MIRRORS_COMPLEMENT);
+}
+
+static void test_d_faces_encode_three_but_one_inversion_operator(void) {
+    assert(hc_harmonic_d_face(0u, 0u) == HC_D_FACE_NONE);
+    assert(hc_harmonic_d_face(1u, 0u) == HC_D_FACE_LEFT);
+    assert(hc_harmonic_d_face(0u, 1u) == HC_D_FACE_RIGHT);
+    assert(hc_harmonic_d_face(1u, 1u) == HC_D_FACE_BOTH);
+
+    assert(hc_harmonic_depth_for_d_face(HC_D_FACE_NONE) == 2u);
+    assert(hc_harmonic_depth_for_d_face(HC_D_FACE_LEFT) == 3u);
+    assert(hc_harmonic_depth_for_d_face(HC_D_FACE_RIGHT) == 3u);
+    assert(hc_harmonic_depth_for_d_face(HC_D_FACE_BOTH) == 4u);
+
+    assert(strcmp(hc_harmonic_d_face_name(HC_D_FACE_LEFT), "D_LEFT") == 0);
+    assert(strcmp(hc_harmonic_d_face_name(HC_D_FACE_RIGHT), "D_RIGHT") == 0);
+    assert(strcmp(hc_harmonic_d_face_name(HC_D_FACE_BOTH), "D_BOTH") == 0);
+}
+
+static void test_harmonic_relation_types_are_semantic_not_generic(void) {
+    assert(strcmp(hc_harmonic_relation_type_name(HC_REL_ADJACENTLY_ARTICULATES), "ADJACENTLY_ARTICULATES") == 0);
+    assert(strcmp(hc_harmonic_relation_type_name(HC_REL_MIRRORS_COMPLEMENT), "MIRRORS_COMPLEMENT") == 0);
+    assert(strcmp(hc_harmonic_relation_type_name(HC_REL_CROSSES_KNOWING_LIMIT), "CROSSES_KNOWING_LIMIT") == 0);
+    assert(strcmp(hc_harmonic_relation_type_name(HC_REL_INVERTS_THROUGH_FIRST), "INVERTS_THROUGH_FIRST") == 0);
+    assert(strcmp(hc_harmonic_relation_type_name(HC_REL_INVERTS_THROUGH_SECOND), "INVERTS_THROUGH_SECOND") == 0);
+    assert(strcmp(hc_harmonic_relation_type_name(HC_REL_INVERTS_THROUGH_PAIR), "INVERTS_THROUGH_PAIR") == 0);
+}
+
 int main(void) {
     printf("=== Harmonic Pointer Web36 Tests ===\n");
 
@@ -249,6 +303,10 @@ int main(void) {
     RUN_TEST(test_lens_ring_exposes_full_twelve_lens_anchors);
     RUN_TEST(test_context_frame_overlay_is_sevenfold_and_diatonic);
     RUN_TEST(test_harmonic_helpers_match_ql_math);
+    RUN_TEST(test_harmonic_family_lut_names_corrected_abc_registers);
+    RUN_TEST(test_l2_l3_is_both_being_and_becoming_hinge);
+    RUN_TEST(test_d_faces_encode_three_but_one_inversion_operator);
+    RUN_TEST(test_harmonic_relation_types_are_semantic_not_generic);
 
     printf("\n=== Harmonic Pointer Web36: %d/%d passed ===\n", tests_passed, tests_run);
     return (tests_passed == tests_run) ? 0 : 1;

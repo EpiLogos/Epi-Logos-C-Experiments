@@ -1,0 +1,38 @@
+{
+  "runId": "20260625T161047Z-11-T11.5",
+  "taskId": "11.T11.5",
+  "startedAt": "2026-06-25T16:10:47.871Z",
+  "owner": "codex-m-dev-11-t11-5-forbidden-direct-import",
+  "leaseExpiresAt": "2026-06-25T18:10:47.871Z",
+  "worktree": null,
+  "task": {
+    "id": "11.T11.5",
+    "trackId": "11",
+    "tranche": "T11.5",
+    "title": "Forbidden-direct-import lint enforcement against six M-extension source trees",
+    "effort": null,
+    "file": "11-theia-shell-surface-hosting.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+    "dependsOn": [
+      "11.T11.4"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/scripts/validate-extension-contract-preflight.mjs",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**",
+      "src/**/*.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

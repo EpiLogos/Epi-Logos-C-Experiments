@@ -13,7 +13,7 @@ mod tests {
     }
 
     #[tokio::test]
-    #[ignore]
+    #[ignore = "live-infra: requires running Neo4j (Neo4jConfig::from_env)"]
     async fn test_neo4j_run_query() {
         let config = Neo4jConfig::from_env();
         let client = Neo4jClient::connect(&config).unwrap();

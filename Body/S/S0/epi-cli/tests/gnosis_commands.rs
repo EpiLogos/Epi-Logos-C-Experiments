@@ -167,6 +167,88 @@ fn gnosis_query_report_proves_s5_world_return_over_s2_substrate() {
     assert!(!report.hits.iter().any(|hit| hit.title == "book.md"));
 }
 
+/// 12.T12.13 clause (b) — the S4→S0→S5 cross-namespace-edge seam must reach
+/// the enricher, not the ingester.
+///
+/// The `MAPS_TO_COORDINATE` edge is minted by `CoordinateEnricher.assign_direct`,
+/// reachable only through the `epi-gnostic enrich` subcommand (cli.py). The
+/// Aletheia Pi tool `aletheia_gnosis_enrich` spawns `epi techne gnosis enrich`,
+/// so this dispatch arm is the ONLY runtime route to that edge. It used to call
+/// `ingest::ingest_gnostic`, which spawns `epi-gnostic ingest <entity_id>` —
+/// the entity id was handed to the document-ingest path as a file path, and the
+/// enrich branch of the Python CLI was dispatched by nothing in the repository.
+///
+/// This asserts the observed subprocess argv, so it stays honest about which
+/// subcommand actually fires.
+#[test]
+fn gnosis_enrich_dispatches_the_enrich_subcommand_not_ingest() {
+    let env = TestEnv::repo_with_assets();
+
+    let argv_log = env.repo_root.join("gnostic-argv.log");
+    let harness = write_file(
+        env.repo_root.join("fake-epi-gnostic.sh"),
+        &format!(
+            "#!/bin/sh\nprintf '%s\\n' \"$@\" > {}\nprintf '{{\"status\":\"ok\"}}'\n",
+            argv_log.display()
+        ),
+    );
+    std::fs::set_permissions(
+        &harness,
+        <std::fs::Permissions as std::os::unix::fs::PermissionsExt>::from_mode(0o755),
+    )
+    .expect("harness must be executable");
+
+    let env = env.with_env("EPI_GNOSTIC_PYTHON", harness.to_str().unwrap());
+
+    let enriched = run_epi(
+        [
+            "techne",
+            "gnosis",
+            "enrich",
+            "gnostic-entity-42",
+            "--coordinate",
+            "M3",
+            "--family",
+            "M",
+        ]
+        .as_slice(),
+        &env,
+    );
+    assert!(
+        enriched.status.success(),
+        "enrich dispatch failed: {}",
+        enriched.stderr
+    );
+
+    let argv: Vec<String> = std::fs::read_to_string(&argv_log)
+        .expect("harness must have been invoked")
+        .lines()
+        .map(str::to_string)
+        .collect();
+
+    assert_eq!(
+        argv.first().map(String::as_str),
+        Some("enrich"),
+        "epi techne gnosis enrich must reach the epi-gnostic enrich subcommand \
+         (CoordinateEnricher.assign_direct / MAPS_TO_COORDINATE); observed argv: {argv:?}"
+    );
+    assert_eq!(
+        argv.get(1).map(String::as_str),
+        Some("gnostic-entity-42"),
+        "the entity id must be forwarded as the enrich target; observed argv: {argv:?}"
+    );
+    assert!(
+        argv.windows(2)
+            .any(|pair| pair[0] == "--coordinate" && pair[1] == "M3"),
+        "the Bimba coordinate must reach the enricher; observed argv: {argv:?}"
+    );
+    assert!(
+        argv.windows(2)
+            .any(|pair| pair[0] == "--family" && pair[1] == "M"),
+        "the coordinate family must reach the enricher; observed argv: {argv:?}"
+    );
+}
+
 fn env_path_placeholder() -> String {
     "/tmp/gnosis-vault".to_string()
 }

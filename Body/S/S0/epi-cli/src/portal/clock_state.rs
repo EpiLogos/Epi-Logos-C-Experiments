@@ -1,6 +1,6 @@
 use std::sync::{Arc, Mutex};
 
-use portal_core::KernelProjection;
+use portal_core::{E4PersonalInputs, E5HarmonicInputs, E6VerifierInputs, KernelProjection};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ORACLE FACES
@@ -212,25 +212,17 @@ impl WalkType {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Hamilton product of two quaternions [w, x, y, z].
+/// CCT-8: delegates to the ONE Cl(4,2) primitive (portal-core) — the
+/// 16.T16.8 audit caught this as a parallel implementation; the local
+/// tests below stay as parity pins on the delegation.
 pub fn quat_mul(a: [f32; 4], b: [f32; 4]) -> [f32; 4] {
-    let (aw, ax, ay, az) = (a[0], a[1], a[2], a[3]);
-    let (bw, bx, by, bz) = (b[0], b[1], b[2], b[3]);
-    [
-        aw * bw - ax * bx - ay * by - az * bz,
-        aw * bx + ax * bw + ay * bz - az * by,
-        aw * by - ax * bz + ay * bw + az * bx,
-        aw * bz + ax * by - ay * bx + az * bw,
-    ]
+    portal_core::quat_mul(a, b)
 }
 
 /// Normalize a quaternion to unit length. Returns identity if magnitude is near zero.
+/// CCT-8: delegates to the ONE Cl(4,2) primitive (portal-core).
 pub fn quat_normalize(q: [f32; 4]) -> [f32; 4] {
-    let mag = (q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]).sqrt();
-    if mag < f32::EPSILON {
-        [1.0, 0.0, 0.0, 0.0]
-    } else {
-        [q[0] / mag, q[1] / mag, q[2] / mag, q[3] / mag]
-    }
+    portal_core::quat_normalize(q)
 }
 
 /// Derive walk mode from quaternion: argmax of |w|, |x|, |y|, |z|.
@@ -314,39 +306,29 @@ pub fn compute_aspects(state: &SharedClockState) {
 /// Full kairos update: set kairos state, compute transit quaternion from element distribution,
 /// and compute aspects. Alternative entry point that does not break existing `update_kairos`.
 pub fn update_kairos_full(state: &SharedClockState, kairos: KairosState) {
-    // Compute transit quaternion from element distribution (sign % 4 -> element bucket)
-    let mut elem_counts = [0.0f32; 4]; // w=EARTH, x=FIRE, y=WATER, z=AIR
-    let mut valid_count = 0.0f32;
-    for ps in &kairos.planets {
-        if ps.degree == 0xFFFF {
-            continue;
-        }
-        let sign = (ps.degree / 30) as usize % 12;
-        // sign -> element: Fire(0,4,8), Earth(1,5,9), Air(2,6,10), Water(3,7,11)
-        let elem = sign % 4; // 0=Fire, 1=Earth, 2=Air, 3=Water
-                             // Remap to quaternion: w=EARTH(1), x=FIRE(0), y=WATER(3), z=AIR(2)
-        let qi = match elem {
-            0 => 1, // Fire -> x
-            1 => 0, // Earth -> w
-            2 => 3, // Air -> z
-            3 => 2, // Water -> y
-            _ => 0,
-        };
-        elem_counts[qi] += 1.0;
-        valid_count += 1.0;
-    }
-
-    let transit_q = if valid_count > 0.0 {
-        let raw = [
-            elem_counts[0] / valid_count,
-            elem_counts[1] / valid_count,
-            elem_counts[2] / valid_count,
-            elem_counts[3] / valid_count,
-        ];
-        quat_normalize(raw)
-    } else {
-        [1.0, 0.0, 0.0, 0.0]
+    // POSITION register — delegates to the ONE elemental law in
+    // portal-core aspect.rs (drift retired 2026-07-19; the former inline
+    // copy of the sign-occupancy fold lives there as
+    // `position_transit_quaternion`, shared with portal-core state.rs).
+    let transit_kairos = portal_core::KairosState {
+        planets: std::array::from_fn(|index| {
+            let planet = &kairos.planets[index];
+            portal_core::PlanetState {
+                degree: planet.degree,
+                is_retrograde: planet.is_retrograde,
+                is_resonance: planet.is_resonance,
+                transiting_hex: planet.transiting_hex,
+                transiting_tarot: planet.transiting_tarot,
+                transiting_chakra: planet.transiting_chakra,
+            }
+        }),
+        current_hour: kairos.current_hour,
+        hour_planet: kairos.hour_planet,
+        active_chakra: kairos.active_chakra,
+        timestamp: kairos.timestamp,
+        valid: kairos.valid,
     };
+    let transit_q = portal_core::aspect::position_transit_quaternion(&transit_kairos);
 
     {
         let mut s = state.lock().unwrap();
@@ -521,6 +503,13 @@ pub struct PortalClockState {
     /// Transit quaternion derived from planetary element distribution.
     pub transit_quaternion: [f32; 4],
 
+    /// Ambient environmental transform factor (DR-ENV-1/8) — the collective sky's
+    /// slow forces aspected against the natal invariant, composed onto the PASU
+    /// base in `recompute_composed_quaternion_state`. Defaults to the identity
+    /// rotation (no ambient influence); it TRANSFORMS the base, never becomes
+    /// `quintessence_quaternion`. Mirrors `portal_core::PortalClockState`.
+    pub environment_quaternion: [f32; 4],
+
     /// Currently active planetary aspects (Ptolemaic: conjunction/sextile/square/trine/opposition).
     pub aspects: Vec<PlanetaryAspect>,
 
@@ -563,6 +552,7 @@ impl Default for PortalClockState {
             resolution_level: 0,
             active_codon: ActiveCodon::default(),
             transit_quaternion: [1.0, 0.0, 0.0, 0.0],
+            environment_quaternion: [1.0, 0.0, 0.0, 0.0],
             aspects: Vec::new(),
             micro_orbit: Vec::new(),
             natal_degrees: [0xFFFF; 10],
@@ -575,8 +565,15 @@ impl Default for PortalClockState {
 pub type SharedClockState = Arc<Mutex<PortalClockState>>;
 
 fn recompute_composed_quaternion_state(s: &mut PortalClockState) {
+    // PASU base ⊗ ambient environment ⊗ transit ⊗ live (DR-ENV-1/8). Mirrors the
+    // canonical `portal_core::state::recompute_composed_quaternion_state`. With
+    // `environment_quaternion` at the identity rotation this reduces byte-for-byte
+    // to the prior quintessence ⊗ transit ⊗ live law (a ⊗ [1,0,0,0] === a).
     let composed = quat_normalize(quat_mul(
-        quat_mul(s.quintessence_quaternion, s.transit_quaternion),
+        quat_mul(
+            quat_mul(s.quintessence_quaternion, s.environment_quaternion),
+            s.transit_quaternion,
+        ),
         s.live_quaternion,
     ));
     s.composed_quaternion = composed;
@@ -587,14 +584,31 @@ fn recompute_composed_quaternion_state(s: &mut PortalClockState) {
 }
 
 pub fn sync_kernel_projection(s: &mut PortalClockState) {
+    // TWIN of `portal_core::state::sync_kernel_projection`: a cast/live
+    // projection sounds the harmonic substrate, so E₅ engages the canonical
+    // channels (mahamaya included). This twin reads the default engagement
+    // (`E5_CAST_ENGAGEMENT_DEFAULT`); per-state tunable parity for
+    // `m3.energy.e5_cast_engagement` lands with the flagged clock-state
+    // unification. E₄/E₆ stay dormant for a bare clock sync.
+    let engaged = (portal_core::state::E5_CAST_ENGAGEMENT_DEFAULT
+        * portal_core::kernel::harmonic_channels::HARMONIC_CHANNEL_COUNT as f32)
+        .round() as usize;
+    let e_5_inputs = E5HarmonicInputs {
+        channel_set: portal_core::kernel::harmonic_channels::CANONICAL_CHANNEL_SET[..engaged]
+            .iter()
+            .map(|channel| (*channel).to_owned())
+            .collect(),
+        ebm_energy_scalar: None,
+    };
     s.kernel_projection = KernelProjection::from_clock_state(
         s.generation / 12,
         s.tick12,
         s.quintessence_quaternion,
         s.composed_quaternion,
         None,
-        None,
-        0.0,
+        &E4PersonalInputs::default(),
+        &e_5_inputs,
+        &E6VerifierInputs::default(),
     );
 }
 
@@ -773,19 +787,24 @@ pub fn update_from_cast(
     sync_kernel_projection(&mut s);
 }
 
-/// Update the quintessence quaternion after identity augment.
-/// `profiles`: 5 × [FIRE, WATER, EARTH, AIR] from M4_Quintessence_Identity.
-/// Weighted average across valid (non-zero) profiles → unit quaternion.
-pub fn update_quintessence_quaternion(state: &SharedClockState, profiles: &[[f32; 4]; 5]) {
+/// Pure core of the quintessence-quaternion law (the ONE authority WITHIN
+/// epi-cli — the TUI clock state and the S3 heartbeat projection both derive
+/// from here): weighted elemental average of the PRESENT (non-zero)
+/// identity-layer profiles, remapped and normalised to a unit quaternion.
+/// None when no layer carries weight — never a fabricated identity ground.
+/// DUPLICATE-LAW NOTE (E6 verifier, 2026-07-02): portal-core
+/// `state.rs::update_quintessence_quaternion` carries a pre-existing copy of
+/// the same math — unification follow-up flagged in the Sprint-8 plan; any
+/// law change MUST land in both sites until then.
+pub fn quintessence_quaternion_from_profiles(profiles: &[[f32; 4]; 5]) -> Option<[f32; 4]> {
     let valid: Vec<_> = profiles
         .iter()
         .filter(|p| p.iter().any(|&v| v > f32::EPSILON))
         .collect();
     let n = valid.len() as f32;
     if n < f32::EPSILON {
-        return;
+        return None;
     }
-
     let mut avg = [0.0f32; 4];
     for p in &valid {
         for i in 0..4 {
@@ -796,15 +815,37 @@ pub fn update_quintessence_quaternion(state: &SharedClockState, profiles: &[[f32
     let (w, x, y, z) = (avg[2] / n, avg[0] / n, avg[1] / n, avg[3] / n);
     let mag = (w * w + x * x + y * y + z * z).sqrt();
     if mag < f32::EPSILON {
-        return;
+        return None;
     }
+    Some([w / mag, x / mag, y / mag, z / mag])
+}
+
+/// Update the quintessence quaternion after identity augment.
+/// `profiles`: 5 × [FIRE, WATER, EARTH, AIR] from M4_Quintessence_Identity.
+/// Weighted average across valid (non-zero) profiles → unit quaternion.
+pub fn update_quintessence_quaternion(state: &SharedClockState, profiles: &[[f32; 4]; 5]) {
+    let Some(quaternion) = quintessence_quaternion_from_profiles(profiles) else {
+        return;
+    };
     {
         let mut s = state.lock().unwrap();
-        s.quintessence_quaternion = [w / mag, x / mag, y / mag, z / mag];
+        s.quintessence_quaternion = quaternion;
         recompute_composed_quaternion_state(&mut s);
         s.generation += 1;
         sync_kernel_projection(&mut s);
     }
+}
+
+/// Set the ambient environmental transform factor and recompute the composed
+/// quaternion (DR-ENV-1/8). Mirrors `portal_core::update_environment_quaternion`:
+/// the `quintessence_quaternion` (PASU base) is left untouched — the environment
+/// transforms the base, it never becomes it. A near-zero env normalizes to the
+/// identity rotation (honest "no ambient influence"). Does not bump `generation`.
+pub fn update_environment_quaternion(state: &SharedClockState, environment: [f32; 4]) {
+    let mut s = state.lock().unwrap();
+    s.environment_quaternion = quat_normalize(environment);
+    recompute_composed_quaternion_state(&mut s);
+    sync_kernel_projection(&mut s);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -819,7 +860,10 @@ fn orbit_path() -> std::path::PathBuf {
 
 /// Persist micro-orbit degree history to disk as a JSON array of u16 values.
 pub fn save_micro_orbit(orbit: &[u16]) {
-    let path = orbit_path();
+    save_micro_orbit_at(&orbit_path(), orbit);
+}
+
+fn save_micro_orbit_at(path: &std::path::Path, orbit: &[u16]) {
     if let Some(parent) = path.parent() {
         let _ = std::fs::create_dir_all(parent);
     }
@@ -832,13 +876,16 @@ pub fn save_micro_orbit(orbit: &[u16]) {
             .collect::<Vec<_>>()
             .join(",")
     );
-    let _ = std::fs::write(&path, json);
+    let _ = std::fs::write(path, json);
 }
 
 /// Load micro-orbit degree history from disk. Returns empty vec if file missing or invalid.
 pub fn load_micro_orbit() -> Vec<u16> {
-    let path = orbit_path();
-    match std::fs::read_to_string(&path) {
+    load_micro_orbit_at(&orbit_path())
+}
+
+fn load_micro_orbit_at(path: &std::path::Path) -> Vec<u16> {
+    match std::fs::read_to_string(path) {
         Ok(content) => {
             // Parse JSON array of numbers
             let trimmed = content.trim();
@@ -874,6 +921,17 @@ pub fn update_kairos(state: &SharedClockState, kairos: KairosState) {
 mod tests {
     use super::*;
 
+    fn isolated_orbit_path(label: &str) -> std::path::PathBuf {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("system clock must be after the Unix epoch")
+            .as_nanos();
+        std::env::temp_dir().join(format!(
+            "epi-micro-orbit-{label}-{}-{nonce}.json",
+            std::process::id()
+        ))
+    }
+
     #[test]
     fn quat_mul_identity() {
         let id = [1.0f32, 0.0, 0.0, 0.0];
@@ -904,6 +962,51 @@ mod tests {
         assert!((result[1]).abs() < 1e-6, "x should be 0");
         assert!((result[2]).abs() < 1e-6, "y should be 0");
         assert!((result[3] - 1.0).abs() < 1e-6, "z should be 1");
+    }
+
+    // --- P3 parity: q_environment composition mirrors portal_core (DR-ENV-1/8) ---
+
+    #[test]
+    fn environment_transforms_composed_but_not_the_pasu_base_dr_env_1() {
+        let state: SharedClockState = Arc::new(Mutex::new(PortalClockState::default()));
+        {
+            let mut s = state.lock().unwrap();
+            s.quintessence_quaternion = quat_normalize([0.5, 0.3, 0.6, 0.2]);
+            s.transit_quaternion = quat_normalize([0.9, 0.1, 0.2, 0.3]);
+            s.live_quaternion = quat_normalize([0.2, 0.8, 0.1, 0.5]);
+            recompute_composed_quaternion_state(&mut s);
+        }
+        let (base_before, composed_before) = {
+            let s = state.lock().unwrap();
+            (s.quintessence_quaternion, s.composed_quaternion)
+        };
+        update_environment_quaternion(&state, quat_normalize([0.1, 0.9, 0.2, 0.3]));
+        let s = state.lock().unwrap();
+        assert_eq!(
+            s.quintessence_quaternion, base_before,
+            "PASU base must not move under an ambient wind (DR-ENV-1)"
+        );
+        assert_ne!(
+            s.composed_quaternion, composed_before,
+            "composed must move under a real environment"
+        );
+    }
+
+    #[test]
+    fn environment_default_identity_composes_as_prior_law_pass_through() {
+        let state: SharedClockState = Arc::new(Mutex::new(PortalClockState::default()));
+        let mut s = state.lock().unwrap();
+        s.quintessence_quaternion = quat_normalize([0.4, 0.2, 0.7, 0.1]);
+        s.transit_quaternion = quat_normalize([0.3, 0.6, 0.2, 0.5]);
+        s.live_quaternion = quat_normalize([0.5, 0.5, 0.5, 0.5]);
+        recompute_composed_quaternion_state(&mut s);
+        // the default env is the identity rotation → composed equals the prior law
+        let prior = quat_normalize(quat_mul(
+            quat_mul(s.quintessence_quaternion, s.transit_quaternion),
+            s.live_quaternion,
+        ));
+        assert_eq!(s.environment_quaternion, [1.0, 0.0, 0.0, 0.0]);
+        assert_eq!(s.composed_quaternion, prior);
     }
 
     #[test]
@@ -1020,23 +1123,21 @@ mod tests {
 
     #[test]
     fn micro_orbit_roundtrip() {
+        let path = isolated_orbit_path("roundtrip");
         let test_data: Vec<u16> = vec![10, 90, 180, 270, 359];
-        save_micro_orbit(&test_data);
-        let loaded = load_micro_orbit();
+        save_micro_orbit_at(&path, &test_data);
+        let loaded = load_micro_orbit_at(&path);
         assert_eq!(
             loaded, test_data,
             "micro-orbit should survive save/load roundtrip"
         );
-        // Clean up
-        let _ = std::fs::remove_file(orbit_path());
+        let _ = std::fs::remove_file(path);
     }
 
     #[test]
     fn micro_orbit_empty_on_missing_file() {
-        // Use a nonexistent path — load should return empty
-        let loaded = load_micro_orbit();
-        // We can't guarantee the file doesn't exist, but at least verify it returns a Vec
-        assert!(loaded.len() <= 360, "loaded orbit should be capped");
+        let path = isolated_orbit_path("missing");
+        assert_eq!(load_micro_orbit_at(&path), Vec::<u16>::new());
     }
 
     // ── Task 23: WalkType tests ─────────────────────────────────────────────

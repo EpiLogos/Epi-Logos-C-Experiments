@@ -65,18 +65,23 @@ fn extract_methods(content: &str) -> Vec<String> {
             collecting = true;
         }
         if collecting {
-            let mut start = 0;
-            while let Some(open) = trimmed[start..].find('\'') {
-                let open = start + open + 1;
-                let Some(close_rel) = trimmed[open..].find('\'') else {
-                    break;
-                };
-                let close = open + close_rel;
-                let value = &trimmed[open..close];
-                if value.contains('.') {
-                    methods.push(value.to_owned());
+            // Methods may be single- OR double-quoted (double when the name
+            // itself carries an apostrophe, e.g. "s4'.mediation.*").
+            let chars: Vec<char> = trimmed.chars().collect();
+            let mut i = 0;
+            while i < chars.len() {
+                let c = chars[i];
+                if c == '\'' || c == '"' {
+                    if let Some(close_rel) = chars[i + 1..].iter().position(|&d| d == c) {
+                        let value: String = chars[i + 1..i + 1 + close_rel].iter().collect();
+                        if value.contains('.') {
+                            methods.push(value);
+                        }
+                        i = i + close_rel + 2;
+                        continue;
+                    }
                 }
-                start = close + 1;
+                i += 1;
             }
         }
         if collecting && trimmed.contains(']') {

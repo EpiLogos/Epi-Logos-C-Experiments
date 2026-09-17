@@ -13,11 +13,48 @@ use epi_logos::gate::{
     },
     system,
 };
+use epi_s3_gateway_contract::{
+    TerminalBinding, TerminalCaptureMode, TerminalCapturePolicy, TerminalLease, TerminalStatus,
+};
 use serde_json::json;
 use support::{temp_env, TestGatewayClient};
 
 use futures_util::{SinkExt, StreamExt};
 use tokio_tungstenite::{accept_hdr_async, tungstenite::Message};
+
+/// Where the fixture day `07-03-2026` archives.
+///
+/// History IS legitimately nested (`{YYYY}/{MM}/W{week}/{DD}`) — only Present
+/// is flat. What changed is how the day id READS: it is MONTH-FIRST
+/// (`vault::paths::DAY_ID_FORMAT` = "%m-%d-%Y", CHARTER:28, ratified
+/// 2026-07-02, and `temporal_context::chrono_like_day` parses month-first to
+/// match), so `07-03-2026` is 3 July 2026 → `2026/07/W27/03`. These tests
+/// previously expected `2026/03/W10/07`, the same id read day-first as
+/// 7 March 2026 — the pre-consolidation law.
+///
+/// W27: `temporal_context::iso_week_number` = ((ordinal + 6) / 7).max(1), and
+/// 3 July 2026 is ordinal 184 (2026 is not a leap year) → 190 / 7 = 27.
+const HISTORY_ARCHIVE_SEGMENT_FOR_07_03_2026: &str =
+    "Pratibimba/Self/Action/History/2026/07/W27/03";
+
+/// A terminal lease that is LIVE at the moment the patch is applied.
+///
+/// `session_store::validate_terminal_capture_policy` refuses any capture
+/// policy beyond metadata-only whose lease has already expired — real
+/// production law, and a real caller (`agent/tmux.rs::lease_expires_at`)
+/// mints `created_at + ttl`. A hardcoded absolute millisecond stamp is a
+/// lease with a calendar death date: the previous literal
+/// `1_785_000_000_000` was 2026-07-25T09:20:00Z, so this test began failing
+/// once the wall clock passed it. Deriving from `SystemTime::now()` mirrors
+/// the real caller and never rots.
+fn live_lease_expires_at_ms() -> u128 {
+    const LEASE_TTL_MS: u128 = 12 * 60 * 60 * 1000; // agent::tmux::DEFAULT_LEASE_TTL_SECONDS
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .expect("system clock is after the unix epoch")
+        .as_millis()
+        + LEASE_TTL_MS
+}
 
 #[test]
 fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
@@ -28,6 +65,7 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
     let gate_root = env.home.join(".epi").join("gate");
     let store = SessionStore::new(&gate_root).unwrap();
     let session = store.create("agent:main:main").unwrap();
+    let lease_expires_at_ms = live_lease_expires_at_ms();
     store
         .patch(
             &session.canonical_key,
@@ -53,6 +91,23 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
                 cmux_workspace: Some(Some("epi-team-alpha".to_owned())),
                 cmux_surface: Some(Some("leader".to_owned())),
                 cmux_pane_id: Some(Some("pane-main".to_owned())),
+                terminal_binding: Some(Some(TerminalBinding {
+                    terminal_identifier: Some("tmux:epi-team-alpha:%terminal-main".to_owned()),
+                    session_anchor: Some("epi-team-alpha".to_owned()),
+                    tmux_pane_id: Some("%terminal-main".to_owned()),
+                    attached_session_key: Some("agent:main:main".to_owned()),
+                    terminal_status: Some(TerminalStatus::Attached),
+                    lease: Some(TerminalLease {
+                        lease_owner: Some("pi.anima".to_owned()),
+                        lease_purpose: Some("interactive-session".to_owned()),
+                        lease_expires_at_ms: Some(lease_expires_at_ms),
+                    }),
+                    capture_policy: Some(TerminalCapturePolicy {
+                        mode: TerminalCaptureMode::Transcript,
+                        max_lines: Some(80),
+                        redaction_policy: Some("test-redactor".to_owned()),
+                    }),
+                })),
                 ..Default::default()
             },
         )
@@ -99,7 +154,8 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
     bridge.publish_m_clock_placeholder("M0").unwrap();
 
     let events = bridge.drain_test_events().unwrap();
-
+    let lease_expires_at_ms_json =
+        u64::try_from(lease_expires_at_ms).expect("lease expiry fits in u64");
     assert!(events.iter().any(|event| {
         event.kind == "gateway_registration"
             && event.table == "gateway_instance"
@@ -139,12 +195,21 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
             && event.payload["diagnostics"][0]["severity"] == "info"
             && event.payload["teamId"] == "team-alpha"
             && event.payload["cmuxWorkspace"] == "epi-team-alpha"
+            && event.payload["terminalBinding"]["provider"] == "tmux"
+            && event.payload["terminalBinding"]["terminalStatus"] == "attached"
+            && event.payload["terminalBinding"]["tmuxPaneId"] == "%terminal-main"
+            && event.payload["terminalBinding"]["leaseExpiresAtMs"].as_u64()
+                == Some(lease_expires_at_ms_json)
+            && event.payload["terminalBinding"]["capturePolicy"]["mode"] == "transcript"
+            && event.payload["terminalBinding"]["capturePolicy"]["redactionPolicy"] == "configured"
+            && event.payload["terminalBinding"]["rawPaneBodyIncluded"] == false
+            && event.payload["terminalBinding"].get("leaseOwner").is_none()
             && event.payload["dayId"] == "07-03-2026"
             && event.payload["vaultNowPath"] == "/vault/Empty/Present/07-03-2026/main/now.md"
             && event.payload["redisTemporalContext"]["sessionNowKey"]
-                == "s3:gateway:temporal:session:main:now:md"
+                == "cache:hot:s3:gateway:temporal:session:main:now:md"
             && event.payload["redisTemporalContext"]["sessionKairosKey"]
-                == "s3:gateway:temporal:session:main:kairos"
+                == "cache:hot:s3:gateway:temporal:session:main:kairos"
             && event.payload["kairos"]["privacy"] == "public-current-transit-only"
             && event.payload["kernel"]["privacy"] == "safe-public-current-kernel-tick"
             && event.payload["kernel"]["projectionOwner"] == "S3'"
@@ -161,7 +226,7 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
             && event.payload["history"]["archivePath"]
                 .as_str()
                 .unwrap()
-                .contains("Pratibimba/Self/Action/History/2026/03/W10/07")
+                .contains(HISTORY_ARCHIVE_SEGMENT_FOR_07_03_2026)
             && event.payload["aliases"]
                 .as_array()
                 .unwrap()
@@ -179,7 +244,7 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
             && event.payload["nowPath"] == "/vault/Empty/Present/07-03-2026/main/now.md"
             && event.payload["nowLineageKey"] == "agent:main:main"
             && event.payload["redis"]["dayContextKey"]
-                == "s3:gateway:temporal:day:07-03-2026:context"
+                == "cache:warm:s3:gateway:temporal:day:07-03-2026:context"
             && event.payload["redis"]["globalContextKey"]
                 == "s3:gateway:temporal:global:install-local:gateway-main:day:07-03-2026"
             && event.payload["graphiti"]["sessionArcId"] == "day:07-03-2026:session:main"
@@ -187,6 +252,13 @@ fn bridge_emits_session_presence_activity_and_m_clock_surfaces() {
             && event.payload["kernel"]["tick"]["harmonicRatio"]
                 .as_str()
                 .is_some()
+            && event.payload["terminal"]["provider"] == "tmux"
+            && event.payload["terminal"]["status"] == "attached"
+            && event.payload["terminal"]["leaseExpiresAtMs"].as_u64()
+                == Some(lease_expires_at_ms_json)
+            && event.payload["terminal"]["capturePolicy"]["mode"] == "transcript"
+            && event.payload["terminal"]["rawPaneBodyIncluded"] == false
+            && event.payload["terminal"].get("tmuxPaneId").is_none()
             && event.payload["privacy"] == "safe-live-projection"
     }));
     assert!(events.iter().any(|event| {
@@ -266,8 +338,8 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "/vault/Empty/Present/07-03-2026/main/now.md",
             "[[now]]",
             "Idea/Pratibimba/Self/Action/History/2026/03/W10/07",
-            "s3:gateway:temporal:session:main:now:md",
-            "s3:gateway:temporal:day:07-03-2026:context",
+            "cache:hot:s3:gateway:temporal:session:main:now:md",
+            "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "graphiti-main",
             "pratibimba-abcd1234",
             "kairos-07-03-2026-main",
@@ -312,8 +384,8 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "[[now]]",
             "agent:main:main",
             "Idea/Pratibimba/Self/Action/History/2026/03/W10/07",
-            "s3:gateway:temporal:session:main:now:md",
-            "s3:gateway:temporal:day:07-03-2026:context",
+            "cache:hot:s3:gateway:temporal:session:main:now:md",
+            "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "s3:gateway:temporal:global:install-local:gateway-main:day:07-03-2026",
             "pratibimba-abcd1234",
             "graphiti-main",
@@ -373,8 +445,8 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "/vault/Empty/Present/07-03-2026/main/now.md",
             "[[now]]",
             "Idea/Pratibimba/Self/Action/History/2026/03/W10/07",
-            "s3:gateway:temporal:session:main:now:md",
-            "s3:gateway:temporal:day:07-03-2026:context",
+            "cache:hot:s3:gateway:temporal:session:main:now:md",
+            "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "graphiti-main",
             "pratibimba-abcd1234",
             "kairos-07-03-2026-main",
@@ -423,8 +495,8 @@ fn spacetimedb_registration_client_posts_real_reducer_requests() {
             "[[now]]",
             "agent:main:main",
             "Idea/Pratibimba/Self/Action/History/2026/03/W10/07",
-            "s3:gateway:temporal:session:main:now:md",
-            "s3:gateway:temporal:day:07-03-2026:context",
+            "cache:hot:s3:gateway:temporal:session:main:now:md",
+            "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "s3:gateway:temporal:global:install-local:gateway-main:day:07-03-2026",
             "pratibimba-abcd1234",
             "graphiti-main",
@@ -654,6 +726,10 @@ fn spacetimedb_registration_builds_native_subscription_projection_plan() {
             "coincidence",
             "coincidence_tick",
             "module_version",
+            "aletheia_veto_log",
+            "being_pattern_presence",
+            "being_pattern_relation_edge",
+            "being_pattern_review_candidate",
         ]
     );
     assert_eq!(plan.sql_fallback_mode, "http-sql-poll");
@@ -695,7 +771,7 @@ fn spacetimedb_registration_builds_native_subscription_projection_plan() {
             .as_array()
             .unwrap()
             .len(),
-        14
+        18
     );
 }
 
@@ -1236,7 +1312,7 @@ async fn gateway_rpc_publishes_bridge_events_for_real_state_changes() {
             && event.payload["cmuxWorkspace"] == "epi-team-bravo"
             && event.payload["dayId"] == "07-03-2026"
             && event.payload["redisTemporalContext"]["dayContextKey"]
-                == "s3:gateway:temporal:day:07-03-2026:context"
+                == "cache:warm:s3:gateway:temporal:day:07-03-2026:context"
             && event.payload["spacetimedb"].is_null()
             && event.payload["kairos"]["privacy"] == "public-current-transit-only"
     }));
@@ -1387,9 +1463,9 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "07-03-2026",
             "/vault/Empty/Present/07-03-2026/main/now.md",
             "[[Empty/Present/07-03-2026/main/now|NOW main]]",
-            "/vault/Pratibimba/Self/Action/History/2026/03/W10/07",
-            "s3:gateway:temporal:session:main:now:md",
-            "s3:gateway:temporal:day:07-03-2026:context",
+            format!("/vault/{HISTORY_ARCHIVE_SEGMENT_FOR_07_03_2026}"),
+            "cache:hot:s3:gateway:temporal:session:main:now:md",
+            "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "day:07-03-2026:session:main",
             "",
             "kairos-07-03-2026-main",
@@ -1446,9 +1522,9 @@ async fn gateway_registers_live_spacetimedb_gateway_client_and_agent_surfaces_wh
             "/vault/Empty/Present/07-03-2026/main/now.md",
             "[[Empty/Present/07-03-2026/main/now|NOW main]]",
             "agent:main:main",
-            "/vault/Pratibimba/Self/Action/History/2026/03/W10/07",
-            "s3:gateway:temporal:session:main:now:md",
-            "s3:gateway:temporal:day:07-03-2026:context",
+            format!("/vault/{HISTORY_ARCHIVE_SEGMENT_FOR_07_03_2026}"),
+            "cache:hot:s3:gateway:temporal:session:main:now:md",
+            "cache:warm:s3:gateway:temporal:day:07-03-2026:context",
             "s3:gateway:temporal:global:install-live-test:gateway-live-test:day:07-03-2026",
             "",
             "day:07-03-2026:session:main",
@@ -1609,11 +1685,16 @@ async fn spacetimedb_subscription_emits_typed_delta_with_routable_table_identity
 
     // Insert side: kairos + session, typed by surface.
     assert_eq!(delta.inserts.len(), 2, "two inserts expected");
-    let has_kairos = delta.inserts.iter().any(|delta| matches!(
-        delta,
-        SpacetimeTableDelta::KairosSurface { row } if row["kairos_snapshot_id"] == "kairos-rt-1"
-    ));
-    assert!(has_kairos, "KairosSurface insert must be typed and routable");
+    let has_kairos = delta.inserts.iter().any(|delta| {
+        matches!(
+            delta,
+            SpacetimeTableDelta::KairosSurface { row } if row["kairos_snapshot_id"] == "kairos-rt-1"
+        )
+    });
+    assert!(
+        has_kairos,
+        "KairosSurface insert must be typed and routable"
+    );
 
     let has_session = delta.inserts.iter().any(|delta| matches!(
         delta,
@@ -1623,10 +1704,10 @@ async fn spacetimedb_subscription_emits_typed_delta_with_routable_table_identity
 
     // Delete side: world_clock — proves the decoder doesn't drop deletes.
     assert_eq!(delta.deletes.len(), 1, "one delete expected");
-    assert!(matches!(
-        delta.deletes[0],
-        SpacetimeTableDelta::WorldClock { .. }
-    ), "WorldClock delete must be typed");
+    assert!(
+        matches!(delta.deletes[0], SpacetimeTableDelta::WorldClock { .. }),
+        "WorldClock delete must be typed"
+    );
 
     // Convenience accessor: first_kairos_insert should fast-path the common case.
     assert!(
@@ -1660,7 +1741,8 @@ fn reducer_post_retries_503_then_succeeds_with_idempotent_replay() {
                 if read == 0 || header.trim().is_empty() {
                     break;
                 }
-                if let Some(value) = header.strip_prefix("content-length: ")
+                if let Some(value) = header
+                    .strip_prefix("content-length: ")
                     .or_else(|| header.strip_prefix("Content-Length: "))
                 {
                     content_length = value.trim().parse::<usize>().unwrap_or(0);
@@ -1680,10 +1762,7 @@ fn reducer_post_retries_503_then_succeeds_with_idempotent_replay() {
         }
     });
 
-    let client = SpacetimePresence::for_database(
-        &format!("http://{address}"),
-        "epi-logos-runtime",
-    );
+    let client = SpacetimePresence::for_database(&format!("http://{address}"), "epi-logos-runtime");
     let result = client.post_reducer_with_retry(
         "heartbeat_gateway",
         json!(["gateway-rt"]),
@@ -1693,7 +1772,10 @@ fn reducer_post_retries_503_then_succeeds_with_idempotent_replay() {
         },
     );
 
-    assert!(result.is_ok(), "retry should succeed on 3rd attempt: {result:?}");
+    assert!(
+        result.is_ok(),
+        "retry should succeed on 3rd attempt: {result:?}"
+    );
     assert_eq!(
         attempts.load(std::sync::atomic::Ordering::SeqCst),
         3,
@@ -1735,7 +1817,12 @@ fn decode_kairos_row(row: &serde_json::Value) -> LiveKairosColumns {
             .unwrap_or_default()
             .to_owned()
     };
-    let take_bool = |idx: usize| -> bool { array.get(idx).and_then(|value| value.as_bool()).unwrap_or(false) };
+    let take_bool = |idx: usize| -> bool {
+        array
+            .get(idx)
+            .and_then(|value| value.as_bool())
+            .unwrap_or(false)
+    };
     // Schema order from KairosSurface in
     // Body/S/S3/epi-spacetime-module/src/lib.rs (see #[reducer]
     // bind_kairos_surface): kairos_snapshot_id, installation_id, gateway_id,
@@ -1753,23 +1840,39 @@ fn decode_kairos_row(row: &serde_json::Value) -> LiveKairosColumns {
     }
 }
 
-/// Live SpaceTimeDB round-trip — gated by EPI_SPACETIME_LIVE_HOST=http://host:port.
-/// Set EPI_SPACETIME_LIVE_HOST + EPI_SPACETIME_LIVE_DATABASE (defaults to
-/// epi-logos-runtime) and `cargo test --test gate_spacetimedb_bridge
-/// spacetimedb_live_kairos_round_trip -- --nocapture --ignored` to exercise
-/// the full client path against a real running SpaceTimeDB host that has the
-/// epi-logos-runtime module published. Skipped by default so CI without a
-/// live host stays green.
+/// Live SpaceTimeDB round-trip.
+///
+/// **SpaceTimeDB runs NATIVELY — it is not a Docker service.** There is no
+/// `spacetimedb` entry in `docker-compose.epi-s2.yml` (Neo4j, Redis, and
+/// Graphiti only), and `epi up` does not start it either. The operator runs
+/// the host directly, per `docs/operations/track-03-runbook.md` §1:
+///
+/// ```bash
+/// spacetime start --listen-addr 127.0.0.1:3000
+/// cd Body/S/S3/epi-spacetime-module
+/// spacetime build
+/// spacetime publish epi-logos-runtime --server http://127.0.0.1:3000 -y
+/// ```
+///
+/// With the host up, run
+/// `cargo test --test gate_spacetimedb_bridge spacetimedb_live_kairos_round_trip
+/// -- --nocapture --ignored`. Override the target with
+/// `EPI_SPACETIME_LIVE_HOST=http://host:port` and `EPI_SPACETIME_LIVE_DATABASE`
+/// (defaults `http://127.0.0.1:3000` / `epi-logos-runtime`).
+///
+/// `#[ignore]`d rather than probe-and-skipped: with no host this FAILS at
+/// `subscribe_projection` with `spacetimedb websocket connect failed:
+/// Connection refused (os error 61)`, which means the host was never started.
 #[tokio::test]
-#[ignore = "requires a live SpaceTimeDB instance with epi-logos-runtime published"]
+#[ignore = "requires a natively-run SpaceTimeDB host with epi-logos-runtime published: `spacetime start --listen-addr 127.0.0.1:3000`, then `cd Body/S/S3/epi-spacetime-module && spacetime build && spacetime publish epi-logos-runtime --server http://127.0.0.1:3000 -y`. NOT a Docker service — docker-compose.epi-s2.yml has no spacetimedb entry, and `epi up` does not start it."]
 async fn spacetimedb_live_kairos_round_trip_arrives_within_100ms() {
     use epi_logos::gate::spacetimedb_bridge::{SpacetimePresence, SpacetimeRegistration};
     use epi_s3_gateway_contract::SpacetimeTableDelta;
 
     let host =
         std::env::var("EPI_SPACETIME_LIVE_HOST").unwrap_or_else(|_| "http://127.0.0.1:3000".into());
-    let database = std::env::var("EPI_SPACETIME_LIVE_DATABASE")
-        .unwrap_or_else(|_| "epi-logos-runtime".into());
+    let database =
+        std::env::var("EPI_SPACETIME_LIVE_DATABASE").unwrap_or_else(|_| "epi-logos-runtime".into());
 
     let env = temp_env()
         .with_env("SPACETIMEDB_URL", host.clone())
@@ -1877,9 +1980,7 @@ async fn spacetimedb_live_kairos_round_trip_arrives_within_100ms() {
         .expect("observed_at must be set when row is found")
         .duration_since(before_bind)
         .as_millis();
-    eprintln!(
-        "[LIVE] bind_kairos_surface -> typed KairosSurface delta in {elapsed_ms} ms"
-    );
+    eprintln!("[LIVE] bind_kairos_surface -> typed KairosSurface delta in {elapsed_ms} ms");
 
     assert_eq!(columns.snapshot_id, snapshot_id);
     assert_eq!(columns.session_key, session_key);
@@ -1906,15 +2007,15 @@ async fn spacetimedb_live_kairos_round_trip_arrives_within_100ms() {
 /// harness named in the verification rider — that scale belongs to Track 10
 /// integration milestones, see 10.T*).
 #[tokio::test(flavor = "multi_thread", worker_threads = 6)]
-#[ignore = "requires a live SpaceTimeDB instance with epi-logos-runtime (03.T4 schema) published"]
+#[ignore = "requires a natively-run SpaceTimeDB host with the 03.T4-schema epi-logos-runtime published: `spacetime start --listen-addr 127.0.0.1:3000` + `spacetime publish epi-logos-runtime` from Body/S/S3/epi-spacetime-module. NOT a Docker service."]
 async fn spacetimedb_live_world_clock_advances_at_1hz_across_subscribers_within_30ms() {
     use epi_logos::gate::spacetimedb_bridge::{SpacetimePresence, SpacetimeRegistration};
     use epi_s3_gateway_contract::SpacetimeTableDelta;
 
     let host =
         std::env::var("EPI_SPACETIME_LIVE_HOST").unwrap_or_else(|_| "http://127.0.0.1:3000".into());
-    let database = std::env::var("EPI_SPACETIME_LIVE_DATABASE")
-        .unwrap_or_else(|_| "epi-logos-runtime".into());
+    let database =
+        std::env::var("EPI_SPACETIME_LIVE_DATABASE").unwrap_or_else(|_| "epi-logos-runtime".into());
 
     let env = temp_env()
         .with_env("SPACETIMEDB_URL", host.clone())
@@ -1953,14 +2054,11 @@ async fn spacetimedb_live_world_clock_advances_at_1hz_across_subscribers_within_
 
     // Drain each subscriber's initial snapshot.
     for sub in subscribers.iter_mut() {
-        let _ = tokio::time::timeout(
-            std::time::Duration::from_millis(2000),
-            sub.next_delta(),
-        )
-        .await
-        .expect("initial frame")
-        .expect("initial decode")
-        .expect("initial delta");
+        let _ = tokio::time::timeout(std::time::Duration::from_millis(2000), sub.next_delta())
+            .await
+            .expect("initial frame")
+            .expect("initial decode")
+            .expect("initial delta");
     }
 
     // Now advance the world_clock at 1 Hz cadence five times and collect when
@@ -1970,8 +2068,7 @@ async fn spacetimedb_live_world_clock_advances_at_1hz_across_subscribers_within_
     // a quiet local host the spread should be well under that).
     let client = SpacetimePresence::for_database(&host, &database);
 
-    let mut tick_observed_at: Vec<Vec<std::time::Instant>> =
-        (0..4).map(|_| Vec::new()).collect();
+    let mut tick_observed_at: Vec<Vec<std::time::Instant>> = (0..4).map(|_| Vec::new()).collect();
 
     for tick in 1..=5u64 {
         let before_tick = std::time::Instant::now();
@@ -1993,14 +2090,12 @@ async fn spacetimedb_live_world_clock_advances_at_1hz_across_subscribers_within_
                 if std::time::Instant::now() >= deadline {
                     panic!("subscriber {idx} did not observe tick {tick} within 1s of issue");
                 }
-                let next = tokio::time::timeout(
-                    std::time::Duration::from_millis(500),
-                    sub.next_delta(),
-                )
-                .await
-                .expect("delta read")
-                .expect("delta")
-                .expect("delta present");
+                let next =
+                    tokio::time::timeout(std::time::Duration::from_millis(500), sub.next_delta())
+                        .await
+                        .expect("delta read")
+                        .expect("delta")
+                        .expect("delta present");
                 let saw_world_clock = next.inserts.iter().any(|delta| {
                     if let SpacetimeTableDelta::WorldClock { row } = delta {
                         let array: Vec<serde_json::Value> = match row {
@@ -2073,7 +2168,7 @@ async fn spacetimedb_live_world_clock_advances_at_1hz_across_subscribers_within_
 /// 03.T4 live verification — opt-in archetype event + coincidence detection
 /// across multiple publishers. Gated by EPI_SPACETIME_LIVE_HOST.
 #[tokio::test]
-#[ignore = "requires a live SpaceTimeDB instance with epi-logos-runtime (03.T4 schema) published"]
+#[ignore = "requires a natively-run SpaceTimeDB host with the 03.T4-schema epi-logos-runtime published: `spacetime start --listen-addr 127.0.0.1:3000` + `spacetime publish epi-logos-runtime` from Body/S/S3/epi-spacetime-module. NOT a Docker service."]
 async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_same_grid_cell() {
     use epi_logos::gate::spacetimedb_bridge::{
         identity_handle_blake3, quintessence_hash_blake3, SpacetimePresence, SpacetimeRegistration,
@@ -2082,8 +2177,8 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
 
     let host =
         std::env::var("EPI_SPACETIME_LIVE_HOST").unwrap_or_else(|_| "http://127.0.0.1:3000".into());
-    let database = std::env::var("EPI_SPACETIME_LIVE_DATABASE")
-        .unwrap_or_else(|_| "epi-logos-runtime".into());
+    let database =
+        std::env::var("EPI_SPACETIME_LIVE_DATABASE").unwrap_or_else(|_| "epi-logos-runtime".into());
 
     let env = temp_env()
         .with_env("SPACETIMEDB_URL", host.clone())
@@ -2104,9 +2199,8 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
     // Three publishers each derive their own identity_handle via BLAKE3 and
     // publish an opt-in archetype event on the same aspect_grid_cell.
     for idx in 0..3u32 {
-        let identity_handle = identity_handle_blake3(
-            format!("test-identity-{day_id}-{idx}").as_bytes(),
-        );
+        let identity_handle =
+            identity_handle_blake3(format!("test-identity-{day_id}-{idx}").as_bytes());
         // Pre-derive quintessence_hash so the presence row never carries raw
         // quaternionic data — only the canonical fingerprint.
         let _quintessence_hash =
@@ -2158,9 +2252,7 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
     let deadline = before_detect + std::time::Duration::from_millis(3000);
     let mut observed_coincidence = false;
     let mut observed_tick = false;
-    while !(observed_coincidence && observed_tick)
-        && std::time::Instant::now() < deadline
-    {
+    while !(observed_coincidence && observed_tick) && std::time::Instant::now() < deadline {
         let next = tokio::time::timeout(
             std::time::Duration::from_millis(1000),
             subscription.next_delta(),
@@ -2179,10 +2271,15 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
                         }
                         _ => Vec::new(),
                     };
-                    let row_day = array.get(1).and_then(|value| value.as_str()).unwrap_or_default();
+                    let row_day = array
+                        .get(1)
+                        .and_then(|value| value.as_str())
+                        .unwrap_or_default();
                     let row_cell = array.get(2).and_then(|value| value.as_u64()).unwrap_or(0);
-                    let participants_serialised =
-                        array.get(3).and_then(|value| value.as_str()).unwrap_or_default();
+                    let participants_serialised = array
+                        .get(3)
+                        .and_then(|value| value.as_str())
+                        .unwrap_or_default();
                     if row_day == day_id && row_cell as u32 == aspect_grid_cell {
                         let participant_count = participants_serialised
                             .split(',')
@@ -2203,11 +2300,13 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
                         }
                         _ => Vec::new(),
                     };
-                    let row_day = array.get(1).and_then(|value| value.as_str()).unwrap_or_default();
+                    let row_day = array
+                        .get(1)
+                        .and_then(|value| value.as_str())
+                        .unwrap_or_default();
                     if row_day == day_id {
                         let new_count = array.get(2).and_then(|v| v.as_u64()).unwrap_or(0);
-                        let participants_count =
-                            array.get(3).and_then(|v| v.as_u64()).unwrap_or(0);
+                        let participants_count = array.get(3).and_then(|v| v.as_u64()).unwrap_or(0);
                         assert_eq!(new_count, 1, "tick should show 1 new coincidence");
                         assert_eq!(participants_count, 3, "3 distinct participants expected");
                         observed_tick = true;
@@ -2218,7 +2317,10 @@ async fn spacetimedb_live_shared_archetype_publishes_produce_coincidence_for_sam
         }
     }
 
-    assert!(observed_coincidence, "coincidence row must arrive on the subscribed multiplex");
+    assert!(
+        observed_coincidence,
+        "coincidence row must arrive on the subscribed multiplex"
+    );
     assert!(observed_tick, "coincidence_tick audit row must arrive");
 }
 
@@ -2258,7 +2360,7 @@ fn shared_archetype_event_refuses_opt_in_consent_false_at_client_boundary() {
 /// the subscription, re-subscribes, and asserts the latest cached state
 /// is recovered FROM LIVE DELTAS (not from any local stale polling cache).
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
-#[ignore = "requires a live SpaceTimeDB instance with epi-logos-runtime (03.T4 schema) published"]
+#[ignore = "requires a natively-run SpaceTimeDB host with the 03.T4-schema epi-logos-runtime published: `spacetime start --listen-addr 127.0.0.1:3000` + `spacetime publish epi-logos-runtime` from Body/S/S3/epi-spacetime-module. NOT a Docker service."]
 async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconnect() {
     use epi_logos::gate::spacetimedb_bridge::{SpacetimePresence, SpacetimeRegistration};
     use epi_s3_gateway_contract::{
@@ -2270,8 +2372,8 @@ async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconne
 
     let host =
         std::env::var("EPI_SPACETIME_LIVE_HOST").unwrap_or_else(|_| "http://127.0.0.1:3000".into());
-    let database = std::env::var("EPI_SPACETIME_LIVE_DATABASE")
-        .unwrap_or_else(|_| "epi-logos-runtime".into());
+    let database =
+        std::env::var("EPI_SPACETIME_LIVE_DATABASE").unwrap_or_else(|_| "epi-logos-runtime".into());
 
     let env = temp_env()
         .with_env("SPACETIMEDB_URL", host.clone())
@@ -2437,11 +2539,15 @@ async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconne
         }
     }
     assert!(
-        recovered_cache.iter().any(|cached| cached.surface == "world_clock"),
+        recovered_cache
+            .iter()
+            .any(|cached| cached.surface == "world_clock"),
         "recovered cache must include world_clock from live deltas"
     );
     assert!(
-        recovered_cache.iter().any(|cached| cached.surface == "kairos_surface"),
+        recovered_cache
+            .iter()
+            .any(|cached| cached.surface == "kairos_surface"),
         "recovered cache must include kairos_surface from live deltas"
     );
     // The recovered world_clock row carries tick=42 (the one we bound) —
@@ -2454,7 +2560,10 @@ async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconne
         .iter()
         .find(|cached| {
             cached.surface == "world_clock"
-                && cached.row.get("gateway_id").and_then(serde_json::Value::as_str)
+                && cached
+                    .row
+                    .get("gateway_id")
+                    .and_then(serde_json::Value::as_str)
                     == Some(gateway_id.as_str())
         })
         .map(|cached| &cached.row)
@@ -2478,7 +2587,7 @@ async fn kernel_bridge_stream_round_trips_world_clock_and_kairos_through_reconne
 /// arc carry ONLY the namespace_ref/session_arc_id references (no episode
 /// body fields).
 #[tokio::test]
-#[ignore = "requires the live Graphiti runtime at http://127.0.0.1:37778"]
+#[ignore = "requires the live Graphiti runtime at http://127.0.0.1:37778. Graphiti — unlike SpaceTimeDB — IS a compose service: `docker compose -f docker-compose.epi-s2.yml up -d graphiti` (needs GEMINI_API_KEY; pulls neo4j + redis via depends_on)."]
 async fn graphiti_live_round_trip_carries_only_safe_references_into_spacetimedb() {
     use epi_logos::gate::graphiti;
     use epi_s3_gateway_contract::assert_no_graphiti_body_in_row;
@@ -2545,8 +2654,7 @@ async fn graphiti_live_round_trip_carries_only_safe_references_into_spacetimedb(
         "graphiti_namespace_ref": namespace_ref,
         "graphiti_arc_id": format!("day:{day_id}:session:{session_key}"),
     });
-    assert_no_graphiti_body_in_row(&safe_row)
-        .expect("reference-only row must be accepted");
+    assert_no_graphiti_body_in_row(&safe_row).expect("reference-only row must be accepted");
 
     // Conversely, if someone tried to leak the episode body into a
     // SpaceTimeDB row, the contract MUST refuse it.
@@ -2566,6 +2674,9 @@ async fn graphiti_live_round_trip_carries_only_safe_references_into_spacetimedb(
         err.contains("episode_body"),
         "refusal must name the offending field: {err}"
     );
+
+    // Delete exactly what this test created.
+    purge_graphiti_group(&session_key).await;
 }
 
 #[test]
@@ -2605,10 +2716,7 @@ fn reducer_post_surfaces_4xx_immediately_without_retry() {
         stream.flush().expect("flush");
     });
 
-    let client = SpacetimePresence::for_database(
-        &format!("http://{address}"),
-        "epi-logos-runtime",
-    );
+    let client = SpacetimePresence::for_database(&format!("http://{address}"), "epi-logos-runtime");
     let result = client.post_reducer_with_retry(
         "heartbeat_gateway",
         json!(["bad-gateway-id"]),
@@ -2625,4 +2733,31 @@ fn reducer_post_surfaces_4xx_immediately_without_retry() {
         1,
         "exactly 1 reducer attempt for non-retryable 4xx"
     );
+}
+
+/// Delete exactly the Graphiti group this test created, and nothing else.
+///
+/// Graphiti episodes are `:Entity`/`:Episodic` keyed by `group_id`, derived
+/// from the session key with `:` replaced by `_`. Leaving them behind is how
+/// the graph accumulated fixture residue that nothing owned; the fix belongs
+/// here, in the test that created it, not in a scheduled sweep somewhere else.
+/// The delete is scoped to this run's unique group id and asserts it never
+/// touches a `:Bimba` node.
+async fn purge_graphiti_group(session_key: &str) {
+    let group_id = session_key.replace(':', "_");
+    let Ok(graph) = epi_s2_graph_services::Neo4jClient::connect(
+        &epi_s2_graph_services::Neo4jConfig::from_env(),
+    ) else {
+        return; // no live graph in this environment; nothing was written either
+    };
+    let _ = graph
+        .graph()
+        .run(
+            neo4rs::query(
+                "MATCH (n) WHERE (n:Entity OR n:Episodic) AND NOT n:Bimba \
+                 AND n.group_id = $group_id DETACH DELETE n",
+            )
+            .param("group_id", group_id),
+        )
+        .await;
 }

@@ -1,7 +1,7 @@
 CompileFlags:
   Add:
-    - "-Iepi-lib/include"
-    - "-Ivendor/blake3"
+    - "-IBody/S/S0/epi-lib/include"
+    - "-IBody/S/S0/vendor/blake3"
     - "-std=c11"
     - "-Wall"
     - "-Wextra"

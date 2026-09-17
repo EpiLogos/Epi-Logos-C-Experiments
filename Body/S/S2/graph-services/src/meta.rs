@@ -223,6 +223,28 @@ pub async fn write_graph_meta(client: &Neo4jClient, meta: &GraphMeta) -> Result<
     Ok(())
 }
 
+/// CCT-16 (v): monotonically bump `graph_revision` after any non-read
+/// transaction touching `:Bimba`. The Redis cold-tier already keys its
+/// coordinate-lookup namespace on this value, so one bump flips the cache
+/// namespace atomically — no DEL storms. Returns the new revision.
+pub async fn bump_graph_revision(client: &Neo4jClient) -> Result<i64, String> {
+    let rows = client
+        .run_query(
+            query(
+                "MERGE (m:GraphMeta {graph_id: $graph_id})
+                 SET m.graph_revision = coalesce(m.graph_revision, 0) + 1,
+                     m.updated_at = datetime()
+                 RETURN m.graph_revision AS graph_revision",
+            )
+            .param("graph_id", GRAPH_ID),
+        )
+        .await
+        .map_err(|e| format!("graph revision bump failed: {}", e))?;
+    rows.first()
+        .and_then(|row| row.get::<i64>("graph_revision").ok())
+        .ok_or_else(|| "graph revision bump returned no revision".to_owned())
+}
+
 pub fn desired_meta(schema_version: &str, next_revision: i64) -> GraphMeta {
     GraphMeta {
         graph_id: GRAPH_ID.to_string(),

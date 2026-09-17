@@ -1,0 +1,36 @@
+{
+  "runId": "20260611T174104Z-06-T6.3",
+  "taskId": "06.T6.3",
+  "startedAt": "2026-06-11T17:41:04.075Z",
+  "owner": "codex-m-dev-06-t6-3",
+  "leaseExpiresAt": "2026-06-11T19:41:04.075Z",
+  "worktree": null,
+  "task": {
+    "id": "06.T6.3",
+    "trackId": "06",
+    "tranche": "T6.3",
+    "title": "Six operational-capacity panes over `capacity_workflows.rs`",
+    "effort": null,
+    "file": "06-m5-epii-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/06-m5-epii-reconciliation.md",
+    "dependsOn": [
+      "06.T6.2"
+    ],
+    "writeScopes": [
+      "Body/S/S5/epii-autoresearch-core/src/capacity_workflows.rs",
+      "vendor/legacy/epi-tauri/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

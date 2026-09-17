@@ -12,6 +12,7 @@ fn hybrid_retriever_computes_vak_bias_weights_mechanistic() {
         cs: CsField {
             code: "CS2".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     };
     let weights = HybridRetriever::vak_bias_weights(&vak);
@@ -62,6 +63,7 @@ fn hybrid_retriever_carries_address_values_for_matching() {
         cs: CsField {
             code: "CS3".into(),
             direction: CsDirection::Night,
+            recognized: false,
         },
     };
     let weights = HybridRetriever::vak_bias_weights(&vak);
@@ -87,6 +89,7 @@ fn hybrid_retriever_dialogical_returns_empty_weights() {
         cs: CsField {
             code: "".into(),
             direction: CsDirection::Day,
+            recognized: false,
         },
     };
     let weights = HybridRetriever::vak_bias_weights(&vak);

@@ -1,6 +1,6 @@
 # Fibonacci 60-Digit Pisano Integration — Mahamaya Clock Bridge
 
-**Status:** Proposed (2026-04-11) — Awaiting dataset reconciliation. Onto-architectural placement RESOLVED: Fibonacci Ground = Level 0 (meta-lens, pre-lensic). See §6 and companion specs.
+**Status:** Proposed (2026-04-11) — Awaiting dataset reconciliation. Onto-architectural placement RESOLVED: Fibonacci Ground = Level 0 and primary functional lens id 16, grounding derived ids 0..15. See §6 and companion specs.
 **Author:** Session synthesis — Epi-Logos C Experiments
 **Coordinate placement:** Root at `#2-0` | Expression at `#3-5` | Completion at `Clock_Central_Node`
 **Companion specs:** `Idea/Bimba/Seeds/M/M4'/Legacy/plans/CLOCK-AND-NARA-SPECS/02-16-lenses-backbone-temporal.md`,
@@ -111,7 +111,7 @@ Pos  Digit  Degree  Backbone Role       Quadrant
 **8 fives** at positions {5, 10, 20, 25, 35, 40, 50, 55} → degrees {30°,60°,120°,150°,210°,240°,300°,330°}:
 - These are 8 of the **12 Ring-1 backbone nodes** (zodiacal, every 30°)
 - The 4 zeros + 8 fives together cover all 12 clock-hour positions (every 5th Fibonacci step = every 30° = one zodiacal step)
-- Lens 6 (12°×30°, zodiacal) is intrinsically embedded in the Fibonacci 60-clock at this resolution
+- Lens 9 (30°×12, Solar Month) is intrinsically embedded in the Fibonacci 60-clock at this resolution (drift-corrected 2026-07-19: the 12 clock-hour positions at every 30° are Lens 9's sections; Lens 6 (12°×30) is the Pleromatic lens — see `pleroma-30-syzygy-lens6-integration.md`)
 
 ### §2b The 10-Complement Symmetry (# Inversion)
 
@@ -411,7 +411,7 @@ The prime pair at `#2-5` arithmetically encodes the planet-zodiac product (7×12
 | 60-digit Pisano period | QL-native 6°×60 clock traversal | Proposed Lens 16 |
 | Period completion (step 60) | Central Node arrival (degree 360°) | `Clock_Central_Node` |
 | 4 cardinal zeros | Ring-0 backbone (0°,90°,180°,270°) | Lens 2 (4×90°) |
-| 8 zodiacal fives | Ring-1 backbone (all 12 clock positions) | Lens 6 (12×30°) |
+| 8 zodiacal fives | Ring-1 backbone (all 12 clock positions) | Lens 9 (30°×12) |
 | 10-complement pairs (i ↔ i+30) | # inversion operator + Lens 14 (hemispheres) | `#` operator |
 | Strand A (positions 0–29, sum 128) | Strand A explicit double helix | M1 spanda spec 03 |
 | Strand B (positions 30–59, sum 152) | Strand B implicit double helix | M1 spanda spec 03 |

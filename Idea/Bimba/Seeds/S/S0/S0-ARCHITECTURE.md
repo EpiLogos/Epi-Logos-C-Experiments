@@ -3,6 +3,7 @@ title: "S0 Terminal — Total Shape, Substrate Map, Membrane Contract, M' Depend
 coordinate: "S0 / S0'"
 status: "canonical-architecture-spec"
 created: 2026-06-03
+updated: 2026-08-02
 authority_relation: "Domain authority for the S0 stack — the executable kernel membrane. `S0-SPEC.md` and `S0'-SPEC.md` are the canonical narrative seeds; this document supplies the load-bearing substrate map, modularisation findings, and M' dependency surface for cycle-3 architectural reconciliation. Where they disagree, the seed specs hold for prose intent; this doc is authoritative for code-grounded substrate claims and concrete refactor proposals."
 depends_on:
   - "[[S0-SPEC]]"
@@ -20,10 +21,8 @@ related_tranches:
   - "11-theia-shell-surface-hosting (kernel-bridge extension consumes S0)"
 m_prime_consumers:
   - "Every M' surface consumes S0"
-  - "Body/M/epi-theia/extensions/kernel-bridge (single typed boundary)"
-  - "Body/M/epi-theia/extensions/kernel-bridge-readiness (nine-state taxonomy)"
-  - "Body/M/epi-theia/extensions/m0-anuttara..m5-epii (read MathemeHarmonicProfile via bridge)"
-  - "Body/M/epi-tauri (deprecated; same KernelTemporalProjection contract)"
+  - "Body/M/pratibimba-app (active single typed gateway/bridge boundary)"
+  - "Body/M/epi-theia and Body/M/epi-tauri (frozen/deprecated carrier genealogy)"
 ---
 
 # S0 Architecture — The Executable Membrane Spine
@@ -35,6 +34,8 @@ m_prime_consumers:
 S0 is **not** the top-layer kernel owner. Kernel/profile bridge facts that span S0, S3, S5, and M' are jointly owned (S0-SPEC §"Canonical Source Lock", lines 561-574). S0 owns command executability, typed mirrors, approval-aware process execution, profile projection, and audit return. It does not own vault, graph, gateway, agent, or review domain law — those live in S1–S5.
 
 This document gives the total shape: substrate map per sub-coordinate, profile-bus + kernel-bridge contracts, M' dependency map, concrete modularisation findings (with file:line scope and refactor proposals), and the boundary contracts that hold the membrane together.
+
+**Cycle-3 Nara membrane additions (2026-08-02).** `epi-cli/src/nara/oracle_composite.rs` and `src/gate/nara.rs` expose typed I-Ching/Tarot cast, protected history read, and position-state mutation while preserving the existing Oracle engines/LUTs and treating [[S3]] publication as a separately reported best-effort consequence. `src/gate/nara_close_bundle.rs` additively retains bounded protected `wisdom_delta_text`; the carrier derives an eight-byte display witness without conflating it with the C `uint64_t wisdom_delta`. `nara.field.handle` is loopback-only and opaque. These are host adapters over M4/S3/M5 law, not new S0 ontology.
 
 **Anti-greenfield posture (binding):** `Body/S/S0/{epi-cli, portal-core, epi-lib}` and `Body/S/epi-kernel-contract` are all landed substrate. Every proposal below is phrased *consume as-is*, *audit/verify*, *extend a named field/contract*, or *refactor/modularise/cleanup with named scope*. First-build is only invoked for genuine integration blockers (klein_flip emit, ananda_vortex field, KleinFlipEvent enum) and for tightening the C/Rust FFI surface.
 
@@ -50,7 +51,7 @@ The S0 stack realises the QL 0-5 internally as a sub-coordinate ring. Verified a
 | **S0-1 / S0-1'** | `epi-lib` — C kernel: pointer-web, `m0.h..m5.h`, `.rodata` LUTs, `kernel.h` bioquaternion algebra | `Body/S/S0/epi-lib/include/*.h`, `Body/S/S0/epi-lib/src/*.c` (12 files, 7021 LOC), `m1.h` 853 LOC, `m3.h` 983 LOC are the largest |
 | **S0-2 / S0-2'** | `portal-core` — Rust kernel: `MathemeHarmonicProfile`, `KernelProjection`, `KernelTemporalProjection`, `PersonalIdentityProfile`, codon rotation, Spanda, Hopf | `Body/S/S0/portal-core/src/*.rs` (19 files, 4472 LOC), `kernel.rs` is 1266 LOC (the matheme spine), `nara_journal.rs` is 466 LOC |
 | **S0-3 / S0-3'** | `epi-cli` — CLI + TUI + portal: kernel-bridge runtime, gateway server, agent dispatch, profile/portal command, ratatui-hypertile workspace | `Body/S/S0/epi-cli/src/{main.rs, lib.rs, gate, portal, tui, agent, nara, profile, core}` — single binary `epi`, ~36 700 LOC across 100+ files |
-| **S0-4 / S0-4'** | `epi-kernel-contract` — parent-role typed envelope: `KernelTickEnvelope`, `TrajectoryDeposit`, `AnuttaraDiagnostic`, `PhysicalPoleState`, `MentalPoleState` | `Body/S/epi-kernel-contract/src/*.rs` (8 files, 2184 LOC, sibling-to-S0, depends on `portal-core`) |
+| **S0-4 / S0-4'** | `epi-kernel-contract` — parent-role typed envelope consumed by S0: `KernelTickEnvelope`, `TrajectoryDeposit`, `AnuttaraDiagnostic`, `PhysicalPoleState`, `MentalPoleState` | `Body/S/epi-kernel-contract/src/*.rs` (8 files, 2184 LOC, parent crate / parent-role envelope of the S-stack; depends on `portal-core`) |
 | **S0-5 / S0-5'** | Membrane synthesis — bootstrap return, audit, `epi up`, portal surface registry, parity manifest | `epi-cli/src/up.rs:1-328`, `portal/registry.rs:1-97`, `portal/surfaces.rs:1-1175`, `gate/parity.rs:1-750`, `tests/kernel_*` |
 
 **Anti-greenfield note:** all six sub-coordinates are landed. The architectural work proposed below is modularisation (split monoliths), typed-surface tightening (klein_flip, ananda_vortex, KleinFlipEvent enum), and contract closure (cycle-3 ledger rows 10.x, 16.x) — not rebuild.
@@ -185,9 +186,9 @@ Sub-module groups by domain:
 
 **The portal surface registry** at [Body/S/S0/epi-cli/src/portal/registry.rs:1-97](Body/S/S0/epi-cli/src/portal/registry.rs) (small but architectural) and `portal/surfaces.rs:1-1175` is the operator-facing parity manifest — every gateway method, extension tool, package manifest, PI agent contract method, capability gate, and registered TUI plugin becomes inspectable here (S0-SPEC.md:133).
 
-### 2.4 S0-4 — `epi-kernel-contract` (the parent-role typed envelope)
+### 2.4 S0-4 Consumer Boundary — `epi-kernel-contract` (the parent-role typed envelope)
 
-Sibling crate at `Body/S/epi-kernel-contract/` (NOT under `Body/S/S0/`). Depends on `portal-core`. Public surface re-exports portal-core types plus eight contract modules:
+Parent crate at `Body/S/epi-kernel-contract/` (NOT under `Body/S/S0/`): the parent-role envelope of the S-stack. It depends on `portal-core`. Its public surface re-exports portal-core types plus eight contract modules:
 
 | Module | LOC | Surface |
 |---|---:|---|
@@ -435,13 +436,13 @@ The findings below are concrete and prioritised. Each names the file, current sh
 
 ### 5.9 [LOW-PRIORITY] Workspace organisation: promote `epi-kernel-contract` clarity
 
-**Current shape:** `epi-kernel-contract` lives at `Body/S/epi-kernel-contract/` (sibling-to-S0). Its `Cargo.toml:13` depends on `portal-core = { path = "../S0/portal-core" }`. The crate re-exports ~60 portal-core types via `lib.rs:27-50`.
+**Current shape:** `epi-kernel-contract` lives at `Body/S/epi-kernel-contract/` as the parent crate and parent-role envelope of the S-stack. Its `Cargo.toml:13` depends on `portal-core = { path = "../S0/portal-core" }`. The crate re-exports ~60 portal-core types via `lib.rs:27-50`.
 
 **Proposed refactor:**
-- Document the cross-coordinate dependency explicitly in `epi-kernel-contract/README.md` (currently undocumented; the crate lives "above" S0 in the contract sense but "beside" it in the filesystem)
+- Document the cross-coordinate dependency explicitly in `epi-kernel-contract/README.md` (currently undocumented; the crate is the parent-role envelope in the contract sense while residing at `Body/S/`)
 - Audit re-export façade: 60 types is large; split into `contract::shapes`, `contract::projections`, `contract::events` to mirror portal-core organisation
 
-**Benefit:** the crate's positional ambiguity ("sibling-to-S0, parent-role across S") is currently invisible; explicit documentation closes the gap.
+**Benefit:** the crate's parent role is explicit, so future refactors cannot misclassify it as an S0 sibling.
 
 **Blast radius:** LOW — documentation + module organisation only.
 
@@ -584,7 +585,7 @@ To close cycle-3 ledger:
 
 ### 10.3 Decision register entries surfaced
 
-- **DR-S0-1 (new):** `epi-kernel-contract` workspace location — keep sibling-to-S0 at `Body/S/epi-kernel-contract/` or promote to `Body/S/S0/epi-kernel-contract/` or `Body/S/contract/`? Current location is positionally ambiguous (per §5.9).
+- **DR-S0-1 (VALIDATED):** `epi-kernel-contract` remains at `Body/S/epi-kernel-contract/` as the parent crate / parent-role envelope of the S-stack; it must not be relocated into `Body/S/S0/` by filesystem convenience (per §5.9).
 - **DR-S0-2 (new):** Per-method dispatch tests for `gate/server.rs` — required as part of §5.1 split, or as standalone landing tranche?
 - **DR-S0-3 (new):** `KernelBridgeCachedProfile.profile: Value` — confirm leave-as-is policy (§5.10) or do per-extension narrowing tranches by Mn surface?
 

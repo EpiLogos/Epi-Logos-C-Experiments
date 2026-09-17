@@ -176,9 +176,11 @@ mod tests {
     fn sample_energy() -> EnergyDecomposition {
         EnergyDecomposition {
             bimba_pratibimba_energy: 0.1,
-            lens_energy: 0.05,
-            r_energy: 0.02,
-            total_energy: 0.17,
+            e_4_personal_energy: 0.04,
+            e_5_harmonic_energy: 0.05,
+            e_6_verifier_energy: 0.06,
+            // canonical 4:5:6 weighting (epi-logos-kernel-spec energy law)
+            total_energy: (4.0 * 0.04 + 5.0 * 0.05 + 6.0 * 0.06) / 15.0,
         }
     }
 

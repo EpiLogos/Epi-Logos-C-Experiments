@@ -1,0 +1,37 @@
+{
+  "runId": "20260628T091043Z-17-T17.23",
+  "taskId": "17.T17.23",
+  "startedAt": "2026-06-28T09:10:43.434Z",
+  "owner": "codex-m-dev-17-t17-23-epi-app-decommission",
+  "leaseExpiresAt": "2026-06-28T11:10:43.434Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.23",
+    "trackId": "17",
+    "tranche": "T17.23",
+    "title": "Migrate/decommission `Body/S/S3/epi-app`",
+    "effort": null,
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.22"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia",
+      "Body/S/S3",
+      "Body/S/S3/epi-app"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -31,8 +31,16 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         self.assertEqual(matrix["package_role"], "anima_executive_capability_membrane")
         self.assertEqual(matrix["owner_agent"], "anima")
 
-        for agent in matrix["constitutional_agents"]:
-            self.assertTrue((PLUGIN_ROOT / "agents" / agent / "ANIMA.md").is_file(), agent)
+        self.assertEqual(matrix["constitutional_agents"], [])
+        self.assertIn("DEPRECATED per DR-M5-1", matrix["_constitutional_agents_status"])
+        self.assertEqual(
+            set(matrix["anima_authorial_registers_deprecated"]),
+            {"anima", "eros", "logos", "mythos", "nous", "psyche", "sophia"},
+        )
+
+        anima_agent_root = REPO_ROOT / "Body" / "S" / "S4" / "ta-onta" / "S4-4p-anima" / "S4'" / "agents"
+        for agent in matrix["anima_authorial_registers_deprecated"]:
+            self.assertTrue((anima_agent_root / f"{agent}.md").is_file(), agent)
 
         for skill in matrix["skills"]:
             self.assertTrue((PLUGIN_ROOT / "skills" / skill["name"] / "SKILL.md").is_file(), skill)
@@ -51,7 +59,7 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
             self.assertIn(required, skill_names)
 
         self.assertTrue((PLUGIN_ROOT / "hooks" / matrix["hooks"]["manifest"]).is_file())
-        self.assertNotIn("epii", matrix["constitutional_agents"])
+        self.assertNotIn("epii", matrix["anima_authorial_registers_deprecated"])
 
     def test_matrix_declares_anima_execution_backbone_and_agent_gates(self):
         matrix = json.loads((PLUGIN_ROOT / "capability-matrix.json").read_text(encoding="utf-8"))
@@ -66,7 +74,7 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         )
 
         gates = matrix["agent_capability_gates"]
-        self.assertEqual(set(gates), set(matrix["constitutional_agents"]))
+        self.assertEqual(set(gates), set(matrix["anima_authorial_registers_deprecated"]))
 
         anima_tools = set(gates["anima"]["tools"])
         self.assertIn("orchestrator", gates["anima"]["role_restrictions"])
@@ -205,6 +213,17 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
         missing = expected - names
         self.assertFalse(missing, f"dispatch_tools missing entries: {missing}")
 
+    def test_techne_vama_summon_declares_psyche_template_authority(self):
+        """Track 41.2: techne_vama_summon is Psyche-templated and dialogue-only."""
+        matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
+        tools = {tool["name"]: tool for tool in matrix["techne_tools"]}
+        summon = tools["techne_vama_summon"]
+
+        self.assertTrue(summon["psyche_template_authority"])
+        self.assertFalse(summon["system_tool_grant"])
+        self.assertTrue(summon["dialogue_only_output"])
+        self.assertTrue(summon["requires_vama_shakti_class"])
+
     def test_m5_4_governance_separates_deposit_from_review_resolution(self):
         """M5-4 roles may surface review work without collapsing into Epii review authority."""
         matrix = json.loads((self.PLEROMA_ROOT / "capability-matrix.json").read_text())
@@ -230,6 +249,8 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
 
         self.assertIn("prepare_agent_run_evidence", pi["permitted_actions"])
         self.assertIn("dispatch_bounded_agent_run", pi["permitted_actions"])
+        self.assertIn("axiom-translate", pi["permitted_actions"])
+        self.assertIn("axiom_translation", pi["required_review_categories"])
         self.assertIn("approve_human_required_review", pi["forbidden_actions"])
         self.assertNotIn("approve_human_required_review", pi["permitted_actions"])
 
@@ -339,6 +360,7 @@ class PleromaCapabilityMatrixTest(unittest.TestCase):
                 self.assertNotIn("s1.vault.append_block", allowlists[actor])
 
         self.assertIn("s1.vault.append_block", allowlists["pi"])
+        self.assertIn("axiom-translate", allowlists["pi"])
         for capability in ["s1.vault.write_file", "s1.vault.move_file", "s1.vault.rename_file"]:
             with self.subTest(capability=capability):
                 self.assertIn(capability, bridge["user_final_validation_required"])

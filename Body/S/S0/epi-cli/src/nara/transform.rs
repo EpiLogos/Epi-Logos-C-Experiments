@@ -1,7 +1,20 @@
+//! Coordinate: S0/M4' (Nara transform)
+//! Residency: Body/S/S0/epi-cli/src/nara
+//! Position (#n): transform cycle and governed container-lifecycle adapter
+//! Actualises: legacy alchemical cycles plus canonical M4' container stages.
+//! Public surface: cycle commands, `start_container`, `advance_container`.
+//! Does NOT own: YAML mutation law, carrier rendering, or alchemical canon.
+//! Contract: [[S0-SPEC]] / [[S1-SPEC]] / [[S3-SPEC]] / [[M4'-SPEC]].
+
 use serde::{Deserialize, Serialize};
 use std::io::Write;
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
+
+mod lifecycle;
+pub use lifecycle::{
+    advance_container, start_container, TransformDirection, TransformLifecycleReceipt,
+};
 
 // ─── Containers ──────────────────────────────────────────────────────────
 

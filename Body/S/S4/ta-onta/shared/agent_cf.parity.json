@@ -1,0 +1,96 @@
+{
+  "$comment": [
+    "50.T50.11 — the ONE cross-language CF->agent fixture.",
+    "",
+    "Two independent tables carry this binding: TS `AGENT_CF`",
+    "(S4-4p-anima/modules/dispatch-validate.ts) and Rust `cf_to_agent`",
+    "(Body/S/S0/epi-cli/src/agent/vak.rs). They agreed by luck, not by contract,",
+    "and nothing would have caught a one-sided edit.",
+    "",
+    "Both sides read THIS file. Neither greps the other's source — the same",
+    "discipline `vak_address.parity.json` established in 50.T50.03. Add a binding",
+    "here to bind it in both languages at once.",
+    "",
+    "Canon: [[S4-SPEC]] -> VAK dispatch; S4-ARCHITECTURE.md:178 (Moirai host CF)."
+  ],
+
+  "constitutional": {
+    "$comment": [
+      "The 7-fold constitutional roster. Membership in this map IS the roster:",
+      "an agent absent from it does not participate in the cf-binding contract.",
+      "Checked by BOTH languages."
+    ],
+    "nous": "(00/00)",
+    "logos": "(0/1)",
+    "eros": "(0/1/2)",
+    "mythos": "(0/1/2/3)",
+    "psyche": "(4.5/0)",
+    "sophia": "(5/0)",
+    "anima": "(4.0/1-4.4/5)"
+  },
+
+  "moiraiHost": {
+    "$comment": [
+      "Moirai are Aletheia subagents, NOT constitutional agents. Each inherits the",
+      "CF of the constitutional territory it dissects during the Night' rehearing",
+      "pass, keyed by its night position (moirai-dispatch.ts:104-106).",
+      "",
+      "RATIFIED 50.T50.11 against canon, not against a skill: S4-ARCHITECTURE.md:178",
+      "reads 'klotho->Eros, lachesis->Anima, atropos->Sophia', and the originating",
+      "spec (Legacy/superpowers/plans/2026-05-22-vak-as-operational-substrate.md:1480)",
+      "reads 'CF (0/1/2) Eros for Klotho, CF (4.0/1-4.4/5) Anima for Lachesis,",
+      "CF (5/0) Sophia for Atropos per spec'. The code was already right; two skills",
+      "were not. See `skillNotation` below.",
+      "",
+      "TS-only: Rust carries no Moirai table. The fixture still records the ratified",
+      "value so the skill check has one source to agree with."
+    ],
+    "klotho": { "cf": "(0/1/2)", "hostAgent": "eros", "nightPosition": "P1'" },
+    "lachesis": { "cf": "(4.0/1-4.4/5)", "hostAgent": "anima", "nightPosition": "P4'" },
+    "atropos": { "cf": "(5/0)", "hostAgent": "sophia", "nightPosition": "P5'" }
+  },
+
+  "skillNotation": {
+    "$comment": [
+      "The two divergences 50.T50.11 was asked to decide and land. A SKILL.md is",
+      "NOT canon, so in both cases canon/code won and the skill text was corrected —",
+      "and is now machine-checked so it cannot drift back silently.",
+      "",
+      "`forbidden` entries are the pre-50.T50.11 spellings. A skill file matching one",
+      "is a regression, not a variant."
+    ],
+    "nous": {
+      "canonical": "(00/00)",
+      "forbidden": ["(0000)"],
+      "reason": "Nous' CF is the fourfold-zero ground written as (00/00), the same spelling the code has always carried. (0000) is a legacy alias — the S2 coordinate syntax already lists it as one (bimba-mcp/src/coordinates/syntax.ts LEGACY_CONTEXT_FRAME_ALIASES) — and carrying two spellings of one frame is how a reader learns to treat the notation as approximate."
+    },
+    "lachesis": {
+      "canonical": "(4.0/1-4.4/5)",
+      "canonicalHostAgent": "anima",
+      "forbidden": ["(4.5/0)"],
+      "reason": "Lachesis measures at P4', and P4' is the 4.x lemniscate frame, which is Anima's CF. (4.5/0) is Psyche's CF — a different position, not a different name for the same one."
+    },
+    "files": [
+      "Body/S/S4/ta-onta/S4-4p-anima/S4'/skills/anima-orchestration/SKILL.md",
+      "Body/S/S4/ta-onta/S4-4p-anima/S4'/skills/vak-coordinate-frame/SKILL.md",
+      "Body/S/S4/ta-onta/S4-4p-anima/S4'/skills/day-night-pass/SKILL.md",
+      "Body/S/S4/plugins/pleroma/skills/anima-orchestration/SKILL.md"
+    ]
+  },
+
+  "rustUnknownCfFallback": {
+    "$comment": [
+      "A DIVERGENCE THAT IS PINNED, NOT FIXED. Rust `cf_to_agent` returns",
+      "`&'static str` and answers an unknown CF with \"psyche\"; TS `agentForCf`",
+      "returns `undefined`. So for a CF outside the roster the two languages",
+      "disagree: one fabricates an agent, the other says it does not know.",
+      "",
+      "Narrowing the Rust signature to an Option is a public-surface change beyond",
+      "this tranche, so the behaviour is recorded here and asserted by both sides",
+      "instead of being silently tolerated. If the surface is ever narrowed, this",
+      "key is what tells you the test is expecting the old shape."
+    ],
+    "rust": "psyche",
+    "typescript": null
+  }
+}

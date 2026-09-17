@@ -3,7 +3,9 @@
 **Status:** Canonical (2026-03-15)
 **Source:** docs/resources/random/mahamaya-numerological-plans.md (the complete 16-fold analysis)
 **Updated:** 2026-04-11 — Fibonacci Ground (Level 0) section added; walk/tick derivations annotated.
-**See also:** `docs/datasets/mahamaya-deep/fibonacci-60-pisano-integration.md` (the ground spec)
+**Updated:** 2026-07-19 — Lens 6 "Zodiacal" drift corrected: Lens 6 (12°×30 = 30 segments) is the **Pleromatic lens** (30 aeons / 15 syzygies); the zodiac-sign 12-fold is Lens 9. See the pleroma spec below.
+**See also:** `docs/datasets/mahamaya-deep/fibonacci-60-pisano-integration.md` (the ground spec),
+  `Idea/Bimba/Map/datasets/mahamaya-deep/pleroma-30-syzygy-lens6-integration.md` (Lens 6 pleromatic identity)
 
 ---
 
@@ -83,7 +85,7 @@ This is NOT arbitrary — it is the EXHAUSTIVE set of factor-pairs of 360 that a
 The 16 = 4×4, directly mirroring Anuttara's 16-fold void (#0).
 
 **The 16-lens matrix is complete and exhaustive for its level (Level 2, synchronic partition).
-It does not need a 17th member — the Fibonacci ground operates at Level 0, prior to all lenses.**
+It does not need a seventeenth member — the Fibonacci ground operates at Level 0, prior to all lenses.**
 
 Every degree node carries `lens_segment[16]` — its index within EACH of the 16 lenses simultaneously.
 
@@ -99,7 +101,7 @@ Row 0 (Unity Level — coarse):
 Row 1 (Complexity):
   Lens 4:  9°  × 40   =  40 segments  — Enneadic Spiral / 40-day initiatory chambers
   Lens 5:  10° × 36   =  36 segments  — Decan System / 36 celestial administrators
-  Lens 6:  12° × 30   =  30 segments  — Zodiacal Signs / 12 months
+  Lens 6:  12° × 30   =  30 segments  — Pleromatic / 30 aeons in 15 syzygies (drift-corrected 2026-07-19; the 12-fold zodiac is Lens 9)
   Lens 7:  15° × 24   =  24 segments  — Hourly Quarters / 24 amino acids / 24 hours ← BACKBONE
 
 Row 2 (Reflection):
@@ -170,6 +172,10 @@ typedef struct {
 
 The 24-fold backbone makes the clock BOTH a daily and monthly instrument:
 
+> **Drift note (2026-07-19):** this section previously credited "Lens 6" with
+> the 30°-per-sign frame. Lens 6 is the 30-segment **Pleromatic** lens; the
+> 12-sign frame is Lens 9. Corrected throughout below.
+
 ### Daily Mode (Lens 7 as clock face)
 ```
 Backbone node 0  = 0°   = midnight (00:00)
@@ -181,9 +187,9 @@ Backbone node 23 = 345° = 23:00
 Live clock degree → backbone_index → current_hour. The entity's natal degree tells them
 what "hour" they were born into structurally.
 
-### Monthly/Seasonal Mode (Lens 6 as outer frame, Lens 7 as inner)
+### Monthly/Seasonal Mode (Lens 9 as outer frame, Lens 7 as inner)
 ```
-Lens 6 (12×30°): each 30° = one zodiac sign
+Lens 9 (30°×12): each 30° = one zodiac sign
 Lens 7 (15×24°): each 15° = half a sign → sign cusp or sign midpoint
 
 Aries:    nodes 0 (0°, cusp) and 1 (15°, midpoint)
@@ -240,7 +246,7 @@ The 6 phenomenological lenses of #4.4 have primary clock lens indices:
 | #4.4 Lens | Name | Primary Clock Lens | Rationale |
 |---|---|---|---|
 | #4.4-0 | Gebser (Integral) | Lens 11 (40°×9 / enneadic) | Gebser's 5 mutations map to the 9-chamber enneadic spiral |
-| #4.4-1 | Ontological | Lens 6 (12°×30 / zodiacal) | Ontology operates through the 12-fold categorical order |
+| #4.4-1 | Ontological | Lens 9 (30°×12 / Solar Month) | Ontology operates through the 12-fold categorical order (drift-corrected 2026-07-19: formerly cited "Lens 6", whose 30-fold division cannot carry a 12-fold order; Lens 6 is Pleromatic) |
 | #4.4-2 | Epistemological | Lens 7 (15°×24 / amino-daily) | Epistemology at the precision of individual hours/amino acids |
 | #4.4-3 | Jungian | Lens 2 (4°×90 / quaternary) | Jung's 4 functions = the quaternary cross |
 | #4.4-4 | Phenomenological | Lens 14 (180°×2 / hemispheres) | Phenomenology = the explicit/implicit divide as primary distinction |
@@ -256,12 +262,81 @@ CLOCK_LENS rendering mode. Lens inversion = switching to the reciprocal partner.
 
 ---
 
+## The Generic Lens-Field Dynamic (canon 2026-07-19)
+
+**Every functional lens (0..16) is a FIELD carrier of one generic dynamic;
+symbolic systems are INSTANCES decorating it, never peers of it.** The
+pleromatic 30/15 at Lens 6 is the built exemplar (see
+`pleroma-30-syzygy-lens6-integration.md`); decans@5, sephiroth@10 etc. are
+future instances of the same shape. Code: `portal-core/src/lens_field.rs`
+(generic) + `pleroma_lens.rs` (instance); wire:
+`kernelBridge.m3.lensField(lensId)`.
+
+The generic field has three layers:
+
+**1. Structure (state-free).**
+- **720-unit midpoint law:** segment k's midpoint in half-degree units is
+  `(2k+1)·slice` — INTEGRAL for every lens. The SU(2) double-cover is exactly
+  what makes every lens readable (in 360° units the Microscopic lens would
+  need half-degrees).
+- **Element law (generic):** Ring-1 sign element at the midpoint
+  (`sign = midpoint720/60`, cycle Fire/Earth/Air/Water). The pleromatic
+  element law is this law at slice 12.
+- **Parity opposition topology** (the # inversion's shape at each lens):
+  even sections → **diameter-paired** (segment i ↔ i+N/2; N/2 channels — the
+  generic syzygy shape); odd sections → **boundary-opposed** (the polar
+  opposite of every midpoint lands ON a boundary — lenses 3/8/11, sections
+  45/15/9); Unity (1 section) → **self-opposed**. Exactly 4 of the 16 matrix
+  members are non-diameter-paired.
+- **Element complement theorem (generic):** for EVERY diameter-paired lens,
+  partner segments carry cross-complements (Fire↔Air, Earth↔Water — Matrix-2,
+  same-polarity/cross-mobility): +360 in 720-units → +6 signs → +2 elements.
+- **Ground quantization:** a lens inherits whole Fibonacci-ground steps iff
+  6 | slice (lenses 6/8/9/10/13/14/15 + the ground itself). Lens 6 (slice 12
+  = 2 steps) is the FINEST integral derived lens — the half-ground — which is
+  why the pleromatic instance seats there.
+
+**2. Activation (live, objects → field).** Planets are clock OBJECTS; the
+lens reads them. A positioned orbiter (Sun excluded — identity root, 9:8 law)
+lands in segment ⌊degree/slice⌋ carrying its one Mahabhuta element at
+Keplerian energy. AKASHA carriers (Uranus) inform presence, never a segment
+bucket. **Two registers, one authority:** the aggregate 4-element bar
+DELEGATES to `kernelBridge.m2.planetaryElementalWeights()` (aspect-amplified;
+aspect gains are element-level planet-pair phenomena and are never localized
+to one segment); per-segment landings and per-channel signed balances use
+base positional energies. Unpositioned kairos → honest absence (no Akasha
+verdict), never fabrication.
+
+**3. Balance (field → quaternion).**
+- **Balance-quaternion identity:** `ElementalWeightProjection {fire, water,
+  air, earth}` maps DIRECTLY onto the canonical quaternion basis
+  `[w=EARTH, x=FIRE, y=WATER, z=AIR]` — the per-lens q_cosmic refinement
+  carrier. Personal resonance at lens L = PersonalResonance(q_personal,
+  balance_quaternion(weights at L)) — **library-level / protected surface
+  only; q_personal and the bioquaternion never cross the public wire**
+  (DR-M4-3/4). Where the refinement feeds the RUNNING q_cosmic (kernel tick
+  vs oracle cast) is a flagged Architect decision, not yet wired.
+- **Akasha condition:** all four normalized weights within
+  `akasha_balance_epsilon` (default 0.05; tunable-schema migration flagged)
+  of 0.25. For diameter-paired lenses the channel balances decompose WHERE
+  imbalance lives. Note the two registers of the pleromatic channels: the
+  static Pisano digit register (13×20+2×10=280, proven) and the live
+  planetary-energy register — same 15-channel structure, different substance.
+
+Proof suites: `portal-core/tests/lens_field_generic_laws.rs` (10 generic
+laws), `tests/pleroma_lens_table.rs` (9 instance laws),
+`epi-cli/tests/kernel_bridge_lens_field.rs` (wire contract),
+`schemas/tests/lens-field.test.ts` (Zod gate),
+`pratibimba-app/src/bridge/lensFieldBoundary.test.ts` (app boundary).
+
+---
+
 ### Lenses vs Walk Modes vs Tick vs Fibonacci Ground — Four Distinct Levels
 
 **These four concepts are not peers — they form a hierarchy. The Fibonacci Ground (Level 0) is prior
 to and generative of the other three. See §0 above and `fibonacci-60-pisano-integration.md §4`.**
 
-**Fibonacci Ground (Level 0, pre-lensic)** = the 60-fold synchronization period LCM(6,5,12)=60.
+**Fibonacci Ground (Level 0, primary lens id 16)** = the 60-fold synchronization period LCM(6,5,12)=60, grounding the sixteen derived static lenses.
 Stored as intrinsic node properties (`fibonacci_position`, `fibonacci_digit`) on every degree node.
 Not a mode, not an aperture — a fundamental coordinate of the clock space itself.
 
@@ -277,7 +352,7 @@ Most walks correspond to a matching lens's step-size, but their function is diff
 |------------------|-------|---------|--------------------|---------------------|-------------------|
 | WALK_DEGREE      | 360   | 1°      | 1/6 (sub-ground)   | Lens 0 (1×360)      | Full degree resolution |
 | WALK_AMINO       | 24    | 15°     | 2.5 (non-integer)  | Lens 7 (15×24)      | Backbone nodes |
-| WALK_ZODIAC      | 12    | 30°     | **5 (exact)**      | Lens 6 (12×30)      | Pentadic ground points (M3 reading) |
+| WALK_ZODIAC      | 12    | 30°     | **5 (exact)**      | Lens 9 (30×12)      | Pentadic ground points (M3 reading; drift-corrected — a 12-step walk matches the 12-section lens, same ground traversal as WALK_SPANDA) |
 | WALK_SPANDA      | 12    | 30°     | **5 (exact)**      | Lens 9 (30×12)      | Pentadic ground points (M1 reading) |
 | WALK_DECAN       | 36    | 10°     | 5/3 (non-integer)  | Lens 5 (10×36)      | 36 decans |
 | WALK_HEXAGRAM    | 64    | ~5.625° | non-integer        | **none**            | Binary 2^6 space |

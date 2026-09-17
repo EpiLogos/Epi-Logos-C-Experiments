@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/integrated-1-2-3",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "description": "Expected, deterministic state for the cosmic-engine composition rendered in the daily-0-1 layout. The visual-regression gate asserts these values survive a layout/face toggle and a workspace reload (composition codec identity).",
+  "activeLayout": "daily-0-1",
+  "compositionState": {
+    "compositionId": "cosmic-engine.integrated",
+    "pinnedMatrixFamily": 2,
+    "pinnedTorusView": "tick-choreography",
+    "cosmicSelectedCoordinate": "M2.5",
+    "cosmicKleinToPersonalHinge": true,
+    "pinnedRecognitionSlot": "5",
+    "personalSelectedDayId": "2026-06-11",
+    "personalReviewQueueFilter": "unread",
+    "personalKleinToCosmicHinge": false
+  },
+  "omniPanel": {
+    "activeTab": "pi-chat",
+    "perTabState": {
+      "pi-chat": { "scrollOffset": 0, "draftCommand": "" },
+      "sessions": { "selectedSessionKey": "agent:epii:main", "dayNowAnchor": "2026-06-11" },
+      "dispatch-trace": { "selectedNodeId": null, "expandedNodeIds": [] },
+      "tool-stream": { "activeEventId": null, "actorFilter": null },
+      "evidence": { "selectedPacketId": null, "miniGraphNodeId": null },
+      "review": { "selectedReviewId": null, "decisionDraft": null },
+      "gateway": { "activeCapability": null, "facet": "capabilities" },
+      "diagnostics": { "selectedIntentId": null, "readinessPanel": "kernel-bridge" }
+    }
+  },
+  "slots": {
+    "center-stage": {
+      "owner": "m3-mahamaya",
+      "miniMode": "codon-provenance",
+      "emptyState": false
+    },
+    "side-panel": {
+      "owner": "m1-paramasiva",
+      "miniMode": "lens-walk",
+      "emptyState": false
+    },
+    "evidence-panel": {
+      "owner": "m2-parashakti",
+      "miniMode": "meaning-packet",
+      "emptyState": false
+    }
+  },
+  "bridge": {
+    "connected": true,
+    "mode": "full",
+    "subscriptionIdentity": "STABLE",
+    "sessionKey": "agent:epii:main",
+    "dayNow": "2026-06-11"
+  },
+  "invariants": [
+    "composition state is byte-identical after layout:daily-0-1<->ide-deep toggle",
+    "composition state is byte-identical after face:cosmic<->personal-0/1 toggle",
+    "OmniPanel exposes exactly 8 tabs in canonical order",
+    "no forbidden privacy field appears in any rendered DTO"
+  ]
+}

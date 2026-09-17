@@ -1,0 +1,36 @@
+{
+  "runId": "20260710T222622Z-45-T0",
+  "taskId": "45.T0",
+  "startedAt": "2026-07-10T22:26:22.285Z",
+  "owner": "opus-c-law",
+  "leaseExpiresAt": "2026-07-11T00:26:22.285Z",
+  "worktree": null,
+  "task": {
+    "id": "45.T0",
+    "trackId": "45",
+    "tranche": "T0",
+    "title": "Absorb and retarget: 45-bimba-map-indexing-and-dox-okf-unification.md (law-only source)",
+    "effort": "law-only source",
+    "file": "45-bimba-map-indexing-and-dox-okf-unification.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/45-bimba-map-indexing-and-dox-okf-unification.md",
+    "dependsOn": [
+      "00.T3"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/45-bimba-map-indexing-and-dox-okf-unification.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — Bimba Map indexing / DOX-OKF (crystallisation upward Hen vs reflection downward Map projection never re-promotes; five cross-language normaliser impls must stay in sync; Hen is_valid_coordinate rejects depth>=2 — real gap). Coordinate rendering must use gateway-side normalisation, never a 6th local impl. §2 track 45."
+  }
+}

@@ -58,8 +58,8 @@
 
 ### CODE-PENDING (kernel-bridge / profile-contract blockers; do not greenfield)
 
-- **CP-M0-01 (row 14) — `dataset_lut_state: "pending-dataset-lut"`** in `kernel.rs` line 797 — the M0/M3 dataset LUT contract is unfinished. Owning spec: M3'-SPEC + kernel-bridge profile-contract. Unblocks: M0' readiness beyond `pending` once `MathemeBedrockProjection` and `MathemeChromaticProfile` provenance flips from `pending-dataset-lut` to a populated LUT.
-- **CP-M0-02 (row 14) — `tarot/amino LUTs pending`** in `kernel.rs` line 805 — m3 codec provenance line. Same owning spec.
+- **CP-M0-01 (row 14) — `dataset_lut_state: "pending-dataset-lut"`** in the Wave-B anchor at `kernel.rs` line 797 — the M0/M3 dataset LUT contract is unfinished. Owning spec: M3'-SPEC + kernel-bridge profile-contract. Host-struct correction per DR-KB-3 / Tranche 10.9: this literal lives on `MathemeBinaryProjection` (current line drift `kernel.rs:1208`). Unblocks: M0' readiness beyond `pending` once the binary projection's dataset LUT provenance flips from `pending-dataset-lut` to a populated LUT.
+- **CP-M0-02 (row 14) — `tarot/amino LUTs pending`** in the Wave-B anchor at `kernel.rs` line 805 — m3 codec provenance line. Host-struct correction per DR-KB-3 / Tranche 10.9: this literal lives on `MathemeBinaryProjection` (current line drift `kernel.rs:1216`). Same owning spec.
 - **CP-M0-03 (row 14) — `kleinFlipState` not in kernel** — grep finds zero hits. Owning spec: M2'-SPEC / kernel-bridge profile-contract. Unblocks: any UX claim that mentions Klein-double-cover or implicate-flip rendering.
 - **CP-M0-04 (row 20) — kernel-S2 core-65 audit projection absent.** Owning spec: S2 graph-services + M0'-SPEC §"Readiness/Test Criteria". Unblocks: `ready_public_current` badge becoming true on the M0 widget.
 

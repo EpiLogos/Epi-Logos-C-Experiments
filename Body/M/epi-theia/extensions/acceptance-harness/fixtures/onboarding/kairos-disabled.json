@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "onboarding/kairos-disabled",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "preferences": {
+    "epi-logos.privacy.kairos-enabled": false
+  },
+  "kerykeionProbeExpected": false,
+  "mercuriusRefreshExpected": false,
+  "relay": {
+    "expectedPhase": "idle",
+    "expectedTone": "grey",
+    "expectedLabel": "Kairos disabled"
+  }
+}

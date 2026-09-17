@@ -51,6 +51,8 @@ pub async fn ensure_gateway_ready(
         });
     }
 
+    clear_stale_gateway_records(&gate_root);
+
     let runtime_dir = gate_root.join("up");
     fs::create_dir_all(&runtime_dir).map_err(|err| err.to_string())?;
     let stdout_log = runtime_dir.join(format!("gateway-{port}.stdout.log"));
@@ -66,6 +68,7 @@ pub async fn ensure_gateway_ready(
         .stdout(Stdio::from(stdout))
         .stderr(Stdio::from(stderr));
     apply_command_env(&mut command, repo_root, env_map);
+    detach_gateway_process(&mut command);
 
     let mut child = command
         .spawn()
@@ -74,6 +77,7 @@ pub async fn ensure_gateway_ready(
 
     if let Err(err) = wait_for_gateway_ready(&url, &mut child).await {
         let _ = child.kill();
+        clear_stale_gateway_records(&gate_root);
         let stderr_tail = fs::read_to_string(&stderr_log).unwrap_or_default();
         return Err(format!("gateway-ready: {err}\n{stderr_tail}"));
     }
@@ -156,6 +160,16 @@ fn apply_command_env(command: &mut Command, repo_root: &Path, env_map: &BTreeMap
     command.envs(env_map);
 }
 
+#[cfg(unix)]
+fn detach_gateway_process(command: &mut Command) {
+    use std::os::unix::process::CommandExt;
+
+    command.process_group(0);
+}
+
+#[cfg(not(unix))]
+fn detach_gateway_process(_command: &mut Command) {}
+
 fn gate_root_from_env_map(env_map: &BTreeMap<String, String>) -> Result<PathBuf, String> {
     if let Some(root) = env_map.get("EPI_GATE_STATE_ROOT") {
         return Ok(PathBuf::from(root));
@@ -170,6 +184,23 @@ fn current_exe_command() -> Result<Command, String> {
 
 fn gateway_process_record_path(gate_root: &Path) -> PathBuf {
     gate_root.join("up").join("gateway-process.json")
+}
+
+fn gateway_status_path(gate_root: &Path) -> PathBuf {
+    gate_root.join("status.json")
+}
+
+fn clear_stale_gateway_records(gate_root: &Path) {
+    for path in [
+        gateway_process_record_path(gate_root),
+        gateway_status_path(gate_root),
+    ] {
+        match fs::remove_file(&path) {
+            Ok(()) => {}
+            Err(err) if err.kind() == std::io::ErrorKind::NotFound => {}
+            Err(_) => {}
+        }
+    }
 }
 
 fn write_gateway_process_record(

@@ -1,0 +1,33 @@
+{
+  "runId": "20260625T164048Z-47-T47.3",
+  "taskId": "47.T47.3",
+  "startedAt": "2026-06-25T16:40:48.437Z",
+  "owner": "codex-m-dev-47-t47-3-aeon-scheduling",
+  "leaseExpiresAt": "2026-06-25T18:40:48.437Z",
+  "worktree": null,
+  "task": {
+    "id": "47.T47.3",
+    "trackId": "47",
+    "tranche": "T47.3",
+    "title": "Aeon scheduling binding",
+    "effort": null,
+    "file": "47-autonomous-loop-scheduling.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/47-autonomous-loop-scheduling.md",
+    "dependsOn": [
+      "47.T47.2"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

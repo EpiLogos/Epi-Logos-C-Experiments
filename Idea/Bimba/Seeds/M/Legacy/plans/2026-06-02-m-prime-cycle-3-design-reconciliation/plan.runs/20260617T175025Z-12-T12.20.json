@@ -1,0 +1,39 @@
+{
+  "runId": "20260617T175025Z-12-T12.20",
+  "taskId": "12.T12.20",
+  "startedAt": "2026-06-17T17:50:25.923Z",
+  "owner": "codex-m-dev-12-t12-20",
+  "leaseExpiresAt": "2026-06-17T19:50:25.923Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.20",
+    "trackId": "12",
+    "tranche": "T12.20",
+    "title": "Elo-bookkeeping infrastructure across Mercurius / Janus / Anansi / Moirai",
+    "effort": null,
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.2"
+    ],
+    "writeScopes": [
+      "Body/S/S3/spacetime-context/schemas/elo-runtime.sql",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/anansi-elo-index.ts",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/mercurius-elo.ts",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/moirai-fair-comparison.ts",
+      "Body/S/S4/ta-onta/S4-5p-aletheia/modules/{mercurius-elo, anansi-elo-index, moirai-fair-comparison, janus-threshold}.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

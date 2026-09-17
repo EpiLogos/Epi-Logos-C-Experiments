@@ -1,6 +1,6 @@
 ---
 coordinate: "M5'"
-sub_coordinate: "M5-1 + M5-2 + M5-3 + M5-4 + M5-5 cross-cutting"
+sub_coordinate: "M5-4' primary (siva-shakti operational register); library substrate at M5-0'; cross-cuts M5-1/2/3/5"
 status: "active-operational-capacity-spec"
 updated: "2026-05-30"
 family: "epii-operational-capacities"

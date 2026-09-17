@@ -43,7 +43,7 @@ function readyProfile(generation, extra = {}) {
             nodal_quartet: [0, 1, 2, 3],
             planetaryChakral: { sun: 'ground' },
             resonance72: { tick: 1 },
-            kleinFlipState: 'L',
+            kleinFlip: null,
             codon_rotation_projection: { codon: 0, rotation: 0 },
             mahamaya: { phase: 'incubation' },
             codec_lut: { v: 1 },

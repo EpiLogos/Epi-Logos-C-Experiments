@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { CoordinateSchema } from '../schemas.js';
-import { isCanonicalCoordinateSyntax } from './syntax.js';
+import { isCanonicalCoordinateSyntax, wrapContextFrames } from './syntax.js';
 import { parseCoordinate } from './parser.js';
 
 describe('canonical coordinate syntax', () => {
@@ -14,6 +14,10 @@ describe('canonical coordinate syntax', () => {
       'M1-3-4.(00/00)',
       'M0-(4.0/1-4.4/5)',
       'M0-(4.5/0)',
+      'M0-4.(0/1)',
+      'M0-4.(0/1/2/3)',
+      'M0-4.(5/0)',
+      'M0-4.(4.0/1-4.4/5)',
       "L2-3'",
     ];
 
@@ -59,5 +63,18 @@ describe('canonical coordinate syntax', () => {
       contextFrame: '0/1',
       isPrime: false,
     });
+  });
+
+  it('normalises bare/legacy context frames to canonical dot-notation (parity with Rust/projector)', () => {
+    expect(wrapContextFrames('M0-4.0/1')).toBe('M0-4.(0/1)');
+    expect(wrapContextFrames('M0-4.0/1/2/3-5')).toBe('M0-4.(0/1/2/3)-5');
+    expect(wrapContextFrames('M1-3-4.5/0')).toBe('M1-3-4.(5/0)');
+    expect(wrapContextFrames('M0-4.4.0-4.4/5')).toBe('M0-4.(4.0/1-4.4/5)');
+    expect(wrapContextFrames('M0-3-0/1')).toBe('M0-3-(0/1)');
+    // idempotent on canonical (incl. the doubling whose dash is inside the parens)
+    expect(wrapContextFrames('M0-4.(0/1)')).toBe('M0-4.(0/1)');
+    expect(wrapContextFrames('M0-4.(4.0/1-4.4/5)')).toBe('M0-4.(4.0/1-4.4/5)');
+    // legacy '#' frame input round-trips to a valid canonical coordinate
+    expect(parseCoordinate('#0-4.0/1')).toMatchObject({ type: 'M', contextFrame: '0/1' });
   });
 });

@@ -1,0 +1,822 @@
+{
+  "coordinate": "M1",
+  "c_4_artifact_role": "base-view",
+  "c_3_projected_from": "Idea/Bimba/Map",
+  "c_3_projected_at": "2026-06-17",
+  "row_count": 42,
+  "rows": [
+    {
+      "coordinate": "M1-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Bimba - Original Aspect",
+      "c_0_source_coordinates": [
+        "[[M1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-1]]",
+        "[[M1-2]]",
+        "[[M1-3]]",
+        "[[M1-4]]",
+        "[[M0-3-4]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M0-3-(0∕1)-0]]",
+        "[[M0-3-(0∕1)-1]]",
+        "[[M1]]",
+        "[[M1-3-1]]",
+        "[[M1-5]]",
+        "[[M1-5-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-0"
+    },
+    {
+      "coordinate": "M1-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Pratibimba - Reflection Aspect",
+      "c_0_source_coordinates": [
+        "[[M1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0]]",
+        "[[M1-2]]",
+        "[[M1-0]]",
+        "[[M1-3]]",
+        "[[M1-4]]",
+        "[[M0-3-4]]",
+        "[[M0-3-(0∕1)]]",
+        "[[M1]]",
+        "[[M1-3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-1"
+    },
+    {
+      "coordinate": "M1-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Ananda",
+      "c_0_source_coordinates": [
+        "[[M1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-0]]",
+        "[[M1-2-1]]",
+        "[[M1-2-2]]",
+        "[[M1-2-3]]",
+        "[[M1-2-4]]",
+        "[[M1-2-5]]",
+        "[[M1-3]]",
+        "[[M1-4]]",
+        "[[M1-5-1]]",
+        "[[M0-3]]",
+        "[[M4]]",
+        "[[M2]]",
+        "[[M1-5]]",
+        "[[M1-5-5]]",
+        "[[M2-5]]",
+        "[[M1-3-0]]",
+        "[[M1-3-1]]",
+        "[[M1-3-3]]",
+        "[[M1]]",
+        "[[M1-0]]",
+        "[[M1-1]]",
+        "[[M1-5-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2"
+    },
+    {
+      "coordinate": "M1-2-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 0: The Original (Bimba)",
+      "c_0_source_coordinates": [
+        "[[M1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-0-0]]",
+        "[[M1-2]]",
+        "[[M1-3-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-0"
+    },
+    {
+      "coordinate": "M1-2-0-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 0 Digital Root Reflection",
+      "c_0_source_coordinates": [
+        "[[M1-2-0]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-1-0]]",
+        "[[M1-2-0]]",
+        "[[M1-3-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-0-0"
+    },
+    {
+      "coordinate": "M1-2-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 1: The Offset (Pratibimba)",
+      "c_0_source_coordinates": [
+        "[[M1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-1-0]]",
+        "[[M1-2]]",
+        "[[M1-3-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-1"
+    },
+    {
+      "coordinate": "M1-2-1-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 1 Digital Root Reflection",
+      "c_0_source_coordinates": [
+        "[[M1-2-1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-0-0]]",
+        "[[M1-2-1]]",
+        "[[M1-3-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-1-0"
+    },
+    {
+      "coordinate": "M1-2-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 2: The Sum (Constructive Synthesis)",
+      "c_0_source_coordinates": [
+        "[[M1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-2-0]]",
+        "[[M1-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-2"
+    },
+    {
+      "coordinate": "M1-2-2-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 2 Digital Root Reflection",
+      "c_0_source_coordinates": [
+        "[[M1-2-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-2-0"
+    },
+    {
+      "coordinate": "M1-2-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 3: First Difference (Pure Polarity)",
+      "c_0_source_coordinates": [
+        "[[M1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-3-0]]",
+        "[[M1-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-3"
+    },
+    {
+      "coordinate": "M1-2-3-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 3 Digital Root Reflection",
+      "c_0_source_coordinates": [
+        "[[M1-2-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-3-0"
+    },
+    {
+      "coordinate": "M1-2-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 4: Second Difference (Complementary Polarity)",
+      "c_0_source_coordinates": [
+        "[[M1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-4-0]]",
+        "[[M1-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-4"
+    },
+    {
+      "coordinate": "M1-2-4-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 4 Digital Root Reflection",
+      "c_0_source_coordinates": [
+        "[[M1-2-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-4-0"
+    },
+    {
+      "coordinate": "M1-2-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 5: Non-Dual Quintessence (Paradox Holder)",
+      "c_0_source_coordinates": [
+        "[[M1-2]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-5-0]]",
+        "[[M1-3-4]]",
+        "[[M1-2]]",
+        "[[M1-3-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-5"
+    },
+    {
+      "coordinate": "M1-2-5-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Matrix 5 Digital Root Reflection",
+      "c_0_source_coordinates": [
+        "[[M1-2-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-2-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-2-5-0"
+    },
+    {
+      "coordinate": "M1-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Spanda",
+      "c_0_source_coordinates": [
+        "[[M1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-3-0]]",
+        "[[M1-3-1]]",
+        "[[M1-3-2]]",
+        "[[M1-3-3]]",
+        "[[M1-3-4]]",
+        "[[M1-3-5]]",
+        "[[M1-4]]",
+        "[[M1-2]]",
+        "[[M1-5-2]]",
+        "[[M3]]",
+        "[[M2]]",
+        "[[M4]]",
+        "[[M0-3]]",
+        "[[M1]]",
+        "[[M1-0]]",
+        "[[M1-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3"
+    },
+    {
+      "coordinate": "M1-3-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Spanda Seed",
+      "c_0_source_coordinates": [
+        "[[M1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-4]]",
+        "[[M0-1-(0∕1)]]",
+        "[[M0-3-2]]",
+        "[[M0-3-(0∕1)-0]]",
+        "[[M1-2-0-0]]",
+        "[[M1-3-4.(0∕1∕2∕3)]]",
+        "[[M1-3-1]]",
+        "[[M1-3-3]]",
+        "[[M0-0]]",
+        "[[M0-0-0]]",
+        "[[M0-0-1]]",
+        "[[M1-2-0]]",
+        "[[M1-2]]",
+        "[[M1-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-0"
+    },
+    {
+      "coordinate": "M1-3-1",
+      "c_4_artifact_role": "map-index",
+      "title": "Primal Differentiation - Original Pole",
+      "c_0_source_coordinates": [
+        "[[M1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-1-(0∕1)]]",
+        "[[M0-3-3]]",
+        "[[M0-3-(0∕1)-1]]",
+        "[[M1-2-1-0]]",
+        "[[M1-3-2]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-1]]",
+        "[[M1-0]]",
+        "[[M1-2-1]]",
+        "[[M1-2]]",
+        "[[M1-3]]",
+        "[[M1-3-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-1"
+    },
+    {
+      "coordinate": "M1-3-2",
+      "c_4_artifact_role": "map-index",
+      "title": "Primal Differentiation - Reflection Pole",
+      "c_0_source_coordinates": [
+        "[[M1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-1]]",
+        "[[M1-3-3]]",
+        "[[M0-4.(0∕1∕2)]]",
+        "[[M1-1]]",
+        "[[M1-3]]",
+        "[[M1-3-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-2"
+    },
+    {
+      "coordinate": "M1-3-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Trika Synthesis",
+      "c_0_source_coordinates": [
+        "[[M1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-6]]",
+        "[[M0-4.(0∕1∕2∕3)]]",
+        "[[M0-2]]",
+        "[[M1-2-5]]",
+        "[[M1-3-4]]",
+        "[[M2]]",
+        "[[M3]]",
+        "[[M1-3-4.0000]]",
+        "[[M1-2]]",
+        "[[M1-3]]",
+        "[[M1-3-0]]",
+        "[[M1-3-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-3"
+    },
+    {
+      "coordinate": "M1-3-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Contextual Flowering",
+      "c_0_source_coordinates": [
+        "[[M1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-3-4.(0∕1)]]",
+        "[[M1-3-4.(0∕1∕2)]]",
+        "[[M1-3-4.(0∕1∕2∕3)]]",
+        "[[M1-3-4.0000]]",
+        "[[M1-3-4.(4.0∕1-4.4∕5)]]",
+        "[[M1-3-4.(5∕0)]]",
+        "[[M0-3-7]]",
+        "[[M0-4]]",
+        "[[M1-2-5]]",
+        "[[M1-3]]",
+        "[[M1-3-3]]",
+        "[[M1-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-4"
+    },
+    {
+      "coordinate": "M1-3-4.(0/1)",
+      "c_4_artifact_role": "map-index",
+      "title": "6-Fold Dynamic Process",
+      "c_0_source_coordinates": [
+        "[[M1-3-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-3-4.(0∕1∕2)]]",
+        "[[M1-4.1]]",
+        "[[M1-4.2]]",
+        "[[M1-3-4]]",
+        "[[M1-3-4.0000]]",
+        "[[M1-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-4.(0/1)"
+    },
+    {
+      "coordinate": "M1-3-4.(0/1/2)",
+      "c_4_artifact_role": "map-index",
+      "title": "8-Fold Processual Frame",
+      "c_0_source_coordinates": [
+        "[[M1-3-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-3-4.(0∕1∕2∕3)]]",
+        "[[M1-4.2]]",
+        "[[M1-3-4]]",
+        "[[M1-3-4.(0∕1)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-4.(0/1/2)"
+    },
+    {
+      "coordinate": "M1-3-4.(0/1/2/3)",
+      "c_4_artifact_role": "map-index",
+      "title": "Dual-Track Parallel Equation",
+      "c_0_source_coordinates": [
+        "[[M1-3-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-3-4.(4.0∕1-4.4∕5)]]",
+        "[[M1-4.3]]",
+        "[[M1-4.4]]",
+        "[[M1-3-0]]",
+        "[[M1-3-4]]",
+        "[[M1-3-4.(0∕1∕2)]]",
+        "[[M1-3-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-4.(0/1/2/3)"
+    },
+    {
+      "coordinate": "M1-3-4.(4.0/1-4.4/5)",
+      "c_4_artifact_role": "map-index",
+      "title": "Contextual Flowering Synthesis (Nested Frame)",
+      "c_0_source_coordinates": [
+        "[[M1-3-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-3-4.(5∕0)]]",
+        "[[M1-4.4]]",
+        "[[M1-3-4]]",
+        "[[M1-3-4.(0∕1∕2∕3)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-4.(4.0/1-4.4/5)"
+    },
+    {
+      "coordinate": "M1-3-4.(5/0)",
+      "c_4_artifact_role": "map-index",
+      "title": "Transcendent Integration (Recursive Frame)",
+      "c_0_source_coordinates": [
+        "[[M1-3-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-4.5]]",
+        "[[M1-3-4]]",
+        "[[M1-3-4.(4.0∕1-4.4∕5)]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-4.(5/0)"
+    },
+    {
+      "coordinate": "M1-3-4.0000",
+      "c_4_artifact_role": "map-index",
+      "title": "4-Fold Static Framework (Void Frame)",
+      "c_0_source_coordinates": [
+        "[[M1-3-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-3-4.(0∕1)]]",
+        "[[M1-4.0]]",
+        "[[M1-3-3]]",
+        "[[M1-3-4]]",
+        "[[M1-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-4.0000"
+    },
+    {
+      "coordinate": "M1-3-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Quintessential Meta-Reflection",
+      "c_0_source_coordinates": [
+        "[[M1-3]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M0-3-8]]",
+        "[[M0-5]]",
+        "[[M0-5-(5∕0)-5]]",
+        "[[M1-3-4.(0∕1∕2∕3)]]",
+        "[[M1-5]]",
+        "[[M1-4]]",
+        "[[M1-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-3-5"
+    },
+    {
+      "coordinate": "M1-4",
+      "c_4_artifact_role": "map-index",
+      "title": "Quaternal Logic Flowering",
+      "c_0_source_coordinates": [
+        "[[M1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-4.0]]",
+        "[[M1-4.1]]",
+        "[[M1-4.2]]",
+        "[[M1-4.3]]",
+        "[[M1-4.4]]",
+        "[[M1-4.5]]",
+        "[[M1-5]]",
+        "[[M]]",
+        "[[M2]]",
+        "[[M0-3-10]]",
+        "[[M4]]",
+        "[[M1-3-4.0000]]",
+        "[[M1-3-4.(0∕1)]]",
+        "[[M1-3-4]]",
+        "[[M1]]",
+        "[[M1-0]]",
+        "[[M1-1]]",
+        "[[M1-2]]",
+        "[[M1-3]]",
+        "[[M1-3-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-4"
+    },
+    {
+      "coordinate": "M1-4.0",
+      "c_4_artifact_role": "map-index",
+      "title": "Foundational Encoding",
+      "c_0_source_coordinates": [
+        "[[M1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-4.1]]",
+        "[[M1-3-4.0000]]",
+        "[[M1-4]]",
+        "[[M1-4.5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-4.0"
+    },
+    {
+      "coordinate": "M1-4.1",
+      "c_4_artifact_role": "map-index",
+      "title": "Explicate-Implicate Framework",
+      "c_0_source_coordinates": [
+        "[[M1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-4.2]]",
+        "[[M1-3-4.(0∕1)]]",
+        "[[M1-4]]",
+        "[[M1-4.0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-4.1"
+    },
+    {
+      "coordinate": "M1-4.2",
+      "c_4_artifact_role": "map-index",
+      "title": "Principle of Inversion",
+      "c_0_source_coordinates": [
+        "[[M1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-4.3]]",
+        "[[M1-3-4.(0∕1)]]",
+        "[[M1-3-4.(0∕1∕2)]]",
+        "[[M1-4]]",
+        "[[M1-4.1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-4.2"
+    },
+    {
+      "coordinate": "M1-4.3",
+      "c_4_artifact_role": "map-index",
+      "title": "Bi-Directional Synthesis",
+      "c_0_source_coordinates": [
+        "[[M1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-4.4]]",
+        "[[M1-3-4.(0∕1∕2∕3)]]",
+        "[[M1-4]]",
+        "[[M1-4.2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-4.3"
+    },
+    {
+      "coordinate": "M1-4.4",
+      "c_4_artifact_role": "map-index",
+      "title": "Contextual Flowering",
+      "c_0_source_coordinates": [
+        "[[M1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-4.5]]",
+        "[[M1-3-4.(4.0∕1-4.4∕5)]]",
+        "[[M1-3-4.(0∕1∕2∕3)]]",
+        "[[M1-4]]",
+        "[[M1-4.3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-4.4"
+    },
+    {
+      "coordinate": "M1-4.5",
+      "c_4_artifact_role": "map-index",
+      "title": "Harmonic Meta-Frames & Quintessential Integration",
+      "c_0_source_coordinates": [
+        "[[M1-4]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-4.0]]",
+        "[[M1-3-4.(5∕0)]]",
+        "[[M1-4]]",
+        "[[M1-4.4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-4.5"
+    },
+    {
+      "coordinate": "M1-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Toroidal Recognition",
+      "c_0_source_coordinates": [
+        "[[M1]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-5-0]]",
+        "[[M1-5-1]]",
+        "[[M1-5-2]]",
+        "[[M1-5-3]]",
+        "[[M1-5-4]]",
+        "[[M1-5-5]]",
+        "[[M1-0]]",
+        "[[M1-4]]",
+        "[[M2]]",
+        "[[M3]]",
+        "[[M5]]",
+        "[[M1-3-5]]",
+        "[[M1]]",
+        "[[M1-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-5"
+    },
+    {
+      "coordinate": "M1-5-0",
+      "c_4_artifact_role": "map-index",
+      "title": "Toroidal-Quaternionic Ground",
+      "c_0_source_coordinates": [
+        "[[M1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-5-1]]",
+        "[[M1-5]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-5-0"
+    },
+    {
+      "coordinate": "M1-5-1",
+      "c_4_artifact_role": "map-index",
+      "title": "The Torus in Quaternionic Space",
+      "c_0_source_coordinates": [
+        "[[M1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-5-2]]",
+        "[[M0-1]]",
+        "[[M5]]",
+        "[[M1-2]]",
+        "[[M1-5]]",
+        "[[M1-5-0]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-5-1"
+    },
+    {
+      "coordinate": "M1-5-2",
+      "c_4_artifact_role": "map-index",
+      "title": "The 4π = 720° Toroidal Cycle",
+      "c_0_source_coordinates": [
+        "[[M1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-5-3]]",
+        "[[M1-2]]",
+        "[[M1-5-5]]",
+        "[[M1-3]]",
+        "[[M1-5]]",
+        "[[M1-5-1]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-5-2"
+    },
+    {
+      "coordinate": "M1-5-3",
+      "c_4_artifact_role": "map-index",
+      "title": "Shadow as Phase-Shift on the Torus",
+      "c_0_source_coordinates": [
+        "[[M1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-5-4]]",
+        "[[M4]]",
+        "[[M1-5]]",
+        "[[M1-5-2]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-5-3"
+    },
+    {
+      "coordinate": "M1-5-4",
+      "c_4_artifact_role": "map-index",
+      "title": "The Torus Generating Parashakti",
+      "c_0_source_coordinates": [
+        "[[M1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-5-5]]",
+        "[[M2-0]]",
+        "[[M1-0]]",
+        "[[M1-5]]",
+        "[[M1-5-3]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-5-4"
+    },
+    {
+      "coordinate": "M1-5-5",
+      "c_4_artifact_role": "map-index",
+      "title": "Recognition of Toroidal Necessity",
+      "c_0_source_coordinates": [
+        "[[M1-5]]"
+      ],
+      "c_0_related_coordinates": [
+        "[[M1-5]]",
+        "[[M4]]",
+        "[[M0-0]]",
+        "[[M5]]",
+        "[[M1-2]]",
+        "[[M1-5-2]]",
+        "[[M1-5-4]]"
+      ],
+      "c_3_projected_from": "Idea/Bimba/Map/datasets/paramasiva-deep",
+      "c_3_projected_at": "2026-06-17",
+      "c_4_graph_node": "neo4j://Bimba/M1-5-5"
+    }
+  ]
+}

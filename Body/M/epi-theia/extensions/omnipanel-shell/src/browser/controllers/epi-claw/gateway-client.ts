@@ -2,6 +2,7 @@
 // Wholesale-ported from Body/S/S3/epi-app/renderer/controllers/epi-claw/ — Track 05 T2.
 // Uses window.sPrime.epiClaw which is provided by the Electron preload script in source;
 // runtime-stubbed for the Theia browser bundle (see omnipanel-runtime-stub.ts).
+// TODO: migrate to invokeGatewayRpc through SharedBridgeAdapter / KERNEL_BRIDGE_API.
 // Strict typing returns when Track 05 T3 kernel-bridge replaces window.sPrime via Theia DI.
 /**
  * Epi-Claw Gateway Client for Renderer
@@ -232,4 +233,4 @@ export class GatewayClient {
  * Default gateway URL for Epi-Claw
  * Port 18794 — canonical S3' gateway port (epi gate)
  */
-export const DEFAULT_GATEWAY_URL = "ws://localhost:18794";
+export const DEFAULT_GATEWAY_URL = "ws://127.0.0.1:18794";

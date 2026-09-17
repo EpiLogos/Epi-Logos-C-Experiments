@@ -1,0 +1,36 @@
+{
+  "runId": "20260619T122050Z-42-T42.5",
+  "taskId": "42.T42.5",
+  "startedAt": "2026-06-19T12:20:50.953Z",
+  "owner": "codex-m-dev-42-t42-5-transcript-record",
+  "leaseExpiresAt": "2026-06-19T14:20:50.953Z",
+  "worktree": null,
+  "task": {
+    "id": "42.T42.5",
+    "trackId": "42",
+    "tranche": "T42.5",
+    "title": "Harness-neutral transcript-of-record (S3 gateway)",
+    "effort": "S3 gateway",
+    "file": "42-harness-dynamics-surface.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/42-harness-dynamics-surface.md",
+    "dependsOn": [
+      "42.T42.4"
+    ],
+    "writeScopes": [
+      "Body/S/S3/gateway/src/chat.rs",
+      "vendors/claude-mem-v10.5.5/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

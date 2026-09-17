@@ -1,0 +1,36 @@
+{
+  "runId": "20260628T093506Z-17-T17.26",
+  "taskId": "17.T17.26",
+  "startedAt": "2026-06-28T09:35:06.466Z",
+  "owner": "codex-m-dev-17-t17-26-graphiti-native",
+  "leaseExpiresAt": "2026-06-28T11:35:06.466Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.26",
+    "trackId": "17",
+    "tranche": "T17.26",
+    "title": "Graphiti native-library landing + sidecar deprecation",
+    "effort": null,
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.25"
+    ],
+    "writeScopes": [
+      "Body/S/S3/graphiti-runtime/**",
+      "Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "runId": "20260716T133253Z-31-T31.11",
+  "taskId": "31.T31.11",
+  "startedAt": "2026-07-16T13:32:53.230Z",
+  "owner": "codex-mdev-track31-action-policy",
+  "leaseExpiresAt": "2026-07-16T15:32:53.230Z",
+  "worktree": null,
+  "task": {
+    "id": "31.T31.11",
+    "trackId": "31",
+    "tranche": "T31.11",
+    "title": "Toolbar / context-menu / inline-action contribution policy",
+    "effort": null,
+    "file": "31-chrome-contributions-catalog.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/31-chrome-contributions-catalog.md",
+    "dependsOn": [
+      "31.T31.10"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/31-chrome-contributions-catalog.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: chrome contributions — six-entry strip ids, chord grammar (cmd-period face toggle, cmd-shift-{0..5} Mn, cmd-1..8 tabs), slot policy (no three-pane main), family->archetype->position breadcrumbs, no-modal. §2 track 31."
+  }
+}

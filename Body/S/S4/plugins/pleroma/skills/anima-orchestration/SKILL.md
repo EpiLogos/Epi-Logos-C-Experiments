@@ -11,7 +11,7 @@ Use this skill when Anima must turn a user or system request into an executable 
 
 1. Run `vak-evaluate` first unless the caller provides a fresh VAK result.
 2. Map `CF` to the constitutional agent function:
-   - `(0000)` -> Nous
+   - `(00/00)` -> Nous
    - `(0/1)` -> Logos
    - `(0/1/2)` -> Eros
    - `(0/1/2/3)` -> Mythos

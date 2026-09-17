@@ -1,12 +1,98 @@
+use serde::Serialize;
 use serde_json::{json, Value};
+use std::collections::HashMap;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::graph::client::{Neo4jClient, Neo4jConfig};
 use crate::graph::{
     kernel_coordinate_anchor_from_parts, GraphMethodParams, GraphMethodService, GraphNodeRequest,
-    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest, HybridFusionConfig,
-    KernelResonanceObservationRequest, PointerWebRefreshRequest, RetrievalResult,
+    GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
+    HarmonicRelationMaterializationRequest, HybridFusionConfig, KernelResonanceObservationRequest,
+    PointerWebRefreshRequest, RetrievalResult,
 };
+use epi_s2_graph_services::retrieval::{CoordinateRetrieval, PropPredicate};
+use epi_s2_graph_services::M0ResidualListRequest;
+
+const ASMA_MIRROR_ABSENT: u8 = 0xFF;
+const RELATION_FAMILY_VALUES: &[&str] = &[
+    "structural",
+    "correspondential",
+    "kernel_core",
+    "inferred",
+    "sync",
+    "compatibility",
+];
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct KernelAsmaNameDesc {
+    name_idx: u8,
+    group: u8,
+    index_in_group: u8,
+    element_id: u8,
+    digital_root: u8,
+    mirror_idx: u8,
+    abjad_value: u16,
+    meaning_id: u16,
+    _pad: [u8; 2],
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct RoutingMask128 {
+    low_64: u64,
+    high_64: u64,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct KernelMantraEntryDesc {
+    mantra_idx: u8,
+    matrika_group: u8,
+    element_id: u8,
+    phase: u8,
+    fundamental_frequency: u16,
+    meaning_id: u16,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct KernelPlanetOperator {
+    id: u8,
+    group_type: u8,
+    prime: u8,
+    elem_sig: u8,
+    cousto_freq: u16,
+    keplerian_vel: u16,
+    digital_root: u8,
+    ananda_row: u8,
+    meaning_id: u16,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct AlchemicalTattvicEntry {
+    alchemical: u8,
+    tattvic: u8,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct PsychoidPlanetaryEntry {
+    l0_prime_position: u8,
+    archetypal_number: u8,
+    planet_id: u8,
+}
+
+extern "C" {
+    static M2_ASMA_LUT: [KernelAsmaNameDesc; 100];
+    static M2_MANTRA_LUT: [KernelMantraEntryDesc; 100];
+    static M2_PLANET_LUT: [KernelPlanetOperator; 10];
+    static ALCHEMICAL_TO_TATTVIC: [AlchemicalTattvicEntry; 6];
+    static PSYCHOID_PLANETARY_CORRESPONDENCE: [PsychoidPlanetaryEntry; 7];
+    static ASMA_36_INTERNAL_MASK: RoutingMask128;
+    static ASMA_64_PROJECTIVE_MASK: RoutingMask128;
+}
 
 pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value, String> {
     if method == "s2'.coordinate.resolve" {
@@ -22,12 +108,20 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
             &resolution.input,
             resolution.compatibility_property.clone(),
         )?;
-        let pointer_web = coordinate_anchor.pointer_web.clone();
+        let coordinate_reference_projection =
+            coordinate_anchor.coordinate_reference_projection.clone();
         return Ok(json!({
             "resolution": resolution,
             "coordinate_anchor": coordinate_anchor,
-            "pointerWeb": pointer_web,
+            "coordinateReferenceProjection": coordinate_reference_projection,
+            "deprecatedPointerWeb": {
+                "status": "deprecated_compatibility_only",
+                "replacement": "s2.graph.harmonic_relations.materialize + s2.graph.traverse"
+            },
         }));
+    }
+    if method == "s2.parashaktiCorrespondences" {
+        return parashakti_correspondences(params).await;
     }
 
     let config = Neo4jConfig::from_env();
@@ -48,6 +142,39 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
         "s2.graph.node" => {
             let coordinate = required_string(params, "coordinate")?;
             service.node(GraphNodeRequest { coordinate }).await
+        }
+        "s2.graph.list" => {
+            let coordinate_prefix = required_string(params, "coordinatePrefix")?;
+            let offset = params
+                .get("offset")
+                .and_then(Value::as_i64)
+                .unwrap_or_default();
+            let limit = params.get("limit").and_then(Value::as_i64).unwrap_or(20);
+            service
+                .list_m0_residual(M0ResidualListRequest {
+                    coordinate_prefix,
+                    offset,
+                    limit,
+                })
+                .await
+        }
+        "s2.graph.list_by_filter" => {
+            // Track 48 §13.E — coordinate-scoped base-view list-by-filter. The
+            // async row-returning `list_by_filter` on CoordinateRetrieval already
+            // yields `{ "rows": [...] }`; the handler just marshals params.
+            let coordinate_scope = params
+                .get("coordinateScope")
+                .and_then(Value::as_str)
+                .unwrap_or("");
+            let predicates: Vec<PropPredicate> = match params.get("propertyFilters") {
+                Some(value) => serde_json::from_value(value.clone())
+                    .map_err(|err| format!("invalid propertyFilters: {err}"))?,
+                None => Vec::new(),
+            };
+            let limit = params.get("limit").and_then(Value::as_i64);
+            CoordinateRetrieval::new(&client)
+                .list_by_filter(coordinate_scope, &predicates, limit)
+                .await
         }
         "s2.graph.traverse" => {
             let from = required_string(params, "from")?;
@@ -101,6 +228,94 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
                         .get("graphitiArcId")
                         .and_then(|value| value.as_str())
                         .map(str::to_owned),
+                })
+                .await
+        }
+        "s2.graph.gds.tangent_overlay" => {
+            let coordinate = required_string(params, "coordinate")?;
+            let top_k = params
+                .get("topK")
+                .or_else(|| params.get("top_k"))
+                .and_then(|value| value.as_u64())
+                .unwrap_or(8) as usize;
+            service
+                .gds_tangent_overlay(epi_s2_graph_services::GdsOverlayRequest { coordinate, top_k })
+                .await
+        }
+        "s2.graph.ontology.reload" => {
+            crate::graph::import_epi_ontology_with_n10s(&client).await?;
+            let plan = epi_s2_graph_services::ontology_import_plan();
+            Ok(json!({
+                "method": "s2.graph.ontology.reload",
+                "ontologyUri": plan.ontology_uri,
+                "versionIri": plan.version_iri,
+                "sourceFormat": plan.source_format,
+                "turtleSha256": plan.turtle_sha256,
+                "status": "reloaded"
+            }))
+        }
+        "s2.graph.seed.snapshot" => {
+            let queries = crate::graph::seed_baseline_snapshot_queries();
+            let coordinates = crate::graph::seed_baseline_coordinates();
+            let relationship_types = crate::graph::seed_relationship_types();
+            Ok(json!({
+                "method": "s2.graph.seed.snapshot",
+                "coordinateCount": coordinates.len(),
+                "coordinates": coordinates,
+                "relationshipTypes": relationship_types,
+                "queries": queries.iter().map(|query| json!({
+                    "name": query.name,
+                    "cypher": query.cypher
+                })).collect::<Vec<_>>()
+            }))
+        }
+        "s2.graph.core65.audit" => service.core_65_audit().await,
+        "s2.graph.promotion.dry_run" => {
+            let intent = promotion_intent_from_params(params)?;
+            let plan = epi_s2_graph_services::SyncCoordinator::validate_promotion_intent(&intent)?;
+            let report = epi_s2_graph_services::GraphPromotionSyncReport::planned(&plan);
+            Ok(json!({
+                "method": "s2.graph.promotion.dry_run",
+                "report": report,
+                "plan": {
+                    "coordinate": plan.coordinate,
+                    "identityProperty": plan.identity_property,
+                    "labels": plan.labels,
+                    "properties": plan.properties,
+                    "sourcePath": plan.source_path,
+                    "relationCount": plan.relationships.len(),
+                    "compatibilityMigrations": plan.compatibility_migrations,
+                    "syncVersion": plan.sync_version,
+                    "promotionSource": plan.promotion_source
+                },
+                "canonicalWritePerformed": false
+            }))
+        }
+        "s2.graph.promotion.commit" => {
+            let intent = promotion_intent_from_params(params)?;
+            let report = epi_s2_graph_services::SyncCoordinator::new(&client)
+                .promote_intent(&intent)
+                .await?;
+            Ok(json!({
+                "method": "s2.graph.promotion.commit",
+                "report": report,
+                "canonicalWritePerformed": true
+            }))
+        }
+        "s2.graph.relation_family.list" => Ok(json!({
+            "method": "s2.graph.relation_family.list",
+            "property": "c_1_relation_family",
+            "values": RELATION_FAMILY_VALUES,
+            "source": "DR-IG-1 / S2 graph-services relation-family discriminator"
+        })),
+        "s2.graph.harmonic_relations.materialize" => {
+            let timestamp_ms = params
+                .get("timestampMs")
+                .and_then(|value| value.as_u64())
+                .unwrap_or_else(current_epoch_millis);
+            service
+                .materialize_harmonic_relations(HarmonicRelationMaterializationRequest {
+                    timestamp_ms,
                 })
                 .await
         }
@@ -179,12 +394,953 @@ pub async fn dispatch_graph_method(method: &str, params: &Value) -> Result<Value
     }
 }
 
+fn promotion_intent_from_params(
+    params: &Value,
+) -> Result<epi_s2_graph_services::S2GraphPromotionIntent, String> {
+    let value = params
+        .get("intent")
+        .cloned()
+        .unwrap_or_else(|| params.clone());
+    serde_json::from_value(value).map_err(|err| format!("invalid promotion intent: {err}"))
+}
+
 fn required_string(params: &Value, key: &str) -> Result<String, String> {
     params
         .get(key)
         .and_then(|value| value.as_str())
         .map(str::to_owned)
         .ok_or_else(|| format!("{key} must be a string"))
+}
+
+/// `s2.parashaktiCorrespondences` — the 72-fold parashakti correspondence face,
+/// re-sourced off its lawful substrates (uc-reorient-1 / gate-adapter).
+///
+/// - The **decan chain** (decan · sign · ruling-planet · element · body-part ·
+///   tarot pip · degrees) is resolved **bridge-side from the kernel LUTs** —
+///   `ZODIAC_DECAN_TABLE` (the M0→M1→M2 ONE-LUT decan chain, LAW(24)) plus the
+///   Golden-Dawn `PIP_DECAN_MAP` inversion for the tarot pip. These are kernel
+///   law and stay available offline.
+/// - The **asma** sacred name + domain mirror, the **maqam**, and the planetary
+///   vedic-mantra / **modal signature (octaval mode)** / chakral role come from
+///   the **live Neo4j parashakti-deep graph** via the existing `Neo4jClient`
+///   seam (DivineName / Maqam / PlanetaryHarmonic / ChakralCenter nodes). The
+///   planetary mode rides `PlanetaryHarmonic.c_0_modal_signature`; thin
+///   outer-planet seed stubs (Neptune/Pluto) carry none, so it honest-nulls
+///   per-planet. No dataset file is ever read.
+/// - When Neo4j is unreachable, the kernel-LUT fields still serve and every
+///   graph-sourced field is HONEST-ABSENT (`null`) with `graphUnavailable:
+///   true` — never a JSON-dataset fallback.
+async fn parashakti_correspondences(params: &Value) -> Result<Value, String> {
+    let address72 = (required_u64(params, "address72")? % 72) as usize;
+    let include_shadow_decans = params
+        .get("includeShadowDecans")
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
+
+    // ── (a) kernel decan chain — always available (kernel law) ──────────────
+    // 72 Shem quinances fold onto the 36 decans two-to-one.
+    let decan_index = (address72 / 2) as u8;
+    let entry = crate::nara::medicine::zodiac_decan(decan_index)
+        .ok_or_else(|| format!("kernel decan index {decan_index} out of range 0..35"))?;
+    let sign_name = ZODIAC_SIGN_NAMES[entry.sign as usize];
+    let ruling_planet = entry.ruling_planet;
+    let planet_ruler_name = crate::nara::medicine::planet_name(ruling_planet).to_string();
+    let decan_coordinate = decan_graph_coordinate(entry.sign, entry.decan_in_sign);
+    let lo = u32::from(entry.decan_in_sign) * 10;
+    let decan_face = json!({
+        "coordinate": decan_coordinate,
+        "name": format!("{sign_name} Decan {}", entry.decan_in_sign + 1),
+        "zodiacSign": sign_name,
+        "degrees": format!("{lo}°–{}°", lo + 10),
+        "degreesRange": format!("{lo}°–{}° {sign_name}", lo + 10),
+        "planetaryRuler": planet_ruler_name.clone(),
+        "element": crate::nara::medicine::element_name(entry.element),
+        "bodyPart": entry.body_part,
+        "herbalismHerbs": [entry.herb],
+        "tarotCard": pip_card_for_decan(entry.sign, entry.decan_in_sign),
+        "provenance": "kernel-lut",
+        "kernelLut": "ZODIAC_DECAN_TABLE + PIP_DECAN_MAP"
+    });
+
+    // kernel planet→chakra chain (LAW(24) tail); the coordinates are handles the
+    // live graph resolves.
+    let chakra_id = crate::nara::medicine::PLANET_CHAKRA
+        .get(ruling_planet as usize)
+        .copied()
+        .unwrap_or(0);
+    let planet_coordinate = planet_graph_coordinate(ruling_planet);
+    let chakra_coordinate = chakra_graph_coordinate(chakra_id);
+    let kernel_chakra_name = crate::nara::medicine::chakra_name(chakra_id).to_string();
+    let chakra_body_zones = crate::nara::medicine::body_zones_for_chakra(chakra_id)
+        .iter()
+        .copied()
+        .collect::<Vec<_>>();
+    let epogdoon =
+        crate::gate::kernel_bridge_runtime::typed_json_m2_epogdoon_projection(address72 as u8);
+
+    // kernel asma mirror algebra (M2_ASMA_LUT); the mirror *name* is filled from
+    // the graph below — the algebra itself is kernel law.
+    let mut asma_overlay = asma_overlay_record(address72, params)?;
+    let mirror_idx = kernel_asma_desc(address72)?.mirror_idx;
+    let asma_name_coordinate = asma_graph_coordinate(address72);
+    let mirror_coordinate = if mirror_idx == ASMA_MIRROR_ABSENT {
+        None
+    } else {
+        Some(asma_graph_coordinate(mirror_idx as usize))
+    };
+
+    let axis = portal_core::RoutingAxisViews::for_index72(address72 as u8)
+        .expect("address72 is reduced to the closed 0..72 kernel domain");
+    let mantra = unsafe { M2_MANTRA_LUT[address72] };
+    let planet = unsafe { M2_PLANET_LUT[ruling_planet as usize] };
+    let tattvic_throughline = unsafe { ALCHEMICAL_TO_TATTVIC }
+        .iter()
+        .map(|entry| {
+            json!({
+                "alchemical": alchemical_element_name(entry.alchemical),
+                "tattvic": tattvic_element_name(entry.tattvic),
+                "marker": match entry.alchemical {
+                    0 => "prima-materia",
+                    5 => "ultima-materia",
+                    _ => "throughline"
+                }
+            })
+        })
+        .collect::<Vec<_>>();
+
+    // ── (b) live-graph fields — honest-absent when Neo4j unreachable ────────
+    let graph = fetch_parashakti_graph(
+        address72,
+        &asma_name_coordinate,
+        mirror_coordinate.as_deref(),
+        &planet_coordinate,
+        if chakra_id >= 1 {
+            Some(chakra_coordinate.as_str())
+        } else {
+            None
+        },
+        include_shadow_decans,
+    )
+    .await;
+    let graph_unavailable = !graph.available;
+    let live_provenance = if graph_unavailable {
+        "graph-unavailable"
+    } else {
+        "live-graph"
+    };
+
+    if let Value::Object(overlay) = &mut asma_overlay {
+        overlay.insert(
+            "mirror_name".to_owned(),
+            graph.mirror_name.clone().map_or(Value::Null, Value::String),
+        );
+    }
+
+    let provenance_handle = format!("s2://graph/parashakti-deep/address72/{address72}");
+    let earth_observer_handle =
+        format!("s2://graph/parashakti-deep/earth-observer/address72/{address72}");
+
+    let mut artifact = json!({
+        "address72": address72,
+        "graphUnavailable": graph_unavailable,
+        "provenanceHandle": {
+            "source": "s2",
+            "handle": provenance_handle,
+            "bodyAllowed": false,
+            "note": "kernel decan LUT + live Neo4j parashakti-deep graph (no dataset file)"
+        },
+        "decanFace": decan_face,
+        "sacredSonic": {
+            "coordinate": graph.asma_coordinate.clone().map_or(Value::Null, Value::String),
+            "name": opt_string(graph.asma_name),
+            "arabicText": opt_string(graph.asma_arabic),
+            "englishTranslation": opt_string(graph.asma_english),
+            "chakraCorrespondence": opt_string(graph.asma_chakra),
+            "asma": asma_overlay,
+            "maqam": {
+                "coordinate": opt_string(graph.maqam_coordinate),
+                "name": opt_string(graph.maqam_name),
+                "spiritualFunction": opt_string(graph.maqam_function)
+            },
+            "provenance": live_provenance
+        },
+        "planetaryChakral": {
+            "planetaryRuler": planet_ruler_name,
+            "planetCoordinate": planet_coordinate,
+            // The planet "mode" is the live PlanetaryHarmonic octaval/musical
+            // signature (`c_0_modal_signature`), not the retired JSON
+            // diurnal/nocturnal field (which existed nowhere in the ontology).
+            // Honest-null for outer-planet seed stubs with no modal signature.
+            "planetaryMode": opt_string(graph.planet_modal_signature),
+            "vedicMantra": opt_string(graph.vedic_mantra),
+            "chakraCoordinate": if chakra_id >= 1 {
+                Value::String(chakra_coordinate)
+            } else {
+                Value::Null
+            },
+            "chakraName": graph.chakra_name.clone().unwrap_or(kernel_chakra_name.clone()),
+            "chakraRole": opt_string(graph.chakra_role),
+            "earthObserverHandle": earth_observer_handle.clone(),
+            "provenance": live_provenance
+        },
+        "bridge72": {
+            "address72": address72,
+            "hexagramId": epogdoon["compressedCodon"].clone(),
+            "halfDecan": decan_index,
+            "decan": {
+                "index": decan_index,
+                "label": format!("{sign_name} Decan {}", entry.decan_in_sign + 1),
+                "provenance": "ZODIAC_DECAN_TABLE"
+            },
+            "planet": {
+                "id": ruling_planet,
+                "name": planet_ruler_name,
+                "provenance": "M2_DECAN_DESC + M2_PLANET_LUT"
+            },
+            "chakra": {
+                "id": chakra_id,
+                "name": kernel_chakra_name,
+                "provenance": "PLANET_CHAKRA"
+            },
+            "bodyZone": {
+                "zones": chakra_body_zones,
+                "provenance": "CHAKRA_BODY_ZONES"
+            },
+            "epogdoon": {
+                "ratio": "9:8",
+                "roundTripLoss": epogdoon["roundTripLoss"].clone(),
+                "provenance": "kernelBridge.m2.epogdoonProjection(address72)"
+            }
+        },
+        "earthObserverHandle": earth_observer_handle
+    });
+
+    artifact
+        .as_object_mut()
+        .expect("parashakti correspondence artifact must be an object")
+        .insert(
+            "sixSonicCards".to_owned(),
+            json!({
+                "provenance": "kernel-lut + live-graph-enrichment",
+                "decanFace": {
+                    "address72": address72,
+                    "element": crate::nara::medicine::element_name(entry.element),
+                    "sign": sign_name,
+                    "decan": entry.decan_in_sign + 1,
+                    "face": if axis.decan.face == 0 { "light" } else { "shadow" },
+                    "rulingPlanet": crate::nara::medicine::planet_name(axis.decan.ruling_planet),
+                    "tattva": {
+                        "index": axis.tattva.tattva_index,
+                        "phase": axis.tattva.phase,
+                        "glyph": format!("T{}{}", axis.tattva.tattva_index + 1, if axis.tattva.phase == 0 { "↓" } else { "↑" })
+                    },
+                    "tattvicThroughline": tattvic_throughline
+                },
+                "shemPair": {
+                    "light": shem_card_entry((address72 as u8) & !1, graph.shem_entries.get(address72 & !1)),
+                    "shadow": shem_card_entry(((address72 as u8) & !1) + 1, graph.shem_entries.get((address72 & !1) + 1))
+                },
+                "maqam": {
+                    "family": portal_core::music_tech::MAQAM_FAMILY_NAMES[axis.maqam.family as usize],
+                    "modeInFamily": axis.maqam.mode_in_family,
+                    "intervals": portal_core::music_tech::MAQAM_MODES[address72],
+                    "planetRuler": crate::nara::medicine::planet_name(axis.maqam.planet_ruler)
+                },
+                "mantra": {
+                    "index": mantra.mantra_idx,
+                    "phoneme": mantra_phoneme(mantra.mantra_idx),
+                    "frequencyHz": mantra.fundamental_frequency,
+                    "matrikaGroup": mantra.matrika_group,
+                    "phase": if mantra.phase == 0 { "Matrika" } else { "Malini" },
+                    "element": tattvic_element_name(mantra.element_id),
+                    "meaningId": mantra.meaning_id
+                },
+                "asma": {
+                    "index": asma_overlay["name_idx"].clone(),
+                    "group": asma_overlay["group_name"].clone(),
+                    "mirror": asma_overlay["mirror_name"].clone(),
+                    "maskRouting": asma_overlay["mask_routing"].clone()
+                },
+                "planetaryChakral": {
+                    "planet": crate::nara::medicine::planet_name(planet.id),
+                    "coustoHz": planet.cousto_freq,
+                    "digitalRoot": planet.digital_root,
+                    "chakra": (planet.elem_sig >> 3) & 0x07,
+                    "element": tattvic_element_name(planet.elem_sig & 0x07),
+                    "keplerianVelocity": planet.keplerian_vel,
+                    "meaningId": planet.meaning_id
+                }
+            }),
+        );
+
+    // The correspondence tree is an additive, compiled-kernel projection.  The
+    // carrier must not recreate either 100-entry overlay or the planet table.
+    let mantra_overlay = unsafe { M2_MANTRA_LUT }
+        .iter()
+        .map(|entry| {
+            json!({
+                "index": entry.mantra_idx,
+                "frequencyHz": entry.fundamental_frequency,
+                "phase": if entry.phase == 0 { "Matrika" } else { "Malini" },
+                "element": tattvic_element_name(entry.element_id),
+            })
+        })
+        .collect::<Vec<_>>();
+    let asma_overlay = (0..100)
+        .map(|index| {
+            let record = asma_overlay_record(index, params)?;
+            Ok(json!({
+                "index": record["name_idx"].clone(),
+                "group": record["group_name"].clone(),
+                "maskRouting": record["mask_routing"].clone(),
+            }))
+        })
+        .collect::<Result<Vec<_>, String>>()?;
+    let planetary_keying = unsafe { M2_PLANET_LUT }
+        .iter()
+        .map(|planet| {
+            json!({
+                "index": planet.id,
+                "name": crate::nara::medicine::planet_name(planet.id),
+                "coustoHz": planet.cousto_freq,
+                "element": tattvic_element_name(planet.elem_sig & 0x07),
+                "chakra": (planet.elem_sig >> 3) & 0x07,
+                "isOuter": planet.id >= 7,
+            })
+        })
+        .collect::<Vec<_>>();
+    let psychoid_planetary = unsafe { PSYCHOID_PLANETARY_CORRESPONDENCE }
+        .iter()
+        .map(|entry| {
+            let role = match entry.archetypal_number {
+                1 => "Unity-Monad",
+                2 => "Polarity-Dyad",
+                3 => "Mediator-Triad",
+                4 => "Quaternio-Tetrad",
+                5 => "Transcendence-Pentad",
+                6 => "Perfect-Hexad",
+                7 => "7th-Boundary",
+                _ => "Unknown",
+            };
+            json!({
+                "planetId": entry.planet_id,
+                "planet": crate::nara::medicine::planet_name(entry.planet_id),
+                "l0PrimePosition": entry.l0_prime_position,
+                "archetypalNumber": entry.archetypal_number,
+                "archetypalRole": role,
+            })
+        })
+        .collect::<Vec<_>>();
+    artifact
+        .as_object_mut()
+        .expect("parashakti correspondence artifact must be an object")
+        .insert(
+            "correspondenceTree".to_owned(),
+            json!({
+                "provenance": "compiled M2_MANTRA_LUT + M2_ASMA_LUT + M2_PLANET_LUT",
+                "mantraOverlay": mantra_overlay,
+                "asmaOverlay": asma_overlay,
+                "planetaryKeying": planetary_keying,
+                "psychoidPlanetary": psychoid_planetary,
+            }),
+        );
+
+    if include_shadow_decans {
+        artifact
+            .as_object_mut()
+            .expect("parashakti correspondence artifact must be an object")
+            .insert(
+                "shadowDecanSurface".to_owned(),
+                serde_json::to_value(shadow_decan_projection(&graph.shadow_decan_graph))
+                    .map_err(|err| format!("serialize shadow-decan projection: {err}"))?,
+            );
+    }
+
+    Ok(artifact)
+}
+
+/// Zodiacal sign names, index 0 = Aries … 11 = Pisces (kernel `ZodiacDecanEntry.sign`).
+const ZODIAC_SIGN_NAMES: [&str; 12] = [
+    "Aries",
+    "Taurus",
+    "Gemini",
+    "Cancer",
+    "Leo",
+    "Virgo",
+    "Libra",
+    "Scorpio",
+    "Sagittarius",
+    "Capricorn",
+    "Aquarius",
+    "Pisces",
+];
+
+/// Canonical M2-3 decan coordinate (the element-family layout the
+/// parashakti-deep graph uses): family Fire→1 · Earth→2 · Air→3 · Water→4,
+/// sign-in-family = sign / 4 (verified against all 36 live `Decan` nodes).
+fn decan_graph_coordinate(sign: u8, decan_in_sign: u8) -> String {
+    let family = match crate::nara::medicine::SIGN_ELEMENT[sign as usize] {
+        4 => 1, // Fire
+        1 => 2, // Earth
+        3 => 3, // Air
+        2 => 4, // Water
+        _ => 0,
+    };
+    format!("M2-3-{family}-{}-{decan_in_sign}", sign / 4)
+}
+
+/// PlanetaryHarmonic graph coordinate for a kernel `Planet_Id`
+/// (Sun 0 · Earth 1 · Venus 2 · Mercury 3 · Moon 4 · Saturn 5 · Jupiter 6 · Mars 7).
+fn planet_graph_coordinate(planet_id: u8) -> String {
+    match planet_id {
+        0 => "M2-5-(0/1)".to_owned(),
+        1 => "M2-5-(0/1)-0".to_owned(),
+        other => format!("M2-5-{other}"),
+    }
+}
+
+/// ChakralCenter graph coordinate for a chakra id (1..7); id 0 is the Earth
+/// ground (the Planet-Earth node), which has no ChakralCenter node.
+fn chakra_graph_coordinate(chakra_id: u8) -> String {
+    format!("M2-5-(0/1)-{chakra_id}")
+}
+
+/// DivineName (Asma) graph coordinate for a global name index (0..98): the 99
+/// names split three-by-three into Jalal/Kamal/Jamal groups of 33, so the
+/// global index = group·33 + index-in-group (verified against the live graph).
+fn asma_graph_coordinate(name_idx: usize) -> String {
+    format!("M2-4.0-(0/1)-{}-{}", name_idx / 33, name_idx % 33)
+}
+
+/// Golden-Dawn tarot pip for a `(sign, decan)` by inverting the kernel
+/// `PIP_DECAN_MAP` (the `decan → pip` accessor the LAW(24) chain names).
+fn pip_card_for_decan(sign: u8, decan_in_sign: u8) -> Value {
+    const SUIT_NAMES: [&str; 4] = ["Cups", "Wands", "Pentacles", "Swords"];
+    for (suit, cards) in crate::nara::oracle::PIP_DECAN_MAP.iter().enumerate() {
+        for (value_idx, pip) in cards.iter().enumerate() {
+            if pip.zodiac_sign == sign && pip.decan == decan_in_sign {
+                return Value::String(format!("{} of {}", value_idx + 2, SUIT_NAMES[suit]));
+            }
+        }
+    }
+    Value::Null
+}
+
+fn opt_string(value: Option<String>) -> Value {
+    value.map_or(Value::Null, Value::String)
+}
+
+fn alchemical_element_name(element: u8) -> &'static str {
+    match element {
+        0 => "Aether",
+        1 => "Earth",
+        2 => "Water",
+        3 => "Air",
+        4 => "Fire",
+        5 => "Salt",
+        _ => "Unknown",
+    }
+}
+
+fn tattvic_element_name(element: u8) -> &'static str {
+    match element {
+        0 => "Akasha",
+        1 => "Vayu",
+        2 => "Agni",
+        3 => "Apas",
+        4 => "Prithvi",
+        _ => "Unknown",
+    }
+}
+
+fn mantra_phoneme(index: u8) -> Value {
+    const MATRIKA_VOWELS: [&str; 16] = [
+        "A", "Aa", "I", "Ii", "U", "Uu", "Ri", "Rii", "Lri", "Lrii", "E", "Ai", "O", "Au", "Am",
+        "Ah",
+    ];
+    MATRIKA_VOWELS
+        .get(index as usize)
+        .map(|phoneme| Value::String((*phoneme).to_owned()))
+        .unwrap_or(Value::Null)
+}
+
+fn shem_card_entry(index: u8, enrichment: Option<&ShemGraphEntry>) -> Value {
+    json!({
+        "index": index,
+        "choir": index / 9,
+        "position": index % 9,
+        "coordinate": enrichment.map_or(Value::Null, |entry| Value::String(entry.coordinate.clone())),
+        "name": enrichment.map_or(Value::Null, |entry| opt_string(entry.name.clone())),
+        "hebrew": enrichment.map_or(Value::Null, |entry| opt_string(entry.hebrew.clone())),
+        "meaning": enrichment.map_or(Value::Null, |entry| opt_string(entry.meaning.clone())),
+        "provenance": if enrichment.is_some() { "live-graph" } else { "kernel-index" }
+    })
+}
+
+/// Opt-in 108-cell aggregate for the M2 shadow-decan face. The two kernel
+/// columns stay available without Neo4j; only descriptors physically present in
+/// S2 are reported as graph-backed, and M3 reversed meaning remains a declared
+/// pending seam until its gateway provider exists.
+fn shadow_decan_projection(graph: &ShadowDecanGraph) -> ShadowDecanProjection {
+    let shadow_complete = graph.shadow_proper_descriptors.len() == 36;
+
+    ShadowDecanProjection {
+        coordinate: "#2-3",
+        primary_decans: kernel_decan_surface_descriptors("primary"),
+        light_decans: kernel_decan_surface_descriptors("light"),
+        primary_descriptors: graph.primary_descriptors.clone(),
+        shadow_proper_descriptors: graph.shadow_proper_descriptors.clone(),
+        tarot_reversed_meanings: Vec::new(),
+        tarot_reversed_meaning: TarotReversedMeaningSeam {
+            coordinate: "#3-4",
+            required_gateway_method: "kernelBridge.m3.tarotReversedMeaning",
+            state: "pending",
+            reason: "the M3 reversed-meaning provider is not registered in the gateway capability matrix",
+        },
+        pending: ShadowDecanPending {
+            shadow_decan_graph: !shadow_complete,
+            tarot_reversed_meaning: true,
+        },
+        visible_cell_count: if shadow_complete { 108 } else { 72 },
+    }
+}
+
+fn kernel_decan_surface_descriptors(face: &'static str) -> Vec<DecanSurfaceDescriptor> {
+    (0u8..36)
+        .filter_map(|decan_index| {
+            crate::nara::medicine::zodiac_decan(decan_index).map(|entry| {
+                let sign_name = ZODIAC_SIGN_NAMES[entry.sign as usize];
+                let coordinate = decan_graph_coordinate(entry.sign, entry.decan_in_sign);
+                let tarot_card = pip_card_for_decan(entry.sign, entry.decan_in_sign)
+                    .as_str()
+                    .map(str::to_owned);
+
+                DecanSurfaceDescriptor {
+                    decan_index,
+                    coordinate: coordinate.clone(),
+                    label: format!("{sign_name} Decan {}", entry.decan_in_sign + 1),
+                    tarot_card,
+                    source_handle: format!("kernel://m2/decan/{face}/{decan_index}"),
+                    provenance: "kernel-lut",
+                }
+            })
+        })
+        .collect()
+}
+
+#[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct DecanSurfaceDescriptor {
+    decan_index: u8,
+    coordinate: String,
+    label: String,
+    tarot_card: Option<String>,
+    source_handle: String,
+    provenance: &'static str,
+}
+
+#[derive(Default)]
+struct ShadowDecanGraph {
+    primary_descriptors: Vec<DecanSurfaceDescriptor>,
+    shadow_proper_descriptors: Vec<DecanSurfaceDescriptor>,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct ShadowDecanProjection {
+    coordinate: &'static str,
+    primary_decans: Vec<DecanSurfaceDescriptor>,
+    light_decans: Vec<DecanSurfaceDescriptor>,
+    primary_descriptors: Vec<DecanSurfaceDescriptor>,
+    shadow_proper_descriptors: Vec<DecanSurfaceDescriptor>,
+    tarot_reversed_meanings: Vec<TarotReversedMeaningReference>,
+    tarot_reversed_meaning: TarotReversedMeaningSeam,
+    pending: ShadowDecanPending,
+    visible_cell_count: usize,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct TarotReversedMeaningReference {
+    decan_index: u8,
+    coordinate: String,
+    reversed_meaning: String,
+    source_handle: String,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct TarotReversedMeaningSeam {
+    coordinate: &'static str,
+    required_gateway_method: &'static str,
+    state: &'static str,
+    reason: &'static str,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct ShadowDecanPending {
+    shadow_decan_graph: bool,
+    tarot_reversed_meaning: bool,
+}
+
+/// Live-graph correspondence fields for a 72-address. `available` is false when
+/// Neo4j is unreachable (connection or query error) — every field is then None,
+/// which the adapter renders as honest canonical-absence.
+#[derive(Default)]
+struct ParashaktiGraph {
+    available: bool,
+    shem_entries: Vec<ShemGraphEntry>,
+    asma_coordinate: Option<String>,
+    asma_name: Option<String>,
+    asma_arabic: Option<String>,
+    asma_english: Option<String>,
+    asma_chakra: Option<String>,
+    mirror_name: Option<String>,
+    maqam_coordinate: Option<String>,
+    maqam_name: Option<String>,
+    maqam_function: Option<String>,
+    vedic_mantra: Option<String>,
+    /// `PlanetaryHarmonic.c_0_modal_signature` — the octaval/musical mode of the
+    /// ruling planet (what the Bimba map means by a "planet mode"). `None` for
+    /// thin outer-planet seed stubs (Neptune/Pluto) that carry no modal
+    /// signature — an honest per-planet null, never invented.
+    planet_modal_signature: Option<String>,
+    chakra_name: Option<String>,
+    chakra_role: Option<String>,
+    shadow_decan_graph: ShadowDecanGraph,
+}
+
+#[derive(Clone, Default)]
+struct ShemGraphEntry {
+    coordinate: String,
+    name: Option<String>,
+    hebrew: Option<String>,
+    meaning: Option<String>,
+}
+
+/// Fetch the graph-sourced correspondence fields via the live `Neo4jClient`
+/// seam. Any connection/query failure degrades to `ParashaktiGraph::default()`
+/// (`available: false`) — never a dataset-file fallback.
+async fn fetch_parashakti_graph(
+    address72: usize,
+    asma_name_coord: &str,
+    mirror_coord: Option<&str>,
+    planet_coord: &str,
+    chakra_coord: Option<&str>,
+    include_shadow_decans: bool,
+) -> ParashaktiGraph {
+    match fetch_parashakti_graph_inner(
+        address72,
+        asma_name_coord,
+        mirror_coord,
+        planet_coord,
+        chakra_coord,
+        include_shadow_decans,
+    )
+    .await
+    {
+        Ok(graph) => graph,
+        Err(_) => ParashaktiGraph::default(),
+    }
+}
+
+async fn fetch_parashakti_graph_inner(
+    address72: usize,
+    asma_name_coord: &str,
+    mirror_coord: Option<&str>,
+    planet_coord: &str,
+    chakra_coord: Option<&str>,
+    include_shadow_decans: bool,
+) -> Result<ParashaktiGraph, String> {
+    let config = Neo4jConfig::from_env();
+    let client = Neo4jClient::connect(&config).map_err(|err| err.to_string())?;
+
+    let scalar_query = neo4rs::query(
+        "OPTIONAL MATCH (nm:DivineName {coordinate: $nameCoord})
+         OPTIONAL MATCH (mr:DivineName {coordinate: $mirrorCoord})
+         OPTIONAL MATCH (pl:PlanetaryHarmonic {coordinate: $planetCoord})
+         OPTIONAL MATCH (ch:ChakralCenter {coordinate: $chakraCoord})
+         RETURN nm.coordinate AS asmaCoord, nm.c_1_name AS asmaName,
+                nm.m_2_4_arabic_text AS asmaArabic,
+                nm.s_4_english_translation AS asmaEnglish,
+                nm.l_2_chakra_correspondence AS asmaChakra,
+                mr.c_1_name AS mirrorName,
+                pl.l_2_vedic_mantra AS vedicMantra,
+                pl.c_0_modal_signature AS planetModalSignature,
+                ch.c_1_name AS chakraName, ch.l_3_spiritual_function AS chakraRole",
+    )
+    .param("nameCoord", asma_name_coord.to_owned())
+    .param("mirrorCoord", mirror_coord.unwrap_or("").to_owned())
+    .param("planetCoord", planet_coord.to_owned())
+    .param("chakraCoord", chakra_coord.unwrap_or("").to_owned());
+
+    let rows = client
+        .run_query(scalar_query)
+        .await
+        .map_err(|err| err.to_string())?;
+    let row = rows
+        .first()
+        .ok_or_else(|| "parashakti scalar query returned no row".to_owned())?;
+
+    // maqam: the 72 nodes ordered by (group, index) parsed from the coordinate.
+    let maqam_rows = client
+        .run(
+            "MATCH (m:Maqam) RETURN m.coordinate AS c, m.c_1_name AS n, \
+             m.l_3_spiritual_function AS sf",
+        )
+        .await
+        .map_err(|err| err.to_string())?;
+    let mut maqams: Vec<(String, Option<String>, Option<String>)> = maqam_rows
+        .iter()
+        .filter_map(|maqam_row| {
+            let coord = maqam_row.get::<String>("c").ok()?;
+            Some((
+                coord,
+                maqam_row.get::<Option<String>>("n").ok().flatten(),
+                maqam_row.get::<Option<String>>("sf").ok().flatten(),
+            ))
+        })
+        .collect();
+    maqams.sort_by(|a, b| maqam_sort_key(&a.0).cmp(&maqam_sort_key(&b.0)));
+    let maqam = if maqams.is_empty() {
+        None
+    } else {
+        maqams.into_iter().nth(address72 % 72)
+    };
+    let shem_rows = client
+        .run(
+            "MATCH (s:DivineName) WHERE s.coordinate STARTS WITH 'M2-4.5' \
+             RETURN s.coordinate AS coordinate, s.c_1_name AS name, \
+                    s.m_2_4_hebrew_text AS hebrew, s.s_4_english_translation AS meaning",
+        )
+        .await
+        .map_err(|err| err.to_string())?;
+    let mut shem_entries = shem_rows
+        .iter()
+        .filter_map(|shem_row| {
+            Some(ShemGraphEntry {
+                coordinate: shem_row.get::<String>("coordinate").ok()?,
+                name: shem_row.get::<Option<String>>("name").ok().flatten(),
+                hebrew: shem_row.get::<Option<String>>("hebrew").ok().flatten(),
+                meaning: shem_row.get::<Option<String>>("meaning").ok().flatten(),
+            })
+        })
+        .collect::<Vec<_>>();
+    shem_entries.sort_by(|left, right| {
+        shem_sort_key(&left.coordinate).cmp(&shem_sort_key(&right.coordinate))
+    });
+    let shadow_decan_graph = if include_shadow_decans {
+        fetch_shadow_decan_graph(&client).await.unwrap_or_default()
+    } else {
+        ShadowDecanGraph::default()
+    };
+
+    Ok(ParashaktiGraph {
+        available: true,
+        shem_entries,
+        asma_coordinate: row.get::<Option<String>>("asmaCoord").ok().flatten(),
+        asma_name: row.get::<Option<String>>("asmaName").ok().flatten(),
+        asma_arabic: row.get::<Option<String>>("asmaArabic").ok().flatten(),
+        asma_english: row.get::<Option<String>>("asmaEnglish").ok().flatten(),
+        asma_chakra: row.get::<Option<String>>("asmaChakra").ok().flatten(),
+        mirror_name: row.get::<Option<String>>("mirrorName").ok().flatten(),
+        maqam_coordinate: maqam.as_ref().map(|entry| entry.0.clone()),
+        maqam_name: maqam.as_ref().and_then(|entry| entry.1.clone()),
+        maqam_function: maqam.as_ref().and_then(|entry| entry.2.clone()),
+        vedic_mantra: row.get::<Option<String>>("vedicMantra").ok().flatten(),
+        planet_modal_signature: row
+            .get::<Option<String>>("planetModalSignature")
+            .ok()
+            .flatten(),
+        chakra_name: row.get::<Option<String>>("chakraName").ok().flatten(),
+        chakra_role: row.get::<Option<String>>("chakraRole").ok().flatten(),
+        shadow_decan_graph,
+    })
+}
+
+/// Reads only declared S2 decan nodes. A missing `ShadowDecan` extension is an
+/// empty result, not a kernel or dataset substitute.
+async fn fetch_shadow_decan_graph(client: &Neo4jClient) -> Result<ShadowDecanGraph, String> {
+    let primary_rows = client
+        .run(
+            "MATCH (d:Decan) \
+             RETURN d.coordinate AS coordinate, d.c_1_name AS label, d.m_2_3_tarot_card AS tarotCard",
+        )
+        .await
+        .map_err(|err| err.to_string())?;
+    let mut primary_by_coordinate = HashMap::new();
+    for row in primary_rows {
+        let coordinate = match row.get::<String>("coordinate") {
+            Ok(value) => value,
+            Err(_) => continue,
+        };
+        let label = row.get::<Option<String>>("label").ok().flatten();
+        let tarot_card = row.get::<Option<String>>("tarotCard").ok().flatten();
+        primary_by_coordinate.insert(coordinate, (label, tarot_card));
+    }
+
+    let primary_descriptors = kernel_decan_surface_descriptors("primary")
+        .into_iter()
+        .filter_map(|kernel| {
+            primary_by_coordinate
+                .remove(&kernel.coordinate)
+                .map(|(label, tarot_card)| DecanSurfaceDescriptor {
+                    label: label.unwrap_or(kernel.label),
+                    tarot_card: tarot_card.or(kernel.tarot_card),
+                    source_handle: format!(
+                        "s2://graph/parashakti-deep/decan/{}",
+                        kernel.coordinate
+                    ),
+                    provenance: "live-graph",
+                    ..kernel
+                })
+        })
+        .collect();
+
+    let shadow_rows = client
+        .run(
+            "MATCH (d:ShadowDecan) \
+             RETURN d.decanIndex AS decanIndex, d.coordinate AS coordinate, \
+                    d.c_1_name AS label, d.m_3_tarot_card AS tarotCard",
+        )
+        .await
+        .map_err(|err| err.to_string())?;
+    let mut shadow_by_index = HashMap::new();
+    for row in shadow_rows {
+        let decan_index = row
+            .get::<i64>("decanIndex")
+            .ok()
+            .and_then(|value| u8::try_from(value).ok())
+            .filter(|value| *value < 36);
+        let coordinate = row.get::<String>("coordinate").ok();
+        if let (Some(decan_index), Some(coordinate)) = (decan_index, coordinate) {
+            shadow_by_index.insert(
+                decan_index,
+                (
+                    coordinate,
+                    row.get::<Option<String>>("label").ok().flatten(),
+                    row.get::<Option<String>>("tarotCard").ok().flatten(),
+                ),
+            );
+        }
+    }
+
+    let shadow_proper_descriptors = (0u8..36)
+        .filter_map(|decan_index| {
+            shadow_by_index
+                .remove(&decan_index)
+                .map(|(coordinate, label, tarot_card)| DecanSurfaceDescriptor {
+                    decan_index,
+                    label: label.unwrap_or_else(|| format!("Shadow Decan {}", decan_index + 1)),
+                    source_handle: format!("s2://graph/parashakti-deep/shadow-decan/{coordinate}"),
+                    coordinate,
+                    tarot_card,
+                    provenance: "live-graph",
+                })
+        })
+        .collect();
+
+    Ok(ShadowDecanGraph {
+        primary_descriptors,
+        shadow_proper_descriptors,
+    })
+}
+
+/// Numeric (group, index) sort key for a Maqam coordinate `M2-4.3-{group}-{idx}`.
+/// `first_integer` tolerates the `(0/1)` QL-variant idx segment.
+fn maqam_sort_key(coordinate: &str) -> (u32, u32) {
+    let rest = coordinate.strip_prefix("M2-4.3-").unwrap_or(coordinate);
+    let mut segments = rest.split('-');
+    let group = segments
+        .next()
+        .and_then(|segment| segment.parse::<u32>().ok())
+        .unwrap_or(u32::MAX);
+    let index = segments.next().map(first_integer).unwrap_or(u32::MAX);
+    (group, index)
+}
+
+/// The live Shem corpus keeps its 8 choirs x 9 positions in coordinate form.
+/// Sorting by parsed numbers preserves the kernel's flat `choir * 9 + position`
+/// addressing independent of lexicographic zero-padding.
+fn shem_sort_key(coordinate: &str) -> (u32, u32, String) {
+    let rest = coordinate.strip_prefix("M2-4.5-").unwrap_or(coordinate);
+    let mut segments = rest.split('-');
+    let choir = segments.next().map(first_integer).unwrap_or(u32::MAX);
+    let position = segments.next().map(first_integer).unwrap_or(u32::MAX);
+    (choir, position, coordinate.to_owned())
+}
+
+/// First integer run in a coordinate segment (`"(0/1)"` → 0, `"10"` → 10).
+fn first_integer(segment: &str) -> u32 {
+    let digits: String = segment
+        .chars()
+        .skip_while(|ch| !ch.is_ascii_digit())
+        .take_while(char::is_ascii_digit)
+        .collect();
+    digits.parse::<u32>().unwrap_or(u32::MAX)
+}
+
+/// Kernel-only Asma overlay: `M2_ASMA_LUT` mirror algebra + 36/64 routing masks.
+/// The `mirror_name` (a graph value) is injected by `parashakti_correspondences`
+/// after the live fetch; this record carries the kernel-law fields alone.
+fn asma_overlay_record(name_idx: usize, params: &Value) -> Result<Value, String> {
+    let desc = kernel_asma_desc(name_idx)?;
+    let has_mirror = desc.mirror_idx != ASMA_MIRROR_ABSENT;
+
+    Ok(json!({
+        "name_idx": desc.name_idx,
+        "group": desc.group,
+        "group_name": asma_group_name(desc.group),
+        "index_in_group": desc.index_in_group,
+        "mirror_idx": desc.mirror_idx,
+        "has_mirror": has_mirror,
+        "mirror_relation": "domain_mirror",
+        "phase": asma_phase(params),
+        "phase_law": "#/inversion_spanda",
+        "mask_routing": {
+            "internal": asma_mask_contains(unsafe { ASMA_36_INTERNAL_MASK }, desc.name_idx),
+            "projective": asma_mask_contains(unsafe { ASMA_64_PROJECTIVE_MASK }, desc.name_idx),
+            "basis": "ASMA_36_INTERNAL_MASK/ASMA_64_PROJECTIVE_MASK"
+        }
+    }))
+}
+
+fn kernel_asma_desc(name_idx: usize) -> Result<KernelAsmaNameDesc, String> {
+    if name_idx >= 100 {
+        return Err(format!("Asma name index must be < 100, got {name_idx}"));
+    }
+    Ok(unsafe { M2_ASMA_LUT[name_idx] })
+}
+
+fn asma_mask_contains(mask: RoutingMask128, name_idx: u8) -> bool {
+    if name_idx < 64 {
+        ((mask.low_64 >> name_idx) & 1) == 1
+    } else {
+        ((mask.high_64 >> (name_idx - 64)) & 1) == 1
+    }
+}
+
+fn asma_group_name(group: u8) -> &'static str {
+    match group {
+        0 => "Jalal",
+        1 => "Kamal",
+        2 => "Jamal",
+        _ => "Hidden",
+    }
+}
+
+fn asma_phase(params: &Value) -> &'static str {
+    let active_kind = params
+        .get("activeKleinFlip")
+        .or_else(|| params.get("kleinFlip"))
+        .and_then(|value| value.get("kind"))
+        .and_then(Value::as_str);
+    match active_kind {
+        Some("M2CymaticValenceInvert") | Some("m2.cymatic.valence.invert") => "inverted",
+        _ if params.get("phase").and_then(Value::as_str) == Some("inverted") => "inverted",
+        _ => "primary",
+    }
 }
 
 fn required_u64(params: &Value, key: &str) -> Result<u64, String> {
@@ -225,5 +1381,100 @@ fn parse_results(params: &Value, key: &str) -> Result<Vec<RetrievalResult>, Stri
         Some(value) => serde_json::from_value(value.clone())
             .map_err(|err| format!("{key} must be RetrievalResult[]: {err}")),
         None => Ok(Vec::new()),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The decan chain + asma mirror algebra are kernel law: they resolve for
+    /// address 17 whether or not Neo4j is reachable and match `ZODIAC_DECAN_TABLE`
+    /// / `PIP_DECAN_MAP` exactly. (The runtime no-dataset-leak guard lives in the
+    /// contract test so its string literals never re-pollute this source file.)
+    #[tokio::test]
+    async fn parashakti_correspondences_decan_chain_is_kernel_lut_sourced() {
+        let artifact = parashakti_correspondences(&json!({ "address72": 17 }))
+            .await
+            .expect("parashakti adapter should resolve address 17 from kernel LUTs");
+
+        // address 17 → decan 17/2 = 8 = Gemini Decan 3 (Sun, Air) in ZODIAC_DECAN_TABLE.
+        let decan = &artifact["decanFace"];
+        assert_eq!(artifact["address72"], 17);
+        assert_eq!(decan["zodiacSign"], "Gemini");
+        assert_eq!(decan["name"], "Gemini Decan 3");
+        assert_eq!(decan["planetaryRuler"], "Sun");
+        assert_eq!(decan["element"], "Air");
+        assert_eq!(decan["degreesRange"], "20°–30° Gemini");
+        assert_eq!(decan["tarotCard"], "10 of Swords");
+        assert_eq!(decan["coordinate"], "M2-3-3-0-2");
+        assert_eq!(decan["provenance"], "kernel-lut");
+
+        let asma = &artifact["sacredSonic"]["asma"];
+        assert_eq!(asma["name_idx"], 17);
+        assert_eq!(asma["mirror_idx"], 0xFF);
+        assert_eq!(asma["has_mirror"], false);
+        assert!(asma["mirror_name"].is_null());
+        assert_eq!(asma["mirror_relation"], "domain_mirror");
+        assert_eq!(asma["phase_law"], "#/inversion_spanda");
+        assert_eq!(asma["phase"], "primary");
+
+        let flipped = parashakti_correspondences(&json!({
+            "address72": 17,
+            "activeKleinFlip": { "kind": "M2CymaticValenceInvert" }
+        }))
+        .await
+        .expect("active Klein flip should only change phase");
+        assert_eq!(flipped["address72"], 17);
+        assert_eq!(flipped["sacredSonic"]["asma"]["phase"], "inverted");
+    }
+
+    /// The optional shadow-decan projection keeps the 72 kernel faces usable
+    /// while the S2 shadow graph and M3 reversed-meaning provider are incomplete.
+    #[tokio::test]
+    async fn parashakti_shadow_decan_projection_is_opt_in_and_honest_about_missing_authorities() {
+        let default_artifact = parashakti_correspondences(&json!({ "address72": 17 }))
+            .await
+            .expect("default correspondence projection should resolve");
+        assert!(
+            default_artifact.get("shadowDecanSurface").is_none(),
+            "the 108-cell projection must remain opt-in for existing callers"
+        );
+
+        let artifact = parashakti_correspondences(&json!({
+            "address72": 17,
+            "includeShadowDecans": true
+        }))
+        .await
+        .expect("shadow-decan projection should resolve through the real adapter");
+        let surface = &artifact["shadowDecanSurface"];
+
+        assert_eq!(surface["coordinate"], "#2-3");
+        assert_eq!(surface["primaryDecans"].as_array().map(Vec::len), Some(36));
+        assert_eq!(surface["lightDecans"].as_array().map(Vec::len), Some(36));
+        assert_eq!(surface["tarotReversedMeaning"]["coordinate"], "#3-4");
+        assert_eq!(
+            surface["tarotReversedMeaning"]["requiredGatewayMethod"],
+            "kernelBridge.m3.tarotReversedMeaning"
+        );
+        assert_eq!(
+            surface["tarotReversedMeanings"].as_array().map(Vec::len),
+            Some(0)
+        );
+        assert_eq!(surface["pending"]["tarotReversedMeaning"], true);
+
+        let shadow_count = surface["shadowProperDescriptors"]
+            .as_array()
+            .map(Vec::len)
+            .expect("shadow descriptors must be an array");
+        assert!(
+            shadow_count == 0 || shadow_count == 36,
+            "the S2 extension is either unavailable or a complete 36-cell face"
+        );
+        assert_eq!(
+            surface["visibleCellCount"],
+            if shadow_count == 36 { 108 } else { 72 }
+        );
+        assert_eq!(surface["pending"]["shadowDecanGraph"], shadow_count != 36);
     }
 }

@@ -144,6 +144,23 @@ measured chaos      = only when quantitative nonlinear metrics exist
 
 This lets M3' show patterns without overclaiming. It may label basin, perturbation, recurrence, bifurcation candidate, and phase-portrait slice; it may not claim "mathematical strange attractor" unless the system has actual nonlinear-dynamics evidence. Default rigor is `symbolic_phase_portrait`.
 
+Every packet-chain handoff that uses attractor language must carry an explicit `dynamical_rigor` envelope:
+
+```yaml
+dynamical_rigor:
+  level: symbolic_phase_portrait | measured_nonlinear_dynamics
+  evidence:
+    packet_chain_ref: optional string
+    recurrence_window: optional string
+    basin_label: optional string
+    perturbation_sources: optional [M2 | M3 | M4-1 | M4-2 | M4-4]
+    bifurcation_candidate: optional boolean
+    lyapunov_or_dimension_metric: optional string
+  caveat: required
+```
+
+`symbolic_phase_portrait` is the normal Mahāmāyā/Nara bridge: deterministic packet chains, recurrence windows, and provenance. `measured_nonlinear_dynamics` is reserved for actual time-series or dynamical-systems metrics. Without those metrics, M3' may show a symbolic phase portrait, but it must not promote the reading into measured chaos.
+
 The 0-1-2-3 relation now reads cleanly:
 
 ```text
@@ -285,7 +302,7 @@ Relative to `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-2-canonica
 06-m4-nara-extension                the consuming surface — oracle / identity / transformation
 ```
 
-Held open-questions tracked from M3'-SPEC §10.1: the TCT/Nine-of-Wands dataset mismatch, the "17th lens" / "16+1" wording, the 72→64 uniqueness scope, and the `codonRotationProjection` kernel-home.
+Held open-questions tracked from M3'-SPEC §10.1: the TCT/Nine-of-Wands dataset mismatch, the "17th lens" / "16+1" wording, and the `codonRotationProjection` kernel-home. The former 72→64 uniqueness-scope question is superseded by DR-M3-2: M3' renders the backend/profile-provided 9:8 epogdoon provenance and adds no extra fold-state profile field.
 
 ---
 

@@ -1,6 +1,9 @@
 use crate::ffi;
 use crate::portal::runtime_state::SharedPortalTemporalSurface;
 use crate::portal::theme;
+use epi_s5_epii_autoresearch_core::{
+    QReviewQueue, QReviewQueueEntry, QReviewReasonClass, QReviewStore,
+};
 use ratatui::prelude::*;
 use ratatui::widgets::*;
 use ratatui_hypertile::{EventOutcome, HypertileEvent, KeyCode};
@@ -608,6 +611,255 @@ impl HypertilePlugin for M5ChatPlugin {
                 .border_style(Style::default().fg(theme::pane_border(is_focused))),
         );
         Widget::render(para, area, buf);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// M5QReviewPlugin — Q-review wisdom-curation queue (Tranche 6.12)
+//
+// Renders the S5 QReviewQueue (produced by `epii_self_referential_read` and
+// persisted by `QReviewStore`) as a card stack. Each card carries the target
+// coordinate, its existing q_* articulation, the reason_class, and the
+// "open in pair-composition" action. The pane never mutates the corpus, never
+// promotes canon, and never composes proposals — it only surfaces the queue at
+// the VAK context frame the candidate belongs to. See
+// `Body/S/S5/epii-autoresearch-core/src/q_review.rs` and Tranche 6.12 §(iii).
+// ═══════════════════════════════════════════════════════════════════════════
+
+fn reason_label(reason: &QReviewReasonClass) -> &'static str {
+    match reason {
+        QReviewReasonClass::ArticulationGap => "articulation_gap",
+        QReviewReasonClass::PromotionCandidate => "promotion_candidate",
+        QReviewReasonClass::ContradictionCandidate => "contradiction_candidate",
+        QReviewReasonClass::StaleByNonRevisit => "stale_by_non_revisit",
+    }
+}
+
+pub struct M5QReviewPlugin {
+    queue: Option<QReviewQueue>,
+    /// When set, only cards whose `review_surface.vak_cf` matches surface —
+    /// the VAK context-frame filter (Tranche 6.12 §(iii): "the queue is
+    /// filtered by current cf so candidates surface where they are relevant").
+    active_cf: Option<String>,
+    selected: usize,
+    temporal: Option<SharedPortalTemporalSurface>,
+}
+
+impl M5QReviewPlugin {
+    pub fn new() -> Self {
+        Self {
+            queue: None,
+            active_cf: None,
+            selected: 0,
+            temporal: None,
+        }
+    }
+
+    /// Portal registration entry point: derive the day from the temporal
+    /// surface and best-effort load the persisted queue from the default
+    /// `$HOME/.epi-logos` S5 store. An absent queue renders the honest empty
+    /// state rather than failing the pane.
+    pub fn new_with_temporal(temporal: SharedPortalTemporalSurface) -> Self {
+        let mut plugin = Self {
+            queue: None,
+            active_cf: None,
+            selected: 0,
+            temporal: Some(temporal),
+        };
+        plugin.load_from_default_store();
+        plugin
+    }
+
+    /// Test / injection entry point: render a queue directly, unfiltered.
+    pub fn with_queue(queue: QReviewQueue) -> Self {
+        Self {
+            queue: Some(queue),
+            active_cf: None,
+            selected: 0,
+            temporal: None,
+        }
+    }
+
+    /// Test / injection entry point: render a queue filtered to a single VAK
+    /// context frame (mirrors `QReviewStore::latest(day_id, Some(cf))`).
+    pub fn with_queue_filtered(queue: QReviewQueue, cf: impl Into<String>) -> Self {
+        Self {
+            queue: Some(queue),
+            active_cf: Some(cf.into()),
+            selected: 0,
+            temporal: None,
+        }
+    }
+
+    fn load_from_default_store(&mut self) {
+        let Some(temporal) = &self.temporal else {
+            return;
+        };
+        let day_id = temporal.lock().unwrap().day_id.clone();
+        let Some(day_id) = day_id else {
+            return;
+        };
+        let Some(home) = std::env::var_os("HOME").map(std::path::PathBuf::from) else {
+            return;
+        };
+        // No cf signal exists on the temporal surface yet, so the pane loads
+        // the full day queue and shows every candidate (active_cf = None).
+        let root = epi_s5_epii_autoresearch_core::s5_handlers::improve::improvement_store_path(
+            home.join(".epi-logos"),
+        );
+        if let Ok(Some(queue)) = QReviewStore::new(root).latest(&day_id, None) {
+            self.queue = Some(queue);
+        }
+    }
+
+    fn visible_entries(&self) -> Vec<&QReviewQueueEntry> {
+        match &self.queue {
+            None => Vec::new(),
+            Some(queue) => queue
+                .entries
+                .iter()
+                .filter(|entry| {
+                    self.active_cf
+                        .as_deref()
+                        .is_none_or(|cf| entry.review_surface.vak_cf == cf)
+                })
+                .collect(),
+        }
+    }
+}
+
+impl Default for M5QReviewPlugin {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl HypertilePlugin for M5QReviewPlugin {
+    fn render(&self, area: Rect, buf: &mut Buffer, is_focused: bool) {
+        let accent = theme::m_level_color(5);
+        let dim = Style::default().fg(Color::DarkGray);
+
+        let chunks = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints([
+                Constraint::Length(3), // header
+                Constraint::Min(3),    // card stack
+                Constraint::Length(1), // footer
+            ])
+            .split(area);
+
+        let visible = self.visible_entries();
+        let header_line = match &self.queue {
+            Some(queue) => Line::from(vec![
+                Span::styled(
+                    format!(" DAY {} ", queue.day_id),
+                    Style::default().fg(Color::White),
+                ),
+                Span::styled(
+                    format!("· rev {} ", queue.graph_revision),
+                    Style::default().fg(Color::White),
+                ),
+                Span::styled(
+                    format!("· {} candidate(s)", visible.len()),
+                    Style::default().fg(accent),
+                ),
+            ]),
+            None => Line::from(Span::styled(" no Q-review queue for this day ", dim)),
+        };
+        let header = Paragraph::new(header_line).block(
+            Block::default()
+                .title(Span::styled(
+                    " M5' Q-Review Queue ",
+                    Style::default().fg(accent).add_modifier(Modifier::BOLD),
+                ))
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(theme::pane_border(is_focused))),
+        );
+        Widget::render(header, chunks[0], buf);
+
+        // Card stack — one 3-line card per visible candidate.
+        let mut lines: Vec<Line> = Vec::new();
+        if visible.is_empty() {
+            lines.push(Line::from(Span::styled(
+                "  The wisdom-curation loop surfaced no candidates here.",
+                dim,
+            )));
+        }
+        for (index, entry) in visible.iter().enumerate() {
+            let selected = index == self.selected;
+            let marker = if selected { "▶ " } else { "  " };
+            let title_style = if selected {
+                Style::default()
+                    .fg(Color::Black)
+                    .bg(Color::Magenta)
+                    .add_modifier(Modifier::BOLD)
+            } else {
+                Style::default()
+                    .fg(Color::White)
+                    .add_modifier(Modifier::BOLD)
+            };
+            lines.push(Line::from(vec![
+                Span::styled(format!("{marker}{}", entry.target_coordinate), title_style),
+                Span::styled(
+                    format!(
+                        "  [{}]  p{}",
+                        reason_label(&entry.reason_class),
+                        entry.priority
+                    ),
+                    Style::default().fg(accent),
+                ),
+            ]));
+            lines.push(Line::from(Span::styled(
+                format!("    q {}", entry.q_key),
+                Style::default().fg(Color::Yellow),
+            )));
+            lines.push(Line::from(Span::styled(
+                format!(
+                    "    cf {} · cp {} · [Enter] {}",
+                    entry.review_surface.vak_cf,
+                    entry.review_surface.vak_cp,
+                    entry.review_surface.pair_composition_action
+                ),
+                dim,
+            )));
+        }
+        let stack = Paragraph::new(lines).block(
+            Block::default()
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(Color::DarkGray)),
+        );
+        Widget::render(stack, chunks[1], buf);
+
+        let filter_label = self.active_cf.as_deref().unwrap_or("all");
+        let footer = Paragraph::new(Span::styled(
+            format!(
+                "  [j/k] navigate  [Enter] open in pair-composition  cf-filter: {filter_label}"
+            ),
+            dim,
+        ));
+        Widget::render(footer, chunks[2], buf);
+    }
+
+    fn on_event(&mut self, event: &HypertileEvent) -> EventOutcome {
+        let count = self.visible_entries().len();
+        if let HypertileEvent::Key(chord) = event {
+            match chord.code {
+                KeyCode::Char('j') | KeyCode::Down => {
+                    if count > 0 && self.selected + 1 < count {
+                        self.selected += 1;
+                    }
+                    return EventOutcome::Consumed;
+                }
+                KeyCode::Char('k') | KeyCode::Up => {
+                    if self.selected > 0 {
+                        self.selected -= 1;
+                    }
+                    return EventOutcome::Consumed;
+                }
+                _ => {}
+            }
+        }
+        EventOutcome::Ignored
     }
 }
 

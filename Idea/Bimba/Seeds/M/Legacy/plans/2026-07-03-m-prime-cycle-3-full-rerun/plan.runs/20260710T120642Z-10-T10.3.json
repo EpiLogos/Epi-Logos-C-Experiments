@@ -1,0 +1,39 @@
+{
+  "runId": "20260710T120642Z-10-T10.3",
+  "taskId": "10.T10.3",
+  "startedAt": "2026-07-10T12:06:42.676Z",
+  "owner": "opus-a-m1",
+  "leaseExpiresAt": "2026-07-10T14:06:42.676Z",
+  "worktree": null,
+  "task": {
+    "id": "10.T10.3",
+    "trackId": "10",
+    "tranche": "T10.3",
+    "title": "Execute DR-KB-1: planetary projection LUT cardinality",
+    "effort": null,
+    "file": "10-kernel-bridge-profile-contract.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/10-kernel-bridge-profile-contract.md",
+    "dependsOn": [
+      "10.T10.2"
+    ],
+    "writeScopes": [
+      ".omx/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/10-kernel-bridge-profile-contract.md",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — profile-field ledger on portal-core kernel.rs + kernel_bridge (19 Phase-B anti-greenfield surfacing fields; forbidden greenfield fields listed). Carrier consumes via the typed bridge. §2 track 10."
+  }
+}

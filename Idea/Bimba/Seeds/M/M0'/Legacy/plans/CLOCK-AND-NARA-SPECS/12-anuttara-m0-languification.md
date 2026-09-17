@@ -391,6 +391,28 @@ available; just needs wiring.
 in Pleroma (S2). The full relationship between M5 Epii, R#, and Pleroma-Techne requires its own
 architectural clarification. May entail extending the Ta-Onta spec.
 
+**`(@#)` handover: PASU → psyche-under-Anima (M0-4 `(@)` reaching toward M0-5 `(@#)`).** *(named
+2026-06-12; the crossing itself stays gated, see below)* Śakti = psyche (`M0-5-(5/0)` "Dynamic
+Psyche of Duration/Lived Time", symbol `@#`; `@4 = M#` = Śakti Stories = M4 Nara — the user's
+lived field), and the constitutional `psyche` agent (`Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/psyche.md`)
+is defined as **the session subject — the user themselves**. Anima's VAK is the M0-5 Śakti runtime
+grammar. So the **`psyche` subagent under Anima is the system's agentic carrier of the user as a
+being-pattern** (Track 10.PASU `pasu_being_pattern`).
+
+The handover has a precise structure: Archetype 5's `(@)` (contained Presence, `M0-3-8-7`) reaches
+**M0-4** — a PasuBeingPattern acquires the M# person-grammar (I/You/We) and `#` family-grammar
+(Father/Mother/Tao). This is **landed** (Track 10.PASU `perspective_role` + `nara_family_role`).
+The **`(@)` → `(@#)` step into M0-5** — the being-pattern becoming a living psyche-carried self,
+dispatchable in the Śakti runtime — is the **deferred joint**. Its gate and seed are one construct:
+Śiva-instruction-0 `(@#)` ("contains Śakti as deepest potential", `M0-5-(0/1)-0`) is exactly the
+`(@#)` **R-factor band-turn** where Beauty (`2R = (…-(@#))`, pravritti) hands to Life
+(`3R = ((@#)-…)`, nivritti) — see Track 01 §1.12 DR-(@#). The crossing fires when the M0 witness
+recognises wholeness: `recognized: bool` (the M0-5 Siva-Shakti recognition closure flag). Cycle 3
+builds the threshold computable (the `(@#)` typed construct, the `RFactorPathStep.isTurn` marker,
+the `anuttara_witness` projection); it does **not** auto-cross it — recognition closure is the gate,
+the `psyche` subagent is the destination, and `ActualisingOne`/forced-unification review (Track 08)
+remains the guard against premature crossing.
+
 **M0-0 computational correlate.** `(0000) with (-)` = infinite potential held by negation. The
 `(-)` is Siva (1) from M0-5. Computational expression: `[0u8; 32]` hash zero-state before any
 identity data written — the empty session before Khora opens it.

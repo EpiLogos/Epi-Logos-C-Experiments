@@ -31,6 +31,44 @@ This is architecturally coherent with the [[Bimba]]-[[Pratibimba]] polarity esta
 
 ---
 
+## §0.1 — Coordinate-Family Coupling Rule (load-bearing)
+
+The six coordinate families do not float independently. They pair structurally, and the structural shoulder of any coordinate lives in its couple:
+
+| Couple | Meaning |
+|--------|---------|
+| **M ↔ S** | Subsystem (consciousness domain) ↔ Stack (technology layer). M-coordinates manifest their techne expression in S-coordinates. |
+| **L ↔ P** | Lens (epistemic mode) ↔ Position (functional semantics). L-coordinates manifest their operational expression in P-coordinates. |
+| **C ↔ T** | Category (ontology) ↔ Thought (artifact/cognition). C-coordinates manifest their artifact expression in T-coordinates. |
+
+**Discipline:** when reasoning about a coordinate's structural shoulder — its "where does this live as techne / operation / artifact" question — stay within the couple. Do **not** import structure across couplings.
+
+Concretely:
+- `M5-1` (Philosophical Worldview in Process) has its techne expression at `S5.1'` (Crystallised Form inside Epii, per [[S5']]), not at `L5-1` (Para Vāk in the Lens family). Para Vāk is the *L-family analogue at the same #1 position*, not the structural shoulder of M5-1.
+- `L5-1` (Para Vāk) has its operational expression at `P5-1` (Integration's Definition position), not at M or S.
+- `C0` (Bimba) has its artifact expression at `T0` (Seed), not at M.
+
+This rule is what prevents the recurrent error of importing Para Vāk levels (L-family) as an "editor pattern" for M-family canon surfaces, or pulling C-family ontological law into M-family subsystem mechanics, etc. The couplings are how the families *relate without collapsing into each other*.
+
+The couplings also explain the legibility of the Bimba/Pratibimba dial at each register: M⁰⁻⁵ ↔ S⁰⁻⁵ traces consciousness-domain through technology-stack; L⁰⁻⁵ ↔ P⁰⁻⁵ traces epistemic-mode through functional-semantic; C⁰⁻⁵ ↔ T⁰⁻⁵ traces ontology through artifact. Three independent Bimba/Pratibimba dials, one per couple, all operating simultaneously.
+
+---
+
+## §0.2 — Folder Hygiene Addendum (sidecar to §0)
+
+A naming sin compounds on top of the §0 clarification: **the seed folder `Idea/Bimba/Seeds/M/` is in practice `Seeds/M'/` content**. Its subfolders are `M0'/`, `M1'/`, `M2'/`, `M3'/`, `M4'/`, `M5'/` — all primed (Pratibimba / M' Theia-extension territory). The unprimed `M/` parent name is a legacy artefact; there is no `M0/`, `M1/`, … under Seeds, and there should not be.
+
+**Discipline:**
+- `Idea/Bimba/Map/` and the Neo4j surface it feeds are the **M-coordinate home** (the canonical Bimba dataset).
+- `Idea/Bimba/Seeds/M/` (despite its name) is the **M'-coordinate seed home** — Theia extension specs, agentic IDE design, autoresearch loop, system-shape canon, etc.
+- `Idea/Bimba/World/` Forms and Types crystallise the M-side ontology; the M'-side surfaces consume these as ground.
+
+No folder rename now — the wikilink graph would shatter — but future agents should not seed M-coordinate (unprimed) content into the Seeds/M/ tree. M-coordinate work belongs in the dataset + Map + World channels; the Seeds/M/ tree is reserved for M'.
+
+If a future migration becomes necessary, the safe move is to add a sibling `Seeds/M-prime/` and migrate via aliasing, never via in-place rename of the existing tree.
+
+---
+
 ## §1 — The Structure of the Whole: The Symbolic Solar System
 
 The M/M' arc encodes a **symbolic mathematical solar system** — a Hopf-fibrational structure in which:

@@ -5,7 +5,8 @@ import {
     intentTargetCommandId,
     WELL_KNOWN_INTENT_KINDS,
     WellKnownIntentKind,
-    layoutOnlyIntent
+    layoutOnlyIntent,
+    publishCrossLayoutIntentTelemetry
 } from '../common/cross-layout-intent';
 import {
     PRATIBIMBA_LAYOUT_DAILY_0_1,
@@ -96,44 +97,60 @@ export class CrossLayoutIntentDispatcher implements CommandContribution {
 
     /** Programmatic entry point — equivalent to firing the dispatch command. */
     async dispatch(intent: CrossLayoutIntent): Promise<void> {
-        // 1. Snapshot session state for the layout transition.
-        const session = this.sessionState.state;
-        const preserved = {
-            selectedCoordinate: session.selectedCoordinate,
-            sessionKey: session.sessionKey,
-            dayNowContext: session.dayNow,
-            profileGeneration: session.profileGeneration,
-            // bridgeSubscriptionId is owned by kernel-bridge; we don't have
-            // direct read access without an injection, so pass null. Track 03
-            // wires this once the bridge surfaces its subscription id.
-            bridgeSubscriptionId: null
-        };
+        try {
+            // 1. Snapshot session state for the layout transition.
+            const session = this.sessionState.state;
+            const preserved = {
+                selectedCoordinate: session.selectedCoordinate,
+                sessionKey: session.sessionKey,
+                dayNowContext: session.dayNow,
+                profileGeneration: session.profileGeneration,
+                // bridgeSubscriptionId is owned by kernel-bridge; we don't have
+                // direct read access without an injection, so pass null. Track 03
+                // wires this once the bridge surfaces its subscription id.
+                bridgeSubscriptionId: null
+            };
 
-        // 2. Materialise the requested layout (no-op if already active).
-        if (this.switcher.currentLayout !== intent.requestedLayout) {
-            await this.switcher.switchTo(intent.requestedLayout, preserved);
-        }
+            // 2. Materialise the requested layout (no-op if already active).
+            if (this.switcher.currentLayout !== intent.requestedLayout) {
+                await this.switcher.switchTo(intent.requestedLayout, preserved);
+            }
 
-        // 3. Update session-state from intent fields (coordinate, artifact, etc.).
-        // Skip null fields so the intent only positively SETs known context.
-        this.sessionState.update({
-            ...(intent.coordinate !== null ? { selectedCoordinate: intent.coordinate } : {}),
-            ...(intent.artifactUri !== null ? { artifactUri: intent.artifactUri } : {}),
-            ...(intent.dayNow !== null ? { dayNow: intent.dayNow } : {}),
-            ...(intent.sessionKey !== null ? { sessionKey: intent.sessionKey } : {}),
-            ...(intent.profileGeneration !== null
-                ? { profileGeneration: intent.profileGeneration }
-                : {}),
-            ...(intent.privacyClass !== null ? { privacyClass: intent.privacyClass } : {})
-        });
-        if (intent.reviewId) {
-            this.sessionState.pushReview(intent.reviewId);
-        }
+            // 3. Update session-state from intent fields (coordinate, artifact, etc.).
+            // Skip null fields so the intent only positively SETs known context.
+            this.sessionState.update({
+                ...(intent.coordinate !== null ? { selectedCoordinate: intent.coordinate } : {}),
+                ...(intent.artifactUri !== null ? { artifactUri: intent.artifactUri } : {}),
+                ...(intent.dayNow !== null ? { dayNow: intent.dayNow } : {}),
+                ...(intent.sessionKey !== null ? { sessionKey: intent.sessionKey } : {}),
+                ...(intent.profileGeneration !== null
+                    ? { profileGeneration: intent.profileGeneration }
+                    : {}),
+                ...(intent.privacyClass !== null ? { privacyClass: intent.privacyClass } : {})
+            });
+            if (intent.reviewId) {
+                this.sessionState.pushReview(intent.reviewId);
+            }
 
-        // 4. Invoke target command (intra-process — no IPC).
-        const targetCommand = intentTargetCommandId(intent);
-        if (targetCommand && this.commands.getCommand(targetCommand)) {
-            await this.commands.executeCommand(targetCommand, intent);
+            // 4. Invoke target command (intra-process — no IPC).
+            const targetCommand = intentTargetCommandId(intent);
+            if (targetCommand && this.commands.getCommand(targetCommand)) {
+                await this.commands.executeCommand(targetCommand, intent);
+            }
+            publishCrossLayoutIntentTelemetry({
+                timestamp: Date.now(),
+                intent,
+                status: 'success',
+                error: null
+            });
+        } catch (err) {
+            publishCrossLayoutIntentTelemetry({
+                timestamp: Date.now(),
+                intent,
+                status: 'failure',
+                error: err instanceof Error ? err.message : String(err)
+            });
+            throw err;
         }
     }
 

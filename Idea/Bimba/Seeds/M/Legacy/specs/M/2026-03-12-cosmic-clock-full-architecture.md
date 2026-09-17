@@ -16,6 +16,19 @@
 > Where this document still uses older names like `m1_torus_stage` or quaternion→degree identity
 > projections, the harmonized canonical model wins.
 
+> **Errata (2026-07-02, whole-derivation session — each pinned by tests in the pratibimba-app carrier):**
+> 1. **§4's worked-example block miscomputes two lens rows against this document's own LUT + formula**
+>    (the Lens 2 and Lens 6 lines). The LUT formula (`segment = degree / slice_degrees`) is the
+>    authority; the prose example is wrong. Pinning test: `Body/M/pratibimba-app/src/engine/cosmicMath.test.ts`
+>    ("the 16 lenses each tile 360 exactly").
+> 2. **§5.3's planet-order comment swaps Venus and Mercury.** Kernel canon (kairos.rs tests,
+>    `M2_PLANET_LUT`, `aspect.rs`) is Sun 0, Moon 1, **Mercury 2, Venus 3**, Mars 4 … Pluto 9.
+>    This erratum had propagated into the app's `PLANET_ORDER` and was corrected with a pinning
+>    test (same file, "planet order follows the kernel canon").
+> 3. **§10.1's TUI torus used `R/r = 16/9`** — that ratio belongs to the retired hypertile-portal
+>    visualizer register; the rendered K² aspect is an `OPEN —` contradiction (9/8 vs 16/9)
+>    awaiting Architect ratification in [[M1'-SPEC]] §13.6.
+
 **Coordinate:** #3-5 (The 360-Degree Synthesis Wheel) + #3-0 (Reception Ground anchor)
 **Companion specs:** M1-paramasiva-mathematical-dna.md, M2-parashakti-vibrational-architecture.md,
   M3-mahamaya-symbolic-transcription.md, M4-nara-subtle-body-map.md
@@ -336,7 +349,7 @@ typedef struct {
     char     single_letter;         // 'A', 'C', 'D', ...
     uint16_t backbone_degree;       // 0, 15, 30, ..., 345
     uint8_t  ruling_chakra;         // Chakra_Id: which chakra this amino acid resonates with
-    uint8_t  element;               // A=Fire/nn, T=Earth/pp, C=Air/pn, G=Water/np (nucleotide family)
+    uint8_t  element;               // A=Water/nn, T=Fire/pp, C=Earth/pn, G=Air/np (Golden-Dawn suits, code-canonical per m3.h:70-73)
     const char* body_zones[4];      // anatomical zones (from parashakti DECAN_BODY_PARTS dataset)
     const char* herbs[3];           // herbalism associations (from DECAN_HERBS dataset)
 } Amino_Acid_Body_Map;
@@ -1662,16 +1675,60 @@ The "old" lines (changing, sum=6 or 9) hit the Parashakti tripling track (3,6,9)
 The "young" lines (stable, sum=7 or 8) sit between — 7 is Archetype 7 (Divine Action,
 the generative code 16/9), and 8 is Archetype 8 (Structural Reflection).
 
-**Elemental families from nucleotides:**
+**Deeper derivation — the R#/## tao-binary construction (M0 ground).** The yin=2/yang=3
+values are themselves the two **tao elements**, the Non-Dual Binary read both ways:
+`R#` = "Yin-yang 0/1", `##` = "Yang-yin 1/0" (`##` is also the Anuttara Primordial Matrix
+`M0-(4.5/0)-0`). Each nucleotide is built from R#/## units over a 4-slot frame; the
+**yang-count (#-count) + 5** gives the I-Ching value:
+
 ```
-A (6, old yin):  FIRE   family — the initiating, transformative line
-T (9, old yang): EARTH  family — the completing, grounding line
-C (7, young yin): AIR   family — the flowing, relational line
-G (8, young yang): WATER family — the containing, receptive line
+A = Old Yin    = 3×R#       (3 R, 1 #)  →  RRR# / RR#R / R#RR / #RRR        →  6   (Red)
+T = Old Yang   = 3×##       (0 R, 4 #)  →  ####                             →  9   (Blue)
+C = Young Yin  = 2×R# + ##  (2 R, 2 #)  →  R#R# / RR## / #RR# / ##RR / #R#R  →  7   (Green)
+G = Young Yang = R# + 2×##  (1 R, 3 #)  →  R### / #R## / ##R# / ###R         →  8   (Yellow)
+```
+
+So the codon — three nucleotides, each a tao-binary construction — is **evaluated** by
+`m3_compute_charges` (the I-Ching values through the X# sign-permutation algebra). That
+evaluation is **Tao** (`M0-(4.5/0)-5 = 5-/5`, the kinship-grammar apex): the apex of the
+family grammar IS the act that transcribes the molecule. The binary computation system
+emerges from the underlying 0/1 and 1/0 of the tao elements, and the same R#/## arithmetic
+generates the M# person grammar (I/You/We-I). See [[M0'-SPEC]] "The M# / # Relational
+Grammars and the Tao Binary" and Track 37 §III.6.
+
+**Elemental families from nucleotides** (Golden-Dawn tarot suits — **code-canonical** per
+`m3.h:70-73`; resolves DR-37-5, user-ratified 2026-06-12. The orthodox polarity holds:
+yin→Water, yang→Fire. The earlier A=Fire/T=Earth/C=Air/G=Water table here was stale; the
+A=Red/T=Blue/C=Green/G=Yellow colours are **rendering-only**, not element assignments):
+```
+A (6, old yin):   WATER family — Cups      — the receptive, containing line
+T (9, old yang):  FIRE  family — Wands     — the initiating, transformative line
+C (7, young yin): EARTH family — Pentacles — the grounding, completing line
+G (8, young yang):AIR   family — Swords    — the flowing, relational line
 
 Quintessence/Akasha: emerges from BALANCE — low variance in {A,T,C,G} counts
   (nucleotide_balance_variance < threshold → Akasha activation)
 ```
+
+<!-- STALE_SPEC_FLAG (DR-37-3 / DR-37-5, Track 37.10) — IN-PLACE DEPRECATION:
+  The nucleotide→element table above (scheme C: A=Water/T=Fire/C=Earth/G=Air) is
+  no longer the source of truth for cross-layer code. As of Track 37.10 this
+  binding is a FIRST-CLASS converter, `canonical_from_nucleotide` (scheme C →
+  L2' canonical-B), in `Body/S/S0/epi-cli/src/nara/medicine_frame.rs`, alongside
+  `canonical_from_m3_decan_element` (scheme D → B) and `canonical_from_m2_tattva`
+  (scheme A → B). The earlier A=Fire/T=Earth/C=Air/G=Water table (scheme E) was
+  stale and is superseded by the Golden-Dawn/Thoth code binding (`m3.h:70-73`);
+  it was corrected in place per DR-37-5 (user-ratified 2026-06-12). Treat the
+  code converters as canonical; this prose mirrors them and must be re-synced
+  here (or replaced by a `superseded-by-code` note) if the binding ever moves. -->
+
+> **STALE_SPEC_FLAG (DR-37-3 / DR-37-5, Track 37.10):** the nucleotide→element
+> binding above is now codified as the first-class converter
+> `canonical_from_nucleotide` in [`medicine_frame.rs`](../../../../../Body/S/S0/epi-cli/src/nara/medicine_frame.rs)
+> (scheme C → L2' canonical-B), joined by `canonical_from_m3_decan_element`
+> (scheme D → B) and `canonical_from_m2_tattva` (scheme A → B). **The code is
+> canonical**; this table is descriptive prose that mirrors it. The stale scheme
+> E table (A=Fire/T=Earth/C=Air/G=Water) was corrected in place per DR-37-5.
 
 These elemental assignments carry through:
 ```

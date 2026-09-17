@@ -1,0 +1,76 @@
+# AGENTS.md — Map/datasets (DEPRECATED SEED ARCHIVE)
+
+## Purpose
+`Idea/Bimba/Map/datasets/` is a **deprecated seed archive**. It holds the raw per-branch
+dataset JSON (`{anuttara,paramasiva,parashakti,mahamaya,nara,epii}-deep/`, `low-detail/`),
+enrichment docs, node/relation hashes, and the historical import/fetch/cypher scripts that
+**were used, once, to seed the Neo4j Bimba graph**. Seeding is complete.
+
+**The live Neo4j Bimba graph is now the authority.** These files are frozen provenance — a
+record of what was imported, not a live source. See parent contract [[AGENTS]] (`Idea/Bimba/Map`)
+and the reflection/crystallisation law in [[45-bimba-map-indexing-and-dox-okf-unification]].
+
+## Ownership / Canon Boundary (non-negotiable)
+- **Nothing may READ these files at runtime or in tests as a source of truth.** Runtime
+  correspondence data (decan chains, asma names, planetary/chakral harmonics, maqam, …) comes
+  from the live graph via the `Neo4jClient` seam, cross-checked bridge-side against the kernel
+  LUTs. A test or adapter that serves a value out of `datasets/**` is a violation.
+- The standing anti-leak guards live in the live-graph suites and assert the *negative* — that
+  no `Idea/Bimba/Map/datasets` path and no `nodes-full-detail.json` string ever appears in a
+  live artifact:
+  - [[lut_graph_parity_live]] (`Body/S/S0/epi-cli/tests/lut_graph_parity_live.rs`) — the standing
+    kernel-LUT ↔ live-graph parity sweep (36 `Decan`, 99+72 `DivineName`, `PlanetaryHarmonic` /
+    `ChakralCenter`).
+  - [[parashakti_correspondences_live_graph]]
+    (`Body/S/S0/epi-cli/tests/parashakti_correspondences_live_graph.rs`) — the gold-standard live
+    seam for `s2.parashaktiCorrespondences`.
+
+## Sanctioned exceptions (only these two — do NOT widen)
+1. **`dataset_import` is retained as historical seed tooling.** The importer
+   (`Body/S/S2/graph-services/src/dataset_import/**`, `graph/dataset_import.rs`) and its scripts
+   here remain so the seed run is reproducible from provenance. They are **seed-time tooling, not
+   a runtime read path** — do not invoke them to satisfy a live query.
+2. **The Vortex Modulae CSV is separately sanctioned spec-law.**
+   `(0_1) Vortex Modulae - (0_1) x 12Fold and 8_9fold (mod12 and mod10) Archetypal Number
+   Identities - Sheet1.csv` is the canonical 12×12 archetypal-number authority read by the kernel
+   truth suites `m1_ananda_12x12_raw_fidelity_vs_vortex_modulae_csv` (GREEN since Tranche 10.10)
+   and `m1_ananda_seat_dual_base_and_rule_face_fidelity_vs_c_authority` (FR 2.1.10: seat binding,
+   dual-base sum columns, rule face) in `Body/S/S0/portal-core/tests/kernel_truth.rs`, plus the C
+   suite `test_m1_ananda.c`. The CSV's laws are fully compiled into epi-lib/portal-core — consult
+   the code authority first; the CSV remains spec authority for fidelity testing, not seed
+   provenance, and is exempt from the no-read rule. (The "8_9fold" annex rows 52-71 — grand-total
+   quartets, cumulative DR traces, 11-mirror pairs — are encoded per
+   [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §2.1b: `m1_ananda_grand_total` /
+   `m1_ananda_cumulative_dr_trace` / `m1_ananda_mirror_pair`.)
+
+## Local Contracts
+- No `CONTRACT.md` / crate here — frozen provenance + spec CSV.
+- Projector `scripts/project-map-index.mjs` reads the seed JSON to regenerate the `M0/`–`M5/`
+  navigation projection; that is a **repo-projection convenience over frozen provenance**, not a
+  runtime data path, and it never re-promotes into the graph (reflection is downward-only).
+- `scripts/generate-deep-regional-cypher.mjs` owns `registeredTargets` — the **recovery allowlist**.
+  A property absent from it is unrecoverable after a wipe (2026-07-28). Register a camelCase→target
+  mapping the moment a new property enters the write path, not after it is lost; declare StringList
+  targets in `stringListTargets` too. The generator emits `SET n +=` on `:Bimba` nodes only, so it
+  carries **no label and no relationship** — those recover from their own idempotent migration
+  (Tranche 09.T9.14's `:World`/`:Archetypal`/`:Gnostic` + `WORLD_*` set recovers from
+  `Body/S/S2/graph-services/migrations/2026-08-01-world-gnostic-namespace-promotion.cypher`).
+
+## Work Guidance
+- To change correspondence data, change the **live graph** (the authority) — never edit a
+  `*-deep/` JSON expecting a runtime effect; nothing reads it.
+- Do not add new runtime readers of `datasets/**`. If you think you need dataset data at runtime,
+  you need a live-graph query plus a kernel-LUT cross-check instead (see the parity sweep).
+
+## Verification
+- Grep guard: `rg -l "Idea/Bimba/Map/datasets|nodes-full-detail.json" --type rust Body/`
+  enumerates every code reference. The live correspondence suites (`lut_graph_parity_live`,
+  `parashakti_correspondences_live_graph`) assert the **negative** (no-leak); the only sanctioned
+  readers are the `dataset_import` seed tooling and the Vortex Modulae CSV test above. **No NEW
+  positive runtime read may be added** — audit any addition against this boundary.
+- `cargo test --manifest-path Body/S/S0/epi-cli/Cargo.toml --test lut_graph_parity_live` (live
+  Neo4j required) proves the LUTs mirror the graph without touching these files.
+
+## Child DOX Index
+- `*-deep/`, `low-detail/`, `migrations/`, `scripts/` — (leaves) frozen seed provenance + seed
+  tooling; no nested AGENTS.md.

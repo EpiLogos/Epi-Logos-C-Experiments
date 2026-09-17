@@ -2,8 +2,10 @@ use epi_s2_graph_schema::{
     coordinate_position_semantics, coordinate_prefix_families, coordinate_prefix_family_spec,
     coordinate_prefix_property_key, coordinate_prefix_property_key_for_axis,
     coordinate_property_construction_law, coordinate_semantic_family_specs,
-    coordinate_semantic_registry, coordinate_semantic_registry_authority_paths,
-    validate_coordinate_prefix_property,
+    coordinate_semantic_registry, coordinate_semantic_registry_authority_paths, node_property_spec,
+    validate_coordinate_prefix_property, CRYSTALLISATION_STATE_PROPERTY,
+    C_LAYER_AUTHORITY_MIGRATION, C_LAYER_ROLE_PROPERTY, C_MOC_EVIDENCE_PATHS_PROPERTY,
+    SEMANTIC_AUTHORITY_PROPERTY, WORLD_TYPE_PATH_PROPERTY,
 };
 
 #[test]
@@ -110,4 +112,24 @@ fn coordinate_semantics_registry_names_m5_and_mef_scope_law() {
     assert!(m.direct_axis.contains("full Bimba map"));
     assert!(m.inverted_axis.contains("M'"));
     assert!(m.inverted_axis.contains("Pratibimba"));
+}
+
+#[test]
+fn c_layer_authority_properties_and_migration_are_registered() {
+    for key in [
+        C_LAYER_ROLE_PROPERTY,
+        SEMANTIC_AUTHORITY_PROPERTY,
+        WORLD_TYPE_PATH_PROPERTY,
+        CRYSTALLISATION_STATE_PROPERTY,
+        C_MOC_EVIDENCE_PATHS_PROPERTY,
+    ] {
+        let spec = node_property_spec(key).unwrap_or_else(|| panic!("{key} missing"));
+        assert!(spec.coordinate_home.starts_with('C'));
+    }
+
+    assert!(C_LAYER_AUTHORITY_MIGRATION.contains("Idea/Bimba/World/Types/Coordinates/C/C2"));
+    assert!(C_LAYER_AUTHORITY_MIGRATION.contains("C2.canvas"));
+    assert!(C_LAYER_AUTHORITY_MIGRATION.contains("C4.md"));
+    assert!(!C_LAYER_AUTHORITY_MIGRATION.contains("World/Types/Entities"));
+    assert!(!C_LAYER_AUTHORITY_MIGRATION.contains("World/Types/Diagrams"));
 }

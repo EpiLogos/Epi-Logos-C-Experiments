@@ -12,10 +12,13 @@ pub mod bidirectional_sync;
 pub mod constraint;
 pub mod consumption;
 mod coordinate;
+pub mod core65_audit;
+pub mod curation_snapshot;
 pub mod cypher;
 pub mod dataset_import;
 pub mod doctor;
 pub mod embeddings;
+pub mod equivalence_classes;
 pub mod gds;
 pub mod graph_api;
 pub mod lifecycle;
@@ -23,23 +26,46 @@ pub mod link_enforcement;
 pub mod meta;
 pub mod ontology;
 pub mod pointers;
+pub mod q_articulation;
 pub mod relationship_manager;
 pub mod retrieval;
 mod retrieval_query;
+pub mod row_projection;
+/// The `s2.*` / `s2'.*` gateway handlers, resident at their own coordinate
+/// (Track 53). Registered into an `epi_kernel_contract::MethodRegistry` by the
+/// composition root; S3 routes to them without importing this crate.
+pub mod s2_handlers;
 pub mod schema;
 pub mod seed;
 pub mod semantic;
+pub mod sync;
 pub mod sync_coordinator;
+/// Track 54 transaction-log forensics: decodes Neo4j's own transaction log
+/// into a typed command stream carrying before- and after-images. Feature-gated
+/// (`txlog-forensics`) — recovery tooling, not a serving surface.
+#[cfg(feature = "txlog-forensics")]
+pub mod txlog_forensics;
 pub mod types;
 pub mod vault;
 
-pub use bidirectional_sync::{BidirectionalSyncer, ConflictResolution, SyncConflict};
+pub use bidirectional_sync::{
+    most_recent_winner, BidirectionalSyncer, ConflictResolution, MostRecentWinner, SyncConflict,
+};
 pub use consumption::{
     m5_handoff_consumption_contract, FORBIDDEN_CLIENT_DERIVATIONS, M5_HANDOFF_CONTRACT_VERSION,
 };
 pub use coordinate::{
     cf_node_for_frame, convert_hash_to_m_family, extract_context_frames, wrap_context_frames,
-    CoordLayer, CoordinateArrayParser, ParsedCoordinate, WikiLink,
+    CLayerMetadata, CoordLayer, CoordinateArrayParser, ParsedCoordinate, WikiLink,
+};
+pub use core65_audit::{
+    core_65_audit_payload, core_65_audit_plan, kernel_core_readiness_fact,
+    kernel_declared_core_relation_count, Core65AuditPlan, Core65AuditSummary, M0GraphReadinessFact,
+    CORE65_AUDIT_METHOD, KERNEL_CORE_RELATION_FAMILY,
+};
+pub use curation_snapshot::{
+    read_bimba_curation_snapshot, BimbaCurationNode, BimbaCurationRelation, BimbaCurationResonance,
+    BimbaCurationSnapshot,
 };
 pub use dataset_import::DatasetImporter;
 pub use doctor::{
@@ -47,7 +73,10 @@ pub use doctor::{
     PrivacyProjectionReadiness, ProcedureReadiness, RedisStackStatus, SchemaReadiness,
     SemanticCacheStatus, ServiceStatus,
 };
-pub use embeddings::{EmbeddingConfig, GeminiEmbeddingClient};
+pub use embeddings::{
+    check_write_width, ensure_index_accepts_writes, live_index_width, EmbeddingConfig,
+    GeminiEmbeddingClient, IndexWidth, IndexWidthSource, EMBED_DIMS_ENV, EMBED_DIMS_ENV_ALIAS,
+};
 pub use gds::{
     algorithm_descriptors, blocked_overlay_payload, gds_procedure_count, option1_projection_plan,
     GdsAlgorithmDescriptor, GdsOverlayNode, GdsOverlayPayload, GdsOverlayRequest,
@@ -55,10 +84,13 @@ pub use gds::{
     GDS_OPTION1_PROJECTION_VERSION, GDS_PRIVACY_BOUNDARY,
 };
 pub use graph_api::{
-    graph_contract, source_traceability_anchors, CoordinateResolution, GraphMethodParams,
-    GraphMethodService, GraphNodeRequest, GraphParamValue, GraphQueryRequest,
-    GraphTraverseDirection, GraphTraverseRequest, KernelResonanceObservationPlan,
-    KernelResonanceObservationRequest, PointerWebRefreshPlan, PointerWebRefreshRequest,
+    graph_contract, m0_archetype_lut_coordinates, m0_residual_list_plan,
+    source_traceability_anchors, CoordinateResolution, GraphMethodParams, GraphMethodService,
+    GraphNodeRequest, GraphParamValue, GraphQueryRequest, GraphTraverseDirection,
+    GraphTraverseRequest, HarmonicRelationMaterializationPlan,
+    HarmonicRelationMaterializationRequest, KernelResonanceObservationPlan,
+    KernelResonanceObservationRequest, M0ResidualListPlan, M0ResidualListRequest,
+    PointerWebRefreshPlan, PointerWebRefreshRequest,
 };
 pub use lifecycle::{
     live_graph_backed_evidence, maybe_refresh_semantic_embeddings, LiveGraphBackedEvidence,
@@ -70,28 +102,37 @@ pub use meta::{
     seed_source_hash, structural_state_aligned, write_graph_meta, GraphMeta,
 };
 pub use ontology::{
-    anuttara_property_mappings, epi_ontology_sha256, import_epi_ontology_with_n10s,
-    ontology_import_plan, record_ontology_bridge_facts, OntologyImportPlan,
-    OntologyPropertyMapping, EPI_ONTOLOGY_FORMAT, EPI_ONTOLOGY_TURTLE, EPI_ONTOLOGY_URI,
-    EPI_ONTOLOGY_VERSION_IRI, OWL2_RL_PROFILE, SHACL_REPORTING_MODE,
+    ananda_vortex_property_mappings, anuttara_property_mappings, epi_ontology_sha256,
+    import_epi_ontology_with_n10s, ontology_import_plan, record_ontology_bridge_facts,
+    OntologyImportPlan, OntologyPropertyMapping, EPI_ONTOLOGY_FORMAT, EPI_ONTOLOGY_TURTLE,
+    EPI_ONTOLOGY_URI, EPI_ONTOLOGY_VERSION_IRI, OWL2_RL_PROFILE, SHACL_REPORTING_MODE,
 };
 pub use pointers::{
-    compute_pointer_web, kernel_coordinate_anchor_for, kernel_coordinate_anchor_from_parts,
-    HarmonicBedrockAnchor, HarmonicContextFrameAnchor, HarmonicPointerAnchor,
-    HarmonicPointerRelationDescriptor, HarmonicPointerWebAnchor, KernelAnchor,
-    KernelCoordinateAnchor, PointerWeb, QvDataAnchor,
+    canonical_harmonic_bimba_relations, compute_coordinate_reference_projection,
+    kernel_coordinate_anchor_for, kernel_coordinate_anchor_from_parts,
+    CoordinateReferenceProjection, HarmonicBedrockAnchor, HarmonicBimbaRelation,
+    HarmonicContextFrameAnchor, HarmonicPointerAnchor, HarmonicPointerWebAnchor, KernelAnchor,
+    KernelCoordinateAnchor, QvDataAnchor,
+};
+#[allow(deprecated)]
+pub use pointers::{compute_pointer_web, PointerWeb};
+pub use q_articulation::{
+    q_articulation_review_epoch_key, validate_q_articulation_key, verify_bimba_q_articulation,
+    QArticulationVerification,
 };
 pub use relationship_manager::{RelationshipManager, RelationshipWritePlan, POSITION_REL_TYPES};
 pub use retrieval::{CoordinateRetrieval, GraphRAGRetriever, HybridRetriever};
 pub use retrieval_query::{
-    classify_query, disclosure_for_query_type, extract_coordinate_mentions, fusion_rrf_results,
-    fusion_weighted_results, infer_positions, tokenize_query, CoordinateSearchScope,
-    DisclosureLevel, GraphRetrievalQuery, HybridFusionConfig, QueryType, RetrievalMode,
-    RetrievalResult,
+    classify_query, disclosure_for_query_type, extract_c_layer_metadata,
+    extract_coordinate_mentions, fusion_rrf_results, fusion_weighted_results, infer_positions,
+    tokenize_query, CoordinateSearchScope, DisclosureLevel, GraphRetrievalQuery,
+    HybridFusionConfig, QueryType, RetrievalMode, RetrievalResult,
 };
+pub use s2_handlers::{register_s2_handlers, S2_COMPOSITE_AT_ROOT, S2_METHODS};
 pub use semantic::SemanticDocument;
-pub use sync_coordinator::{
-    CodeProvenanceEvidence, FrontmatterPropertyRule, FrontmatterPropertyRuleKind,
+pub use sync::{
+    plan_frontmatter_properties, resolve_frontmatter_key, CodeProvenanceEvidence,
+    FrontmatterKeyResolution, FrontmatterPropertyRule, FrontmatterPropertyRuleKind,
     GraphPromotionSyncReport, GraphitiEpisodePlan, PromotionClass, PromotionFrontmatterEvidence,
     PromotionLinkEvidence, PromotionNodeIntent, PromotionPlan, PromotionPolicyDecision,
     PromotionRelationCandidate, PromotionTargetSurface, PropertyProposal, PropertySchemaStatus,
@@ -210,8 +251,7 @@ impl GraphRedisRole {
             embedding_dimensions: epi_s2_graph_schema::SEMANTIC_EMBEDDING_DIMENSIONS,
             embedding_version: epi_s2_graph_schema::EMBEDDING_VERSION,
             q_schema_version: epi_s2_graph_schema::Q_SCHEMA_VERSION,
-            description:
-                "Redis Stack semantic cache for S2 graph retrieval over Neo4j/Bimba coordinates",
+            description: "S2 graph retrieval payload semantics over the S3-owned Redis runtime",
         }
     }
 }
@@ -247,7 +287,7 @@ impl SemanticCacheConfig {
     }
 
     pub fn for_local_dev(repo_root: &Path) -> Self {
-        Self::from_script_path(epi_s3_redis_context::redisvl_service_script(repo_root))
+        Self::from_script_path(epi_kernel_contract::redisvl_service_script(repo_root))
     }
 
     pub fn from_script_path(script_path: PathBuf) -> Self {
@@ -548,21 +588,21 @@ fn default_script_path() -> PathBuf {
         .parent()
         .and_then(Path::parent)
         .and_then(Path::parent)
-        .map(epi_s3_redis_context::redisvl_service_script);
+        .map(epi_kernel_contract::redisvl_service_script);
     if let Some(candidate) = repo_candidate {
         if candidate.exists() {
             return candidate;
         }
     }
 
-    let manifest_candidate = epi_s3_redis_context::redisvl_service_script(&manifest_root);
+    let manifest_candidate = epi_kernel_contract::redisvl_service_script(&manifest_root);
     if manifest_candidate.exists() {
         return manifest_candidate;
     }
 
     if let Ok(exe) = std::env::current_exe() {
         if let Some(root) = exe.parent().and_then(Path::parent) {
-            let candidate = epi_s3_redis_context::redisvl_service_script(root);
+            let candidate = epi_kernel_contract::redisvl_service_script(root);
             if candidate.exists() {
                 return candidate;
             }

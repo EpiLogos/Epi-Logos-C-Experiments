@@ -1,0 +1,33 @@
+{
+  "runId": "20260609T215054Z-15-T15.1",
+  "taskId": "15.T15.1",
+  "startedAt": "2026-06-09T21:50:54.569Z",
+  "owner": "codex-m-dev-15-t15-1",
+  "leaseExpiresAt": "2026-06-09T23:50:54.569Z",
+  "worktree": null,
+  "task": {
+    "id": "15.T15.1",
+    "trackId": "15",
+    "tranche": "T15.1",
+    "title": "Foundation principles registry",
+    "effort": null,
+    "file": "15-ui-design-foundations.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+    "dependsOn": [],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/contracts/ui-foundation-principles.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

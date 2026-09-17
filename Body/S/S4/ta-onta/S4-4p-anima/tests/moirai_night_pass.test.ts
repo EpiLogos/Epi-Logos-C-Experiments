@@ -15,7 +15,8 @@ describe("Moirai Night' pass plan", () => {
       disclosure_path: "/vault/Empty/Present/22-05-2026/agent:session/sophia-disclosure.jsonl",
     });
     assert.equal(plan.cfp, "CFP3");
-    assert.equal(plan.cs_direction, "Night'");
+    assert.equal(plan.cs_sense, "retrospective");
+    assert.equal(plan.cs_direction, "Night'", "legacy Night' alias retained for one release (05.T5.15)");
     assert.equal(plan.dispatches.length, 3);
     const names = plan.dispatches.map((d) => d.agent).sort();
     assert.deepEqual(names, ["atropos", "klotho", "lachesis"]);
@@ -108,7 +109,8 @@ describe("Moirai Night' pass post-refactor invariants", () => {
       disclosure_path: "/vault/Empty/Present/22-05-2026/agent:session/sophia-disclosure.jsonl",
     });
     assert.equal(plan.cfp, "CFP3");
-    assert.equal(plan.cs_direction, "Night'");
+    assert.equal(plan.cs_sense, "retrospective");
+    assert.equal(plan.cs_direction, "Night'", "legacy Night' alias retained for one release (05.T5.15)");
     assert.equal(plan.dispatches.length, 3);
     const names = plan.dispatches.map((d) => d.agent).sort();
     assert.deepEqual(names, ["atropos", "klotho", "lachesis"]);
@@ -130,7 +132,8 @@ describe("Moirai Night' pass post-refactor invariants", () => {
       assert.deepEqual(v.ct, ["CT5"]);
       assert.equal(v.cp, "CP4.5");
       assert.equal(v.cfp, "CFP3");
-      assert.deepEqual(v.cs, { code: "CS0", direction: "Night'" });
+      // 05.T5.15: sense is the operative Klein binary; direction is the retained legacy alias.
+      assert.deepEqual(v.cs, { code: "CS0", direction: "Night'", sense: "retrospective" });
     }
   });
 });

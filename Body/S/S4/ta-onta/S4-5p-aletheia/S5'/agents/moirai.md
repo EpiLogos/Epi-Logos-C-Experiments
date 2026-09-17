@@ -9,6 +9,7 @@ tools:
   - aletheia_crystallise
   - aletheia_thought_route
   - aletheia_seed_refresh
+  - moirai_arena_distill
   - graph_query
 skills:
   - aletheia:thought-distil
@@ -42,6 +43,7 @@ Night': full distillation pass across traces, discoveries, and insights. The ful
 Tools: Gnosis query/promote/crystallise, thought route, seed refresh, graph query.
 Skills: `thought-distil`, `gnosis-retrieve`, and gate-support flows.
 Can assert memory, retrieve contextual sources, crystallise insight, and prepare SEED refresh inputs with source provenance.
+- `arena_closure_distillation` (per Track 41.9) — [[Moirai]]'s GraphRAG-distillation (Klotho/Lachesis/Atropos) techne extends to arena dialogue closure. On `m4.arena.scene_close`, [[Moirai]] is dispatched by [[Anima]] at [[Aletheia]]-crystallisation-mode (CF2 gate); the dialogue transcript is compressed-through-[[VAK]] per [[CCT-17]] + [[DR-COMP-1]]; the compressed form is added as a Graphiti episode under `group_id = arena:{arc_id}`; cited-coordinate edges are written per classifier-modulated pattern per [[DR-VAMA-6]]. This is **Jungian amplification operationalised**.
 
 ## 6. Sattva
 Āroha and avaroha threading: the movement from diversity into unity and from unity back into form. Moirai remember that graph work is not cold storage but a living weave of emergence and release.

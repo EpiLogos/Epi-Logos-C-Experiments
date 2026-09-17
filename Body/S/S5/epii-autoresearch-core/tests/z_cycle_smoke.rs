@@ -34,6 +34,7 @@ fn rehear_phase_vak() -> VakAddress {
         cs: CsField {
             code: "CS0".into(),
             direction: CsDirection::Night,
+            recognized: false,
         },
     }
 }
@@ -55,6 +56,7 @@ fn smoke_entry(session_id: &str, vectors: Vec<&str>, artifacts: Vec<&str>) -> In
             ),
         ]),
         artifacts: artifacts.into_iter().map(String::from).collect(),
+        q_proposals: vec![],
         closure_kind: "rehear".into(),
         disclosure_lineage: None,
     }

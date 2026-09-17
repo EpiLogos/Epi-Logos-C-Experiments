@@ -87,3 +87,336 @@ export function assertThreshold(input: { before: string; after: string }): Doorw
   }
   return { ok: true };
 }
+
+export type OracleCardKind = "tarot_major" | "tarot_pip" | "tarot_court" | "hexagram";
+export type OracleLiveState = "generating" | "muting" | "mute";
+export type KleinFace = "prospective" | "retrospective";
+export type AspectKind = "conjunction" | "sextile" | "square" | "trine" | "opposition";
+
+export interface TargetAspect {
+  /** Canonical mod-10 planet id: Sun=0, Moon=1, Mercury=2, ... Pluto=9. */
+  planet_a: number;
+  aspect_kind: AspectKind;
+  planet_b_or_natal: number;
+  exact_at?: string;
+}
+
+export interface OracleSpreadPosition {
+  spread_id: string | number;
+  position_idx: number;
+  card_id: number;
+  card_kind: OracleCardKind;
+  card_name?: string;
+  image_id?: string;
+  drawn_at: string;
+  drawn_in_session: string;
+  target_aspect?: TargetAspect;
+  live_state: OracleLiveState;
+  last_recognition_at?: string;
+  recognition_count: number;
+  klein_face: KleinFace;
+  ruling_planet?: string;
+  decan?: string;
+  state_changed_at?: string;
+}
+
+export interface DailyNoteRecognition {
+  session_id: string;
+  noted_at: string;
+  body: string;
+}
+
+export interface JanusTrackSpreadsInput {
+  session_id: string;
+  positions: OracleSpreadPosition[];
+  daily_notes: DailyNoteRecognition[];
+}
+
+export interface JanusEvaluateAlivenessInput {
+  spread_id: string | number;
+  positions: OracleSpreadPosition[];
+  now: string;
+}
+
+export interface SpreadResolution {
+  spread_id: string | number;
+  resolved: boolean;
+  resolved_at?: string;
+}
+
+export interface JanusSpreadDelta {
+  readonly still_alive: readonly string[];
+  readonly gone_mute: readonly string[];
+}
+
+export interface M4TemporalNow {
+  /** Canonical mod-10 order: Sun=0, Moon=1, Mercury=2, Venus=3, Mars=4, Jupiter=5, Saturn=6, Uranus=7, Neptune=8, Pluto=9. */
+  planet_degrees?: number[];
+  realtime?: { planet_degrees?: number[] };
+  kairotic?: { planet_degrees?: number[] };
+  kairotic_active?: boolean | number;
+}
+
+export interface KairosMotionSignals {
+  saturn_station?: boolean;
+  mercury_retrograde_shadow_entry?: boolean;
+  mercury_direct_station?: boolean;
+}
+
+export interface KleinWeighting {
+  prospective: number;
+  retrospective: number;
+}
+
+export interface JanusWeightSessionInput {
+  session_id: string;
+  M4_Temporal_Now: M4TemporalNow;
+  natal_planet_degrees?: number[];
+  kairos_signals?: KairosMotionSignals;
+  user_override?: Partial<KleinWeighting>;
+}
+
+export interface JanusWeightSessionResult {
+  session_id: string;
+  c_3_klein_weighting: KleinWeighting;
+  basis: string[];
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const HOUR_MS = 60 * 60 * 1000;
+
+function parseTime(value: string): number {
+  const time = Date.parse(value);
+  if (!Number.isFinite(time)) throw new Error(`invalid timestamp "${value}"`);
+  return time;
+}
+
+function daysBetween(start: string, end: string): number {
+  return (parseTime(end) - parseTime(start)) / DAY_MS;
+}
+
+function hoursApart(a: string, b: string): number {
+  return Math.abs(parseTime(a) - parseTime(b)) / HOUR_MS;
+}
+
+function normaliseText(value: string): string {
+  return value.toLocaleLowerCase();
+}
+
+function includesTerm(text: string, term?: string): boolean {
+  const clean = term?.trim();
+  return !!clean && text.includes(normaliseText(clean));
+}
+
+function noteRecognisesPosition(noteBody: string, position: OracleSpreadPosition): boolean {
+  const text = normaliseText(noteBody);
+  return (
+    includesTerm(text, position.card_name) ||
+    includesTerm(text, position.image_id) ||
+    includesTerm(text, position.decan) ||
+    includesTerm(text, position.ruling_planet) ||
+    (text.includes("live-spread") && text.includes(String(position.position_idx)))
+  );
+}
+
+function latestIso(a?: string, b?: string): string | undefined {
+  if (!a) return b;
+  if (!b) return a;
+  return parseTime(a) >= parseTime(b) ? a : b;
+}
+
+function hasTargetAspectWithin(position: OracleSpreadPosition, now: string, days: number): boolean {
+  const exactAt = position.target_aspect?.exact_at;
+  return !!exactAt && Math.abs(daysBetween(exactAt, now)) <= days;
+}
+
+function hasRecognitionAfter(position: OracleSpreadPosition, timestamp?: string): boolean {
+  if (!position.last_recognition_at || !timestamp) return false;
+  return parseTime(position.last_recognition_at) > parseTime(timestamp);
+}
+
+/**
+ * Track OracleSpread recognitions from daily-note text. Janus stays pure here:
+ * callers provide the note corpus for the session; this function performs the
+ * temporal filtering and position-reference detection.
+ */
+export function janus_track_spreads(input: JanusTrackSpreadsInput): OracleSpreadPosition[] {
+  return input.positions.map((position) => {
+    let recognitionCount = position.recognition_count;
+    let lastRecognitionAt = position.last_recognition_at;
+    const drawnAt = parseTime(position.drawn_at);
+
+    for (const note of input.daily_notes) {
+      if (note.session_id !== input.session_id) continue;
+      if (parseTime(note.noted_at) < drawnAt) continue;
+      if (!noteRecognisesPosition(note.body, position)) continue;
+      recognitionCount += 1;
+      lastRecognitionAt = latestIso(lastRecognitionAt, note.noted_at);
+    }
+
+    return {
+      ...position,
+      recognition_count: recognitionCount,
+      last_recognition_at: lastRecognitionAt,
+    };
+  });
+}
+
+/**
+ * Evaluate live-vs-mute transitions for an OracleSpread. The thresholds follow
+ * the M4' prospective/retrospective canvas spec: unrecognised positions begin
+ * muting after 14 days unless a target aspect is within seven days; muting
+ * positions become mute after seven further days without recognition; mute
+ * positions reopen when their target aspect is within 24 hours of exactness.
+ */
+export function janus_evaluate_aliveness(input: JanusEvaluateAlivenessInput): OracleSpreadPosition[] {
+  return input.positions.map((position) => {
+    if (position.spread_id !== input.spread_id) return { ...position };
+    const next: OracleSpreadPosition = { ...position };
+
+    if (next.live_state === "mute" && next.target_aspect?.exact_at && hoursApart(next.target_aspect.exact_at, input.now) <= 24) {
+      return { ...next, live_state: "generating", state_changed_at: input.now };
+    }
+
+    if (next.live_state === "muting") {
+      const changedAt = next.state_changed_at ?? next.drawn_at;
+      if (!hasRecognitionAfter(next, changedAt) && daysBetween(changedAt, input.now) >= 7) {
+        return { ...next, live_state: "mute", state_changed_at: input.now };
+      }
+      if (hasRecognitionAfter(next, changedAt)) {
+        return { ...next, live_state: "generating", state_changed_at: input.now };
+      }
+      return next;
+    }
+
+    if (
+      next.live_state === "generating" &&
+      next.recognition_count === 0 &&
+      daysBetween(next.drawn_at, input.now) > 14 &&
+      !hasTargetAspectWithin(next, input.now, 7)
+    ) {
+      return { ...next, live_state: "muting", state_changed_at: input.now };
+    }
+
+    return next;
+  });
+}
+
+/** Resolve a spread once every position in that spread has become mute. */
+export function janus_spread_resolved(input: JanusEvaluateAlivenessInput): SpreadResolution {
+  const spreadPositions = input.positions.filter((position) => position.spread_id === input.spread_id);
+  const resolved = spreadPositions.length > 0 && spreadPositions.every((position) => position.live_state === "mute");
+  return {
+    spread_id: input.spread_id,
+    resolved,
+    resolved_at: resolved ? input.now : undefined,
+  };
+}
+
+/** Read the user-authored spread-state delta returned by Hen at a re-entry boundary. */
+export function janus_spread_delta(contentDelta: string): JanusSpreadDelta {
+  const lines = contentDelta
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  return {
+    still_alive: lines.filter((line) => /live-spread|still alive|active spread/i.test(line)).slice(-5),
+    gone_mute: lines.filter((line) => /gone mute|resolved|closed spread|\bmute\b/i.test(line)).slice(-5),
+  };
+}
+
+function clamp01(value: number): number {
+  return Math.min(1, Math.max(0, value));
+}
+
+function roundWeight(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
+function angularDistance(a: number, b: number): number {
+  const diff = Math.abs((((a - b) % 360) + 360) % 360);
+  return diff > 180 ? 360 - diff : diff;
+}
+
+function assertPlanetDegrees(degrees: number[]): void {
+  if (!Array.isArray(degrees) || degrees.length < 10) {
+    throw new Error("M4_Temporal_Now.planet_degrees must provide Sun(0) through Pluto(9).");
+  }
+  degrees.slice(0, 10).forEach((degree, index) => {
+    if (!Number.isFinite(degree)) throw new Error(`planet_degrees[${index}] is not finite`);
+  });
+}
+
+function fromProspective(prospective: number): KleinWeighting {
+  const p = roundWeight(clamp01(prospective));
+  return { prospective: p, retrospective: roundWeight(1 - p) };
+}
+
+/** Compute Janus's per-session prospective/retrospective Klein weighting. */
+export function janus_weight_session(input: JanusWeightSessionInput): JanusWeightSessionResult {
+  if (input.user_override?.prospective !== undefined || input.user_override?.retrospective !== undefined) {
+    const prospective =
+      input.user_override.prospective !== undefined ? input.user_override.prospective : 1 - input.user_override.retrospective!;
+    return {
+      session_id: input.session_id,
+      c_3_klein_weighting: fromProspective(prospective),
+      basis: ["user override"],
+    };
+  }
+
+  const degrees = livePlanetDegrees(input.M4_Temporal_Now);
+  assertPlanetDegrees(degrees);
+
+  const basis: string[] = [];
+  let prospective = 0.5;
+  const sun = degrees[0];
+  const moon = degrees[1];
+  const saturn = degrees[6];
+  const natalSun = input.natal_planet_degrees?.[0];
+  const natalSaturn = input.natal_planet_degrees?.[6];
+
+  if (input.kairos_signals?.saturn_station) {
+    prospective -= 0.3;
+    basis.push("Saturn station: retrospective +0.3");
+  }
+  if (natalSaturn !== undefined && angularDistance(saturn, natalSaturn) <= 2) {
+    prospective -= 0.5;
+    basis.push("Saturn return: retrospective +0.5");
+  }
+  if (angularDistance(sun, moon) <= 6) {
+    prospective += 0.3;
+    basis.push("New Moon: prospective +0.3");
+  }
+  if (input.kairos_signals?.mercury_retrograde_shadow_entry) {
+    prospective -= 0.2;
+    basis.push("Mercury retrograde shadow entry: retrospective +0.2");
+  }
+  if (input.kairos_signals?.mercury_direct_station) {
+    prospective += 0.2;
+    basis.push("Mercury direct station: prospective +0.2");
+  }
+  if (natalSun !== undefined) {
+    const sunDistance = angularDistance(sun, natalSun);
+    if (Math.abs(sunDistance - 60) <= 2 || Math.abs(sunDistance - 120) <= 2) {
+      basis.push("Sun trine/sextile natal Sun: balanced");
+    }
+  }
+
+  if (basis.length === 0) basis.push("balanced kairos");
+
+  return {
+    session_id: input.session_id,
+    c_3_klein_weighting: fromProspective(prospective),
+    basis,
+  };
+}
+
+function livePlanetDegrees(now: M4TemporalNow): number[] {
+  if ((now.kairotic_active === true || now.kairotic_active === 1) && Array.isArray(now.kairotic?.planet_degrees)) {
+    return now.kairotic.planet_degrees;
+  }
+  if (Array.isArray(now.realtime?.planet_degrees)) {
+    return now.realtime.planet_degrees;
+  }
+  return now.planet_degrees ?? [];
+}

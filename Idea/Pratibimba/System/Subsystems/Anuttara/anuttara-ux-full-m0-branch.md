@@ -19,11 +19,11 @@ source_context:
 
 ## 0. Purpose of This Document
 
-This document articulates Anuttara as the **integrated bimba-map engagement system** — the M0' surface that holds, renders, and (within the IDE) gives full CRUD access to the entire bimba graph across all its data-integration layers. It is the third pole of the 4/5/0 seam (with [[nara-ux-full-m4-branch-update|Nara]] M4 and [[epii-ux-full-m5-branch|Epii]] M5), and it is the structural ground the recognition surface resolves into.
+This document articulates Anuttara as the **integrated bimba-map engagement system** — the M0' surface that holds, renders, and (within the IDE) gives governed read/stage/routed-write access to the entire bimba graph across all its data-integration layers. It is the third pole of the 4/5/0 seam (with [[nara-ux-full-m4-branch-update|Nara]] M4 and [[epii-ux-full-m5-branch|Epii]] M5), and it is the structural ground the recognition surface resolves into.
 
 The corrected view, in one paragraph:
 
-> **M0 (content) is Anuttara's own deep language** — the 109-node unified formal syntax (void-grammar, archetypal number language, the R-virtues, Śiva-Śakti). **M0' (app surface) is the bimba-map-as-held** — and *it* has a sixfold, because the surface that masters the whole graph reads it through six modes, one per subsystem. Within the IDE, M0' is a fully integrated bimba-map engagement system: full CRUD across all layers of data, full access, kept deliberately dynamic and open-ended. What it renders is not a static diagram but a **playable physics** — the graph as the matheme that M1' (Paramaśiva) walks.
+> **M0 (content) is Anuttara's own deep language** — the 109-node unified formal syntax (void-grammar, archetypal number language, the R-virtues, Śiva-Śakti). **M0' (app surface) is the bimba-map-as-held** — and *it* has a sixfold, because the surface that masters the whole graph reads it through six modes, one per subsystem. Within the IDE, M0' is a fully integrated bimba-map engagement system: governed read/stage/routed-write across all layers of data, full access without direct canon mutation, kept deliberately dynamic and open-ended. What it renders is not a static diagram but a **playable physics** — the graph as the matheme that M1' (Paramaśiva) walks.
 
 This document clarifies six points:
 
@@ -145,25 +145,23 @@ The governing UX move: **render M0'/M2'/M3' over a solar-system spatial anchor**
 
 ---
 
-# 7. M0' as a Full CRUD Engagement System (within the IDE)
+# 7. M0' as a Governed Routed-Write Engagement System (within the IDE)
 
-Within the M5-3 Theia/Tauri IDE, M0' is not only a viewer — it is the **integrated bimba-map engagement workbench**, with full create/read/update/traverse/delete across every layer, under governance. This is what keeps the system "dynamic and open-ended."
+Within the M5-3 Theia/Tauri IDE, M0' is not only a viewer — it is the **integrated bimba-map engagement workbench** whose prior "full CRUD" ambition is downgraded by DR-M0-1 to **governed routed-write via M5 atelier**. M0' may inspect, stage, and route graph-intent, but its extension contract remains `mutatesGraphCanon: false`. This is what keeps the system "dynamic and open-ended" without making M0' a canon-mutation authority.
 
 ```text
-Layer        READ                          WRITE (governed)
-M0-0′  Lang  inspect symbol/formulation     author/edit node language; lift to OWL (via M5-2);
-                                            attach asset handles
-M0-1′  QL    inspect coordinate structure   create/restructure coordinates, branch QL-formations
-                                            (load-bearing → user final-validation)
-M0-2′  Rel   inspect typed relations        create/retype/annotate edges (structural + correspondential)
-M0-3′  Time  inspect community/clock overlay run GDS community detection; bind temporal/astro overlays
-M0-4′  Pers  inspect personal traversal      protected; writes only via Nara governance + consent
-M0-5′  Pedag inspect traversal analytics     author learning-paths, recommendations, map annotations
+Layer        READ                          WRITE REQUEST ROUTE (governed)
+M0-0′  Lang  inspect symbol/formulation     stage node-language/asset intent -> M5-5 Logos Atelier
+M0-1′  QL    inspect coordinate structure   stage coordinate-formation intent -> M5-5 dry-run
+M0-2′  Rel   inspect typed relations        stage edge annotation/retype intent -> M5-5 review
+M0-3′  Time  inspect community/clock overlay stage overlay/GDS intent -> M5-5 dry-run
+M0-4′  Pers  inspect personal traversal      protected; route via Nara governance + consent before M5
+M0-5′  Pedag inspect traversal analytics     stage pedagogy/path intent -> M5-5 governed-promote
 ```
 
-**Governance is the same construction-discipline that holds Anuttara's language** ([[epii-ux-full-m5-branch]] §11): every write is a deliberate act, never gradient-descended; load-bearing coordinates (R-virtues at M0-2-9, Śiva operators at M0-5, M0-4 holographic-matrix bases) require explicit user final-validation; all writes route through the S2 graph-services layer with provenance; reversibility via deprecation-with-reasons. The engagement system is *open* but never *ungoverned* — it is the place where the map grows by construction.
+**Governance is the same construction-discipline that holds Anuttara's language** ([[epii-ux-full-m5-branch]] §11): every write-intent is a deliberate act, never gradient-descended; load-bearing coordinates (R-virtues at M0-2-9, Śiva operators at M0-5, M0-4 holographic-matrix bases) require explicit user final-validation. No `requestCanonMutation()` path lands on M0'. Canon mutation routes through M5-5 Logos Atelier review / dry-run / governed-promote, then through the S2 graph-services layer with provenance and reversibility via deprecation-with-reasons. The engagement system is *open* but never *ungoverned* — it is the place where the map grows by construction.
 
-CRUD does not fork the substrate: M0' edits the canonical Neo4j graph that M2' and M3' also render. Edit a node's correspondence at M0-2', and the M2' solar overlay and M3' wheel re-read it on the next tick. **One substrate; edits propagate to all renderings.**
+Routed-write does not fork the substrate: M0' reads and stages against the canonical Neo4j graph that M2' and M3' also render, while M5-5 owns canon mutation. Promote a reviewed node correspondence through governed-promote, and the M2' solar overlay and M3' wheel re-read it on the next tick. **One substrate; governed mutation propagates to all renderings.**
 
 ---
 
@@ -235,7 +233,7 @@ M0-5′ holds the pedagogy (depth, breadth, next-explorations — map-compass-le
 
 The shorter operational mantra:
 
-> **The bimba map is the system made walkable. M1' is the physics that walks it. M0' is the workbench that holds it — one substrate, three renderings, six layers, full CRUD under construction-discipline.**
+> **The bimba map is the system made walkable. M1' is the physics that walks it. M0' is the workbench that holds it — one substrate, three renderings, six layers, governed routed-write under construction-discipline.**
 > **The solar system is the anchor; the angels and every symbolic system are data-driven overlays; the user is the central daimon resonating against the cosmos in one shared Cl(4,2) algebra.**
 
 ---

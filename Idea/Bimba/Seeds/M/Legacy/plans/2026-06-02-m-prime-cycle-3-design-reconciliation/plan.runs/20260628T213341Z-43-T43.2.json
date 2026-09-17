@@ -1,0 +1,33 @@
+{
+  "runId": "20260628T213341Z-43-T43.2",
+  "taskId": "43.T43.2",
+  "startedAt": "2026-06-28T21:33:41.720Z",
+  "owner": "codex-m-dev-43-t43-2-coordinate-header-convention",
+  "leaseExpiresAt": "2026-06-28T23:33:41.720Z",
+  "worktree": null,
+  "task": {
+    "id": "43.T43.2",
+    "trackId": "43",
+    "tranche": "T43.2",
+    "title": "Unified \"Coordinate Header\" convention (define + hand to Hen)",
+    "effort": null,
+    "file": "43-end-of-cycle-3-audit-protocol.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/43-end-of-cycle-3-audit-protocol.md",
+    "dependsOn": [
+      "43.T43.1"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

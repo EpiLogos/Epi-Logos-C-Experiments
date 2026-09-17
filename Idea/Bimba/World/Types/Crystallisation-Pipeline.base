@@ -1,0 +1,51 @@
+coordinate: "World/Types"
+c_4_artifact_role: "base-view"
+c_5_reflects: "[[World-Ontology]]"
+c_3_projected_from: "Idea/Bimba/World/Types"
+c_3_projected_at: "2026-06-25"
+c_0_source_coordinates: ["[[World-Ontology]]", "[[C5]]", "[[CT]]", "[[48-bases-cs-reflection-layer]]"]
+filters:
+  and:
+    - 'c_5_crystallisation_state != null'
+    - 'c_4_artifact_role != "base-view"'
+views:
+  - type: table
+    name: "Crystallisation pipeline"
+    group_by: c_5_crystallisation_state
+    order:
+      - coordinate
+      - title
+      - c_4_artifact_role
+      - c_5_crystallisation_state
+      - c_5_reflects
+      - c_0_source_coordinates
+      - c_4_graph_node
+    sort:
+      - { property: c_5_crystallisation_state, direction: ASC }
+      - { property: coordinate, direction: ASC }
+  - type: table
+    name: "Type MOC pointers"
+    filters:
+      and:
+        - 'c_4_artifact_role == "type-moc-pointer"'
+    group_by: c_5_crystallisation_state
+    order:
+      - coordinate
+      - title
+      - c_5_crystallisation_state
+      - c_0_source_coordinates
+      - c_5_reflects
+  - type: table
+    name: "Flat World forms"
+    filters:
+      or:
+        - 'c_5_crystallisation_state == "crystallised_world_form"'
+        - 'c_4_artifact_role == "definition"'
+        - 'c_4_artifact_role == "form"'
+    group_by: c_4_artifact_role
+    order:
+      - coordinate
+      - title
+      - c_4_artifact_role
+      - c_5_crystallisation_state
+      - c_0_source_coordinates

@@ -4,7 +4,101 @@
   "package_role": "anima_executive_capability_membrane",
   "body_residency": "Body/S/S4/plugins/pleroma",
   "plugin_manifest": ".claude-plugin/plugin.json",
-  "constitutional_agents": [
+  "constitutional_agents": [],
+  "_constitutional_agents_status": "DEPRECATED per DR-M5-1 (VALIDATED 2026-06-02, cleanup 2026-06-15): The executable dispatch roster is pi + anima + the six Aletheia subagent techne-guardians (anansi/moirai/janus/mercurius/agora/zeithoven). The former 7-name constitutional tuple is retained only as Anima authorial-register metadata below; it is psyche-aspect rendering material, not separate dispatch authority.",
+  "_audit_12_3": {
+    "audit_doc": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/plan.runs/12.3-constitutional-agents-disposition.md",
+    "date": "2026-06-18",
+    "outcome": "All seven names (anima, eros, logos, mythos, nous, psyche, sophia) resolve to DR-M5-1 disposition (1) — psyche-aspect rendering material surfaced through Anima, refined by Tranche 12.29 as CF-team-composition members. NONE is disposition (2) tangent. NONE deleted (non-deletion clause). No orphan-fill: zero new agent profiles created; the seven extant profiles at Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/ retained and annotated with a Disposition footer. anima is the dispatcher (only actual runtime register); the other six are the authorial-register / team-composition voices it composes. The genuine DR-M5-1 tangent is the ACR extension AgenticActor union (handled by Tranches 12.1 / 12.14 / DR-B-3), NOT this array."
+  },
+  "constitutional_ct_mapping": {
+    "nous": {
+      "ct": "CT0",
+      "domain": "freedom / pre-artifact open source",
+      "primary_artifacts": ["prompt files", "flow files"],
+      "register": "L1 causal"
+    },
+    "logos": {
+      "ct": "CT1",
+      "domain": "material / data / research operative",
+      "primary_action": "retrieves, reads, parses"
+    },
+    "eros": {
+      "ct": "CT2",
+      "domain": "relational data - connections, resonances, oppositions, dissonances",
+      "primary_action": "scours folders, relations, sources"
+    },
+    "mythos": {
+      "ct": "CT3",
+      "domain": "patterns / diagrams / narratives / symbols / form",
+      "primary_action": "generates artifacts, updates canon"
+    },
+    "psyche": {
+      "ct": "CT4a + CT4b",
+      "domain_4a": "daily template / temporal-structural horizon container",
+      "domain_4b": "synthesising horizon into open summation via T thoughts"
+    },
+    "sophia": {
+      "ct": "CT5",
+      "domain": "crystallisations - aphoristic, essayistic, open questions accruable",
+      "primary_action": "review crystallisation on session close"
+    }
+  },
+  "cf_team_composition_gates": {
+    "CF1": {
+      "positions": "(0/1)",
+      "team": ["nous", "logos"],
+      "flow": "Nous plans -> Logos researches via Aletheia/Techne -> back to Nous -> Nous surfaces to user"
+    },
+    "CF2": {
+      "positions": "(0/1/2)",
+      "team": ["nous", "logos", "eros"],
+      "flow": "+ Eros for relational scour"
+    },
+    "CF3": {
+      "positions": "(0/1/2/3)",
+      "team": ["nous", "logos", "eros", "mythos"],
+      "flow": "+ Mythos for artifact generation / canon update; Nous verifies back; auto-Aletheia/Sophia review gate on session close may reengage"
+    },
+    "CF4": {
+      "positions": "(0/1/2/3/4)",
+      "team": ["nous", "logos", "eros", "mythos", "psyche"],
+      "flow": "+ Psyche for horizon container / synthesis"
+    },
+    "CF5": {
+      "positions": "(0/1/2/3/4/5)",
+      "team": ["nous", "logos", "eros", "mythos", "psyche", "sophia"],
+      "flow": "+ Sophia for review crystallisation"
+    }
+  },
+  "cf_aletheia_techne_mapping": {
+    "CF0": {
+      "guardian": "anansi",
+      "techne": "coordinate-mapping / blueprint / Darshana-REPL"
+    },
+    "CF1": {
+      "guardian": "janus",
+      "techne": "temporal-structure / bhedabheda-threshold"
+    },
+    "CF2": {
+      "guardian": "moirai",
+      "techne": "GraphRAG-distillation (Klotho/Lachesis/Atropos)"
+    },
+    "CF3": {
+      "guardian": "mercurius",
+      "techne": "Kairos-signal / qualitative-temporal-pattern / Elo bookkeeping"
+    },
+    "CF4": {
+      "guardian": "agora",
+      "techne": "plugin-absorption / skill-index / multi-channel-aggregation"
+    },
+    "CF5": {
+      "guardian": "zeithoven",
+      "techne": "creative-advance / skill-and-agent-creation"
+    }
+  },
+  "shared_cf_scale_note": "CF is the shared scale: CF1-CF5 names how many constitutional members are activated in the team Anima composes; CF0-CF5 names the Aletheia techne-guardian invoked WITHIN that team during Aletheia-crystallisation-mode. Constitutional team-size and Aletheia mode-invocation are the same gate.",
+  "anima_authorial_registers_deprecated": [
     "anima",
     "eros",
     "logos",
@@ -57,6 +151,55 @@
       "upstream_required": ["vak-evaluate"]
     }
   ],
+  "techne_tools": [
+    {
+      "name": "techne_vama_summon",
+      "kind": "vama-shakti-summon",
+      "layer": "S4-2'/Pleroma",
+      "operator_role": "psyche-template",
+      "psyche_template_authority": true,
+      "system_tool_grant": false,
+      "dialogue_only_output": true,
+      "requires_vama_shakti_class": true,
+      "refusal_law": ["DR-VAMA-3", "DR-VAMA-5", "DR-VAMA-6"]
+    }
+  ],
+  "entitlement_classes": {
+    "standard": "User-/agent-facing peer tools; entitlement resolved by the same isEntitled(tool, team, agent) contract as every tool.",
+    "aletheia-mode-internal": "Tools invoked by Anima during Aletheia-crystallisation-mode; the calling agent must hold both `anima.dispatcher` role AND `aletheia.mode.active` session state; entitlement is checked at dispatch time. These are NOT user-facing peer tools (DR-M5-1, DR-B-3) — they remain dispatched-through-Anima — but the boundary is enforced by this entitlement class, not by a side-door."
+  },
+  "aletheia_mode_internal": {
+    "entitlement_class": "aletheia-mode-internal",
+    "no_implicit_allow_list": true,
+    "routes_through": "s4'.mediation.route",
+    "dispatch_requires": ["anima.dispatcher", "aletheia.mode.active"],
+    "checked_at": "dispatch-time",
+    "cross_link": "DR-S5-ONE-1",
+    "description": "Tools invoked by Anima during Aletheia-crystallisation-mode; the calling agent must hold both `anima.dispatcher` role AND `aletheia.mode.active` session state; entitlement is checked at dispatch time. Every tool below is a first-class entry in the canonical tool universe and routes through isEntitled() like any other tool — no implicit allow-lists, no bypass. The class varies; the routing is uniform (Tranche 12.32).",
+    "tools": [
+      { "name": "aletheia_crystallise", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_arc_open", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_arc_close", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_arc_status", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_ingest_thoughts", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_logos_stage", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_mobius_arc", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_oracle_arc", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_record", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_episodic_search", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_gnosis_enrich", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_gnosis_ingest", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_gnosis_notebook_create", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_gnosis_query", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_gnosis_status", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_ingest", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_seed_refresh", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_session_promote", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "aletheia_thought_route", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "dispatch_moirai_night_pass", "entitlement_class": "aletheia-mode-internal" },
+      { "name": "moirai_arena_distill", "entitlement_class": "aletheia-mode-internal" }
+    ]
+  },
   "skills": [
     {
       "name": "anima-orchestration",
@@ -266,6 +409,39 @@
         ]
       }
     }
+  },
+  "context_assembly": {
+    "method": "s4'.context.assemble",
+    "coordinate_owner": "S4'",
+    "tranche": "51.T51.1",
+    "assembler": "Body/S/S4/ta-onta/spine/compositor.ts::SpineCompositor.assembleContextPack",
+    "published_to": "<gate-state-root>/s4/context-pack/<session-slug>.json",
+    "served_by": "Body/S/S0/epi-cli/src/gate/anima.rs::context_assemble",
+    "single_assembler_law": "The S4' spine compositor assembles ONCE per session: it injects pack.injection as the session system prompt and publishes that same object. The gateway adapter READS the published pack and never re-assembles - two code paths that both assemble the pack is how the injection drifted into being dead with nothing able to notice.",
+    "returns": ["owner", "sessionKey", "present", "assembler", "packPath", "pack"],
+    "pack_fields": ["version", "sessionKey", "assembledAtMs", "budget", "blocks", "injection"],
+    "block_fields": ["coordinate", "cost", "status", "bytes", "charEstimate", "producedAtMs", "rendered", "vakToken", "error"],
+    "entitlement_class": "standard",
+    "is_dispatch_tool": false,
+    "dispatch_tool_note": "A gateway METHOD, not a vak-dispatch tool: it is deliberately absent from dispatch_tools so capability-parity's local and gateway tool sets stay identical."
+  },
+  "orchestration_run": {
+    "method": "s4'.orchestration.score",
+    "coordinate_owner": "S4'",
+    "tranche": "50.T50.10",
+    "composer": "Body/S/S4/ta-onta/S4-4p-anima/lib/vak-orchestration-surface.ts::defineOrchestration/runOrchestration",
+    "persisted_by": "Body/S/S4/ta-onta/S4-1p-hen/modules/score-store.ts::saveScore/recordScoreRun",
+    "published_to": "<EPI_SCORES_DIR or repo-root>/.epi/scores/<scoreId>.json + <scoreId>.runs.jsonl",
+    "served_by": "Body/S/S0/epi-cli/src/gate/anima.rs::orchestration_score",
+    "reader_not_runner_law": "The adapter SERVES a persisted score and its run history; it never executes one. Pi->subagent is the only agentic path, so a gateway that ran orchestrations would be a second one, and run state belongs to the parent Anima session that holds it (S4-4p-anima/lib/orchestration-run.ts), not to a stateless RPC. Same reader discipline as s4'.context.assemble: the S4' authority produces, the S0 adapter serves what was produced.",
+    "returns": ["owner", "scoreId", "present", "store", "authority", "hash", "score", "runs"],
+    "returns_without_score_id": ["owner", "store", "authority", "scores"],
+    "score_fields": ["schema", "id", "title", "provenance", "program", "hash"],
+    "run_fields": ["scoreId", "hash", "at", "origination", "outcome", "detail"],
+    "fails_closed_on": "a persisted score carrying no hash — a caller reading a program without the hash it was scored under cannot tell whether it is the program that ran",
+    "entitlement_class": "standard",
+    "is_dispatch_tool": false,
+    "dispatch_tool_note": "A gateway METHOD, not a vak-dispatch tool: it is deliberately absent from dispatch_tools so capability-parity's local and gateway tool sets stay identical."
   },
   "typed_delegation": {
     "delegate_lens": {
@@ -527,6 +703,7 @@
           "prepare_agent_run_evidence",
           "dispatch_bounded_agent_run",
           "run_runtime_smoke",
+          "axiom-translate",
           "prepare_dry_run_promotion_plan"
         ],
         "forbidden_actions": [
@@ -537,6 +714,7 @@
         "required_review_categories": [
           "runtime_evidence",
           "test_evidence",
+          "axiom_translation",
           "promotion_readiness"
         ],
         "recursive_self_review_requires_user_final_validation": true
@@ -694,7 +872,8 @@
         "graphContext",
         "sessionRuntime",
         "semanticCandidates",
-        "s5Refs"
+        "s5Refs",
+        "privacyClass"
       ],
       "capability_allowlists": {
         "sophia": [
@@ -731,6 +910,7 @@
           "readGraphContext",
           "subscribeRunEvents",
           "invokeGatewayRpc",
+          "axiom-translate",
           "depositReviewEvidence",
           "requestDryRunPromotion",
           "s1.semantic.suggest_links",

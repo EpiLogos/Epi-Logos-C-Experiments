@@ -1,6 +1,7 @@
 export type GatewayPanelId =
   | 'chat'
   | 'workspace'
+  | 'gateway'
   | 'models'
   | 'overview'
   | 'channels'
@@ -27,6 +28,10 @@ export const PANEL_RPC_PARITY: Record<GatewayPanelId, PanelParityContract> = {
   },
   workspace: {
     required: ['config.get', 'config.set', 'config.apply', 'skills.status', 'skills.update', 'cron.list', 'cron.add', 'cron.update'],
+    optional: ['config.schema', 'skills.install', 'cron.status', 'cron.run', 'cron.remove', 'cron.runs', 'status.summary'],
+  },
+  gateway: {
+    required: ["s4'.mediation.capabilities.list", 'config.get', 'skills.status', 'cron.list', 'node.list'],
     optional: ['config.schema', 'skills.install', 'cron.status', 'cron.run', 'cron.remove', 'cron.runs', 'status.summary'],
   },
   models: {

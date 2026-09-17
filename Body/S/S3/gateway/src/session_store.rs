@@ -1,12 +1,17 @@
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use serde_json::{Map, Value};
 
+use epi_s3_redis_context::{CacheTier, RedisCache, RedisConfig, RedisKey};
+
 use super::{bootstrap, subagents, transcripts, workspace};
 
-pub use epi_s3_gateway_contract::{SessionPatch, SessionRecord};
+pub use epi_s3_gateway_contract::{
+    SessionPatch, SessionRecord, TerminalBinding, TerminalCaptureMode, TerminalStatus,
+};
 
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct CreateSessionContext {
@@ -19,6 +24,13 @@ pub struct CreateSessionContext {
 
 pub struct SessionStore {
     gate_root: PathBuf,
+    redis: Mutex<Option<RedisCache>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RedisRuntimeWrite {
+    pub key: RedisKey,
+    pub value: String,
 }
 
 impl SessionStore {
@@ -26,7 +38,35 @@ impl SessionStore {
         let gate_root = gate_root.as_ref().to_path_buf();
         fs::create_dir_all(gate_root.join("sessions")).map_err(|err| err.to_string())?;
         fs::create_dir_all(gate_root.join("transcripts")).map_err(|err| err.to_string())?;
-        Ok(Self { gate_root })
+        Ok(Self {
+            gate_root,
+            redis: Mutex::new(None),
+        })
+    }
+
+    /// Create a SessionStore with Redis caching. Falls back to file-only
+    /// if Redis is unavailable — the store is always functional.
+    pub fn with_redis(gate_root: impl AsRef<Path>) -> Result<Self, String> {
+        let store = Self::new(gate_root)?;
+        let rt = tokio::runtime::Handle::try_current()
+            .map_err(|_| "no tokio runtime active — cannot connect to Redis".to_string())?;
+        match rt.block_on(RedisCache::connect(&RedisConfig::from_env())) {
+            Ok(cache) => {
+                eprintln!(
+                    "[gateway] Redis connected OK ({})",
+                    std::env::var("EPILOGOS_REDIS_URI")
+                        .unwrap_or_else(|_| "redis://localhost:6379".into())
+                );
+                *store.redis.lock().map_err(|err| err.to_string())? = Some(cache);
+            }
+            Err(err) => {
+                eprintln!(
+                    "[gateway] Redis unavailable ({}), session store is file-only",
+                    err
+                );
+            }
+        }
+        Ok(store)
     }
 
     pub fn create(&self, canonical_key: &str) -> Result<SessionRecord, String> {
@@ -68,6 +108,7 @@ impl SessionStore {
             cmux_workspace: None,
             cmux_surface: None,
             cmux_pane_id: None,
+            terminal_binding: None,
             active_agent_id: canonical_key.to_owned(),
             subagent_lineage: Vec::new(),
             workspace_root: workspace::derive_workspace_root(&self.gate_root, canonical_key, &[])
@@ -188,6 +229,63 @@ impl SessionStore {
         transcripts::transcript_path(&self.gate_root, canonical_key)
     }
 
+    pub fn cached_session_state_key(session_id: &str) -> RedisKey {
+        RedisKey::session_state(session_id)
+    }
+
+    pub fn runtime_cache_writes_for_record(
+        record: &SessionRecord,
+    ) -> Result<Vec<RedisRuntimeWrite>, String> {
+        let record_json = serde_json::to_string(record).map_err(|err| err.to_string())?;
+        let session_summary = serde_json::json!({
+            "canonicalKey": record.canonical_key,
+            "sessionId": record.session_id,
+            "dayId": record.day_id,
+            "activeAgentId": record.active_agent_id,
+            "vaultNowPath": record.vault_now_path,
+            "runtimeCwd": record.runtime_cwd,
+            "vaultRoot": record.vault_root,
+            "sourceSessionKey": record.source_session_key,
+            "sourceSessionKind": record.source_session_kind,
+            "terminalBinding": record.terminal_binding,
+            "updatedAtMs": record.updated_at_ms,
+        })
+        .to_string();
+        let mut writes = vec![
+            RedisRuntimeWrite {
+                key: RedisKey::from_logical(
+                    CacheTier::Active,
+                    format!("s3:gateway:session:record:{}", record.canonical_key),
+                ),
+                value: record_json,
+            },
+            RedisRuntimeWrite {
+                key: RedisKey::session_state(&record.session_id),
+                value: session_summary.clone(),
+            },
+            RedisRuntimeWrite {
+                key: RedisKey::agent_orientation(&record.active_agent_id, &record.session_id),
+                value: session_summary.clone(),
+            },
+        ];
+        if let Some(day_id) = record.day_id.as_deref() {
+            writes.push(RedisRuntimeWrite {
+                key: RedisKey::from_logical(
+                    CacheTier::Warm,
+                    format!("s3:gateway:temporal:day:{day_id}:context"),
+                ),
+                value: serde_json::json!({
+                    "dayId": day_id,
+                    "sessionKey": record.canonical_key,
+                    "sessionId": record.session_id,
+                    "vaultNowPath": record.vault_now_path,
+                })
+                .to_string(),
+            });
+        }
+        Ok(writes)
+    }
+
     pub fn patch(&self, identifier: &str, patch: SessionPatch) -> Result<SessionRecord, String> {
         let canonical_key = self.resolve(identifier)?.canonical_key;
         self.update(&canonical_key, |record| {
@@ -288,6 +386,15 @@ impl SessionStore {
             if let Some(cmux_pane_id) = patch.cmux_pane_id {
                 record.cmux_pane_id = cmux_pane_id;
             }
+            if let Some(terminal_binding) = patch.terminal_binding {
+                validate_terminal_binding_patch(
+                    &canonical_key,
+                    record.terminal_binding.as_ref(),
+                    terminal_binding.as_ref(),
+                    now_ms()?,
+                )?;
+                record.terminal_binding = terminal_binding;
+            }
             if let Some(model_override) = patch.model_override {
                 record.model_override = model_override;
             }
@@ -313,6 +420,80 @@ impl SessionStore {
         Ok(record)
     }
 
+    // ── Redis tiered cache ───────────────────────────────────────────
+
+    /// Cache session state in the Hot tier (TTL 300s).
+    /// No-op if Redis is unavailable or no tokio runtime is active.
+    pub fn cache_session_state(
+        &mut self,
+        session_id: &str,
+        state_json: &str,
+    ) -> Result<(), String> {
+        let mut guard = self.redis.lock().map_err(|err| err.to_string())?;
+        if let Some(ref mut redis) = *guard {
+            let key = Self::cached_session_state_key(session_id);
+            tokio::runtime::Handle::try_current()
+                .map_err(|_| "no tokio runtime".to_string())?
+                .block_on(redis.set_key(&key, state_json))
+                .map_err(|e| e.to_string())
+        } else {
+            Ok(())
+        }
+    }
+
+    /// Load cached session state.
+    /// Returns `None` if the key is absent, Redis is unavailable,
+    /// or no tokio runtime is active.
+    pub fn load_cached_session_state(
+        &mut self,
+        session_id: &str,
+    ) -> Result<Option<String>, String> {
+        let mut guard = self.redis.lock().map_err(|err| err.to_string())?;
+        if let Some(ref mut redis) = *guard {
+            let key = Self::cached_session_state_key(session_id);
+            tokio::runtime::Handle::try_current()
+                .map_err(|_| "no tokio runtime".to_string())?
+                .block_on(redis.get_key(&key))
+                .map_err(|e| e.to_string())
+        } else {
+            Ok(None)
+        }
+    }
+
+    /// Cache a bimba coordinate lookup in the Cold tier (TTL 86400s).
+    pub fn cache_coordinate(&mut self, bimba_coord: &str, json_value: &str) -> Result<(), String> {
+        let mut guard = self.redis.lock().map_err(|err| err.to_string())?;
+        if let Some(ref mut redis) = *guard {
+            tokio::runtime::Handle::try_current()
+                .map_err(|_| "no tokio runtime".to_string())?
+                .block_on(redis.cache_coordinate(bimba_coord, json_value, CacheTier::Cold))
+                .map_err(|e| e.to_string())
+        } else {
+            Ok(())
+        }
+    }
+
+    /// Report whether the Redis connection is healthy.
+    /// Returns `false` if Redis was never connected.
+    pub fn redis_healthy(&mut self) -> bool {
+        let Ok(mut guard) = self.redis.lock() else {
+            return false;
+        };
+        guard.as_mut().map_or(false, |r| {
+            tokio::runtime::Handle::try_current()
+                .ok()
+                .and_then(|rt| rt.block_on(r.health_check()).ok())
+                .unwrap_or(false)
+        })
+    }
+
+    pub fn has_redis(&self) -> bool {
+        self.redis
+            .lock()
+            .map(|guard| guard.is_some())
+            .unwrap_or(false)
+    }
+
     fn update<F>(&self, canonical_key: &str, mutate: F) -> Result<SessionRecord, String>
     where
         F: FnOnce(&mut SessionRecord) -> Result<(), String>,
@@ -335,6 +516,24 @@ impl SessionStore {
         record.updated_at_ms = now_ms()?;
         let payload = serde_json::to_string_pretty(&record).map_err(|err| err.to_string())?;
         fs::write(path, payload).map_err(|err| err.to_string())?;
+        self.flush_runtime_cache_for_record(&record)?;
+        Ok(())
+    }
+
+    fn flush_runtime_cache_for_record(&self, record: &SessionRecord) -> Result<(), String> {
+        let mut guard = self.redis.lock().map_err(|err| err.to_string())?;
+        let Some(redis) = guard.as_mut() else {
+            return Ok(());
+        };
+        let writes = Self::runtime_cache_writes_for_record(record)?;
+        let handle = tokio::runtime::Handle::try_current().map_err(|_| {
+            "no tokio runtime active — cannot write Redis session cache".to_string()
+        })?;
+        for write in writes {
+            handle
+                .block_on(redis.set_key(&write.key, &write.value))
+                .map_err(|err| err.to_string())?;
+        }
         Ok(())
     }
 }
@@ -455,6 +654,7 @@ fn copy_camel_aliases(object: &mut Map<String, Value>) {
         ("cmux_workspace", "cmuxWorkspace"),
         ("cmux_surface", "cmuxSurface"),
         ("cmux_pane_id", "cmuxPaneId"),
+        ("terminal_binding", "terminalBinding"),
         ("active_agent_id", "activeAgentId"),
         ("subagent_lineage", "subagentLineage"),
         ("workspace_root", "workspaceRoot"),
@@ -504,6 +704,89 @@ fn string_array(value: Option<&Value>) -> Vec<String> {
                 .collect()
         })
         .unwrap_or_default()
+}
+
+fn validate_terminal_binding_patch(
+    target_session_key: &str,
+    current: Option<&TerminalBinding>,
+    next: Option<&TerminalBinding>,
+    now_ms: u128,
+) -> Result<(), String> {
+    let Some(binding) = next else {
+        return Ok(());
+    };
+
+    let active_terminal =
+        binding.tmux_pane_id.is_some() || binding.terminal_status == Some(TerminalStatus::Attached);
+    if active_terminal && binding.attached_session_key.as_deref() != Some(target_session_key) {
+        return Err(format!(
+            "terminal binding for {target_session_key} must set attachedSessionKey to the target session before attaching a tmux pane"
+        ));
+    }
+
+    validate_terminal_lease_extension(current, binding)?;
+    validate_terminal_capture_policy(binding, now_ms)?;
+    Ok(())
+}
+
+fn validate_terminal_lease_extension(
+    current: Option<&TerminalBinding>,
+    next: &TerminalBinding,
+) -> Result<(), String> {
+    let Some(next_lease) = next.lease.as_ref() else {
+        return Ok(());
+    };
+    let Some(next_expires_at) = next_lease.lease_expires_at_ms else {
+        return Ok(());
+    };
+    let current_expires_at = current
+        .and_then(|binding| binding.lease.as_ref())
+        .and_then(|lease| lease.lease_expires_at_ms)
+        .unwrap_or(0);
+
+    if next_expires_at > current_expires_at
+        && (blank(next_lease.lease_owner.as_deref()) || blank(next_lease.lease_purpose.as_deref()))
+    {
+        return Err(
+            "terminal binding lease extensions require leaseOwner and leasePurpose".to_owned(),
+        );
+    }
+
+    Ok(())
+}
+
+fn validate_terminal_capture_policy(binding: &TerminalBinding, now_ms: u128) -> Result<(), String> {
+    let Some(capture_policy) = binding.capture_policy.as_ref() else {
+        return Ok(());
+    };
+    if capture_policy.mode == TerminalCaptureMode::MetadataOnly {
+        return Ok(());
+    }
+
+    if capture_policy.max_lines.is_none() || blank(capture_policy.redaction_policy.as_deref()) {
+        return Err(
+            "terminal capture beyond metadata-only requires capturePolicy.maxLines and capturePolicy.redactionPolicy"
+                .to_owned(),
+        );
+    }
+
+    let non_expired_lease = binding
+        .lease
+        .as_ref()
+        .and_then(|lease| lease.lease_expires_at_ms)
+        .map(|lease_expires_at_ms| lease_expires_at_ms > now_ms)
+        .unwrap_or(false);
+    if !non_expired_lease {
+        return Err(
+            "terminal capture beyond metadata-only requires a non-expired lease".to_owned(),
+        );
+    }
+
+    Ok(())
+}
+
+fn blank(value: Option<&str>) -> bool {
+    value.map(str::trim).unwrap_or("").is_empty()
 }
 
 fn now_ms() -> Result<u128, String> {

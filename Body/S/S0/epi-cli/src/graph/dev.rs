@@ -7,6 +7,10 @@ use tokio::time::{sleep, Duration};
 
 use crate::graph::client::{Neo4jClient, Neo4jConfig};
 use crate::graph::doctor;
+// S0 ADAPTER: temporary graph-dev bootstrap readiness probe for the S3-owned
+// Redis runtime. Sunset: route this through S3 gateway readiness and remove
+// `crate::graph::redis_cache` once graph bootstrap no longer starts local dev
+// backing services directly.
 use crate::graph::redis_cache::{RedisCache, RedisConfig};
 use crate::graph::semantic_cache::SemanticCacheConfig;
 

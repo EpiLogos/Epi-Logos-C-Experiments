@@ -6,15 +6,26 @@ import {
     FrontendApplicationContribution,
     bindViewContribution
 } from '@theia/core/lib/browser';
+import type { KeybindingContribution, KeybindingRegistry } from '@theia/core/lib/browser/keybinding';
 import { AbstractViewContribution } from '@theia/core/lib/browser/shell/view-contribution';
 import {
+    Disposable,
+    EMPTY_STATE_REGISTRY,
+    EmptyStateRegistry,
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
     parseExtensionRoute,
     registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
+import {
+    M5EpiiEmptyState,
+    M5EpiiEmptyStateWidget
+} from './empty-state';
 import { M5EpiiWidget } from './m5-epii-widget';
+import { ResonanceEbmService } from './services/resonance-ebm-service';
+import { ContemplationObjectService } from './services/contemplation-object-service';
+import { WisdomDeltaService } from './services/wisdom-delta-service';
 import {
     EXTENSION_ID,
     OPEN_COMMAND_ID,
@@ -27,12 +38,16 @@ import {
 export const M5_EPII_PUBLISHER = Symbol(
     'm5-epii.observabilityPublisher'
 );
+const M5_RECOGNITION_LAYER_KEYBINDING: string = 'cmd+alt+r';
 
 @injectable()
 export class M5EpiiContribution
     extends AbstractViewContribution<M5EpiiWidget>
-    implements CommandContribution, FrontendApplicationContribution
+    implements CommandContribution, FrontendApplicationContribution, KeybindingContribution
 {
+    @inject(SHARED_BRIDGE_ADAPTER)
+    protected readonly bridge!: SharedBridgeAdapter;
+
     constructor() {
         super({
             widgetId: M5EpiiWidget.ID,
@@ -88,6 +103,44 @@ export class M5EpiiContribution
             'M5 Epii: Deposit Review Evidence',
             () => this.openView({ activate: true, reveal: true })
         );
+        // 31.2 / CC-02 command-palette catalog — stage-1 wave-C commands for
+        // m5-epii (26.x). Dispatch routes through the shared bridge only.
+        commands.registerCommand({ id: 'm5-epii.capacity-tree.focus', label: `${EXTENSION_ID}: focus capacity tree` }, { execute: () => this.dispatchPaletteCommand('m5-epii.capacity-tree.focus') });
+        commands.registerCommand({ id: 'm5-epii.mobius-pass-ribbon.open', label: `${EXTENSION_ID}: open Möbius pass ribbon` }, { execute: () => this.dispatchPaletteCommand('m5-epii.mobius-pass-ribbon.open') });
+        commands.registerCommand({ id: 'm5-epii.contemplation-object.open', label: `${EXTENSION_ID}: open contemplation object` }, { execute: () => this.dispatchPaletteCommand('m5-epii.contemplation-object.open') });
+        commands.registerCommand({ id: 'm5-epii.recognition-layer.focus', label: `${EXTENSION_ID}: focus recognition layer` }, { execute: () => this.dispatchPaletteCommand('m5-epii.recognition-layer.focus') });
+        commands.registerCommand({ id: 'm5-epii.iod-17-parity.refresh', label: `${EXTENSION_ID}: refresh IoD-17 parity` }, { execute: () => this.dispatchPaletteCommand('m5-epii.iod-17-parity.refresh') });
+        commands.registerCommand({ id: 'm5-epii.pi-axiom-translation.open', label: `${EXTENSION_ID}: open PI axiom translation` }, { execute: () => this.dispatchPaletteCommand('m5-epii.pi-axiom-translation.open') });
+    }
+
+    override registerKeybindings(keybindings: KeybindingRegistry): void {
+        super.registerKeybindings(keybindings);
+        keybindings.registerKeybinding({
+            command: OPEN_COMMAND_ID,
+            keybinding: 'cmd+shift+5'
+        });
+        keybindings.registerKeybinding({
+            command: 'm5-epii.mobius-pass-ribbon.open',
+            keybinding: 'cmd+alt+m'
+        });
+        keybindings.registerKeybinding({
+            command: 'm5-epii.recognition-layer.focus',
+            keybinding: M5_RECOGNITION_LAYER_KEYBINDING,
+            when: "epiLogosLayoutActive === 'daily-0-1'"
+        });
+    }
+
+    /**
+     * 31.2 / CC-02: command-palette entries route through the shared bridge so
+     * the OmniPanel parity layer can observe and forward the dispatch. Feature
+     * behaviour lands in the owning feature tranche (26.x).
+     */
+    protected dispatchPaletteCommand(commandId: string, params: Record<string, unknown> = {}): void {
+        this.bridge.updateCurrentStateSelectorPayload(commandId, {
+            commandId,
+            extensionId: EXTENSION_ID,
+            ...params
+        });
     }
 }
 
@@ -111,8 +164,34 @@ class M5EpiiPublisher implements MObservabilityPublisher {
     }
 }
 
+@injectable()
+class M5EpiiEmptyStateRegistration implements FrontendApplicationContribution {
+    @inject(EMPTY_STATE_REGISTRY)
+    protected readonly emptyStates!: EmptyStateRegistry;
+
+    protected disposable?: Disposable;
+
+    onStart(): void {
+        this.disposable = this.emptyStates.register({
+            extensionId: EXTENSION_ID,
+            viewId: 'm5-epii.primary',
+            activationCondition: snapshot => snapshot.state !== 'ready_public_current',
+            component: M5EpiiEmptyState
+        });
+    }
+
+    onStop(): void {
+        this.disposable?.dispose();
+        this.disposable = undefined;
+    }
+}
+
 export default new ContainerModule(bind => {
+    bind(ResonanceEbmService).toSelf().inSingletonScope();
+    bind(ContemplationObjectService).toSelf().inSingletonScope();
+    bind(WisdomDeltaService).toSelf().inSingletonScope();
     bind(M5EpiiWidget).toSelf();
+    bind(M5EpiiEmptyStateWidget).toSelf();
     bind(WidgetFactory)
         .toDynamicValue(ctx => ({
             id: M5EpiiWidget.ID,
@@ -126,6 +205,8 @@ export default new ContainerModule(bind => {
     bind(M5_EPII_PUBLISHER).toService(
         M5EpiiPublisher
     );
+    bind(M5EpiiEmptyStateRegistration).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(M5EpiiEmptyStateRegistration);
 
     // ROUTE_PATH reference keeps the constant load-bearing; route resolution
     // happens via the registered command above.

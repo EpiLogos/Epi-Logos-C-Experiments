@@ -152,7 +152,7 @@ Numbered for tracking. Each item: location → change → why.
 - **Why:** Lands the pedagogy without bloating kernel. Open question about 137/343 decan adjacency documented for follow-up.
 
 ### **9. Document 3-5-7-9 syntax-layer reading**
-- **Location:** addition to [`INTEGRATED-4-5-0-RECOGNITION-ARCHITECTURE.md`](Idea/Bimba/Seeds/M/INTEGRATED-4-5-0-RECOGNITION-ARCHITECTURE.md)
+- **Location:** [`INTEGRATED-4-5-0-RECOGNITION-ARCHITECTURE.md §0.1`](Idea/Bimba/Seeds/M/INTEGRATED-4-5-0-RECOGNITION-ARCHITECTURE.md)
 - **Change:** Short section naming arch 3/5/7/9 as syntax-of-speech / relationship / action / completion, how each contemplation seed is read during the close, and how Nous/Moirai/Sophia/Psyche carry which reading.
 - **Why:** Makes the four-syntax assessment legible to agents and future sessions.
 

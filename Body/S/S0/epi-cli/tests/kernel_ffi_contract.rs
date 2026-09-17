@@ -69,7 +69,12 @@ fn ffi_kernel_energy_combines_latent_lens_and_r_terms() {
     let energy: KernelEnergy = unsafe { kernel_energy_evaluate(state, &observed, &target, 0.25) };
     assert!(near(energy.bimba_pratibimba_energy, 2.0));
     assert!(near(energy.lens_energy, 1.0 / 72.0));
-    assert!(near(energy.total_energy, 2.0 + (1.0 / 72.0) + 0.25));
+    // Canonical (4·E4 + 5·E5 + 6·E6)/15 with E4 = 0 (no personal channel in the
+    // C engine); lens = E5, r = E6, bimba–pratibimba diagnostic-only.
+    assert!(near(
+        energy.total_energy,
+        (5.0 * (1.0 / 72.0) + 6.0 * 0.25) / 15.0
+    ));
 }
 
 #[test]

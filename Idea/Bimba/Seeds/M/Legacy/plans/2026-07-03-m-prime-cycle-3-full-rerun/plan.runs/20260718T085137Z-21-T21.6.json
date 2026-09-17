@@ -1,0 +1,39 @@
+{
+  "runId": "20260718T085137Z-21-T21.6",
+  "taskId": "21.T21.6",
+  "startedAt": "2026-07-18T08:51:37.961Z",
+  "owner": "codex-mdev-continuous",
+  "leaseExpiresAt": "2026-07-18T10:51:37.961Z",
+  "worktree": null,
+  "task": {
+    "id": "21.T21.6",
+    "trackId": "21",
+    "tranche": "T21.6",
+    "title": "Bridged-Layer Launcher (M0-4' / M0-5' deep-link buttons)",
+    "effort": "M0-4' / M0-5' deep-link buttons",
+    "file": "21-m0-anuttara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/21-m0-anuttara-frontend-deep.md",
+    "dependsOn": [
+      "21.T21.5"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [
+      "21.T21.5"
+    ],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M0' one-widget six-panels three-modes (implicate<->explicate one substrate; virtue witness 9-bit LSB-first; 16-fold void ring; DR-M0-1 banner verbatim) in pratibimba-app. §2 track 21."
+  }
+}

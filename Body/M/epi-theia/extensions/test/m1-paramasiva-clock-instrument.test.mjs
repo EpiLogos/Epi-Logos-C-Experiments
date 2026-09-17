@@ -5,10 +5,32 @@ import { extname, join } from 'node:path';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
+const React = require('react');
+const { renderToStaticMarkup } = require('react-dom/server');
 const {
     buildM1ProfileClockModel,
-    buildM1RelationWalkStep
+    buildM1RelationWalkStep,
+    buildM1KleinTopologyView
 } = require('../m1-paramasiva/lib/common/clock-instrument.js');
+const {
+    M1Cl42SignatureInspector
+} = require('../m1-paramasiva/lib/browser/m1-cl42-signature-inspector.js');
+const {
+    MersenneProofOverlay,
+    anandaSkeletonEventFromObservabilityEvent
+} = require('../m1-paramasiva/lib/browser/m1-mersenne-proof-overlay.js');
+const {
+    M1KleinFlipEventStrip
+} = require('../m1-paramasiva/lib/browser/m1-klein-flip-event-strip.js');
+const {
+    M1AudioBusInspectorView
+} = require('../m1-paramasiva/lib/browser/m1-audio-bus-inspector-view.js');
+const {
+    KAPREKAR_PEDAGOGY_SEED_PATH,
+    CANON_STUDIO_OPEN_MARKDOWN_COMMAND,
+    M1KaprekarInspector,
+    openKaprekarPedagogySeed
+} = require('../m1-paramasiva/lib/browser/m1-kaprekar-inspector.js');
 
 const baselineProfile = JSON.parse(
     readFileSync(
@@ -19,6 +41,10 @@ const baselineProfile = JSON.parse(
 
 const SOURCE_ROOT =
     '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m1-paramasiva/src';
+const CONTRACT_PATH =
+    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json';
+const M1_HEADER_PATH =
+    '/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/epi-lib/include/m1.h';
 
 function boundary(generation, payload = baselineProfile) {
     return {
@@ -103,6 +129,43 @@ test('M1 consumes audioOctet and nodalQuartet exactly from the kernel profile', 
     assert.equal(model.audioBus.authority, 'S0/S2 profile bus');
 });
 
+test('m1.paramasiva.audioBusInspector renders 8 audio rows and 4 nodal rows with Vimarśa badges', () => {
+    const html = renderAudioBusInspector();
+
+    assert.equal(count(html, 'data-test="m1-audio-octet-row"'), 8);
+    assert.equal(count(html, 'data-test="m1-nodal-quartet-row"'), 4);
+    assert.equal(count(html, 'data-test="m1-vimarsha-authority-badge"'), 12);
+    assert.equal(count(html, 'data-authority-citation="vimarsha_reading.rs:17-93"'), 12);
+    assert.equal(count(html, 'Vimarśa M2-1&#x27; authority'), 12);
+    assert.match(html, /data-test="m1-audio-octet-hz"[^>]*>146\.8324 Hz</);
+    assert.match(html, /data-test="m1-nodal-quartet-ratio"[^>]*>1\/1</);
+});
+
+test('m1.paramasiva.audioBusInspector renders the exact reads-only M1/M2 contract banner', () => {
+    const html = renderAudioBusInspector();
+
+    assert.match(
+        html,
+        /M1&#x27; is the consumer; M2-1&#x27; is the writer\. To change a value, route through M2\./
+    );
+});
+
+test('m1.paramasiva.audioBusInspector source does not derive or synthesise substrate values', () => {
+    const source = readFileSync(join(SOURCE_ROOT, 'browser/m1-audio-bus-inspector-view.tsx'), 'utf8');
+
+    assert.doesNotMatch(source, /computeHz|deriveOctet|local_pitch|synthesise/);
+});
+
+test('m1.paramasiva.audioBusInspector route command opens the audio bus body', () => {
+    const widgetSource = readFileSync(join(SOURCE_ROOT, 'browser/m1-paramasiva-widget.tsx'), 'utf8');
+    const frontendSource = readFileSync(join(SOURCE_ROOT, 'browser/frontend-module.ts'), 'utf8');
+
+    assert.match(frontendSource, /OPEN_COMMAND_ID \+ '\?view=audioBusInspector'/);
+    assert.match(frontendSource, /setActiveView\('audioBusInspector'\)/);
+    assert.match(widgetSource, /activeView === 'audioBusInspector'/);
+    assert.match(widgetSource, /M1AudioBusInspectorView/);
+});
+
 test('M1 relation walk stays blocked until S2 typed harmonic descriptors are present', () => {
     const model = buildM1ProfileClockModel({
         profile: boundary(4),
@@ -163,19 +226,458 @@ test('M1 topology inspector reads substrate values from profile payload and keep
     assert.equal(model.topology.source, 'kernel/profile topology payload');
 });
 
+test('m1.paramasiva.kleinTopology view wires bridge topology invariants (doubleCoverDeg=720, torusGenus=1)', () => {
+    const profileWithTopology = {
+        ...baselineProfile,
+        m1Topology: {
+            doubleCoverDeg: 720,
+            torusGenus: 1,
+            hopfIdentity: 'S3 -> S2 -> S1 Hopf identity',
+            k2TritoneCrossing: 'Lens N to Lens N+3 tritone crossing',
+            m1OriginKleinFlip: 'M1-origin Klein flip signal'
+        }
+    };
+    const view = buildM1KleinTopologyView({
+        profile: boundary(20, profileWithTopology),
+        context,
+        emittedAt: 999
+    });
+
+    assert.equal(view.topology.doubleCoverDeg, 720);
+    assert.equal(view.topology.torusGenus, 1);
+    assert.equal(view.topology.hopfIdentity, 'S3 -> S2 -> S1 Hopf identity');
+    assert.equal(view.topology.source, 'kernel/profile topology payload');
+    assert.match(view.topology.parentAttribution, /M1-5 is the \+1 parent/);
+});
+
+test('m1.paramasiva.kleinTopology stays quiet when klein_flip is None', () => {
+    const view = buildM1KleinTopologyView({
+        profile: boundary(21),
+        context,
+        emittedAt: 999
+    });
+
+    assert.equal(baselineProfile.kleinFlip, null);
+    assert.equal(view.kleinFlip.present, false);
+    assert.deepEqual(view.observabilityEvents, []);
+});
+
+test('m1.klein_flip.source observability event fires on a synthetic profile with klein_flip=Some(...)', () => {
+    const profileWithFlip = {
+        ...baselineProfile,
+        kleinFlip: {
+            fromLens: 0,
+            toLens: 3,
+            tritone: true,
+            reasonCode: 'tritone_mirror'
+        },
+        m1Topology: {
+            doubleCoverDeg: 720,
+            torusGenus: 1,
+            hopfIdentity: 'S3 -> S2 -> S1 Hopf identity',
+            k2TritoneCrossing: 'Lens N to Lens N+3 tritone crossing',
+            m1OriginKleinFlip: 'M1-origin Klein flip signal'
+        },
+        anandaVortex: {
+            ...baselineProfile.anandaVortex,
+            kleinFlipAtThisTick: true
+        }
+    };
+    const view = buildM1KleinTopologyView({
+        profile: boundary(22, profileWithFlip),
+        context,
+        emittedAt: 424242
+    });
+
+    assert.equal(view.kleinFlip.present, true);
+    assert.equal(view.kleinFlip.tickFlip, true);
+    assert.equal(view.observabilityEvents.length, 1);
+    const event = view.observabilityEvents[0];
+    assert.equal(event.type, 'm1.klein_flip.source');
+    assert.equal(event.extensionId, 'm1-paramasiva');
+    assert.equal(event.emittedAt, 424242);
+    assert.equal(event.payload.m1Origin, true);
+    assert.equal(event.payload.privacyClass, 'public_current_audio_metadata_only');
+    assert.equal(event.payload.doubleCoverDeg, 720);
+    assert.equal(event.payload.torusGenus, 1);
+    assert.deepEqual(event.payload.kleinFlip, profileWithFlip.kleinFlip);
+});
+
+test('m1.paramasiva.cl42SignatureInspector renders six canonical QL trig positions and signatures', () => {
+    const html = renderInspector({
+        ...baselineProfile,
+        anandaVortex: {
+            ...baselineProfile.anandaVortex,
+            qlTrigTable: canonicalQlTrigTable()
+        }
+    });
+
+    for (const row of canonicalQlTrigTable()) {
+        assert.match(html, new RegExp(`data-test="m1-cl42-position-${row.position}"`));
+        assert.match(html, new RegExp(`P${row.position}`));
+        assert.match(html, new RegExp(`>${row.name}<`));
+        assert.match(html, new RegExp(`signature-${row.cl42Signature}`));
+    }
+    assert.match(html, />tan</);
+    assert.match(html, /\[0\]\/\[5\]/);
+});
+
+test('m1.paramasiva.cl42SignatureInspector halo swatch follows active Cl(4,2) signature', () => {
+    for (const position6 of [0, 5]) {
+        const html = renderInspector(profileWithCl42Position(position6));
+        assert.match(
+            html,
+            new RegExp(`data-test="m1-cl42-halo-${position6}"[^>]*m1-cl42-halo-indigo`)
+        );
+        assert.match(
+            html,
+            new RegExp(`data-test="m1-cl42-position-${position6}"[^>]*m1-cl42-position-active`)
+        );
+    }
+
+    for (const position6 of [1, 2, 3, 4]) {
+        const html = renderInspector(profileWithCl42Position(position6));
+        assert.match(
+            html,
+            new RegExp(`data-test="m1-cl42-halo-${position6}"[^>]*m1-cl42-halo-warm`)
+        );
+        assert.match(
+            html,
+            new RegExp(`data-test="m1-cl42-position-${position6}"[^>]*m1-cl42-position-active`)
+        );
+    }
+});
+
+test('m1.paramasiva.cl42SignatureInspector renders 9/8 derivation and tick12 highlight', () => {
+    const html = renderInspector({
+        ...baselineProfile,
+        tick12: 7,
+        anandaVortex: {
+            ...baselineProfile.anandaVortex,
+            qlTrigTable: canonicalQlTrigTable()
+        }
+    });
+
+    assert.match(html, /\(4\/3\) × \(3\/2\) = 2\/1/);
+    assert.match(html, /\(3\/2\) ÷ \(4\/3\) = 9\/8/);
+    assert.match(html, /epogdoon-tick/);
+    assert.match(html, /data-test="m1-cl42-tick-7"[^>]*m1-cl42-tick-active/);
+});
+
+test('m1.paramasiva.mersenneProofOverlay is gated by ide-deep layout and developer mode', () => {
+    assert.doesNotMatch(
+        renderMersenneOverlay({ layoutMode: 'daily-0-1', developerMode: true }),
+        /data-test="m1-mersenne-proof-overlay"/
+    );
+    assert.doesNotMatch(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: false }),
+        /data-test="m1-mersenne-proof-overlay"/
+    );
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true }),
+        /data-test="m1-mersenne-proof-overlay"/
+    );
+    assert.match(
+        renderInspector(profileWithCl42Position(2), { layoutMode: 'ide-deep', developerMode: true }),
+        /data-test="m1-mersenne-proof-overlay"/
+    );
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', preferenceDeveloperMode: true }),
+        /data-test="m1-mersenne-proof-overlay"/
+    );
+});
+
+test('m1.paramasiva.mersenneProofOverlay maps skeleton events to proof-line highlights', () => {
+    assert.equal(anandaSkeletonEventFromObservabilityEvent(skeletonEvent(4)), 'Additive137');
+    assert.equal(anandaSkeletonEventFromObservabilityEvent(skeletonEvent('IdentityReturn4Plus2')), 'IdentityReturn4Plus2');
+    assert.equal(anandaSkeletonEventFromObservabilityEvent(skeletonEvent('KaprekarPedagogyHit')), 'KaprekarPedagogyHit');
+
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true, lastSkeletonEvent: 'Additive137' }),
+        /data-test="m1-mersenne-proof-line-4"[^>]*data-active="true"/
+    );
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true, lastSkeletonEvent: 'IdentityReturn4Plus2' }),
+        /data-test="m1-mersenne-proof-line-3"[^>]*data-active="true"/
+    );
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true, lastSkeletonEvent: 'KaprekarPedagogyHit' }),
+        /data-test="m1-mersenne-proof-line-2"[^>]*data-active="true"/
+    );
+    assert.match(
+        renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true, lastSkeletonEvent: 'Hit64' }),
+        /data-test="m1-mersenne-proof-substrate"[^>]*data-active="true"/
+    );
+});
+
+test('m1.paramasiva.mersenneProofOverlay renders the Tranche 02.1 proof text verbatim', () => {
+    const html = renderMersenneOverlay({ layoutMode: 'ide-deep', developerMode: true });
+
+    assert.match(html, /M_5 = 2\^5 − 1 = 31/);
+    assert.match(html, /prime-index of M_7 is itself a Mersenne prime; actional-Archetype-7 grounding at the Mersenne layer/);
+    assert.match(html, /M_7 = 2\^7 − 1 = 127/);
+    assert.match(html, /the additive substrate `64 \+ 72 = 136` minus 9-gap = 127 exposes the Mersenne prime/);
+    assert.match(html, /\+1 → 128 = 2\^7/);
+    assert.match(html, /the M1-5 \+1 parent — this is the \+1 attribution operationally decisive per Tranche 02.1/);
+    assert.match(html, /\+9 → 137/);
+    assert.match(html, /\+9 restores wholeness — 137 is the atomically-dressed return/);
+});
+
+test('m1.paramasiva.kleinFlipEventStrip renders a horizontal scroll-strip with time axis', () => {
+    const html = renderKleinFlipStrip(kleinFlipStripPayload());
+
+    assert.match(html, /data-test="m1-klein-flip-scroll-strip"/);
+    assert.match(html, /data-test="m1-klein-flip-time-axis"/);
+    assert.match(html, />past</);
+    assert.match(html, />current</);
+    assert.match(html, />future-projected</);
+});
+
+test('m1.paramasiva.kleinFlipEventStrip renders event bar tick index and flipped from-to labels', () => {
+    const html = renderKleinFlipStrip(kleinFlipStripPayload());
+
+    assert.match(html, /data-test="m1-klein-flip-event-bar"/);
+    assert.match(html, /data-test="m1-klein-flip-tick-index"[^>]*>tick 6</);
+    assert.match(html, /data-test="m1-klein-flip-from-to"[^>]*>lens 0 -&gt; lens 6</);
+});
+
+test('m1.paramasiva.kleinFlipEventStrip highlights the active event at current position6', () => {
+    const html = renderKleinFlipStrip(kleinFlipStripPayload({ position6: 3 }));
+
+    assert.match(html, /data-test="m1-klein-flip-event-bar"[^>]*data-active="true"/);
+    assert.match(html, /data-test="m1-klein-flip-current-tick"[^>]*>tick12=6 · position6=3/);
+    assert.match(html, /title="[^"]*dipyramid-face 3 -&gt; 0[^"]*torus_genus=1[^"]*720-step=720 -&gt; 360[^"]*trigger=m1TritoneCrossing/);
+});
+
+test('m1.paramasiva.kaprekarInspector renders only on the 7-row trigger', () => {
+    assert.match(
+        renderKaprekarInspector({ position6: 4 }),
+        /data-test="m1-kaprekar-inspector"/
+    );
+    assert.doesNotMatch(
+        renderKaprekarInspector({ position6: 0 }),
+        /data-test="m1-kaprekar-inspector"/
+    );
+});
+
+test('m1.paramasiva.kaprekarInspector opens the lean pedagogy seed through Canon Studio in ide-deep', async () => {
+    const calls = [];
+    await openKaprekarPedagogySeed({
+        executeCommand: async (...args) => {
+            calls.push(args);
+        }
+    });
+
+    assert.deepEqual(calls, [[CANON_STUDIO_OPEN_MARKDOWN_COMMAND, KAPREKAR_PEDAGOGY_SEED_PATH]]);
+    assert.match(
+        renderKaprekarInspector({ position6: 4, layoutMode: 'ide-deep' }),
+        /data-test="m1-kaprekar-seed-button"/
+    );
+    assert.match(
+        renderKaprekarInspector({ position6: 4, layoutMode: 'daily-0-1' }),
+        /title="Idea\/Bimba\/Seeds\/M\/M1(?:'|&#x27;)\/m1-prime-kaprekar-pedagogy\.md"/
+    );
+});
+
+test('m1.paramasiva.kaprekarInspector renders the substrate citation and stays lean', () => {
+    const html = renderKaprekarInspector({ position6: 4 });
+    const source = readFileSync(join(SOURCE_ROOT, 'browser/m1-kaprekar-inspector.tsx'), 'utf8');
+
+    assert.match(html, /6174 = 7² × 9 × 14 = 18 × 7³/);
+    assert.match(html, /m1\.h:417-422/);
+    assert.doesNotMatch(source, /four-register law|Möbius twist|parent-as-7th|Cl\(4,2\)\+2/);
+});
+
+test('m1.paramasiva.cl42SignatureInspector is registered in common view ids and contract preflight', () => {
+    const commonSource = readFileSync(join(SOURCE_ROOT, 'common/index.ts'), 'utf8');
+    const contract = JSON.parse(readFileSync(CONTRACT_PATH, 'utf8'));
+    const m1 = contract.extensions.find(extension => extension.id === 'm1-paramasiva');
+
+    assert.match(commonSource, /m1\.paramasiva\.cl42SignatureInspector/);
+    assert.ok(m1.viewIds.includes('m1.paramasiva.cl42SignatureInspector'));
+});
+
+test('m1.paramasiva.kleinFlipEventStrip is registered in common view ids and contract preflight', () => {
+    const commonSource = readFileSync(join(SOURCE_ROOT, 'common/index.ts'), 'utf8');
+    const contract = JSON.parse(readFileSync(CONTRACT_PATH, 'utf8'));
+    const m1 = contract.extensions.find(extension => extension.id === 'm1-paramasiva');
+
+    assert.match(commonSource, /m1\.paramasiva\.kleinFlipEventStrip/);
+    assert.ok(m1.viewIds.includes('m1.paramasiva.kleinFlipEventStrip'));
+});
+
 test('m1-paramasiva source does not define frontend substrate-law numeric constants', () => {
     const offenses = [];
     for (const file of walk(SOURCE_ROOT)) {
         const content = readFileSync(file, 'utf8');
-        if (/\b(?:DOUBLE_COVER_DEG|TORUS_GENUS)\s*(?:=|:)\s*(?:720|1)\b/.test(content)) {
+        if (/\bconst\s+(?:DOUBLE_COVER_DEG|TORUS_GENUS)\s*(?:=|:)\s*(?:720|1)\b/.test(content)) {
             offenses.push(file);
         }
         if (/\bconst\s+(?:AUDIO_OCTET|NODAL_QUARTET|RING_QUATERNION_LUT|QL_TRIG_TABLE)\b/.test(content)) {
             offenses.push(file);
         }
+        if (
+            file.endsWith('m1-cl42-signature-inspector.tsx') &&
+            /CL42_BASIS\s*=\s*\[|QL_TRIG_TABLE\s*=\s*\[/.test(content)
+        ) {
+            offenses.push(file);
+        }
     }
     assert.deepEqual(offenses, []);
 });
+
+function renderInspector(payload, options = {}) {
+    return renderToStaticMarkup(
+        React.createElement(M1Cl42SignatureInspector, {
+            profile: boundary(42, payload),
+            readiness: readiness(),
+            context,
+            layoutMode: options.layoutMode,
+            developerMode: options.developerMode
+        })
+    );
+}
+
+function renderMersenneOverlay(props) {
+    return renderToStaticMarkup(
+        React.createElement(MersenneProofOverlay, {
+            layoutMode: props.layoutMode,
+            developerMode: props.developerMode,
+            preferences:
+                props.preferenceDeveloperMode === undefined
+                    ? undefined
+                    : preferenceService(props.preferenceDeveloperMode),
+            lastSkeletonEvent: props.lastSkeletonEvent
+        })
+    );
+}
+
+function preferenceService(developerMode) {
+    return {
+        get(name, defaultValue) {
+            return name === 'epi-logos.ui.developerMode' ? developerMode : defaultValue;
+        },
+        onPreferenceChanged() {
+            return { dispose() {} };
+        }
+    };
+}
+
+function skeletonEvent(kind) {
+    return {
+        type: 'profile.ananda_skeleton',
+        extensionId: 'kernel-bridge',
+        emittedAt: 137,
+        payload: {
+            eventKind: kind
+        }
+    };
+}
+
+function renderKleinFlipStrip(payload) {
+    return renderToStaticMarkup(
+        React.createElement(M1KleinFlipEventStrip, {
+            profile: boundary(72, payload)
+        })
+    );
+}
+
+function renderAudioBusInspector(options = {}) {
+    return renderToStaticMarkup(
+        React.createElement(M1AudioBusInspectorView, {
+            profile: boundary(88, options.payload ?? baselineProfile),
+            readiness: readiness(),
+            context,
+            initialAudioSort: options.initialAudioSort
+        })
+    );
+}
+
+function renderKaprekarInspector({
+    position6,
+    layoutMode = 'ide-deep',
+    lastSkeletonEvent = null
+}) {
+    return renderToStaticMarkup(
+        React.createElement(M1KaprekarInspector, {
+            model: {
+                ...buildM1ProfileClockModel({
+                    profile: boundary(6174, { ...baselineProfile, position6 }),
+                    readiness: readiness(),
+                    context,
+                    relationDescriptors: [typedDescriptor()]
+                }),
+                position6
+            },
+            layoutMode,
+            commands: {
+                executeCommand() {}
+            },
+            lastSkeletonEvent
+        })
+    );
+}
+
+function kleinFlipStripPayload(overrides = {}) {
+    const position6 = overrides.position6 ?? 3;
+    return {
+        ...baselineProfile,
+        tick12: 6,
+        degree720: 360,
+        position6,
+        kleinFlip: {
+            kind: 'm1TritoneCrossing',
+            tick12: 6,
+            lens_pair: [0, 6],
+            triggerSource: 'm1TritoneCrossing'
+        },
+        m1Topology: {
+            doubleCoverDeg: 720,
+            torusGenus: 1,
+            hopfIdentity: 'S3 -> S2 -> S1 Hopf identity',
+            k2TritoneCrossing: 'Lens N to Lens N+3 tritone crossing',
+            m1OriginKleinFlip: 'M1-origin Klein flip signal'
+        },
+        ananda_vortex: {
+            ...baselineProfile.anandaVortex,
+            active_cell_value: {
+                ...baselineProfile.anandaVortex.activeCellValue,
+                position_p: position6
+            },
+            klein_flip_at_this_tick: true
+        }
+    };
+}
+
+function profileWithCl42Position(position6) {
+    const row = canonicalQlTrigTable()[position6];
+    return {
+        ...baselineProfile,
+        position6,
+        anandaVortex: {
+            ...baselineProfile.anandaVortex,
+            cl42SignatureAtPosition: row.cl42Signature,
+            qlTrigTable: canonicalQlTrigTable()
+        }
+    };
+}
+
+function canonicalQlTrigTable() {
+    const content = readFileSync(M1_HEADER_PATH, 'utf8');
+    return Array.from(
+        content.matchAll(
+            /\[(\d)\]\s*=\s*\{\s*"([^"]+)",\s*"([^"]+)",\s*([^,]+),\s*([^,]+),\s*([+-]?\d)\s*\}/g
+        ),
+        match => ({
+            position: Number(match[1]),
+            name: match[2],
+            formula: match[3],
+            numeratorPos: match[4].trim() === 'TRIG_UNITY' ? 6 : Number(match[4]),
+            denominatorPos: match[5].trim() === 'TRIG_UNITY' ? 6 : Number(match[5]),
+            cl42Signature: Number(match[6])
+        })
+    );
+}
 
 function typedDescriptor(overrides = {}) {
     return {
@@ -190,6 +692,10 @@ function typedDescriptor(overrides = {}) {
         kleinFlip: false,
         ...overrides
     };
+}
+
+function count(haystack, needle) {
+    return haystack.split(needle).length - 1;
 }
 
 function walk(dir) {

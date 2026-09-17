@@ -1,0 +1,3185 @@
+{
+ "generatedAt": "2026-08-03T04:08:05.974Z",
+ "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
+ "port": 18923,
+ "corpus": [
+  "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun",
+  "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation"
+ ],
+ "summary": {
+  "probed": 285,
+  "present": 118,
+  "absent": 167,
+  "absentFamilyLive": 106,
+  "absentFamilyDark": 61,
+  "unknown": 0
+ },
+ "methods": [
+  {
+   "method": "chat.send",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: sessionKey must be a string"
+  },
+  {
+   "method": "config.aletheia.drift_detection.coverage_days",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.aletheia.drift_detection.delta_elo",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.aletheia.drift_detection.min_trials",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.aletheia.drift_detection.verifier_violation_multiplier",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.aletheia.drift_detection.veto_consecutive_sessions",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.aletheia.drift_detection.veto_count_per_facet",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.aletheia.elo.bootstrap_sigma",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.aletheia.elo.bootstrap_trials",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.aletheia.elo.confidence_penalty_alpha",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.aletheia.elo.seed_rating",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.aletheia.elo.sigmoid_midpoint_percentile",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.harness.cost_class",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "config.harness.subscription",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "contemplate_session_close",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "contemplate_session_close()",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "contemplate_session_close(ContemplationObject)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "contemplate_session_close(obj)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "cron.error",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "cron.fired",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "kernelBridge.m0.alchemicalToTattvic()",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m0.psychoidPlanetary(planet_id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m0.zodiacalBridge(sign)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m2.asmaName(idx)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m2.cymaticMonoPolyState(address72)",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: address72 must be an unsigned integer"
+  },
+  {
+   "method": "kernelBridge.m2.decodeAxisAt",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m2.epogdoonProjection",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m2.epogdoonProjection(address72)",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: address72 must be an unsigned integer"
+  },
+  {
+   "method": "kernelBridge.m2.mantraEntry(idx)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m2.planetLUT(idx)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m2.planetLUT(planet_id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m2.planetaryElementalWeights()",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "kernelBridge.m2m3.lensOrbiterRelations()",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m3.bioquaternionTranscription(codon)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m3.hexagram(idx)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m3.lensCodonBinary(16)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m3.lensCodonBinary(lensId)",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: lensId must be an unsigned integer"
+  },
+  {
+   "method": "kernelBridge.m3.lensField(lensId)",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: lensId must be an unsigned integer"
+  },
+  {
+   "method": "kernelBridge.m3.tarotReversedMeaning(decan_idx)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.m4.medicineChakraZones(chakra_id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.profileAtLensMode",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.s2.meaningIdResolve",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.s2.meaningIdResolve(meaning_id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "kernelBridge.s2.parashaktiCorrespondences(address72)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 5,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "kernelBridge.m2.cymaticMonoPolyState(address72)",
+    "kernelBridge.m2.epogdoonProjection(address72)",
+    "kernelBridge.m2.planetaryElementalWeights()",
+    "kernelBridge.m3.lensCodonBinary(lensId)",
+    "kernelBridge.m3.lensField(lensId)"
+   ]
+  },
+  {
+   "method": "khora.result.wake",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 1,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "khora.session_start"
+   ]
+  },
+  {
+   "method": "khora.session_id.hash_composition",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 1,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "khora.session_start"
+   ]
+  },
+  {
+   "method": "khora.session_start",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: dayId must be a non-blank DD-MM-YYYY or YYYY-MM-DD string"
+  },
+  {
+   "method": "m2.cymatic.valence.invert",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m2.decodeAxisAt",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m2.element_chakra.tradition",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m2.epogdoonProjection",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m2.klein_flip",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m2.meaning_packet",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m2.parashakti.correspondenceTree",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m2.parashakti.cymaticEngine",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m2.parashakti.meaningPacket",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m2.routing_trace",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m3.bioquaternionTranscription",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m3.codon.rotation.cross",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m3.h's",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m3.lensCodonBinary",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m3.mahamaya.codonNavigator",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m3.mahamaya.cosmicWheel",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m3.tarot_codon_map",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m4.arena.list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m4.arena.scene_close",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m4.arena.scene_open",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m4.arena.subscribe",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m4.arena.summon",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m4.arena.turn_advance",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m4.arena.vama_list_warm",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "m4.arena.vama_release_warm",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "nara.contemplate_session_close",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: invalid contemplation object: missing field `session_id`"
+  },
+  {
+   "method": "nara.day.open",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.field.handle",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.graphiti.body.inspect",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.identity.proposals.list",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.journal.timeline",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.kairos.natal_positions",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.kairos.probe_kerykeion",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.kairos.snapshot",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.lens.apply",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'lens'"
+  },
+  {
+   "method": "nara.lens.list",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.lens.synthesize",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'lenses'"
+  },
+  {
+   "method": "nara.logos.advance",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.logos.regress",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.medicine.pin",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'materia'"
+  },
+  {
+   "method": "nara.medicine.snapshot",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required numeric param 'sunDegree'"
+  },
+  {
+   "method": "nara.oracle.cast",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'system'"
+  },
+  {
+   "method": "nara.oracle.cast_iching",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'question'"
+  },
+  {
+   "method": "nara.oracle.cast_tarot",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'system'"
+  },
+  {
+   "method": "nara.oracle.history",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.oracle.history.read",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.oracle.hygiene",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.oracle.update_position_state",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'spread_id'"
+  },
+  {
+   "method": "nara.oracle_position_state",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.oracle_spread",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.pasu.clear",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.pasu.consents.append",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: invalid consent record: missing field `subjectHandle`"
+  },
+  {
+   "method": "nara.pasu.set",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'key'"
+  },
+  {
+   "method": "nara.pasu.show",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "nara.session",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.session.close_summary",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.session.protected_handle_strict",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.session.protein_capacity",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.session.psyche_anchor",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.session.set_time_axis",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.session.stop_codon_policy",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.session.write_through_mode",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.session_close",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'sessionId'"
+  },
+  {
+   "method": "nara.session_close.contemplation.read",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: nara.session_close.read requires session_id"
+  },
+  {
+   "method": "nara.session_close.read",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: nara.session_close.read requires session_id"
+  },
+  {
+   "method": "nara.session_open",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'sessionId'"
+  },
+  {
+   "method": "nara.transform.advance",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'container'"
+  },
+  {
+   "method": "nara.transform.start",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required param 'container'"
+  },
+  {
+   "method": "nara.weights",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "nara.weights.body_natal",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 28,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "nara.contemplate_session_close",
+    "nara.field.handle",
+    "nara.identity.proposals.list",
+    "nara.journal.timeline",
+    "nara.kairos.probe_kerykeion",
+    "nara.lens.apply",
+    "nara.lens.list",
+    "nara.lens.synthesize"
+   ]
+  },
+  {
+   "method": "node.coordinate",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "node.relations",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s0'.anuttara.compress_entity(coord)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 2,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s0'.verifier.check_state",
+    "s0'.verifier.respond_question"
+   ]
+  },
+  {
+   "method": "s0'.anuttara.trace",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 2,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s0'.verifier.check_state",
+    "s0'.verifier.respond_question"
+   ]
+  },
+  {
+   "method": "s0'.anuttara.unified_act_trace",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 2,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s0'.verifier.check_state",
+    "s0'.verifier.respond_question"
+   ]
+  },
+  {
+   "method": "s0'.settings.api_key_status(name)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 2,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s0'.verifier.check_state",
+    "s0'.verifier.respond_question"
+   ]
+  },
+  {
+   "method": "s0'.settings.opt_in(name)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 2,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s0'.verifier.check_state",
+    "s0'.verifier.respond_question"
+   ]
+  },
+  {
+   "method": "s0'.verifier",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 2,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s0'.verifier.check_state",
+    "s0'.verifier.respond_question"
+   ]
+  },
+  {
+   "method": "s0'.verifier.check_state",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: invalid verifier state: missing field `committedVirtueMask`"
+  },
+  {
+   "method": "s0'.verifier.emit_question",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 2,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s0'.verifier.check_state",
+    "s0'.verifier.respond_question"
+   ]
+  },
+  {
+   "method": "s0'.verifier.respond_question",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: invalid verifier response request: missing field `coordinateString`"
+  },
+  {
+   "method": "s0.current_profile",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s1'.base.ensure",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `coordinate`"
+  },
+  {
+   "method": "s1'.base.ensure(params)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.canvas.create_or_update",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.entity.capture",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: source is required"
+  },
+  {
+   "method": "s1'.entity.capture(path)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.entity.classify",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: candidatePath is required"
+  },
+  {
+   "method": "s1'.entity.promote_to_type",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: candidatePath is required"
+  },
+  {
+   "method": "s1'.entity.promote_to_type(id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.moc.ensure",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.q_articulation.accept",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `coordinate`"
+  },
+  {
+   "method": "s1'.residency.resolve",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.semantic",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.semantic.neighbors_of",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.semantic.suggest",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.semantic.suggest_links",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: vault root missing: provide `vaultRoot` param or set EPILOGOS_VAULT"
+  },
+  {
+   "method": "s1'.type.classify_c_layer",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: path is required"
+  },
+  {
+   "method": "s1'.type.index",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.vault",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.vault.frontmatter_validate",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.vault.read_file",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: path is required"
+  },
+  {
+   "method": "s1'.world.graduate",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: typePath is required"
+  },
+  {
+   "method": "s1'.world.graduate(type_path)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.world.resolve",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1'.world.resolve(coord)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 9,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s1'.base.ensure",
+    "s1'.entity.capture",
+    "s1'.entity.classify",
+    "s1'.entity.promote_to_type",
+    "s1'.q_articulation.accept",
+    "s1'.semantic.suggest_links",
+    "s1'.type.classify_c_layer",
+    "s1'.vault.read_file"
+   ]
+  },
+  {
+   "method": "s1.semantic.suggest_links",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s2'.coordinate.context_xray",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 2,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2'.coordinate.resolve",
+    "s2'.retrieve"
+   ]
+  },
+  {
+   "method": "s2'.coordinate.cypher",
+   "advertised": true,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 2,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2'.coordinate.resolve",
+    "s2'.retrieve"
+   ]
+  },
+  {
+   "method": "s2'.coordinate.resolve",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: coordinate must be a string"
+  },
+  {
+   "method": "s2'.retrieve",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: query must be a string"
+  },
+  {
+   "method": "s2.codon.aa_lookup",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: codon is required"
+  },
+  {
+   "method": "s2.codon.scalar_ref.read",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: refKind is required"
+  },
+  {
+   "method": "s2.decanFace",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.earthObserverHandle",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.graph",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.graph.ananda_position",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: vakAddress is required for Ananda projection"
+  },
+  {
+   "method": "s2.graph.ananda_position(coord)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.graph.core65.audit",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s2.graph.gds.tangent_overlay",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: coordinate must be a string"
+  },
+  {
+   "method": "s2.graph.list",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: coordinatePrefix must be a string"
+  },
+  {
+   "method": "s2.graph.list_by_filter",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s2.graph.node",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: coordinate must be a string"
+  },
+  {
+   "method": "s2.graph.node(coord)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.graph.ontology.reload",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: n10s epi ontology import failed: Neo4j error `Neo.ClientError.Procedure.ProcedureNotFound`: There is no procedure with t"
+  },
+  {
+   "method": "s2.graph.promotion.commit",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: invalid promotion intent: missing field `node`"
+  },
+  {
+   "method": "s2.graph.promotion.dry_run",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: invalid promotion intent: missing field `node`"
+  },
+  {
+   "method": "s2.graph.query",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: cypher must be a string"
+  },
+  {
+   "method": "s2.graph.relation_family.list",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s2.graph.seed.snapshot",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s2.graph_services",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.graph_services.ping",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.outerPlanetGraphNode",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.parashaktiCorrespondences",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: address72 must be a positive integer"
+  },
+  {
+   "method": "s2.parashaktiCorrespondences(address72)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.pointer.walk.read",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.provenanceHandle",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.relation.dual_matrix_pair.read",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s2.sacredSonic",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 15,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s2.codon.aa_lookup",
+    "s2.codon.scalar_ref.read",
+    "s2.graph.ananda_position",
+    "s2.graph.core65.audit",
+    "s2.graph.gds.tangent_overlay",
+    "s2.graph.list",
+    "s2.graph.list_by_filter",
+    "s2.graph.node"
+   ]
+  },
+  {
+   "method": "s3'.being_pattern.observe",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: entityId must be a non-empty string"
+  },
+  {
+   "method": "s3'.being_pattern.project",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: entityId must be a non-empty string"
+  },
+  {
+   "method": "s3'.being_pattern.review_candidate",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: candidateId must be a non-empty string"
+  },
+  {
+   "method": "s3'.being_pattern.subscribe",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s3'.subscription.lifecycle",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 6,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s3'.being_pattern.observe",
+    "s3'.being_pattern.project",
+    "s3'.being_pattern.review_candidate",
+    "s3'.being_pattern.subscribe",
+    "s3'.temporal.context",
+    "s3'.temporal.subscribe"
+   ]
+  },
+  {
+   "method": "s3'.temporal.context",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: session not found: agent:main:main"
+  },
+  {
+   "method": "s3'.temporal.subscribe",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s3.gateway",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s3.world_clock",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s3.world_clock.aperture.activate",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s3.world_clock.walk.advance",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s4'.context.assemble",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s4'.mediation.capabilities.list",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s4'.mediation.route",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: taskText must be a non-empty string"
+  },
+  {
+   "method": "s4'.orchestrate",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: cf or task is required"
+  },
+  {
+   "method": "s4'.orchestration.score",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s4'.psyche.state",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s4'.psyche.update",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: patch must be an object"
+  },
+  {
+   "method": "s4'.vak.evaluate",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: task must be a non-empty string"
+  },
+  {
+   "method": "s4.khora.session_archive",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s4.khora.session_list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s4.khora.session_resume",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s4.khora.session_start",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s4.pi.chat.stream",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s4.vak.evaluate",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "s5'.canon_update",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.canon_update.land(id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.canon_update.list",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.canon_update.list(filter)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.canon_update.propose",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.canon_update.refuse",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.canon_update.status(id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.decision_register.list_for_packet",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.epii.axiom_translation_history",
+   "advertised": false,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.epii.deposit",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `source_agent`"
+  },
+  {
+   "method": "s5'.epii.deposit.list",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.epii.runtimeContext",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.epii.runtime_control",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.gnostic",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.gnostic.candidates",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.gnostic.candidates(filter)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.gnostic.comparative_retrieval",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.gnostic.enrich",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required string parameter; expected one of entityId, entity_id, id, vectorId, vector_id"
+  },
+  {
+   "method": "s5'.gnostic.episode_search",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required string parameter; expected one of query, question"
+  },
+  {
+   "method": "s5'.gnostic.etymology",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required string parameter; expected one of coord, coordinate, bimbaCoordinate"
+  },
+  {
+   "method": "s5'.gnostic.etymology(coord)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.gnostic.evidence_trace(passage_id)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.gnostic.ingest",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required string parameter; expected one of source, path, filePath, file_path"
+  },
+  {
+   "method": "s5'.gnostic.list_notebooks",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.gnostic.list_notebooks(coord)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.gnostic.list_notebooks(coord_filter)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.gnostic.musical_transcript",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: vakAddress is required for M3 transcription"
+  },
+  {
+   "method": "s5'.gnostic.notebook",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.gnostic.query",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required string parameter; expected one of query, question"
+  },
+  {
+   "method": "s5'.gnostic.query_with_layers",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required string parameter; expected one of query, question"
+  },
+  {
+   "method": "s5'.gnostic.resolve",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing required string parameter; expected one of coord, coordinate, ref, passageId, passage_id, id"
+  },
+  {
+   "method": "s5'.gnostic.resolve(coord)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.gnostic.seed_resolve(seed_query)",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.gnostic.status",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.improve",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.improve.history",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.improve.propose",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `target_family`"
+  },
+  {
+   "method": "s5'.improve.q_review.latest",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `day_id`"
+  },
+  {
+   "method": "s5'.improve.q_review.night_pass",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `day_id`"
+  },
+  {
+   "method": "s5'.improve.q_review.run",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `corpus_snapshot`"
+  },
+  {
+   "method": "s5'.improve.status",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.review",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.review.history",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.review.inbox",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.review.resolve",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `item_id`"
+  },
+  {
+   "method": "s5'.review.submit",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `source`"
+  },
+  {
+   "method": "s5'.review.transition",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.tune",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.tune.audit.read",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: key must be a non-empty string"
+  },
+  {
+   "method": "s5'.tune.get",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.tune.lock.toggle",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: key must be a non-empty string"
+  },
+  {
+   "method": "s5'.tune.proposals",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 33,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5'.epii.axiom_translation_history",
+    "s5'.epii.deposit",
+    "s5'.epii.deposit.list",
+    "s5'.gnostic.candidates",
+    "s5'.gnostic.enrich",
+    "s5'.gnostic.episode_search",
+    "s5'.gnostic.etymology",
+    "s5'.gnostic.ingest"
+   ]
+  },
+  {
+   "method": "s5'.tune.proposals.list",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.tune.proposals.resolve",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: missing field `item_id`"
+  },
+  {
+   "method": "s5'.tune.propose",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: key must be a non-empty string"
+  },
+  {
+   "method": "s5'.tune.registry.get",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: key must be a non-empty string"
+  },
+  {
+   "method": "s5'.tune.registry.list",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5'.tune.registry.set",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: key must be a non-empty string"
+  },
+  {
+   "method": "s5.epii.deposit",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 1,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5.oracle.iching.cast"
+   ]
+  },
+  {
+   "method": "s5.evidence.deposit",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 1,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5.oracle.iching.cast"
+   ]
+  },
+  {
+   "method": "s5.oracle.iching.cast",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "s5.oracle.tarot.cast",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 1,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5.oracle.iching.cast"
+   ]
+  },
+  {
+   "method": "s5.review.annotate",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 1,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5.oracle.iching.cast"
+   ]
+  },
+  {
+   "method": "s5.review.submit",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 1,
+   "hint": "family is LIVE — this exact name is probably plan prose, not a missing capability; check the served siblings before concluding anything is unbuilt",
+   "servedSiblings": [
+    "s5.oracle.iching.cast"
+   ]
+  },
+  {
+   "method": "session.compact",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "session.insert",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "session.resume",
+   "advertised": false,
+   "exists": false,
+   "responds": true,
+   "errorClass": "unimplemented",
+   "familyServed": 0
+  },
+  {
+   "method": "sessions.fork",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: sessionKey must be a string"
+  },
+  {
+   "method": "sessions.import",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: targetSessionKey must be a string"
+  },
+  {
+   "method": "sessions.list",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": null
+  },
+  {
+   "method": "sessions.patch",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: sessionKey must be a string"
+  },
+  {
+   "method": "sessions.resolve",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: sessionKey must be a string"
+  },
+  {
+   "method": "sessions.resume",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: sessionKey must be a string"
+  },
+  {
+   "method": "vault.day.ensure",
+   "advertised": true,
+   "exists": true,
+   "responds": true,
+   "errorClass": "domain-error: dayId must be a non-blank DD-MM-YYYY or YYYY-MM-DD string"
+  }
+ ]
+}

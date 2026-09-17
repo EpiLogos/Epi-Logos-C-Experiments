@@ -1,0 +1,38 @@
+{
+  "runId": "20260720T170319Z-36-T36.8",
+  "taskId": "36.T36.8",
+  "startedAt": "2026-07-20T17:03:19.915Z",
+  "owner": "codex-mdev-368-vak-trace",
+  "leaseExpiresAt": "2026-07-20T21:03:19.915Z",
+  "worktree": null,
+  "task": {
+    "id": "36.T36.8",
+    "trackId": "36",
+    "tranche": "T36.8",
+    "title": "Languification trace: Parā → Vaikharī descent as profile-bus projection",
+    "effort": null,
+    "file": "36-anuttara-pentadic-runtime-trace.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/36-anuttara-pentadic-runtime-trace.md",
+    "dependsOn": [
+      "36.T36.7"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/36-anuttara-pentadic-runtime-trace.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "SUBSTRATE — AnuttaraPentadicRuntimeTrace + VakLanguificationTrace on ONE subscription (portal-core). CARRIER: pentadic inspector + vakLevel/m0Address chips — currently designed, claimed, UNCONSUMED. Gated on DR-VAK-4/5/6 (PROPOSED). §2 track 36."
+  }
+}

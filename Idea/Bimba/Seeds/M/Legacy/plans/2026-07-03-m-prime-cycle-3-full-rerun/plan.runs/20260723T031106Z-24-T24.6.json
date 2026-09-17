@@ -1,0 +1,38 @@
+{
+  "runId": "20260723T031106Z-24-T24.6",
+  "taskId": "24.T24.6",
+  "startedAt": "2026-07-23T03:11:06.999Z",
+  "owner": "opus-mdev-t24-build",
+  "leaseExpiresAt": "2026-07-23T05:11:06.999Z",
+  "worktree": null,
+  "task": {
+    "id": "24.T24.6",
+    "trackId": "24",
+    "tranche": "T24.6",
+    "title": "Tarot wheel (`M3TarotWheel`): 22 major arcana + 56 minor arcana *(doc-ahead-landing; depends on 19.5 substrate utility + Wave-B field WC-M3-SA-2)",
+    "effort": "doc-ahead-landing; depends on 19.5 substrate utility + Wave-B field WC-M3-SA-2",
+    "file": "24-m3-mahamaya-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/24-m3-mahamaya-frontend-deep.md",
+    "dependsOn": [
+      "24.T24.5"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/24-m3-mahamaya-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: M3' inspectors in pratibimba-app (primary Fibonacci Ground lens id 16 plus its 16 derived divisions, 9-walk navigator, tarot wheel 22+56, hexagram browser over 384 graph, transcription, pentadic). The superseded Frame/Operator 18-aperture branch MUST NOT be rebuilt. NO Math.random — casts dispatch to the gateway. §2 track 24."
+  }
+}

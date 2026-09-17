@@ -1,7 +1,11 @@
 use epi_s2_graph_services::{
-    graph_contract, schema, source_traceability_anchors, GraphMethodParams, GraphMethodService,
+    core_65_audit_payload, core_65_audit_plan, graph_contract, kernel_core_readiness_fact,
+    kernel_declared_core_relation_count, m0_archetype_lut_coordinates, m0_residual_list_plan,
+    schema, source_traceability_anchors, Core65AuditSummary, GraphMethodParams, GraphMethodService,
     GraphNodeRequest, GraphQueryRequest, GraphTraverseDirection, GraphTraverseRequest,
-    KernelResonanceObservationRequest, Neo4jClient, Neo4jConfig, PointerWebRefreshRequest,
+    HarmonicRelationMaterializationRequest, KernelResonanceObservationRequest,
+    M0ResidualListRequest, Neo4jClient, Neo4jConfig, PointerWebRefreshRequest, CORE65_AUDIT_METHOD,
+    KERNEL_CORE_RELATION_FAMILY,
 };
 use serde_json::json;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -53,6 +57,76 @@ fn coordinate_resolution_canonicalizes_hash_without_legacy_property() {
 }
 
 #[test]
+fn m0_residual_list_plan_normalizes_hash_prefix_and_excludes_exact_lut_rows() {
+    let plan = m0_residual_list_plan(&M0ResidualListRequest {
+        coordinate_prefix: "#0-3".into(),
+        offset: 20,
+        limit: 20,
+    })
+    .expect("valid M0 residual-list plan");
+
+    assert_eq!(plan.requested_prefix, "#0-3");
+    assert_eq!(plan.canonical_prefix, "M0-3");
+    assert_eq!(plan.offset, 20);
+    assert_eq!(plan.limit, 20);
+    let excluded = m0_archetype_lut_coordinates();
+    assert_eq!(excluded.len(), 12);
+    assert_eq!(
+        excluded,
+        vec![
+            "M0-3-(0/1)",
+            "M0-3-4",
+            "M0-3-2",
+            "M0-3-3",
+            "M0-3-5",
+            "M0-3-6",
+            "M0-3-7",
+            "M0-3-8",
+            "M0-3-9",
+            "M0-3-10",
+            "M0-3-11",
+            "M0-2-9",
+        ]
+    );
+    assert_eq!(
+        plan.page_params.get_string("coordinate_prefix"),
+        Some("M0-3")
+    );
+    assert_eq!(plan.page_params.get_integer("offset"), Some(20));
+    assert_eq!(plan.page_params.get_integer("limit"), Some(20));
+    assert_eq!(
+        plan.page_params.get_string_list("excluded_lut_coordinates"),
+        Some(excluded.as_slice())
+    );
+    assert!(plan
+        .page_cypher
+        .contains("NOT n.coordinate IN $excluded_lut_coordinates"));
+    assert!(plan.page_cypher.contains("SKIP $offset LIMIT $limit"));
+    assert!(plan.count_cypher.contains("dataset_total"));
+    assert!(plan.count_cypher.contains("residual_total"));
+    assert!(plan.count_cypher.contains("branch_total"));
+}
+
+#[test]
+fn m0_residual_list_plan_rejects_non_m0_branches_and_bounds_pages() {
+    let wrong_branch = m0_residual_list_plan(&M0ResidualListRequest {
+        coordinate_prefix: "#1-3".into(),
+        offset: 0,
+        limit: 20,
+    })
+    .unwrap_err();
+    assert!(wrong_branch.contains("one of #0-0 through #0-5"));
+
+    let oversized = m0_residual_list_plan(&M0ResidualListRequest {
+        coordinate_prefix: "#0-4".into(),
+        offset: 0,
+        limit: 21,
+    })
+    .unwrap_err();
+    assert!(oversized.contains("limit must be 20"));
+}
+
+#[test]
 fn kernel_resonance_observation_plan_is_parameterized_and_coordinate_owned() {
     let plan =
         GraphMethodService::kernel_resonance_observation_plan(&KernelResonanceObservationRequest {
@@ -75,31 +149,15 @@ fn kernel_resonance_observation_plan_is_parameterized_and_coordinate_owned() {
     assert_eq!(plan.tritone_square, 2);
     assert_eq!(plan.coordinate_anchor.coordinate, "M2");
     assert_eq!(plan.coordinate_anchor.kernel.source, "s0.kernel");
-    assert_eq!(plan.coordinate_anchor.pointer_web.pointer_count, 36);
     assert_eq!(
         plan.coordinate_anchor
-            .pointer_web
-            .harmonic_relation_descriptors
-            .len(),
-        2
+            .coordinate_reference_projection
+            .reference_count,
+        36
     );
     assert_eq!(
         plan.coordinate_anchor
-            .pointer_web
-            .harmonic_relation_descriptors[0]
-            .reason_code,
-        "inversion_spanda"
-    );
-    assert_eq!(
-        plan.coordinate_anchor
-            .pointer_web
-            .harmonic_relation_descriptors[0]
-            .privacy_policy,
-        "public-coordinate-topology-only"
-    );
-    assert_eq!(
-        plan.coordinate_anchor
-            .pointer_web
+            .coordinate_reference_projection
             .family_refs
             .get("m_ref")
             .map(String::as_str),
@@ -107,7 +165,7 @@ fn kernel_resonance_observation_plan_is_parameterized_and_coordinate_owned() {
     );
     assert_eq!(
         plan.coordinate_anchor
-            .pointer_web
+            .coordinate_reference_projection
             .lens_inversion_refs
             .get("l2_inv_ref")
             .map(String::as_str),
@@ -176,14 +234,12 @@ fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
     .expect("valid pointer web refresh plan");
 
     assert_eq!(plan.resolution.canonical, "M2");
-    assert_eq!(plan.pointer_web.coordinate, "M2");
-    assert_eq!(plan.pointer_web.pointer_count, 36);
-    assert_eq!(plan.pointer_web.harmonic_relation_descriptors.len(), 2);
-    assert!(plan
-        .pointer_web
-        .harmonic_relation_descriptors
-        .iter()
-        .any(|descriptor| descriptor.reason_code == "lens_anchor"));
+    assert_eq!(plan.coordinate_reference_projection.coordinate, "M2");
+    assert_eq!(plan.coordinate_reference_projection.reference_count, 36);
+    assert_eq!(
+        plan.deprecation_notice,
+        "deprecated compatibility projection; consume S2 Neo4j relations instead"
+    );
     let harmonic_pointer = plan
         .coordinate_anchor
         .harmonic_pointer
@@ -198,7 +254,7 @@ fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
         "position-identity"
     );
     assert_eq!(
-        plan.pointer_web
+        plan.coordinate_reference_projection
             .family_refs
             .get("m_ref")
             .map(String::as_str),
@@ -225,6 +281,128 @@ fn pointer_web_refresh_plan_is_parameterized_and_coordinate_owned() {
 }
 
 #[test]
+fn harmonic_relation_materialization_plan_creates_real_bimba_edges_for_positions_and_lenses() {
+    let plan = GraphMethodService::harmonic_relation_materialization_plan(
+        &HarmonicRelationMaterializationRequest {
+            timestamp_ms: 1_779_000_002_000,
+        },
+    )
+    .expect("valid harmonic relation materialization plan");
+
+    assert_eq!(plan.namespace, "bimba");
+    assert_eq!(plan.relation_count, 36);
+    assert_eq!(
+        plan.params.get_integer("timestamp_ms"),
+        Some(1_779_000_002_000)
+    );
+    assert!(!plan.cypher.contains("c_5_pointer_web_json"));
+    assert!(plan
+        .cypher
+        .contains("MATCH (source:Bimba {coordinate: rel.source_coordinate})"));
+    assert!(plan
+        .cypher
+        .contains("MATCH (target:Bimba {coordinate: rel.target_coordinate})"));
+    assert!(plan.cypher.contains(
+        "MERGE (source)-[edge:ADJACENTLY_ARTICULATES {c_2_edge_id: rel.edge_id}]->(target)"
+    ));
+    assert!(plan
+        .cypher
+        .contains("MERGE (source)-[edge:MIRRORS_COMPLEMENT {c_2_edge_id: rel.edge_id}]->(target)"));
+    assert!(plan.cypher.contains(
+        "MERGE (source)-[edge:CROSSES_KNOWING_LIMIT {c_2_edge_id: rel.edge_id}]->(target)"
+    ));
+    assert!(plan.cypher.contains(
+        "MERGE (source)-[edge:INVERTS_THROUGH_PAIR {c_2_edge_id: rel.edge_id}]->(target)"
+    ));
+
+    assert!(plan.relations.iter().any(|relation| {
+        relation.source_coordinate == "P0"
+            && relation.target_coordinate == "L1"
+            && relation.relation_type == "ADJACENTLY_ARTICULATES"
+    }));
+    assert!(plan.relations.iter().any(|relation| {
+        relation.source_coordinate == "P0'"
+            && relation.target_coordinate == "L1"
+            && relation.relation_type == "INVERTS_THROUGH_FIRST"
+    }));
+    assert!(plan.relations.iter().any(|relation| {
+        relation.source_coordinate == "P0"
+            && relation.target_coordinate == "L1'"
+            && relation.relation_type == "INVERTS_THROUGH_SECOND"
+    }));
+    assert!(plan.relations.iter().any(|relation| {
+        relation.source_coordinate == "P0'"
+            && relation.target_coordinate == "L1'"
+            && relation.relation_type == "INVERTS_THROUGH_PAIR"
+    }));
+}
+
+#[test]
+fn core65_audit_plan_reads_kernel_declared_count_and_queries_neo4j_family() {
+    assert_eq!(kernel_declared_core_relation_count().unwrap(), 65);
+
+    let plan = core_65_audit_plan().expect("core 65 audit plan");
+
+    assert_eq!(plan.method, CORE65_AUDIT_METHOD);
+    assert_eq!(plan.kernel_declared_count, 65);
+    assert_eq!(plan.relation_family, KERNEL_CORE_RELATION_FAMILY);
+    assert_eq!(
+        plan.params.get_string("relation_family"),
+        Some("kernel_core")
+    );
+    assert_eq!(plan.params.get_integer("declared_count"), Some(65));
+    assert!(plan.cypher.contains("MATCH ()-[r]->()"));
+    assert!(plan
+        .cypher
+        .contains("r.c_1_relation_family = $relation_family"));
+    assert_eq!(
+        plan.params.get_string("kernel_source_token"),
+        Some("M0_CORE_RELATIONS")
+    );
+    assert!(plan.cypher.contains("observed_count"));
+}
+
+#[test]
+fn core65_readiness_projection_only_marks_ready_when_zero_mismatches() {
+    let ready = Core65AuditSummary::from_observation(
+        65,
+        65,
+        vec!["HAS_COMPONENT".to_owned()],
+        vec!["HAS_COMPONENT".to_owned()],
+        vec!["#0".to_owned()],
+        vec!["#0-0".to_owned()],
+    );
+    let ready_fact = kernel_core_readiness_fact(&ready);
+    assert_eq!(ready_fact.id, "kernel-core");
+    assert_eq!(ready_fact.state, "canonical");
+    assert!(ready_fact.canonical);
+    assert!(ready_fact.summary.contains("kernel-core 65/65"));
+
+    let blocked = Core65AuditSummary::from_observation(
+        65,
+        64,
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+        Vec::new(),
+    );
+    let blocked_fact = kernel_core_readiness_fact(&blocked);
+    assert_eq!(blocked_fact.state, "blocked");
+    assert!(!blocked_fact.canonical);
+    assert_eq!(blocked.mismatch_count, 1);
+
+    let ready_payload = core_65_audit_payload(graph_contract(CORE65_AUDIT_METHOD, None), ready);
+    assert_eq!(ready_payload["readiness"]["status"], "ready_public_current");
+    assert_eq!(
+        ready_payload["m0GraphReadinessFacts"][0]["id"],
+        "kernel-core"
+    );
+
+    let blocked_payload = core_65_audit_payload(graph_contract(CORE65_AUDIT_METHOD, None), blocked);
+    assert_eq!(blocked_payload["readiness"]["status"], "s2_graph_blocked");
+}
+
+#[test]
 fn graph_api_contract_envelope_carries_sources_namespace_gds_and_pointer_descriptors() {
     let resolved = GraphMethodService::resolve_coordinate_string("#2").unwrap();
     let contract = graph_contract("s2.graph.node", Some(&resolved));
@@ -241,12 +419,13 @@ fn graph_api_contract_envelope_carries_sources_namespace_gds_and_pointer_descrip
         false
     );
     assert_eq!(contract["disclosureDensity"], "public-coordinate-topology");
-    let descriptors = contract["pointerWebDescriptors"].as_array().unwrap();
-    assert_eq!(descriptors.len(), 2);
-    assert_eq!(descriptors[0]["from_coordinate"], "M2");
     assert_eq!(
-        descriptors[0]["deposition_policy"],
-        "read-only descriptor; downstream evidence deposit is S5-governed"
+        contract["deprecatedPointerWeb"]["status"],
+        "deprecated_compatibility_only"
+    );
+    assert_eq!(
+        contract["harmonicRelations"]["source"],
+        "s2.graph.harmonic_relations.materialize"
     );
     assert_eq!(
         contract["residencyAuthority"]["diagramPack"],
@@ -342,6 +521,20 @@ async fn live_graph_methods_write_read_traverse_and_cleanup_test_owned_data() {
         .await
         .expect("node method");
     assert_eq!(node["node"]["coordinate"], source);
+    // The relation collection must SURVIVE the projection. It once did not:
+    // `properties: properties(r)` made the column a map-of-map, the reader
+    // asked for `Vec<BTreeMap<String, String>>`, and `unwrap_or_default()`
+    // turned the failure into `[]` — so a node with live edges reported none.
+    let relations = node["relations"]
+        .as_array()
+        .expect("relations must project as an array");
+    let edge = relations
+        .iter()
+        .find(|rel| rel["coordinate"] == target.as_str())
+        .unwrap_or_else(|| panic!("the created edge must appear in relations: {relations:?}"));
+    assert_eq!(edge["type"], "POS5_INTEGRATES_INTO");
+    assert_eq!(edge["direction"], "outbound");
+    assert_eq!(edge["properties"]["c_1_relation_family"], "position");
 
     let refreshed = service
         .refresh_pointer_web(PointerWebRefreshRequest {
@@ -351,8 +544,18 @@ async fn live_graph_methods_write_read_traverse_and_cleanup_test_owned_data() {
         .await
         .expect("refresh pointer web");
     assert_eq!(refreshed["source"]["canonical"], source);
-    assert_eq!(refreshed["pointerWeb"]["coordinate"], source);
-    assert_eq!(refreshed["pointerWeb"]["pointer_count"], 18);
+    assert_eq!(
+        refreshed["coordinateReferenceProjection"]["coordinate"],
+        source
+    );
+    assert_eq!(
+        refreshed["coordinateReferenceProjection"]["reference_count"],
+        18
+    );
+    assert_eq!(
+        refreshed["deprecatedPointerWeb"]["status"],
+        "deprecated_compatibility_only"
+    );
     assert_eq!(refreshed["rowCount"], 1);
     let pointer_rows = client
         .run(&format!(
@@ -495,4 +698,37 @@ async fn live_m0_inspector_payload_reads_anuttara_fields_from_s2_properties() {
         )
         .await
         .expect("cleanup anuttara test node");
+}
+
+/// CCT-13 / DR-IG-1 (16.T16.13): the kernel-resonance write stamps the TYPED
+/// canonical relation family `kernel_core` — the Phase-C 'kernel-resonance'
+/// hyphen drift can never re-enter the write path.
+#[test]
+fn kernel_resonance_plan_stamps_canonical_relation_family() {
+    let plan =
+        GraphMethodService::kernel_resonance_observation_plan(&KernelResonanceObservationRequest {
+            source_coordinate: "#2".into(),
+            session_key: "cct13:session".into(),
+            timestamp_ms: 1_779_000_009_999,
+            lens: 2,
+            ascent_helix: false,
+            position: 1,
+            score: 0.5,
+            kernel_tick: 3,
+            graphiti_arc_id: None,
+        })
+        .expect("plan builds");
+    assert!(
+        plan.cypher.contains("c_1_relation_family = 'kernel_core'"),
+        "the write must stamp the canonical kernel_core family: {}",
+        plan.cypher
+    );
+    assert!(
+        !plan.cypher.contains("kernel-resonance'"),
+        "the hyphen drift literal must be gone from the write path"
+    );
+    assert!(
+        epi_s2_graph_schema::RELATION_FAMILY_VALUES.contains(&"kernel_core"),
+        "kernel_core is a member of the typed family enum"
+    );
 }

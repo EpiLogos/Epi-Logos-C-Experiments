@@ -1,0 +1,46 @@
+{
+  "runId": "20260727T175226Z-50-T50.14",
+  "taskId": "50.T50.14",
+  "startedAt": "2026-07-27T17:52:26.997Z",
+  "owner": "claude-opus5-t50-vakeval-20260727",
+  "leaseExpiresAt": "2026-07-27T20:52:26.997Z",
+  "worktree": null,
+  "task": {
+    "id": "50.T50.14",
+    "trackId": "50",
+    "tranche": "T50.14",
+    "title": "Execution-trace capture as the ELO/ML training substrate (epii-on-#3 program-synthesis feed)",
+    "effort": "epii-on-#3 program-synthesis feed",
+    "file": "50-code-mode-orchestration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+    "dependsOn": [
+      "50.T50.13"
+    ],
+    "writeScopes": [
+      "Body/S/S3",
+      "Body/S/S3/gateway/src/transcripts.rs",
+      "Body/S/S5/epii-autoresearch-core",
+      "Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-27T17:41:40.096Z",
+        "text": "RECON ONLY — no code written; claim released back to pending so the next worker starts from these findings rather than re-deriving them. Two BRIEF CORRECTIONS and one substantive design finding, all verified against the tree, none of them fixed here. (1) RESIDENCY ERROR in the Build line, the same class 50.T50.10 recorded: aeon_eval.rs / AeonEvalMetrics is NOT in Body/S/S5/epii-autoresearch-core (that crate has no such file; `grep -rn AeonEval` over the repo returns nothing under S5). The real surface is Body/S/S3/redis-context/src/aeon_eval.rs — `aeon_eval_ledger_from_transcript(transcript_path, AeonEvalContext) -> AeonEvalLedger`, plus `AeonEvalLedger::redis_records()` and `AeonEvalLedger::graphiti_episode()`, exercised by Body/S/S3/redis-context/tests/aeon_eval_ledger.rs. Build against redis-context, not epii-autoresearch-core. (2) THE LOAD-BEARING GAP, which is the actual work of this tranche: `aeon_eval_ledger_from_transcript` derives EVERY behavioural metric by counting `toolCallObserved` events in the JSONL transcript (read_tool_observations, edit_tool_observations, test_tool_observations, reads_before_first_edit, tests_after_first_edit, and both ratios; turns and tokens come from `turnComplete`). That is precisely the compounding JSON staircase this track exists to REPLACE. So a code-mode orchestration — one script instead of N JSON tool calls — currently reads as all-zeros: the learning substrate goes blind exactly when the orchestration works as designed. Making the deterministic trace produce those metrics IS the deliverable; feeding the existing reader unchanged would produce an honest-looking ledger of nothing. (3) EMISSION SEAM already exists and needs no contract-surface widening: `TranscriptEntry` (Body/S/S3/gateway/src/transcripts.rs) is a String-`kind` record that ALREADY carries `vak_address: Option<VakAddress>` and `event: Option<HarnessTurnEvent>`, with append_message / append_harness_turn_event / append_abort as the writers. A new additive `kind` for the orchestration trace is the light-touch option; adding a HarnessTurnEvent variant would be a gateway-contract surface change and wants Architect sign-off first. (4) GRAPHITI DEPOSIT is landed and already shaped for this: `session_memory_deposit` (Body/S/S3/graphiti-runtime/src/native_gateway.rs) takes content/sourceAgent/sessionKey/namespaceRef/dayId/qlPosition/cp/cpf, and the existing `AeonEvalGraphitiEpisode` struct already carries exactly that field set. (5) DISTILLATION ROW CONTRACT is strict and enforced at Body/S/S5/plugins/epi-logos/skills/custom/epii-distillation/scripts/distill_dataset_gen.py: a row REQUIRES non-empty `prompt` and `teacher_output`, and `annotations` carrying all three of lens_coherence / verifier_pass / user_articulation_simulation (missing one raises). Expect the 50.T50.12 pattern again — `verifier_pass` is plausibly the run outcome and `lens_coherence` plausibly the declared mef_lens or the 50.T50.13 tonal reading, but `user_articulation_simulation` has NO producer in an orchestration run and should be declared/refused by name rather than invented. DEPENDENCY 50.T50.13 verified real by this same worker (built and closed it): portal.vak_eval now emits and VakTonalReading is on the wire, so the trace already has a reading to carry."
+      }
+    ],
+    "claimedAt": "2026-07-27T17:39:01.487Z",
+    "completedAt": null,
+    "owner": "claude-opus5-t50-vakeval-20260727",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-27T17:39:01.487Z",
+    "runId": "20260727T173901Z-50-T50.14",
+    "worktree": null,
+    "blocker": null,
+    "carrier": "SUBSTRATE — Code-Mode orchestration (JSON->TS program synthesis). Body/S/S4/pi-agent base tool-scripting + Body/S/S4/ta-onta/S4-4p-anima VAK six-coordinate executor (unified spawn(pi) seam, CP-nesting, tilldone CFP4 gate, (00/00)->score lifecycle) + Body/S/S4/ta-onta/S4-5p-aletheia Mercurius ELO trial + Body/S/S3 gateway method + Body/S/S0 portal-core vak_eval/diatonic + epi-cli CF table. NEW self-contained track; briefs inline. No pratibimba-app surface of its own (score/trace is gateway-observable; a session/score pane is a later UF follow-on)."
+  }
+}

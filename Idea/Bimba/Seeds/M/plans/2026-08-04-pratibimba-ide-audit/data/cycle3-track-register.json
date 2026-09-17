@@ -1,0 +1,1572 @@
+{
+  "version": 1,
+  "snapshotDate": "2026-08-04",
+  "authority": {
+    "designLaw": "2026-06-02 design-reconciliation briefs + Track 13 decision register",
+    "executionLaw": "2026-07-03 full-rerun CHARTER.md + carrier-contract.json + verification-classes.json",
+    "completionEvidence": "plan.runs/verifications + wire-captures + gateway expected-present ratchet"
+  },
+  "summary": {
+    "indexTrackEntries": 57,
+    "logicalTracks": 55,
+    "indexedTasks": 656,
+    "indexedTaskStateCounts": {
+      "done": 656
+    },
+    "latestVerificationCounts": {
+      "PASS": 635,
+      "REFUSED": 21
+    },
+    "staleStateEntries": 16,
+    "gatewayExpectedPresent": 89,
+    "kernelTruthExpectedFailures": 1,
+    "sourceIndexGeneratedAt": "2026-08-03T04:12:06.902Z",
+    "sourceStateUpdatedAt": "2026-08-03T04:12:06.911Z"
+  },
+  "knownMetadataCaveats": [
+    "Track 00 has three plan.index track entries sharing one logical id.",
+    "Track 38 has two plan.index track entries sharing one logical id.",
+    "Track 13 is decision law and has no executable task row in the rerun index.",
+    "A done ledger status is not sufficient evidence when the latest verification record is REFUSED.",
+    "Tracks 01, 03, 04, and 05 remain K-class despite carrier exposure; verification-classes.json names this sibling hole.",
+    "Track 54 has no entry in verification-classes.json and must be classified before any follow-on tranche can close.",
+    "Verification files T1.4.md and T1.5.md are PASS records with no current plan.index task id; indexed-task verification counts exclude them."
+  ],
+  "staleStateEntries": [
+    {
+      "id": "00.T0.1",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "00.T0.2",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "00.T0.3",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "00.T0.4",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "00.T0.5",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "00.T0.6",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "00.T0.7",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "53.T53.1",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "53.T53.2",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "53.T53.3",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "53.T53.4",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "53.T53.5",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "53.T53.6",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "53.T53.7",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "53.T53.8",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    },
+    {
+      "id": "53.T53.9",
+      "status": "blocked",
+      "note": "Task no longer appears in plan index."
+    }
+  ],
+  "tracks": [
+    {
+      "id": "00",
+      "titles": [
+        "The Computational-Core Truth Ledger",
+        "Track 00 — Verification-Harness Hardening Ledger (gap audit → hardening tranches)",
+        "Track 00 — Verification Harness (runs first; gates every other track)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/00-computational-core-truth-ledger.md",
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/00-verification-harness-hardening.md",
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/00-verification-harness.md"
+      ],
+      "taskCount": 7,
+      "stateCounts": {
+        "done": 7
+      },
+      "verificationCounts": {
+        "PASS": 7
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — kernel as bioquaternionic JEPA-EBM operator (epi-lib C + portal-core). Method + standing-invariants track; no carrier surface of its own. §2 track 00.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/00-computational-core-truth-ledger.md",
+          "checksum": "7475ae5878b5b62c226f8620890c6316716c17a473d771c713b05237576c4e9f"
+        },
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/00-verification-harness-hardening.md",
+          "checksum": "b3c49e45e016e6e3bec2bc99cc86a1abbe8c849a0ecbf472f6dde1cc6c36d292"
+        },
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/00-verification-harness.md",
+          "checksum": "7652d6c8522aef4970837ee4badb1d9d891497ee9a0aad05734dee11ebd2257c"
+        }
+      ]
+    },
+    {
+      "id": "01",
+      "titles": [
+        "Track 01 — M0 Anuttara Reconciliation (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/01-m0-anuttara-reconciliation.md"
+      ],
+      "taskCount": 18,
+      "stateCounts": {
+        "done": 18
+      },
+      "verificationCounts": {
+        "PASS": 18
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER pratibimba-app: M0' strata panes (src/panes/m0*, M0LayerRail) over the composed engine base. SUBSTRATE: portal-core kernel/anuttara + graph-services + graph-schema. epi-theia m0-anuttara = FROZEN reference. §2 track 01/21.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/01-m0-anuttara-reconciliation.md",
+          "checksum": "3a7a2027ef5409c6541e38a20e29c948bf6ae6136de1fbd03f74d0b4a7248ba2"
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "titles": [
+        "Track 02 — M1 Paramaśiva Reconciliation (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/02-m1-paramasiva-reconciliation.md"
+      ],
+      "taskCount": 14,
+      "stateCounts": {
+        "done": 14
+      },
+      "verificationCounts": {
+        "PASS": 14
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: M1' instrument strata (Spanda walk navigator, Cl(4,2) inspector, klein-flip chronograph, vortex-matrix browser) in pratibimba-app engine/panes. SUBSTRATE: epi-lib m1 + portal-core spanda.rs. §2 track 02/22.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/02-m1-paramasiva-reconciliation.md",
+          "checksum": "2015b5af6d50f11c938ff4171c1403caf4baee82128423cca908b922107797f2"
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "titles": [
+        "Track 03 — M2 Paraśakti Reconciliation (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/03-m2-parashakti-reconciliation.md"
+      ],
+      "taskCount": 10,
+      "stateCounts": {
+        "done": 10
+      },
+      "verificationCounts": {
+        "PASS": 10
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: M2' six-axis/sonic/breadcrumb/descent/MonoPoly surfaces (Chladni chi shader) in pratibimba-app. SUBSTRATE: portal-core parashakti/vimarsha_reading.rs (canonical writer). §2 track 03/23.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/03-m2-parashakti-reconciliation.md",
+          "checksum": "c42e763bc8cd2581956904fe645c8c3a1290146dc093bf3aad5daf213b0c6260"
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "titles": [
+        "Track 04 — M3 Mahāmāyā Reconciliation (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/04-m3-mahamaya-reconciliation.md"
+      ],
+      "taskCount": 17,
+      "stateCounts": {
+        "done": 17
+      },
+      "verificationCounts": {
+        "PASS": 17
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: M3' inspectors (primary Fibonacci Ground lens id 16 grounding the 16 derived divisions, tarot wheel, hexagram browser, transcription engine) in pratibimba-app. SUBSTRATE: epi-lib m3 + portal-core m3_transcription_bridge. §2 track 04/24. The superseded 18-aperture branch MUST NOT be rebuilt.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/04-m3-mahamaya-reconciliation.md",
+          "checksum": "91428e89130d24f0e7415842cb1f980a551f620f23fc372fa7e214f40bb6eb75"
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "titles": [
+        "Track 05 — M4 Nara Reconciliation (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/05-m4-nara-reconciliation.md"
+      ],
+      "taskCount": 27,
+      "stateCounts": {
+        "done": 27
+      },
+      "verificationCounts": {
+        "PASS": 27
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: M4' lived-surface depth (oracle aliveness, R-factor fretboard, session-close ceremony, time-axis switcher) in pratibimba-app. SUBSTRATE: portal-core nara/* + kairos. Least-real M surface (22 AR). §2 track 05/25.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/05-m4-nara-reconciliation.md",
+          "checksum": "63f7f4103f11e25347dbb20dad505ffbd87c9f372b6a4593f4197e95a329bee2"
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "titles": [
+        "Track 06 — M5 Epii Reconciliation (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/06-m5-epii-reconciliation.md"
+      ],
+      "taskCount": 12,
+      "stateCounts": {
+        "done": 12
+      },
+      "verificationCounts": {
+        "PASS": 12
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: M5' EBM observatory (72-grid, Klein-V4 tritone squares, Logos Atelier) in pratibimba-app. SUBSTRATE: epii-autoresearch-core resonance_ebm + portal-core. §2 track 06/26.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/06-m5-epii-reconciliation.md",
+          "checksum": "d16050402dc75921254cd0ca962c6444a15cd45fbe5c300d2eff507e05ef12b1"
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "titles": [
+        "Track 07 — Integrated 1-2-3 Cosmic Engine Reconciliation (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/07-integrated-1-2-3-cosmic-engine-reconciliation.md"
+      ],
+      "taskCount": 9,
+      "stateCounts": {
+        "done": 9
+      },
+      "verificationCounts": {
+        "PASS": 9
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: integrated 1-2-3 CosmicEngine ALREADY LANDED in pratibimba-app src/engine — extend, never rebuild (composition contract: 137 assertion parentAttribution M1-5, torus_knot_phase SSOT, Cl(4,2) one-algebra). §2 track 07.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/07-integrated-1-2-3-cosmic-engine-reconciliation.md",
+          "checksum": "101ea2ced5d5b021726bef397d816cfe6e24f686ec6ecf25c996c0ef70e851d0"
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "titles": [
+        "Track 08 — Integrated 4-5-0 Recognition Reconciliation (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/08-integrated-4-5-0-recognition-reconciliation.md"
+      ],
+      "taskCount": 9,
+      "stateCounts": {
+        "done": 9
+      },
+      "verificationCounts": {
+        "PASS": 9
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: 4-5-0 recognition engine as the E4/E5/E6 consumption point (dipyramid 6+6=12 DR-IG-6, Mobius write-back read-only). SUBSTRATE: portal-core. §2 track 08.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/08-integrated-4-5-0-recognition-reconciliation.md",
+          "checksum": "fd76b2d8f4f617a3e36f63ad648e91ae930f190f5ffc007eaa9da1fca59305ab"
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "titles": [
+        "Track 09 — Integrated Bimba-Graph Reconciliation (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/09-integrated-bimba-graph-reconciliation.md"
+      ],
+      "taskCount": 14,
+      "stateCounts": {
+        "done": 14
+      },
+      "verificationCounts": {
+        "PASS": 14
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": true,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: gnostic/graph panes + `epi know`/`epi canon` knowledge surfaces (none landed). SUBSTRATE: graph-services single :Bimba label + four namespaces, governed-route writes only. Zero done. §2 track 09.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/09-integrated-bimba-graph-reconciliation.md",
+          "checksum": "7c7c516ab471370f63ad345abd31a29ac7adcdba8513e7d7ec503c45e30f6737"
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "titles": [
+        "Track 10 — Kernel-Bridge / Profile-Contract Readiness Ledger (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/10-kernel-bridge-profile-contract.md"
+      ],
+      "taskCount": 10,
+      "stateCounts": {
+        "done": 10
+      },
+      "verificationCounts": {
+        "PASS": 10
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — profile-field ledger on portal-core kernel.rs + kernel_bridge (19 Phase-B anti-greenfield surfacing fields; forbidden greenfield fields listed). Carrier consumes via the typed bridge. §2 track 10.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/10-kernel-bridge-profile-contract.md",
+          "checksum": "abbf91a2bcf2784d99325954629ca59ae0e7d6e71858f686c16deee1be781058"
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "titles": [
+        "Track 11 — Theia Shell / Surface Hosting (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/11-theia-shell-surface-hosting.md"
+      ],
+      "taskCount": 13,
+      "stateCounts": {
+        "done": 13
+      },
+      "verificationCounts": {
+        "PASS": 11,
+        "REFUSED": 2
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: pratibimba-app IDE shell / face partition (the `/` membrane crosses both faces = `#` itself); 10 highlight categories, ambient strip + tuning bar -> NOW frontmatter via khora_write. §2 track 11.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/11-theia-shell-surface-hosting.md",
+          "checksum": "727136984a050b97c5c0cb402b603f9028f4b2f7d0d12c77db64f998032ea9a1"
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "titles": [
+        "Track 12 — Agentic Layer (S4 ↔ S5) Ownership Closure — Pi + Anima + Subagents (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md"
+      ],
+      "taskCount": 45,
+      "stateCounts": {
+        "done": 45
+      },
+      "verificationCounts": {
+        "PASS": 45
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE-heavy — ta-onta agentic seams (s4'.mediation.* in dispatch.rs, gnostic routes, terminal-lease, Sophia/Moirai/Verify-phase machinery) + gateway. CARRIER: session/agent panes. WORST audit track (36 AR). §2 track 12.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/12-agentic-layer-s4-s5.md",
+          "checksum": "67f39d18ff1d6b40e3e40fe7e1eb4b59880d393643e7225cbff91ab354c51f01"
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "titles": [
+        "Track 13 - Decision Register"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md"
+      ],
+      "taskCount": 0,
+      "stateCounts": {},
+      "verificationCounts": {},
+      "verificationClass": "D",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "inherit-law",
+      "carrierLaw": "DOC — decision register (all DR law). Not a build brief; read in full. §3.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/13-decision-register.md",
+          "checksum": null
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "titles": [
+        "Track 14 — No-Orphan Audit + Release Gates (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/14-no-orphan-audit-and-release-gates.md"
+      ],
+      "taskCount": 5,
+      "stateCounts": {
+        "done": 5
+      },
+      "verificationCounts": {
+        "PASS": 5
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "inherit-gate",
+      "carrierLaw": "AUDIT — gates G1-G14 (never truly passed; the gate list IS the recapture checklist) + open-orphan table. CARRIER: phase-2 no-orphan registry. §2 track 14.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/14-no-orphan-audit-and-release-gates.md",
+          "checksum": "d2d169164f99263169114ed66c0f7a2c7cbd18427a30eabb880df8bad4768a9f"
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "titles": [
+        "Track 15 — UI Design Foundations (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/15-ui-design-foundations.md"
+      ],
+      "taskCount": 12,
+      "stateCounts": {
+        "done": 12
+      },
+      "verificationCounts": {
+        "PASS": 11,
+        "REFUSED": 1
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: pratibimba-app design foundations (nine principles + surface contracts §1). §2 track 15.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/15-ui-design-foundations.md",
+          "checksum": "420042274f634e8d117165fa321f81220032a27de37eb0980fc1fde67daf49dd"
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "titles": [
+        "Track 16 — Cross-Cutting Closures (CCT-1..8) (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/16-cross-cutting-closures.md"
+      ],
+      "taskCount": 22,
+      "stateCounts": {
+        "done": 22
+      },
+      "verificationCounts": {
+        "PASS": 22
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate-recompose-carrier",
+      "carrierLaw": "MIXED — CCT bundle. CCT-16 substrate-integrity five-fix (frontmatter whitelist ERROR, real khora_sync_queue_flush, fire_provenance retry+dead-letter, MostRecent picker, graph_revision bump) is SUBSTRATE (vault/gateway); CCT-21 BeingPattern producer bridges handles. §2 track 16.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/16-cross-cutting-closures.md",
+          "checksum": "53801f0522f7f85502ccc80718343bf915db7e9e9a46100438a7bb93b9642346"
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "titles": [
+        "Track 17 — S-Stack Modularisation Campaign (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/17-s-stack-modularisation.md"
+      ],
+      "taskCount": 28,
+      "stateCounts": {
+        "done": 28
+      },
+      "verificationCounts": {
+        "PASS": 28
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — S-stack facade-split discipline (METHOD_DISPATCH_PLAN canonical DR-S3-3 co-PR rule, Hen rename-reconciliation authority, 17.28 canon byte-identity). Body/S/*. Worst-audited infra track. §2 track 17.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/17-s-stack-modularisation.md",
+          "checksum": "fc159e926257693828061dc03fbd865ce786ab4b488f71d64304be3951af9467"
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "titles": [
+        "Track 18 — Typed Kernel-Bridge JSON Edge (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/18-typed-kernel-bridge-json-edge.md"
+      ],
+      "taskCount": 11,
+      "stateCounts": {
+        "done": 11
+      },
+      "verificationCounts": {
+        "PASS": 11
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — typed-at-the-edge projection catalog (portal-core projections + schemas Zod: KleinFlipEvent, AnandaVortexProjection, M1TopologyProjection torus_knot_phase SSOT, pasu_being_pattern). Acceptance = no Record<string,unknown> outside documented boundaries. §2 track 18.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/18-typed-kernel-bridge-json-edge.md",
+          "checksum": "6a1dd678ddb3f23a75ea08077b38742011e712930155a35a3037496ea51783d6"
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "titles": [
+        "Track 19 — Contemplation Surface Integration (4/5/0 Closure as Agentic-Intelligence Triad) (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/19-contemplation-surface-integration.md"
+      ],
+      "taskCount": 12,
+      "stateCounts": {
+        "done": 12
+      },
+      "verificationCounts": {
+        "PASS": 11,
+        "REFUSED": 1
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: contemplation pane. SUBSTRATE: portal-core contemplate_session_close(ContemplationObject)->wisdom_delta, chronos_response_orbit. §2 track 19.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/19-contemplation-surface-integration.md",
+          "checksum": "e88b32d74319c0a8e53b9d55a176cd437e47dce5ab26e4d3a0e6ac1aa21d17b1"
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "titles": [
+        "Wave C — Frontend Depth Overview (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/20-wave-c-frontend-deep-overview.md"
+      ],
+      "taskCount": 4,
+      "stateCounts": {
+        "done": 4
+      },
+      "verificationCounts": {
+        "PASS": 3,
+        "REFUSED": 1
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: Wave-C cross-cutting design system (the Track-D source) in pratibimba-app. 'the matheme is the architecture; the widgets are how the matheme shows up to a user.' §2 track 20.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/20-wave-c-frontend-deep-overview.md",
+          "checksum": "135691d158f0f5f22f07f0c0b194593b1f3257d886a0d048889485eac41abbe1"
+        }
+      ]
+    },
+    {
+      "id": "21",
+      "titles": [
+        "Track 21 — M0' Anuttara Frontend Deep Design (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/21-m0-anuttara-frontend-deep.md"
+      ],
+      "taskCount": 20,
+      "stateCounts": {
+        "done": 20
+      },
+      "verificationCounts": {
+        "PASS": 19,
+        "REFUSED": 1
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: M0' one-widget six-panels three-modes (implicate<->explicate one substrate; virtue witness 9-bit LSB-first; 16-fold void ring; DR-M0-1 banner verbatim) in pratibimba-app. §2 track 21.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/21-m0-anuttara-frontend-deep.md",
+          "checksum": "1169e925fcd6fae96f430d4c691fca4a025baa6c8579d107c2ad869ded3b66ac"
+        }
+      ]
+    },
+    {
+      "id": "22",
+      "titles": [
+        "Track 22 — M1' Paramaśiva Frontend Deep Design (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/22-m1-paramasiva-frontend-deep.md"
+      ],
+      "taskCount": 13,
+      "stateCounts": {
+        "done": 13
+      },
+      "verificationCounts": {
+        "PASS": 10,
+        "REFUSED": 3
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: M1' instrument strata in pratibimba-app (see track 02) — raw 12x12 vortex face must come from the Vortex Modulae CSV before Ananda is complete. §2 track 22.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/22-m1-paramasiva-frontend-deep.md",
+          "checksum": "d476f0ef74cc5a5c891b14efb07ec60a962d4f3e44793f462cc86eea2658c44f"
+        }
+      ]
+    },
+    {
+      "id": "23",
+      "titles": [
+        "Track 23 — M2' Paraśakti Frontend Deep Design (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/23-m2-parashakti-frontend-deep.md"
+      ],
+      "taskCount": 20,
+      "stateCounts": {
+        "done": 20
+      },
+      "verificationCounts": {
+        "PASS": 17,
+        "REFUSED": 3
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: M2' Chladni chi shader (octet-drive/quartet-constrain), six-axis decoder m2.decodeAxisAt, 72-fold breadcrumb with 9:8 indicator, descent engine 23.18, elemental feed 23.19, MonoPoly classifier 23.20 in pratibimba-app engine. §2 track 23.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/23-m2-parashakti-frontend-deep.md",
+          "checksum": "0279459f6ed3a3ea932ea91ab7801af19403965ef644ee157c383d470ff976aa"
+        }
+      ]
+    },
+    {
+      "id": "24",
+      "titles": [
+        "Track 24 — M3' Mahāmāyā Frontend Deep Design (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/24-m3-mahamaya-frontend-deep.md"
+      ],
+      "taskCount": 21,
+      "stateCounts": {
+        "done": 21
+      },
+      "verificationCounts": {
+        "PASS": 18,
+        "REFUSED": 3
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: M3' inspectors in pratibimba-app (primary Fibonacci Ground lens id 16 plus its 16 derived divisions, 9-walk navigator, tarot wheel 22+56, hexagram browser over 384 graph, transcription, pentadic). The superseded Frame/Operator 18-aperture branch MUST NOT be rebuilt. NO Math.random — casts dispatch to the gateway. §2 track 24.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/24-m3-mahamaya-frontend-deep.md",
+          "checksum": "0b00adab66ebd6e900956263a4e90d3de6a7e1ef71a45d42711726025279d5d8"
+        }
+      ]
+    },
+    {
+      "id": "25",
+      "titles": [
+        "Track 25 — M4' Nara Frontend Deep Design (Delta) (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/25-m4-nara-frontend-deep.md"
+      ],
+      "taskCount": 24,
+      "stateCounts": {
+        "done": 24
+      },
+      "verificationCounts": {
+        "PASS": 18,
+        "REFUSED": 6
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: M4' 23 widget contracts in pratibimba-app (PASU wizard derived-only quintessence, oracle aliveness 4h decay, R-factor fretboard 7x6, session-close ceremony XOR+seeds+lamps, time-axis switcher). AR=14, least-real. §2 track 25.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/25-m4-nara-frontend-deep.md",
+          "checksum": "e5c1d8b60f553cd1be3083ddb1b1edf13a118fdf5725c6eed047451b8b7fd1af"
+        }
+      ]
+    },
+    {
+      "id": "26",
+      "titles": [
+        "Track 26 — M5' Epii Frontend Deep Design (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/26-m5-epii-frontend-deep.md"
+      ],
+      "taskCount": 15,
+      "stateCounts": {
+        "done": 15
+      },
+      "verificationCounts": {
+        "PASS": 15
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: M5' EBM observatory in pratibimba-app ('M5' does not talk. It scores.' 72-grid, three Klein-V4 tritone squares, wisdom-delta 8-byte XOR, psyche-facet badges never actor rows). §2 track 26.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/26-m5-epii-frontend-deep.md",
+          "checksum": "b4df18c2172848144b7aef0fdbe087d38c2ff37d4cce705140151f1b049a0f17"
+        }
+      ]
+    },
+    {
+      "id": "27",
+      "titles": [
+        "Track 27 — OmniPanel Tabs Deep UX (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/27-omnipanel-tabs-deep.md"
+      ],
+      "taskCount": 14,
+      "stateCounts": {
+        "done": 14
+      },
+      "verificationCounts": {
+        "PASS": 14
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: OmniPanel `/` membrane = EIGHT tabs = one substrate folded eight ways (has 3 of 8). Missing slash grammar + dispatch-trace/evidence/review/gateway/diagnostics + intent router + coordinate-tree left rail + governed-write path. §2 track 27.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/27-omnipanel-tabs-deep.md",
+          "checksum": "95ab44f4f0cc8bc1d605ac87ab58d8d70204bb50025a0b0b0fc2a0b6b8647fc0"
+        }
+      ]
+    },
+    {
+      "id": "28",
+      "titles": [
+        "Track 28 — `ide-shell-m0-m5` Chrome Deep UX (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/28-ide-shell-chrome-deep.md"
+      ],
+      "taskCount": 20,
+      "stateCounts": {
+        "done": 20
+      },
+      "verificationCounts": {
+        "PASS": 20
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: IDE chrome partitions (M0' reads / M5' governance / shared) + governed-write flow (Atelier Mobius write-back -> s1'.entity.capture Hen candidate -> Canon Studio; aletheia_* = agent tools via s4'.mediation.route, NOT a pane gateway method — see 28.7 CORRECTION); CrossLayoutIntent envelope; nine-id readiness inline. §2 track 28.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/28-ide-shell-chrome-deep.md",
+          "checksum": "3c2c040757f9690a6eed5d477059d8759d646cd9a6c0e9755bd7527072573e51"
+        }
+      ]
+    },
+    {
+      "id": "29",
+      "titles": [
+        "Track 29 — Integrated Plugin Composition Deep UX (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/29-integrated-plugins-composition-deep.md"
+      ],
+      "taskCount": 16,
+      "stateCounts": {
+        "done": 16
+      },
+      "verificationCounts": {
+        "PASS": 16
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: composition geometric-slot registry (handle-class allow/forbid; compositionLoad hard-fails juxtaposition) + 14 composition events + one useCompositionProfile subscription in pratibimba-app. §2 track 29.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/29-integrated-plugins-composition-deep.md",
+          "checksum": "edd041e59bd489d57f0c03e43425cc7514b24e0b1dc94f04741f634454865f38"
+        }
+      ]
+    },
+    {
+      "id": "30",
+      "titles": [
+        "Track 30 — Design Language Layer (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/30-design-language-layer.md"
+      ],
+      "taskCount": 14,
+      "stateCounts": {
+        "done": 14
+      },
+      "verificationCounts": {
+        "PASS": 14
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: the ENTIRE design-token bundle + 15-primitive shelf + consumption lint, re-homed to CSS vars/TS for React/Tauri. Token law = 30.8 derivation-backed tiers; motion = ratified DR-UI-4 (400/240/320). DR-WC-DL-1 (family palette) still open — re-decide for carrier. §2 track 30.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/30-design-language-layer.md",
+          "checksum": "51918172d4c553aacb4ad2f246f35c67a55b54826dcc608234512a03a834efcb"
+        }
+      ]
+    },
+    {
+      "id": "31",
+      "titles": [
+        "Track 31 — Theia Chrome Contributions Catalog (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/31-chrome-contributions-catalog.md"
+      ],
+      "taskCount": 13,
+      "stateCounts": {
+        "done": 13
+      },
+      "verificationCounts": {
+        "PASS": 13
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: chrome contributions — six-entry strip ids, chord grammar (cmd-period face toggle, cmd-shift-{0..5} Mn, cmd-1..8 tabs), slot policy (no three-pane main), family->archetype->position breadcrumbs, no-modal. §2 track 31.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/31-chrome-contributions-catalog.md",
+          "checksum": "4f8cb4dabd09b4a6f6248d040e2ed1149e1f78b93a195b0e37d520d0fa1415b6"
+        }
+      ]
+    },
+    {
+      "id": "32",
+      "titles": [
+        "Track 32 — Onboarding, Settings, Empty States, Cold Start (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/32-onboarding-settings-empty-states.md"
+      ],
+      "taskCount": 14,
+      "stateCounts": {
+        "done": 14
+      },
+      "verificationCounts": {
+        "PASS": 14
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER: onboarding/settings/empty-states — six-stage cold-start (non-modal splash 'Profile-tick 1 — system alive'), 9-id+5-flavour readiness via flavourOf(), per-Mn empty copy, typed-confirmation reset, per-artifact privacy opt-in. §2 track 32.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/32-onboarding-settings-empty-states.md",
+          "checksum": "4228433d875548d16a521c7f2fa1c0830b820ca78375b482a42afbe5b5c88d41"
+        }
+      ]
+    },
+    {
+      "id": "33",
+      "titles": [
+        "§0 — Handoff Context (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/33-harmonic-energy-channel-handoff.md"
+      ],
+      "taskCount": 4,
+      "stateCounts": {
+        "done": 4
+      },
+      "verificationCounts": {
+        "PASS": 4
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — harmonic energy channel handoff (kernel_energy_evaluate E4 personal / E5 harmonic [user data NEVER enters E5] / E6 verifier, 4:5:6 weighting; oracle codon-charge FFI fix — m3_compute_charges has zero Rust callers). CARRIER: the 4-5-0 engine is its consumption point. Expected-red owner. §2 track 33 + §5.1/§5.3.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/33-harmonic-energy-channel-handoff.md",
+          "checksum": "c71b183d010c6d98e66fd6917b46a2383ece87ee04a50e55ed7c197dd1313ec5"
+        }
+      ]
+    },
+    {
+      "id": "34",
+      "titles": [
+        "Track 34 — S0 Settings Infrastructure + Gemini Embedding 2 Accessor (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/34-s0-settings-and-gemini-embedding.md"
+      ],
+      "taskCount": 2,
+      "stateCounts": {
+        "done": 2
+      },
+      "verificationCounts": {
+        "PASS": 2
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate-recompose-carrier",
+      "carrierLaw": "MIXED — S0 settings (cloud-opt-in refusal contract, keys from env never over gateway, s0'.settings.*, epi settings) SUBSTRATE; CARRIER: settings pane presence + opt-in state only. §2 track 34.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/34-s0-settings-and-gemini-embedding.md",
+          "checksum": "50bb552e4b980b4f8bbdb112d0b79c9e6c3b8d86ef2f52407c2d02946847b6de"
+        }
+      ]
+    },
+    {
+      "id": "35",
+      "titles": [
+        "§0 — Handoff Context (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/35-fibonacci-ground-level-0-temporal-substrate.md"
+      ],
+      "taskCount": 3,
+      "stateCounts": {
+        "done": 3
+      },
+      "verificationCounts": {
+        "PASS": 3
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — Fibonacci Ground clock (CLOCK_BACKBONE[24], KairosFrame m4_planet_degrees_live, NOW frontmatter c_3_fibonacci_position/digit/tick12/backbone_index; Khora stamps, Hen validates). CARRIER: engine ring cardinal-zero {0,15,30,45} + zodiacal-five anchors, natal-Sun gold ring vs live-Sun silver dot. §2 track 35.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/35-fibonacci-ground-level-0-temporal-substrate.md",
+          "checksum": "bd645406b998fdcbb260aef39482c3b69e44f07d52ae4932e03ae2209644b0ae"
+        }
+      ]
+    },
+    {
+      "id": "36",
+      "titles": [
+        "Track 36 — Anuttara Pentadic Runtime Trace (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/36-anuttara-pentadic-runtime-trace.md"
+      ],
+      "taskCount": 8,
+      "stateCounts": {
+        "done": 8
+      },
+      "verificationCounts": {
+        "PASS": 8
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — AnuttaraPentadicRuntimeTrace + VakLanguificationTrace on ONE subscription (portal-core). CARRIER: pentadic inspector + vakLevel/m0Address chips — currently designed, claimed, UNCONSUMED. Gated on DR-VAK-4/5/6 (PROPOSED). §2 track 36.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/36-anuttara-pentadic-runtime-trace.md",
+          "checksum": "3144bcfdba827bd17c46c8181fc55dc2a67911c229cd565514f9157237874f42"
+        }
+      ]
+    },
+    {
+      "id": "37",
+      "titles": [
+        "Track 37 — Biological-Quaternionic Cross-Layer Integration: The Living Symbolic Body (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/37-biological-quaternionic-cross-layer-integration.md"
+      ],
+      "taskCount": 11,
+      "stateCounts": {
+        "done": 11
+      },
+      "verificationCounts": {
+        "PASS": 11
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — bio-quaternionic projection backlog (m2.epogdoonProjection, planetaryElementalWeights, cymaticMonoPolyState, m3.lensCodonBinary, m2m3.lensOrbiterRelations, m3.bioquaternionTranscription) in portal-core/epi-lib. CARRIER: epogdoon gap-wheel, MonoPoly cymatic shader state, elemental-weights feed, 24-amino backbone ring. §2 track 37.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/37-biological-quaternionic-cross-layer-integration.md",
+          "checksum": "654998fc25e32274936b8286e4ade78c6a5af6677ce981de3a9d249b17d0141f"
+        }
+      ]
+    },
+    {
+      "id": "38",
+      "titles": [
+        "Track 38 — Tunability Surface Architecture (RERUN — target: pratibimba-app + substrate)",
+        "Track 38 — Tunability Surface Implementation Plan (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/38-tunability-surface-architecture.md",
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/38-tunability-surface-implementation-plan.md"
+      ],
+      "taskCount": 8,
+      "stateCounts": {
+        "done": 8
+      },
+      "verificationCounts": {
+        "PASS": 8
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate-recompose-carrier",
+      "carrierLaw": "MIXED — tunability (every knob typed/classed/audited behind one schema; ~15 structural invariants NEVER tunable: EPOGDOON 9/8, RESONANCE_DIM 72, planet mod-10, M3_TAROT_CODON_MAP, M2_PLANET_LUT, VIRTUE_LUT[9], ...; s5'.tune.*, epi tune, config.toml) SUBSTRATE; CARRIER: Tuning pane (no modals). DR-TUNE-1..4 PROPOSED. §2 track 38.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/38-tunability-surface-architecture.md",
+          "checksum": "b4568b2d627169a87cc7ea9748caa41fe6b8ec9c1db86cb895bb0ff4a2e2e8e0"
+        },
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/38-tunability-surface-implementation-plan.md",
+          "checksum": "582d704f57d9ad6207bbf55443e5ad11cda0a74bfd9bf135d12f9b41c068642d"
+        }
+      ]
+    },
+    {
+      "id": "39",
+      "titles": [
+        "Track 39 — S5' as ONE Substrate Layer (gateway + Khora + S0 tmux + Redis hierarchical + CLI) (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/39-s5-prime-one-substrate-layer.md"
+      ],
+      "taskCount": 1,
+      "stateCounts": {
+        "done": 1
+      },
+      "verificationCounts": {
+        "PASS": 1
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — S5' one-substrate (five access patterns over ONE Indras Net; three arenas Siva/Shakti/Prana; s5'.gnostic.* + s0'.anuttara.trace + s1'.entity.* + epi gnostic CLI parity). CARRIER: Library pane over list_notebooks is the entry. §2 track 39.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/39-s5-prime-one-substrate-layer.md",
+          "checksum": "bee8e4859731fe8d4e0af55652dca3eb023fc05aaf30381afe42a585008e7707"
+        }
+      ]
+    },
+    {
+      "id": "40",
+      "titles": [
+        "Track 40 — Bimba Canon Update Ledger (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/40-bimba-canon-update-ledger.md"
+      ],
+      "taskCount": 6,
+      "stateCounts": {
+        "done": 6
+      },
+      "verificationCounts": {
+        "PASS": 6
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": true,
+      "inheritanceDisposition": "preserve-substrate-recompose-carrier",
+      "carrierLaw": "MIXED — Bimba canon-update ledger (s5'.canon_update.*, epi bimba propose|land|refuse, lint test) SUBSTRATE; CARRIER: CU review surface (combine with 48 bases view). §2 track 40.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/40-bimba-canon-update-ledger.md",
+          "checksum": "b0e3234ac8722ccfc2a3701094d8f6d8ddc36c6a559911368c35afde0dc7fc55"
+        }
+      ]
+    },
+    {
+      "id": "41",
+      "titles": [
+        "Track 41 — Vama Shakti Factory + Nara M4' Dia-logical Arena (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/41-vama-shakti-factory-and-dialogical-arena.md"
+      ],
+      "taskCount": 12,
+      "stateCounts": {
+        "done": 12
+      },
+      "verificationCounts": {
+        "PASS": 12
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — Vama Shakti factory (portal-core vama_shakti.rs, m4.arena.* gateway family, epi nara arena CLI parity, SpacetimeDB tables — VERIFY they exist AT ALL; four closed classifiers Egregore/Sprite/Daemon/Mantra, BLAKE3 identity). CARRIER: arena pane (large future); 41.7 widget spec is portable design law. Highest fraud-risk file (done=12, zero verification). §2 track 41.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/41-vama-shakti-factory-and-dialogical-arena.md",
+          "checksum": "7edc4c26e664808ce152f0b519b21372f9408ee55e8940727700c79350db0213"
+        }
+      ]
+    },
+    {
+      "id": "42",
+      "titles": [
+        "Track 42 — Harness Dynamics Surface (Multi-Harness Session Substrate + Skill Centralisation) (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/42-harness-dynamics-surface.md"
+      ],
+      "taskCount": 9,
+      "stateCounts": {
+        "done": 9
+      },
+      "verificationCounts": {
+        "PASS": 9
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — harness dynamics (harness = access/cost lever vs model-family = diversity lever; HarnessTurnEvent/HarnessDispatch, transcript-of-record ~/.epi/gate/transcripts). CARRIER: future session UI shows harness/lineage. Whole track suspect. §2 track 42.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/42-harness-dynamics-surface.md",
+          "checksum": "aa01e3bfa767737701774341da3a4721bc0c51850f469e72335a357ef774db39"
+        }
+      ]
+    },
+    {
+      "id": "43",
+      "titles": [
+        "Track 43 — End-of-Cycle-3 Audit Protocol (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/43-end-of-cycle-3-audit-protocol.md"
+      ],
+      "taskCount": 6,
+      "stateCounts": {
+        "done": 6
+      },
+      "verificationCounts": {
+        "PASS": 6
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — end-of-cycle hygiene (coordinate headers convention:coordinate-header:v1, .h < .c, forbidden-imports machine-enforced, DR-HYGIENE-1..3). CARRIER: pratibimba-app itself needs the header convention + its own forbidden-imports row (not covered by the Theia preflight). §2 track 43.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/43-end-of-cycle-3-audit-protocol.md",
+          "checksum": "ddcb2707e3750a562faf07deb8bbba5678b3dc6a7d67ca2aa7576c4973bbff24"
+        }
+      ]
+    },
+    {
+      "id": "44",
+      "titles": [
+        "Track 44 — Pratibimba Surface Standard (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/44-pratibimba-surface-standard.md"
+      ],
+      "taskCount": 10,
+      "stateCounts": {
+        "done": 10
+      },
+      "verificationCounts": {
+        "PASS": 10
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER — Pratibimba surface standard: THE LARGEST structural gap. No block contract, registry, catalog, verdict/annotate loop, s3'.temporal.* live transport, or block-doc persistence. §1 Blocks are carrier-independent LAW. Re-derive natively (React/Tauri), spec-first. §2 track 44.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/44-pratibimba-surface-standard.md",
+          "checksum": "b82b1e355d2b30a0543427f870e295e86b8d822da2511537298dc08ca318cd12"
+        }
+      ]
+    },
+    {
+      "id": "45",
+      "titles": [
+        "Track 45 — Bimba Map Repo-Level Indexing + DOX/OKF Unification (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/45-bimba-map-indexing-and-dox-okf-unification.md"
+      ],
+      "taskCount": 4,
+      "stateCounts": {
+        "done": 4
+      },
+      "verificationCounts": {
+        "PASS": 4
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": true,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — Bimba Map indexing / DOX-OKF (crystallisation upward Hen vs reflection downward Map projection never re-promotes; five cross-language normaliser impls must stay in sync; Hen is_valid_coordinate rejects depth>=2 — real gap). Coordinate rendering must use gateway-side normalisation, never a 6th local impl. §2 track 45.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/45-bimba-map-indexing-and-dox-okf-unification.md",
+          "checksum": "2dce1c51c46c5d0611e8ad0f3486f93c22b90624ddd5f5a77c11cb2eb32af6e3"
+        }
+      ]
+    },
+    {
+      "id": "46",
+      "titles": [
+        "Track 46 — Aeon Loop-Unit Paradigm (Z-Thread Graduation + Reusable Loop Registry) (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/46-aeon-loop-unit-paradigm.md"
+      ],
+      "taskCount": 6,
+      "stateCounts": {
+        "done": 6
+      },
+      "verificationCounts": {
+        "PASS": 6
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — Aeon loop unit (Aeon = graduated named parameterized Z-thread loop; doubling = QL P<->P' syzygy return; Z state machine queued..recomposing; eval ledger -> Redis + Graphiti). CARRIER: none yet (future agent-panel). §2 track 46.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/46-aeon-loop-unit-paradigm.md",
+          "checksum": "82c4f9fae6a524cf16ec2bad5171d9be02acfd043243e69df16c73d5ea37b622"
+        }
+      ]
+    },
+    {
+      "id": "47",
+      "titles": [
+        "Track 47 — Autonomous Loop Scheduling (Aeon Invocation: Cron Auto-Fire + Event + Consent) (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/47-autonomous-loop-scheduling.md"
+      ],
+      "taskCount": 4,
+      "stateCounts": {
+        "done": 4
+      },
+      "verificationCounts": {
+        "PASS": 4
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — autonomous loop scheduling (three triggers cron/event/consent; autonomous fire REQUIRES granted consent; one due-check in gateway heartbeat, NO new scheduler; cron::check_due_and_fire, epi gate cron, chronos_cron_fire, khora.result.wake). CARRIER: OmniPanel cron tab. §2 track 47.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/47-autonomous-loop-scheduling.md",
+          "checksum": "bd98f360d9f7a6a5988edae2f8f05f1227deec57d28a38f5f859f691f87a5e91"
+        }
+      ]
+    },
+    {
+      "id": "48",
+      "titles": [
+        "Track 48 — Obsidian Bases as the C5/CS Reflection Layer (Hen-Emitted `.base` Triad over CTx + MOC) (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/48-bases-cs-reflection-layer.md"
+      ],
+      "taskCount": 7,
+      "stateCounts": {
+        "done": 7
+      },
+      "verificationCounts": {
+        "PASS": 7
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": true,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — Bases/CS reflection layer (C-ladder CT=C1' write-form -> MOC=C4 -> Base=C5/CS read-only -> Mobius to C0; s1'.base.ensure, s2.graph.list_by_filter, BaseViewConfig/BasesRecord). CARRIER: a coordinate-keyed query-view pane (table/cards/list) over the existing GatewayClient. §2 track 48.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/48-bases-cs-reflection-layer.md",
+          "checksum": "ec2315dd52a4acd7804da62eaa6db87e83194f484d83bdbe5046fc61e369a1a6"
+        }
+      ]
+    },
+    {
+      "id": "49",
+      "titles": [
+        "Modal Resonator Bell Kernel Implementation Plan (RERUN — target: pratibimba-app + substrate)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/49-modal-resonator-bell-kernel-implementation.md"
+      ],
+      "taskCount": 8,
+      "stateCounts": {
+        "done": 8
+      },
+      "verificationCounts": {
+        "PASS": 8
+      },
+      "verificationClass": "K",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — modal resonator bell kernel (bell/modal interpretive over the existing 8+4 bus; kernel/gateway/Zod core LANDED & independently verified: ModalResonatorProfile, M123ChimeFrame, kernelBridge.m2.epogdoonProjection). CARRIER: 49.6 integrated coherence gate + 49.7 privacy/drift Zod guards + epogdoon capability parity. §2 track 49.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/49-modal-resonator-bell-kernel-implementation.md",
+          "checksum": "37599b8b4dc05549f59ed7329ac3baba8989fd053d907ce10274728f28411a89"
+        }
+      ]
+    },
+    {
+      "id": "50",
+      "titles": [
+        "Track 50 — Code-Mode Orchestration: VAK Script Execution (JSON→TS Program Synthesis)"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md"
+      ],
+      "taskCount": 16,
+      "stateCounts": {
+        "done": 16
+      },
+      "verificationCounts": {
+        "PASS": 16
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE — Code-Mode orchestration (JSON->TS program synthesis). Body/S/S4/pi-agent base tool-scripting + Body/S/S4/ta-onta/S4-4p-anima VAK six-coordinate executor (unified spawn(pi) seam, CP-nesting, tilldone CFP4 gate, (00/00)->score lifecycle) + Body/S/S4/ta-onta/S4-5p-aletheia Mercurius ELO trial + Body/S/S3 gateway method + Body/S/S0 portal-core vak_eval/diatonic + epi-cli CF table. NEW self-contained track; briefs inline. No pratibimba-app surface of its own (score/trace is gateway-observable; a session/score pane is a later UF follow-on).",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/50-code-mode-orchestration.md",
+          "checksum": "a640fd2a7e59cb67b0502c62d94ddef9b75af94e261023cab45c29b149df3f25"
+        }
+      ]
+    },
+    {
+      "id": "51",
+      "titles": [
+        "Track 51 — Specced-Surface Gap Closure: M′ sub-node surfaces with no tranche"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/51-specced-surface-gap-closure.md"
+      ],
+      "taskCount": 6,
+      "stateCounts": {
+        "done": 6
+      },
+      "verificationCounts": {
+        "PASS": 6
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER - specced-surface gap closure. Preserve landed pane bodies and recompose them into the new workbench; do not recreate substrate methods already consumed.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/51-specced-surface-gap-closure.md",
+          "checksum": "3c92348822a7be533cae1c3cdd3136a196103331793f3dd72d66aaec7beb4d04"
+        }
+      ]
+    },
+    {
+      "id": "52",
+      "titles": [
+        "Track 52 — The 4+2 Layout Layer: build the deep layer the carrier declares but does not have"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/52-four-plus-two-layout-layer.md"
+      ],
+      "taskCount": 6,
+      "stateCounts": {
+        "done": 6
+      },
+      "verificationCounts": {
+        "PASS": 6
+      },
+      "verificationClass": "UF",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "recompose-carrier",
+      "carrierLaw": "CARRIER - 4+2/deep layout layer. Preserve cross-layout identity and activity-mode behavior, but replace the tab-universe composition with the ratified stable workbench.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/52-four-plus-two-layout-layer.md",
+          "checksum": "6e668bfb3287836ec1911ae2a456a8e3c9525971536c777dbbc4337a4a97a7e8"
+        }
+      ]
+    },
+    {
+      "id": "53",
+      "titles": [
+        "Track 53 — S-Stack Residency Restoration: every method at its coordinate"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md"
+      ],
+      "taskCount": 11,
+      "stateCounts": {
+        "done": 11
+      },
+      "verificationCounts": {
+        "PASS": 11
+      },
+      "verificationClass": "W",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE - S-stack residency restoration. Treat landed coordinate ownership and boundary ratchets as inherited architecture; no shell task may move methods back into convenience modules.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/53-s-stack-residency-restoration.md",
+          "checksum": "dec8d08af7162cef14ad062f0bf75e8440422ea87232aa87161ffb98bace0c30"
+        }
+      ]
+    },
+    {
+      "id": "54",
+      "titles": [
+        "Track 54 — Bimba graph enrichment recovery from the transaction log"
+      ],
+      "sourceFiles": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/54-bimba-graph-enrichment-recovery.md"
+      ],
+      "taskCount": 5,
+      "stateCounts": {
+        "done": 5
+      },
+      "verificationCounts": {
+        "PASS": 5
+      },
+      "verificationClass": "UNCLASSIFIED",
+      "graphLiveAddon": false,
+      "inheritanceDisposition": "preserve-substrate",
+      "carrierLaw": "SUBSTRATE - Bimba graph enrichment recovery from transaction history. Preserve recovered graph properties, parity checks, and backup/runbook evidence; require an explicit current verification class before further changes.",
+      "sourceArtifacts": [
+        {
+          "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/54-bimba-graph-enrichment-recovery.md",
+          "checksum": "7775b40767de961ba8ca004ee3bb803320b0dd9ff34114e2ffffe2b27a3f02fa"
+        }
+      ]
+    }
+  ]
+}

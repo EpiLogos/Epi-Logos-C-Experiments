@@ -1,0 +1,38 @@
+{
+  "runId": "20260729T114451Z-54-T54.02",
+  "taskId": "54.T54.02",
+  "startedAt": "2026-07-29T11:44:51.703Z",
+  "owner": "opus5-t5402-impl",
+  "leaseExpiresAt": "2026-07-29T15:44:51.703Z",
+  "worktree": null,
+  "task": {
+    "id": "54.T54.02",
+    "trackId": "54",
+    "tranche": "T54.02",
+    "title": "Reconstruct the pre-wipe graph state and emit reviewable Cypher",
+    "effort": null,
+    "file": "54-bimba-graph-enrichment-recovery.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/54-bimba-graph-enrichment-recovery.md",
+    "dependsOn": [
+      "54.T54.01"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Map"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER = Body/M/pratibimba-app (panes/engine/design); SUBSTRATE crates carry unchanged. epi-theia = FROZEN. See recapture register §2 for this track's exact CARRIER line."
+  }
+}

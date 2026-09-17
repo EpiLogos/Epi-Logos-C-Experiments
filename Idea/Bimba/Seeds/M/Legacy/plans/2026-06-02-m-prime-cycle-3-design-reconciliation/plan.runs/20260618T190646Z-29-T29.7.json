@@ -1,0 +1,35 @@
+{
+  "runId": "20260618T190646Z-29-T29.7",
+  "taskId": "29.T29.7",
+  "startedAt": "2026-06-18T19:06:46.746Z",
+  "owner": "codex-m-dev-29-t29-7",
+  "leaseExpiresAt": "2026-06-18T21:06:46.746Z",
+  "worktree": null,
+  "task": {
+    "id": "29.T29.7",
+    "trackId": "29",
+    "tranche": "T29.7",
+    "title": "Klein-flip three-pole composition choreography *(spec-ahead-integration; closes Track 07 §7.7 DR-IG-3; CP-WC-IP-8 consumer)*",
+    "effort": null,
+    "file": "29-integrated-plugins-composition-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/29-integrated-plugins-composition-deep.md",
+    "dependsOn": [
+      "29.T29.6"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/integrated-composition/src/common/klein-flip-choreography.ts"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

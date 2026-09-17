@@ -1,7 +1,8 @@
 ---
 coordinate: "M1'"
 status: "active-domain-spec"
-updated: "2026-05-31"
+updated: "2026-07-18"
+cycle-3: reconciled
 depends_on:
   - "[[M'-SYSTEM-SPEC]]"
   - "[[M'-TAURI-PORT-SPEC]]"
@@ -63,6 +64,8 @@ M1' is the same six positions re-read as how-it-walks rather than what-it-is. Th
 
 This must stay precise: M1-5 is the **single torus** and [[SU(2)]] / 4π recognition site. The double-torus formalism belongs downstream at [[M3-5]], where [[Mahāmāyā]]'s wheel is read as `K² × T²_Mahāmāya`. [[M0]] is the prior ground M1 receives from; M0 is not the +1 term.
 
+The runtime consequence is explicit. `MathemeHarmonicProfile.m1Topology.ringQuaternion` and `anuttaraPentadicTrace.thirdSpanda.m1.ringQuaternion` are sourced from epi-lib's C-authored `RING_QUATERNION_LUT[12]` through `portal-core::spanda::ring_quaternion`. The M3 codon-charge quaternion (`q_cosmic`) remains a downstream transcription classifier and must never source M1 topology. The same Third-Spanda M1 record carries `degree720`, Hopf fiber, the M1-5 parent attribution, and the C `spanda_codon_advance` result for that generation. This is M1's operative contribution to the cumulative [[M1]]→[[M2]]→[[M3]] process; the `127/128/137` equations are reference forms over that process, not a substitute for it.
+
 ## §2 — User-Facing Surface
 
 - **Torus/path workspace** for walking from the selected [[M0']] coordinate through [[S2]] relation families. The walk is the audible-and-visible expression of the matheme.
@@ -71,6 +74,7 @@ This must stay precise: M1-5 is the **single torus** and [[SU(2)]] / 4π recogni
 - **Route preview** before stepping: which relations are live from the current coordinate, what (lens, mode) the next step would inherit, what interval the step would sound as.
 - **(lens, mode) selector** — the 84-state playing surface exposed as the matheme-navigation panel. Changing lens transposes the chromatic substrate (which note is the matheme-tonic); changing mode rotates the CF-progression (which relational-grammar colours the walk).
 - **Möbius-return indicator** at the moment of P5 → P0' rollover — the visible enharmonic-flip when the walk crosses the matheme's totalisation point.
+- **Session-close 7-8-9 Review reading** — a lean reading of one persisted close bundle for the exact selected session: row 7 reports whether supplied M1 traversal evidence completed the twelve-position `+7 mod 12` generator orbit; row 8 reports whether supplied audio traversal evidence completed the canonical eight-position octave and returned to its origin; row 9 decodes the verifier's exact nine-bit virtue witness aggregate and keeps completion distinct from coherence. The renderer reads these server-derived aggregates and never infers them from UI state.
 - **IDE clock-instrument surface** — per [[m5-prime-system-shape-and-tauri-ide-canon]], the future [[m1-paramasiva]] IDE extension renders the clock instrument, 84-state landscape, [[K²]] topology, and M1-5 [[Hopf bundle|Hopf]] inspector through the shared [[kernel-bridge]]. "Audio controls" on that surface mean controls over profile requests, route rendering, replay, and external encodings; they do not make M1' the owner of audio-genesis.
 
 ## §3 — Backend Contract Consumed
@@ -79,8 +83,11 @@ This must stay precise: M1-5 is the **single torus** and [[SU(2)]] / 4π recogni
 - [[S0]] kernel profile ([[MathemeHarmonicProfile]] at [[Body/S/S0/portal-core/src/harmonic_profile.rs]]) provides tick12, degree720, [[SU(2)]] layer, phase, position6, chromatic substrate, ratio role, square mirror law, diatonic [[CF]]/[[VAK]] projection, and resonance72. The 8+4 `audio_octet`/`nodal_quartet` bus is written into the shared profile by [[M2-1']] [[Vimarśa]] reading at [[Body/S/S0/portal-core/src/parashakti/vimarsha_reading.rs]]. **M1' uses `audio_octet` to sound the current coordinate; it never computes pitch locally and never owns or re-synthesizes the bus.**
 - [[S0]] publishes the deterministic profile-to-performance bridge event as `S0.kernel-bridge.m1-profile-to-performance` through [[Body/S/S0/epi-cli/src/gate/kernel_bridge_runtime.rs|kernel_bridge_runtime::m1_performance_event_from_profile]]. This event is the public-current handoff from `MathemeHarmonicProfile` into M1' performance state; renderers consume it and must not replace it with renderer-local pitch, tempo, or nodal derivation.
 - [[S3]] temporal projection provides session/DAY/NOW context for traversal records and optional deposition.
+- [[S3]] `nara.session_open` / `nara.session_close` binds a canonical protected protein handle to one exact session. At close, the S0 host derives row-7 and row-8 aggregates from bounded traversal sequences, composes the existing 4'-5'-0' contemplation result, reduces the verifier evidence to exactly nine witness bits plus coherence, and persists one opaque-ref bundle beneath a server-derived full active-[[PASU]] scope. `nara.session_close.read` is loopback-only and confines exact/latest reads to that active PASU and requested session. The bundle is protected-local (`0700` directory / `0600` file on Unix), atomic, symlink-refusing, and contains no trajectory, journal, raw contemplation, protein body, pattern packet, or [[Graphiti]] relation body.
 - [[S3]] kernel-profile observation deposits preserve the same handoff as `metadata.profile_to_performance_stream`, naming M1'/Paramasiva as consumer, the six required profile fields, kernel-tick tempo authority, and `renderer_derivation_allowed = false`.
 - M1' never uses animation frame count as clock authority. The walk-tempo is settable but always references the kernel-tick rate, not wall-clock frames.
+
+**No 137 conflation.** The close bundle's `7-8-9` rows are an evidence-reading register for a completed session; they do not define `137`, add three local counts, or prove the engine merely by being displayed. The cumulative [[M1]]→[[M2]]→[[M3]] Third-Spanda runtime remains the operative 137-bearing process: one profile generation carries M1's C-authored ring/advancement, M2's six-axis/epogdoon transformation evidence, and M3's DET/world-clock/codon reception. The `127`, `128`, and `137` equations remain interpretive reference forms over that runtime process.
 
 ## §4 — Required [[MathemeHarmonicProfile]] Fields
 
@@ -89,6 +96,7 @@ This must stay precise: M1-5 is the **single torus** and [[SU(2)]] / 4π recogni
 - `pointerAnchor`: current coordinate, relation descriptors, mirror refs, family refs, lens refs, inversion refs, CF/VAK refs.
 - `diatonic`: context-frame projection for mode-aware movement labels; lens-anchor identifier; mode-anchor CF.
 - `depositionAnchor`: traversal record handles when movement is deposited.
+- `anuttaraPentadicTrace.thirdSpanda.m1`: C ring quaternion, degree720, Hopf fiber, M1-5 parent attribution, and M1 advancement address for the same profile generation consumed by M2/M3.
 - `lensMode`: explicit `(lens, mode)` pair identifying the active 84-state cell.
 
 ## §5 — Privacy Boundary
@@ -322,9 +330,16 @@ The [[m1-paramasiva]] IDE extension described in [[m5-prime-system-shape-and-tau
 
 - [[m1-prime-paramasiva-instrument]] still states older M1' frequency-genesis ownership and proposes `m1_prime_audio_octet` / `m1_prime_nodal_quartet` functions. This spec treats those as design candidates that must be re-homed to the shared profile pipeline unless they become pure consumers/adapters of the M2-1' Vimarśa-written bus.
 - [[m1-prime-audio-generative-research]] leaves the canonical `MathemeHarmonicProfile` type owner unresolved: S0 `epi-lib`, `portal-core`, or an extracted Rust profile service. M1' cannot name a concrete ABI until that ownership is settled.
-- [[alpha_quaternionic_integration_across_M_stack]] §1.1 retains legacy "M0 Anuttara witness-axis" wording in the low-energy corridor after §0, §6.1, and §7.2 assign the +1 parent to M1-5. M1' follows the M1-5 attribution; the source paper still needs cleanup.
+- [[alpha_quaternionic_integration_across_M_stack]] §1.1 legacy witness-axis wording RESOLVED 2026-07-07 (DR-M1-1 sweep, Tranche 02.T2.1): the source paper now attributes the witness-axis to M1-5 (+1 parent) per M1'-SPEC §1 throughout (§1.1, comparison table, chakral-bridge and body-axis passages), with the Third Spanda execution-order (136 → −9 → 127 = M_7 → +1 → 128 → +9 → 137) recorded as the operational ground of the attribution.
 - [[K²]] must remain disambiguated: M1' renders the Klein-identified chromatic-fifths played topology, while [[M3-5]] owns the downstream double-torus formalism `K² × T²_Mahāmāya`.
 - [[m5-prime-system-shape-and-tauri-ide-canon]] names "audio-genesis controls" on the `m1-paramasiva` extension. UI copy and implementation must keep that as profile/event/render control, not audio-bus ownership.
+- `RESOLVED (2026-07-06, Architect-directed, by derivation) —` **K² torus aspect ratio = 16/9; the 9/8-aspect claim was a register category-error.** [[ql-musical-derivation-v3]] fixes each canonical ratio's REGISTER: 16/9 is the only ratio in the **internal-proportion register** ("16/9 is the ratio-face of 1/1 — the way 100% internally-decomposes into 64+36"; v3 §II-0), while 9/8 is a **generator/step-register** ratio (the chromatic stepping-quantum, the octave-residue, the fifth/fourth difference). A torus body IS one standing whole internally decomposed into two radii — the internal-proportion register — so the aspect is `R/r = 16/9` with `R + r = 1`: **R = 0.64 (Mahāmāyā 2⁶), r = 0.36 (Paraśakti 6²), outer equator = the unit 1/1**. The epogdoon is not lost on this body: its geometric seats are the **30°/tick stepping arc** (the chromatic generator) and the **double-cover relation `2r/R = 72/64 = 9/8`** — v3's third epogdoon derivation (2·6²/2⁶) rendered as geometry — plus the 2:1 winding ratio carrying the octave/double-cover. Making 9/8 the aspect would erase its own derivation. Provenance of the error: [[physical-pole-stack-architecture]]:110 floated `R/r = φ` and `R/r = 9/8` as illustrative options ("setting … produces …", no derivation); [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §5.1 hardened the aside into a mandate; the carrier inherited it (0.95/0.85 + 8/9 z-squash, both now corrected to K2_SCALE·(0.64, 0.36)). The m1.h substrate (`TORUS_R_MAJOR_F = 16/9`) and `state.rs` (`R=0.64, r=0.36`) were derivation-correct all along; [[M1-ARCHITECTURE]] §5.6's "16/9 epogdoon aspect" had the right number under the wrong name. Locked in `portal-core/tests/k2_geometry_reference.rs::k2_torus_carries_the_standing_identity_as_its_body_proportions` (R+r=1 · R/r=16/9 · 2r/R=9/8 · point-on-torus). No render toggle: the mathematics is univocal once registers are respected. *(raised 2026-07-02, whole-derivation session; resolved 2026-07-06, computational-core truth session)*
+
+### §13.7 — Bell-Kernel Foothold (2026-07-02)
+
+`ModalResonatorProfile`, serialized as `MathemeHarmonicProfile.modalResonator`, is the standing-body contract M1' consumes.
+
+Per [[m123-modal-resonator-bell-kernel-spec]] §13: M1' is declared the **resonant body / strike-topology CONSUMER** of the landed bell contract. The standing body is `MathemeHarmonicProfile.modalResonator` (S0-derived in `portal-core/src/kernel/projections/modal_resonator.rs`, additive on profile schema v1); the strike proof is `M123ChimeFrame` (1 Hz `m123.chime` gateway event, `strikeRoute: "profile-bus"`), whose `m1` section carries the K² surface-handle slot (null until a composition mount registers one; `playedTorusHandle` remains a retiring-surface slot). M1' reads both; it writes neither pitch nor nodal truth. The pratibimba-app carrier's instrument strikes on the chime when that stream is live and BLOCKS the strike on an incoherent world-clock binding — silence, never a faked chime.
 
 ## §14 — Readiness / Test Criteria
 
@@ -342,6 +357,19 @@ The [[m1-paramasiva]] IDE extension described in [[m5-prime-system-shape-and-tau
 - Tests prove the `m1-paramasiva` IDE extension and the lightweight 0/1 surface consume the same kernel-bridge/profile contract and do not carry duplicated frontend constants for `m1.h` substrate law.
 - Readiness for any M5/Epii Paramaśiva corpus promotion requires register-fidelity evaluation against this spec, [[m1-prime-paramasiva-instrument]], [[alpha_rasa_bridge_ql]], and [[alpha_quaternionic_integration_across_M_stack]], with contradictions routed to open-question review rather than silently absorbed.
 - Readiness is blocked until S2 returns typed harmonic pointer relation descriptors, not only string refs.
+
+### §14.1 — T2.11 [[Spanda]] Dual-Oscillator Landed (2026-07-08)
+
+Track 02 T2.11 (cycle-3 full rerun, [[02-m1-paramasiva-reconciliation]]) landed the [[M1-3]] [[Spanda]] tick-floor as an actual mechanism. Authored in C at [[Body/S/S0/epi-lib/src/m1.c]] / [[Body/S/S0/epi-lib/include/m1.h]] (the `T2.11: SPANDA DUAL-OSCILLATOR — THE TICK FLOOR` block) and mirrored in [[Body/S/S0/portal-core/src/spanda.rs]] — C ground → Rust surface; Rust reflects, never owns. The (0/1)/(1/0) dual counter-phase oscillation is now a [[Haken–Kelso–Bunz]] relative-phase field `φ̇ = Δω − a·sin φ − 2b·sin 2φ`, `V(φ) = −a·cos φ − b·cos 2φ`, bistable at φ=0 (in-phase, `SPANDA_SEED`, the `=`) and φ=π (antiphase, the `≠`); the slash in `0/1` is the `b·cos 2φ` potential barrier.
+
+- **Landscape asymmetry is canon.** `V″(0)=a+4b>0` always (identity unconditional); `V″(π)=4b−a>0 ⇔ b/a>1/4` (difference conditional — a held achievement); below threshold the antiphase well collapses with hysteresis. Tested.
+- **Standing identity `0/1 + 1/0 = 1/1` computed as superposition** — antinode 2× constructive (the 100%), node 0 (the `≠` heard as silence); the half-turn pole-swap exchanges node and antinode and is invisible on any solo-pole observable — the relational-only audibility of the `≠`.
+- **Two distinct order-2 involutions**, composing to `5−n` (Klein four-group): reflection `#(n)=11−n` (`spanda_invert`, traversal-reversal; on `RING_QUATERNION_LUT` it IS the [[SU(2)]] antipode `q↦−q`) and half-turn `n↦(n+6) mod 12` (`spanda_half_turn`, antiphase pole-swap = π polarity flip = 6 ticks × 30°). `spanda_invert` stays the reflection; `spanda_half_turn` is the new named op. Every `#` names which involution it means.
+- **tick12 is flowering-first.** The twelvefold is generated by the fold progression 4→6→8→10→12 (`SPANDA_CF_FOLD_COUNT`), prior to and generative of QL (6 = 12/2 derives FROM it). `tick12` is a readout of continuous cycle phase; nothing re-grounds on it. The `RING_SIZE` comment in `m1.h` now reads flowering-first.
+- **Codon advancement.** `spanda_codon_advance(Quaternion, cycle)` derives the rotational arc from the real [[SU(2)]] state (sign-carrying `atan2` over w/x — `q` and `−q` resolve differently), maps cycle → lens class, then applies the canonical epogdoon 9:8 compression 72→64 (`apply_epogdoon_compression`) — never the bare `tick12` integer. [[M3]] still owns the codon space; this owns only the advancement clock.
+- **Frequency anchor** (config-driven via `[ml.m1_paramasiva]` in `~/.epi-logos/config.toml`): conserved-delta band ~1.5–4.0 Hz, centre ≈2.5 Hz, cited; derived defaults `a=1`, `b=9/16` (the 16/9 generative gap inverted as second-harmonic coupling), `Δω=0`. Out-of-band `base_freq_hz` is refused by the loader; never the human-only fake-2.0.
+- **Honesty fences preserved.** The HKB 0/π bistability is NOT the [[SU(2)]] 720° double cover (that stays the [[M1-5]] quaternionic layer); the ~2.5 Hz beat is not a physical frequency across [[M2]]/[[M3]] (the codon relation is a shared clock index, never a resonance); three rates stay distinct — ~2.5 Hz beat ≠ 1 Hz `profile.update` heartbeat ≠ 12 Hz UI display framerate.
+- **Acceptance.** The six formerly expected-red kernel-truth tests are GREEN in [[Body/S/S0/portal-core/tests/kernel_truth.rs]] (`spanda_hkb_antiphase_bistability`, `spanda_standing_identity_superposition`, `tick12_flowers_from_oscillation`, `codon_advances_on_rotational_state_not_tick12`, `spanda_bistability_threshold_asymmetry`, `spanda_two_involutions_distinct`), their entries removed from `plan.runs/kernel-truth-expected-failures.json`; the index-arithmetic involution half stays pinned in `tests/spanda_involutions.rs`.
 
 ## §15a — M1-2 Ananda Vortex Architecture (Cross-Reference)
 

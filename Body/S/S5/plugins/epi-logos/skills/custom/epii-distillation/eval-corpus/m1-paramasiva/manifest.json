@@ -1,0 +1,60 @@
+{
+  "eval_corpus": "m1-paramasiva-canonical-derivation",
+  "version": "1.0.0",
+  "created": "2026-06-17",
+  "description": "Held-out canonical-derivation eval corpus for M1' Paramaśiva CPT. Contains representative passages from five canonical source files, used for perplexity-eval after every CPT pass per the anti-drift verification discipline (M5'-on-Paramaśiva spec §4.3).",
+  "halt_threshold": {
+    "metric": "perplexity_rise",
+    "threshold_pct": 10.0,
+    "relative_to": "previous_checkpoint"
+  },
+  "files": [
+    {
+      "name": "m1-spec.passages.jsonl",
+      "passage_count": 5,
+      "source_file": "Idea/Bimba/Seeds/M/M1'/M1'-SPEC.md",
+      "registers_covered": ["M1-0-through-M1-5-strata", "M1'-SPEC-domain-contracts"],
+      "derivational_register_classes": ["foundational-derivational"]
+    },
+    {
+      "name": "kernel-spec.passages.jsonl",
+      "passage_count": 5,
+      "source_file": "Idea/Bimba/Seeds/M/M1'/m1-prime-paramasiva-instrument.md, M1-ARCHITECTURE.md, physical-pole-stack-architecture.md",
+      "registers_covered": ["M1-0'-through-M1-5'-operational-primitives", "kernel-architectural-substrate"],
+      "derivational_register_classes": ["foundational-derivational"]
+    },
+    {
+      "name": "musical-derivation.passages.jsonl",
+      "passage_count": 5,
+      "source_file": "Idea/Bimba/Seeds/M/M5'/ql-musical-derivation.md",
+      "registers_covered": ["musical-mathematical-derivation", "12-MEF-lens-scale-derivation", "bimba-pratibimba-helix-architecture"],
+      "derivational_register_classes": ["foundational-derivational"]
+    },
+    {
+      "name": "alpha-rasa.passages.jsonl",
+      "passage_count": 5,
+      "source_file": "Idea/Bimba/Seeds/M/M3'/alpha_rasa_bridge_ql.md",
+      "registers_covered": ["alpha-rasa-physical-symbolic-bridge", "fine-structure-constant-QL-reading", "137-Spanda-derivation"],
+      "derivational_register_classes": ["foundational-derivational"]
+    },
+    {
+      "name": "alpha-quaternionic.passages.jsonl",
+      "passage_count": 5,
+      "source_file": "Idea/Bimba/Seeds/M/alpha_quaternionic_integration_across_M_stack.md",
+      "registers_covered": ["alpha-quaternionic-M-stack-integration", "Third-Spanda-Equation", "M1-M2-M3-manifestational-sequence"],
+      "derivational_register_classes": ["foundational-derivational"]
+    }
+  ],
+  "total_passages": 25,
+  "strata_coverage": {
+    "M1-0": "kernel-spec.passages.jsonl (Canonical Source read-only API)",
+    "M1-1": "m1-spec.passages.jsonl (Instance Manager +1 offset)",
+    "M1-2": "kernel-spec.passages.jsonl (Harmonic Engine Ananda matrices)",
+    "M1-3": "kernel-spec.passages.jsonl (Spanda Core seed bits)",
+    "M1-4": "m1-spec.passages.jsonl (QL Flowering dual partition)",
+    "M1-5": "m1-spec.passages.jsonl + alpha-quaternionic.passages.jsonl (Toroidal Recognition single torus)",
+    "cross-subsystem": "alpha-rasa.passages.jsonl + alpha-quaternionic.passages.jsonl"
+  },
+  "selection_method": "stratified random sample ensuring coverage across all M1-0 through M1-5 strata plus cross-subsystem theoretical material (alpha-rasa bridge, alpha-quaternionic integration, musical derivation). Each passage is 140-230 estimated tokens, representative of the canonical register features the model must preserve.",
+  "usage": "After every CPT pass, run eval_m1_canonical_derivation.py against the checkpoint. If perplexity on canonical material rises >10% relative to the previous checkpoint, halt training per the anti-drift verification discipline."
+}

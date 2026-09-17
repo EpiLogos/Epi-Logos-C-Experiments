@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "fixtureId": "visual-regression/lemniscate-transition",
+  "plan": "track-15-t15.12-visual-regression",
+  "tranche": "15.T15.12",
+  "status": "baseline-committed",
+  "privacyClass": "protected-local-synthetic-fixture",
+  "coverage": [
+    "15.5 lemniscate transition",
+    "0/1 toggle choreography"
+  ],
+  "diffThreshold": {
+    "pixelRatio": 0.02
+  },
+  "framePhases": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
+  "transition": {
+    "from": "daily-0-1",
+    "to": "ide-deep",
+    "reducedMotionEquivalent": "snap-to-settled-frame"
+  }
+}

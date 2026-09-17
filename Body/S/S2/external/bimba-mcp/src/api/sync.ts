@@ -8,8 +8,9 @@
 import { readdir, readFile, writeFile } from 'fs/promises';
 import { extname, join } from 'path';
 import { getNeo4jConnectionManager } from '../db/neo4j.js';
-import type { SyncResult, SyncStats, SyncDirection, Conflict } from '../schemas/sync.js';
-import { resolveVaultRoot } from '../repo-paths.js';
+import type { SyncResult, SyncStats, SyncDirection, SyncScope, Conflict } from '../schemas/sync.js';
+import { resolveVaultRoot, resolveMapRoot } from '../repo-paths.js';
+import { syncMapIndex, Neo4jMapIndexSource, MAP_INDEX_ROLE } from './map-index.js';
 
 // =============================================================================
 // Types
@@ -37,6 +38,7 @@ interface FileEntry {
  * @param direction Sync direction (default: obsidian_to_neo4j)
  * @param coordinateFilter Optional coordinate filter (e.g., 'P2', 'M2-5')
  * @param dryRun If true, report changes without making them
+ * @param scope Sync scope: 'default' (vault<->graph files) or 'map-index' (Neo4j->repo /map reflection)
  * @returns SyncResult with statistics and conflict information
  * @throws Error if vault path doesn't exist or sync fails
  */
@@ -44,10 +46,23 @@ export async function sync(
   vaultPath: string,
   direction: SyncDirection = 'obsidian_to_neo4j',
   coordinateFilter?: string,
-  dryRun = false
+  dryRun = false,
+  scope: SyncScope = 'default'
 ): Promise<SyncResult> {
   const startTime = new Date();
   const startMs = Date.now();
+
+  // The map-index scope is the Track 45 Neo4j->repo reflection projection. It graduates the
+  // vault-side projector into a maintained downward sync direction and refuses any upward flow.
+  if (scope === MAP_INDEX_ROLE) {
+    return syncMapIndex({
+      direction,
+      mapRoot: resolveMapRoot(),
+      source: new Neo4jMapIndexSource(),
+      coordinateFilter,
+      dryRun,
+    });
+  }
 
   try {
     // Initialize result structure
@@ -150,6 +165,13 @@ async function syncVaultToGraph(
 
         const uuid = frontmatter['uuid'] as string | undefined;
         const coord = frontmatter['coordinate'] as string | undefined;
+
+        // No re-promotion: map-index files are Neo4j->repo reflection artifacts. The data already
+        // lives in the graph; they are never crystallised back upward (source §3, Track 45).
+        if (frontmatter['c_4_artifact_role'] === MAP_INDEX_ROLE) {
+          stats.skipped += 1;
+          continue;
+        }
 
         if (!uuid) {
           stats.skipped += 1;

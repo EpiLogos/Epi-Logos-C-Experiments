@@ -91,6 +91,7 @@
           "conjugate_form_character": {"type": "ConjugateFormCharacter", "readiness": "authoritative"},
           "privacy_class": {"type": "ProfilePrivacyClass", "readiness": "authoritative", "default": "PublicCurrentContext"},
           "bedrock": {"type": "MathemeBedrockProjection", "readiness": "authoritative"},
+          "readiness_ledger": {"type": "Vec<MathemeHarmonicProfileReadinessFact>", "readiness": "authoritative", "privacy": "public_current_context", "notes": "Includes the bedrock readiness fact with `bedrock_link: BedrockProvenanceHandle`, rendering the file:line -> .rodata -> profile field -> readiness fact chain inline for provenance tooltips."},
           "pointer_anchor": {"type": "MathemePointerAnchorProjection", "readiness": "transitional", "blocker_id": "IOD-05+S2/S3", "notes": "Current shape lives at S0; final certification and downstream `depositionAnchor` depend on S2/S3 owners. Open decision: nullable vs readiness-blocked vs separate sub-objects."},
           "context_frames": {"type": "MathemeContextFrameWebProjection", "readiness": "authoritative"},
           "vak_address": {"type": "Option<VakAddress>", "readiness": "authoritative", "carries_to": ["epi gate dispatch anima-invoke (D3, 419aac5)", "sessions.patch RPC (C1, 19fbc8fc)"]},
@@ -108,12 +109,12 @@
       {
         "name": "PersonalIdentityProfile",
         "source": "Body/S/S0/portal-core/src/personal_identity.rs#L103",
-        "fields": ["q_personal:[f32;4]", "natal_chart_handle:String", "elemental_balance:ElementalBalance", "identity_hash:String", "privacy_class:ProfilePrivacyClass"],
+        "fields": ["q_personal:[f32;4]", "q_identity:[f32;4]", "natal_chart_handle:String", "elemental_balance:ElementalBalance", "identity_hash:String", "privacy_class:ProfilePrivacyClass"],
         "constructors": ["from_kerykeion_json", "from_natal_chart"],
         "readiness": "authoritative_protected",
         "privacy": "protected_local_body",
         "downstream_owner": "S0 protected arena; never leaves S0 except through handle/derived projection.",
-        "notes": "Public-current baseline fixture MUST NOT carry these fields. Track 01 T0 fixture test asserts absence of natalChartHandle, qPersonal, identityHash, elementalBalance."
+        "notes": "Public-current baseline fixture MUST NOT carry these fields. Track 01 T0 fixture test asserts absence of natalChartHandle, qPersonal, qIdentity, identityHash, elementalBalance."
       },
       {
         "name": "VakAddress",

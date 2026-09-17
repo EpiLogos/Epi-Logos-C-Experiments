@@ -27,6 +27,6 @@
     "build": "tsc -b",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build"
+    "test": "pnpm build && node --test tests/bridge-readiness.test.mjs tests/empty-state-registry.test.mjs tests/error-ux.test.mjs tests/kairos-enablement-step.test.mjs tests/privacy-opt-in-dialog.test.mjs tests/reset-section.test.mjs tests/settings-page.test.mjs tests/coordinate-breadcrumbs.test.mjs tests/profile-tick-visibility.test.mjs tests/block-contract.test.mjs tests/block-transport.test.mjs tests/selection-context.test.mjs"
   }
 }

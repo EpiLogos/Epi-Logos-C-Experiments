@@ -2,7 +2,40 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
+if (!globalThis.document) {
+    class HeadlessElement {
+        constructor() {
+            this.style = {};
+            this.ownerDocument = globalThis.document;
+        }
+        matches() {
+            return false;
+        }
+    }
+    globalThis.Element = HeadlessElement;
+    const documentElement = new HeadlessElement();
+    globalThis.document = {
+        documentElement,
+        body: new HeadlessElement(),
+        createElement: () => new HeadlessElement(),
+        querySelectorAll: () => [],
+        queryCommandSupported: () => false
+    };
+    globalThis.window = {
+        WebAssembly,
+        navigator: { maxTouchPoints: 0 },
+        localStorage: {
+            getItem: () => null,
+            setItem: () => undefined,
+            removeItem: () => undefined
+        }
+    };
+}
+
 const require = createRequire(import.meta.url);
+require.extensions['.css'] = () => undefined;
+require('@theia/core/lib/browser/frontend-application-config-provider').FrontendApplicationConfigProvider
+    .set({ applicationName: 'track-08-contribution-contract-test' });
 
 const runtime = require('../m-extension-runtime/lib/common/index.js');
 
@@ -126,6 +159,17 @@ test('observability contracts require coordinate, profile, privacy, evidence, an
             );
         }
     }
+});
+
+test('M0 contribution declares active-layer state selector for layout persistence', () => {
+    const m0 = extensionModules.find(mod => mod.EXTENSION_ID === 'm0-anuttara');
+    const selector = m0.TRACK_08_CONTRIBUTION.currentStateSelectors.find(
+        item => item.id === 'm0-anuttara.activeLayer'
+    );
+
+    assert.ok(selector);
+    assert.equal(selector.source, 'shared-bridge');
+    assert.deepEqual(selector.reads, ['activeLayer', 'implicateExplicate', 'mode']);
 });
 
 test('stand-alone and composition runtimes read the same SharedBridgeAdapter instance', async () => {

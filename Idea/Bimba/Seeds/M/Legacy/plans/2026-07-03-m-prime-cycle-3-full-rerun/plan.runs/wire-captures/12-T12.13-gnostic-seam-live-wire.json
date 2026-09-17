@@ -1,0 +1,163 @@
+{
+  "task": "12.T12.13",
+  "generatedAt": "2026-07-31T04:01:12.654Z",
+  "gatewayBin": "/Users/admin/Documents/Epi-Logos C Experiments/target/debug/epi",
+  "runs": [
+    {
+      "label": "A: default bridge (EPI_GNOSTIC_PYTHON unset)",
+      "port": 18961,
+      "env": {},
+      "calls": [
+        {
+          "method": "s5'.gnostic.status",
+          "params": {},
+          "timedOut": false,
+          "error": {
+            "code": "internal",
+            "message": "epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5, in <module>\n    from epi_gnostic.cli import main\nModuleNotFoundError: No module named 'epi_gnostic'"
+          },
+          "result": null
+        },
+        {
+          "method": "s5'.gnostic.models",
+          "params": {},
+          "timedOut": false,
+          "error": {
+            "code": "internal",
+            "message": "epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5, in <module>\n    from epi_gnostic.cli import main\nModuleNotFoundError: No module named 'epi_gnostic'"
+          },
+          "result": null
+        },
+        {
+          "method": "s5'.gnostic.enrich",
+          "params": {
+            "entityId": "wire-probe",
+            "coordinate": "#0",
+            "family": "#"
+          },
+          "timedOut": false,
+          "error": {
+            "code": "unimplemented",
+            "message": "s5'.gnostic.enrich is not implemented yet"
+          },
+          "result": null
+        },
+        {
+          "method": "s5'.gnostic.query",
+          "params": {
+            "question": "wire probe"
+          },
+          "timedOut": false,
+          "error": {
+            "code": "internal",
+            "message": "epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Library/Python/3.13/bin/epi-gnostic\", line 5, in <module>\n    from epi_gnostic.cli import main\nModuleNotFoundError: No module named 'epi_gnostic'"
+          },
+          "result": null
+        }
+      ],
+      "handshake": {
+        "ok": true,
+        "protocol": 3,
+        "advertisesGnosticEnrich": false,
+        "advertisedGnosticMethods": [
+          "s5'.gnostic.ingest",
+          "s5'.gnostic.query",
+          "s5'.gnostic.resolve",
+          "s5'.gnostic.musical_transcript",
+          "s5'.gnostic.notebook",
+          "s5'.gnostic.status",
+          "s5'.gnostic.models",
+          "s5'.gnostic.candidates",
+          "s5'.gnostic.etymology",
+          "s5'.gnostic.list_notebooks",
+          "s5'.gnostic.episode_search",
+          "s5'.gnostic.evidence_trace",
+          "s5'.gnostic.query_with_layers"
+        ]
+      }
+    },
+    {
+      "label": "B: bridge pinned to epi-gnostic venv console script",
+      "port": 18962,
+      "env": {
+        "EPI_GNOSTIC_PYTHON": "/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S5/epi-gnostic/.venv/bin/epi-gnostic"
+      },
+      "calls": [
+        {
+          "method": "s5'.gnostic.status",
+          "params": {},
+          "timedOut": false,
+          "error": null,
+          "result": {
+            "embedding_dim": 3072,
+            "embedding_model": "gemini-embedding-2-preview",
+            "llm_model": "gemini-3.1-flash-lite",
+            "neo4j_uri": "bolt://localhost:7687",
+            "status": "ok",
+            "workspace": "gnostic"
+          }
+        },
+        {
+          "method": "s5'.gnostic.models",
+          "params": {},
+          "timedOut": false,
+          "error": null,
+          "result": {
+            "cosine_threshold": 0.2,
+            "embedding_dim": 3072,
+            "embedding_model": "gemini-embedding-2-preview",
+            "llm_model": "gemini-3.1-flash-lite",
+            "status": "ok",
+            "workspace": "gnostic"
+          }
+        },
+        {
+          "method": "s5'.gnostic.enrich",
+          "params": {
+            "entityId": "wire-probe",
+            "coordinate": "#0",
+            "family": "#"
+          },
+          "timedOut": false,
+          "error": {
+            "code": "unimplemented",
+            "message": "s5'.gnostic.enrich is not implemented yet"
+          },
+          "result": null
+        },
+        {
+          "method": "s5'.gnostic.query",
+          "params": {
+            "question": "wire probe"
+          },
+          "timedOut": false,
+          "error": {
+            "code": "internal",
+            "message": "epi-gnostic failed: Traceback (most recent call last):\n  File \"/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S5/epi-gnostic/.venv/bin/epi-gnostic\", line 12, in <module>\n    sys.exit(main())\n             ~~~~^^\n  File \"/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S5/epi-gnostic/epi_gnostic/cli.py\", line 395, in main\n    asyncio.run(_run(args))\n    ~~~~~~~~~~~^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py\", line 195, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.13/3.13.12_1/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py\", line 725, in run_until_complete\n    return future.result()\n           ~~~~~~~~~~~~~^^\n  File \"/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S5/epi-gnostic/epi_gnostic/cli.py\", line 96, in _run\n    await rag.initialize()\n  File \"/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S5/epi-gnostic/epi_gnostic/wrapper.py\", line 83, in initialize\n    self.lightrag = LightRAG(\n                    ~~~~~~~~^\n        working_dir=self.config.working_dir,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<10 lines>...\n        auto_manage_storages_states=False,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"<string>\", line 57, in __init__\n  File \"/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S5/epi-gnostic/.venv/lib/python3.13/site-packages/lightrag/lightrag.py\", line 574, in __post_init__\n    check_storage_env_vars(storage_name)\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\n  File \"/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S5/epi-gnostic/.venv/lib/python3.13/site-packages/lightrag/utils.py\", line 2405, in check_storage_env_vars\n    raise ValueError(\n    ...<2 lines>...\n    )\nValueError: Storage implementation 'Neo4JStorage' requires the following environment variables: NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD"
+          },
+          "result": null
+        }
+      ],
+      "handshake": {
+        "ok": true,
+        "protocol": 3,
+        "advertisesGnosticEnrich": false,
+        "advertisedGnosticMethods": [
+          "s5'.gnostic.ingest",
+          "s5'.gnostic.query",
+          "s5'.gnostic.resolve",
+          "s5'.gnostic.musical_transcript",
+          "s5'.gnostic.notebook",
+          "s5'.gnostic.status",
+          "s5'.gnostic.models",
+          "s5'.gnostic.candidates",
+          "s5'.gnostic.etymology",
+          "s5'.gnostic.list_notebooks",
+          "s5'.gnostic.episode_search",
+          "s5'.gnostic.evidence_trace",
+          "s5'.gnostic.query_with_layers"
+        ]
+      }
+    }
+  ]
+}

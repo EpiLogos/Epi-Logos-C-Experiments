@@ -1,0 +1,37 @@
+{
+  "runId": "20260617T230433Z-12-T12.21",
+  "taskId": "12.T12.21",
+  "startedAt": "2026-06-17T23:04:33.273Z",
+  "owner": "codex-m-dev-12-t12-21",
+  "leaseExpiresAt": "2026-06-18T01:04:33.273Z",
+  "worktree": null,
+  "task": {
+    "id": "12.T12.21",
+    "trackId": "12",
+    "tranche": "T12.21",
+    "title": "`user-context` skill implementation with mandatory routing",
+    "effort": null,
+    "file": "12-agentic-layer-s4-s5.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/12-agentic-layer-s4-s5.md",
+    "dependsOn": [
+      "12.T12.20"
+    ],
+    "writeScopes": [
+      "Body/S/S4/pi-agent/skills/user-context/{SKILL.md, index.ts, schema.json}",
+      "Body/S/S5/epii-autoresearch-core/src/ebm_user_projection.py",
+      "Idea/Pratibimba/Self/PASU.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

@@ -63,6 +63,10 @@ impl TestGatewayClient {
         client
     }
 
+    pub fn home_dir(&self) -> &std::path::Path {
+        &self.env.home
+    }
+
     pub async fn connect(env: TestEnv, port: u16) -> Self {
         let server_lock = test_server_lock()
             .lock()
@@ -159,12 +163,124 @@ impl TestGatewayClient {
         })
     }
 
+    pub async fn next_event(&mut self, event_name: &str) -> Value {
+        let deadline = tokio::time::sleep(Duration::from_secs(5));
+        tokio::pin!(deadline);
+
+        loop {
+            let message = tokio::select! {
+                message = self.socket.next() => message,
+                _ = &mut deadline => panic!("timed out waiting for gateway event {event_name}"),
+            };
+            let message = message
+                .expect("gateway should stay connected")
+                .expect("event frame should decode");
+            if !message.is_text() {
+                continue;
+            }
+            let frame: Value =
+                serde_json::from_str(message.to_text().expect("gateway event should be text"))
+                    .expect("gateway event should be valid json");
+            if frame.get("type").and_then(Value::as_str) == Some("event")
+                && frame.get("event").and_then(Value::as_str) == Some(event_name)
+            {
+                return frame;
+            }
+        }
+    }
+
     pub fn gate_root(&self) -> std::path::PathBuf {
         self.env.home.join(".epi").join("gate")
     }
 
     pub fn transcript_path(&self, session_key: &str) -> std::path::PathBuf {
         chat::transcript_path(self.gate_root(), session_key)
+    }
+
+    /// Open a SECOND socket onto the already-running test server.
+    ///
+    /// `request()` drains and discards every frame that is not the response it
+    /// is waiting for, so an event broadcast DURING a request is eaten before
+    /// `next_event` can see it. That is fine for `profile.update`, which the
+    /// heartbeat keeps producing, but a once-per-request broadcast like
+    /// `portal.vak_eval` would be lost. An observer socket is also the more
+    /// honest proof: it is what a real subscriber (OmniPanel, `epi portal`)
+    /// actually is — a listener registered on the runtime, not the caller.
+    ///
+    /// Reuses this client's server, so it takes no lock and starts nothing.
+    #[allow(dead_code)]
+    pub async fn observer(&self, port: u16) -> GatewayObserver {
+        let (mut socket, _) = connect_async(format!("ws://127.0.0.1:{port}"))
+            .await
+            .expect("observer websocket should connect");
+        // Consume the server hello frame, exactly as the primary client does.
+        let _ = socket.next().await;
+        GatewayObserver { socket }
+    }
+}
+
+/// A read-only second connection used to witness broadcasts.
+pub struct GatewayObserver {
+    socket: WebSocketStream<MaybeTlsStream<tokio::net::TcpStream>>,
+}
+
+impl GatewayObserver {
+    /// Wait for the next broadcast of `event_name`, returning the whole frame.
+    #[allow(dead_code)]
+    pub async fn next_event(&mut self, event_name: &str) -> Value {
+        let deadline = tokio::time::sleep(Duration::from_secs(5));
+        tokio::pin!(deadline);
+
+        loop {
+            let message = tokio::select! {
+                message = self.socket.next() => message,
+                _ = &mut deadline => {
+                    panic!("timed out waiting for broadcast of {event_name}")
+                }
+            };
+            let message = message
+                .expect("gateway should stay connected")
+                .expect("event frame should decode");
+            if !message.is_text() {
+                continue;
+            }
+            let frame: Value =
+                serde_json::from_str(message.to_text().expect("event should be text"))
+                    .expect("gateway event should be valid json");
+            if frame.get("type").and_then(Value::as_str) == Some("event")
+                && frame.get("event").and_then(Value::as_str) == Some(event_name)
+            {
+                return frame;
+            }
+        }
+    }
+
+    /// Assert that `event_name` is NOT broadcast within a short window.
+    #[allow(dead_code)]
+    pub async fn expect_no_event(&mut self, event_name: &str, within: Duration) {
+        let deadline = tokio::time::sleep(within);
+        tokio::pin!(deadline);
+
+        loop {
+            let message = tokio::select! {
+                message = self.socket.next() => message,
+                _ = &mut deadline => return,
+            };
+            let Some(Ok(message)) = message else { return };
+            if !message.is_text() {
+                continue;
+            }
+            let Ok(frame) =
+                serde_json::from_str::<Value>(message.to_text().expect("event should be text"))
+            else {
+                continue;
+            };
+            assert_ne!(
+                frame.get("event").and_then(Value::as_str),
+                Some(event_name),
+                "{event_name} should not have been broadcast: {frame}"
+            );
+        }
     }
 }
 

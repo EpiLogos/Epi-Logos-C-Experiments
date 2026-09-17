@@ -1,27 +1,205 @@
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
 import { spawnSync } from "node:child_process";
-import { existsSync, writeFileSync, appendFileSync, mkdirSync } from "node:fs";
-import { join, basename } from "node:path";
+import { existsSync, writeFileSync, appendFileSync, mkdirSync, readFileSync } from "node:fs";
+import { join, basename, dirname } from "node:path";
 // cross-agent disabled: Claude/Gemini/Codex @-discovery not needed for pi-native agent dispatch
 // import registerCrossAgent from "./S0'/cross-agent.ts";
 import registerSystemSelect from "./S0'/system-select.ts";
 import { composePhaseVakAddress } from "./modules/z-phase-vak.ts";
 import {
+  createKhoraFlowWatcher,
+  RESULT_ARTIFACT_WAKE,
+  type KhoraFlowWatcher,
+  type KhoraFlowEvent,
+} from "./modules/flow-watcher.ts";
+import {
   consumePendingSophia,
   fireSophiaDisclosure,
   recordPendingSophia,
 } from "./modules/sophia-fire.ts";
+import { stampNowFibonacciGroundFrontmatter } from "./modules/now-fibonacci-ground.ts";
+import { stampNowKleinWeightingFrontmatter } from "./modules/now-klein-weighting.ts";
+import {
+  bindHarnessToSessionWorkspace,
+  parseSessionWorkspace,
+  readSessionWorkspaceForBootstrap,
+  writeSessionWorkspaceAtomically,
+  type GatewaySessionProjection,
+} from "./modules/session-workspace.ts";
+import {
+  AGENT_HIGHLIGHT_CATEGORIES,
+  enqueueKhoraSyncEvent,
+  khora_write_highlighted_inscription,
+  type KhoraHighlightedInscriptionInput,
+} from "./modules/highlighted-inscription.ts";
+
+export {
+  khora_write_highlighted_inscription,
+  type KhoraAgentHighlightCategory,
+  type KhoraHighlightedInscriptionInput,
+} from "./modules/highlighted-inscription.ts";
 
 // Session state singleton (persists within a PI process)
 let _sessionId: string | null = null;
 let _dayId: string | null = null;
 let _nowPath: string | null = null;
+let _flowWatcher: KhoraFlowWatcher | null = null;
+let _m4ProteinHandle: string | null = null;
+let _m4ProteinClosed = false;
 
 // Exported getters — other extensions and agent-team.ts read these
 export function getSessionId() { return _sessionId ?? process.env.EPI_SESSION_ID ?? null; }
 export function getDayId()     { return _dayId     ?? process.env.EPI_DAY_ID     ?? null; }
 export function getNowPath()   { return _nowPath   ?? process.env.EPI_NOW_PATH   ?? null; }
+
+function dailyNotePath(dayId: string | null): string | null {
+  if (!dayId) return null;
+  const vaultRoot = process.env.EPILOGOS_VAULT || join(process.env.EPI_REPO_ROOT || process.cwd(), "Idea");
+  return join(vaultRoot, "Empty", "Present", dayId, "daily-note.md");
+}
+
+function invokeNaraSessionDispatch(kind: "open" | "close", payload: Record<string, unknown>): Record<string, unknown> | null {
+  const command = kind === "open" ? "nara-session-open" : "nara-session-close";
+  const result = spawnSync(
+    "epi",
+    ["--json", "gate", "dispatch", command, "--payload-json", JSON.stringify(payload)],
+    { encoding: "utf8" },
+  );
+  if (result.status !== 0) {
+    console.warn(`[khora] nara.session_${kind} failed (non-blocking): ${result.stderr?.trim() || result.stdout?.trim() || "no output"}`);
+    return null;
+  }
+  try {
+    return JSON.parse(result.stdout || "{}");
+  } catch (e) {
+    console.warn(`[khora] nara.session_${kind} returned invalid JSON: ${e}`);
+    return null;
+  }
+}
+
+function openM4SessionProtein(sessionId: string): void {
+  const response = invokeNaraSessionDispatch("open", {
+    session_id: sessionId,
+    kairos: Date.now(),
+  });
+  const handle = response?.protein_handle;
+  if (typeof handle === "string" && handle.length > 0) {
+    _m4ProteinHandle = handle;
+    _m4ProteinClosed = false;
+  }
+}
+
+function closeM4SessionProtein(sessionId: string | null): Record<string, unknown> | null {
+  if (!sessionId || !_m4ProteinHandle || _m4ProteinClosed) return null;
+  const response = invokeNaraSessionDispatch("close", {
+    session_id: sessionId,
+    protein_handle: _m4ProteinHandle,
+    kairos_close: Date.now(),
+  });
+  if (response?.ok === true) {
+    _m4ProteinClosed = true;
+  }
+  return response;
+}
+
+function recordFlowWatcherEvent(api: ExtensionAPI, event: KhoraFlowEvent) {
+  const nowPath = _nowPath ?? process.env.EPI_NOW_PATH ?? event.path;
+  if (nowPath) {
+    try {
+      stampNowFibonacciGroundFrontmatter(nowPath);
+    } catch (e) {
+      console.warn(`[khora] NOW Fibonacci Ground stamp skipped: ${e}`);
+    }
+  }
+  appendFileSync(join(process.env.EPI_REPO_ROOT || ".", ".khora-flow-events.jsonl"), JSON.stringify(event) + "\n", "utf8");
+  const emit = (api as unknown as { emit?: (name: string, payload: unknown) => void | Promise<void> }).emit;
+  if (emit) {
+    void Promise.resolve(emit(event.kind, event));
+    if (event.kind !== RESULT_ARTIFACT_WAKE) {
+      void Promise.resolve(emit("tranche.complete", event));
+    }
+  }
+}
+
+function gateStateRoot(repoRoot: string): string {
+  return process.env.EPI_GATE_STATE_ROOT
+    || process.env.EPI_GATE_ROOT
+    || join(process.env.HOME || repoRoot, ".epi", "gate");
+}
+
+function currentGatewaySessionKey(): string | null {
+  return process.env.EPI_GATE_SESSION_KEY
+    || process.env.EPI_SESSION_KEY
+    || _sessionId
+    || process.env.EPI_SESSION_ID
+    || null;
+}
+
+function currentTmuxLease(sessionId: string): Record<string, unknown> {
+  return {
+    leaseId: process.env.EPI_TMUX_LEASE_ID || `khora-${sessionId}`,
+    leaseOwner: process.env.EPI_AGENT_ID || process.env.EPI_AGENT_NAME || "pi",
+    leasePurpose: "khora-session-workspace",
+    sessionName: process.env.EPI_TMUX_SESSION || process.env.TMUX_SESSION,
+    paneId: process.env.EPI_TMUX_PANE || process.env.TMUX_PANE,
+    live: Boolean(process.env.TMUX || process.env.EPI_TMUX_PANE || process.env.TMUX_PANE),
+  };
+}
+
+function applyBootstrapHarnessBinding(sessionKey: string, repoRoot: string): void {
+  try {
+    const binding = readSessionWorkspaceForBootstrap({
+      gateStateRoot: gateStateRoot(repoRoot),
+      sessionKey,
+    });
+    if (!binding) return;
+    process.env.EPI_HARNESS_BINDING = JSON.stringify(binding.workspace.harness);
+    process.env.EPI_HARNESS_ID = binding.workspace.harness.harness_id;
+    process.env.EPI_HARNESS_MODEL_SLOT = binding.workspace.harness.model_slot;
+    process.env.EPI_HARNESS_LEASE_RESUMED = binding.leaseResumed ? "1" : "0";
+  } catch (e) {
+    console.warn(`[khora] session-workspace bootstrap read skipped: ${e}`);
+  }
+}
+
+function bindCurrentPiHarness(repoRoot: string): void {
+  const sessionId = getSessionId();
+  if (!sessionId) return;
+  try {
+    const sessionKey = currentGatewaySessionKey() || sessionId;
+    const lineage = process.env.EPI_SUBAGENT_LINEAGE
+      ? JSON.parse(process.env.EPI_SUBAGENT_LINEAGE)
+      : [];
+    const session: GatewaySessionProjection = {
+      canonicalKey: sessionKey,
+      sessionId,
+      dayId: getDayId() ?? undefined,
+      vaultNowPath: getNowPath() ?? undefined,
+      runtimeCwd: repoRoot,
+      providerOverride: process.env.EPI_PROVIDER_OVERRIDE,
+      modelOverride: process.env.EPI_MODEL_OVERRIDE || process.env.PI_MODEL,
+      resultDropDir: process.env.EPI_RESULT_DROP_DIR,
+      resultDayDir: process.env.EPI_RESULT_DAY_DIR,
+      resultParentNowPath: process.env.EPI_PARENT_NOW_PATH,
+      parentSessionKey: process.env.EPI_PARENT_SESSION_KEY,
+      activeAgentId: process.env.EPI_AGENT_ID || process.env.EPI_AGENT_NAME || "anima",
+      subagentLineage: Array.isArray(lineage) ? lineage.map(String) : [],
+      terminalBinding: { lease: currentTmuxLease(sessionId) },
+    };
+    bindHarnessToSessionWorkspace({
+      gateStateRoot: gateStateRoot(repoRoot),
+      session,
+      harnessId: process.env.EPI_HARNESS_ID || "pi",
+      backing: "native-cli",
+      permissionProfile: process.env.EPI_PERMISSION_PROFILE || "khora-write-authority",
+      cfIdentity: process.env.EPI_CF_IDENTITY || "anima",
+      authority: "khora_write",
+    });
+  } catch (e) {
+    console.warn(`[khora] session-workspace harness bind skipped: ${e}`);
+  }
+}
 
 export async function khoraExtension(api: ExtensionAPI) {
   // registerCrossAgent(api);
@@ -50,9 +228,13 @@ export async function khoraExtension(api: ExtensionAPI) {
           if (line.startsWith("EPI_DAY_ID=")) _dayId = line.split("=")[1];
           if (line.startsWith("EPI_NOW_PATH=")) _nowPath = line.split("=")[1];
         }
-        return { content: [{ type: "text", text: result.stdout }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: result.stdout }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `khora_session_init error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `khora_session_init error: ${e}` }], isError: true };
       }
     },
   });
@@ -65,7 +247,9 @@ export async function khoraExtension(api: ExtensionAPI) {
     parameters: Type.Object({}),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       const result = spawnSync("epi", ["agent", "session", "status"], { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });
 
@@ -86,16 +270,64 @@ export async function khoraExtension(api: ExtensionAPI) {
           const dir = params.path.substring(0, params.path.lastIndexOf("/"));
           if (dir) mkdirSync(dir, { recursive: true });
         }
+        if (basename(params.path) === "session-workspace.json") {
+          const workspace = parseSessionWorkspace(params.content);
+          if (workspace.harness) {
+            writeSessionWorkspaceAtomically(params.path, workspace, "khora_write");
+            await enqueueKhoraSyncEvent({ path: params.path, coordinate: params.coordinate, action: "write" });
+            return {
+              // pi requires a details payload; this tool returns none.
+              details: undefined, content: [{ type: "text", text: `wrote ${params.path}` }] };
+          }
+        }
         writeFileSync(params.path, params.content, "utf8");
         // Enqueue graph sync event
-        await enqueue_sync_event({ path: params.path, coordinate: params.coordinate, action: "write" });
+        await enqueueKhoraSyncEvent({ path: params.path, coordinate: params.coordinate, action: "write" });
         // PASU.md writes trigger identity propagation: wind → Graphiti IdentityEvent
         if (params.path.endsWith("PASU.md")) {
           spawnSync("epi", ["nara", "wind", "--profile"], { encoding: "utf8" });
         }
-        return { content: [{ type: "text", text: `wrote ${params.path}` }] };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `wrote ${params.path}` }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `khora_write error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `khora_write error: ${e}` }], isError: true };
+      }
+    },
+  });
+
+  // ── Tool: khora_write_highlighted_inscription ─────────────────────
+  api.registerTool({
+    name: "khora_write_highlighted_inscription",
+    label: "Khora Write Highlighted Inscription",
+    description: "Write an agent response into a Nara canvas file as a highlighted inscription, then enqueue the canonical Khora graph-sync event.",
+    parameters: Type.Object({
+      path: Type.String({ description: "Absolute filesystem path to mutate" }),
+      category: Type.Union([
+        Type.Literal("recognition"),
+        Type.Literal("prospective-surfacing"),
+        Type.Literal("retrospective-surfacing"),
+        Type.Literal("kairos-touch"),
+        Type.Literal("somatic-mark"),
+        Type.Literal("live-spread"),
+      ]),
+      position: Type.Optional(Type.Union([Type.Literal("top"), Type.Literal("bottom")], { default: "top" })),
+      content: Type.String({ description: "Agent inscription content" }),
+      response_token: Type.String({ description: "Chronos response token binding this inscription to its tranche" }),
+      coordinate: Type.Optional(Type.String({ description: "Optional graph coordinate for sync" })),
+    }),
+    async execute(_id: string, params: KhoraHighlightedInscriptionInput, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      try {
+        const result = await khora_write_highlighted_inscription(params);
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: JSON.stringify(result) }] };
+      } catch (e) {
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `khora_write_highlighted_inscription error: ${e}` }], isError: true };
       }
     },
   });
@@ -111,8 +343,10 @@ export async function khoraExtension(api: ExtensionAPI) {
       action: Type.Union([Type.Literal("write"), Type.Literal("delete"), Type.Literal("move")]),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      await enqueue_sync_event(params);
-      return { content: [{ type: "text", text: "queued" }] };
+      await enqueueKhoraSyncEvent(params);
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: "queued" }] };
     },
   });
 
@@ -120,11 +354,31 @@ export async function khoraExtension(api: ExtensionAPI) {
   api.registerTool({
     name: "khora_sync_queue_flush",
     label: "Khora Sync Queue Flush",
-    description: "Flush .khora-sync-queue.jsonl to Neo4j (delegated to Hen/S2 for execution). Returns count of events processed.",
+    description: "Flush .khora-sync-queue.jsonl to Neo4j via `epi graph sync` per path-batch (Hen/S2 own the write law). Appends the flushed audit companion; idempotent on (path, ts). Returns counts + failures + Janus staleness warning.",
     parameters: Type.Object({}),
-    async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
-      // Stub: real implementation requires Neo4j connection (Phase 6)
-      return { content: [{ type: "text", text: "sync_queue_flush: stub (Neo4j not yet wired)" }] };
+    async execute(_id: string, _params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
+      // CCT-16 (ii): the real flush path (was: "Neo4j not yet wired" stub).
+      const { flushSyncQueue } = await import("./modules/sync-queue-flush.ts");
+      const repoRoot = process.env.EPI_REPO_ROOT || ".";
+      const report = flushSyncQueue(repoRoot, (path: string) => {
+        const result = spawnSync("epi", ["graph", "sync", path], { encoding: "utf8" });
+        return {
+          ok: result.status === 0,
+          output: (result.stdout || "") + (result.stderr || ""),
+        };
+      });
+      const lines = [
+        `sync_queue_flush: ${report.processed} event(s) flushed in ${report.batches} batch(es); ${report.skippedAlreadyFlushed} already-flushed skipped`,
+      ];
+      for (const failure of report.failures) {
+        lines.push(`FAILED ${failure.path}: ${failure.output.slice(0, 200)}`);
+      }
+      if (report.staleWarning) {
+        lines.push(report.staleWarning);
+      }
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: lines.join("\n") }] };
     },
   });
 
@@ -140,7 +394,9 @@ export async function khoraExtension(api: ExtensionAPI) {
       const args = ["agent", "session", "continuation"];
       if (params.summary) args.push("--summary", params.summary);
       const result = spawnSync("epi", args, { encoding: "utf8" });
-      return { content: [{ type: "text", text: result.stdout || result.stderr }] };
+      return {
+        // pi requires a details payload; this tool returns none.
+        details: undefined, content: [{ type: "text", text: result.stdout || result.stderr }] };
     },
   });
 
@@ -161,27 +417,55 @@ export async function khoraExtension(api: ExtensionAPI) {
     parameters: Type.Object({
       artifacts: Type.Optional(Type.Array(Type.String(), { description: "Absolute paths of vault notes touched during the session." })),
       improvement_vectors: Type.Optional(Type.Array(Type.String(), { description: "Free-form improvement vectors surfaced during the session — read by Epii recompose." })),
+      q_proposals: Type.Optional(Type.Array(Type.Object({
+        target_coordinate: Type.String(),
+        q_key: Type.String(),
+        q_value_candidate: Type.String(),
+        qm_witness_session: Type.String(),
+        qm_witness_vak: Type.Any(),
+        qm_witness_agent: Type.String(),
+        rationale: Type.String(),
+        opens_questions: Type.Array(Type.String()),
+        source_artifacts: Type.Array(Type.String()),
+      }), { description: "Candidate q_ refinements surfaced during session-close; not canon writes." })),
     }),
     async execute(_id: string, params: any, _signal?: unknown, _onUpdate?: unknown, _ctx?: unknown) {
       try {
         const session_id = getSessionId();
         if (!session_id) {
-          return { content: [{ type: "text", text: "khora_session_close skipped: no session_id (session not initialised)" }] };
+          return {
+            // pi requires a details payload; this tool returns none.
+            details: undefined, content: [{ type: "text", text: "khora_session_close skipped: no session_id (session not initialised)" }] };
         }
         recordPendingSophia(
           session_id,
           params.artifacts ?? [],
           params.improvement_vectors ?? [],
+          params.q_proposals ?? [],
         );
-        return { content: [{ type: "text", text: `sophia disclosure enriched for ${session_id} (fires at session_shutdown)` }] };
+        const closed = closeM4SessionProtein(session_id);
+        const suffix = closed
+          ? `; m4 protein sealed (${String(closed.protein_handle ?? "protected handle")})`
+          : "";
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `sophia disclosure enriched for ${session_id} (fires at session_shutdown)${suffix}` }] };
       } catch (e) {
-        return { content: [{ type: "text", text: `khora_session_close error: ${e}` }], isError: true };
+        return {
+          // pi requires a details payload; this tool returns none.
+          details: undefined, content: [{ type: "text", text: `khora_session_close error: ${e}` }], isError: true };
       }
     },
   });
 
   api.on("session_start", async () => {
     const repoRoot = process.env.EPI_REPO_ROOT || process.cwd();
+    const bootstrapSessionKey = currentGatewaySessionKey();
+    if (bootstrapSessionKey) {
+      // Track 39 AP-2 + Track 42.4: read durable harness binding before
+      // CONTINUATION.md recovery or session re-bootstrap work can run.
+      applyBootstrapHarnessBinding(bootstrapSessionKey, repoRoot);
+    }
 
     // 1. EPI_VAULT_NAME: autodetect from .obsidian/ in repo root (skip if already set by base.env)
     if (!process.env.EPI_VAULT_NAME) {
@@ -243,6 +527,32 @@ export async function khoraExtension(api: ExtensionAPI) {
           _nowPath = nowInitOut;
           process.env.EPI_NOW_PATH = _nowPath;
         }
+        if (_nowPath) {
+          try {
+            stampNowFibonacciGroundFrontmatter(_nowPath);
+          } catch (e) {
+            console.warn(`[khora] NOW Fibonacci Ground stamp skipped: ${e}`);
+          }
+          // Session-start only: user override is absolute and the weighting
+          // persists for the session, so flow events never re-stamp it (12.18).
+          try {
+            stampNowKleinWeightingFrontmatter(_nowPath, _sessionId);
+          } catch (e) {
+            console.warn(`[khora] NOW Klein-weighting stamp skipped: ${e}`);
+          }
+        }
+
+        _flowWatcher?.stop();
+        _flowWatcher = createKhoraFlowWatcher({
+          sessionId: _sessionId,
+          dayId: _dayId ?? new Date().toLocaleDateString("en-GB").replace(/\//g, "-"),
+          nowPath: _nowPath,
+          dailyNotePath: dailyNotePath(_dayId),
+          resultDropNowDir: process.env.EPI_RESULT_DROP_DIR ?? (_nowPath ? dirname(_nowPath) : null),
+          resultDropDayDir: process.env.EPI_RESULT_DAY_DIR ?? (_nowPath ? dirname(dirname(_nowPath)) : null),
+          onEvent: (event) => recordFlowWatcherEvent(api, event),
+        });
+        _flowWatcher.start();
 
         // 7. Echo the compose-phase VAK into the gateway SessionRecord.
         //    Env-propagation (step 4) is the load-bearing channel for child
@@ -269,6 +579,17 @@ export async function khoraExtension(api: ExtensionAPI) {
             `[khora] gateway sessions.patch failed (non-blocking): ${patchResult.stderr?.trim() || "no stderr"}`
           );
         }
+
+        // 8. START codon: bind Khora's compose phase to the M4 session
+        //    transcription chain. The protected protein handle is retained
+        //    locally; the body never crosses the profile bus under defaults.
+        openM4SessionProtein(_sessionId);
+
+        // 9. Track 42.4: persist the canonical parent Pi harness binding.
+        //    Sub-session launchers pass EPI_HARNESS_ID / EPI_PARENT_SESSION_KEY /
+        //    EPI_SUBAGENT_LINEAGE so the same binding path records their lease
+        //    lineage without introducing a separate session store.
+        bindCurrentPiHarness(repoRoot);
       }
     } else {
       console.warn(`[khora] session init skipped: ${initResult.stderr?.trim() || "no vault config"}`);
@@ -277,11 +598,24 @@ export async function khoraExtension(api: ExtensionAPI) {
     // Session breadcrumb is handled by the CLI — no GUI auto-open
   });
 
+  (api.on as unknown as (event: string, handler: (payload: Record<string, unknown>) => void) => void)(
+    "nara.activity.keystroke",
+    (payload) => _flowWatcher?.recordKeystroke(String(payload.path ?? payload.now_path ?? "")),
+  );
+
+  (api.on as unknown as (event: string, handler: (payload: Record<string, unknown>) => void) => void)(
+    "nara.activity.file_reentry",
+    (payload) => _flowWatcher?.handleFileOpened(String(payload.path ?? payload.now_path ?? "")),
+  );
+
   api.on("session_before_compact", async () => {
     spawnSync("epi", ["agent", "session", "continuation"], { stdio: "inherit" });
   });
 
   api.on("session_shutdown", async () => {
+    _flowWatcher?.stop();
+    _flowWatcher = null;
+
     // Z-cycle rehear (C2): this lifecycle handler is the SINGLE WRITER to the
     // Sophia JSONL inbox. Callers that want to enrich the disclosure must invoke
     // `khora_session_close` first — it stashes artifacts + improvement_vectors
@@ -290,19 +624,21 @@ export async function khoraExtension(api: ExtensionAPI) {
     try {
       const session_id = getSessionId();
       const day_id = getDayId();
+      closeM4SessionProtein(session_id);
       // had_pending true ⇔ `khora_session_close` was called this session →
       // closure_kind = "rehear" (deliberate Möbius return).
       // had_pending false ⇔ lifecycle fired without the tool call → process
       // killed before deliberate close → closure_kind = "force_closed".
       const consumed = session_id
         ? consumePendingSophia(session_id)
-        : { had_pending: false, artifacts: [], improvement_vectors: [] };
+        : { had_pending: false, artifacts: [], improvement_vectors: [], q_proposals: [] };
       const closure_kind = consumed.had_pending ? "rehear" : "force_closed";
       fireSophiaDisclosure({
         session_id,
         day_id,
         artifacts: consumed.artifacts,
         improvement_vectors: consumed.improvement_vectors,
+        q_proposals: consumed.q_proposals,
         closure_kind,
       });
     } catch (e) {
@@ -314,11 +650,4 @@ export async function khoraExtension(api: ExtensionAPI) {
       spawnSync("sh", [hookPath], { stdio: "inherit" });
     }
   });
-}
-
-// Internal helper
-async function enqueue_sync_event(event: { path: string; coordinate?: string; action: string }) {
-  const queuePath = join(process.env.EPI_REPO_ROOT || ".", ".khora-sync-queue.jsonl");
-  const line = JSON.stringify({ ...event, ts: new Date().toISOString() }) + "\n";
-  appendFileSync(queuePath, line, "utf8");
 }

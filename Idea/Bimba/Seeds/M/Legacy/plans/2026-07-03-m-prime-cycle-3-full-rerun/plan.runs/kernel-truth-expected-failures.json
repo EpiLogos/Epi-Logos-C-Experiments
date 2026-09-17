@@ -1,0 +1,14 @@
+{
+  "description": "Track 00.T4 expected-failures manifest — each entry is a REAL test that FAILS while its recapture-register violation stands. Red is the deliverable: the failure is the work order for its owning rerun track. An entry turning green must be investigated and re-recorded (remove it here only after the owning track's tranche is verified). Runner: .codex/scripts/kernel-truth.mjs (verify-all stage 'kernel-truth').",
+  "recordedAt": "2026-07-03",
+  "recordedBy": "claude-track00 (Track 00.T4)",
+  "expectedFailures": [
+    {
+      "suite": "portal-core",
+      "test": "psychoid_field_projection_carries_cymatic_signature_64_as_8x8_spectrum",
+      "owningTrack": "08 (integrated 4-5-0 §4.3.1)",
+      "registerRow": "hardening §5 C8 / Wave-A M4 row 8",
+      "reason": "No PsychoidFieldProjection exists on the profile bus. Law: the psychoid field surfaces cymatic_signature[f32;64] = 8 audio_octet bands × 8 standing-wave modes (fixed-size signature, never the protected field body). Authored 2026-07-06."
+    }
+  ]
+}

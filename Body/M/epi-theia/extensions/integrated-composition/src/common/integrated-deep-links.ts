@@ -1,4 +1,9 @@
-import { PrivacyClass } from '@pratibimba/m-extension-runtime';
+import type {
+    PrivacyClass,
+    SharedBridgeAdapter
+} from '@pratibimba/m-extension-runtime';
+import type { IntegratedReadinessAggregate } from './layout-claim';
+import type { IntegratedCompositionPersistedState } from './workspace-persistence';
 
 /**
  * Integrated deep-link grammar — 08.T7 deliverable 2.
@@ -49,6 +54,67 @@ export interface IntegratedDeepLink {
     readonly intendedInspector: IntegratedDeepLinkInspector | null;
 }
 
+export const COMPOSITION_ROUTES = {
+    cosmicComposition: 'epi-logos://ide/integrated-1-2-3/cosmic-composition',
+    personalComposition: 'epi-logos://ide/integrated-4-5-0/personal-composition'
+} as const;
+
+export type CompositionRoute =
+    typeof COMPOSITION_ROUTES[keyof typeof COMPOSITION_ROUTES];
+
+export type CompositionIntentCompositionId =
+    'cosmic-engine.integrated'
+    | 'jiva-siva.integrated';
+
+export type CompositionContributionId =
+    'cosmic-composition'
+    | 'personal-composition';
+
+export type CompositionLayoutRange =
+    'integrated-1-2-3'
+    | 'integrated-4-5-0';
+
+export interface CompositionIntent {
+    readonly route: typeof COMPOSITION_ROUTES[keyof typeof COMPOSITION_ROUTES];
+    readonly compositionId: 'cosmic-engine.integrated' | 'jiva-siva.integrated';
+    readonly stateHints: Partial<IntegratedCompositionPersistedState>;
+}
+
+export interface CompositionCrossLayoutIntent {
+    readonly coordinate: string | null;
+    readonly artifactUri: string | null;
+    readonly reviewId: string | null;
+    readonly dayNow: string | null;
+    readonly sessionKey: string | null;
+    readonly profileGeneration: number | null;
+    readonly privacyClass: 'public' | 'protected' | 'private' | null;
+    readonly requestedLayout: 'daily-0-1';
+    readonly requestedExtensionId: IntegratedDeepLinkPluginId;
+    readonly requestedContributionId: CompositionContributionId;
+    readonly reason: string;
+    readonly compositionRoute: CompositionRoute;
+    readonly compositionId: CompositionIntentCompositionId;
+    readonly stateHints: Partial<IntegratedCompositionPersistedState>;
+}
+
+export interface CompositionRouteResolution {
+    readonly route: CompositionRoute;
+    readonly layoutRange: CompositionLayoutRange;
+    readonly requestedLayout: 'daily-0-1';
+    readonly requestedExtensionId: IntegratedDeepLinkPluginId;
+    readonly requestedContributionId: CompositionContributionId;
+    readonly compositionId: CompositionIntentCompositionId;
+    readonly canMount: boolean;
+    readonly blockedBy: readonly string[];
+}
+
+export class InvalidCompositionRouteError extends Error {
+    constructor(public readonly raw: string) {
+        super(`Invalid composition route "${raw}"`);
+        this.name = 'InvalidCompositionRouteError';
+    }
+}
+
 export class InvalidIntegratedDeepLinkError extends Error {
     constructor(public readonly raw: string, public readonly reason: string) {
         super(`Invalid integrated deep link "${raw}": ${reason}`);
@@ -57,6 +123,33 @@ export class InvalidIntegratedDeepLinkError extends Error {
 }
 
 const SCHEME = 'epi-logos://ide/integrated/';
+
+const COMPOSITION_ROUTE_DESCRIPTORS: Record<
+    CompositionRoute,
+    Omit<CompositionRouteResolution, 'route' | 'canMount' | 'blockedBy'>
+> = Object.freeze({
+    [COMPOSITION_ROUTES.cosmicComposition]: Object.freeze({
+        layoutRange: 'integrated-1-2-3',
+        requestedLayout: 'daily-0-1',
+        requestedExtensionId: 'plugin-integrated-1-2-3',
+        requestedContributionId: 'cosmic-composition',
+        compositionId: 'cosmic-engine.integrated'
+    }),
+    [COMPOSITION_ROUTES.personalComposition]: Object.freeze({
+        layoutRange: 'integrated-4-5-0',
+        requestedLayout: 'daily-0-1',
+        requestedExtensionId: 'plugin-integrated-4-5-0',
+        requestedContributionId: 'personal-composition',
+        compositionId: 'jiva-siva.integrated'
+    })
+});
+
+const COMPOSITION_ROUTE_BY_ID: Record<CompositionIntentCompositionId, CompositionRoute> = Object.freeze({
+    'cosmic-engine.integrated': COMPOSITION_ROUTES.cosmicComposition,
+    'jiva-siva.integrated': COMPOSITION_ROUTES.personalComposition
+});
+
+const COMPOSITION_INTENT_EVENT_TYPE = 'composition.intent.dispatch';
 
 export function formatIntegratedDeepLink(link: Omit<IntegratedDeepLink, 'pluginId'>): string {
     const params = new URLSearchParams();
@@ -134,6 +227,99 @@ export function deepLinkForPlugin(
         routeName: ROUTE_NAME_BY_PLUGIN_ID[pluginId],
         pluginId,
         ...rest
+    });
+}
+
+export function buildCompositionIntent(
+    compositionId: CompositionIntent['compositionId'],
+    stateHints: Partial<IntegratedCompositionPersistedState> = {}
+): CompositionIntent {
+    if (
+        stateHints.compositionId !== undefined &&
+        stateHints.compositionId !== compositionId
+    ) {
+        throw new Error(
+            `Composition intent stateHints.compositionId (${stateHints.compositionId}) does not match ${compositionId}`
+        );
+    }
+
+    return Object.freeze({
+        route: COMPOSITION_ROUTE_BY_ID[compositionId],
+        compositionId,
+        stateHints: Object.freeze({ ...stateHints })
+    });
+}
+
+export function resolveCompositionRoute(
+    route: CompositionRoute,
+    readiness?: IntegratedReadinessAggregate
+): CompositionRouteResolution {
+    const descriptor = COMPOSITION_ROUTE_DESCRIPTORS[route];
+    if (!descriptor) {
+        throw new InvalidCompositionRouteError(route);
+    }
+
+    const blockedBy: string[] = readiness ? [...readiness.blockingContributorIds] : [];
+    if (
+        readiness &&
+        readiness.overall !== 'ready_public_current' &&
+        readiness.overall !== 'degraded_but_readable' &&
+        blockedBy.length === 0
+    ) {
+        blockedBy.push(readiness.overall);
+    }
+
+    return Object.freeze({
+        route,
+        ...descriptor,
+        canMount: blockedBy.length === 0,
+        blockedBy: Object.freeze(blockedBy)
+    });
+}
+
+export function buildCompositionCrossLayoutIntent(
+    intent: CompositionIntent
+): CompositionCrossLayoutIntent {
+    const resolution = resolveCompositionRoute(intent.route);
+    if (resolution.compositionId !== intent.compositionId) {
+        throw new Error(
+            `Composition route ${intent.route} resolves to ${resolution.compositionId}, not ${intent.compositionId}`
+        );
+    }
+
+    return Object.freeze({
+        coordinate: null,
+        artifactUri: null,
+        reviewId: null,
+        dayNow: null,
+        sessionKey: null,
+        profileGeneration: null,
+        privacyClass: 'public',
+        requestedLayout: resolution.requestedLayout,
+        requestedExtensionId: resolution.requestedExtensionId,
+        requestedContributionId: resolution.requestedContributionId,
+        reason: `integrated-composition: ${resolution.requestedContributionId}`,
+        compositionRoute: intent.route,
+        compositionId: intent.compositionId,
+        stateHints: Object.freeze({ ...intent.stateHints })
+    });
+}
+
+export async function dispatchCompositionIntent(
+    bridge: SharedBridgeAdapter,
+    intent: CompositionIntent
+): Promise<void> {
+    const crossLayoutIntent = buildCompositionCrossLayoutIntent(intent);
+    bridge.publish({
+        type: COMPOSITION_INTENT_EVENT_TYPE,
+        extensionId: 'integrated-composition',
+        emittedAt: Date.now(),
+        payload: Object.freeze({
+            route: intent.route,
+            compositionId: intent.compositionId,
+            crossLayoutIntent,
+            stateHints: crossLayoutIntent.stateHints
+        })
     });
 }
 

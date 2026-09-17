@@ -210,7 +210,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s2.graph.*",
         owner: "S2",
         status: CoordinateParityStatus::Adapter,
-        live_gateway_method: Some("s2.graph.query / s2.graph.node / s2.graph.traverse / s2.graph.pointer_web.compute / s2.graph.pointer_web.refresh / s2.graph.kernel_resonance.record"),
+        live_gateway_method: Some("s2.graph.query / s2.graph.node / s2.graph.list / s2.graph.traverse / s2.graph.harmonic_relations.materialize / s2.graph.pointer_web.compute(deprecated) / s2.graph.pointer_web.refresh(deprecated) / s2.graph.kernel_resonance.record"),
         cli_mirror: Some("epi graph"),
         body_path: "Body/S/S0/epi-cli/src/graph",
         test_evidence: &[
@@ -339,7 +339,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s4'.*",
         owner: "S4'",
         status: CoordinateParityStatus::Adapter,
-        live_gateway_method: Some("s4'.vak.evaluate / s4'.orchestrate / s4'.psyche.state / s4'.psyche.update / s4'.permission.get / skills.* / exec.approval.*"),
+        live_gateway_method: Some("s4'.vak.evaluate / s4'.orchestrate / s4'.mediation.route / s4'.mediation.capabilities.list / s4'.psyche.state / s4'.psyche.update / s4'.permission.get / s4'.context.assemble / s4'.orchestration.score / skills.* / exec.approval.*"),
         cli_mirror: Some("epi agent vak"),
         body_path: "Body/S/S4/ta-onta/S4-4p-anima",
         test_evidence: &[
@@ -473,7 +473,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s5'.improve.*",
         owner: "S5'",
         status: CoordinateParityStatus::Native,
-        live_gateway_method: Some("s5'.improve.status / s5'.improve.propose / s5'.improve.evaluate / s5'.improve.promote / s5'.improve.history"),
+        live_gateway_method: Some("s5'.improve.status / s5'.improve.propose / s5'.improve.evaluate / s5'.improve.promote / s5'.improve.history / s5'.improve.q_review.run / s5'.improve.q_review.latest / s5'.improve.q_review.night_pass"),
         cli_mirror: None,
         body_path: "Body/S/S5/epii-autoresearch-core",
         test_evidence: &[
@@ -492,7 +492,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         canonical_method: "s5'.epii.*",
         owner: "S5'",
         status: CoordinateParityStatus::Native,
-        live_gateway_method: Some("s5'.epii.status / s5'.epii.deposit / s5'.epii.runtime.context / s5'.epii.user.orientation / s5'.epii.pratibimba.status / s5'.epii.kairos.context"),
+        live_gateway_method: Some("s5'.epii.status / s5'.epii.deposit / s5'.epii.deposit.list / s5'.epii.runtime.context / s5'.epii.user.orientation / s5'.epii.pratibimba.status / s5'.epii.kairos.context / s5'.epii.axiom_translate / s5'.epii.axiom_translation_history"),
         cli_mirror: None,
         body_path: "Body/S/S5/epii-agent-core",
         test_evidence: &[
@@ -500,7 +500,7 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
             "gate_epii_agent_access.rs",
         ],
         authority_path: Some("Body/S/S5/epii-agent-core"),
-        adapter_path: Some("Body/S/S0/epi-cli/src/gate/epii.rs"),
+        adapter_path: Some("Body/S/S0/epi-cli/src/gate/gnostic.rs"),
         extraction_task: Some("13.T7"),
         allowed_s0_responsibilities: &[
             "dispatch entrypoint only — S5 DTO construction belongs in epii-agent-core",
@@ -537,6 +537,47 @@ pub const COORDINATE_PARITY_RECORDS: &[CoordinateParityRecord] = &[
         extraction_task: None,
         allowed_s0_responsibilities: &[
             "dispatch pass-through; gnosis governance owns law",
+        ],
+    },
+    CoordinateParityRecord {
+        canonical_method: "s5'.gnostic.*",
+        owner: "S5'",
+        status: CoordinateParityStatus::Native,
+        live_gateway_method: Some("s5'.gnostic.ingest / s5'.gnostic.query / s5'.gnostic.notebook / s5'.gnostic.status / s5'.gnostic.models / s5'.gnostic.candidates / s5'.gnostic.etymology / s5'.gnostic.list_notebooks / s5'.gnostic.episode_search / s5'.gnostic.evidence_trace / s5'.gnostic.query_with_layers / s5'.gnostic.enrich"),
+        cli_mirror: Some("epi techne gnosis ingest-gnostic/query-gnostic + epi-gnostic status"),
+        body_path: "Body/S/S5/epi-gnostic",
+        test_evidence: &["gate_epii_agent_access.rs", "gateway-contract/src/tests.rs"],
+        authority_path: Some("Body/S/S5/epi-gnostic"),
+        adapter_path: Some("Body/S/S0/epi-cli/src/gate/gnostic.rs"),
+        extraction_task: Some("06.T6.1"),
+        allowed_s0_responsibilities: &[
+            "thin gateway adapter over production epi-gnostic CLI and existing gnosis notebook store",
+        ],
+    },
+    CoordinateParityRecord {
+        // 40.T40.1 — the Track 40 bimba-canon-update ledger route family. Like
+        // the m4.arena.* family (41.6), it lives outside METHOD_NAMES: the
+        // gateway runtime + contract inventory (S5_CANON_UPDATE_METHODS) and the
+        // `epi bimba` admin CLI drive one substrate (DR-S5-ONE-1). SUBSTRATE,
+        // not nara personal access (05.T5.10).
+        canonical_method: "s5'.canon_update.*",
+        owner: "S5'",
+        status: CoordinateParityStatus::Native,
+        live_gateway_method: Some(
+            "s5'.canon_update.propose / s5'.canon_update.status / s5'.canon_update.list / s5'.canon_update.land / s5'.canon_update.refuse",
+        ),
+        cli_mirror: Some("epi bimba"),
+        body_path: "Body/S/S3/gateway::canon_update",
+        test_evidence: &[
+            "Body/S/S3/gateway/src/canon_update.rs s5_canon_update_round_trip",
+            "gate_bimba_canon_update.rs",
+        ],
+        authority_path: Some("Body/S/S3/gateway (canon_update runtime) + Body/S/S3/gateway-contract"),
+        adapter_path: Some("Body/S/S0/epi-cli/src/bimba.rs"),
+        extraction_task: Some("40.T40.1"),
+        allowed_s0_responsibilities: &[
+            "epi bimba CLI surface driving the canon_update runtime",
+            "ledger JSON persistence for the admin/scripted ONE-substrate carve-out",
         ],
     },
     CoordinateParityRecord {
@@ -606,13 +647,52 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "wizard.cancel"
         | "wizard.status"
         | "s0.command.exec"
-        | "s0.command.completion" => Some("s0.*"),
+        | "s0.command.completion"
+        | "s0'.verifier.check_state"
+        | "s0'.verifier.emit_query"
+        | "s0'.verifier.respond_question"
+        | "s0'.verifier.validate_membership"
+        | "s0'.verifier.owl_query"
+        | "s0'.anuttara.trace"
+        // 34.T34.1 settings surface (mapping repaired under 16.T16.14 —
+        // the methods landed in METHOD_NAMES without a parity row)
+        | "s0'.settings.api_key_status"
+        | "s0'.settings.opt_in"
+        // portal-core parashakti adapter — dispatch classifies it S0 product
+        | "m2.cymatic_invert"
+        | "kernelBridge.m2.epogdoonProjection(address72)"
+        | "kernelBridge.m2.cymaticMonoPolyState(address72)"
+        | "kernelBridge.m2.planetaryElementalWeights()"
+        | "kernelBridge.m3.lensCodonBinary(lensId)"
+        | "kernelBridge.m3.lensField(lensId)"
+        // 30.T30.13 — C-backed codon LUT read (gate::codon over portal_core);
+        // the `s2.` prefix names the consumer surface, the authority is S0.
+        | "s2.codon.aa_lookup"
+        // 24.T24.7 scalar-ref resolution — same S0 authority, same surface
+        | "s2.codon.scalar_ref.read"
+        // 02.T2.13 spanda walk family — portal-core anchor adapter (DR-M1-5)
+        | "m1.spanda.hold"
+        | "m1.spanda.release"
+        | "m1.spanda.walk_to"
+        | "m1.spanda.step"
+        | "m1.spanda.half_turn" => Some("s0.*"),
         "s2.graph.query"
         | "s2.graph.node"
+        | "s2.graph.list"
         | "s2.graph.traverse"
+        | "s2.graph.harmonic_relations.materialize"
         | "s2.graph.pointer_web.compute"
-        | "s2.graph.pointer_web.refresh" => Some("s2.graph.*"),
-        "s2.graph.kernel_resonance.record" => Some("s2.graph.*"),
+        | "s2.graph.pointer_web.refresh"
+        | "s2.graph.ananda_position"
+        | "s2.graph.gds.tangent_overlay"
+        | "s2.graph.ontology.reload"
+        | "s2.graph.seed.snapshot"
+        | "s2.graph.core65.audit"
+        | "s2.graph.promotion.dry_run"
+        | "s2.graph.promotion.commit"
+        | "s2.graph.relation_family.list"
+        | "s2.graph.list_by_filter" => Some("s2.graph.*"),
+        "s2.graph.kernel_resonance.record" | "s2.parashaktiCorrespondences" => Some("s2.graph.*"),
         "s2'.coordinate.resolve"
         | "s2'.coordinate.cypher"
         | "s2'.coordinate.ingest"
@@ -625,12 +705,36 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s2'.retrieve"
         | "s2'.rerank"
         | "s2'.enrich" => Some("s2'.*"),
-        "s3'.kernel.envelope.publish" => Some("s3'.*"),
+        "s3'.kernel.envelope.publish"
+        | "s3'.being_pattern.observe"
+        | "s3'.being_pattern.project"
+        | "s3'.being_pattern.subscribe"
+        | "s3'.being_pattern.review_candidate" => Some("s3'.*"),
         "s1'.vault.read_file"
         | "s1'.vault.write_file"
         | "s1'.vault.rename_file"
         | "s1'.vault.move_file"
-        | "s1'.semantic.suggest_links" => Some("s1'.*"),
+        | "s1'.base.ensure"
+        | "s1'.q_articulation.accept"
+        | "s1'.semantic.suggest_links"
+        | "s1'.type.classify_c_layer"
+        | "s1'.entity.promote_to_type"
+        | "s1'.world.graduate"
+        | "s1'.entity.capture"
+        | "s1'.entity.classify"
+        | "s1'.entity.list"
+        | "s1'.world.list_entities"
+        // `vault.day.ensure` is the S1 day-scaffold surface (dispatch plan:
+        // S1HenAdapter, extraction target Body/S/S1/hen-compiler-core). It
+        // landed in METHOD_NAMES without a coordinate mapping, which reds
+        // `every_product_gateway_method_has_coordinate_mapping`; it belongs to
+        // the same S1' family as the rest of the vault write surface.
+        | "vault.day.ensure" => Some("s1'.*"),
+        // 25.T25.11 / oracle cast — the S0 nara adapter family whose parity
+        // record already advertises `nara.*` (canonical_method "s5.m.*").
+        "nara.transform.start" | "nara.transform.advance" | "s5.oracle.iching.cast" => {
+            Some("s5.m.*")
+        }
         "s5.trajectory.verify" | "s5.ebm.train" | "s5.ebm.export_state" => Some("s5'.improve.*"),
         "s5'.anuttara.diagnose" => Some("s5'.ql.*"),
         "channels.status"
@@ -671,9 +775,9 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "cron.runs" | "models.list" | "status" | "health" | "status.summary"
         | "health.snapshot" | "presence.list" | "usage.status" | "usage.cost"
         | "system-presence" | "system-event" => Some("s3'.*"),
-        "s3'.temporal.context"
-        | "s3'.temporal.subscribe"
-        | "s3'.spacetime.subscribe" => Some("s3'.temporal.*"),
+        "s3'.temporal.context" | "s3'.temporal.subscribe" | "s3'.spacetime.subscribe" => {
+            Some("s3'.temporal.*")
+        }
         "device.pair.list"
         | "device.pair.approve"
         | "device.pair.reject"
@@ -692,12 +796,26 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s4'.vak.evaluate"
         | "s4'.orchestrate"
         | "s4'.mediation.route"
+        | "s4'.mediation.capabilities.list"
         | "s4'.psyche.state"
         | "s4'.psyche.update"
-        | "s4'.permission.get" => Some("s4'.*"),
+        | "s4'.permission.get"
+        | "s4'.context.assemble"
+        | "s4'.orchestration.score"
+        // 32.T32.11 — the Khora (S4-0') session-start carrier lifecycle;
+        // dispatch classifies it S4OrchestrationAdapter like the rest of s4'.
+        | "khora.session_start" => Some("s4'.*"),
         "s5'.review.inbox" | "s5'.review.submit" | "s5'.review.resolve" | "s5'.review.history" => {
             Some("s5'.review.*")
         }
+        "s5'.tune.registry.list"
+        | "s5'.tune.registry.get"
+        | "s5'.tune.registry.set"
+        | "s5'.tune.audit.read"
+        | "s5'.tune.lock.toggle"
+        | "s5'.tune.propose"
+        | "s5'.tune.proposals.list"
+        | "s5'.tune.proposals.resolve" => Some("s5'.tune.*"),
         "s5.episodic.search"
         | "s5.episodic.deposit"
         | "s5.episodic.kernel_resonance.deposit"
@@ -706,14 +824,46 @@ pub fn coordinate_family_for_gateway_method(method: &str) -> Option<&'static str
         | "s5'.improve.propose"
         | "s5'.improve.evaluate"
         | "s5'.improve.promote"
-        | "s5'.improve.history" => Some("s5'.improve.*"),
+        | "s5'.improve.history"
+        | "s5'.improve.q_review.run"
+        | "s5'.improve.q_review.latest"
+        | "s5'.improve.q_review.night_pass" => Some("s5'.improve.*"),
         "s5'.epii.status"
         | "s5'.epii.deposit"
+        // 26.T26.10 — the READ sibling of `s5'.epii.deposit` (dispatch.rs
+        // routes it to the same `epii` adapter over epii-agent-core). It
+        // landed in METHOD_NAMES without a parity row, which reds
+        // `every_product_gateway_method_has_coordinate_mapping`; it belongs to
+        // the same family as the write path it projects.
+        | "s5'.epii.deposit.list"
         | "s5'.epii.runtime.context"
         | "s5'.epii.user.orientation"
         | "s5'.epii.pratibimba.status"
-        | "s5'.epii.kairos.context" => Some("s5'.epii.*"),
+        | "s5'.epii.kairos.context"
+        | "s5'.epii.axiom_translate"
+        | "s5'.epii.axiom_translation_history" => Some("s5'.epii.*"),
         "s5'.gnosis.context.retrieve" => Some("s5'.gnosis.*"),
+        // 40.T40.1 canon-update ledger family (parity-visible; not in
+        // METHOD_NAMES — driven by the gateway runtime + `epi bimba` CLI).
+        "s5'.canon_update.propose"
+        | "s5'.canon_update.status"
+        | "s5'.canon_update.list"
+        | "s5'.canon_update.land"
+        | "s5'.canon_update.refuse" => Some("s5'.canon_update.*"),
+        "s5'.gnostic.ingest"
+        | "s5'.gnostic.query"
+        | "s5'.gnostic.notebook"
+        | "s5'.gnostic.status"
+        | "s5'.gnostic.models"
+        | "s5'.gnostic.resolve"
+        | "s5'.gnostic.musical_transcript"
+        | "s5'.gnostic.candidates"
+        | "s5'.gnostic.etymology"
+        | "s5'.gnostic.list_notebooks"
+        | "s5'.gnostic.episode_search"
+        | "s5'.gnostic.evidence_trace"
+        | "s5'.gnostic.query_with_layers"
+        | "s5'.gnostic.enrich" => Some("s5'.gnostic.*"),
         "node.pair.request" | "node.pair.list" | "node.pair.approve" | "node.pair.reject"
         | "node.pair.verify" => Some("s4.agent.*"),
         _ => None,

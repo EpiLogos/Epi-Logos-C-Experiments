@@ -1,6 +1,6 @@
 mod common;
 
-use common::{run_epi, TestEnv};
+use common::{read_to_string, run_epi, write_executable, TestEnv};
 use epi_logos::gate::{session_store::SessionStore, transcripts};
 use serde_json::Value;
 
@@ -227,4 +227,104 @@ fn team_dispatch_chain_run_and_subagent_runtime_use_real_gate_state() {
     assert_eq!(dispatched.spawned_by.as_deref(), Some("agent:main:main"));
     assert!(dispatched.team_id.is_some());
     assert_eq!(dispatched.orchestration_kind.as_deref(), Some("parallel"));
+}
+
+#[test]
+fn terminal_backed_team_and_chain_use_terminal_lease_not_cmux_projection() {
+    let base_env = TestEnv::with_fake_pi();
+    let gate_root = base_env.root.join("gate");
+    let tmux_log = base_env.root.join("tmux-team.log");
+    let tmux_counter = base_env.root.join("tmux-counter");
+    let tmux_bin = write_executable(
+        base_env.root.join("bin/tmux"),
+        &format!(
+            "#!/bin/sh\ncmd=\"$1\"\nprintf '%s' \"$cmd\" >> \"{log}\"\nshift\nfor arg in \"$@\"; do printf ' <%s>' \"$arg\" >> \"{log}\"; done\nprintf '\\n' >> \"{log}\"\ncase \"$cmd\" in\n  has-session) exit 1 ;;\n  display-message)\n    case \"$*\" in\n      *window_id*) printf '@lease-window' ;;\n      *pane_id*)\n        n=0\n        [ -f \"{counter}\" ] && n=$(cat \"{counter}\")\n        n=$((n + 1))\n        printf '%s' \"$n\" > \"{counter}\"\n        printf '%%lease-pane-%s' \"$n\"\n        ;;\n    esac\n    exit 0\n    ;;\n  *) exit 0 ;;\nesac\n",
+            log = tmux_log.display(),
+            counter = tmux_counter.display()
+        ),
+    );
+    let env = base_env
+        .with_env("EPI_GATE_STATE_ROOT", gate_root.display().to_string())
+        .with_env("EPI_AGENT_TERMINAL_BACKED", "1")
+        .with_env("EPI_AGENT_TMUX_BIN", tmux_bin.display().to_string());
+
+    let dispatch = run_epi(
+        &[
+            "--json",
+            "agent",
+            "team",
+            "dispatch",
+            "--parent-session",
+            "agent:main:main",
+            "--task",
+            "Inspect terminal authority",
+            "--agent",
+            "vak",
+        ],
+        &env,
+    );
+    assert!(
+        dispatch.status.success(),
+        "terminal team dispatch failed: {}",
+        dispatch.stderr
+    );
+    let dispatch_value: Value = serde_json::from_str(&dispatch.stdout).expect("dispatch json");
+    assert_eq!(dispatch_value["status"], "running");
+    let projected_cmux_pane = dispatch_value["cmuxPaneId"]
+        .as_str()
+        .expect("projected cmux pane");
+    let terminal_pane = dispatch_value["terminalBinding"]["tmuxPaneId"]
+        .as_str()
+        .expect("terminal pane");
+    assert_ne!(
+        projected_cmux_pane, terminal_pane,
+        "cmux projection must not impersonate terminal process authority"
+    );
+
+    let log = read_to_string(&tmux_log);
+    assert!(
+        log.contains(&format!("send-keys <-t> <{terminal_pane}>")),
+        "runtime command must target the leased terminal pane, log:\n{log}"
+    );
+    assert!(
+        !log.contains(&format!("send-keys <-t> <{projected_cmux_pane}>")),
+        "runtime command must not target a guessed cmux pane id, log:\n{log}"
+    );
+
+    let chain = run_epi(
+        &[
+            "--json",
+            "agent",
+            "chain",
+            "run",
+            "--parent-session",
+            "agent:main:main",
+            "--task",
+            "Route through terminal workers",
+            "--agent",
+            "vak",
+            "--agent",
+            "nous",
+        ],
+        &env,
+    );
+    assert!(
+        chain.status.success(),
+        "terminal chain run failed: {}",
+        chain.stderr
+    );
+    let chain_value: Value = serde_json::from_str(&chain.stdout).expect("chain json");
+    assert_eq!(chain_value["status"], "running");
+    let steps = chain_value["steps"].as_array().expect("chain steps");
+    assert_eq!(steps.len(), 2);
+    let first_pane = steps[0]["terminalBinding"]["tmuxPaneId"]
+        .as_str()
+        .expect("first terminal pane");
+    let second_pane = steps[1]["terminalBinding"]["tmuxPaneId"]
+        .as_str()
+        .expect("second terminal pane");
+    assert_ne!(
+        first_pane, second_pane,
+        "terminal-backed chain workers must receive distinct leases"
+    );
 }

@@ -81,3 +81,78 @@
     padding: 1px 4px;
     border-radius: 2px;
 }
+
+/* 07.T7.2 — Third Spanda Equation composition overlay. */
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-overlay {
+    margin-top: 12px;
+    padding: 8px 10px;
+    border-top: 1px solid var(--theia-editorWidget-border);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-title {
+    margin: 0;
+    font-size: var(--theia-ui-font-size1);
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-spine,
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-parent {
+    color: var(--theia-descriptionForeground);
+    font-family: var(--theia-monospace-font-family);
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-slots {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+    margin: 8px 0;
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-slot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px;
+    border: 1px solid var(--theia-editorWidget-border);
+    border-radius: 3px;
+    text-align: center;
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-slot-value {
+    font-size: var(--theia-ui-font-size2);
+    font-weight: 600;
+    font-family: var(--theia-monospace-font-family);
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-slot-parent-\+1 {
+    border-style: dashed;
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-bridge {
+    margin: 4px 0;
+    font-family: var(--theia-monospace-font-family);
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-forms dt {
+    margin-top: 4px;
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-789,
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-physics {
+    margin: 6px 0;
+    padding-left: 16px;
+}
+
+.integrated-widget-plugin-integrated-1-2-3 .third-spanda-discipline {
+    margin: 4px 0 0;
+    color: var(--theia-descriptionForeground);
+    font-style: italic;
+}

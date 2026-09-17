@@ -17,7 +17,9 @@ Live `epi agent vak evaluate --json "Composition Contract Inventory And Fixture 
 
 ## Relationship To 07.T0
 
-Track 08 **inherits** 07.T0's `KernelBridgeAPI` adapter, forbidden-import set, and readiness taxonomy. It does NOT introduce a parallel bridge, a second forbidden-import list, or a divergent readiness vocabulary. The composition contract shapes (`IntegratedSurfaceContribution`, `IntegratedViewPart`, `IntegratedMiniInspector`, `IntegratedEvidenceProducer`, `IntegratedLayoutClaim`, `IntegratedReadiness`) live at `Body/M/epi-theia/shared` and are imported by both integrated plugins and the `ide-shell-m0-m5` chrome extension.
+Track 08 **inherits** 07.T0's `KernelBridgeAPI` adapter, forbidden-import set, and readiness taxonomy. It does NOT introduce a parallel bridge, a second forbidden-import list, or a divergent readiness vocabulary. The composition contract shapes (`IntegratedSurfaceContribution`, `IntegratedViewPart`, `IntegratedMiniInspector`, `IntegratedEvidenceProducer`, `IntegratedLayoutClaim`, `IntegratedReadiness`, `M2CymaticTextureContribution`) live at `Body/M/epi-theia/shared` and are imported by both integrated plugins and the `ide-shell-m0-m5` chrome extension.
+
+Tranche 23.12 adds `M2CymaticTextureContribution` as the M2 data-shape mount point for the Cosmic Engine texture layer. The shared pointer lives at `Body/M/epi-theia/shared/m2-cymatic-texture-contribution.ts`; the runtime import is `@pratibimba/m2-parashakti/common/composition`; `plugin-integrated-1-2-3` consumes it; standalone M2 browser widgets do not.
 
 See `08-t0-composition-contract-preflight.json` for the machine-readable contract, fixture requirements, compatibility matrix, and open decisions.
 
@@ -31,6 +33,7 @@ See `08-t0-composition-contract-preflight.json` for the machine-readable contrac
 - Both plugins consume S0/S2/S3/S5 only through the **same shared `KernelBridgeAPI` adapter** declared by 07.T0.
 - No integrated plugin imports raw `Body/S/S0`, `Body/S/S2`, `Body/S/S3`, `Body/S/S5`, `@clockworklabs/spacetimedb-sdk`, `neo4j-driver`, `redis`, `portal-core`, or `epii-review-core` — the same forbidden-import set as 07.T0.
 - Composition orchestration is owned by `Body/M/epi-theia/shared` (favoured over per-plugin or ide-shell ownership) to avoid divergent layout arbitration.
+- `M2CymaticTextureContribution` is a data-shape only: M2 never imports Bevy/wgpu renderer modules, and `plugin-integrated-1-2-3` mounts the shape onto the K2 torus texture layer.
 - Per-extension UI internals are Track 07-owned and **explicitly out of scope** for Track 08.
 - M4 protected-local body never crosses the public bridge; recognition surfaces consume Graphiti protected handles only.
 
@@ -55,9 +58,10 @@ Fixture tests **must** parse payloads captured from real upstream services or up
 The preflight validator at `Body/M/epi-theia/extensions/test/validate-composition-contract-preflight.test.mjs` asserts:
 
 - Both integrated plugins are present with the expected extension contributors.
-- All six required contract shapes are declared with the required-fields set.
+- All required contract shapes are declared with the required-fields set.
 - The readiness taxonomy matches 07.T0 (no divergent vocabulary).
 - Forbidden imports inherit from 07.T0 exactly.
 - The compatibility matrix marks Track 07 per-extension internals as out of scope.
+- `M2CymaticTextureContribution` is declared under the shared shape surface, consumed by `plugin-integrated-1-2-3`, and absent from standalone M2 browser widgets.
 
 Run with `node --test Body/M/epi-theia/extensions/test/validate-composition-contract-preflight.test.mjs`.

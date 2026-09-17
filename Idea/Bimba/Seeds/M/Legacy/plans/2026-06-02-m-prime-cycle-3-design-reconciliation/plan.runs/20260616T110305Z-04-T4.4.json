@@ -1,0 +1,40 @@
+{
+  "runId": "20260616T110305Z-04-T4.4",
+  "taskId": "04.T4.4",
+  "startedAt": "2026-06-16T11:03:05.653Z",
+  "owner": "admin",
+  "leaseExpiresAt": "2026-06-16T13:03:05.653Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T4.4",
+    "trackId": "04",
+    "tranche": "T4.4",
+    "title": "TCT / Nine-of-Wands dataset reconciliation",
+    "effort": null,
+    "file": "04-m3-mahamaya-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+    "dependsOn": [
+      "04.T4.3"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-06-16T12:00:00.000Z",
+        "text": "RESET from fraudulent done 2026-06-16. DR-M3-1 is VALIDATED in 13-decision-register.md, but its Action ('add validator in Body/S/S2/graph-services/src/dataset_import.rs rejecting cardinality=8 on TCT nodes') was never executed — that file does not exist. DR validation is not Action execution. Requires: the dataset_import.rs TCT-cardinality validator."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": "hermes-nara",
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

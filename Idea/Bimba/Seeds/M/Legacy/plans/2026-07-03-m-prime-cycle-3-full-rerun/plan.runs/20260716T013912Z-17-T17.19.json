@@ -1,0 +1,36 @@
+{
+  "runId": "20260716T013912Z-17-T17.19",
+  "taskId": "17.T17.19",
+  "startedAt": "2026-07-16T01:39:12.675Z",
+  "owner": "codex-17-wikilink",
+  "leaseExpiresAt": "2026-07-16T03:39:12.675Z",
+  "worktree": null,
+  "task": {
+    "id": "17.T17.19",
+    "trackId": "17",
+    "tranche": "T17.19",
+    "title": "Land S1 `WikilinkTarget::PathBlock` + `PathHeadingBlock` variants",
+    "effort": null,
+    "file": "17-s-stack-modularisation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/17-s-stack-modularisation.md",
+    "dependsOn": [
+      "17.T17.18"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/17-s-stack-modularisation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — S-stack facade-split discipline (METHOD_DISPATCH_PLAN canonical DR-S3-3 co-PR rule, Hen rename-reconciliation authority, 17.28 canon byte-identity). Body/S/*. Worst-audited infra track. §2 track 17."
+  }
+}

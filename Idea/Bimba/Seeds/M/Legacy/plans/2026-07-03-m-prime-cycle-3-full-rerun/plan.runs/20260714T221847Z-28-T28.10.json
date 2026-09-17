@@ -1,0 +1,36 @@
+{
+  "runId": "20260714T221847Z-28-T28.10",
+  "taskId": "28.T28.10",
+  "startedAt": "2026-07-14T22:18:47.289Z",
+  "owner": "sol",
+  "leaseExpiresAt": "2026-07-15T00:18:47.289Z",
+  "worktree": null,
+  "task": {
+    "id": "28.T28.10",
+    "trackId": "28",
+    "tranche": "T28.10",
+    "title": "Autoresearch pane: autoresearch-as-concept frame + Möbius-pass ribbon + per-capacity filter + dry-run + requires_human disclosure",
+    "effort": null,
+    "file": "28-ide-shell-chrome-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/28-ide-shell-chrome-deep.md",
+    "dependsOn": [
+      "28.T28.1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: IDE chrome partitions (M0' reads / M5' governance / shared) + governed-write flow (Atelier Mobius write-back -> aletheia_crystallise -> Canon Studio); CrossLayoutIntent envelope; nine-id readiness inline. §2 track 28."
+  }
+}

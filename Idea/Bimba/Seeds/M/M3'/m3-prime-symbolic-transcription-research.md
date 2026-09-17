@@ -27,11 +27,16 @@
 The operational surface has four simultaneous jobs:
 
 - Read the shared harmonic profile: `tick`, `tick12`, `degree720`, `degree360`, SU(2) layer, `resonance72`, `audio_octet`, `nodal_quartet`, `lensMode`, and the [[Mahāmāyā]] projection fields.
-- Classify the current 64-address state through [[M3]] laws: 2-bit nucleotide encoding, I Ching hexagram/trigram decomposition, codon class, rotational-state count, line-change address, tarot-codon compression, amino-acid/anticodon metadata, and `evolutionaryGap` status.
+- Classify the current 64-address state through [[M3]] laws: 2-bit nucleotide encoding, I Ching hexagram/trigram decomposition, codon class, rotational-state count, line-change address, tarot-codon compression, amino-acid/anticodon metadata, and the codon-indexed resonance-target state.
 - Display symbolic imagery without inventing mappings: codon glyphs, hexagram/trigram forms, line-change edges, minor-arcana card tiles, rotational slots, DNA/RNA phase, shadow/paired codon, and degree-wheel position should come from backend/profile/S2 dataset authority.
 - Support readings as structured profile observations: a reading is a profile-timed symbolic packet, not an ungrounded random draw. It may include oracle-style interpretation, but the address/classification/display data must remain separable from private Nara interpretation.
 
-The current M3' spec correctly says the renderer must show `pending-dataset-lut`, `provisional-gap`, and audio-deferred states instead of filling gaps with local folklore. That matters for production readiness: M3' must be truthful about what is resolved, what is provisional, and what awaits graph/kernel materialization.
+The current M3' spec requires the renderer to keep three states separate:
+`pending-dataset-lut` for absent materialisation, an unresolved
+`M3_RES_MATRIX` target for the codon-indexed partial resonance operator, and
+`roundTripLoss` for non-exact 72→64 epogdoon round trips. That matters for
+production readiness: provisional resonance is not compression loss, and
+neither authorises the renderer to fill data locally.
 
 ## I Ching / DNA / Tarot / Codon Rotation Roles
 
@@ -118,7 +123,7 @@ M3' can show this as a secondary timing/overlay layer on the codon wheel, especi
 
 2. **Address resolution.** Read `mahamayaAddress64` / `codonId` / `hexagramId` from the profile when present. Fallback address law, if the backend explicitly exposes it, is `floor(degree360 * 64 / 360)`. Compute line-change address as `hexagram * 6 + line_index`, but display it as backend/profile state, not as UI magic.
 
-3. **Codec classification.** Classify the codon with the shared M3 classifier, derive rotational-state count, read `M3_ROTATIONAL_PROFILE`, resolve anticodon/amino-acid/RNA capability, and attach `evolutionaryGap` / `datasetLutState`.
+3. **Codec classification.** Classify the codon with the shared M3 classifier, derive rotational-state count, read `M3_ROTATIONAL_PROFILE`, resolve anticodon/amino-acid/RNA capability, and attach `resonanceTargetState` / `datasetLutState`. Carry `thirdSpanda.epogdoon.roundTripLoss` separately from the M2→M3 transition evidence; do not infer it from `M3_RES_MATRIX`.
 
 4. **Graph/LUT enrichment.** Join the resolved address to dataset/S2 details: I Ching trigrams and line changes, tarot card/court metadata, DNA/RNA descriptive fields, degree-wheel relations, and symbolic imagery metadata. Missing data becomes `pending-dataset-lut`.
 

@@ -80,4 +80,3 @@ Follow-up traceability that may need deeper seeds:
 
 - [[S4.0]] through [[S4.5]] sub-coordinate source mapping (per inner structure)
 - Plugin-root packaging authority chain (specs vs plugins/pleroma/ vs _staging/)
-- [[claw-rust]] native harness design docs (when created)

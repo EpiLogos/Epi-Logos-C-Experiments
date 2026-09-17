@@ -1,0 +1,23 @@
+# Track 38 — Tunability Surface Architecture (RERUN — target: pratibimba-app + substrate)
+
+Source of truth for every tranche below: `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-architecture.md` — read the tranche's section IN FULL there before executing; this file carries only retarget + audit posture. Retarget law, resolved decisions, and verification law: `CHARTER.md`. Audit map: [[2026-07-03-cycle-3-recapture-register]] §2 (track 38). Original ledger statuses are CLAIMS about the dead Theia carrier, never truth about this one. Track 00 (verification harness) gates all closure here.
+
+**⚑ Carrier (track 38) — build/verify HERE, never epi-theia:** MIXED — tunability (every knob typed/classed/audited behind one schema; ~15 structural invariants NEVER tunable: EPOGDOON 9/8, RESONANCE_DIM 72, planet mod-10, M3_TAROT_CODON_MAP, M2_PLANET_LUT, VIRTUE_LUT[9], ...; s5'.tune.*, epi tune, config.toml) SUBSTRATE; CARRIER: Tuning pane (no modals). DR-TUNE-1..4 PROPOSED. §2 track 38.
+
+1. **T0 — Absorb and retarget: 38-tunability-surface-architecture.md (law-only source)**
+
+   Brief: read `Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-architecture.md` IN FULL. It carries binding law/design with no tranche list. Enumerate its unbuilt commitments against the current carrier (register §2 track 38 lists known gaps) as new numbered tranches appended to THIS file, then close this task with the enumeration as evidence.
+   Depends on Track 00 Tranche 3.
+   Verify: new tranches parse into the ledger (re-run the assess script and show the new task ids); each cites its original section.
+
+---
+
+## Enumerated tranches (T0 output — Track-38-owned carrier, DR-gated)
+
+*Enumerated from the source law (`../2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-architecture.md`, read in full) against [[2026-07-03-cycle-3-recapture-register]] §2 track 38 (`Idea/Bimba/Seeds/M/plans/2026-07-03-cycle-3-recapture-register.md:94-95`). The source §8 delegates the ENTIRE surface implementation to Track-06 sub-tranches — 06.7 (schema crate), 06.8 (Tuning UI + `s5'.tune.*` gateway), 06.9 (Tier-2 lifecycle), 06.10 (Tier-3 ML hook), 06.11 (audit loop), 06.12 (config migration) — and all six are BLOCKED on DR-TUNE-1..4, which are **PROPOSED** (`13-decision-register.md:1298-1354`; DR-TUNE-1 "Blocks Tranches 06.7-06.12" at `:1308`). Those Track-06 tranches are NOT re-enumerated here. Track 38's own unbuilt commitment is the CARRIER Tuning pane (source §8 06.8 lands the UI on the FROZEN `epi-theia/extensions/tuning-surface`; the pratibimba-app equivalent is Track-38-owned). Grounded with a 2026-07-10 receipt.*
+
+2. **T38.1 — Carrier Tuning pane (pratibimba-app, no-modal landing surface over `s5'.tune.*`)**
+
+   Brief: source §1 M5-3' Tuning UI authority + §2.1 Tier-1 developer surface (`../2026-06-02-m-prime-cycle-3-design-reconciliation/38-tunability-surface-architecture.md:63,72-80`) + §8 tranche 06.8 render contract (`:572-580`) retargeted to `Body/M/pratibimba-app` per `CHARTER.md` (06.8's UI targets the FROZEN `epi-theia/extensions/tuning-surface`; the carrier equivalent is Track-38-owned). Land a Tuning pane on the pratibimba-app carrier consuming the `s5'.tune.{registry.list,get,set,audit.read,lock.toggle,propose}` gateway family (06.8 substrate): left tree grouped by `owning_subsystem`; per-knob current value / default / residency-class / scope-class / risk-class / ml-trainable / citation-back-to-DR; the ~15 structural invariants (source §7.1) rendered **locked / greyed** (`structural_invariant = true`, never editable); audit-trail viewer; lock-knob action. No-modal invariant (source §1, per the 15.2 ACR→OmniPanel reframe) — the pane IS the landing surface, never a popup. Register CARRIER: "Tuning pane (landing surface, no modals) — after DR-TUNE ratification." Register-grounded UNBUILT (2026-07-10: 0 `tuning`/`s5'.tune`/`tunable` refs under `Body/M/pratibimba-app/src`).
+   Depends on 38.T0. ~~**Blocked-gate: DR-TUNE-1..4 (PROPOSED, `13-decision-register.md:1298-1354`) must be VALIDATED before this tranche executes**~~ — **GATE LIFTED 2026-08-01:** DR-TUNE-1, DR-TUNE-2, DR-TUNE-3 and DR-TUNE-4 are VALIDATED by Architect ruling 2026-08-01 (`13-decision-register.md` Phase-H §DR-TUNE-*), and [[2026-07-03-pratibimba-app-phase-2]] moves tunability UI out of its out-of-scope list. The row is workable.
+   Verify: the carrier Tuning pane renders live knobs from a spawned gateway's `s5'.tune.registry.list`, greys the structural invariants, and opens no modal (UF/app-flow per Track 00); DR-TUNE-1..4 VALIDATED in the register before close; verifier ≠ closer.

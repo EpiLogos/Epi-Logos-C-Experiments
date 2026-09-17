@@ -1,0 +1,45 @@
+{
+  "runId": "20260714T001607Z-49-T49.6",
+  "taskId": "49.T49.6",
+  "startedAt": "2026-07-14T00:16:07.213Z",
+  "owner": "fable-c",
+  "leaseExpiresAt": "2026-07-14T01:46:07.213Z",
+  "worktree": null,
+  "task": {
+    "id": "49.T49.6",
+    "trackId": "49",
+    "tranche": "T49.6",
+    "title": "Integrated 1-2-3 Readiness And Wave-A Markers",
+    "effort": null,
+    "file": "49-modal-resonator-bell-kernel-implementation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/49-modal-resonator-bell-kernel-implementation.md",
+    "dependsOn": [
+      "49.T49.5"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/49-modal-resonator-bell-kernel-implementation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-13T18:59:17.959Z",
+        "text": "Released unstarted: multi-surface build (integratedReadiness modal/chime markers vs track-07 exactly-five LAW + strikeRouter generation-agreement + composition proof-handles K2/cymatic/codon-rotation). Needs an Architect decision on the modal/chime marker namespace relative to the LAW-fixed Wave-A five. Warm-context handoff; substrate (M123ChimeFrame, isChimeCoherent from T49.5) pre-landed."
+      },
+      {
+        "at": "2026-07-13T19:21:23.222Z",
+        "text": "Decision B locked (separate M123 contributor concern, own namespace integrated-123.pending:*, NOT extending the track-07 exactly-five Wave-A LAW). SCOPE FINDING: the Step-4 coherency core is already delivered — isChimeCoherent (T49.5: tick/degree/world-clock agreement) + strikeRouter generation-advance gating (instrument.ts:236) already block a non-agreeing/stale chime. Remaining = the marker surface (heterogeneous: modalResonator is a profile field; m123ChimeFrame is an EVENT not a field) in integratedReadiness.ts + Step-3 composition proof-handles (K2SurfaceHandle/M2CymaticTextureContribution/M3CodonRotationProjectionForLensRing) in the integrated-composition model. Multi-surface; fresh-session build with the decision made."
+      }
+    ],
+    "claimedAt": "2026-07-13T19:19:25.471Z",
+    "completedAt": null,
+    "owner": "uc-4906",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-13T19:19:25.471Z",
+    "runId": "20260713T191925Z-49-T49.6",
+    "worktree": null,
+    "carrier": "SUBSTRATE — modal resonator bell kernel (bell/modal interpretive over the existing 8+4 bus; kernel/gateway/Zod core LANDED & independently verified: ModalResonatorProfile, M123ChimeFrame, kernelBridge.m2.epogdoonProjection). CARRIER: 49.6 integrated coherence gate + 49.7 privacy/drift Zod guards + epogdoon capability parity. §2 track 49."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "composite": true,
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "@pratibimba/m-extension-runtime": [
+        "../m-extension-runtime/src/common/index"
+      ],
+      "@pratibimba/m-extension-runtime/lib/common/*": [
+        "../m-extension-runtime/src/common/*"
+      ],
+      "@pratibimba/m-extension-runtime/lib/browser/*": [
+        "../m-extension-runtime/src/browser/*"
+      ]
+    }
+  },
+  "references": [
+    {
+      "path": "../m-extension-runtime"
+    }
+  ],
+  "include": [
+    "src"
+  ]
+}

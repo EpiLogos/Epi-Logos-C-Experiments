@@ -1,0 +1,40 @@
+.backend-studio-root {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(360px, 1.4fr);
+  gap: 12px;
+  padding: 12px;
+  background: var(--theia-editor-background);
+  color: var(--theia-editor-foreground);
+}
+
+.backend-studio-panel {
+  border: 1px solid var(--theia-panel-border);
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.backend-studio-panel h3 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.backend-studio-panel ul {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.backend-studio-panel li {
+  display: grid;
+  gap: 3px;
+  padding: 8px;
+  background: var(--theia-sideBar-background);
+}
+
+.backend-studio-panel code,
+.backend-studio-panel small {
+  color: var(--theia-descriptionForeground);
+}

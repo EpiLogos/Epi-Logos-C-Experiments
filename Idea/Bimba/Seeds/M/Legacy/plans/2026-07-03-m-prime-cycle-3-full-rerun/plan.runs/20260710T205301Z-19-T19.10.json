@@ -1,0 +1,36 @@
+{
+  "runId": "20260710T205301Z-19-T19.10",
+  "taskId": "19.T19.10",
+  "startedAt": "2026-07-10T20:53:01.698Z",
+  "owner": "opus-a-m3",
+  "leaseExpiresAt": "2026-07-10T22:53:01.698Z",
+  "worktree": null,
+  "task": {
+    "id": "19.T19.10",
+    "trackId": "19",
+    "tranche": "T19.10",
+    "title": "Three minimal M0/M2 parity LUT lifts",
+    "effort": null,
+    "file": "19-contemplation-surface-integration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/19-contemplation-surface-integration.md",
+    "dependsOn": [
+      "19.T19.1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/19-contemplation-surface-integration.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: contemplation pane. SUBSTRATE: portal-core contemplate_session_close(ContemplationObject)->wisdom_delta, chronos_response_orbit. §2 track 19."
+  }
+}

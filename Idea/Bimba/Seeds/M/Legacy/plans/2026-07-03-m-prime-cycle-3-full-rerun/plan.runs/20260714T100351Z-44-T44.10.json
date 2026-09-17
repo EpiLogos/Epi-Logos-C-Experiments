@@ -1,0 +1,45 @@
+{
+  "runId": "20260714T100351Z-44-T44.10",
+  "taskId": "44.T44.10",
+  "startedAt": "2026-07-14T10:03:51.241Z",
+  "owner": "fable-c",
+  "leaseExpiresAt": "2026-07-14T11:03:51.241Z",
+  "worktree": null,
+  "task": {
+    "id": "44.T44.10",
+    "trackId": "44",
+    "tranche": "T44.10",
+    "title": "M0–M5 rollout + no-orphan acceptance harness",
+    "effort": null,
+    "file": "44-pratibimba-surface-standard.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/44-pratibimba-surface-standard.md",
+    "dependsOn": [
+      "44.T44.1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-07-14T07:51:38.129Z",
+        "text": "BLOCKED on unbuilt acceptance subjects (fable-c 2026-07-14): 44.10 is the END-of-track acceptance harness (per source: proves every core block type has an owning registration, the verdict loop round-trips under the Human Gate, block-docs round-trip md+MDX) — its subjects 44.2..44.9 (BlockRegistry, BlockHost, projections, verdict loop, transport, block-doc persistence) are NOT yet built in the carrier; only the 44.1 contract landed. The generated tranche chain float-parses T44.10 as 44.1 and orders it BEFORE 44.2, which would deadlock the track (44.2 waits on 44.10, 44.10 honestly unclosable before 44.2..44.9). Marking blocked per the protocol-sanity chain rule (blocked tasks are skipped and the chain self-heals) — requeue when 44.2..44.9 land."
+      },
+      {
+        "at": "2026-07-14T10:03:51.035Z",
+        "text": "UNBLOCKED (fable-c 2026-07-14): the block condition is met — 44.2..44.9 all closed this session (registry/host, Review-fold projection, verdict loop, live transport, context-xray seam, block-doc, agent-card, visual baseline). The acceptance harness subjects exist; requeueing for the closing claim."
+      }
+    ],
+    "claimedAt": "2026-07-14T07:50:33.616Z",
+    "completedAt": null,
+    "owner": "fable-c",
+    "leaseExpiresAt": null,
+    "heartbeatAt": "2026-07-14T07:50:33.616Z",
+    "runId": "20260714T075033Z-44-T44.10",
+    "worktree": null,
+    "carrier": "CARRIER — Pratibimba surface standard: THE LARGEST structural gap. No block contract, registry, catalog, verdict/annotate loop, s3'.temporal.* live transport, or block-doc persistence. §1 Blocks are carrier-independent LAW. Re-derive natively (React/Tauri), spec-first. §2 track 44."
+  }
+}

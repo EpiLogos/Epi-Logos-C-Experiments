@@ -15,6 +15,7 @@ export type PrivacyClass =
     | 'public_current_audio_metadata_only'
     | 'public_current_with_pending_private_projection_blocks'
     | 'public_current_with_scalar_oracle_refs_only'
+    | 'protected_local'
     | 'protected_local_handle_only'
     | 'governed_review_metadata_only';
 

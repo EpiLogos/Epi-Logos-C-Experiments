@@ -1,0 +1,36 @@
+{
+  "runId": "20260716T204340Z-21-T21.14",
+  "taskId": "21.T21.14",
+  "startedAt": "2026-07-16T20:43:40.444Z",
+  "owner": "codex-mdev-continuous",
+  "leaseExpiresAt": "2026-07-16T23:43:40.444Z",
+  "worktree": null,
+  "task": {
+    "id": "21.T21.14",
+    "trackId": "21",
+    "tranche": "T21.14",
+    "title": "Lazy 96-Node Browser panel",
+    "effort": null,
+    "file": "21-m0-anuttara-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/21-m0-anuttara-frontend-deep.md",
+    "dependsOn": [
+      "21.T21.12"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/21-m0-anuttara-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: M0' one-widget six-panels three-modes (implicate<->explicate one substrate; virtue witness 9-bit LSB-first; 16-fold void ring; DR-M0-1 banner verbatim) in pratibimba-app. §2 track 21."
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "runId": "20260625T154821Z-09-T9.8",
+  "taskId": "09.T9.8",
+  "startedAt": "2026-06-25T15:48:21.041Z",
+  "owner": "codex-m-dev-09-t9-8-anuttara-props",
+  "leaseExpiresAt": "2026-06-25T17:48:21.041Z",
+  "worktree": null,
+  "task": {
+    "id": "09.T9.8",
+    "trackId": "09",
+    "tranche": "T9.8",
+    "title": "Anuttara property naming round-trip",
+    "effort": null,
+    "file": "09-integrated-bimba-graph-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/09-integrated-bimba-graph-reconciliation.md",
+    "dependsOn": [
+      "09.T9.7"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/**",
+      "Body/S/S4/**",
+      "Body/S/S5/**",
+      "Idea/Pratibimba/System/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

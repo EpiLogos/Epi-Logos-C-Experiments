@@ -1,0 +1,33 @@
+{
+  "runId": "20260625T164043Z-48-T48.3",
+  "taskId": "48.T48.3",
+  "startedAt": "2026-06-25T16:40:43.633Z",
+  "owner": "codex-m-dev-48-t48-3-zone-bases",
+  "leaseExpiresAt": "2026-06-25T18:40:43.633Z",
+  "worktree": null,
+  "task": {
+    "id": "48.T48.3",
+    "trackId": "48",
+    "tranche": "T48.3",
+    "title": "Per-zone bases *(L1; depends 48.1)*",
+    "effort": null,
+    "file": "48-bases-cs-reflection-layer.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/48-bases-cs-reflection-layer.md",
+    "dependsOn": [
+      "48.T48.2"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

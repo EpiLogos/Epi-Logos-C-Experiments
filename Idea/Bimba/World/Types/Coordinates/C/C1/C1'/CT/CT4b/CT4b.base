@@ -1,0 +1,120 @@
+coordinate: "CT4b"
+c_4_artifact_role: "base-view"
+c_1_ct_type: "CT4b"
+c_5_reflects: "[[CT4b]]"
+c_0_source_coordinates: ["[[CT4b]]", "[[CT]]", "[[C5]]", "[[NOW]]", "[[Daily-Note]]"]
+filters:
+  or:
+    - 'c_1_ct_type == "CT4b"'
+    - 'ctx_type == "CT4b"'
+    - 'c_4_artifact_role == "now"'
+    - 'c_4_artifact_role == "daily-note"'
+    - 'session_id != null'
+    - 'day_id != null'
+views:
+  - type: table
+    name: "Period console by day"
+    group_by: c_3_day_id
+    order:
+      - coordinate
+      - c_4_artifact_role
+      - c_2_session_id
+      - session_id
+      - c_3_day_id
+      - day_id
+      - c_3_created_at
+      - c_3_tranche_mode
+      - c_3_response_orbit
+      - c_3_klein_weighting
+      - c_4_cf_code
+      - c_4_cp_position
+      - c_4_cs_depth
+      - c_5_reflection_complete
+      - p0_grounds
+      - p0_adjacencies
+      - p1_tasks_defined
+      - p1_intentions
+      - p2_sessions
+      - p2_operations
+      - p2_outputs
+      - p2_manual_activity
+      - p3_patterns
+      - p3_observations
+      - p3_connections
+      - p3_decisions
+      - p4_temporals
+      - p4_files_touched
+      - p4_people_mentioned
+      - p4_concepts_engaged
+      - p5_learnings
+      - p5_synthesis
+      - p5_tomorrow_focus
+    sort:
+      - { property: c_3_day_id, direction: DESC }
+      - { property: c_3_created_at, direction: DESC }
+  - type: table
+    name: "NOW sessions (open)"
+    filters:
+      and:
+        - 'c_4_artifact_role == "now"'
+        - 'c_5_reflection_complete == false'
+    group_by: c_3_day_id
+    order:
+      - coordinate
+      - c_2_session_id
+      - c_3_day_id
+      - c_3_created_at
+      - c_3_tranche_mode
+      - c_3_response_orbit
+      - p0_grounds
+      - p1_tasks_defined
+      - p2_operations
+      - p3_decisions
+      - p4_files_touched
+      - p5_synthesis
+  - type: table
+    name: "NOW sessions (legacy/open)"
+    filters:
+      and:
+        - 'session_id != null'
+    group_by: day_id
+    order:
+      - session_id
+      - day_id
+      - coordinate
+      - c_5_reflection_complete
+      - p0_grounds
+      - p1_tasks_defined
+      - p2_operations
+      - p5_synthesis
+  - type: table
+    name: "NOW sessions (reflection complete)"
+    filters:
+      and:
+        - 'c_4_artifact_role == "now"'
+        - 'c_5_reflection_complete == true'
+    group_by: c_3_day_id
+    order:
+      - coordinate
+      - c_2_session_id
+      - c_3_day_id
+      - c_3_created_at
+      - p5_learnings
+      - p5_synthesis
+  - type: table
+    name: "Daily periods awaiting archive"
+    filters:
+      and:
+        - 'c_4_artifact_role == "daily-note"'
+        - 'c_5_reflection_complete == false'
+    group_by: c_3_day_id
+    order:
+      - coordinate
+      - c_3_day_id
+      - c_3_created_at
+      - p0_grounds
+      - p1_tasks_defined
+      - p2_sessions
+      - p3_patterns
+      - p4_temporals
+      - p5_tomorrow_focus

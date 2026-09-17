@@ -1,0 +1,38 @@
+{
+  "runId": "20260719T183744Z-24-T24.17",
+  "taskId": "24.T24.17",
+  "startedAt": "2026-07-19T18:37:44.378Z",
+  "owner": "codex-mdev-2417-renderer-modes",
+  "leaseExpiresAt": "2026-07-19T20:37:44.378Z",
+  "worktree": null,
+  "task": {
+    "id": "24.T24.17",
+    "trackId": "24",
+    "tranche": "T24.17",
+    "title": "Parametrized renderer: one `M3CosmicWheelRenderService`, three modes (`badge` | `mini-view` | `full`) *(doc-ahead-landing; closes Track-08 mini-mode parity per `TRACK_08_CONTRIBUTION`)",
+    "effort": "doc-ahead-landing; closes Track-08 mini-mode parity per `TRACK_08_CONTRIBUTION`",
+    "file": "24-m3-mahamaya-frontend-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/24-m3-mahamaya-frontend-deep.md",
+    "dependsOn": [
+      "24.T24.16"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/24-m3-mahamaya-frontend-deep.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER: M3' inspectors in pratibimba-app (primary Fibonacci Ground lens id 16 plus its 16 derived divisions, 9-walk navigator, tarot wheel 22+56, hexagram browser over 384 graph, transcription, pentadic). The superseded Frame/Operator 18-aperture branch MUST NOT be rebuilt. NO Math.random — casts dispatch to the gateway. §2 track 24."
+  }
+}

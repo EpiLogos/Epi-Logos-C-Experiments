@@ -113,8 +113,16 @@ Do not use the MOC rule to create parallel roots for concerns already owned by c
 | `incubating_type_index` | `Idea/Bimba/World/Types/Coordinates/**/{Name}/{Name}.md` plus `{Name}.canvas` | Coordinate-local MOC/canvas topology and graph-promotion evidence. |
 | `crystallised_world_form` | `Idea/Bimba/World/{Name}.md` | Stable canonical architecture-as-documentation. |
 | `type_moc_pointer` | Original `World/Types/**/{Name}.md` after graduation | Thin coordinate pointer, topology map, and evidence index, not a duplicate definition. |
+| `discarded_branchable` | `Idea/Empty/Discarded/{round-key}/{slug}.md` | Candidate evaluated and not promoted in its originating round, retained as branchable parent for future autoresearch / evolver rounds. Carries `c_5_crystallisation_state: "discarded-branchable"` + evaluation rationale in body + provenance to the round-key that discarded it. |
 
 A flat [[World]] crystallisation must include source coordinates, Seed evidence links, type-source path, canvas path, and related World wikilinks. Hen should use those fields plus wikilinks/frontmatter/source hashes to infer discoverable links across `/World`.
+
+## Promotion Direction
+
+The crystallisation states above compose into a directed flow:
+
+- `Idea/Empty/**` (entity candidate) → `Idea/Bimba/Seeds/**` (seed evidence) → `Idea/Bimba/World/Types/**` (incubating type index / MOC) → `Idea/Bimba/World/{Name}.md` (flat crystallisation) — the canonical Empty → Seeds → World/Types → flat World flow.
+- `Idea/Empty/Discarded/{round-key}/` → **sample-back-as-parent** → new challenger lineage in subsequent autoresearch / evolver rounds. The `discarded_branchable` state is a stepping-stone-archive read-back path: discarded candidates remain retrievable as branchable parents, not deleted. Sampling is round-key-scoped; the round-key is the provenance anchor.
 
 ## Diagram Rule
 

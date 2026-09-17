@@ -1,16 +1,57 @@
 //! Nara — The Personal Dialogical Interface (#4)
 //!
-//! CLI scaffold for all M4 Nara sub-commands:
-//! wind, clock, kairos, identity, decan, resonance, project,
-//! oracle, medicine, transform, lens, pratibimba, logos, status.
+//! # Coordinate
+//!
+//! | Field | Value |
+//! |-------|-------|
+//! | Coordinate | S0-0-4 |
+//! | Residency | Body/S/S0/epi-cli/src/nara/mod.rs (physically S0, actualises M4) |
+//! | Position | #4 - Lived context / personal substrate |
+//! | Actualises | [[M4'-SPEC]] and [[05-m4-nara-reconciliation]] |
+//!
+//! # Public surface
+//! * `NaraCmd` - typed Nara CLI grammar.
+//! * `dispatch` - routes Nara commands to their owning substrate modules.
+//!
+//! # Does NOT own
+//! * Nara domain computation, private journal bodies, or cloud model routing.
 
+pub mod activity_trajectory;
+pub mod applied_identity;
+pub mod arena;
 pub mod clock;
 pub mod identity;
+pub mod identity_proposals;
 pub mod kairos;
 pub mod lens;
 pub mod logos;
+pub mod lora;
 pub mod medicine;
+mod medicine_cast;
+mod medicine_frame;
+pub(crate) use medicine_frame::canonical_from_m3_decan_element;
+// 24.T24.7 scalar-ref resolution (`s2.codon.scalar_ref.read`) reads the decan
+// facts through these; the dataset itself stays private to the module.
+pub(crate) use medicine_frame::{
+    ananda_harmonic_for_decan, body_zones_for_decan, herb_for_decan, mode_for_decan, zodiac_decan,
+};
+// 24.T24.6 tarot scalar-ref resolution: card → decan/court/ace facts route
+// through these accessors; the maps themselves stay private to their modules.
+pub(crate) use medicine_frame::{
+    body_zones_for_chakra, canonical_from_m2_tattva, chakra_for_planet,
+};
+mod medicine_route;
 pub mod oracle;
+mod oracle_cast;
+mod oracle_composite;
+mod oracle_engine;
+mod oracle_frame;
+mod oracle_identity;
+// 24.T24.8's hexagram body dynamics reach the gateway through this one read.
+pub(crate) use oracle_identity::hexagram_body_lookup;
+// 24.T24.6's tarot card scalar-refs resolve through these three lookups.
+pub(crate) use oracle_identity::{ace_element_lookup, court_sign_lookup, pip_decan_lookup};
+mod oracle_route;
 pub mod pratibimba;
 pub mod rotational;
 pub mod transcription;
@@ -99,10 +140,25 @@ pub enum NaraCmd {
         #[command(subcommand)]
         cmd: LogosCmd,
     },
+    /// Dia-logical arena admin surface
+    Arena {
+        #[command(subcommand)]
+        cmd: arena::ArenaCmd,
+    },
     /// Tunable resonance weight system
     Weights {
         #[command(subcommand)]
         cmd: WeightsCmd,
+    },
+    /// Train the local-only Nara voice LoRA adapter
+    #[command(name = "train-lora")]
+    TrainLora {
+        /// Local JSON configuration naming corpus files and checkpoint destination
+        #[arg(long)]
+        config: std::path::PathBuf,
+        /// Validate and materialize the local corpus without invoking MLX
+        #[arg(long)]
+        dry_run: bool,
     },
     /// Composite Nara status
     Status {
@@ -131,6 +187,9 @@ pub enum KairosCmd {
     },
     /// Fetch current transits (alias for sync)
     Fetch,
+    /// Capture the live sky NOW as a kairotic (oracle-consultation) frame that
+    /// preempts the daily transit for 4 hours, then decays back to realtime.
+    Capture,
 }
 
 #[derive(Subcommand)]
@@ -409,6 +468,20 @@ pub enum LogosCmd {
         #[arg(long)]
         json: bool,
     },
+    /// Advance the cycle forward one stage (writes a contemplative artifact)
+    Advance {
+        #[arg(long)]
+        date: Option<String>,
+        #[arg(long)]
+        json: bool,
+    },
+    /// Regress the cycle back one stage (writes a c_4_regression artifact)
+    Regress {
+        #[arg(long)]
+        date: Option<String>,
+        #[arg(long)]
+        json: bool,
+    },
     /// Show curriculum
     Curriculum {
         #[arg(long)]
@@ -452,6 +525,7 @@ pub fn dispatch(cmd: &NaraCmd, json: bool) -> Result<String, String> {
         NaraCmd::Kairos { cmd: sub } => match sub {
             KairosCmd::Sync => kairos::sync_current(),
             KairosCmd::Fetch => kairos::sync_current(),
+            KairosCmd::Capture => kairos::capture_kairotic(),
             KairosCmd::Show { json: j, planets } => kairos::show(*j || json, *planets),
             KairosCmd::Status { json: j } => {
                 let fresh = kairos::is_current_fresh();
@@ -587,16 +661,20 @@ pub fn dispatch(cmd: &NaraCmd, json: bool) -> Result<String, String> {
                 date,
                 json: j,
             } => logos::stage(*stage, date.as_deref(), *j || json),
+            LogosCmd::Advance { date, json: j } => logos::advance(date.as_deref(), *j || json),
+            LogosCmd::Regress { date, json: j } => logos::regress(date.as_deref(), *j || json),
             LogosCmd::Curriculum { json: j } => logos::curriculum(*j || json),
             LogosCmd::Export { date, yes } => logos::export(date.as_deref(), *yes),
             LogosCmd::Weekly { json: j } => logos::weekly(*j || json),
         },
+        NaraCmd::Arena { cmd: sub } => arena::dispatch(sub, json),
         NaraCmd::Weights { cmd: sub } => match sub {
             WeightsCmd::Show { json: j } => weights::show(*j || json),
             WeightsCmd::Set { key, value } => weights::set_weight(key, *value),
             WeightsCmd::Reset => weights::reset(),
             WeightsCmd::Calibrate => weights::calibrate(),
         },
+        NaraCmd::TrainLora { config, dry_run } => lora::train(config, *dry_run),
         NaraCmd::Status { json: j } => {
             let _ = *j || json;
             let mut out = "Nara Status\n".to_string();

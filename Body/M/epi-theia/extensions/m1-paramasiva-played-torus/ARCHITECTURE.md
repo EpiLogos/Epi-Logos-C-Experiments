@@ -1,6 +1,6 @@
 # `m1-paramasiva-played-torus` — Extension Architecture
 
-**Status:** scaffold (DR-M1-2 ratified 2026-06-02; build pending under Tranche 02.6)
+**Status:** first-build surface landed (DR-M1-2 ratified 2026-06-02; Tranche 02.6)
 **Renderer:** Bevy + wgpu (3D)
 **Companion 2D extension:** `Body/M/epi-theia/extensions/m1-paramasiva/` (clock-instrument; this extension is the 3D play surface, distinct)
 
@@ -10,7 +10,7 @@ This is the IDE-side mirror of the canonical M1-2 architecture document at [`Ide
 
 `2026-06-02.15-M1-2-vortex` — paired with cycle-3 tranches 02.6, 10.10, 15.4, 15.8, 15.9.
 
-## Package Shape (expected)
+## Package Shape
 
 ```
 Body/M/epi-theia/extensions/m1-paramasiva-played-torus/
@@ -24,7 +24,7 @@ Body/M/epi-theia/extensions/m1-paramasiva-played-torus/
 │   │   └── index.ts
 │   └── browser/
 │       ├── played-torus-widget.tsx    # widget host; embeds the wgpu canvas
-│       └── played-torus-frontend-module.ts
+│       └── frontend-module.ts
 ├── wgpu/
 │   ├── Cargo.toml              # Rust crate for the Bevy/wgpu renderer
 │   ├── src/
@@ -116,9 +116,8 @@ grep -nE '"bevy"|"wgpu"' Body/M/epi-theia/extensions/m1-paramasiva-played-torus/
     Body/M/epi-theia/extensions/m1-paramasiva-played-torus/wgpu/src/ \
     Body/M/epi-theia/extensions/m1-paramasiva-played-torus/src/
 
-# Vimarśa-window audit (no local pitch synthesis)
-! grep -rn 'synthesise\|local_pitch\|computeHz\|deriveOctet' \
-    Body/M/epi-theia/extensions/m1-paramasiva-played-torus/
+# Vimarśa-window audit (no local audio/nodal derivation helpers)
+pnpm --filter @pratibimba/m1-paramasiva-played-torus test
 
 # Substrate-derivation audit (no local LUT forks)
 ! grep -rn 'RING_QUATERNION_LUT\s*=\|CL42_BASIS\s*=\|DR_RING_MAHAMAYA\s*=' \

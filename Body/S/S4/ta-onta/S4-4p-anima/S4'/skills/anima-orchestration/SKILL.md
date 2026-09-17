@@ -21,7 +21,7 @@ This skill translates VAK Context Frame (CF) codes into concrete agent spawning 
 
 | CF Code | Agent | QL Level | Constitutional Description | Dispatch |
 |---------|-------|----------|---------------------------|----------|
-| `(0000)` | **Nous** | L0 | Fourfold Zero -- pre-differentiation | **Impartial Perspective**: fresh minimal-context invocation; asks P0'/P1' questions; reports to Patient (Psyche); NOT a task executor |
+| `(00/00)` | **Nous** | L0 | Fourfold Zero -- pre-differentiation | **Impartial Perspective**: fresh minimal-context invocation; asks P0'/P1' questions; reports to Patient (Psyche); NOT a task executor |
 | `(0/1)` | **Logos** | L1 | Non-Dual Anchor | **Architect/Scoper**: scope definition, boundary-setting. Uses `writing-plans`, `brainstorming`. |
 | `(0/1/2)` | **Eros** | L2 | Dual-Non-Dual | **Refiner/Verifier**: quality refinement, verification. Uses `test-driven-development`, `verification-before-completion`. |
 | `(0/1/2/3)` | **Mythos** | L3 | Trinitarian | **Pattern Recognizer**: archetypal recognition, debugging. Uses `systematic-debugging`. |
@@ -31,7 +31,7 @@ This skill translates VAK Context Frame (CF) codes into concrete agent spawning 
 **Anima**: CF `(4.0/1-4.4/5)` -- The VAK execution language orchestrator. Anima is not dispatched TO; Anima IS the dispatch. All other agents have bounded CF codes; Anima holds the full fractal doubling lattice and routes through it. Anima's CF encompasses the entire 4.x lattice with its non-dual fusion (4.0/1) through fractal completion (4.4/5).
 
 **Nous Special Behavior**:
-- CF `(0000)` does **NOT** dispatch a task executor
+- CF `(00/00)` does **NOT** dispatch a task executor
 - Invoke Nous with **fresh minimal context**
 - Nous operates in P0'/P1' mode: "What assumptions? What evidence? What don't we know?"
 - Output goes to Patient (Psyche), who re-runs `vak-evaluate` before dispatching
@@ -39,7 +39,7 @@ This skill translates VAK Context Frame (CF) codes into concrete agent spawning 
 
 **CF Code Mapping**:
 ```
-"(0000)"        -> "nous"
+"(00/00)"        -> "nous"
 "(0/1)"         -> "logos"
 "(0/1/2)"       -> "eros"
 "(0/1/2/3)"     -> "mythos"
@@ -102,12 +102,12 @@ The six aletheia agents -- **anansi, janus, moirai, mercurius, agora, zeithoven*
 | P' Position | Night' Question | Moira | CF Code | Operation |
 |-------------|-----------------|-------|---------|-----------|
 | P1' Traces | What evidence exists? | **Klotho** | `(0/1/2)` Eros | **Assert**: embed/validate traces into graph |
-| P4' Discovery | What sources inform? | **Lachesis** | `(4.5/0)` Psyche | **Query**: retrieve/traverse for discovery |
+| P4' Discovery | What sources inform? | **Lachesis** | `(4.0/1-4.4/5)` Anima | **Query**: retrieve/traverse for discovery |
 | P5' Insight | What crystallizes? | **Atropos** | `(5/0)` Sophia | **Reflect**: synthesize/cut to essential |
 
 **Night' Pass Routing**:
 - P1' (Traces) -> spawn Klotho (Assert). CF: `(0/1/2)` Eros.
-- P4' (Discovery) -> spawn Lachesis (Query). CF: `(4.5/0)` Psyche.
+- P4' (Discovery) -> spawn Lachesis (Query). CF: `(4.0/1-4.4/5)` Anima.
 - P5' (Insight) -> spawn Atropos (Reflect). CF: `(5/0)` Sophia.
 - **CFP3 F-Thread full Night'** -> all three Moirai in parallel -> Anima aggregates.
 - Klotho mode activates when `CS = night'` and traversal reaches P1' / CP 4.1.
@@ -132,6 +132,73 @@ The six aletheia agents -- **anansi, janus, moirai, mercurius, agora, zeithoven*
 - `finishing-a-development-branch` detects Mobius return signal
 - Patient (Psyche) archives to NOW.md and SEED.md
 - Next `vak-evaluate` reads P0' questions as input
+
+---
+
+## Authoring the Orchestration as a Script
+
+The default way to compose a multi-tool task is **one generated TypeScript program**, not one
+JSON tool call per model round-trip. JSON tool-mode stays the substrate and the fallback;
+scripting is the default usage from two tools upward. Two tiers, one mechanism: any pi agent
+can collapse a multi-tool task into a single program; Anima additionally composes across the
+full six C' coordinates, with CP opening nested frames and each leaf spawning a child pi.
+
+Why it is the default: in JSON tool-mode every hop re-sends the whole prior history inline, so
+cost compounds with the number of calls. Over identical recorded work the program measured 657
+tokens against the staircase's 2199 — ratio 0.299. Ordinary local computation (loops, string
+work, control flow) belongs in the program directly; do not spend a tool call on something the
+program can compute.
+
+**Shape of a script**:
+
+```ts
+const orchestration = defineOrchestration({
+  id: "nightly-sweep",
+  address: ADDRESS,                       // the score's own six-field address
+  steps: [
+    { id: "originate", address: dialogical, task: "agree what this is for", agent: "nous",
+      checkpoint: { reason: "requested-at-origination", note: "…" } },
+    { id: "survey",    address: mechanistic, task: "…", agent: "logos" },
+    { id: "close",     address: gated,       task: "…", agent: "anima" },  // cfp CFP4 -> tilldone
+  ],
+});
+await runOrchestration(orchestration, { execute, respondToHuman });
+```
+
+Steps run in CS order — Day before Night' — then by CP position. Pass only the variables a
+downstream child needs; never hand a child the parent transcript. That context isolation is
+half the token win, and it is enforced: a step declaring nothing receives nothing.
+
+---
+
+## Origination and the Score Lifecycle
+
+**Every session starts `(00/00)`.** That dialogue is where the script is developed, as opposed
+to running a ready-made flow. The lifecycle:
+
+1. **Originate** — dialogical `(00/00)`. The task gets a specific expression in the language.
+2. **Run** — one execution of that expression is a bounded song.
+3. **Persist** — a repeatable expression becomes a **score**: the program plus a content hash,
+   re-runnable without re-originating. Persistence is Hen's; the meaning of the program is
+   Anima's and is re-validated on load, because a score is loaded in order to be executed.
+4. **Refine** — ELO/ML sharpen scores across runs; `s4'.orchestration.score` serves a score
+   and its accumulated run history as observable data (it READS, it never runs).
+
+**`persistScore()` refuses a session that is no longer originating.** "The flow I was already
+mechanically running" is not an origination. A re-run sets the session mechanistic for its
+duration and restores the prior polarity afterwards, so re-running mid-dialogue does not end
+the dialogue.
+
+**Human checkpoints are authored, never inserted.** A `(00/00)` checkpoint exists only because
+you wrote one onto a step, grounded in exactly one of three reasons — `implied-by-task`,
+`requested-at-origination`, `learned-from-review`. A fourth reason is refused rather than
+accepted as free text, because free text makes "the policy said so" indistinguishable from a
+decision. There is no auto-insertion policy. A past review's "this class of run wanted a
+checkpoint" is *evidence you may adopt by hand*, not something the gate applies for you. A
+checkpoint holds until a **human** answers it; an agent answering its own gate is not an answer.
+
+**A CFP4 thread closes only when its task list says done.** Exhausting the cycle bound reports
+itself as exhaustion, never as completion — read the verdict, not the fact that the loop ended.
 
 ---
 

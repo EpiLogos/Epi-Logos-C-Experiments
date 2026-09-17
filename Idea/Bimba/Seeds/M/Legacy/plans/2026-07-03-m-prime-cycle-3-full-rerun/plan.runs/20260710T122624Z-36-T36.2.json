@@ -1,0 +1,36 @@
+{
+  "runId": "20260710T122624Z-36-T36.2",
+  "taskId": "36.T36.2",
+  "startedAt": "2026-07-10T12:26:24.550Z",
+  "owner": "opus-a-m1",
+  "leaseExpiresAt": "2026-07-10T14:26:24.550Z",
+  "worktree": null,
+  "task": {
+    "id": "36.T36.2",
+    "trackId": "36",
+    "tranche": "T36.2",
+    "title": "Complement-family and mod-6 hinge tests",
+    "effort": null,
+    "file": "36-anuttara-pentadic-runtime-trace.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/36-anuttara-pentadic-runtime-trace.md",
+    "dependsOn": [
+      "36.T36.1"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/36-anuttara-pentadic-runtime-trace.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "SUBSTRATE — AnuttaraPentadicRuntimeTrace + VakLanguificationTrace on ONE subscription (portal-core). CARRIER: pentadic inspector + vakLevel/m0Address chips — currently designed, claimed, UNCONSUMED. Gated on DR-VAK-4/5/6 (PROPOSED). §2 track 36."
+  }
+}

@@ -1,5 +1,7 @@
 # OMX Pleroma Claw Runtime Migration Implementation Plan
 
+> ⚑ **SUPERSEDED — 2026-07-16 (see [[DR-S4-CLAW-1]]).** The `claw-rust` native-harness migration is **abandoned**. The [[PI Agent]] (TypeScript) is the canonical, terminal S4 runtime; the local [[Codex]]/OMX lane remains. This document is retained as a **dated historical record only** — do not treat any `claw-rust` direction below as live. The live `epi agent claw` CLI lane and its tests were removed from `Body/S/S0/epi-cli` on 2026-07-16.
+
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 >
 > **Execution Guardrails:** Also use superpowers:test-driven-development, superpowers:verification-before-completion, superpowers:requesting-code-review, and GitNexus impact analysis before editing any runtime symbol.

@@ -1,0 +1,40 @@
+{
+  "runId": "20260801T103923Z-52-T6",
+  "taskId": "52.T6",
+  "startedAt": "2026-08-01T10:39:23.469Z",
+  "owner": "fable5-mdev-0801",
+  "leaseExpiresAt": "2026-08-01T13:39:23.469Z",
+  "worktree": null,
+  "task": {
+    "id": "52.T6",
+    "trackId": "52",
+    "tranche": "T6",
+    "title": "Wire the activity-bar mode registry and reconcile its contradictions",
+    "effort": null,
+    "file": "52-four-plus-two-layout-layer.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/52-four-plus-two-layout-layer.md",
+    "dependsOn": [
+      "00.T3",
+      "52.T4",
+      "52.T5"
+    ],
+    "writeScopes": [
+      "Body/M/pratibimba-app/src"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "blocker": null,
+    "carrier": "CARRIER = Body/M/pratibimba-app (panes/engine/design); SUBSTRATE crates carry unchanged. epi-theia = FROZEN. See recapture register §2 for this track's exact CARRIER line."
+  }
+}

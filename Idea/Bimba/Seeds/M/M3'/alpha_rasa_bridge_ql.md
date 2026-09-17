@@ -1,3 +1,13 @@
+---
+coordinate: "M3'"
+status: "seed"
+domain: "M3 Mahamaya — the α-rasa bridge: fine structure, Pauli quaternionics, and the 137 Spanda derivation in QL"
+canon_updates_landed:
+  - "CU-IDENTITY-1@2026-06-15"
+  - "CU-IDENTITY-2@2026-06-15"
+  - "CU-IDENTITY-4@2026-06-15"
+---
+
 # The α-Rasa Bridge
 
 ## Fine structure, Pauli quaternionics, and the 137 Spanda derivation in QL
@@ -252,6 +262,26 @@ $$
 $$
 
 That is not hedging. That is the bridge.
+
+### 3.3 Transcriptional bridge connections — three identities routing through M3's 27/37/101 partition
+
+<!-- canon-update: CU-IDENTITY-1 (landed 2026-06-15) -->
+<!-- canon-update: CU-IDENTITY-2 (landed 2026-06-15) -->
+<!-- canon-update: CU-IDENTITY-4 (landed 2026-06-15) -->
+
+The 128 doubled-shell and the 137 Spanda attractor each have an M3-native decomposition through the canonical transcriptional partition $64 = 27 + 37$ at [`m3-prime-ql-transcriptional-bridge.md`](m3-prime-ql-transcriptional-bridge.md) §2. The 27 are the T-free shared codons that pass through transcription unchanged; the 37 are the T-containing codons that transform into U-variants under T→U; the full graph including U-variants is $101 = 64 + 37$.
+
+The three identities (per [Track 40 — Bimba Canon Update Ledger](../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md)):
+
+**CU-IDENTITY-1** — $128 = 101 + 27$. The α-rasa doubled 64-fold Mahāmāyā shell IS the transcriptional full graph (101) plus the T-free shared codons (27). The 27 unchanged-through-transcription codons are exactly what makes the doubled shell $2 \times 64$ rather than $101$. The doubled-storage shell = full graph + unchanged-self-copy.
+
+**CU-IDENTITY-2** — $137 = 101 + 36$. The 137 low-energy atomic appearance IS the transcriptional full graph (101) plus the structural-mātric accounting ($36 = 6^2$). The full graph dressed in structural accounting.
+
+**CU-IDENTITY-4** — $73 = 36 + 37 = 72 + 1$. The canonical $72 + 1$ (M2 paraśakti bridge + M1-5 parent per §3.1 above) has an M3-native re-expression as $36 + 37$ — where the $+1$ parent is supplied not as a sealed external term but as the **productive asymmetry** $37 - 36 = 1$ between the T-containing transformable count and the structural-mātric square. The parent is productive: it generates 37 new entities (the U-variants), not just one. The asymmetry IS the parent.
+
+Together these three identities route the canonical $137 = 64 + 72 + 1$ through M3's transcriptional internal structure: $137 = 64 + 73 = 64 + (36 + 37) = (64 + 27) + 36 + 37 - 27 = $ etc. Multiple algebraic paths, all consistent with the canonical Spanda spine. See [CU-FORM-1](../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md) for the proposed **sixth canonical form** of the Third Spanda Equation: $137 = 64 + 73$ as the M3-native expression (DR-M3-6 amendment pending).
+
+**On the $137 - 128 = 9$ identity above** (line ~225, $3^2$ derivation): a sibling derivation lives at [CU-IDENTITY-3](../Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/40-bimba-canon-update-ledger.md), where the same canonical epogdoon-9 emerges transcriptionally as $36 - 27 = 9$. The matheme converges on itself: same 9, two derivation paths through different sub-structures of M3 — one external (the 128↔137 gap; here as $3^2$), one internal (the structural-mātric vs T-free-shared partition).
 
 ---
 

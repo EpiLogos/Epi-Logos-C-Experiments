@@ -23,12 +23,12 @@
   "modules": [
     {
       "id": "gate.server",
-      "path": "Body/S/S0/epi-cli/src/gate/server.rs",
+      "path": "Body/S/S0/epi-cli/src/gate/server/",
       "classification": "gateway-adapter",
       "parity_status": "TemporaryLiveHost",
       "authority_path": "Body/S/S3/gateway/src/dispatch.rs",
-      "adapter_path": "Body/S/S0/epi-cli/src/gate/server.rs",
-      "extraction_task": "13.T2 (route classification → S3) + 13.T3 (runtime host extraction)",
+      "adapter_path": "Body/S/S0/epi-cli/src/gate/server/",
+      "extraction_task": "13.T2 (route classification \u2192 S3) + 13.T3 (runtime host extraction)",
       "allowed_s0_responsibilities": [
         "host gateway process (Tokio listener + WS upgrade)",
         "wire frames to S3-owned route metadata",
@@ -58,10 +58,10 @@
       "parity_status": "Adapter",
       "authority_path": "Body/S/S3/gateway-contract::METHOD_NAMES",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/parity.rs",
-      "extraction_task": "13.T1 (this tranche — vocabulary recast)",
+      "extraction_task": "13.T1 (this tranche \u2014 vocabulary recast)",
       "allowed_s0_responsibilities": [
         "operator-facing parity ledger (auditable spec record)",
-        "method → coordinate family mapping for reports",
+        "method \u2192 coordinate family mapping for reports",
         "machine-readable inventory adjacent at contract-inventory/"
       ]
     },
@@ -72,7 +72,7 @@
       "parity_status": "Adapter",
       "authority_path": "Body/S/S4/ta-onta/S4-4p-anima + Body/S/S4/plugins/pleroma/capability-matrix.json",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/anima.rs",
-      "extraction_task": "13.T6 (anima → S4 capability surface owner)",
+      "extraction_task": "13.T6 (anima \u2192 S4 capability surface owner)",
       "allowed_s0_responsibilities": [
         "thin gateway handler that calls S4 ta-onta crate",
         "permission_get / psyche_state / psyche_update dispatch glue"
@@ -87,7 +87,9 @@
       "authority_path": "Body/S/S3/gateway::protocol",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/protocol.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["pure re-export façade"]
+      "allowed_s0_responsibilities": [
+        "pure re-export fa\u00e7ade"
+      ]
     },
     {
       "id": "gate.runtime",
@@ -97,7 +99,9 @@
       "authority_path": "Body/S/S3/gateway::runtime",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/runtime.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["pure re-export façade"]
+      "allowed_s0_responsibilities": [
+        "pure re-export fa\u00e7ade"
+      ]
     },
     {
       "id": "gate.events",
@@ -107,7 +111,9 @@
       "authority_path": "Body/S/S3/gateway-contract::GatewayEvent",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/events.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["pure re-export façade"]
+      "allowed_s0_responsibilities": [
+        "pure re-export fa\u00e7ade"
+      ]
     },
     {
       "id": "gate.transcripts",
@@ -117,7 +123,9 @@
       "authority_path": "Body/S/S3/gateway::transcripts",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/transcripts.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["pure re-export façade"]
+      "allowed_s0_responsibilities": [
+        "pure re-export fa\u00e7ade"
+      ]
     },
     {
       "id": "gate.subagents",
@@ -127,7 +135,9 @@
       "authority_path": "Body/S/S3/gateway::subagents",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/subagents.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["pure re-export façade"]
+      "allowed_s0_responsibilities": [
+        "pure re-export fa\u00e7ade"
+      ]
     },
     {
       "id": "gate.workspace",
@@ -137,7 +147,9 @@
       "authority_path": "Body/S/S3/gateway::workspace",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/workspace.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["pure re-export façade"]
+      "allowed_s0_responsibilities": [
+        "pure re-export fa\u00e7ade"
+      ]
     },
     {
       "id": "gate.bootstrap",
@@ -147,7 +159,9 @@
       "authority_path": "Body/S/S3/gateway::bootstrap",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/bootstrap.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["pure re-export façade"]
+      "allowed_s0_responsibilities": [
+        "pure re-export fa\u00e7ade"
+      ]
     },
     {
       "id": "gate.runs",
@@ -157,7 +171,9 @@
       "authority_path": "Body/S/S3/gateway-contract::ChatRunRegistry",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/runs.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["pure re-export façade"]
+      "allowed_s0_responsibilities": [
+        "pure re-export fa\u00e7ade"
+      ]
     },
     {
       "id": "gate.graphiti",
@@ -166,7 +182,7 @@
       "parity_status": "CompatibilityAdapter",
       "authority_path": "Body/S/S3/graphiti-runtime",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/graphiti.rs",
-      "extraction_task": "13.T7 (S5 adapter consolidation) — resolve port-37778 legacy",
+      "extraction_task": "13.T7 (S5 adapter consolidation) \u2014 resolve port-37778 legacy",
       "allowed_s0_responsibilities": [
         "operator-facing GraphitiCmd::Start/Stop/Status (legacy port 37778 wrapper)"
       ]
@@ -190,7 +206,7 @@
       "parity_status": "CompatibilityAdapter",
       "authority_path": "Body/S/S3/gateway-contract",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/sessions.rs",
-      "extraction_task": "13.T3 (JSON envelope constructors → S3 contract)",
+      "extraction_task": "13.T3 (JSON envelope constructors \u2192 S3 contract)",
       "allowed_s0_responsibilities": [
         "dispatch glue between S0 server.rs match arms and S3 envelopes"
       ],
@@ -203,8 +219,10 @@
       "parity_status": "CompatibilityAdapter",
       "authority_path": "Body/S/S3/gateway::transcripts",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/chat.rs",
-      "extraction_task": "13.T3 (chat history/preview/compact → S3 gateway)",
-      "allowed_s0_responsibilities": ["CLI handlers: epi gate chat …"],
+      "extraction_task": "13.T3 (chat history/preview/compact \u2192 S3 gateway)",
+      "allowed_s0_responsibilities": [
+        "CLI handlers: epi gate chat \u2026"
+      ],
       "current_los_loc": 114
     },
     {
@@ -215,30 +233,10 @@
       "authority_path": "Body/S/S3/gateway (channels)",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/channels.rs",
       "extraction_task": "13.T3 (channels law audit + extract)",
-      "allowed_s0_responsibilities": ["dispatch glue and CLI verbs"],
+      "allowed_s0_responsibilities": [
+        "dispatch glue and CLI verbs"
+      ],
       "current_los_loc": 390
-    },
-    {
-      "id": "gate.review",
-      "path": "Body/S/S0/epi-cli/src/gate/review.rs",
-      "classification": "cli-adapter",
-      "parity_status": "Adapter",
-      "authority_path": "Body/S/S5/epii-review-core::ReviewStore",
-      "adapter_path": "Body/S/S0/epi-cli/src/gate/review.rs",
-      "extraction_task": "13.T7 (path convention into S5)",
-      "allowed_s0_responsibilities": ["thin S5 adapter with gate state-root path convention"],
-      "current_los_loc": 44
-    },
-    {
-      "id": "gate.improve",
-      "path": "Body/S/S0/epi-cli/src/gate/improve.rs",
-      "classification": "duplicated-service-law",
-      "parity_status": "Adapter",
-      "authority_path": "Body/S/S5/epii-autoresearch-core",
-      "adapter_path": "Body/S/S0/epi-cli/src/gate/improve.rs",
-      "extraction_task": "13.T7 (move ensure_approved_review into S5 autoresearch core)",
-      "allowed_s0_responsibilities": ["pass-through dispatch only — cross-store guard is S5 law"],
-      "current_los_loc": 67
     },
     {
       "id": "gate.epii",
@@ -248,7 +246,9 @@
       "authority_path": "Body/S/S5/epii-agent-core::EpiiAgentAccess + Body/S/S3/gateway-contract (graphiti envelope)",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/epii.rs",
       "extraction_task": "13.T7 (S5 DTO construction into agent-core)",
-      "allowed_s0_responsibilities": ["dispatch entrypoint only"],
+      "allowed_s0_responsibilities": [
+        "dispatch entrypoint only"
+      ],
       "current_los_loc": 285
     },
     {
@@ -259,7 +259,9 @@
       "authority_path": "Body/S/S2/graph-services + Body/S/S2/graph-schema",
       "adapter_path": "Body/S/S0/epi-cli/src/graph/",
       "extraction_task": "13.T5 (graph adapter decision: keep named or fold into call sites)",
-      "allowed_s0_responsibilities": ["named re-export façade for operator CLI"]
+      "allowed_s0_responsibilities": [
+        "named re-export fa\u00e7ade for operator CLI"
+      ]
     },
     {
       "id": "graph.redis_cache",
@@ -269,7 +271,9 @@
       "authority_path": "Body/S/S3/redis-context",
       "adapter_path": "Body/S/S0/epi-cli/src/graph/redis_cache.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["pure re-export"]
+      "allowed_s0_responsibilities": [
+        "pure re-export"
+      ]
     },
     {
       "id": "vault.frontmatter",
@@ -279,7 +283,9 @@
       "authority_path": "Body/S/S1/hen-compiler-core",
       "adapter_path": "Body/S/S0/epi-cli/src/vault/frontmatter.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["pure re-export"]
+      "allowed_s0_responsibilities": [
+        "pure re-export"
+      ]
     },
     {
       "id": "vault.mod",
@@ -303,7 +309,9 @@
       "authority_path": "Body/S/S5/epi-kbase-core + Body/S/S2/graph-services",
       "adapter_path": "Body/S/S0/epi-cli/src/core/knowing/",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["pure re-exports backing epi core knowing CLI"]
+      "allowed_s0_responsibilities": [
+        "pure re-exports backing epi core knowing CLI"
+      ]
     },
     {
       "id": "app",
@@ -313,7 +321,9 @@
       "authority_path": "Body/M/epi-theia/electron-app",
       "adapter_path": "Body/S/S0/epi-cli/src/app/mod.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["operator-facing app-launcher membrane (epi app launch/dev/build)"]
+      "allowed_s0_responsibilities": [
+        "operator-facing app-launcher membrane (epi app launch/dev/build)"
+      ]
     },
     {
       "id": "agent.runtime",
@@ -341,7 +351,7 @@
         "MathemeProfileProvenance::owner = 'portal-core' (canonical)",
         "fans projection updates to IDE + /body consumers"
       ],
-      "load_bearing": "canonical S0 substrate — NOT an adapter, stays at S0 forever"
+      "load_bearing": "canonical S0 substrate \u2014 NOT an adapter, stays at S0 forever"
     },
     {
       "id": "gate.temporal",
@@ -351,7 +361,9 @@
       "authority_path": "Body/S/S0/portal-core (kernel authority) + Body/S/S3/gateway-contract (temporal envelope)",
       "adapter_path": "Body/S/S0/epi-cli/src/gate/temporal.rs",
       "extraction_task": null,
-      "allowed_s0_responsibilities": ["temporal-context renderer adapter (s3'.temporal.context)"]
+      "allowed_s0_responsibilities": [
+        "temporal-context renderer adapter (s3'.temporal.context)"
+      ]
     },
     {
       "id": "gate.kernel_bridge_runtime",
@@ -470,13 +482,13 @@
       "id": "alpha",
       "service": "epi gate start (gateway process itself)",
       "why_temporary": "Open architectural decision: S0 process host vs Body-native S3 binary",
-      "migration": "13.T10 — decide path; either reduce server.rs to glue or extract to S3 binary"
+      "migration": "13.T10 \u2014 decide path; either reduce server.rs to glue or extract to S3 binary"
     },
     {
       "id": "beta",
       "service": "Graphiti compatibility port 37778",
       "why_temporary": "Doc-comment self-describes as legacy",
-      "migration": "13.T7 audit-04 — replace Python side-channel or canonicalize"
+      "migration": "13.T7 audit-04 \u2014 replace Python side-channel or canonicalize"
     },
     {
       "id": "gamma",
@@ -488,7 +500,7 @@
       "id": "delta",
       "service": "JSONL persistence under gate root (s4/mediation-routes.jsonl, s4/agent-events.jsonl)",
       "why_temporary": "Ambiguous as S3 telemetry vs S4 orchestration evidence",
-      "migration": "13.T6 — mediation routes to S4 plugin state; sessions/chat logs stay under gate root"
+      "migration": "13.T6 \u2014 mediation routes to S4 plugin state; sessions/chat logs stay under gate root"
     }
   ],
   "duplicated_service_law": [
@@ -524,7 +536,7 @@
     }
   ],
   "counts": {
-    "modules": 30,
+    "modules": 28,
     "kernel_owner": 2,
     "cli_adapter": 17,
     "gateway_adapter": 8,

@@ -2,3 +2,38 @@ teams:
   - id: main
     agents:
       - main
+  - id: anima-cf1
+    agents:
+      - anima
+      - nous
+      - logos
+  - id: anima-cf2
+    agents:
+      - anima
+      - nous
+      - logos
+      - eros
+  - id: anima-cf3
+    agents:
+      - anima
+      - nous
+      - logos
+      - eros
+      - mythos
+  - id: anima-cf4
+    agents:
+      - anima
+      - nous
+      - logos
+      - eros
+      - mythos
+      - psyche
+  - id: anima-cf5
+    agents:
+      - anima
+      - nous
+      - logos
+      - eros
+      - mythos
+      - psyche
+      - sophia

@@ -1,0 +1,31 @@
+/*
+ * Coordinate: M' M3' (Wave-C readiness presentation — Track 24.T24.15)
+ * Residency: Body/M/pratibimba-app/src/panes
+ * Position (#n): M3' carrier context
+ * Actualises: inline ready/pending/blocked borders for M3 datum bindings.
+ * Public surface: m3-readiness-* classes consumed by m3SurfaceContext.tsx.
+ * Does NOT own: readiness state, profile generation, or layout geometry.
+ * Contract: [[M3'-SPEC]] / [[24-m3-mahamaya-frontend-deep]]
+ */
+
+.m3-readiness-boundary {
+  border-left: 2px solid var(--hairline);
+  padding-left: 0.5rem;
+}
+
+.m3-readiness-boundary > .readiness-indicator,
+.m3-readiness-boundary > .pending-badge {
+  margin: 0 0.35rem 0.35rem 0;
+}
+
+.m3-readiness-ready {
+  border-left-color: var(--ready);
+}
+
+.m3-readiness-pending {
+  border-left-color: var(--accent);
+}
+
+.m3-readiness-blocked {
+  border-left-color: var(--danger);
+}

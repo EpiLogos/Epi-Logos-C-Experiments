@@ -4,15 +4,142 @@ use std::fmt;
 use serde::{Deserialize, Serialize};
 
 use crate::kernel::{ConjugateFormCharacter, ProfilePrivacyClass};
-use crate::quaternion::{quat_mul, quat_normalize};
+use crate::luts::planet_keplerian::{PLANET_COUNT, PLANET_KEPLERIAN_VELOCITY};
+use crate::quaternion::{quat_mul, quat_normalize, Quaternion};
 
 pub const PERSONAL_RESONANCE_MAJOR_THRESHOLD: f32 = 2.0 / 3.0;
 
-const PLANET_COUNT: usize = 10;
-// Mirrors M2_PLANET_LUT.keplerian_vel in epi-lib/include/m2.h (arcsec/day x 10).
-const PLANET_KEPLERIAN_VELOCITY: [f32; PLANET_COUNT] = [
-    35_999.0, 47_270.0, 14_739.0, 3_600.0, 1_886.0, 299.0, 120.0, 42.0, 21.0, 14.0,
+/// Drift-detection alignment floor for identity-augment proposal production
+/// (M4' seed §2.M4-0' / §9: "Nara can learn from activity immediately, but it
+/// may only become identity through reviewed recognition"). Grounded in the
+/// `m4.resonance.major_threshold` pattern ([`PERSONAL_RESONANCE_MAJOR_THRESHOLD`],
+/// 2/3): when accumulated Q_activity resonates BELOW the major-resonance floor
+/// with the natal `q_identity`, the drift is significant enough to surface a
+/// *Proposed* identity augment (never a mutation) for M4-5' review.
+///
+/// ARCHITECT-TUNABLE: this is the schema default. A boundary consumer may inject
+/// the registry value (`m4.resonance.major_threshold`) — the detect producer
+/// accepts an optional `drift_threshold` override exactly as
+/// [`PersonalResonance::from_quaternions_with_threshold`] injects the registry
+/// value. Flagged for Architect tuning: the exact drift floor is a product/taste
+/// decision at the M4' review boundary, not a derived constant.
+pub const IDENTITY_AUGMENT_DRIFT_THRESHOLD: f32 = PERSONAL_RESONANCE_MAJOR_THRESHOLD;
+
+/// DR-M4-2 axis_order = [w=Earth, x=Fire, y=Water, z=Air].
+pub const CL42_PERSONAL_AXIS_ORDER: [Cl42AxisBinding; 4] = [
+    Cl42AxisBinding {
+        axis: Cl42QuaternionAxis::W,
+        element: ElementalAxis::Earth,
+    },
+    Cl42AxisBinding {
+        axis: Cl42QuaternionAxis::X,
+        element: ElementalAxis::Fire,
+    },
+    Cl42AxisBinding {
+        axis: Cl42QuaternionAxis::Y,
+        element: ElementalAxis::Water,
+    },
+    Cl42AxisBinding {
+        axis: Cl42QuaternionAxis::Z,
+        element: ElementalAxis::Air,
+    },
 ];
+
+/// DR-M4-2 polarity: 0 = cosmic, 1 = personal.
+pub const PERSONAL_CYMATIC_POLARITY: [PersonalCymaticPolarityBinding; 2] = [
+    PersonalCymaticPolarityBinding {
+        pole: 0,
+        register: PersonalCymaticRegister::Cosmic,
+    },
+    PersonalCymaticPolarityBinding {
+        pole: 1,
+        register: PersonalCymaticRegister::Personal,
+    },
+];
+
+pub const IDENTITY_HASH_MIGRATION_POLICY: IdentityHashMigrationPolicy =
+    IdentityHashMigrationPolicy {
+        phase: IdentityHashMigrationPhase::Cutover,
+        accepts_legacy_birth_data_hash: true,
+        accepts_quaternionic_signature_hash: true,
+        final_state: IdentityHashKind::QuaternionicSignatureBlake3,
+    };
+
+pub const VAMA_LONG_PERIOD_REVIEW_POLICY: VamaClassifierPolicy = VamaClassifierPolicy {
+    computed_mandatory_internal_long_period_review: true,
+    user_visible_on_request: true,
+    auto_raise_to_user: false,
+};
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Cl42QuaternionAxis {
+    W,
+    X,
+    Y,
+    Z,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum ElementalAxis {
+    Earth,
+    Fire,
+    Water,
+    Air,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Cl42AxisBinding {
+    pub axis: Cl42QuaternionAxis,
+    pub element: ElementalAxis,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum PersonalCymaticRegister {
+    Cosmic,
+    Personal,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PersonalCymaticPolarityBinding {
+    pub pole: u8,
+    pub register: PersonalCymaticRegister,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum IdentityHashMigrationPhase {
+    Cutover,
+    FinalQuaternionic,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum IdentityHashKind {
+    LegacyBirthDataBlake3,
+    QuaternionicSignatureBlake3,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IdentityHashMigrationPolicy {
+    pub phase: IdentityHashMigrationPhase,
+    pub accepts_legacy_birth_data_hash: bool,
+    pub accepts_quaternionic_signature_hash: bool,
+    pub final_state: IdentityHashKind,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct VamaClassifierPolicy {
+    pub computed_mandatory_internal_long_period_review: bool,
+    pub user_visible_on_request: bool,
+    pub auto_raise_to_user: bool,
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -101,7 +228,10 @@ impl ElementalBalance {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PersonalIdentityProfile {
-    pub q_personal: [f32; 4],
+    /// q_personal is the integrated Nara quintessence output.
+    pub q_personal: Quaternion,
+    /// Q_identity is the Kerykeion natal baseline component integrated by q_personal.
+    pub q_identity: Quaternion,
     pub natal_chart_handle: String,
     pub elemental_balance: ElementalBalance,
     pub identity_hash: String,
@@ -126,8 +256,10 @@ impl PersonalIdentityProfile {
         let natal_chart_handle = required(natal_chart_handle.into(), "natal_chart_handle")?;
         let identity_hash = required_identity_hash(identity_hash.into())?;
         let raw = elemental_weights_from_chart(chart);
+        let q_identity = quat_normalize(raw);
         Ok(Self {
-            q_personal: quat_normalize(raw),
+            q_personal: integrate_nara_quintessence(q_identity, &[]),
+            q_identity,
             natal_chart_handle,
             elemental_balance: ElementalBalance::from_raw_weights(raw)?,
             identity_hash,
@@ -135,9 +267,231 @@ impl PersonalIdentityProfile {
         })
     }
 
-    pub fn composed_quaternion(&self, q_transit: [f32; 4], q_activity: [f32; 4]) -> [f32; 4] {
+    pub fn composed_quaternion(&self, q_transit: Quaternion, q_activity: Quaternion) -> Quaternion {
         compose_personal_quaternion(self.q_personal, q_transit, q_activity)
     }
+
+    pub fn apply_identity_augment(&mut self, q_identity: Quaternion) {
+        let q_identity = quat_normalize(q_identity);
+        self.q_identity = q_identity;
+        self.q_personal = integrate_nara_quintessence(q_identity, &[]);
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum IdentityAugmentProposalState {
+    Proposed,
+    Reviewed,
+    Accepted,
+    Rejected,
+    Applied,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum IdentityAugmentReviewVerdict {
+    Accept,
+    Reject,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct IdentityAugmentProposal {
+    pub proposal_handle: String,
+    pub state: IdentityAugmentProposalState,
+    pub summary: String,
+    pub source_adapter_handle: String,
+    pub created_at: String,
+    pub reviewed_at: Option<String>,
+    pub decided_at: Option<String>,
+    pub applied_at: Option<String>,
+    q_identity_candidate: Quaternion,
+}
+
+impl IdentityAugmentProposal {
+    pub fn proposed(
+        proposal_handle: impl Into<String>,
+        summary: impl Into<String>,
+        source_adapter_handle: impl Into<String>,
+        created_at: impl Into<String>,
+        q_identity_candidate: Quaternion,
+    ) -> Result<Self, PersonalIdentityError> {
+        Ok(Self {
+            proposal_handle: required(proposal_handle.into(), "proposal_handle")?,
+            state: IdentityAugmentProposalState::Proposed,
+            summary: required(summary.into(), "summary")?,
+            source_adapter_handle: required(source_adapter_handle.into(), "source_adapter_handle")?,
+            created_at: required(created_at.into(), "created_at")?,
+            reviewed_at: None,
+            decided_at: None,
+            applied_at: None,
+            q_identity_candidate: quat_normalize(q_identity_candidate),
+        })
+    }
+
+    pub fn view(&self) -> IdentityAugmentProposalView {
+        IdentityAugmentProposalView {
+            proposal_handle: self.proposal_handle.clone(),
+            state: self.state,
+            summary: self.summary.clone(),
+            source_adapter_handle: self.source_adapter_handle.clone(),
+            created_at: self.created_at.clone(),
+            reviewed_at: self.reviewed_at.clone(),
+        }
+    }
+
+    pub fn q_identity_candidate(&self) -> Quaternion {
+        self.q_identity_candidate
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IdentityAugmentProposalView {
+    pub proposal_handle: String,
+    pub state: IdentityAugmentProposalState,
+    pub summary: String,
+    pub source_adapter_handle: String,
+    pub created_at: String,
+    pub reviewed_at: Option<String>,
+}
+
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct IdentityAugmentProposalAdapter {
+    proposals: Vec<IdentityAugmentProposal>,
+}
+
+impl IdentityAugmentProposalAdapter {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn submit(
+        &mut self,
+        proposal: IdentityAugmentProposal,
+    ) -> Result<IdentityAugmentProposalView, PersonalIdentityError> {
+        if self
+            .proposals
+            .iter()
+            .any(|existing| existing.proposal_handle == proposal.proposal_handle)
+        {
+            return Err(PersonalIdentityError::DuplicateIdentityAugmentProposal {
+                proposal_handle: proposal.proposal_handle,
+            });
+        }
+        let view = proposal.view();
+        self.proposals.push(proposal);
+        Ok(view)
+    }
+
+    pub fn pending_proposal_views(&self) -> Vec<IdentityAugmentProposalView> {
+        self.proposals
+            .iter()
+            .filter(|proposal| {
+                matches!(
+                    proposal.state,
+                    IdentityAugmentProposalState::Proposed | IdentityAugmentProposalState::Reviewed
+                )
+            })
+            .map(IdentityAugmentProposal::view)
+            .collect()
+    }
+
+    pub fn review(
+        &mut self,
+        proposal_handle: &str,
+        reviewed_at: impl Into<String>,
+    ) -> Result<IdentityAugmentProposalView, PersonalIdentityError> {
+        let reviewed_at = required(reviewed_at.into(), "reviewed_at")?;
+        let proposal = self.find_mut(proposal_handle)?;
+        transition_identity_proposal(proposal, IdentityAugmentProposalState::Reviewed)?;
+        proposal.reviewed_at = Some(reviewed_at);
+        Ok(proposal.view())
+    }
+
+    pub fn decide(
+        &mut self,
+        proposal_handle: &str,
+        verdict: IdentityAugmentReviewVerdict,
+        decided_at: impl Into<String>,
+    ) -> Result<IdentityAugmentProposalView, PersonalIdentityError> {
+        let decided_at = required(decided_at.into(), "decided_at")?;
+        let proposal = self.find_mut(proposal_handle)?;
+        let next = match verdict {
+            IdentityAugmentReviewVerdict::Accept => IdentityAugmentProposalState::Accepted,
+            IdentityAugmentReviewVerdict::Reject => IdentityAugmentProposalState::Rejected,
+        };
+        transition_identity_proposal(proposal, next)?;
+        proposal.decided_at = Some(decided_at);
+        Ok(proposal.view())
+    }
+
+    pub fn apply(
+        &mut self,
+        proposal_handle: &str,
+        profile: &mut PersonalIdentityProfile,
+        applied_at: impl Into<String>,
+    ) -> Result<IdentityAugmentProposalView, PersonalIdentityError> {
+        let applied_at = required(applied_at.into(), "applied_at")?;
+        let proposal = self.find_mut(proposal_handle)?;
+        transition_identity_proposal(proposal, IdentityAugmentProposalState::Applied)?;
+        profile.apply_identity_augment(proposal.q_identity_candidate);
+        proposal.applied_at = Some(applied_at);
+        Ok(proposal.view())
+    }
+
+    fn find_mut(
+        &mut self,
+        proposal_handle: &str,
+    ) -> Result<&mut IdentityAugmentProposal, PersonalIdentityError> {
+        self.proposals
+            .iter_mut()
+            .find(|proposal| proposal.proposal_handle == proposal_handle)
+            .ok_or_else(|| PersonalIdentityError::UnknownIdentityAugmentProposal {
+                proposal_handle: proposal_handle.to_owned(),
+            })
+    }
+}
+
+fn transition_identity_proposal(
+    proposal: &mut IdentityAugmentProposal,
+    next: IdentityAugmentProposalState,
+) -> Result<(), PersonalIdentityError> {
+    let allowed = matches!(
+        (proposal.state, next),
+        (
+            IdentityAugmentProposalState::Proposed,
+            IdentityAugmentProposalState::Reviewed
+        ) | (
+            IdentityAugmentProposalState::Reviewed,
+            IdentityAugmentProposalState::Accepted
+        ) | (
+            IdentityAugmentProposalState::Reviewed,
+            IdentityAugmentProposalState::Rejected
+        ) | (
+            IdentityAugmentProposalState::Accepted,
+            IdentityAugmentProposalState::Applied
+        )
+    );
+    if !allowed {
+        return Err(PersonalIdentityError::InvalidIdentityAugmentTransition {
+            from: proposal.state,
+            to: next,
+        });
+    }
+    proposal.state = next;
+    Ok(())
+}
+
+pub fn integrate_nara_quintessence(
+    q_identity: Quaternion,
+    layer_quaternions: &[Quaternion],
+) -> Quaternion {
+    let mut q_personal = quat_normalize(q_identity);
+    for layer in layer_quaternions {
+        q_personal = quat_normalize(quat_mul(q_personal, quat_normalize(*layer)));
+    }
+    q_personal
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
@@ -149,7 +503,26 @@ pub struct PersonalResonance {
 }
 
 impl PersonalResonance {
-    pub fn from_quaternions(q_personal: [f32; 4], q_cosmic: [f32; 4]) -> Self {
+    /// Tunable-threshold variant (`m4.resonance.major_threshold`, Track 38
+    /// surface): boundary consumers inject the registry value; the const
+    /// remains the schema default.
+    pub fn from_quaternions_with_threshold(
+        q_personal: Quaternion,
+        q_cosmic: Quaternion,
+        major_threshold: f32,
+    ) -> Self {
+        let mut resonance = Self::from_quaternions(q_personal, q_cosmic);
+        if resonance.conjugate_form_character != ConjugateFormCharacter::ShadowInversion {
+            resonance.conjugate_form_character = if resonance.score >= major_threshold {
+                ConjugateFormCharacter::Major
+            } else {
+                ConjugateFormCharacter::Minor
+            };
+        }
+        resonance
+    }
+
+    pub fn from_quaternions(q_personal: Quaternion, q_cosmic: Quaternion) -> Self {
         let q_personal = quat_normalize(q_personal);
         let q_cosmic = quat_normalize(q_cosmic);
         let signed_dot = q_personal
@@ -175,28 +548,105 @@ impl PersonalResonance {
 }
 
 pub fn compose_personal_quaternion(
-    q_identity: [f32; 4],
-    q_transit: [f32; 4],
-    q_activity: [f32; 4],
-) -> [f32; 4] {
+    q_identity: Quaternion,
+    q_transit: Quaternion,
+    q_activity: Quaternion,
+) -> Quaternion {
     quat_normalize(quat_mul(
         quat_mul(quat_normalize(q_identity), quat_normalize(q_transit)),
         quat_normalize(q_activity),
     ))
 }
 
+/// Pure identity-augment PRODUCER: measure accumulated Q_activity drift against
+/// the natal `q_identity` and, ONLY when the drift exceeds the threshold
+/// (resonance BELOW `drift_threshold`), return a `Proposed` proposal whose
+/// candidate is the activity-composed quaternion. Returns `None` when the
+/// activity is still aligned.
+///
+/// The candidate is `profile.composed_quaternion(q_transit, q_activity)` — the
+/// existing read-only composition law (`q_personal · q_transit · q_activity`),
+/// NOT a q_identity write. Drift is `PersonalResonance::score` (the quaternion
+/// double-cover-invariant `|signed_dot|`, so a shadow inversion `q ~ -q` reads as
+/// aligned, correctly): low score = high drift.
+///
+/// INVARIANT (structural): takes `&PersonalIdentityProfile` (shared ref) and
+/// NEVER calls [`PersonalIdentityProfile::apply_identity_augment`] — it cannot
+/// mutate `q_identity`. Emitting a `Proposed` proposal is the ONLY effect;
+/// identity changes only through the governed
+/// [`IdentityAugmentProposalAdapter::apply`] (`applied` verdict) downstream of a
+/// human accept. `created_at` is caller-supplied because a pure producer holds
+/// no clock. An empty handle/summary/source yields `None` (the producer never
+/// emits a malformed proposal).
+#[allow(clippy::too_many_arguments)]
+pub fn detect_identity_augment_from_activity(
+    profile: &PersonalIdentityProfile,
+    q_activity: Quaternion,
+    q_transit: Quaternion,
+    drift_threshold: f32,
+    proposal_handle: impl Into<String>,
+    source_adapter_handle: impl Into<String>,
+    created_at: impl Into<String>,
+) -> Option<IdentityAugmentProposal> {
+    // The activity candidate: q_personal · q_transit · q_activity (read-only).
+    let candidate = profile.composed_quaternion(q_transit, q_activity);
+    // Drift = resonance BELOW the alignment floor vs the stable natal identity.
+    let resonance = PersonalResonance::from_quaternions(candidate, profile.q_identity);
+    if resonance.score >= drift_threshold {
+        // Still aligned — activity has not drifted enough to propose an augment.
+        return None;
+    }
+    let summary = format!(
+        "Accumulated Q_activity drifted from the natal identity: resonance {:.3} below the drift floor {:.3}. Proposing a #4.0 identity augment for M4-5' review (proposed -> reviewed -> accepted|rejected -> applied).",
+        resonance.score, drift_threshold
+    );
+    IdentityAugmentProposal::proposed(
+        proposal_handle,
+        summary,
+        source_adapter_handle,
+        created_at,
+        candidate,
+    )
+    .ok()
+}
+
+pub fn decompose_bioquaternion(q_composed: Quaternion) -> (Quaternion, Quaternion) {
+    let q_b = quat_normalize(q_composed);
+    let q_p = [q_b[0], -q_b[1], -q_b[2], -q_b[3]];
+    (q_b, q_p)
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum PersonalIdentityError {
-    EmptyField { field: &'static str },
+    EmptyField {
+        field: &'static str,
+    },
     InvalidKerykeionNatalJson(String),
     InvalidIdentityHash,
     MissingPlanetsArray,
-    MissingNatalPlanet { planet: String },
-    DuplicateNatalPlanet { planet: String },
+    MissingNatalPlanet {
+        planet: String,
+    },
+    DuplicateNatalPlanet {
+        planet: String,
+    },
     UnknownNatalPlanet,
     InvalidPlanetId(u64),
-    InvalidPlanetDegree { planet: String, degree: String },
+    InvalidPlanetDegree {
+        planet: String,
+        degree: String,
+    },
     ZeroElementalWeight,
+    DuplicateIdentityAugmentProposal {
+        proposal_handle: String,
+    },
+    UnknownIdentityAugmentProposal {
+        proposal_handle: String,
+    },
+    InvalidIdentityAugmentTransition {
+        from: IdentityAugmentProposalState,
+        to: IdentityAugmentProposalState,
+    },
 }
 
 impl fmt::Display for PersonalIdentityError {
@@ -221,6 +671,21 @@ impl fmt::Display for PersonalIdentityError {
                 write!(f, "invalid natal degree for {planet}: {degree}")
             }
             Self::ZeroElementalWeight => write!(f, "natal elemental weights sum to zero"),
+            Self::DuplicateIdentityAugmentProposal { proposal_handle } => {
+                write!(
+                    f,
+                    "identity augment proposal already exists: {proposal_handle}"
+                )
+            }
+            Self::UnknownIdentityAugmentProposal { proposal_handle } => {
+                write!(f, "unknown identity augment proposal: {proposal_handle}")
+            }
+            Self::InvalidIdentityAugmentTransition { from, to } => {
+                write!(
+                    f,
+                    "invalid identity augment proposal transition: {from:?} -> {to:?}"
+                )
+            }
         }
     }
 }
@@ -395,9 +860,391 @@ fn required(value: String, field: &'static str) -> Result<String, PersonalIdenti
 
 fn required_identity_hash(value: String) -> Result<String, PersonalIdentityError> {
     let value = required(value, "identity_hash")?;
-    if value.len() == 64 && value.chars().all(|character| character.is_ascii_hexdigit()) {
+    if identity_hash_kinds_during_cutover(&value).is_some() {
         Ok(value)
     } else {
         Err(PersonalIdentityError::InvalidIdentityHash)
+    }
+}
+
+pub fn identity_hash_kinds_during_cutover(value: &str) -> Option<[IdentityHashKind; 2]> {
+    if IDENTITY_HASH_MIGRATION_POLICY.phase != IdentityHashMigrationPhase::Cutover {
+        return None;
+    }
+    if value.len() == 64 && value.chars().all(|character| character.is_ascii_hexdigit()) {
+        Some([
+            IdentityHashKind::LegacyBirthDataBlake3,
+            IdentityHashKind::QuaternionicSignatureBlake3,
+        ])
+    } else {
+        None
+    }
+}
+
+#[cfg(test)]
+mod proposal_lifecycle {
+    use super::*;
+
+    const COMPLETE_NATAL: &str = include_str!("../tests/fixtures/kerykeion_natal_complete.json");
+    const IDENTITY_HASH: &str = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+    const NATAL_HANDLE: &str = "protected://nara/kairos/natal/proposal-lifecycle";
+
+    #[test]
+    fn proposed_reviewed_and_accepted_do_not_mutate_q_identity_until_applied() {
+        let mut profile = PersonalIdentityProfile::from_kerykeion_json(
+            NATAL_HANDLE,
+            IDENTITY_HASH,
+            COMPLETE_NATAL,
+        )
+        .expect("fixture should derive protected identity");
+        let original_q_identity = profile.q_identity;
+        let original_q_personal = profile.q_personal;
+        let candidate_q_identity = [0.0, 1.0, 1.0, 0.0];
+
+        let mut adapter = IdentityAugmentProposalAdapter::new();
+        let submitted = adapter
+            .submit(
+                IdentityAugmentProposal::proposed(
+                    "identity-proposal://birthdate-layer",
+                    "Birthdate encoding layer ready for M5 review.",
+                    "adapter://m4/identity-augment",
+                    "2026-06-25T09:00:00.000Z",
+                    candidate_q_identity,
+                )
+                .expect("proposal is valid"),
+            )
+            .expect("proposal submits");
+        assert_eq!(submitted.state, IdentityAugmentProposalState::Proposed);
+        assert_eq!(profile.q_identity, original_q_identity);
+
+        let reviewed = adapter
+            .review(
+                "identity-proposal://birthdate-layer",
+                "2026-06-25T09:01:00.000Z",
+            )
+            .expect("proposal reviews");
+        assert_eq!(reviewed.state, IdentityAugmentProposalState::Reviewed);
+        assert_eq!(profile.q_identity, original_q_identity);
+
+        let accepted = adapter
+            .decide(
+                "identity-proposal://birthdate-layer",
+                IdentityAugmentReviewVerdict::Accept,
+                "2026-06-25T09:02:00.000Z",
+            )
+            .expect("proposal accepts");
+        assert_eq!(accepted.state, IdentityAugmentProposalState::Accepted);
+        assert_eq!(profile.q_identity, original_q_identity);
+        assert_eq!(profile.q_personal, original_q_personal);
+
+        let applied = adapter
+            .apply(
+                "identity-proposal://birthdate-layer",
+                &mut profile,
+                "2026-06-25T09:03:00.000Z",
+            )
+            .expect("accepted proposal applies");
+        assert_eq!(applied.state, IdentityAugmentProposalState::Applied);
+        assert_ne!(profile.q_identity, original_q_identity);
+        assert_approx_quat(profile.q_identity, quat_normalize(candidate_q_identity));
+        assert_eq!(
+            profile.q_personal,
+            integrate_nara_quintessence(profile.q_identity, &[])
+        );
+        assert!(adapter.pending_proposal_views().is_empty());
+    }
+
+    #[test]
+    fn rejected_proposal_cannot_apply_or_mutate_q_identity() {
+        let mut profile = PersonalIdentityProfile::from_kerykeion_json(
+            NATAL_HANDLE,
+            IDENTITY_HASH,
+            COMPLETE_NATAL,
+        )
+        .expect("fixture should derive protected identity");
+        let original_q_identity = profile.q_identity;
+
+        let mut adapter = IdentityAugmentProposalAdapter::new();
+        adapter
+            .submit(
+                IdentityAugmentProposal::proposed(
+                    "identity-proposal://rejected",
+                    "Reviewer should reject this candidate.",
+                    "adapter://m4/identity-augment",
+                    "2026-06-25T10:00:00.000Z",
+                    [0.0, 0.0, 1.0, 1.0],
+                )
+                .expect("proposal is valid"),
+            )
+            .expect("proposal submits");
+        adapter
+            .review("identity-proposal://rejected", "2026-06-25T10:01:00.000Z")
+            .expect("proposal reviews");
+        adapter
+            .decide(
+                "identity-proposal://rejected",
+                IdentityAugmentReviewVerdict::Reject,
+                "2026-06-25T10:02:00.000Z",
+            )
+            .expect("proposal rejects");
+
+        let err = adapter
+            .apply(
+                "identity-proposal://rejected",
+                &mut profile,
+                "2026-06-25T10:03:00.000Z",
+            )
+            .expect_err("rejected proposal is terminal");
+
+        assert_eq!(profile.q_identity, original_q_identity);
+        assert!(matches!(
+            err,
+            PersonalIdentityError::InvalidIdentityAugmentTransition {
+                from: IdentityAugmentProposalState::Rejected,
+                to: IdentityAugmentProposalState::Applied
+            }
+        ));
+    }
+
+    #[test]
+    fn surface_view_is_read_only_and_does_not_serialize_candidate_quaternion() {
+        let proposal = IdentityAugmentProposal::proposed(
+            "identity-proposal://view",
+            "Handle-only proposal view.",
+            "adapter://m4/identity-augment",
+            "2026-06-25T11:00:00.000Z",
+            [0.0, 1.0, 0.0, 1.0],
+        )
+        .expect("proposal is valid");
+
+        let view = proposal.view();
+        let json = serde_json::to_string(&view).expect("view serializes");
+
+        assert!(json.contains("identity-proposal://view"));
+        assert!(!json.contains("qIdentity"));
+        assert!(!json.contains("q_identity"));
+        assert!(!json.contains("candidate"));
+        assert_approx_quat(
+            proposal.q_identity_candidate(),
+            quat_normalize([0.0, 1.0, 0.0, 1.0]),
+        );
+    }
+
+    fn assert_approx_quat(actual: [f32; 4], expected: [f32; 4]) {
+        for (actual, expected) in actual.iter().zip(expected.iter()) {
+            assert!((actual - expected).abs() < 1e-6, "{actual} != {expected}");
+        }
+    }
+}
+
+#[cfg(test)]
+mod identity_augment_detection {
+    use super::*;
+
+    const COMPLETE_NATAL: &str = include_str!("../tests/fixtures/kerykeion_natal_complete.json");
+    const IDENTITY_HASH: &str = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+    const NATAL_HANDLE: &str = "protected://nara/kairos/natal/detect";
+    const IDENTITY_TRANSIT: Quaternion = [1.0, 0.0, 0.0, 0.0];
+
+    fn profile() -> PersonalIdentityProfile {
+        PersonalIdentityProfile::from_kerykeion_json(NATAL_HANDLE, IDENTITY_HASH, COMPLETE_NATAL)
+            .expect("fixture derives a protected identity")
+    }
+
+    fn assert_approx_quat(actual: [f32; 4], expected: [f32; 4]) {
+        for (actual, expected) in actual.iter().zip(expected.iter()) {
+            assert!((actual - expected).abs() < 1e-6, "{actual} != {expected}");
+        }
+    }
+
+    #[test]
+    fn drift_threshold_default_is_the_major_resonance_floor() {
+        assert_eq!(
+            IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+            PERSONAL_RESONANCE_MAJOR_THRESHOLD
+        );
+    }
+
+    #[test]
+    fn drifted_activity_produces_a_proposed_proposal_without_mutating_identity() {
+        let profile = profile();
+        let before_identity = profile.q_identity;
+        let before_personal = profile.q_personal;
+
+        // A zero-scalar q_activity drives the composed candidate to near-
+        // orthogonal resonance with the natal identity (score approx 0), well
+        // below the drift floor (2/3). Property: with identity transit and
+        // q_personal == normalize(q_identity), score == |q_activity[0]|.
+        let q_activity = [0.0, 1.0, 0.0, 0.0];
+        let proposal = detect_identity_augment_from_activity(
+            &profile,
+            q_activity,
+            IDENTITY_TRANSIT,
+            IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+            "identity-proposal://activity-drift",
+            "adapter://m4/activity-drift-detector",
+            "2026-07-22T12:00:00.000Z",
+        )
+        .expect("drifted activity must produce a proposal");
+
+        assert_eq!(proposal.state, IdentityAugmentProposalState::Proposed);
+        assert_eq!(
+            proposal.source_adapter_handle,
+            "adapter://m4/activity-drift-detector"
+        );
+        // The candidate IS the activity-composed quaternion, never the identity.
+        let expected_candidate = profile.composed_quaternion(IDENTITY_TRANSIT, q_activity);
+        assert_approx_quat(proposal.q_identity_candidate(), expected_candidate);
+        assert_ne!(proposal.q_identity_candidate(), profile.q_identity);
+
+        // The detector NEVER mutates q_identity / q_personal (structural: &self).
+        assert_eq!(profile.q_identity, before_identity);
+        assert_eq!(profile.q_personal, before_personal);
+    }
+
+    #[test]
+    fn aligned_activity_produces_no_proposal() {
+        let profile = profile();
+        let before_identity = profile.q_identity;
+
+        // Identity activity + identity transit → composed == q_personal ==
+        // q_identity; resonance approx 1.0 >= drift floor → no proposal.
+        let none = detect_identity_augment_from_activity(
+            &profile,
+            IDENTITY_TRANSIT,
+            IDENTITY_TRANSIT,
+            IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+            "identity-proposal://aligned",
+            "adapter://m4/activity-drift-detector",
+            "2026-07-22T12:01:00.000Z",
+        );
+        assert!(none.is_none(), "aligned activity must not propose an augment");
+        assert_eq!(profile.q_identity, before_identity);
+    }
+
+    #[test]
+    fn empty_handle_yields_none_never_a_malformed_proposal() {
+        let profile = profile();
+        let none = detect_identity_augment_from_activity(
+            &profile,
+            [0.0, 1.0, 0.0, 0.0],
+            IDENTITY_TRANSIT,
+            IDENTITY_AUGMENT_DRIFT_THRESHOLD,
+            "   ",
+            "adapter://m4/activity-drift-detector",
+            "2026-07-22T12:02:00.000Z",
+        );
+        assert!(none.is_none());
+    }
+}
+
+#[cfg(test)]
+mod bioquaternion_decomposition {
+    use super::*;
+
+    #[test]
+    fn dr_m4_2_ratified_bindings_are_executable() {
+        assert_eq!(
+            CL42_PERSONAL_AXIS_ORDER,
+            [
+                Cl42AxisBinding {
+                    axis: Cl42QuaternionAxis::W,
+                    element: ElementalAxis::Earth
+                },
+                Cl42AxisBinding {
+                    axis: Cl42QuaternionAxis::X,
+                    element: ElementalAxis::Fire
+                },
+                Cl42AxisBinding {
+                    axis: Cl42QuaternionAxis::Y,
+                    element: ElementalAxis::Water
+                },
+                Cl42AxisBinding {
+                    axis: Cl42QuaternionAxis::Z,
+                    element: ElementalAxis::Air
+                },
+            ]
+        );
+        assert_eq!(
+            PERSONAL_CYMATIC_POLARITY,
+            [
+                PersonalCymaticPolarityBinding {
+                    pole: 0,
+                    register: PersonalCymaticRegister::Cosmic
+                },
+                PersonalCymaticPolarityBinding {
+                    pole: 1,
+                    register: PersonalCymaticRegister::Personal
+                },
+            ]
+        );
+        assert!(IDENTITY_HASH_MIGRATION_POLICY.accepts_legacy_birth_data_hash);
+        assert!(IDENTITY_HASH_MIGRATION_POLICY.accepts_quaternionic_signature_hash);
+        assert!(VAMA_LONG_PERIOD_REVIEW_POLICY.computed_mandatory_internal_long_period_review);
+        assert!(VAMA_LONG_PERIOD_REVIEW_POLICY.user_visible_on_request);
+        assert!(!VAMA_LONG_PERIOD_REVIEW_POLICY.auto_raise_to_user);
+    }
+
+    #[test]
+    fn q_personal_integrates_q_identity_baseline_and_extra_layers() {
+        let q_identity = [1.0, 0.0, 0.0, 0.0];
+        let q_birthdate = [0.0, 1.0, 0.0, 0.0];
+        let q_activity_history = [0.0, 0.0, 1.0, 0.0];
+
+        let q_personal =
+            integrate_nara_quintessence(q_identity, &[q_birthdate, q_activity_history]);
+        let expected = compose_personal_quaternion(q_identity, q_birthdate, q_activity_history);
+
+        assert_eq!(q_personal, expected);
+    }
+
+    #[test]
+    fn identity_hash_cutover_accepts_one_digest_as_both_kinds() {
+        let digest = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08";
+        assert_eq!(
+            identity_hash_kinds_during_cutover(digest),
+            Some([
+                IdentityHashKind::LegacyBirthDataBlake3,
+                IdentityHashKind::QuaternionicSignatureBlake3
+            ])
+        );
+        assert_eq!(identity_hash_kinds_during_cutover("not-a-hash"), None);
+    }
+
+    #[test]
+    fn bioquaternion_decomposition_reads_from_q_composed() {
+        let q_identity = [0.5, 0.5, 0.5, 0.5];
+        let q_transit = [0.0, 1.0, 0.0, 0.0];
+        let q_activity_a = [0.0, 0.0, 1.0, 0.0];
+        let q_activity_b = [0.0, 0.0, 0.0, 1.0];
+
+        let q_composed_a = compose_personal_quaternion(q_identity, q_transit, q_activity_a);
+        let q_composed_b = compose_personal_quaternion(q_identity, q_transit, q_activity_b);
+
+        let (q_b_a, q_p_a) = decompose_bioquaternion(q_composed_a);
+        let (q_b_b, q_p_b) = decompose_bioquaternion(q_composed_b);
+
+        assert_eq!(q_b_a, q_composed_a);
+        assert_eq!(
+            q_p_a,
+            [
+                q_composed_a[0],
+                -q_composed_a[1],
+                -q_composed_a[2],
+                -q_composed_a[3]
+            ]
+        );
+        assert_eq!(q_b_b, q_composed_b);
+        assert_eq!(
+            q_p_b,
+            [
+                q_composed_b[0],
+                -q_composed_b[1],
+                -q_composed_b[2],
+                -q_composed_b[3]
+            ]
+        );
+        assert_ne!(q_b_a, q_b_b);
+        assert_ne!(q_p_a, q_p_b);
     }
 }

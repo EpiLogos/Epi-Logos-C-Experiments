@@ -17,24 +17,116 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { createRequire } from 'node:module';
 
+installBrowserImportShim();
+
 const require = createRequire(import.meta.url);
 const {
     ALL_CONSENT_ACTIONS,
     ConsentExpiredError,
     ConsentGate,
     ConsentMissingError,
+} = require('../integrated-composition/lib/common/consent-gate.js');
+const {
     JIVA_SIVA_DEEP_ACTIONS,
     JIVA_SIVA_PANE_FIELD_GROUPS,
-    PENDING_INTEGRATED_VIEW_STATE,
     checkJivaSivaPanes,
+} = require('../integrated-composition/lib/common/jiva-siva-fields.js');
+const {
+    PENDING_INTEGRATED_VIEW_STATE,
+} = require('../integrated-composition/lib/common/integrated-state.js');
+const {
     JIVA_SIVA_LAYOUT,
+} = require('../integrated-composition/lib/common/layout-claim.js');
+const {
+    dailyWidgetsForSide,
+    PRATIBIMBA_LAYOUT_DAILY_0_1,
+    PRATIBIMBA_LAYOUT_IDE_DEEP,
+} = require('../pratibimba-layouts/lib/common/layout-types.js');
+const {
+    OMNIPANEL_TABS,
+} = require('../omnipanel-shell/lib/common/omnipanel-types.js');
+const {
     PrivacyViolationError,
-    produceAllAvailableEnvelopes,
     validateEvidenceEnvelopeForRange
-} = require('../integrated-composition/lib/common/index.js');
+} = require('../integrated-composition/lib/common/privacy-scrubber.js');
+const {
+    readCurrentInhabitedBimbaField,
+} = require('../integrated-composition/lib/common/integrated-readiness.js');
+const {
+    produceAllAvailableEnvelopes,
+} = require('../integrated-composition/lib/common/evidence-producers.js');
+const {
+    buildPersonalBeingPatternView
+} = require('../plugin-integrated-4-5-0/lib/browser/personal-recognition-composition.js');
 
 const PLUGIN_SOURCE_ROOT =
     '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/plugin-integrated-4-5-0/src';
+
+function installBrowserImportShim() {
+    const requireForShim = createRequire(import.meta.url);
+    requireForShim.extensions['.css'] = () => undefined;
+
+    if (globalThis.document) {
+        return;
+    }
+    class ElementStub {}
+    ElementStub.prototype.matches = () => false;
+    ElementStub.prototype.msMatchesSelector = () => false;
+    ElementStub.prototype.webkitMatchesSelector = () => false;
+    ElementStub.prototype.contains = () => false;
+    const element = () => Object.assign(new ElementStub(), {
+        classList: { add() {}, remove() {}, contains() { return false; }, toggle() {} },
+        dataset: {},
+        style: {},
+        setAttribute() {},
+        getAttribute() { return null; },
+        removeAttribute() {},
+        appendChild() {},
+        removeChild() {},
+        addEventListener() {},
+        removeEventListener() {}
+    });
+    globalThis.Element = ElementStub;
+    globalThis.HTMLElement = ElementStub;
+    globalThis.document = {
+        createElement: element,
+        documentElement: { style: {} },
+        body: element(),
+        addEventListener() {},
+        removeEventListener() {},
+        createTextNode: text => ({ textContent: text }),
+        queryCommandSupported() { return false; }
+    };
+    const navigator = {
+        userAgent: 'node',
+        platform: 'Linux x86_64',
+        maxTouchPoints: 0,
+        clipboard: {}
+    };
+    globalThis.window = {
+        document: globalThis.document,
+        navigator,
+        localStorage: {
+            getItem() { return null; },
+            setItem() {},
+            removeItem() {}
+        },
+        getComputedStyle: () => ({})
+    };
+    Object.defineProperty(globalThis, 'navigator', {
+        configurable: true,
+        value: navigator
+    });
+
+    const {
+        FrontendApplicationConfigProvider
+    } = requireForShim('../../node_modules/@theia/core/lib/browser/frontend-application-config-provider.js');
+    FrontendApplicationConfigProvider.set({
+        applicationName: 'plugin-integrated-4-5-0-test',
+        defaultTheme: 'light',
+        defaultIconTheme: 'none'
+    });
+}
 
 function readyProfile(generation, overrides = {}) {
     return {
@@ -117,6 +209,33 @@ test('jiva-siva layout names M4 center, M5 side, M0 mini-inspector', () => {
     );
 });
 
+test('jiva-siva layout claim is shell-1 personal flow-writing inside daily-0-1', () => {
+    assert.equal(JIVA_SIVA_LAYOUT.id, 'jiva-siva.integrated');
+    assert.equal(JIVA_SIVA_LAYOUT.hostLayoutId, PRATIBIMBA_LAYOUT_DAILY_0_1);
+    assert.equal(JIVA_SIVA_LAYOUT.shellId, 'shell-1');
+    assert.equal(JIVA_SIVA_LAYOUT.dailyShellFace, '1-personal');
+    assert.equal(JIVA_SIVA_LAYOUT.surfaceRole, 'personal-flow-writing');
+    assert.notEqual(
+        JIVA_SIVA_LAYOUT.hostLayoutId,
+        JIVA_SIVA_LAYOUT.id,
+        'jiva-siva.integrated is a composition claim, not a third workspace layout'
+    );
+
+    const personalSide = dailyWidgetsForSide('1-personal');
+    const cosmicSide = dailyWidgetsForSide('0-cosmic');
+    assert.ok(personalSide.includes('pratibimba.body.agent-checkin'));
+    assert.ok(personalSide.includes('pratibimba.omnipanel.shell'));
+    assert.ok(!cosmicSide.includes('pratibimba.body.agent-checkin'));
+
+    for (const tab of OMNIPANEL_TABS) {
+        assert.deepEqual(
+            tab.availableInLayouts,
+            [PRATIBIMBA_LAYOUT_DAILY_0_1, PRATIBIMBA_LAYOUT_IDE_DEEP],
+            `${tab.id} must remain available across the daily and deep layouts`
+        );
+    }
+});
+
 // ---- ConsentGate ---------------------------------------------------------
 
 test('ConsentGate.require throws ConsentMissingError when no record on file', () => {
@@ -190,6 +309,50 @@ test('4/5/0 envelope with bioquaternion_raw still fails the scrubber', () => {
     );
 });
 
+test('4/5/0 composition boundary rejects raw q_personal ProtectedPersonalFieldInput payload', () => {
+    const rawProtectedPersonalField = Object.freeze({
+        envelopeId: 'env-450-raw-q-personal',
+        emittedAt: 1,
+        producerId: 'cosmic-engine-snapshot',
+        rangeId: '4-5-0',
+        pluginId: 'plugin-integrated-4-5-0',
+        profileGeneration: 1,
+        worldClockGeneration: 1,
+        s2ProvenanceHandles: ['s2://provenance/handle'],
+        s3SessionHandle: 's3://session/handle',
+        s3DayNowHandle: 's3://day-now/handle',
+        s5ReviewTarget: {
+            targetKind: 's5.review.target.routine',
+            targetId: 's5.review.routine.fixture',
+            reason: 'fixture'
+        },
+        privacyClass: 'protected_local_handle_only',
+        sourceSpecAnchors: [
+            'DR-M4-3',
+            'M4 Tranche 05.5 psychoid-cymatic renderer-handle invariant'
+        ],
+        requiresHumanFinalValidation: true,
+        payload: Object.freeze({
+            q_personal: Object.freeze({
+                qIdentity: [1, 0, 0, 0],
+                qTransit: [0, 1, 0, 0],
+                qActivity: [0, 0, 1, 0],
+                qComposed: [0, 0, 0, 1],
+                audio_octet: [0, 1, 0, 1, 0, 1, 0, 1]
+            })
+        })
+    });
+
+    assert.throws(
+        () => validateEvidenceEnvelopeForRange(rawProtectedPersonalField),
+        error =>
+            error instanceof PrivacyViolationError &&
+            error.violations.some(v => v.includes('q_personal')) &&
+            error.violations.some(v => v.includes('q_personal.qIdentity')) &&
+            error.violations.some(v => v.includes('q_personal.audio_octet'))
+    );
+});
+
 test('4/5/0 envelope with opaque protected handle passes the scrubber', () => {
     // Opaque handles (Graphiti episode IDs etc.) are LEGAL in 4/5/0 — only
     // raw body content is forbidden. This is what distinguishes 4/5/0 from
@@ -221,6 +384,44 @@ test('4/5/0 envelope with opaque protected handle passes the scrubber', () => {
     assert.doesNotThrow(() => validateEvidenceEnvelopeForRange(safe450));
 });
 
+test('4/5/0 composition boundary accepts only opaque M4 handles with provenance-state', () => {
+    const safeProtectedPersonalFieldProjection = Object.freeze({
+        envelopeId: 'env-450-safe-m4-handles',
+        emittedAt: 1,
+        producerId: 'cosmic-engine-snapshot',
+        rangeId: '4-5-0',
+        pluginId: 'plugin-integrated-4-5-0',
+        profileGeneration: 1,
+        worldClockGeneration: 1,
+        s2ProvenanceHandles: ['s2://provenance/handle'],
+        s3SessionHandle: 's3://session/handle',
+        s3DayNowHandle: 's3://day-now/handle',
+        s5ReviewTarget: {
+            targetKind: 's5.review.target.routine',
+            targetId: 's5.review.routine.fixture',
+            reason: 'fixture'
+        },
+        privacyClass: 'protected_local_handle_only',
+        sourceSpecAnchors: [
+            'DR-M4-3',
+            'M4 Tranche 05.5 psychoid-cymatic renderer-handle invariant'
+        ],
+        requiresHumanFinalValidation: true,
+        payload: Object.freeze({
+            protectedPersonalFieldHandles: Object.freeze({
+                qIdentityHandle: 'm4://protected/qIdentity/opaque',
+                qTransitHandle: 'm4://protected/qTransit/opaque',
+                qActivityHandle: 'm4://protected/qActivity/opaque',
+                qComposedHandle: 'm4://protected/qComposed/opaque',
+                provenanceState: 'deterministic-lower-fidelity',
+                invariant: 'M4 Tranche 05.5 psychoid-cymatic renderer-handle'
+            })
+        })
+    });
+
+    assert.doesNotThrow(() => validateEvidenceEnvelopeForRange(safeProtectedPersonalFieldProjection));
+});
+
 // ---- No-local-tables discipline -----------------------------------------
 
 const FORBIDDEN_LITERAL_PATTERNS = [
@@ -236,7 +437,12 @@ function walk(dir) {
         const full = join(dir, entry);
         const stats = statSync(full);
         if (stats.isDirectory()) out.push(...walk(full));
-        else if (['.ts', '.tsx', '.mjs', '.js'].includes(extname(entry))) out.push(full);
+        else if (
+            ['.ts', '.tsx', '.mjs', '.js'].includes(extname(entry)) &&
+            !entry.includes('.test.')
+        ) {
+            out.push(full);
+        }
     }
     return out;
 }
@@ -252,4 +458,54 @@ test('plugin-integrated-4-5-0 source contains no q_personal / q_nara / bioquater
         }
     }
     assert.deepEqual(offenses, [], `local-table offenses: ${JSON.stringify(offenses, null, 2)}`);
+});
+
+test('personal composition passes current PASU projection to M4 perspective and M5 review views', () => {
+    const profile = readyProfile(88, {
+        pasuBeingPatternProjections: [
+            {
+                entityId: 'current-being',
+                entityKind: 'person',
+                stableIdentity: { handle: 's2://being/current' },
+                monopolyOperator: 'PotentiallyOne',
+                perspectiveRole: 'SecondPerson',
+                naraFamilyRole: 'You',
+                clockAddress: { degree360: 64 },
+                elementalWeights: { fire: 0.2, water: 0.8 },
+                liveState: {
+                    generation: 88,
+                    streamDelta: 's3://being/current/g88',
+                    graphitiEpisodeRefs: [
+                        {
+                            episodeId: 'ep-current',
+                            sourceRef: 'graphiti://episode/current',
+                            publicSummary: 'public-safe summary'
+                        }
+                    ]
+                },
+                relationEdges: [],
+                reviewRisk: 'canon-candidate'
+            },
+            {
+                entityId: 'stale-being',
+                entityKind: 'person',
+                monopolyOperator: 'Mono',
+                perspectiveRole: 'FirstPerson',
+                clockAddress: { degree360: 12 },
+                elementalWeights: {},
+                liveState: { generation: 87, streamDelta: 's3://being/stale/g87' },
+                relationEdges: []
+            }
+        ]
+    });
+
+    const field = readCurrentInhabitedBimbaField(profile);
+    const view = buildPersonalBeingPatternView(field, 'current-being');
+
+    assert.equal(view?.m4Perspective.entityId, 'current-being');
+    assert.equal(view?.m4Perspective.perspectiveRole, 'You');
+    assert.equal(view?.m4Perspective.naraFamilyRole, 'You');
+    assert.equal(view?.m4Perspective.monopolyOperator, 'PotentiallyOne');
+    assert.equal(view?.m5Recognition.reviewRisk, 'canon-candidate');
+    assert.deepEqual(view?.m5Recognition.provenanceHandles, ['graphiti://episode/current']);
 });

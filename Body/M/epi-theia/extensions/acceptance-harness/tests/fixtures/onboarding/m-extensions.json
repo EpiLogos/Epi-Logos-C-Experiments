@@ -1,0 +1,11 @@
+{
+  "description": "Task 32.14 — the six M-extension onboarding surfaces. Folder names match Body/M/epi-theia/extensions/{id}/ and the plan's {m0-anuttara..m5-epii} roster.",
+  "extensions": [
+    { "id": "m0-anuttara", "raw": 0, "subsystem": "Anuttara", "package": "@pratibimba/m0-anuttara" },
+    { "id": "m1-paramasiva", "raw": 1, "subsystem": "Paramasiva", "package": "@pratibimba/m1-paramasiva" },
+    { "id": "m2-parashakti", "raw": 2, "subsystem": "Parashakti", "package": "@pratibimba/m2-parashakti" },
+    { "id": "m3-mahamaya", "raw": 3, "subsystem": "Mahamaya", "package": "@pratibimba/m3-mahamaya" },
+    { "id": "m4-nara", "raw": 4, "subsystem": "Nara", "package": "@pratibimba/m4-nara" },
+    { "id": "m5-epii", "raw": 5, "subsystem": "Epii", "package": "@pratibimba/m5-epii" }
+  ]
+}

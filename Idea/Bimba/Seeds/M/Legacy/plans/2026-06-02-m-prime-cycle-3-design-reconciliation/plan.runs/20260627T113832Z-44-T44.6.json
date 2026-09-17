@@ -1,0 +1,33 @@
+{
+  "runId": "20260627T113832Z-44-T44.6",
+  "taskId": "44.T44.6",
+  "startedAt": "2026-06-27T11:38:32.334Z",
+  "owner": "codex-m-dev-44-t44-6-context-xray",
+  "leaseExpiresAt": "2026-06-27T13:38:32.334Z",
+  "worktree": null,
+  "task": {
+    "id": "44.T44.6",
+    "trackId": "44",
+    "tranche": "T44.6",
+    "title": "Selection → context (context-xray seam) *(depends: s2'.coordinate.context_xray landing)*",
+    "effort": null,
+    "file": "44-pratibimba-surface-standard.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/44-pratibimba-surface-standard.md",
+    "dependsOn": [
+      "44.T44.5"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

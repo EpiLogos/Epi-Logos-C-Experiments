@@ -1,3 +1,8 @@
+import {
+    enforcePiReviewRoutingGate,
+    type PiReviewRoutingGateResult
+} from './recursive-self-review-gate';
+
 /**
  * 08.T6 deliverable 2 — typed surface state for the 4/5/0 Epii review pane.
  *
@@ -65,5 +70,46 @@ export function withPanelMode(
         ...state,
         mode,
         lastUpdatedAt: now
+    });
+}
+
+export interface IdentityAugmentReviewProposal {
+    readonly proposalId: string;
+    readonly actor: string;
+    readonly recursiveSelfReview: boolean;
+    readonly humanRequired: boolean;
+    readonly actorIsHuman: boolean;
+}
+
+export interface RoutedIdentityAugmentReviewProposal {
+    readonly gate: PiReviewRoutingGateResult;
+    readonly gatedVerdict: 'applied' | 'awaiting-human-final-validation';
+    readonly state: EpiiReviewSurfaceState;
+}
+
+export function routeIdentityAugmentProposalThroughM5ReviewGate(
+    state: EpiiReviewSurfaceState,
+    proposal: IdentityAugmentReviewProposal,
+    now: number
+): RoutedIdentityAugmentReviewProposal {
+    const gate = enforcePiReviewRoutingGate({
+        decision: 'applied',
+        humanRequired: proposal.humanRequired,
+        actorIsHuman: proposal.actorIsHuman,
+        recursiveSelfReview: proposal.recursiveSelfReview,
+        actor: proposal.actor
+    });
+    const gatedVerdict = gate.ok ? 'applied' : 'awaiting-human-final-validation';
+    return Object.freeze({
+        gate,
+        gatedVerdict,
+        state: Object.freeze({
+            ...state,
+            mode: gate.ok ? 'open' : 'notify-pending',
+            reviewInboxCount: state.reviewInboxCount + 1,
+            activeCandidateRoute: `identity-augment:${proposal.proposalId}`,
+            humanRequiredGateState: gate.ok ? 'human-approved' : 'awaiting-human',
+            lastUpdatedAt: now
+        })
     });
 }

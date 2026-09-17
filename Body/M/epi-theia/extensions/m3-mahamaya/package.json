@@ -23,6 +23,8 @@
   ],
   "dependencies": {
     "@theia/core": "1.56.0",
+    "@pratibimba/integrated-composition": "workspace:*",
+    "@pratibimba/kernel-bridge": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -34,9 +36,9 @@
     "typescript": "~5.4.5"
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "pnpm -C ../.. exec tsc -b extensions/m3-mahamaya",
     "watch": "tsc -b -w",
     "clean": "rimraf lib",
-    "test": "pnpm build"
+    "test": "pnpm -C ../.. exec tsc -b extensions/m3-mahamaya && node --test ../test/m3-mahamaya-codon-wheel.test.mjs ../test/m3-mahamaya-inspectors.test.mjs ../test/m3-mahamaya-clock-field-edge-overlay.test.mjs ../test/m3-mahamaya-iching-cast-ribbon.test.mjs ../test/m3-mahamaya-profile-tick-readiness.test.mjs"
   }
 }

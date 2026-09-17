@@ -1,0 +1,39 @@
+{
+  "coordinate": "S4/S4'",
+  "owner_agent": "pi",
+  "package_role": "pi_agent_runtime_capability_membrane",
+  "body_residency": "Body/S/S4/pi-agent",
+  "vama_shakti_dialogue_only_invariant": true,
+  "vama_shakti_registration": {
+    "tranche": "41.4",
+    "lib": "Body/S/S4/pi-agent/lib/agent-registry.ts",
+    "dispatch_guard": "Body/S/S4/pi-agent/lib/dispatch-guard.ts",
+    "tests": "Body/S/S4/pi-agent/tests/vama-shakti-dialogue-only.test.ts",
+    "refusal_law": ["DR-VAMA-3", "DR-VAMA-5", "DR-VAMA-6"],
+    "capability_profile": {
+      "dialogue_only": true,
+      "system_tools_granted": [],
+      "vault_write": false,
+      "subagent_dispatch": false,
+      "terminal_authority": false,
+      "frozen": "per DR-VAMA-5 — structural, not configurable"
+    },
+    "dialogue_emission_primitive": "vama_shakti_dialogue_emit",
+    "lifecycle": {
+      "on_scene_close": {
+        "ephemeral": "released",
+        "warm": "persisted to WarmVamaShakti (Tranche 41.10)",
+        "promoted": "flows back to Hen (Tranche 41.11)"
+      }
+    },
+    "registry_api": [
+      "registerVamaShakti",
+      "resolveSpeaker",
+      "releaseVamaShakti",
+      "listByArena",
+      "guardSpeakerDispatch",
+      "closeScene"
+    ]
+  },
+  "canon": ["[[S4-SPEC]]", "[[S4-2p-pleroma]]"]
+}

@@ -13,6 +13,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 const require = createRequire(import.meta.url);
 const {
@@ -23,6 +25,49 @@ const {
     REQUIRED_EVIDENCE_FIELDS,
     REQUIRED_MEDIATED_EVIDENCE_FIELDS
 } = require('../lib/common/run-model.js');
+
+const REPO_ROOT = resolve(import.meta.dirname, '../../../../../..');
+const CAPABILITY_MATRIX_PATH = resolve(REPO_ROOT, 'Body/S/S4/plugins/pleroma/capability-matrix.json');
+const MEDIATED_REFS = {
+    currentProfile: {
+        source: 's0.current_profile',
+        generation: 42,
+        readiness: { bridge: 'ready' },
+        profileHandle: 's0://profile/42'
+    },
+    graphContext: {
+        source: 's2.graph_services',
+        namespace: 'bimba',
+        coordinate: 'M5.epii.improve-1',
+        graphAnchor: 'M5.epii.improve-1'
+    },
+    sessionRuntime: {
+        source: 's3.gateway',
+        sessionKey: 'session-abc-xyz',
+        dayId: '2026-06-01',
+        nowPath: 'Idea/Empty/Present/01-06-2026/now.md'
+    },
+    semanticCandidates: {
+        source: 's1.semantic.suggest_links',
+        responseType: 'LinkCandidateResponse',
+        requestRef: 's1://semantic/request/improve-1',
+        candidates: [{ target: '[[M5]]', score: 0.8, sourceBlock: 'block://m5' }]
+    },
+    s5Refs: {
+        source: 's5.persisted_store',
+        candidateRef: 's5://candidate/cand-3',
+        reviewRef: 's5://review/rev-2026-06-01-001',
+        persistedStoreDtoRef: 's5://dto/cand-3'
+    }
+};
+
+test('RunEvidenceEnvelope required keys match mediated-run packet fields in the real capability matrix', () => {
+    const matrix = JSON.parse(readFileSync(CAPABILITY_MATRIX_PATH, 'utf8'));
+    const matrixFields = matrix.m5_4_governance.mediated_run_evidence_bridge.packet_required_fields;
+    assert.equal(matrixFields.length, 16);
+    assert.ok(matrixFields.includes('privacyClass'));
+    assert.deepEqual(new Set(REQUIRED_EVIDENCE_FIELDS), new Set(matrixFields));
+});
 
 test('buildEvidenceEnvelope fills nulls for any missing field', () => {
     const env = buildEvidenceEnvelope({ candidateId: 'cand-1' });
@@ -36,15 +81,21 @@ test('buildEvidenceEnvelope fills nulls for any missing field', () => {
     assert.equal(env.bridgeReadinessHandle, null);
     assert.equal(env.sessionKey, null);
     assert.equal(env.dayNowContext, null);
+    assert.equal(env.currentProfile, null);
+    assert.equal(env.graphContext, null);
+    assert.equal(env.sessionRuntime, null);
+    assert.equal(env.semanticCandidates, null);
+    assert.equal(env.s5Refs, null);
     assert.equal(env.privacyClass, 'safe-public-current-kernel-tick');
 });
 
 test('missingEvidenceFields lists every required field when envelope is empty', () => {
     const env = buildEvidenceEnvelope({ candidateId: 'cand-2' });
     const missing = missingEvidenceFields(env);
-    // candidateId is always set; the other required fields should be missing.
+    // candidateId and privacyClass are default-populated; the other required fields should be missing.
     assert.ok(!missing.includes('candidateId'));
-    for (const field of REQUIRED_EVIDENCE_FIELDS.filter(f => f !== 'candidateId')) {
+    assert.ok(!missing.includes('privacyClass'));
+    for (const field of REQUIRED_EVIDENCE_FIELDS.filter(f => !['candidateId', 'privacyClass'].includes(f))) {
         assert.ok(missing.includes(field), `${field} should be reported as missing`);
     }
 });
@@ -63,7 +114,8 @@ test('fully populated envelope reports no missing fields', () => {
         profileGeneration: 42,
         bridgeReadinessHandle: 'bridge-ready-12',
         sessionKey: 'session-abc-xyz',
-        dayNowContext: '2026-06-01/NOW-session-3'
+        dayNowContext: '2026-06-01/NOW-session-3',
+        ...MEDIATED_REFS
     });
     const missing = missingEvidenceFields(env);
     assert.deepEqual(missing, []);
@@ -78,7 +130,8 @@ test('partially populated envelope reports only the missing fields', () => {
         reviewId: 'rev-4',
         testAnchor: 'tests/foo_test.rs',
         profileGeneration: 12,
-        bridgeReadinessHandle: 'br-12'
+        bridgeReadinessHandle: 'br-12',
+        ...MEDIATED_REFS
         // session + day-now missing
     });
     const missing = missingEvidenceFields(env);
@@ -235,10 +288,10 @@ test('mediated evidence packet rejects protected body payloads before dispatch',
 });
 
 test('mediation capability allowlist separates read-only, deposit, and user-final vault writes', () => {
-    assert.equal(isMediationCapabilityAllowed('sophia', 's1.semantic.suggest_links').allowed, true);
-    assert.equal(isMediationCapabilityAllowed('aletheia', 's1.vault.read_file').allowed, true);
+    assert.equal(isMediationCapabilityAllowed('moirai', 's1.semantic.suggest_links').allowed, true);
+    assert.equal(isMediationCapabilityAllowed('anansi', 's1.vault.read_file').allowed, true);
     assert.equal(isMediationCapabilityAllowed('pi', 's1.vault.append_block').allowed, true);
-    assert.equal(isMediationCapabilityAllowed('sophia', 's1.vault.append_block').allowed, false);
+    assert.equal(isMediationCapabilityAllowed('moirai', 's1.vault.append_block').allowed, false);
     assert.equal(isMediationCapabilityAllowed('pi', 's1.vault.write_file').allowed, false);
     assert.equal(
         isMediationCapabilityAllowed('human', 's1.vault.write_file', { userFinalValidated: true }).allowed,

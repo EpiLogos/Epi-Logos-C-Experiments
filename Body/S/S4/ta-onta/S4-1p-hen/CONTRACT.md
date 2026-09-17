@@ -75,7 +75,7 @@ When a `/docs` artifact is still load-bearing, Hen should produce or request a S
 | Tool | Purpose |
 |------|---------|
 | `hen_template_invoke` | Instantiate a CT template type with correct frontmatter and content scaffold |
-| `hen_hybrid_retrieve` | Coordinate-aware retrieval: vault search + Neo4j traversal + Redis cache |
+| `hen_hybrid_retrieve` | Coordinate-aware retrieval plus exact-path content delta via optional `path`, `since`, and `response_token`; response boundaries come from Khora's durable highlight-write receipt |
 | `hen_status` | Template registry state, sync queue depth, pending validations |
 | `graph_query` | Neo4j query interface (coordinate-aware Cypher) |
 | `hen_frontmatter_validate` | Validate note frontmatter against 126-key schema |

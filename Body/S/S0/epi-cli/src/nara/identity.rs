@@ -187,8 +187,13 @@ pub struct LayerMeta {
 
 // ─── Filesystem I/O ─────────────────────────────────────────────────────────
 
-/// Returns ~/.epi-logos/nara
+/// Returns the Nara state root. `EPI_NARA_HOME` is the explicit process-level
+/// isolation seam used by supervised/test gateways; ordinary CLI processes
+/// retain the canonical `~/.epi-logos/nara` default.
 pub fn nara_home() -> PathBuf {
+    if let Some(root) = std::env::var_os("EPI_NARA_HOME").filter(|root| !root.is_empty()) {
+        return PathBuf::from(root);
+    }
     dirs::home_dir()
         .unwrap_or_else(|| PathBuf::from("."))
         .join(".epi-logos")
@@ -424,6 +429,100 @@ pub fn compute_quintessence_profiles(profile: &ProfileJson) -> [[f32; 4]; 5] {
         }
     }
     profiles
+}
+
+/// Quintessence weight per 01-quintessence-hash-architecture: `1 − variance`
+/// across the PRESENT layer profiles (low variance = the five readings agree
+/// = quintessence present), scaled by completeness, under the HARD
+/// REQUIREMENT that a partial identity may never read as whole — weight can
+/// exceed 0.5 only when at least 4 of 5 layers are present.
+pub fn quintessence_weight(profiles: &[[f32; 4]; 5]) -> f32 {
+    let present: Vec<&[f32; 4]> = profiles
+        .iter()
+        .filter(|p| p.iter().any(|&v| v > f32::EPSILON))
+        .collect();
+    if present.is_empty() {
+        return 0.0;
+    }
+    let n = present.len() as f32;
+    // mean per-element variance across the present profiles
+    let mut variance = 0.0f32;
+    for element in 0..4 {
+        let mean = present.iter().map(|p| p[element]).sum::<f32>() / n;
+        variance += present
+            .iter()
+            .map(|p| (p[element] - mean) * (p[element] - mean))
+            .sum::<f32>()
+            / n;
+    }
+    variance /= 4.0;
+    let agreement = (1.0 - variance).clamp(0.0, 1.0);
+    let weight = agreement * (n / 5.0);
+    if present.len() < 4 {
+        weight.min(0.5)
+    } else {
+        weight
+    }
+}
+
+/// Handle-only heartbeat summary (Sprint-8 E6, DR-M4-3): what the S3 gateway
+/// may attach to the shared profile each tick. Only handles cross the bus —
+/// the natal clock address (hash-derived), weight, enrichment honesty, an
+/// 8-hex preview, and the elemental quaternion (clock_state's ONE quaternion
+/// law). `None` when no local identity exists or no layer carries weight —
+/// absence is the honest "no identity anchored" state. The natal chart and
+/// per-layer bodies NEVER cross here.
+pub fn heartbeat_quintessence() -> Option<portal_core::QuintessenceProjection> {
+    let profile = load_profile().ok()??;
+    let profiles = compute_quintessence_profiles(&profile);
+    let quaternion = crate::portal::clock_state::quintessence_quaternion_from_profiles(&profiles)?;
+    let hash = blake3_identity_hash(&profile);
+    let (natal_degree, natal_tick12) = hash_to_clock_position(&hash);
+    let layer_count = profile.layer_presence_mask.count_ones() as u8;
+    Some(portal_core::QuintessenceProjection {
+        natal_degree,
+        natal_tick12,
+        natal_fibonacci_position: Some((natal_degree / 6) as u8),
+        quintessence_weight: quintessence_weight(&profiles),
+        layer_count,
+        partial: layer_count < 5,
+        hash_preview: hash[..4].iter().map(|b| format!("{b:02x}")).collect(),
+        quintessence_quaternion: quaternion,
+        authority:
+            "epi nara identity (BLAKE3 → hash_to_clock_position; clock_state quaternion law)"
+                .to_owned(),
+    })
+}
+
+/// The ambient environmental transform (DR-ENV-1/2/7) for the live heartbeat:
+/// the transiting sky's transpersonal (outer) planets — Uranus(7)/Neptune(8)/
+/// Pluto(9), the collective band — each aspected against the PASU natal Sun and
+/// folded into the `environment_quaternion` the carrier composes onto the base.
+/// `sky` is the live ecliptic-degree tuple (0..360) the heartbeat already holds.
+/// Requires a natal chart (layer_1); absent it, `None` — the ambient wind is only
+/// ever computed AGAINST the personal invariant (DR-ENV-7), never fabricated. The
+/// result is a DISTINCT factor; it never becomes q_identity (DR-ENV-1).
+pub fn heartbeat_environment(sky: &[f32; 10]) -> Option<[f32; 4]> {
+    use portal_core::environment::{
+        derive_env_quaternion, ConditionSource, EnvironmentalCondition, NatalReference,
+    };
+    // Natal invariant: the FULL PASU natal chart (all ten natal planets, ecliptic
+    // 0..360) from the persisted natal.json — the birth-time anchor the ambient
+    // conditions aspect against (DR-ENV-7, P2 richer reference: a transit engaging
+    // any natal point counts, not only the Sun). No cached natal → no env (honest).
+    let natal_chart = crate::nara::kairos::load_natal().ok()??;
+    let natal_degrees = crate::nara::kairos::planet_degrees_from_result(&natal_chart)?;
+    let natal_ref = NatalReference::from_points(natal_degrees.to_vec());
+    // The transpersonal band (DR-ENV-2): Uranus/Neptune/Pluto are the ambient,
+    // collective conditions — never a personal M2–M5 dataset.
+    let conditions: [EnvironmentalCondition; 3] =
+        [7u8, 8, 9].map(|planet| EnvironmentalCondition {
+            source: ConditionSource::TranspersonalPlanet(planet),
+            degree: sky[planet as usize],
+            magnitude: 1.0,
+            sensitivity: 1.0,
+        });
+    Some(derive_env_quaternion(&conditions, &natal_ref))
 }
 
 // ─── Journal elemental weight stub ──────────────────────────────────────────
@@ -680,6 +779,59 @@ pub fn show(json: bool) -> Result<String, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn quintessence_weight_rewards_agreement_and_caps_partial_identities() {
+        // five identical present profiles: zero variance, full completeness
+        let unanimous = [[0.25f32, 0.25, 0.25, 0.25]; 5];
+        assert!((quintessence_weight(&unanimous) - 1.0).abs() < 1e-6);
+
+        // HARD REQUIREMENT: 3 of 5 present can never exceed 0.5, even in
+        // perfect agreement
+        let three = [
+            [0.25, 0.25, 0.25, 0.25],
+            [0.25, 0.25, 0.25, 0.25],
+            [0.25, 0.25, 0.25, 0.25],
+            [0.0; 4],
+            [0.0; 4],
+        ];
+        assert!(quintessence_weight(&three) <= 0.5);
+
+        // disagreement lowers the weight below unanimous
+        let tension = [
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+            [0.25, 0.25, 0.25, 0.25],
+        ];
+        assert!(quintessence_weight(&tension) < quintessence_weight(&unanimous));
+
+        // no identity at all: zero, never fabricated
+        assert_eq!(quintessence_weight(&[[0.0; 4]; 5]), 0.0);
+    }
+
+    #[test]
+    fn quaternion_law_remaps_elements_and_normalises() {
+        use crate::portal::clock_state::quintessence_quaternion_from_profiles;
+        // pure FIRE profiles → x-axis per [w=EARTH, x=FIRE, y=WATER, z=AIR]
+        let fire = [[1.0f32, 0.0, 0.0, 0.0]; 5];
+        let q = quintessence_quaternion_from_profiles(&fire).expect("present");
+        assert_eq!(q, [0.0, 1.0, 0.0, 0.0]);
+        // absent identity → None, never a fabricated ground
+        assert_eq!(quintessence_quaternion_from_profiles(&[[0.0; 4]; 5]), None);
+        // mixed profiles normalise to unit magnitude
+        let mixed = [
+            [0.4f32, 0.2, 0.3, 0.1],
+            [0.1, 0.5, 0.2, 0.2],
+            [0.0; 4],
+            [0.25, 0.25, 0.25, 0.25],
+            [0.3, 0.3, 0.2, 0.2],
+        ];
+        let q = quintessence_quaternion_from_profiles(&mixed).expect("present");
+        let mag: f32 = q.iter().map(|v| v * v).sum::<f32>().sqrt();
+        assert!((mag - 1.0).abs() < 1e-6);
+    }
 
     #[test]
     fn hash_zero_gives_degree_0_tick_0() {

@@ -1,0 +1,38 @@
+{
+  "runId": "20260617T122523Z-05-T5.22",
+  "taskId": "05.T5.22",
+  "startedAt": "2026-06-17T12:25:23.073Z",
+  "owner": "codex-m-dev-05-t5-22",
+  "leaseExpiresAt": "2026-06-17T14:25:23.073Z",
+  "worktree": null,
+  "task": {
+    "id": "05.T5.22",
+    "trackId": "05",
+    "tranche": "T5.22",
+    "title": "Nara LoRA + E_4 personal-energy substrate (Stream F of [[33-harmonic-energy-channel-handoff.md]] §2.6)",
+    "effort": "Stream F of [[33-harmonic-energy-channel-handoff.md]] §2.6",
+    "file": "05-m4-nara-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/05-m4-nara-reconciliation.md",
+    "dependsOn": [
+      "05.T5.21"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/**",
+      "Body/S/S4/ta-onta/S4-x/skills/{nara-voice-training, nara-journal-parser, mlx-lora}/**",
+      "Idea/Pratibimba/System/**",
+      "vendor/legacy/epi-tauri/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

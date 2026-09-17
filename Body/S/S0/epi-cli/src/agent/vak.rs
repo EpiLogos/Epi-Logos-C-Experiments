@@ -64,7 +64,7 @@ pub fn evaluate_vak(task: &str) -> VakCoordinates {
         || task_lower.contains("async")
         || task_lower.contains("long")
     {
-        "CFP4" // L-Thread: background subagent
+        "CFP4" // L-Thread (Long): high-autonomy, long-duration, self-validating
     } else {
         "CFP0" // Base Thread: direct single-agent
     };

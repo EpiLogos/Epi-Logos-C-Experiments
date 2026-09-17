@@ -1,11 +1,15 @@
+import {
+    enforcePiReviewRoutingGate
+} from '@pratibimba/m-extension-runtime/lib/common/recursive-self-review-gate';
+
 /**
- * Agentic Control Room run model — Track 05 T8.
+ * Pi runtime monitor run model — Track 05 T8 / Track 12.14.
  *
  * The run flow surfaces:
  *   1. A user-driven (or intent-routed) S5 improvement candidate.
- *   2. The actor chooses a route + actor pair (Anima/Aletheia/Pi/Sophia per
- *      Body/S/S4/plugins/pleroma/capability-matrix.json).
- *   3. The Agentic Control Room composes a payload and dispatches via
+ *   2. The actor chooses a route + actor pair (Pi, Anima, or an Aletheia
+ *      techne-guardian subagent per DR-M5-1).
+ *   3. The Pi runtime monitor composes a payload and dispatches via
  *      KERNEL_BRIDGE_API.invokeCapability (method='invokeGatewayRpc',
  *      gatewayMethod='s4'.mediation.route'). Tool events stream back through
  *      kernel-bridge runtime events.
@@ -20,17 +24,35 @@
  * may defer (record `humanRequired` state + reason) but never commit.
  */
 
+/** Canonical three-tier architecture per plan.runs/12.1-pi-anima-subagents-architecture.md:
+ *  Tier 1 — Pi (Harness): governs tool surface, entitlement, dispatch lifecycle
+ *  Tier 2 — Anima (Main Dispatcher): routes intents to techne-guardians
+ *  Tier 3 — Aletheia (Techne-Guardian): subagent specialist; techne class
+ *           (Anansi/Janus/Moirai/Mercurius/Agora/Zeithoven) discriminated
+ *           at runtime via dispatch payload's techneClass field, not actor type */
 export type AgenticActor =
-    | 'anima'
-    | 'eros'
-    | 'logos'
-    | 'mythos'
-    | 'nous'
-    | 'psyche'
-    | 'sophia'
-    | 'aletheia'
     | 'pi'
-    | string;
+    | 'anima'
+    | 'aletheia';
+
+export type AletheiaTechneClass =
+    | 'anansi'
+    | 'moirai'
+    | 'janus'
+    | 'mercurius'
+    | 'agora'
+    | 'zeithoven';
+
+export type ReviewGateActor =
+    | AgenticActor
+    | AletheiaTechneClass
+    | 'human';
+
+export interface AgenticRouteSelection {
+    readonly route: AgenticRoute;
+    readonly actor: AgenticActor;
+    readonly techneClass?: AletheiaTechneClass | null;
+}
 
 export type AgenticRoute =
     | 'dispatch_agent'
@@ -78,7 +100,8 @@ export interface ReviewTransition {
     readonly candidateId: string;
     readonly decision: ReviewDecision;
     readonly reason: string;
-    readonly actor: AgenticActor;
+    readonly actor: ReviewGateActor;
+    readonly techneClass?: AletheiaTechneClass | null;
     /** When true, only a human (via M5 review surface) may transition. */
     readonly humanRequired: boolean;
     readonly transitionAtMs: number;
@@ -92,17 +115,22 @@ export interface ReviewTransition {
 export interface RunEvidenceEnvelope {
     readonly candidateId: string;
     readonly coordinate: string | null;
-    readonly artifactUri: string | null;
     readonly sourceAnchor: string | null;
-    readonly specAnchor: string | null;
-    readonly codeAnchor: string | null;
-    readonly testAnchor: string | null;
     readonly graphAnchor: string | null;
     readonly reviewId: string | null;
+    readonly testAnchor: string | null;
     readonly profileGeneration: number | null;
     readonly bridgeReadinessHandle: string | null;
     readonly sessionKey: string | null;
     readonly dayNowContext: string | null;
+    readonly currentProfile: CurrentProfileEvidenceRef | null;
+    readonly graphContext: GraphContextEvidenceRef | null;
+    readonly sessionRuntime: SessionRuntimeEvidenceRef | null;
+    readonly semanticCandidates: SemanticCandidateEvidenceRef | null;
+    readonly s5Refs: S5EvidenceRefs | null;
+    readonly artifactUri: string | null;
+    readonly specAnchor: string | null;
+    readonly codeAnchor: string | null;
     readonly privacyClass: string;
 }
 
@@ -193,6 +221,19 @@ export interface S5EvidenceRefs {
     readonly persistedStoreDtoRef: string;
 }
 
+export {
+    buildPiRuntimeMonitorProjection
+} from '../../../omnipanel-shell/lib/common';
+
+export type {
+    GatewayResolvedSessionSurface,
+    PiRuntimeMonitorProjection,
+    PortalTemporalSurfaceContract,
+    TerminalCaptureMode,
+    TerminalObservabilityBinding,
+    TerminalObservabilityCapturePolicy
+} from '../../../omnipanel-shell/lib/common';
+
 export interface MediatedRunEvidencePacket extends RunEvidenceEnvelope {
     readonly currentProfile: CurrentProfileEvidenceRef;
     readonly graphContext: GraphContextEvidenceRef;
@@ -213,24 +254,23 @@ export function enforceHumanGate(transition: {
     decision: ReviewDecision;
     humanRequired: boolean;
     actorIsHuman: boolean;
+    recursiveSelfReview?: boolean;
+    actor?: ReviewGateActor;
+    techneClass?: AletheiaTechneClass | null;
 }): { ok: true } | { ok: false; reason: string } {
-    if (!transition.humanRequired) {
-        return { ok: true };
-    }
-    // Defer is always allowed — it RECORDS the human-required state.
-    if (transition.decision === 'defer') {
-        return { ok: true };
-    }
-    if (transition.actorIsHuman) {
+    const gate = enforcePiReviewRoutingGate({
+        decision: transition.decision,
+        humanRequired: transition.humanRequired,
+        actorIsHuman: transition.actorIsHuman,
+        recursiveSelfReview: transition.recursiveSelfReview,
+        actor: transition.techneClass ?? transition.actor
+    });
+    if (gate.ok) {
         return { ok: true };
     }
     return {
         ok: false,
-        reason:
-            'human-gate enforced: human-required review items may not be approved, ' +
-            'rejected, or revised by an agent. Agents may defer (recording the ' +
-            'human-required state); only a human via the M5 review surface may ' +
-            'transition this item.'
+        reason: gate.reason
     };
 }
 
@@ -241,33 +281,43 @@ export function enforceHumanGate(transition: {
 export function buildEvidenceEnvelope(input: {
     candidateId: string;
     coordinate?: string | null;
-    artifactUri?: string | null;
     sourceAnchor?: string | null;
-    specAnchor?: string | null;
-    codeAnchor?: string | null;
-    testAnchor?: string | null;
     graphAnchor?: string | null;
     reviewId?: string | null;
+    testAnchor?: string | null;
     profileGeneration?: number | null;
     bridgeReadinessHandle?: string | null;
     sessionKey?: string | null;
     dayNowContext?: string | null;
+    currentProfile?: CurrentProfileEvidenceRef | null;
+    graphContext?: GraphContextEvidenceRef | null;
+    sessionRuntime?: SessionRuntimeEvidenceRef | null;
+    semanticCandidates?: SemanticCandidateEvidenceRef | null;
+    s5Refs?: S5EvidenceRefs | null;
+    artifactUri?: string | null;
+    specAnchor?: string | null;
+    codeAnchor?: string | null;
     privacyClass?: string;
 }): RunEvidenceEnvelope {
     return {
         candidateId: input.candidateId,
         coordinate: input.coordinate ?? null,
-        artifactUri: input.artifactUri ?? null,
         sourceAnchor: input.sourceAnchor ?? null,
-        specAnchor: input.specAnchor ?? null,
-        codeAnchor: input.codeAnchor ?? null,
-        testAnchor: input.testAnchor ?? null,
         graphAnchor: input.graphAnchor ?? null,
         reviewId: input.reviewId ?? null,
+        testAnchor: input.testAnchor ?? null,
         profileGeneration: input.profileGeneration ?? null,
         bridgeReadinessHandle: input.bridgeReadinessHandle ?? null,
         sessionKey: input.sessionKey ?? null,
         dayNowContext: input.dayNowContext ?? null,
+        currentProfile: input.currentProfile ?? null,
+        graphContext: input.graphContext ?? null,
+        sessionRuntime: input.sessionRuntime ?? null,
+        semanticCandidates: input.semanticCandidates ?? null,
+        s5Refs: input.s5Refs ?? null,
+        artifactUri: input.artifactUri ?? null,
+        specAnchor: input.specAnchor ?? null,
+        codeAnchor: input.codeAnchor ?? null,
         privacyClass: input.privacyClass ?? 'safe-public-current-kernel-tick'
     };
 }
@@ -297,7 +347,7 @@ const HUMAN_FINAL_VAULT_CAPABILITIES = new Set<MediationCapabilityName>([
 ]);
 
 export function isMediationCapabilityAllowed(
-    actor: AgenticActor,
+    actor: ReviewGateActor,
     capability: MediationCapabilityName,
     context: { readonly userFinalValidated?: boolean } = {}
 ): CapabilityAllowResult {
@@ -313,13 +363,13 @@ export function isMediationCapabilityAllowed(
     }
     if (
         SEMANTIC_READ_CAPABILITIES.has(capability) &&
-        ['sophia', 'aletheia', 'pi', 'anima', 'epii', 'human'].includes(normalizedActor)
+        ['pi', 'anima', 'anansi', 'moirai', 'janus', 'mercurius', 'agora', 'zeithoven'].includes(normalizedActor)
     ) {
         return { allowed: true, reason: 'read-only S1 semantic capability' };
     }
     if (
         capability === 's1.vault.read_file' &&
-        ['sophia', 'aletheia', 'pi', 'anima', 'epii', 'human'].includes(normalizedActor)
+        ['pi', 'anima', 'anansi', 'moirai', 'janus', 'mercurius', 'agora', 'zeithoven'].includes(normalizedActor)
     ) {
         return { allowed: true, reason: 'read-only S1 vault retrieval' };
     }
@@ -402,17 +452,16 @@ export const REQUIRED_EVIDENCE_FIELDS = [
     'profileGeneration',
     'bridgeReadinessHandle',
     'sessionKey',
-    'dayNowContext'
-] as const;
-
-export const REQUIRED_MEDIATED_EVIDENCE_FIELDS = [
-    ...REQUIRED_EVIDENCE_FIELDS,
+    'dayNowContext',
     'currentProfile',
     'graphContext',
     'sessionRuntime',
     'semanticCandidates',
-    's5Refs'
+    's5Refs',
+    'privacyClass'
 ] as const;
+
+export const REQUIRED_MEDIATED_EVIDENCE_FIELDS = REQUIRED_EVIDENCE_FIELDS;
 
 /**
  * Verify an envelope has the load-bearing fields populated. Used by tests +

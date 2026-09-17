@@ -1,0 +1,392 @@
+{
+  "generatedAt": "2026-07-06T14:20:25.277Z",
+  "graphHash": "f9e52c94a8a9156c665659dec58d0887e78063131f90d5c70019440c903f37f9",
+  "overview": {
+    "nodes": 14,
+    "edges": 55,
+    "pages": 19,
+    "communities": 1
+  },
+  "firstPartyOverview": {
+    "nodes": 14,
+    "edges": 55,
+    "pages": 19,
+    "communities": 1
+  },
+  "sourceClassBreakdown": {
+    "first_party": {
+      "sources": 0,
+      "pages": 0,
+      "nodes": 0
+    },
+    "third_party": {
+      "sources": 0,
+      "pages": 0,
+      "nodes": 0
+    },
+    "resource": {
+      "sources": 0,
+      "pages": 0,
+      "nodes": 0
+    },
+    "generated": {
+      "sources": 0,
+      "pages": 0,
+      "nodes": 0
+    }
+  },
+  "warnings": [
+    "Non-first-party material accounts for 100.0% of graph nodes."
+  ],
+  "benchmark": {
+    "generatedAt": "2026-06-08T15:08:51.358Z",
+    "stale": true,
+    "summary": {
+      "questionCount": 3,
+      "uniqueVisitedNodes": 0,
+      "finalContextTokens": 233,
+      "naiveCorpusTokens": 1,
+      "avgReduction": -232,
+      "reductionRatio": -232
+    },
+    "questionCount": 3,
+    "byClass": {
+      "first_party": {
+        "sourceCount": 0,
+        "pageCount": 0,
+        "nodeCount": 0,
+        "godNodeCount": 0,
+        "finalContextTokens": 0,
+        "naiveCorpusTokens": 0,
+        "reductionRatio": 0
+      },
+      "third_party": {
+        "sourceCount": 0,
+        "pageCount": 0,
+        "nodeCount": 0,
+        "godNodeCount": 0,
+        "finalContextTokens": 0,
+        "naiveCorpusTokens": 0,
+        "reductionRatio": 0
+      },
+      "resource": {
+        "sourceCount": 0,
+        "pageCount": 0,
+        "nodeCount": 0,
+        "godNodeCount": 0,
+        "finalContextTokens": 0,
+        "naiveCorpusTokens": 0,
+        "reductionRatio": 0
+      },
+      "generated": {
+        "sourceCount": 0,
+        "pageCount": 0,
+        "nodeCount": 0,
+        "godNodeCount": 0,
+        "finalContextTokens": 0,
+        "naiveCorpusTokens": 0,
+        "reductionRatio": 0
+      }
+    }
+  },
+  "godNodes": [
+    {
+      "nodeId": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+      "label": "Memory Task: M' whole-derivation session 2026-07-02: Phase 0 full-shape spec reads...",
+      "pageId": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+      "degree": 13,
+      "bridgeScore": 0,
+      "surpriseReason": "degree 13"
+    },
+    {
+      "nodeId": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+      "label": "Memory Task: S6.3 bell kernel contracts: ModalResonatorProfile + M123ChimeFrame la...",
+      "pageId": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+      "degree": 13,
+      "bridgeScore": 0,
+      "surpriseReason": "degree 13"
+    },
+    {
+      "nodeId": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "label": "Memory Task: Author paramasiva tick canon-rooting session prompt",
+      "pageId": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "degree": 13,
+      "bridgeScore": 0,
+      "surpriseReason": "degree 13"
+    },
+    {
+      "nodeId": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "label": "Memory Task: Author paramasiva tick canon-rooting session prompt",
+      "pageId": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "degree": 13,
+      "bridgeScore": 0,
+      "surpriseReason": "degree 13"
+    },
+    {
+      "nodeId": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "label": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+      "pageId": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "degree": 13,
+      "bridgeScore": 0,
+      "surpriseReason": "degree 13"
+    },
+    {
+      "nodeId": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "label": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+      "pageId": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "degree": 13,
+      "bridgeScore": 0,
+      "surpriseReason": "degree 13"
+    },
+    {
+      "nodeId": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "label": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri...",
+      "pageId": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "degree": 13,
+      "bridgeScore": 0,
+      "surpriseReason": "degree 13"
+    }
+  ],
+  "bridgeNodes": [],
+  "thinCommunities": [],
+  "surprisingConnections": [
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1:uses_context:9",
+      "sourceNodeId": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "sourceLabel": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri...",
+      "targetNodeId": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+      "targetLabel": "Rooting confirmed M1-0(0/1)/M1-1(1/0)/M1-3(Trika); Ananda separate not the lo...",
+      "relation": "uses_context",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "pathNodeIds": [
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1"
+      ],
+      "pathEdgeIds": [
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1:uses_context:9"
+      ],
+      "pathRelations": [
+        "uses_context"
+      ],
+      "pathEvidenceClasses": [
+        "extracted"
+      ],
+      "pathSummary": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... -> Rooting confirmed M1-0(0/1)/M1-1(1/0)/M1-3(Trika); Ananda separate not the lo...",
+      "why": "it spans different canonical pages; it bridges memory_task and decision nodes",
+      "explanation": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... connects to Rooting confirmed M1-0(0/1)/M1-1(1/0)/M1-3(Trika); Ananda separate not the lo... because it spans different canonical pages; it bridges memory_task and decision nodes."
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2:uses_context:10",
+      "sourceNodeId": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "sourceLabel": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri...",
+      "targetNodeId": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+      "targetLabel": "LOCKED in-session 2026-07-04 (no out-of-session ratification): residency = C-...",
+      "relation": "uses_context",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "pathNodeIds": [
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2"
+      ],
+      "pathEdgeIds": [
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2:uses_context:10"
+      ],
+      "pathRelations": [
+        "uses_context"
+      ],
+      "pathEvidenceClasses": [
+        "extracted"
+      ],
+      "pathSummary": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... -> LOCKED in-session 2026-07-04 (no out-of-session ratification): residency = C-...",
+      "why": "it spans different canonical pages; it bridges memory_task and decision nodes",
+      "explanation": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... connects to LOCKED in-session 2026-07-04 (no out-of-session ratification): residency = C-... because it spans different canonical pages; it bridges memory_task and decision nodes."
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3:uses_context:11",
+      "sourceNodeId": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "sourceLabel": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri...",
+      "targetNodeId": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+      "targetLabel": "OPEN design questions from memo (non-blocking, for Architect): (1) codon adva...",
+      "relation": "uses_context",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "pathNodeIds": [
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3"
+      ],
+      "pathEdgeIds": [
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3:uses_context:11"
+      ],
+      "pathRelations": [
+        "uses_context"
+      ],
+      "pathEvidenceClasses": [
+        "extracted"
+      ],
+      "pathSummary": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... -> OPEN design questions from memo (non-blocking, for Architect): (1) codon adva...",
+      "why": "it spans different canonical pages; it bridges memory_task and decision nodes",
+      "explanation": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... connects to OPEN design questions from memo (non-blocking, for Architect): (1) codon adva... because it spans different canonical pages; it bridges memory_task and decision nodes."
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4:uses_context:12",
+      "sourceNodeId": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "sourceLabel": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri...",
+      "targetNodeId": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+      "targetLabel": "CODON ADVANCEMENT locked (Architect 2026-07-04): codon advances on the real q...",
+      "relation": "uses_context",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "pathNodeIds": [
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4"
+      ],
+      "pathEdgeIds": [
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4:uses_context:12"
+      ],
+      "pathRelations": [
+        "uses_context"
+      ],
+      "pathEvidenceClasses": [
+        "extracted"
+      ],
+      "pathSummary": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... -> CODON ADVANCEMENT locked (Architect 2026-07-04): codon advances on the real q...",
+      "why": "it spans different canonical pages; it bridges memory_task and decision nodes",
+      "explanation": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... connects to CODON ADVANCEMENT locked (Architect 2026-07-04): codon advances on the real q... because it spans different canonical pages; it bridges memory_task and decision nodes."
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1:records_decision:1",
+      "sourceNodeId": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "sourceLabel": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+      "targetNodeId": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+      "targetLabel": "Rooting confirmed M1-0(0/1)/M1-1(1/0)/M1-3(Trika); Ananda separate not the lo...",
+      "relation": "records_decision",
+      "evidenceClass": "extracted",
+      "confidence": 1,
+      "pathNodeIds": [
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1"
+      ],
+      "pathEdgeIds": [
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1:records_decision:1"
+      ],
+      "pathRelations": [
+        "records_decision"
+      ],
+      "pathEvidenceClasses": [
+        "extracted"
+      ],
+      "pathSummary": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02 -> Rooting confirmed M1-0(0/1)/M1-1(1/0)/M1-3(Trika); Ananda separate not the lo...",
+      "why": "it bridges memory_task and decision nodes",
+      "explanation": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02 connects to Rooting confirmed M1-0(0/1)/M1-1(1/0)/M1-3(Trika); Ananda separate not the lo... because it bridges memory_task and decision nodes."
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2:records_decision:2",
+      "sourceNodeId": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "sourceLabel": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+      "targetNodeId": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+      "targetLabel": "LOCKED in-session 2026-07-04 (no out-of-session ratification): residency = C-...",
+      "relation": "records_decision",
+      "evidenceClass": "extracted",
+      "confidence": 1,
+      "pathNodeIds": [
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2"
+      ],
+      "pathEdgeIds": [
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2:records_decision:2"
+      ],
+      "pathRelations": [
+        "records_decision"
+      ],
+      "pathEvidenceClasses": [
+        "extracted"
+      ],
+      "pathSummary": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02 -> LOCKED in-session 2026-07-04 (no out-of-session ratification): residency = C-...",
+      "why": "it bridges memory_task and decision nodes",
+      "explanation": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02 connects to LOCKED in-session 2026-07-04 (no out-of-session ratification): residency = C-... because it bridges memory_task and decision nodes."
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3:records_decision:3",
+      "sourceNodeId": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "sourceLabel": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+      "targetNodeId": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+      "targetLabel": "OPEN design questions from memo (non-blocking, for Architect): (1) codon adva...",
+      "relation": "records_decision",
+      "evidenceClass": "extracted",
+      "confidence": 1,
+      "pathNodeIds": [
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3"
+      ],
+      "pathEdgeIds": [
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3:records_decision:3"
+      ],
+      "pathRelations": [
+        "records_decision"
+      ],
+      "pathEvidenceClasses": [
+        "extracted"
+      ],
+      "pathSummary": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02 -> OPEN design questions from memo (non-blocking, for Architect): (1) codon adva...",
+      "why": "it bridges memory_task and decision nodes",
+      "explanation": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02 connects to OPEN design questions from memo (non-blocking, for Architect): (1) codon adva... because it bridges memory_task and decision nodes."
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4:records_decision:4",
+      "sourceNodeId": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "sourceLabel": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+      "targetNodeId": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+      "targetLabel": "CODON ADVANCEMENT locked (Architect 2026-07-04): codon advances on the real q...",
+      "relation": "records_decision",
+      "evidenceClass": "extracted",
+      "confidence": 1,
+      "pathNodeIds": [
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4"
+      ],
+      "pathEdgeIds": [
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4:records_decision:4"
+      ],
+      "pathRelations": [
+        "records_decision"
+      ],
+      "pathEvidenceClasses": [
+        "extracted"
+      ],
+      "pathSummary": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02 -> CODON ADVANCEMENT locked (Architect 2026-07-04): codon advances on the real q...",
+      "why": "it bridges memory_task and decision nodes",
+      "explanation": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02 connects to CODON ADVANCEMENT locked (Architect 2026-07-04): codon advances on the real q... because it bridges memory_task and decision nodes."
+    }
+  ],
+  "groupPatterns": [],
+  "suggestedQuestions": [
+    "Are the inferred relationships involving Memory Task: S6.3 bell kernel contracts: ModalResonatorProfile + M123ChimeFrame la... correct?",
+    "Are the inferred relationships involving Memory Task: Author paramasiva tick canon-rooting session prompt correct?",
+    "Are the inferred relationships involving Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02 correct?",
+    "Are the inferred relationships involving Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri... correct?"
+  ],
+  "communityPages": [
+    {
+      "id": "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "path": "graph/communities/memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1.md",
+      "title": "Community: Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr..."
+    }
+  ],
+  "recentResearchSources": [],
+  "contradictions": [],
+  "communityCohesion": [
+    {
+      "id": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+      "nodeCount": 14,
+      "cohesion": 0.6043956043956044
+    }
+  ],
+  "knowledgeGaps": {
+    "isolatedNodes": [],
+    "thinCommunityCount": 0,
+    "ambiguousEdgeRatio": 0,
+    "warnings": []
+  }
+}

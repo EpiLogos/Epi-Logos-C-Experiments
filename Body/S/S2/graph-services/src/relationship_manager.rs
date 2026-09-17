@@ -1,7 +1,9 @@
 use std::collections::BTreeMap;
 
 use epi_s2_graph_schema::{
-    relationship_property_spec, relationship_required_evidence_property_keys, relationship_spec,
+    relation_family_for_relationship_type, relationship_property_spec,
+    relationship_required_evidence_property_keys, relationship_spec, GraphPropertyType,
+    RELATION_FAMILY_PROPERTY,
 };
 use neo4rs::query;
 use serde_json::Value;
@@ -47,12 +49,16 @@ impl RelationshipWritePlan {
             return Err("target coordinate is required".to_owned());
         }
         relationship_spec(&rel_type)?;
+        let relation_family = relation_family_for_relationship_type(&rel_type);
 
         Ok(Self {
             source_coordinate,
             target_coordinate,
             rel_type,
-            properties: BTreeMap::new(),
+            properties: BTreeMap::from([(
+                RELATION_FAMILY_PROPERTY.to_owned(),
+                Value::String(relation_family.to_owned()),
+            )]),
         })
     }
 
@@ -122,6 +128,21 @@ impl RelationshipWritePlan {
         for key in self.properties.keys() {
             if relationship_property_spec(key).is_none() {
                 return Err(format!("unknown graph relationship property key: {key}"));
+            }
+        }
+        for (key, value) in &self.properties {
+            if let Some(spec) = relationship_property_spec(key) {
+                if let GraphPropertyType::Enum(values) = spec.value_type {
+                    let Some(value) = value.as_str() else {
+                        return Err(format!("{key} expected enum string value"));
+                    };
+                    if !values.contains(&value) {
+                        return Err(format!(
+                            "{key} expected one of [{}], got {value}",
+                            values.join(", ")
+                        ));
+                    }
+                }
             }
         }
         for required in relationship_required_evidence_property_keys() {
@@ -282,7 +303,11 @@ impl<'a> RelationshipManager<'a> {
             for target in targets {
                 plans.push(
                     RelationshipWritePlan::new(source_coord, target, rel_type)?
-                        .with_frontmatter_evidence(key, target),
+                        .with_frontmatter_evidence(key, target)
+                        .with_property(
+                            RELATION_FAMILY_PROPERTY,
+                            Value::String("sync".to_owned()),
+                        )?,
                 );
             }
         }

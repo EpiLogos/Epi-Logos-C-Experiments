@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "contract": "readiness-state-grammar",
+  "owner": "32.5",
+  "authority": {
+    "states": "src/ui/bridgeReadiness.ts#BRIDGE_READINESS_IDS — itself a mirror of @epi-logos/ql-schema BridgeReadinessState, locked to Rust BridgeReadinessState",
+    "grammar": "src/ui/readinessGrammar.ts#READINESS_GRAMMAR",
+    "law": "DR-WC-OB-1 RESOLVED — contract authority stays exactly nine ids; the five flavours are render-time variants OF a parent contract state, never a parallel taxonomy.",
+    "derivation": "shell, tier, severity and recovery on every row are COMPUTED from the landed 28.11 laws (needsWrappingShell / readinessTier / readinessSeverity / readinessRecovery). They are snapshotted here for readability and pinned by src/ui/readinessGrammar.test.tsx, which fails if this file and the code disagree.",
+    "divergence": "The 32.5 design-recon table calls s2_graph_blocked and s3_subscription_blocked 'overlay'. 28.11(a) — later, landed carrier law — keeps the wrapping shell for bridge_unavailable alone and renders every finer-grained state inline at the datum (15.6). The landed law wins; the prose described the frozen Theia shape."
+  },
+  "states": [
+    {
+      "state": "bridge_unavailable",
+      "shell": "wrapping",
+      "tier": "red",
+      "severity": "blocked",
+      "copy": "Bridge unavailable — no derived state is rendered.",
+      "recovery": { "label": "Open Diagnostics", "commandId": "omnipanel.tab.activate.7" },
+      "flavours": ["pending_first_tick"]
+    },
+    {
+      "state": "profile_missing_field",
+      "shell": "inline",
+      "tier": "amber",
+      "severity": "blocked",
+      "copy": "Awaiting a profile field.",
+      "recovery": { "label": "Open Diagnostics", "commandId": "omnipanel.tab.activate.7" },
+      "flavours": []
+    },
+    {
+      "state": "s2_graph_blocked",
+      "shell": "inline",
+      "tier": "amber",
+      "severity": "blocked",
+      "copy": "S2 graph unreachable.",
+      "recovery": { "label": "Open Diagnostics", "commandId": "omnipanel.tab.activate.7" },
+      "flavours": []
+    },
+    {
+      "state": "s3_subscription_blocked",
+      "shell": "inline",
+      "tier": "amber",
+      "severity": "blocked",
+      "copy": "S3 gateway down.",
+      "recovery": { "label": "Open Gateway", "commandId": "omnipanel.tab.activate.6" },
+      "flavours": ["s3_gateway_unreachable"]
+    },
+    {
+      "state": "s5_review_blocked",
+      "shell": "inline",
+      "tier": "amber",
+      "severity": "blocked",
+      "copy": "Atelier review pending.",
+      "recovery": { "label": "Open Review tab", "commandId": "omnipanel.openReview" },
+      "flavours": ["s5_atelier_blocked"]
+    },
+    {
+      "state": "authority_payload_missing",
+      "shell": "inline",
+      "tier": "amber",
+      "severity": "blocked",
+      "copy": "Authoritative payload missing — its owner is named.",
+      "recovery": { "label": "Open Evidence tab", "commandId": "omnipanel.tab.activate.4" },
+      "flavours": ["pending_dataset"]
+    },
+    {
+      "state": "privacy_blocked",
+      "shell": "inline",
+      "tier": "red",
+      "severity": "blocked",
+      "copy": "protected_local — consent required.",
+      "recovery": { "label": "Protected — consent required", "commandId": null },
+      "flavours": []
+    },
+    {
+      "state": "degraded_but_readable",
+      "shell": "inline",
+      "tier": "green",
+      "severity": "degraded",
+      "copy": "Readable, but degraded — writes stay blocked.",
+      "recovery": { "label": "Readable, write blocked", "commandId": null },
+      "flavours": []
+    },
+    {
+      "state": "ready_public_current",
+      "shell": "inline",
+      "tier": "green",
+      "severity": "ok",
+      "copy": "Ready.",
+      "recovery": { "label": "Ready", "commandId": null },
+      "flavours": ["ready_protected_local"]
+    }
+  ],
+  "flavours": [
+    {
+      "flavour": "pending_first_tick",
+      "parentState": "bridge_unavailable",
+      "copy": "Awaiting first profile-tick…",
+      "render": "shimmer"
+    },
+    {
+      "flavour": "s3_gateway_unreachable",
+      "parentState": "s3_subscription_blocked",
+      "copy": "S3 gateway unreachable.",
+      "render": "alias"
+    },
+    {
+      "flavour": "s5_atelier_blocked",
+      "parentState": "s5_review_blocked",
+      "copy": "Atelier review pending.",
+      "render": "alias"
+    },
+    {
+      "flavour": "pending_dataset",
+      "parentState": "authority_payload_missing",
+      "copy": "Awaiting a named dataset.",
+      "render": "chip"
+    },
+    {
+      "flavour": "ready_protected_local",
+      "parentState": "ready_public_current",
+      "copy": "Ready — protected-local.",
+      "render": "tint"
+    }
+  ]
+}

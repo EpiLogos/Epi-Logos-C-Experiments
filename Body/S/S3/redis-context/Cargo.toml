@@ -10,8 +10,14 @@ name = "epi_s3_redis_context"
 path = "src/lib.rs"
 
 [dependencies]
+# S3 -> S-root is DOWNWARD and legal. Track 53 T53.06 moved the S2↔S3 Redis
+# residency declaration (RedisRuntimeRole, CacheTier, RedisConfig, the RedisVL
+# bridge script path) to the root contract so S2 can name its own namespace
+# without an upward S2→S3 edge; this crate re-exports it unchanged.
+epi-kernel-contract = { path = "../../epi-kernel-contract" }
 redis = { version = "0.25", features = ["tokio-comp", "connection-manager"] }
 serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

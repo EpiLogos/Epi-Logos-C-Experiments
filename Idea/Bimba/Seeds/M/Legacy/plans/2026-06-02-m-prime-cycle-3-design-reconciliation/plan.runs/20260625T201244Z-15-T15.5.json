@@ -1,0 +1,38 @@
+{
+  "runId": "20260625T201244Z-15-T15.5",
+  "taskId": "15.T15.5",
+  "startedAt": "2026-06-25T20:12:44.454Z",
+  "owner": "codex-m-dev-15-t15-5-toggle-gesture",
+  "leaseExpiresAt": "2026-06-25T22:12:44.454Z",
+  "worktree": null,
+  "task": {
+    "id": "15.T15.5",
+    "trackId": "15",
+    "tranche": "T15.5",
+    "title": "0/1 toggle gesture + lemniscate transition",
+    "effort": null,
+    "file": "15-ui-design-foundations.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+    "dependsOn": [
+      "15.T15.4"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [
+      {
+        "at": "2026-06-16T12:00:00.000Z",
+        "text": "RESET from fraudulent done 2026-06-16. no-orphan-fill new-affordance tranche closed without implementation. The lemniscate-transition.tsx primitive exists, but the '0/1 toggle gesture' affordance + cmd-period binding is absent from integrated-composition/src (grep returns nothing). Requires: implement the 0/1 toggle gesture wired to the lemniscate transition."
+      }
+    ],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": "hermes-nara",
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

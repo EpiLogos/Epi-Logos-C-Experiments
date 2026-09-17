@@ -1,0 +1,37 @@
+{
+  "runId": "20260717T235159Z-15-T15.8",
+  "taskId": "15.T15.8",
+  "startedAt": "2026-07-17T23:51:59.583Z",
+  "owner": "codex-mdev-continuous",
+  "leaseExpiresAt": "2026-07-18T01:51:59.583Z",
+  "worktree": null,
+  "task": {
+    "id": "15.T15.8",
+    "trackId": "15",
+    "tranche": "T15.8",
+    "title": "M1-2 ananda vortex visual rendering on K²",
+    "effort": null,
+    "file": "15-ui-design-foundations.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/15-ui-design-foundations.md",
+    "dependsOn": [
+      "15.T15.7"
+    ],
+    "writeScopes": [
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "provisionalReviewDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null,
+    "carrier": "CARRIER: pratibimba-app design foundations (nine principles + surface contracts §1). §2 track 15."
+  }
+}

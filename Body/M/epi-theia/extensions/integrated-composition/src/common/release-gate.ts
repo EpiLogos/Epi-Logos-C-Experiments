@@ -4,6 +4,7 @@ import {
     IntegratedViewState
 } from './integrated-state';
 import { IntegratedWorkspaceSnapshot } from './workspace-persistence';
+import { qPartitionViolationForKey } from './privacy-scrubber';
 
 export type IntegratedPluginId =
     | 'plugin-integrated-1-2-3'
@@ -122,7 +123,7 @@ export interface IntegratedReleaseGateReport {
 const FORBIDDEN_KEY_PATTERNS: readonly RegExp[] = Object.freeze([
     /^q_b$/i,
     /^q_p$/i,
-    /^q_personal/i,
+    /^q_(personal|identity|activity|composed)(_|$)/i,
     /^q_nara/i,
     /^bioquaternion(_raw|_body|_personal)?$/i,
     /^protected_(natal|birth)_data/i,
@@ -301,6 +302,10 @@ function walkPrivacy(value: unknown, path: string, violations: ReleaseViolation[
     }
     for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
         const childPath = `${path}.${key}`;
+        const qPartitionViolation = qPartitionViolationForKey(key);
+        if (qPartitionViolation) {
+            violations.push(violation('privacy', childPath, qPartitionViolation));
+        }
         for (const re of FORBIDDEN_KEY_PATTERNS) {
             if (re.test(key)) {
                 violations.push(violation('privacy', childPath, `matches forbidden key ${re.source}`));

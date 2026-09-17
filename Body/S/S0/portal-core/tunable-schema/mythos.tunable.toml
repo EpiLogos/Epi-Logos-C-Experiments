@@ -1,0 +1,130 @@
+# Tranche 5.27 — Mythos symbolic-protein reading knobs.
+
+[[tunable]]
+key = "mythos.symbolic_protein_reading.trigger_mode"
+type = "enum"
+default = "every-mth-kairos-pulse"
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+structural_invariant = false
+owning_subsystem = "M4"
+owning_carrier = "anima"
+authoritative_doc = "Tranche 5.27"
+[tunable.range]
+enum_values = ["every-nth-utterance", "every-mth-kairos-pulse", "hybrid-utterance-and-pulse", "adaptive"]
+
+[[tunable]]
+key = "mythos.symbolic_protein_reading.utterance_interval_n"
+type = "u32"
+default = 5
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Tranche 5.27"
+[tunable.range]
+min = 1
+max = 100
+
+[[tunable]]
+key = "mythos.symbolic_protein_reading.kairos_pulse_interval_m"
+type = "u32"
+default = 3
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Tranche 5.27"
+[tunable.range]
+min = 1
+max = 50
+
+[[tunable]]
+key = "mythos.symbolic_protein_reading.adaptive_floor_seconds"
+type = "u64"
+default = 90
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Tranche 5.27"
+
+[[tunable]]
+key = "mythos.symbolic_protein_reading.adaptive_ceiling_seconds"
+type = "u64"
+default = 1800
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Tranche 5.27"
+
+[[tunable]]
+key = "mythos.symbolic_protein_reading.cosmic_weather_weights"
+type = "f32_triplet"
+default = { m1 = 0.33, m2 = 0.34, m3 = 0.33 }
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = true
+privacy_class = "local-only"
+structural_invariant = false
+owning_subsystem = "M4"
+authoritative_doc = "Tranche 5.27"
+description = "Relative weights of M1 spanda / M2 cymatic / M3 codon channels in archetypal naming."
+[tunable.range]
+min = 0.0
+max = 1.0
+sum_to = 1.0
+
+[[tunable]]
+key = "mythos.symbolic_protein_reading.secondary_archetypes_count"
+type = "u32"
+default = 2
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "B"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "Tranche 5.27"
+[tunable.range]
+min = 0
+max = 6
+
+[[tunable]]
+key = "mythos.symbolic_protein_reading.voice_template_path"
+type = "string"
+default = "Body/S/S4/ta-onta/S4-4p-anima/S4'/skills/symbolic-protein-reading/voice-templates/default.md"
+residency_class = "hot-reload"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "local-only"
+owning_subsystem = "M4"
+authoritative_doc = "Tranche 5.27"
+
+[[tunable]]
+key = "mythos.symbolic_protein_reading.reification_guard_strictness"
+type = "enum"
+default = "standard"
+residency_class = "freeze-on-session-start"
+scope_class = "per-pasu"
+tuning_risk_class = "A"
+ml_trainable = false
+privacy_class = "non-sensitive"
+owning_subsystem = "M4"
+authoritative_doc = "Tranche 5.27"
+[tunable.range]
+enum_values = ["permissive", "standard", "strict"]

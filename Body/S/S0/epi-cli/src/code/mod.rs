@@ -1,5 +1,6 @@
 use clap::Subcommand;
-use std::process::Command;
+
+use crate::agent::harness::{self, CodeHarnessProfile, HarnessProfile};
 
 #[derive(Subcommand)]
 pub enum CodeCmd {
@@ -51,43 +52,19 @@ pub fn dispatch(cmd: &CodeCmd) {
         CodeCmd::Gemini { args } => (Some("gemini.conf"), args),
     };
 
-    let status = match profile {
-        Some(prof) => {
-            // Source api-keys.env + profile, then exec claude
-            let args_str = args
-                .iter()
-                .map(|a| shell_escape(a))
-                .collect::<Vec<_>>()
-                .join(" ");
+    let result = harness::launch_blocking(
+        &HarnessProfile::ClaudeNative(CodeHarnessProfile {
+            profile: profile.map(str::to_owned),
+            args: args.clone(),
+        }),
+        false,
+    );
 
-            Command::new("bash")
-                .args([
-                    "-c",
-                    &format!(
-                        "source ~/.claude/api-keys.env 2>/dev/null; \
-                         source ~/.claude/profiles/{}; \
-                         exec claude {}",
-                        prof, args_str
-                    ),
-                ])
-                .status()
-        }
-        None => {
-            // Native claude — just exec directly
-            Command::new("claude").args(args).status()
-        }
-    };
-
-    match status {
-        Ok(s) if !s.success() => std::process::exit(s.code().unwrap_or(1)),
+    match result {
         Err(e) => {
-            eprintln!("epi code: failed to launch claude: {}", e);
+            eprintln!("epi code: {}", e);
             std::process::exit(1);
         }
         _ => {}
     }
-}
-
-fn shell_escape(s: &str) -> String {
-    format!("'{}'", s.replace('\'', "'\\''"))
 }

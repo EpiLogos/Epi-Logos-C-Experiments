@@ -374,8 +374,10 @@ fn persist_launch_routes_pi_plan_into_khora_tmux_envelope() {
     let tmux_bin = write_executable(
         env.root.join("bin/tmux"),
         &format!(
-            "#!/bin/sh\nenv | sort > \"{}\"\nprintf '%s %s\n' \"$1\" \"$*\" >> \"{}\"\ncase \"$1\" in\n  has-session) exit 1 ;;\n  *) exit 0 ;;\nesac\n",
+            "#!/bin/sh\ncmd=\"$1\"\nif [ \"$cmd\" = \"new-session\" ]; then env | sort > \"{}\"; fi\nprintf '%s' \"$cmd\" >> \"{}\"\nshift\nfor arg in \"$@\"; do printf ' <%s>' \"$arg\" >> \"{}\"; done\nprintf '\\n' >> \"{}\"\ncase \"$cmd\" in\n  has-session) exit 1 ;;\n  display-message)\n    case \"$*\" in\n      *window_id*) printf '@persist-window' ;;\n      *pane_id*) printf '%%persist-pane' ;;\n    esac\n    exit 0\n    ;;\n  *) exit 0 ;;\nesac\n",
             tmux_env.display(),
+            tmux_log.display(),
+            tmux_log.display(),
             tmux_log.display()
         ),
     );
@@ -398,11 +400,42 @@ fn persist_launch_routes_pi_plan_into_khora_tmux_envelope() {
     assert!(out.status.success(), "stderr: {}", out.stderr);
     assert!(out.stdout.contains("\"status\": \"running\""));
     assert!(out.stdout.contains("\"agentId\": \"anima\""));
+    assert!(out
+        .stdout
+        .contains("\"sessionKey\": \"agent:anima:psyche\""));
+    assert!(out.stdout.contains("\"terminalLease\""));
+    assert!(out.stdout.contains("\"tmuxPaneId\": \"%persist-pane\""));
     assert!(!env.fake_pi_log.join("argv.txt").exists());
     let log = read_to_string(tmux_log);
-    assert!(log.contains("new-session new-session -d"));
+    assert!(log.contains("new-session <-d>"));
+    assert!(log.contains("display-message <-p> <-t> <"));
+    assert!(log.contains("#{window_id}"));
+    assert!(log.contains("#{pane_id}"));
+    assert!(log.contains("send-keys <-t> <%persist-pane>"));
+    assert!(log.contains(&format!("<{}>", env.root.join("bin/pi").display())));
+    assert!(log.contains("<--no-extensions>"));
+    assert!(log.contains("<'hold state'>"));
+    assert!(log.contains("<Enter>"));
     let captured_env = read_to_string(tmux_env);
     assert!(captured_env.contains("EPI_AGENT_ID=anima"));
     assert!(captured_env.contains("EPI_AGENT_ROLE=psyche"));
     assert!(captured_env.contains("EPI_AGENT_SCOPED_SURFACE=anima:psyche"));
+    assert!(captured_env.contains("EPI_GATE_SESSION_KEY=agent:anima:psyche"));
+    assert!(captured_env.contains("EPI_TERMINAL_LEASE_ID=agent:anima:psyche"));
+
+    let session_record = read_to_string(
+        env.repo_root
+            .join(".epi/gate/sessions/agent_anima_psyche.json"),
+    );
+    assert!(session_record.contains("\"canonical_key\": \"agent:anima:psyche\""));
+    assert!(session_record.contains("\"tmuxPaneId\": \"%persist-pane\""));
+
+    let lease_record = read_to_string(
+        env.repo_root
+            .join(".epi/gate/terminal-leases/agent_anima_psyche.json"),
+    );
+    assert!(lease_record.contains("\"sessionKey\": \"agent:anima:psyche\""));
+    assert!(lease_record.contains("\"tmuxSessionName\":"));
+    assert!(lease_record.contains("\"tmuxWindowId\": \"@persist-window\""));
+    assert!(lease_record.contains("\"tmuxPaneId\": \"%persist-pane\""));
 }

@@ -1,3 +1,5 @@
+@import './provenance-pills.css';
+
 .mext-widget-m0-anuttara .mext-widget-root {
     display: flex;
     flex-direction: column;
@@ -38,8 +40,137 @@
     word-break: break-word;
 }
 
+.mext-widget-m0-anuttara .m0-layer-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.mext-widget-m0-anuttara .m0-layer-tabs button {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--theia-input-border);
+    border-radius: 3px;
+    padding: 4px 8px;
+    color: var(--theia-foreground);
+    background: var(--theia-button-secondaryBackground);
+    font: inherit;
+    cursor: pointer;
+}
+
+.mext-widget-m0-anuttara .m0-layer-tabs button[aria-selected='true'] {
+    color: var(--theia-button-foreground);
+    background: var(--theia-button-background);
+}
+
+.mext-widget-m0-anuttara .m0-community-clock-overlay[data-provenance-state='blocked'] {
+    border-left: 2px solid var(--theia-inputValidation-warningBorder);
+    padding-left: 10px;
+}
+
 .mext-widget-m0-anuttara .mext-widget-empty {
     margin: 0;
     color: var(--theia-descriptionForeground);
     font-style: italic;
+}
+
+.mext-widget-m0-anuttara .m0-language-layer-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mext-widget-m0-anuttara .m0-language-layer-assets {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.mext-widget-m0-anuttara .m0-language-layer-asset-thumb {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    flex: 0 0 128px;
+    width: 128px;
+    min-height: 84px;
+    border: 1px solid var(--theia-input-border);
+    border-radius: 4px;
+    padding: 8px;
+    color: var(--theia-foreground);
+    background:
+        linear-gradient(135deg, transparent 0 48%, var(--theia-input-border) 48% 52%, transparent 52%),
+        var(--theia-editorWidget-background);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.mext-widget-m0-anuttara
+    .m0-language-layer-asset-thumb[data-provenance-state='canonical_absent'] {
+    color: var(--theia-descriptionForeground);
+    background: var(--theia-editorWidget-background);
+    cursor: default;
+    opacity: 0.68;
+}
+
+.mext-widget-m0-anuttara .m0-language-layer-asset-thumb[aria-pressed='true'] {
+    border-color: var(--theia-focusBorder);
+    outline: 1px solid var(--theia-focusBorder);
+    outline-offset: -2px;
+}
+
+.mext-widget-m0-anuttara .m0-language-layer-asset-kind {
+    align-self: start;
+    justify-self: start;
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--theia-badge-foreground);
+    background: var(--theia-badge-background);
+    font-size: var(--theia-ui-font-size0);
+    text-transform: uppercase;
+}
+
+.mext-widget-m0-anuttara .m0-language-layer-asset-uri {
+    overflow: hidden;
+    color: inherit;
+    font-size: var(--theia-ui-font-size0);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mext-widget-m0-anuttara .m0-language-layer-asset-expanded {
+    border-left: 2px solid var(--theia-focusBorder);
+    padding-left: 10px;
+}
+
+/* Track 08 compact coordinate summary card (21.T21.17). */
+.mext-widget-m0-anuttara .m0-coordinate-summary-card .m0-coordinate-summary-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0;
+}
+
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-pill {
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: var(--theia-ui-font-size0);
+    background: var(--theia-badge-background);
+    color: var(--theia-badge-foreground);
+}
+
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-generation {
+    color: var(--theia-descriptionForeground);
+    font-size: var(--theia-ui-font-size0);
+}
+
+.mext-widget-m0-anuttara .m0-coordinate-summary-card-open {
+    padding: 3px 10px;
+    border: none;
+    border-radius: 2px;
+    color: var(--theia-button-foreground);
+    background: var(--theia-button-background);
+    font: inherit;
+    cursor: pointer;
 }

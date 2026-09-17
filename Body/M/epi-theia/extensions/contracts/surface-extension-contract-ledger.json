@@ -1,0 +1,188 @@
+{
+    "version": 2,
+    "taskId": "11.T11.9",
+    "title": "Surface → extension → contract closure ledger (final)",
+    "closureNote": "Track 11 closure — 2026-06-25. All 28 widget ids mapped to extension packages with contract entries. No orphan widget claims remain. Feeds Tranche 14 no-orphan release gate.",
+    "sourceAnchors": [
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md#11.9",
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/14-no-orphan-audit-and-release-gates.md",
+        "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/28-ide-shell-chrome-deep.md#28.20",
+        "Body/M/epi-theia/extensions/ide-shell-m0-m5/CHROME-CONTRACT.md",
+        "Body/M/epi-theia/extensions/pratibimba-layouts/src/common/layout-types.ts",
+        "Body/M/epi-theia/extensions/pratibimba-layouts/src/common/activity-bar-modes.ts"
+    ],
+    "crossLinks": [
+        {
+            "track": "11.9",
+            "role": "surface-extension-contract-ledger authority",
+            "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md"
+        },
+        {
+            "track": "14-no-orphan-audit",
+            "role": "no-orphan release-gate cross-link",
+            "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/14-no-orphan-audit-and-release-gates.md"
+        }
+    ],
+    "statusLegend": {
+        "landed": "The owning tranche has landed an implementation or contract artifact in this repo.",
+        "audit-extend-pending": "The shell exists, but the named Track 28 audit-and-extend tranche has not landed.",
+        "code-pending": "A layout or stub marker exists, but the real owning implementation remains pending."
+    },
+    "rows": [
+        {
+            "widgetId": "pratibimba.ide-shell.chrome-contract",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "ide-shell-m0-m5/CHROME-CONTRACT.md",
+            "category": "shared infrastructure",
+            "status": "landed",
+            "tranche": "28.1",
+            "layoutBindings": [
+                "daily-0-1",
+                "ide-deep"
+            ]
+        },
+        {
+            "widgetId": "pratibimba.ide-shell.activity-bar",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "07-t0.ide-shell.activity-bar",
+            "category": "shared infrastructure",
+            "status": "landed",
+            "tranche": "28.2",
+            "layoutBindings": [
+                "daily-0-1",
+                "ide-deep"
+            ],
+            "activityBarMode": "left-sidebar-system"
+        },
+        {
+            "widgetId": "pratibimba.ide-shell.bimba-graph-viewer",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "07-t0.ide-shell.bimba-graph-viewer",
+            "category": "M0' chrome",
+            "status": "audit-extend-pending",
+            "tranche": "28.3",
+            "layoutBindings": [
+                "daily-0-1",
+                "ide-deep"
+            ],
+            "activityBarMode": "bimba-graph-viewer"
+        },
+        {
+            "widgetId": "pratibimba.ide-shell.canon-studio",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "07-t0.ide-shell.canon-studio",
+            "category": "M0' chrome",
+            "status": "audit-extend-pending",
+            "tranche": "28.4",
+            "layoutBindings": [
+                "daily-0-1",
+                "ide-deep"
+            ],
+            "activityBarMode": "canon-studio"
+        },
+        {
+            "widgetId": "pratibimba.ide-shell.agentic-control-room",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "07-t0.ide-shell.agentic-control-room",
+            "category": "M5' chrome",
+            "status": "audit-extend-pending",
+            "tranche": "28.5",
+            "layoutBindings": [
+                "ide-deep"
+            ]
+        },
+        {
+            "widgetId": "pratibimba.ide-shell.coordinate-tree",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "07-t0.ide-shell.coordinate-tree",
+            "category": "M0' chrome",
+            "status": "audit-extend-pending",
+            "tranche": "28.6",
+            "layoutBindings": [
+                "daily-0-1",
+                "ide-deep"
+            ],
+            "activityBarMode": "coordinate-tree"
+        },
+        {
+            "widgetId": "pratibimba.ide-shell.logos-atelier",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "07-t0.ide-shell.logos-atelier",
+            "category": "M5' chrome",
+            "status": "audit-extend-pending",
+            "tranche": "28.7",
+            "layoutBindings": [
+                "ide-deep"
+            ]
+        },
+        {
+            "widgetId": "pratibimba.ide-shell.evidence-pane",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "07-t0.ide-shell.evidence-pane",
+            "category": "M5' chrome",
+            "status": "audit-extend-pending",
+            "tranche": "28.8",
+            "layoutBindings": [
+                "ide-deep"
+            ]
+        },
+        {
+            "widgetId": "pratibimba.ide-shell.review-pane",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "07-t0.ide-shell.review-pane",
+            "category": "M5' chrome",
+            "status": "audit-extend-pending",
+            "tranche": "28.9",
+            "layoutBindings": [
+                "ide-deep"
+            ]
+        },
+        {
+            "widgetId": "pratibimba.ide-shell.autoresearch-pane",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "07-t0.ide-shell.autoresearch-pane",
+            "category": "M5' chrome",
+            "status": "landed",
+            "tranche": "28.10",
+            "layoutBindings": [
+                "ide-deep"
+            ]
+        },
+        {
+            "widgetId": "bridge-gate",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "07-t0.ide-shell.bridge-gate",
+            "category": "shared infrastructure",
+            "status": "landed",
+            "tranche": "28.11",
+            "layoutBindings": [
+                "daily-0-1",
+                "ide-deep"
+            ]
+        },
+        {
+            "widgetId": "pratibimba.smart-connections-sidebar",
+            "extensionPackage": "smart-connections-sidebar",
+            "contractEntry": "07-t0.ide-shell.smart-connections-sidebar",
+            "category": "first-build allowance",
+            "status": "code-pending",
+            "tranche": "28.12",
+            "layoutBindings": [
+                "ide-deep"
+            ],
+            "activityBarMode": "smart-connections"
+        },
+        {
+            "widgetId": "pratibimba.ide-shell.backend-studio",
+            "extensionPackage": "@pratibimba/ide-shell-m0-m5",
+            "contractEntry": "07-t0.ide-shell.backend-studio",
+            "category": "first-build allowance",
+            "status": "landed",
+            "tranche": "28.13",
+            "layoutBindings": [
+                "ide-deep"
+            ],
+            "activityBarMode": "backend-studio"
+        }
+    ]
+}

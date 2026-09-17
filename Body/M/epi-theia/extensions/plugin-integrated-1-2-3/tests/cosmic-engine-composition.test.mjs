@@ -1,0 +1,149 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { installBrowserShim } from '../../test/browser-shim.mjs';
+
+const require = createRequire(import.meta.url);
+installBrowserShim('cosmic-engine-composition-test');
+const React = require('react');
+const { renderToStaticMarkup } = require('react-dom/server');
+const {
+    CosmicEngineComposition,
+    buildCosmicCompositionModel
+} = require('../lib/browser/cosmic-engine-composition.js');
+const {
+    CompositionProfileProvider
+} = require('../../integrated-composition/lib/browser/composition-profile-context.js');
+
+function completeProfile(overrides = {}) {
+    return Object.freeze({
+        generation: 137,
+        pointerAnchor: 'profile://cosmic/137',
+        capabilities: Object.freeze([]),
+        payload: Object.freeze({
+            k2SurfaceHandle: Object.freeze({
+                handle: 'k2://played-torus/live-surface'
+            }),
+            anandaVortexMatrix: Object.freeze({
+                familyHandle: 'm1://ananda/vortex-matrix'
+            }),
+            compositionMountPoint: Object.freeze({
+                handle: 'm2://composition/cymatic-mount'
+            }),
+            m1_topology: Object.freeze({
+                torus_knot_phase: Object.freeze({
+                    p: 0.25,
+                    q: 0.5
+                })
+            }),
+            kleinFlip: Object.freeze({
+                kind: 'm2CymaticValenceInvert'
+            }),
+            resonance72: Object.freeze({
+                lensAnchorIndex: 17
+            }),
+            audioOctet: Object.freeze([144, 162, 180, 216, 243, 270, 324, 360]),
+            nodalQuartet: Object.freeze([
+                Object.freeze({ m: 1, n: 2 }),
+                Object.freeze({ m: 2, n: 3 }),
+                Object.freeze({ m: 3, n: 5 }),
+                Object.freeze({ m: 5, n: 8 })
+            ]),
+            m3CodonRotationProjectionForLensRing: Object.freeze({
+                cells: Object.freeze([
+                    Object.freeze({
+                        ringIndex: 4,
+                        cellIndex: 21,
+                        positionLabel: 'P4/equator-south',
+                        codonTriple: 'ATG',
+                        colourHsla: 'hsla(210, 72%, 52%, 0.92)'
+                    })
+                ]),
+                activeRingIndex: 4,
+                rotationPhase: Math.PI / 3
+            }),
+            ...overrides
+        })
+    });
+}
+
+function count(haystack, needle) {
+    return (haystack.match(new RegExp(needle, 'g')) ?? []).length;
+}
+
+function bridgeWithProfile(currentProfile) {
+    return {
+        onProfile(listener) {
+            listener(currentProfile);
+            return { dispose() {} };
+        }
+    };
+}
+
+function renderComposition(currentProfile) {
+    return renderToStaticMarkup(
+        React.createElement(
+            CompositionProfileProvider,
+            { bridge: bridgeWithProfile(currentProfile) },
+            React.createElement(CosmicEngineComposition)
+        )
+    );
+}
+
+test('renders one primary editor surface instead of the old three-pane editor juxtaposition', () => {
+    const html = renderComposition(completeProfile());
+
+    assert.equal(count(html, 'data-test="cosmic-engine-editor-surface"'), 1);
+    assert.doesNotMatch(html, /cosmic-engine-layout/);
+    assert.match(html, /data-editor-surface="cosmic-engine-composition"/);
+    assert.match(html, /data-test="matheme-137-overlay"/);
+    assert.match(html, /data-heatmap-cells="72"/);
+    assert.match(html, /data-torus-knot-phase-p="0.25"/);
+    assert.match(html, /data-torus-knot-phase-q="0.5"/);
+    assert.match(html, /data-klein-flip-phase="inverted"/);
+});
+
+test('occupies surface texture and cell-state slots with the M1 M2 M3 contributors', () => {
+    const model = buildCosmicCompositionModel(completeProfile());
+
+    assert.deepEqual(model.blockers, []);
+    assert.deepEqual(
+        model.slotOccupants.map(slot => [
+            slot.geometricSlot,
+            slot.extensionId,
+            slot.handleClass
+        ]),
+        [
+            ['surface', 'm1-paramasiva-played-torus', 'k2-surface-handle'],
+            ['texture', 'm2-parashakti', 'cymatic-mount-point'],
+            ['cell-state', 'm3-mahamaya', 'codon-rotation-export']
+        ]
+    );
+    assert.deepEqual(
+        model.geometricClaims.map(claim => [
+            claim.geometricSlot,
+            claim.extensionId,
+            claim.handleClass
+        ]),
+        [
+            ['surface', 'm1-paramasiva-played-torus', 'k2-surface-handle'],
+            ['texture', 'm2-parashakti', 'cymatic-mount-point'],
+            ['cell-state', 'm3-mahamaya', 'codon-rotation-export']
+        ]
+    );
+    assert.equal(model.cymaticTextureContribution?.chladniField.length, 72);
+    assert.equal(model.cymaticTextureContribution?.heatmap72.length, 72);
+    assert.equal(model.cymaticTextureContribution?.activeCellIndex, 17);
+    assert.equal(model.cymaticTextureContribution?.surfaceVariant, 'torus');
+    assert.equal(model.cymaticTextureContribution?.kleinFlipPhase, 'inverted');
+    assert.equal(model.codonProjection?.cells[0]?.codonTriple, 'ATG');
+});
+
+test('keeps composition mounted and renders IntegratedEmptyState for pending K2 surface', () => {
+    const html = renderComposition(completeProfile({ k2SurfaceHandle: undefined }));
+
+    assert.equal(count(html, 'data-test="cosmic-engine-editor-surface"'), 1);
+    assert.match(html, /integrated-empty-state/);
+    assert.match(html, /pending-k2-surface/);
+    assert.match(html, /Track 22\.2/);
+});

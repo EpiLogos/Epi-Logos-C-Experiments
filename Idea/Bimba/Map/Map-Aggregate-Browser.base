@@ -1,0 +1,41 @@
+coordinate: "Map"
+c_4_artifact_role: "base-view"
+c_5_reflects: "[[M-SYSTEM-INDEX]]"
+c_3_projected_from: "Idea/Bimba/Map"
+c_3_projected_at: "2026-06-25"
+c_0_source_coordinates: ["[[M-SYSTEM-INDEX]]", "[[45-bimba-map-indexing-and-dox-okf-unification]]", "[[48-bases-cs-reflection-layer]]"]
+filters:
+  and:
+    - 'c_4_artifact_role == "map-index"'
+views:
+  - type: table
+    name: "Map aggregate browser"
+    group_by: c_3_projected_from
+    order:
+      - coordinate
+      - title
+      - c_0_source_coordinates
+      - c_0_related_coordinates
+      - c_4_graph_node
+      - c_3_projected_at
+    sort:
+      - { property: coordinate, direction: ASC }
+  - type: cards
+    name: "Map cards"
+    image: c_1_symbol_image
+    order:
+      - coordinate
+      - title
+      - c_4_graph_node
+      - c_0_related_coordinates
+    sort:
+      - { property: coordinate, direction: ASC }
+  - type: table
+    name: "Projection provenance"
+    group_by: c_3_projected_at
+    order:
+      - coordinate
+      - title
+      - c_3_projected_from
+      - c_3_projected_at
+      - c_4_graph_node

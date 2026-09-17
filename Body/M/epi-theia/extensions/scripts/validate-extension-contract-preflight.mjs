@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 
 const repoRoot = "/Users/admin/Documents/Epi-Logos C Experiments";
 const manifestPath = join(
@@ -11,6 +11,42 @@ const captureRequirementsPath = join(
   repoRoot,
   "Body/M/epi-theia/extensions/test/fixtures/07-t0-readiness-capture-requirements.json"
 );
+const ideShellContractSourcePath = join(
+  repoRoot,
+  "Body/M/epi-theia/extensions/ide-shell-m0-m5/src/common/contract.ts"
+);
+const chromeContractPath = join(
+  repoRoot,
+  "Body/M/epi-theia/extensions/ide-shell-m0-m5/CHROME-CONTRACT.md"
+);
+const omnipanelSourceRoot = join(
+  repoRoot,
+  "Body/M/epi-theia/extensions/omnipanel-shell/src"
+);
+const extensionsRoot = join(repoRoot, "Body/M/epi-theia/extensions");
+
+const omnipanelCompatImportExceptions = new Map([
+  [
+    join(omnipanelSourceRoot, "browser/omnipanel-runtime-stub.ts"),
+    "@deprecated TODO"
+  ],
+  [
+    join(omnipanelSourceRoot, "browser/controllers/epi-claw/gateway-client.ts"),
+    "migrate to invokeGatewayRpc"
+  ]
+]);
+
+const omnipanelAllowedSharedSiblingImports = new Set([
+  "@pratibimba/integrated-composition",
+  "@pratibimba/m-extension-runtime",
+  "@pratibimba/m-extension-runtime/lib/common/recursive-self-review-gate",
+  "@pratibimba/pratibimba-layouts",
+  "@pratibimba/kernel-bridge",
+  "@pratibimba/kernel-bridge-readiness",
+  "@pratibimba/block-kit/lib/browser/block-host",
+  "@pratibimba/ide-shell-m0-m5/lib/browser/services/privacy-drop-feed",
+  "@pratibimba/integrated-composition/common/evidence-shapes"
+]);
 
 const expectedExtensions = [
   "m0-anuttara",
@@ -19,6 +55,12 @@ const expectedExtensions = [
   "m3-mahamaya",
   "m4-nara",
   "m5-epii"
+];
+
+const forbiddenStandaloneProjectionExtensions = [
+  "library-surface",
+  "logos-atelier",
+  "scent-following-workspace"
 ];
 
 const expectedReadinessStates = [
@@ -32,6 +74,12 @@ const expectedReadinessStates = [
   "degraded_but_readable",
   "ready_public_current"
 ];
+
+const allowedChromeContractCategories = new Set([
+  "M0' chrome",
+  "M5' chrome",
+  "shared infrastructure"
+]);
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
@@ -59,6 +107,45 @@ function walkFiles(root) {
     files.push(fullPath);
   }
   return files;
+}
+
+function relativeRepoPath(path) {
+  return relative(repoRoot, path);
+}
+
+function readImportSpecifiers(content) {
+  const imports = [];
+  const importPattern = /(?:\bfrom\s*['"`]([^'"`]+)['"`]|\bimport\s*['"`]([^'"`]+)['"`]|\brequire\(\s*['"`]([^'"`]+)['"`]|\bimport\(\s*['"`]([^'"`]+)['"`])/g;
+  const lines = content.split(/\r?\n/);
+  for (const [index, line] of lines.entries()) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*")) {
+      continue;
+    }
+    for (const match of line.matchAll(importPattern)) {
+      imports.push({
+        specifier: match[1] ?? match[2] ?? match[3] ?? match[4],
+        line: index + 1
+      });
+    }
+  }
+  return imports;
+}
+
+function importMatchesForbiddenFragment(specifier, forbiddenFragment) {
+  if (forbiddenFragment.includes("ws-connection-provider")) {
+    return specifier.startsWith("@theia/") && specifier.endsWith("ws-connection-provider");
+  }
+  return specifier.includes(forbiddenFragment);
+}
+
+function isAllowedOmniPanelSharedSiblingImport(specifier) {
+  for (const allowed of omnipanelAllowedSharedSiblingImports) {
+    if (specifier === allowed || specifier.startsWith(`${allowed}/`)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function validateManifest(manifest, errors) {
@@ -115,28 +202,183 @@ function validateCaptureRequirements(captureRequirements, errors) {
   }
 }
 
+function readIdeShellWidgetIds(errors) {
+  if (!existsSync(ideShellContractSourcePath)) {
+    errors.push("missing ide-shell contract source");
+    return [];
+  }
+
+  const source = readFileSync(ideShellContractSourcePath, "utf8");
+  return Array.from(new Set(Array.from(source.matchAll(/'pratibimba\.ide-shell\.[^']+'/g), (match) =>
+    match[0].slice(1, -1)
+  )));
+}
+
+function parseChromeContractCategories(content) {
+  const categories = new Map();
+  const rowPattern = /^\|\s*`([^`]+)`\s*\|[^|]*\|\s*([^|]+?)\s*\|$/gm;
+  for (const match of content.matchAll(rowPattern)) {
+    categories.set(match[1], match[2].trim());
+  }
+  return categories;
+}
+
+function validateChromeContract(errors) {
+  if (!existsSync(chromeContractPath)) {
+    errors.push("missing ide-shell CHROME-CONTRACT.md");
+    return;
+  }
+
+  const content = readFileSync(chromeContractPath, "utf8");
+  for (const required of [
+    "M0' chrome",
+    "M5' chrome",
+    "shared infrastructure",
+    "bridge-gate",
+    "SharedBridgeAdapter",
+    "kernel-bridge",
+    "isPrivacySafe()",
+    "useProfileTick()",
+    "audit-extend, never rebuild"
+  ]) {
+    if (!content.includes(required)) {
+      errors.push(`CHROME-CONTRACT.md missing required term: ${required}`);
+    }
+  }
+
+  const categories = parseChromeContractCategories(content);
+  const widgetIds = readIdeShellWidgetIds(errors);
+  for (const widgetId of widgetIds) {
+    const category = categories.get(widgetId);
+    if (!category) {
+      errors.push(`${widgetId} missing CHROME-CONTRACT category`);
+      continue;
+    }
+    if (!allowedChromeContractCategories.has(category)) {
+      errors.push(`${widgetId} has invalid CHROME-CONTRACT category: ${category}`);
+    }
+  }
+
+  const bridgeGateCategory = categories.get("bridge-gate");
+  if (bridgeGateCategory !== "shared infrastructure") {
+    errors.push("bridge-gate must be categorized as shared infrastructure");
+  }
+}
+
 function scanExtensionImports(manifest, errors) {
   for (const extension of manifest.extensions) {
     const packageRoot = join(repoRoot, extension.packagePath);
     if (!existsSync(packageRoot)) {
       continue;
     }
-    const scannedFiles = walkFiles(packageRoot).filter((path) =>
-      /\.(?:[cm]?js|tsx?|json)$/.test(path)
+    const sourceRoot = join(packageRoot, "src");
+    if (!existsSync(sourceRoot)) {
+      errors.push(`${extension.id} missing source root: ${relativeRepoPath(sourceRoot)}`);
+      continue;
+    }
+    const scannedFiles = walkFiles(sourceRoot).filter((path) =>
+      /\.tsx?$/.test(path)
     );
     for (const file of scannedFiles) {
       const content = readFileSync(file, "utf8");
-      for (const forbiddenFragment of extension.bridge.forbiddenDirectImports) {
-        // Only flag forbidden fragments that appear inside actual import/require
-        // statements; substring matches inside JSDoc or comments are noise.
-        const escaped = forbiddenFragment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const importPattern = new RegExp(
-          `(?:from\\s+['"\`]|require\\(\\s*['"\`]|import\\s*\\(\\s*['"\`])[^'"\`\\n]*${escaped}`,
-          "m"
+      for (const { specifier, line } of readImportSpecifiers(content)) {
+        const forbiddenFragment = extension.bridge.forbiddenDirectImports.find((fragment) =>
+          importMatchesForbiddenFragment(specifier, fragment)
         );
-        if (importPattern.test(content)) {
-          errors.push(`${extension.id} imports forbidden dependency fragment ${forbiddenFragment} in ${file}`);
+        if (forbiddenFragment) {
+          errors.push(
+            `${extension.id} imports forbidden dependency fragment ${forbiddenFragment} in ${relativeRepoPath(file)}:${line}`
+          );
         }
+      }
+    }
+  }
+}
+
+function validateOmniPanelForbiddenDirectImports(manifest, errors) {
+  if (!existsSync(omnipanelSourceRoot)) {
+    errors.push("missing omnipanel-shell src root");
+    return;
+  }
+
+  for (const [file, marker] of omnipanelCompatImportExceptions) {
+    if (!existsSync(file)) {
+      errors.push(`missing OmniPanel compat exception: ${relativeRepoPath(file)}`);
+      continue;
+    }
+    const content = readFileSync(file, "utf8");
+    if (!content.includes(marker)) {
+      errors.push(`${relativeRepoPath(file)} missing compat TODO marker: ${marker}`);
+    }
+  }
+
+  const forbiddenFragments = [
+    ...manifest.sharedBridgeAdapter.forbiddenDirectImports,
+    "@theia/core/lib/browser/messaging/ws-connection-provider"
+  ];
+  const scannedFiles = walkFiles(omnipanelSourceRoot).filter((path) =>
+    /\.tsx?$/.test(path)
+  );
+
+  for (const file of scannedFiles) {
+    const marker = omnipanelCompatImportExceptions.get(file);
+    if (marker) {
+      const content = readFileSync(file, "utf8");
+      if (content.includes(marker)) {
+        continue;
+      }
+    }
+
+    const content = readFileSync(file, "utf8");
+    for (const { specifier, line } of readImportSpecifiers(content)) {
+      const forbiddenFragment = forbiddenFragments.find((fragment) =>
+        importMatchesForbiddenFragment(specifier, fragment)
+      );
+      if (forbiddenFragment) {
+        errors.push(
+          `omnipanel-shell imports forbidden dependency fragment ${forbiddenFragment} in ${relativeRepoPath(file)}:${line}`
+        );
+        continue;
+      }
+      if (
+        specifier.startsWith("@pratibimba/") &&
+        !isAllowedOmniPanelSharedSiblingImport(specifier)
+      ) {
+        errors.push(
+          `omnipanel-shell imports non-allowlisted shared sibling ${specifier} in ${relativeRepoPath(file)}:${line}`
+        );
+      }
+    }
+  }
+}
+
+function validateNoStandaloneProjectionExtensions(errors) {
+  for (const extensionName of forbiddenStandaloneProjectionExtensions) {
+    const extensionPath = join(extensionsRoot, extensionName);
+    if (existsSync(extensionPath)) {
+      errors.push(
+        `${relativeRepoPath(extensionPath)} must not exist; Library/Atelier/scent-following surfaces are projection-lens contributions on existing extensions`
+      );
+    }
+  }
+}
+
+function validateIntegratedPluginProfileSubscriptionDiscipline(errors) {
+  for (const pluginName of ["plugin-integrated-1-2-3", "plugin-integrated-4-5-0"]) {
+    const browserRoot = join(extensionsRoot, pluginName, "src/browser");
+    if (!existsSync(browserRoot)) {
+      errors.push(`missing integrated plugin browser root: ${relativeRepoPath(browserRoot)}`);
+      continue;
+    }
+    const scannedFiles = walkFiles(browserRoot).filter((path) =>
+      /\.(?:[cm]?js|tsx?)$/.test(path)
+    );
+    for (const file of scannedFiles) {
+      const content = readFileSync(file, "utf8");
+      if (/\bbridge\.onProfile\b|\bonProfileAdvance\b/.test(content)) {
+        errors.push(
+          `${relativeRepoPath(file)} opens a direct profile subscription; use CompositionProfileProvider/useCompositionProfile`
+        );
       }
     }
   }
@@ -150,6 +392,9 @@ function main() {
   if (!existsSync(captureRequirementsPath)) {
     errors.push("missing readiness capture requirements");
   }
+  validateNoStandaloneProjectionExtensions(errors);
+  validateIntegratedPluginProfileSubscriptionDiscipline(errors);
+  validateChromeContract(errors);
 
   if (errors.length === 0) {
     const manifest = readJson(manifestPath);
@@ -157,6 +402,7 @@ function main() {
     validateManifest(manifest, errors);
     validateCaptureRequirements(captureRequirements, errors);
     scanExtensionImports(manifest, errors);
+    validateOmniPanelForbiddenDirectImports(manifest, errors);
   }
 
   if (errors.length > 0) {

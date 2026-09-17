@@ -1,6 +1,10 @@
 use serde::de::{Error as DeError, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::Value;
+
+/// The `s5'.review.*` gateway surface, resident at its owning coordinate
+/// (Track 53 T53.08). Relocated verbatim from `epi-cli/src/gate/review.rs`.
+pub mod s5_handlers;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -383,6 +387,40 @@ impl ReviewStore {
         Ok(ReviewHistory { items, resolutions })
     }
 
+    /// Return the latest approval only when it is an explicit human decision
+    /// over a human-gated review item. Canon-write adapters use this as their
+    /// narrow authority check; all review policy remains in S5.
+    pub fn approved_human_resolution(&self, item_id: &str) -> Result<ReviewResolution, String> {
+        if item_id.trim().is_empty() {
+            return Err("review item id is required for canon-write authority".to_owned());
+        }
+        let state = self.load_state()?;
+        let item = state
+            .items
+            .iter()
+            .find(|item| item.item_id == item_id)
+            .ok_or_else(|| format!("review item not found: {item_id}"))?;
+        if !item.requires_human {
+            return Err(format!(
+                "review item {item_id} is not human-gated and cannot authorize a canon write"
+            ));
+        }
+        let resolution = state
+            .resolutions
+            .iter()
+            .rev()
+            .find(|resolution| resolution.item_id == item_id)
+            .ok_or_else(|| format!("review item {item_id} has no approved human resolution"))?;
+        if resolution.decision != ReviewDecision::Approve
+            || resolution.resolved_by != ResolutionActor::Human
+        {
+            return Err(format!(
+                "review item {item_id} has no approved human resolution"
+            ));
+        }
+        Ok(resolution.clone())
+    }
+
     fn state_path(&self) -> PathBuf {
         self.root.join("s5-review-state.json")
     }
@@ -416,13 +454,89 @@ fn validate_submission(submission: &ReviewSubmission) -> Result<(), String> {
     if !submission.coordinate_context.is_object() {
         return Err("coordinate_context must be an object".to_owned());
     }
+    validate_personal_field_composition(&submission.coordinate_context, "coordinate_context")?;
+    if let Some(action) = &submission.proposed_action {
+        if let Some(target) = &action.target {
+            validate_personal_field_composition(target, "proposed_action.target")?;
+        }
+        if let Some(payload) = &action.payload {
+            validate_personal_field_composition(payload, "proposed_action.payload")?;
+        }
+    }
     if let Some(kernel_visibility) = &submission.kernel_visibility {
         validate_kernel_visibility(kernel_visibility)?;
+        validate_personal_field_composition(
+            &kernel_visibility.projection,
+            "kernel_visibility.projection",
+        )?;
     }
     if let Some(governance) = &submission.governance_profile {
         validate_governance_profile(governance)?;
     }
     Ok(())
+}
+
+/// DR-M4-3 composition law (08.T8.1): M4 personal fields cross to M5 review
+/// surfaces only as opaque `*Handle` strings — never raw quaternions, never
+/// audio-octet or natal bodies. Applied to every open Value surface a
+/// submission carries.
+const RAW_PERSONAL_FIELD_KEYS: [&str; 16] = [
+    "qIdentity",
+    "q_identity",
+    "qTransit",
+    "q_transit",
+    "qActivity",
+    "q_activity",
+    "qComposed",
+    "q_composed",
+    "qPersonal",
+    "q_personal",
+    "audioOctet",
+    "audio_octet",
+    "natalChart",
+    "natal_chart",
+    "natalHash",
+    "natal_hash",
+];
+
+const PERSONAL_HANDLE_KEYS: [&str; 6] = [
+    "qIdentityHandle",
+    "qTransitHandle",
+    "qActivityHandle",
+    "qComposedHandle",
+    "audioBusHandle",
+    "planetaryChakralStateHandle",
+];
+
+fn validate_personal_field_composition(value: &Value, surface: &str) -> Result<(), String> {
+    match value {
+        Value::Object(map) => {
+            for (key, child) in map {
+                if RAW_PERSONAL_FIELD_KEYS.contains(&key.as_str()) {
+                    return Err(format!(
+                        "DR-M4-3: raw personal field `{key}` must not cross the {surface} \
+                         composition boundary — personal fields cross as opaque `*Handle` \
+                         strings with provenance-state only"
+                    ));
+                }
+                if PERSONAL_HANDLE_KEYS.contains(&key.as_str()) && !child.is_string() {
+                    return Err(format!(
+                        "DR-M4-3: personal handle `{key}` on {surface} must be an opaque \
+                         string, not a body"
+                    ));
+                }
+                validate_personal_field_composition(child, surface)?;
+            }
+            Ok(())
+        }
+        Value::Array(items) => {
+            for item in items {
+                validate_personal_field_composition(item, surface)?;
+            }
+            Ok(())
+        }
+        _ => Ok(()),
+    }
 }
 
 fn validate_governance_profile(profile: &GovernanceProfile) -> Result<(), String> {

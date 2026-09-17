@@ -14,11 +14,16 @@ This folder holds the canonical seed layer for [[M]] / [[M']] interface, visuali
 
 ## Current Seeds
 
+- [[M'-SURFACE-REENVISIONING-2026-07-01]] — **ratified 2026-07-02** carrier re-conception: one Tauri v2 binary (`Body/M/pratibimba-app/`) supervising the `epi` gateway; `Body/M/epi-theia` frozen as parts warehouse (DR-FACE-1..6); dev-protocol corrections (verifier ≠ closer, behavioral proof, drivable-loop gates). Active plan: [[2026-07-02-pratibimba-app-phase-1]]. Harmonisation law: [[SEED-HARMONISATION-PROTOCOL]].
 - [[M'-SYSTEM-SPEC]] — full [[M']] system language and domain contract: how to speak about M0'-M5', how the musical instrument ramifies through the portal/app stack, and how M' consumes S-layer services without owning them.
 - [[M'-PORTAL-SPEC]] — shared `0` / `/` / `1` portal grammar for TUI and desktop, now expanded across the full [[M0']] through [[M5']] domain set.
 - [[M'-TAURI-PORT-SPEC]] — Tauri v2 port specification for the current Electron `epi-app`, preserving [[OmniPanel]] as the `/` surface and deepening [[Nara]], [[Epii]], agentic execution, inbox, and clock-platform targets.
 - `M0'/` through `M5'/` — per-domain [[M']] seed homes. Each folder carries its active domain spec, and may carry deeper techne/kernel-facing companion specs where the domain requires more than the short renderer contract can hold.
-- `M0'/epi-logos-kernel-spec.md` — foundational kernel canon: the bioquaternionic JEPA-EBM operator, Paramaśiva's tick, the eight-element traversal, physical/mental pole split.
+- `epi-logos-kernel-spec.md` — foundational kernel canon: the bioquaternionic JEPA-EBM operator, Paramaśiva's tick, the eight-element traversal, physical/mental pole split, the just-triad 4:5:6 weighted energy formula. Rehomed from `M0'/` to M' root 2026-06-07 (per DR-KERNEL-1) — the kernel describes the whole inverted M-pole, not just M0'.
+- [[M'-AGENTIC-RUNTIME-SPEC]] — coordinate-conditional MoE runtime with four orthogonal expert dimensions (constitutional × techne × model × skill), Elo-gated dispatch through Anima, S4'/S5' autoresearch self-improvement loop with Mercurius/Janus/Anansi/Moirai infrastructure.
+- [[M'-USER-CONTEXT-SKILL-SPEC]] — user-temporal as first-class mandatory-routed skill, UserContextFrame contract, dual injection (agent context + EBM second-channel input), longitudinal write-back to PASU and M5_ContemplationObject.
+- [[M'-MODEL-SLOT-SPEC]] — per-role model-slot rule (local-default / cloud-opt-in / null), Gemma 4 12B Unified Q4 as Nara-parser default, Pro-class hosted as Epii-judge default, per-Aletheia-subagent slots, verifier-enforced privacy boundaries.
+- [[M'-ML-SKILL-SURFACE-SPEC]] — per-subsystem ML method specification (each M-coordinate's primary ML technique fits its semantic role), dual-source skill surface (~13 vendored Hermes skills 1:1 compatible with Claude Code skills + 5 core custom-built gap skills + per-subsystem domain skills), residency rule under `Body/S/`, drift-detection autoresearch retrain loop closing through Mercurius/Aletheia/Anima.
 - `M0'/the-matheme-of-the-field-differential.md` — philosophical ground: the 0/1 threshold and the principle of sameness, explicated through differential calculus and Pratyabhijñā.
 - `M1'/physical-pole-stack-architecture.md` — physical-pole engine: torus (Paramaśiva #1-5), solar-chakral (#2-5), codon-clock (#3-5), Tauri v2/Bevy/wgpu implementation.
 - `M4'/mental-pole-mechanics.md` — mental-pole intelligence: 4'/5'/0' LLM/EBM/Verifier bootstrap protocol, 72-fold resonance vectors, dev-session disclosure loop.

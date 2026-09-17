@@ -1,0 +1,5 @@
+# GitNexus index exclusions (gitignore-style; separate from .gitignore).
+# epi-theia is FROZEN/dead reference (cycle-3 rerun targets pratibimba-app);
+# it should not pollute code-intelligence results, and excluding it drops the
+# graph under the 50k-node embedding cap so semantic embeddings can generate.
+Body/M/epi-theia/

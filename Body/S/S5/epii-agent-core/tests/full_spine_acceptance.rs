@@ -233,12 +233,14 @@ fn full_spine_acceptance_runs_real_persisted_surfacing_review_promotion_and_snap
                         uri: "run://s5/full-spine/aletheia-inbox/session-full-spine#L0".to_owned(),
                         coordinate: Some("S5/S5'".to_owned()),
                         summary: Some("real JSONL inbox entry consumed".to_owned()),
+                        anchor: None,
                     },
                     EvidenceSourceRef {
                         kind: "review_gate".to_owned(),
                         uri: format!("review://s5/full-spine/{}", promotion_review.item_id),
                         coordinate: Some("S5/S5'".to_owned()),
                         summary: Some("human recursive gate resolved".to_owned()),
+                        anchor: None,
                     },
                 ],
                 kernel_evidence: None,
@@ -436,6 +438,7 @@ fn aletheia_entry(session_id: &str) -> InboxEntry {
             cs: CsField {
                 code: "CS-full-spine".to_owned(),
                 direction: CsDirection::Day,
+                recognized: false,
             },
         },
         improvement_vectors: vec![
@@ -446,6 +449,7 @@ fn aletheia_entry(session_id: &str) -> InboxEntry {
             "Aletheia disclosed a production-shaped S5 acceptance seam".to_owned(),
         )]),
         artifacts: vec!["vault://Idea/Bimba/Seeds/S/S5/S5-SPEC.md".to_owned()],
+        q_proposals: vec![],
         closure_kind: "rehear".to_owned(),
         disclosure_lineage: None,
     }

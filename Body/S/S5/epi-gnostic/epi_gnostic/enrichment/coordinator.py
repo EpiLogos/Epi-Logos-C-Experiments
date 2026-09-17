@@ -77,6 +77,7 @@ class CoordinateEnricher:
             One of the VALID_FAMILIES letters, or ``"#"``.
         """
         family = _normalise_family(family)
+        coordinate = _normalise_coordinate(coordinate)
         ws = self._workspace
 
         cypher = (
@@ -123,6 +124,7 @@ class CoordinateEnricher:
             Primary family letter (from LLM classification).
         """
         family = _normalise_family(family)
+        resonances = [_normalise_coordinate(c) for c in resonances]
         ws = self._workspace
 
         # Pair up resonances and confidences, filling missing confidences with 0.0
@@ -295,3 +297,60 @@ def _normalise_family(family: str) -> str:
     """Return *family* uppercased if valid, else ``"#"``."""
     upper = family.upper() if family else "#"
     return upper if upper in VALID_FAMILIES else "#"
+
+
+_DOUBLING_RAW = "4.4.0-4.4/5"
+_DOUBLING_TOK = chr(1)
+_DOUBLING_CANON = "4.(4.0/1-4.4/5)"
+
+
+def _normalise_coordinate(coord: str) -> str:
+    """Normalise a Bimba coordinate's context frames to canonical parenthesised form.
+
+    Idempotent. A position-N frame keeps its ``N.`` outside the parens
+    (``4.0/1`` -> ``4.(0/1)``); the QL fractal-doubling frame stays atomic
+    (``4.4.0-4.4/5`` -> ``4.(4.0/1-4.4/5)``).
+
+    Does NOT convert ``#`` -> ``M``. ``#n`` (raw archetype / ``:Psychoid``) and
+    ``Mn`` (M-family / ``:Subsystem``) are DISTINCT coordinates and distinct
+    ``:Bimba`` nodes; a ``#`` coordinate must resolve to its own ``#`` node.
+    The ``#`` -> ``M`` mapping was a one-time legacy port of the old neo4j
+    coordinate data (done historically) and is NOT a live normalisation — never
+    apply it at runtime here.
+    """
+    if not coord:
+        return coord
+    protected = coord.replace(_DOUBLING_RAW, _DOUBLING_TOK)
+    segs: list[str] = []
+    depth = 0
+    cur = ""
+    for ch in protected:
+        if ch == "(":
+            depth += 1
+            cur += ch
+        elif ch == ")":
+            depth -= 1
+            cur += ch
+        elif ch == "-" and depth == 0:
+            segs.append(cur)
+            cur = ""
+        else:
+            cur += ch
+    segs.append(cur)
+
+    out: list[str] = []
+    for seg in segs:
+        if seg == _DOUBLING_TOK:
+            out.append(_DOUBLING_CANON)
+        elif "/" not in seg:
+            out.append(seg)
+        elif seg.startswith("(") and seg.endswith(")"):
+            out.append(seg)
+        else:
+            dot = seg.find(".")
+            if dot > 0 and seg[:dot].isdigit():
+                rest = seg[dot + 1 :]
+                out.append(seg if rest.startswith("(") and rest.endswith(")") else f"{seg[:dot]}.({rest})")
+            else:
+                out.append(f"({seg})")
+    return "-".join(out)

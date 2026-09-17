@@ -32,6 +32,37 @@ describe("Psyche handoff continuity", () => {
     assert.equal(s2.nowPath, "Idea/Empty/Present/02-06-2026/20260602-140000-b/now.md");
   });
 
+  it("renderer state survives handoff with active blocks, pending verdict, and selection", () => {
+    const s1WithRenderer = openSession({
+      sessionId: "20260602-090000-renderer",
+      dayId: "02-06-2026",
+      carryForward: ["review-thread"],
+      renderer: {
+        activeBlockIds: ["block:review:1"],
+        pendingVerdict: {
+          method: "blocks.verdict",
+          blockId: "block:review:1",
+          decision: "approve",
+          actor: "human",
+          actorIsHuman: true,
+          resolutionTarget: "human",
+          reason: "approved under Human Gate",
+          routesTo: "s4'.psyche.update",
+        },
+        currentSelection: "block:review:1",
+      },
+    });
+    const s2 = handoff(s1WithRenderer, {
+      sessionId: "20260602-150000-renderer",
+      dayId: "02-06-2026",
+      carryForward: ["review-thread"],
+    });
+
+    assert.deepEqual(s2.renderer.activeBlockIds, ["block:review:1"]);
+    assert.equal(s2.renderer.pendingVerdict?.decision, "approve");
+    assert.equal(s2.renderer.currentSelection, "block:review:1");
+  });
+
   it("handoff across a day boundary still preserves the continuity link", () => {
     const s2 = handoff(s1, { sessionId: "20260603-090000-c", dayId: "03-06-2026", carryForward: [] });
     assert.equal(s2.dayId, "03-06-2026");

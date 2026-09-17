@@ -215,11 +215,43 @@ pub struct PortalClockState {
     pub resolution_level: u8,
     pub active_codon: ActiveCodon,
     pub transit_quaternion: [f32; 4],
+    /// Ambient environmental transform factor (DR-ENV-1/8) — the collective sky's
+    /// slow forces aspected against the natal invariant, composed onto the PASU
+    /// base in `recompute_composed_quaternion_state`. Defaults to the identity
+    /// rotation (no ambient influence); it TRANSFORMS the base, never becomes
+    /// `quintessence_quaternion`. Serde-default so pre-ambient states deserialize.
+    #[serde(default = "identity_quaternion")]
+    pub environment_quaternion: [f32; 4],
     pub aspects: Vec<PlanetaryAspect>,
     pub micro_orbit: Vec<u16>,
     pub natal_degrees: [u16; 10],
     pub generation: u64,
     pub zoom_level: f32,
+    /// Tunable `m3.lens_field.akasha_balance_epsilon` (Track 38 surface),
+    /// injected at the boundary (registry read); 0.0 = unset → the kernel
+    /// falls back to `lens_field::AKASHA_BALANCE_EPSILON_DEFAULT`. Kernel
+    /// stays registry-free (pure math); the value freezes on session start.
+    #[serde(default)]
+    pub akasha_balance_epsilon: f32,
+    /// Tunable `m3.energy.e5_cast_engagement` (Track 33 surface), injected at
+    /// the boundary; 0.0 = unset → the kernel falls back to
+    /// `state::E5_CAST_ENGAGEMENT_DEFAULT`. The fraction of the seven canonical
+    /// harmonic channels (mahamaya included) a live/cast projection engages, so
+    /// the portal clock carries real E₅ harmonic energy once a cast has sounded
+    /// the substrate. Kernel stays registry-free; freezes on session start.
+    #[serde(default)]
+    pub cast_e5_engagement: f32,
+    /// Bounded oracle-cast lens reading (Architect 2026-07-19: cast-time,
+    /// never tick-time) — recorded by `update_from_cast`, sky-at-cast through
+    /// the pleromatic lens. Serde-default so pre-reading states deserialize.
+    #[serde(default)]
+    pub last_cast_lens_reading: Option<crate::lens_field::CastLensReading>,
+}
+
+/// The identity rotation `[1,0,0,0]` — serde default for `environment_quaternion`
+/// so pre-ambient serialized states deserialize as "no ambient influence".
+fn identity_quaternion() -> [f32; 4] {
+    [1.0, 0.0, 0.0, 0.0]
 }
 
 impl Default for PortalClockState {
@@ -233,6 +265,9 @@ impl Default for PortalClockState {
             tick12: 0,
             last_cast: None,
             last_cast_timestamp: 0,
+            akasha_balance_epsilon: 0.0,
+            cast_e5_engagement: 0.0,
+            last_cast_lens_reading: None,
             chakra_levels: [0.0; 8],
             active_branch_lens: 0,
             transform_stage: 0,
@@ -246,6 +281,7 @@ impl Default for PortalClockState {
             resolution_level: 0,
             active_codon: ActiveCodon::default(),
             transit_quaternion: [1.0, 0.0, 0.0, 0.0],
+            environment_quaternion: [1.0, 0.0, 0.0, 0.0],
             aspects: Vec::new(),
             micro_orbit: Vec::new(),
             natal_degrees: [0xFFFF; 10],

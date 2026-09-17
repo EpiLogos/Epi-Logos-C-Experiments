@@ -272,9 +272,101 @@ function unescapeXml(s: string): string {
 
 type PiLike = {
 	on?: (event: string, handler: (...args: any[]) => any) => void;
+	registerTool?: (tool: Record<string, unknown>) => void;
 	getActiveTools?: () => string[];
 	__setActiveEntitlement?: (e: AgentEffectiveEntitlement | null) => void;
 };
+
+export interface ManifestRewriteOptions {
+	skillLookupAvailable: boolean;
+}
+
+const SKILL_LOOKUP_POINTER =
+	"Skill universe available. Use `skill_lookup(query)` to find skills relevant to your task. The lookup honours your team / agent entitlement contract.";
+
+/**
+ * Primary post-12.28 manifest rewrite. If the Hermes-style `skill_lookup`
+ * primitive is registered, replace the eager XML dump with a compact pointer.
+ * If it is unavailable, fail-soft to the XML manifest fallback with the same
+ * entitlement filter that existed before 12.28.
+ */
+export function rewriteInjectedSkillsManifest(
+	systemPrompt: string,
+	effective: AgentEffectiveEntitlement,
+	options: ManifestRewriteOptions,
+): { prompt: string; removed: string[]; mode: "skill_lookup" | "xml_fallback" | "noop" } {
+	if (typeof systemPrompt !== "string" || systemPrompt.length === 0) {
+		return { prompt: systemPrompt, removed: [], mode: "noop" };
+	}
+	const blockMatch = systemPrompt.match(
+		/<available_skills>[\s\S]*?<\/available_skills>/,
+	);
+	if (!blockMatch) return { prompt: systemPrompt, removed: [], mode: "noop" };
+	if (options.skillLookupAvailable) {
+		const prompt =
+			systemPrompt.slice(0, blockMatch.index!) +
+			SKILL_LOOKUP_POINTER +
+			systemPrompt.slice(blockMatch.index! + blockMatch[0].length);
+		return { prompt, removed: [], mode: "skill_lookup" };
+	}
+	const { prompt, removed } = filterInjectedSkillsManifest(systemPrompt, effective);
+	return { prompt, removed, mode: removed.length > 0 ? "xml_fallback" : "noop" };
+}
+
+async function installSkillLookupPrimitive(input: {
+	pi: PiLike;
+	repoRoot: string;
+	skillUniverseRoots: string[];
+	effective: AgentEffectiveEntitlement;
+}): Promise<boolean> {
+	if (typeof input.pi.registerTool !== "function") {
+		dbg("skill_lookup unavailable: pi.registerTool absent; fallback entitlement XML manifest remains active");
+		return false;
+	}
+	try {
+		const skillLookup = await import("../skills/custom/skill-lookup/index.ts");
+		const configPath =
+			process.env.EPI_SKILL_LOOKUP_CONFIG ??
+			process.env.EPI_LOGOS_CONFIG ??
+			process.env.EPI_LOGOS_CONFIG_PATH;
+		const config = await skillLookup.loadSkillLookupConfig(
+			configPath ? { path: configPath } : {},
+		);
+		const service = await skillLookup.createSkillLookupService({
+			repoRoot: input.repoRoot,
+			homeDir: process.env.HOME,
+			skillUniverseRoots: input.skillUniverseRoots,
+			effective: input.effective,
+			config,
+		});
+		skillLookup.configureSkillLookupContext(service);
+		if (!(input.pi as any).__epiiSkillLookupRegistered) {
+			(input.pi as any).__epiiSkillLookupRegistered = true;
+			input.pi.registerTool({
+				name: "skill_lookup",
+				label: "Skill Lookup",
+				description:
+					"Semantic-search the live skill manifest for task-relevant skills; results are pre-filtered by entitlement.",
+				async execute(_toolCallId: string, params: { query?: string; max_results?: number }) {
+					const query = typeof params?.query === "string" ? params.query : "";
+					const max_results =
+						typeof params?.max_results === "number" ? params.max_results : undefined;
+					const results = await skillLookup.skill_lookup(query, max_results);
+					return {
+						// pi requires a details payload; this tool returns none.
+						details: undefined, content: [{ type: "text", text: JSON.stringify(results) }] };
+				},
+			});
+		}
+		dbg("skill_lookup primitive registered; eager XML manifest replaced by pointer");
+		return true;
+	} catch (e) {
+		dbg(
+			`skill_lookup unavailable (${(e as Error)?.message ?? e}); fail-soft XML manifest fallback entitlement remains active`,
+		);
+		return false;
+	}
+}
 
 /**
  * Wire the LIVE entitlement activation for the epii persona.
@@ -353,6 +445,14 @@ export async function activateEpiiEntitlement(
 				`${effective.tools.effective.length} tools entitled`,
 		);
 
+		const skillLookupAvailable = await installSkillLookupPrimitive({
+			pi,
+			repoRoot,
+			skillUniverseRoots,
+			effective,
+		});
+		(pi as any).__epiiSkillLookupAvailable = skillLookupAvailable;
+
 		// (5) Gate the prompt-injected skill manifest. Register the
 		// before_agent_start listener once per pi instance (activation may run on
 		// every session_start). The listener reads `effective` via the closure
@@ -371,10 +471,19 @@ export async function activateEpiiEntitlement(
 						const live: AgentEffectiveEntitlement =
 							((pi as any).__epiiEffective as AgentEffectiveEntitlement) ??
 							effective;
-						const { prompt, removed } = filterInjectedSkillsManifest(sp, live);
-						if (removed.length === 0) return undefined;
-						dbg(`filtered injected skills: removed [${removed.join(", ")}]`);
-						return { systemPrompt: prompt };
+						const rewrite = rewriteInjectedSkillsManifest(sp, live, {
+							skillLookupAvailable:
+								((pi as any).__epiiSkillLookupAvailable as boolean) === true,
+						});
+						if (rewrite.mode === "noop") return undefined;
+						if (rewrite.mode === "skill_lookup") {
+							dbg("replaced eager XML manifest with skill_lookup pointer");
+						} else {
+							dbg(
+								`fail-soft XML manifest fallback entitlement filtered skills: removed [${rewrite.removed.join(", ")}]`,
+							);
+						}
+						return { systemPrompt: rewrite.prompt };
 					} catch (e) {
 						dbg(`skill-manifest filter failed: ${(e as Error)?.message ?? e}`);
 						return undefined; // never break prompt assembly

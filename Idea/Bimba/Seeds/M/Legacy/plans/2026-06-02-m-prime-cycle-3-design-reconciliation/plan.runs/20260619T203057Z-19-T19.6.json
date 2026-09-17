@@ -1,0 +1,35 @@
+{
+  "runId": "20260619T203057Z-19-T19.6",
+  "taskId": "19.T19.6",
+  "startedAt": "2026-06-19T20:30:57.044Z",
+  "owner": "codex-m-dev-19-t19-6-headless-contemplation",
+  "leaseExpiresAt": "2026-06-19T22:30:57.044Z",
+  "worktree": null,
+  "task": {
+    "id": "19.T19.6",
+    "trackId": "19",
+    "tranche": "T19.6",
+    "title": "Add headless contemplation surface in gateway (canonical 4'-5'-0' = LLM/EBM/Verifier triplet)",
+    "effort": "canonical 4'-5'-0' = LLM/EBM/Verifier triplet",
+    "file": "19-contemplation-surface-integration.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/19-contemplation-surface-integration.md",
+    "dependsOn": [
+      "19.T19.5"
+    ],
+    "writeScopes": [
+      "Body/S/S3/gateway/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

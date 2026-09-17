@@ -1,0 +1,113 @@
+# ---------------------------------------------------------------------------
+# `[gemini_embedding]` — Gemini embedding accessor configuration
+#
+# WHERE THIS GOES
+#   ~/.epi-logos/config.toml
+#   (or whatever `$EPI_LOGOS_CONFIG_PATH` points at, which wins when set)
+#
+# This file is a TEMPLATE, not a config that is read at runtime. Copy the
+# sections you need into your own `~/.epi-logos/config.toml`, which holds many
+# other sections besides these two — merge, do not overwrite.
+#
+# A missing file is treated exactly like an empty one. Only `model_version` is
+# required; every other key below is shown at its built-in default, so this file
+# also documents what the accessor does when you configure nothing.
+#
+# Reader of record: `Body/S/S0/gemini-embedding/src/lib.rs`
+#   (`EmbeddingConfig::from_file` + the `DEFAULT_*` consts).
+# ---------------------------------------------------------------------------
+
+[gemini_embedding]
+
+# REQUIRED — no default, by design.
+#
+# The model identity decides vector compatibility. A guessed default would
+# silently produce vectors that cannot be compared with the canonical ones
+# already stored in the graph, and nothing downstream would notice. So the
+# accessor refuses to start rather than pick for you.
+#
+# Per-process override: `$GEMINI_EMBEDDING_MODEL` (wins over this key). Set it
+# to the SAME model that produced the canonical vectors.
+model_version = "gemini-embedding-2-preview"
+
+
+# --- Optional. Everything below is tuning, and defaults if omitted. ----------
+#
+# The distinction the accessor draws: a wrong tuning value can make embedding
+# slow, or retry more than you wanted. It cannot make the accessor write a wrong
+# vector. Identity and credentials can — so those stay required, and these do
+# not. This is not cosmetic: on 2026-07-28 a missing tuning key hard-errored
+# `EmbeddingConfig::from_default_file` on a machine with a perfectly valid API
+# key, aborting a graph seed run after it had already mutated the database.
+
+# Chunking threshold, in bytes. Documents at or under this go to the API in a
+# single call; longer ones are split on UTF-8 boundaries and their per-chunk
+# vectors averaged. Chunk only beyond the model's canonical context limit — do
+# not lower this to "be safe", since extra chunking changes the resulting
+# vector.
+# canonical_context_limit_bytes = 8192
+
+# Requests per rolling 60s window, enforced client-side before dispatch.
+# Conservative by default; raise it to match your account's actual quota.
+# max_rpm = 60
+
+# Maximum in-flight requests.
+# max_concurrent = 4
+
+# Retry back-off: first delay, then multiplied by `backoff_factor` per attempt.
+# backoff_initial_ms = 500
+# backoff_factor = 2
+
+# Randomisation spread applied to each back-off delay, 0.0..=1.0.
+# 0.1 means each delay lands within ±10% of its nominal value. Set 0.0 for
+# deterministic timing in tests.
+# jitter_ratio = 0.1
+
+# Retries AFTER the initial attempt, so 3 means up to 4 calls total.
+# max_retries = 3
+
+# Cache location. Vectors are cached as
+# `{cache_root}/{model_version}/{document_hash}.{dim}`, so a model change
+# invalidates without manual cleanup.
+# Defaults to `~/.epi-logos/cache/embeddings`.
+# cache_root = "/Users/you/.epi-logos/cache/embeddings"
+
+
+# ---------------------------------------------------------------------------
+# REQUIRED before any cloud call.
+#
+# The accessor calls `CloudOptInPolicy::require` on entry and refuses with a
+# typed error if this is absent. There is no silent fall-through to cloud.
+#
+# Prefer recording this through the CLI, which surfaces the privacy implication
+# rather than writing consent behind your back:
+#
+#     epi settings opt-in gemini_embedding
+#
+# `scopes` restricts which task types may be dispatched. Use the explicit list
+# to keep consent narrow; `["*"]` permits every task type.
+# ---------------------------------------------------------------------------
+
+[cloud_opt_in.gemini_embedding]
+recorded = true
+scopes = [
+  "RETRIEVAL_QUERY",
+  "RETRIEVAL_DOCUMENT",
+  "SEMANTIC_SIMILARITY",
+  "CLASSIFICATION",
+  "CLUSTERING",
+  "QUESTION_ANSWERING",
+]
+
+
+# ---------------------------------------------------------------------------
+# NOT IN THIS FILE: the API key.
+#
+# `GEMINI_API_KEY` is read from the process environment only — never from
+# config, so a credential cannot end up committed. Export it from your shell
+# profile (canonically `~/.zshenv`):
+#
+#     export GEMINI_API_KEY="…"
+#
+# Verify what the process can actually see with `epi settings status`.
+# ---------------------------------------------------------------------------

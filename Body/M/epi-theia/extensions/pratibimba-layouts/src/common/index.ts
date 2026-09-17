@@ -1,5 +1,6 @@
 export * from './layout-types';
 export * from './cross-layout-intent';
+export * from './activity-bar-modes';
 
 // Browser-runtime helpers re-exported so consumers can import everything
 // from the package root (`@pratibimba/pratibimba-layouts`) rather than

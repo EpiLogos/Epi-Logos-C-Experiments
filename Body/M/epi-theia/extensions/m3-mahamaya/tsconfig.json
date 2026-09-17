@@ -4,9 +4,19 @@
     "rootDir": "src",
     "outDir": "lib",
     "composite": true,
-    "jsx": "react"
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {
+      "@pratibimba/kernel-bridge": ["../kernel-bridge/src/common"]
+    }
   },
   "references": [
+    {
+      "path": "../kernel-bridge"
+    },
+    {
+      "path": "../integrated-composition"
+    },
     {
       "path": "../m-extension-runtime"
     }

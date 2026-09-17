@@ -10,6 +10,31 @@
   ],
   "main": "lib/common/index.js",
   "types": "lib/common/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/common/index.d.ts",
+      "default": "./lib/common/index.js"
+    },
+    "./meaning-packet": {
+      "types": "./lib/common/meaning-packet.d.ts",
+      "default": "./lib/common/meaning-packet.js"
+    },
+    "./common/composition": {
+      "types": "./lib/common/composition.d.ts",
+      "default": "./lib/common/composition.js"
+    },
+    "./lib/browser/frontend-module": {
+      "types": "./lib/browser/frontend-module.d.ts",
+      "default": "./lib/browser/frontend-module.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "meaning-packet": ["lib/common/meaning-packet.d.ts"],
+      "common/composition": ["lib/common/composition.d.ts"],
+      "lib/browser/frontend-module": ["lib/browser/frontend-module.d.ts"]
+    }
+  },
   "theiaExtensions": [
     {
       "frontend": "lib/browser/frontend-module"
@@ -23,6 +48,7 @@
   ],
   "dependencies": {
     "@theia/core": "1.56.0",
+    "@pratibimba/integrated-composition": "workspace:*",
     "@pratibimba/m-extension-runtime": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -36,7 +62,17 @@
   "scripts": {
     "build": "tsc -b",
     "watch": "tsc -b -w",
-    "clean": "rimraf lib",
-    "test": "pnpm build"
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
+    "test:outer-planet-pending": "node --test test/outer-planet-pending.test.mjs",
+    "test:shadow-decan": "node --test test/shadow-decan.test.mjs",
+    "test:audio-bus-visual": "node --test test/audio-bus-visual.test.mjs",
+    "test:provenance-inline": "node --test test/provenance-inline.test.mjs",
+    "test:cymatic-transport": "node --test test/cymatic-transport.test.mjs",
+    "test:cymatic-determinism": "node --test test/cymatic-determinism.test.mjs",
+    "test:cymatic-spheres-deferred": "node --test test/cymatic-spheres-deferred.test.mjs",
+    "test:planetary-elemental-feed": "node --test test/planetary-elemental-feed.test.mjs",
+    "test:cymatic-monopoly-engine": "node --test test/cymatic-monopoly-engine.test.mjs",
+    "test:epogdoon-bridge-engine": "node --test test/epogdoon-bridge-engine.test.mjs",
+    "test": "node --test test/widget-registry.test.mjs && node --test test/shadow-decan.test.mjs && node --test test/audio-bus-visual.test.mjs && node --test test/provenance-inline.test.mjs && node --test test/cymatic-transport.test.mjs && node --test test/cymatic-determinism.test.mjs && node --test test/cymatic-spheres-deferred.test.mjs && node --test test/planetary-elemental-feed.test.mjs && node --test test/cymatic-monopoly-engine.test.mjs && node --test test/epogdoon-bridge-engine.test.mjs && pnpm build"
   }
 }

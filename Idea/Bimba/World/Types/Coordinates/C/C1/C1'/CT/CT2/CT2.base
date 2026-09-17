@@ -1,0 +1,39 @@
+coordinate: "CT2"
+c_4_artifact_role: "base-view"
+c_1_ct_type: "CT2"
+c_5_reflects: "[[CT2]]"
+c_0_source_coordinates: ["[[CT2]]", "[[CT]]", "[[C5]]"]
+filters:
+  or:
+    - 'c_1_ct_type == "CT2"'
+    - 'ctx_type == "CT2"'
+views:
+  - type: table
+    name: "Day operations register"
+    group_by: c_4_artifact_role
+    order:
+      - coordinate
+      - c_4_artifact_role
+      - c_3_ctx_frame
+      - c_3_created_at
+      - c_5_crystallisation_state
+      - c_0_source_coordinates
+      - p0_grounds
+      - p1_definitions
+      - p2_operations
+      - p2_outputs
+    sort:
+      - { property: c_3_created_at, direction: DESC }
+      - { property: coordinate, direction: ASC }
+  - type: table
+    name: "Night' blocked operations"
+    filters:
+      and:
+        - 'c_5_reflection_complete == false'
+    order:
+      - coordinate
+      - c_4_artifact_role
+      - c_3_created_at
+      - p1_definitions
+      - p2_operations
+      - p2_outputs

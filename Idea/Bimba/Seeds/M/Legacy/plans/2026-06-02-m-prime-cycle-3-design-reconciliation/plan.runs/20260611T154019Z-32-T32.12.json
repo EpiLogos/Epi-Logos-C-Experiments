@@ -1,0 +1,36 @@
+{
+  "runId": "20260611T154019Z-32-T32.12",
+  "taskId": "32.T32.12",
+  "startedAt": "2026-06-11T15:40:19.159Z",
+  "owner": "codex-m-dev-32-t32-12",
+  "leaseExpiresAt": "2026-06-11T17:40:19.159Z",
+  "worktree": null,
+  "task": {
+    "id": "32.T32.12",
+    "trackId": "32",
+    "tranche": "T32.12",
+    "title": "Reset / clear-state UX",
+    "effort": null,
+    "file": "32-onboarding-settings-empty-states.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/32-onboarding-settings-empty-states.md",
+    "dependsOn": [
+      "32.T32.11"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/m-extension-runtime/src/browser/settings/reset-section.tsx",
+      "Idea/Empty/_backups/PASU-{ISO-timestamp}.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

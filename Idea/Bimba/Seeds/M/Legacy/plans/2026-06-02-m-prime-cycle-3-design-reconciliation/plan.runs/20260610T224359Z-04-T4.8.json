@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T224359Z-04-T4.8",
+  "taskId": "04.T4.8",
+  "startedAt": "2026-06-10T22:43:59.203Z",
+  "owner": "codex-m-dev-04-t4-8",
+  "leaseExpiresAt": "2026-06-11T00:43:59.203Z",
+  "worktree": null,
+  "task": {
+    "id": "04.T4.8",
+    "trackId": "04",
+    "tranche": "T4.8",
+    "title": "Integrated reading/transcription clock chain",
+    "effort": null,
+    "file": "04-m3-mahamaya-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/04-m3-mahamaya-reconciliation.md",
+    "dependsOn": [
+      "04.T4.7"
+    ],
+    "writeScopes": [
+      "Body/S/S5/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

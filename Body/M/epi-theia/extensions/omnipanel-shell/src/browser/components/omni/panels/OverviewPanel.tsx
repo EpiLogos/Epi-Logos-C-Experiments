@@ -72,7 +72,7 @@ export function OverviewPanel({
             value={gatewayUrl}
             onChange={(e) => onSetGatewayUrl(e.target.value)}
             className="w-full px-3 py-2 text-xs bg-black/30 border border-[var(--border-subtle)] rounded"
-            placeholder="ws://localhost:18794"
+            placeholder="ws://127.0.0.1:18794"
           />
         </label>
         <label className="text-xs text-[var(--text-tertiary)] space-y-1">

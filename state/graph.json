@@ -1,0 +1,2203 @@
+{
+  "generatedAt": "2026-07-06T14:20:25.273Z",
+  "nodes": [
+    {
+      "id": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "type": "memory_task",
+      "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+      "pageId": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "status/completed"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 8,
+      "bridgeScore": 0,
+      "isGodNode": false,
+      "normLabel": "memory task: cycle-3 integration: fibonacci ground level 0 temporal substrate — wr..."
+    },
+    {
+      "id": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "type": "memory_task",
+      "label": "Memory Task: Synthesize VAK–Anuttara interpenetration (para vak / notational reali...",
+      "pageId": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "status/completed"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 8,
+      "bridgeScore": 0,
+      "isGodNode": false,
+      "normLabel": "memory task: synthesize vak–anuttara interpenetration (para vak / notational reali..."
+    },
+    {
+      "id": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+      "type": "memory_task",
+      "label": "Memory Task: M' whole-derivation session 2026-07-02: Phase 0 full-shape spec reads...",
+      "pageId": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+      "freshness": "stale",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "status/active"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 13,
+      "bridgeScore": 0,
+      "isGodNode": true,
+      "surpriseReason": "degree 13",
+      "normLabel": "memory task: m' whole-derivation session 2026-07-02: phase 0 full-shape spec reads..."
+    },
+    {
+      "id": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+      "type": "memory_task",
+      "label": "Memory Task: S6.3 bell kernel contracts: ModalResonatorProfile + M123ChimeFrame la...",
+      "pageId": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "status/completed"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 13,
+      "bridgeScore": 0,
+      "isGodNode": true,
+      "surpriseReason": "degree 13",
+      "normLabel": "memory task: s6.3 bell kernel contracts: modalresonatorprofile + m123chimeframe la..."
+    },
+    {
+      "id": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "type": "memory_task",
+      "label": "Memory Task: Author paramasiva tick canon-rooting session prompt",
+      "pageId": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "status/completed"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 13,
+      "bridgeScore": 0,
+      "isGodNode": true,
+      "surpriseReason": "degree 13",
+      "normLabel": "memory task: author paramasiva tick canon-rooting session prompt"
+    },
+    {
+      "id": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "type": "memory_task",
+      "label": "Memory Task: Author paramasiva tick canon-rooting session prompt",
+      "pageId": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "status/completed"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 13,
+      "bridgeScore": 0,
+      "isGodNode": true,
+      "surpriseReason": "degree 13",
+      "normLabel": "memory task: author paramasiva tick canon-rooting session prompt"
+    },
+    {
+      "id": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "type": "memory_task",
+      "label": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+      "pageId": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "freshness": "stale",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "status/active"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 13,
+      "bridgeScore": 0,
+      "isGodNode": true,
+      "surpriseReason": "degree 13",
+      "normLabel": "memory task: integrate spanda dual-oscillator tick primitive into cycle-3 track 02"
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "type": "memory_task",
+      "label": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+      "pageId": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "status/completed"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 13,
+      "bridgeScore": 0,
+      "isGodNode": true,
+      "surpriseReason": "degree 13",
+      "normLabel": "memory task: integrate spanda dual-oscillator tick primitive into cycle-3 track 02"
+    },
+    {
+      "id": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+      "type": "decision",
+      "label": "Rooting confirmed M1-0(0/1)/M1-1(1/0)/M1-3(Trika); Ananda separate not the lo...",
+      "pageId": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "decision"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 11,
+      "bridgeScore": 0,
+      "isGodNode": false,
+      "normLabel": "rooting confirmed m1-0(0/1)/m1-1(1/0)/m1-3(trika); ananda separate not the lo..."
+    },
+    {
+      "id": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+      "type": "decision",
+      "label": "LOCKED in-session 2026-07-04 (no out-of-session ratification): residency = C-...",
+      "pageId": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "decision"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 11,
+      "bridgeScore": 0,
+      "isGodNode": false,
+      "normLabel": "locked in-session 2026-07-04 (no out-of-session ratification): residency = c-..."
+    },
+    {
+      "id": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+      "type": "decision",
+      "label": "OPEN design questions from memo (non-blocking, for Architect): (1) codon adva...",
+      "pageId": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "decision"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 11,
+      "bridgeScore": 0,
+      "isGodNode": false,
+      "normLabel": "open design questions from memo (non-blocking, for architect): (1) codon adva..."
+    },
+    {
+      "id": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+      "type": "decision",
+      "label": "CODON ADVANCEMENT locked (Architect 2026-07-04): codon advances on the real q...",
+      "pageId": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "decision"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 11,
+      "bridgeScore": 0,
+      "isGodNode": false,
+      "normLabel": "codon advancement locked (architect 2026-07-04): codon advances on the real q..."
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "type": "memory_task",
+      "label": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri...",
+      "pageId": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "status/completed"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 13,
+      "bridgeScore": 0,
+      "isGodNode": true,
+      "surpriseReason": "degree 13",
+      "normLabel": "memory task: execute track 00 hardening p0 tranches t8 t9 t11 t14 t16 from 00-veri..."
+    },
+    {
+      "id": "decision:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha:decision:2026-07-06T12-37-17-167Z:1",
+      "type": "decision",
+      "label": "s1'.entity.promote_to_type / s1'.type.classify_c_layer / s1'.world.graduate a...",
+      "pageId": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "freshness": "fresh",
+      "confidence": 1,
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "tags": [
+        "agent-task",
+        "agent-memory",
+        "decision"
+      ],
+      "communityId": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "degree": 11,
+      "bridgeScore": 0,
+      "isGodNode": false,
+      "normLabel": "s1'.entity.promote_to_type / s1'.type.classify_c_layer / s1'.world.graduate a..."
+    }
+  ],
+  "edges": [
+    {
+      "id": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:produced_output:1",
+      "source": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ]
+    },
+    {
+      "id": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:uses_context:1",
+      "source": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ]
+    },
+    {
+      "id": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:uses_context:1",
+      "source": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int"
+      ]
+    },
+    {
+      "id": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:uses_context:2",
+      "source": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int"
+      ]
+    },
+    {
+      "id": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:produced_output:2",
+      "source": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke"
+      ]
+    },
+    {
+      "id": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:uses_context:2",
+      "source": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke"
+      ]
+    },
+    {
+      "id": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:produced_output:1",
+      "source": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke"
+      ]
+    },
+    {
+      "id": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:uses_context:1",
+      "source": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:produced_output:1",
+      "source": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:uses_context:1",
+      "source": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:produced_output:2",
+      "source": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:uses_context:2",
+      "source": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:produced_output:1",
+      "source": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:uses_context:1",
+      "source": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:produced_output:2",
+      "source": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:uses_context:2",
+      "source": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt->memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt:produced_output:3",
+      "source": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "target": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt->memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt:uses_context:3",
+      "source": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "target": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:uses_context:1",
+      "source": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:uses_context:2",
+      "source": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1:records_decision:1",
+      "source": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+      "relation": "records_decision",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 1,
+      "provenance": [
+        "2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2:records_decision:2",
+      "source": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+      "relation": "records_decision",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 1,
+      "provenance": [
+        "2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3:records_decision:3",
+      "source": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+      "relation": "records_decision",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 1,
+      "provenance": [
+        "2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4:records_decision:4",
+      "source": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+      "relation": "records_decision",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 1,
+      "provenance": [
+        "2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:produced_output:1",
+      "source": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:uses_context:1",
+      "source": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:produced_output:2",
+      "source": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:uses_context:2",
+      "source": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:produced_output:3",
+      "source": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02->memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:uses_context:3",
+      "source": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "target": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1:produced_output:9",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1:uses_context:9",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2:produced_output:10",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2:uses_context:10",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3:produced_output:11",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3:uses_context:11",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4:produced_output:12",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4:uses_context:12",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->decision:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha:decision:2026-07-06T12-37-17-167Z:1:records_decision:1",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "decision:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha:decision:2026-07-06T12-37-17-167Z:1",
+      "relation": "records_decision",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 1,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:produced_output:2",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon:uses_context:2",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:produced_output:1",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl:uses_context:1",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int:produced_output:3",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int:uses_context:3",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke:produced_output:4",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke:uses_context:4",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt:produced_output:5",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt:uses_context:5",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt:produced_output:6",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt:uses_context:6",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:produced_output:7",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:uses_context:7",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:produced_output:8",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "relation": "produced_output",
+      "status": "inferred",
+      "evidenceClass": "inferred",
+      "confidence": 0.68,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha->memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:uses_context:8",
+      "source": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "target": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "relation": "uses_context",
+      "status": "extracted",
+      "evidenceClass": "extracted",
+      "confidence": 0.9,
+      "provenance": [
+        "2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    }
+  ],
+  "hyperedges": [],
+  "communities": [
+    {
+      "id": "community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "label": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+      "nodeIds": [
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+        "decision:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha:decision:2026-07-06T12-37-17-167Z:1",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ]
+    }
+  ],
+  "sources": [],
+  "pages": [
+    {
+      "id": "output:12-fold-tick-spanda-kerykeion-temporality-substrate",
+      "path": "outputs/12-fold-tick-spanda-kerykeion-temporality-substrate.md",
+      "title": "12-fold tick spanda kerykeion temporality substrate",
+      "kind": "output",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 0.74,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-06-08T15:08:51.425Z",
+      "updatedAt": "2026-06-08T15:08:51.425Z",
+      "compiledFrom": [],
+      "managedBy": "system",
+      "origin": "query",
+      "question": "12-fold tick spanda kerykeion temporality substrate",
+      "outputFormat": "markdown",
+      "outputAssets": []
+    },
+    {
+      "id": "output:bioquaternion-graphiti-episodic-day-now-context",
+      "path": "outputs/bioquaternion-graphiti-episodic-day-now-context.md",
+      "title": "bioquaternion graphiti episodic day/now context",
+      "kind": "output",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 0.74,
+      "backlinks": [
+        "graph:report",
+        "dashboard:dashboards/source-guides",
+        "dashboard:dashboards/source-sessions"
+      ],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "graph:report",
+        "dashboard:dashboards/source-guides",
+        "dashboard:dashboards/source-sessions"
+      ],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-06-08T15:08:54.546Z",
+      "updatedAt": "2026-06-08T15:08:54.546Z",
+      "compiledFrom": [],
+      "managedBy": "system",
+      "origin": "query",
+      "question": "bioquaternion graphiti episodic day/now context",
+      "outputFormat": "markdown",
+      "outputAssets": []
+    },
+    {
+      "id": "output:mahamaya-60x6-meta-lens-16-1-lenses",
+      "path": "outputs/mahamaya-60x6-meta-lens-16-1-lenses.md",
+      "title": "mahamaya 60x6 meta lens 16+1 lenses",
+      "kind": "output",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 0.74,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-06-08T15:08:52.843Z",
+      "updatedAt": "2026-06-08T15:08:52.843Z",
+      "compiledFrom": [],
+      "managedBy": "system",
+      "origin": "query",
+      "question": "mahamaya 60x6 meta lens 16+1 lenses",
+      "outputFormat": "markdown",
+      "outputAssets": []
+    },
+    {
+      "id": "output:major-arcana-codon-chromosome-transcription-m3",
+      "path": "outputs/major-arcana-codon-chromosome-transcription-m3.md",
+      "title": "Major Arcana codon chromosome transcription m3",
+      "kind": "output",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 0.74,
+      "backlinks": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "relatedSourceIds": [],
+      "createdAt": "2026-06-13T08:43:27.719Z",
+      "updatedAt": "2026-06-13T08:43:27.719Z",
+      "compiledFrom": [],
+      "managedBy": "system",
+      "origin": "query",
+      "question": "Major Arcana codon chromosome transcription m3",
+      "outputFormat": "markdown",
+      "outputAssets": []
+    },
+    {
+      "id": "output:pratibimba-app-phase-1-m-whole-derivation",
+      "path": "outputs/pratibimba-app-phase-1-m-whole-derivation.md",
+      "title": "pratibimba-app phase 1 M' whole derivation",
+      "kind": "output",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 0.74,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-07-02T11:45:49.709Z",
+      "updatedAt": "2026-07-02T11:45:49.709Z",
+      "compiledFrom": [],
+      "managedBy": "system",
+      "origin": "query",
+      "question": "pratibimba-app phase 1 M' whole derivation",
+      "outputFormat": "markdown",
+      "outputAssets": []
+    },
+    {
+      "id": "output:quaternionic-computational-core-truth-ledger",
+      "path": "outputs/quaternionic-computational-core-truth-ledger.md",
+      "title": "quaternionic computational core truth ledger",
+      "kind": "output",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke"
+      ],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 0.74,
+      "backlinks": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "source:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-07-06T14:18:21.529Z",
+      "updatedAt": "2026-07-06T14:18:21.529Z",
+      "compiledFrom": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "managedBy": "system",
+      "origin": "query",
+      "question": "quaternionic computational core truth ledger",
+      "outputFormat": "markdown",
+      "outputAssets": []
+    },
+    {
+      "id": "output:quaternionic-computational-core-truth-ledger-kernel-tests",
+      "path": "outputs/quaternionic-computational-core-truth-ledger-kernel-tests.md",
+      "title": "quaternionic computational core truth ledger kernel tests",
+      "kind": "output",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "decision:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha:decision:2026-07-06T12-37-17-167Z:1"
+      ],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 0.74,
+      "backlinks": [
+        "output:quaternionic-computational-core-truth-ledger",
+        "graph:share-card",
+        "graph:report",
+        "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "source:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "output:quaternionic-computational-core-truth-ledger",
+        "graph:share-card",
+        "graph:report",
+        "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "decision:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha:decision:2026-07-06T12-37-17-167Z:1"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-07-06T14:20:25.246Z",
+      "updatedAt": "2026-07-06T14:20:25.246Z",
+      "compiledFrom": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "managedBy": "system",
+      "origin": "query",
+      "question": "quaternionic computational core truth ledger kernel tests",
+      "outputFormat": "markdown",
+      "outputAssets": []
+    },
+    {
+      "id": "output:rotational-state-protocol-minor-arcana-37-27-split",
+      "path": "outputs/rotational-state-protocol-minor-arcana-37-27-split.md",
+      "title": "rotational state protocol minor arcana 37 27 split",
+      "kind": "output",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 0.74,
+      "backlinks": [
+        "output:major-arcana-codon-chromosome-transcription-m3"
+      ],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "output:major-arcana-codon-chromosome-transcription-m3"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "relatedSourceIds": [],
+      "createdAt": "2026-06-13T08:43:29.672Z",
+      "updatedAt": "2026-06-13T08:43:29.672Z",
+      "compiledFrom": [],
+      "managedBy": "system",
+      "origin": "query",
+      "question": "rotational state protocol minor arcana 37 27 split",
+      "outputFormat": "markdown",
+      "outputAssets": []
+    },
+    {
+      "id": "output:track-00-verification-harness-hardening-t8-backend-gate",
+      "path": "outputs/track-00-verification-harness-hardening-t8-backend-gate.md",
+      "title": "track 00 verification harness hardening T8 backend gate",
+      "kind": "output",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 0.74,
+      "backlinks": [
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "relatedSourceIds": [],
+      "createdAt": "2026-07-04T17:16:48.521Z",
+      "updatedAt": "2026-07-04T17:16:48.521Z",
+      "compiledFrom": [],
+      "managedBy": "system",
+      "origin": "query",
+      "question": "track 00 verification harness hardening T8 backend gate",
+      "outputFormat": "markdown",
+      "outputAssets": []
+    },
+    {
+      "id": "output:vak-execution-language-lattice-syntax-musical-system-anuttara-para-vak-notationa",
+      "path": "outputs/vak-execution-language-lattice-syntax-musical-system-anuttara-para-vak-notationa.md",
+      "title": "VAK execution language lattice syntax musical system Anuttara para vak notational reality",
+      "kind": "output",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 0.74,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-06-12T21:54:58.876Z",
+      "updatedAt": "2026-06-12T21:54:58.876Z",
+      "compiledFrom": [],
+      "managedBy": "system",
+      "origin": "query",
+      "question": "VAK execution language lattice syntax musical system Anuttara para vak notational reality",
+      "outputFormat": "markdown",
+      "outputAssets": []
+    },
+    {
+      "id": "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+      "path": "memory/tasks/2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon.md",
+      "title": "Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+      "kind": "memory_task",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "freshness": "fresh",
+      "status": "completed",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "output:12-fold-tick-spanda-kerykeion-temporality-substrate",
+        "output:bioquaternion-graphiti-episodic-day-now-context",
+        "graph:report",
+        "graph:share-card",
+        "dashboard:dashboards/source-guides",
+        "dashboard:dashboards/source-sessions"
+      ],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-06-08T19:57:21.089Z",
+      "updatedAt": "2026-06-08T19:57:34.921Z",
+      "compiledFrom": [
+        "2026-06-08T19-57-21-093Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+      "path": "memory/tasks/2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl.md",
+      "title": "Memory Task: Synthesize VAK–Anuttara interpenetration (para vak / notational reali...",
+      "kind": "memory_task",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "freshness": "fresh",
+      "status": "completed",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "output:vak-execution-language-lattice-syntax-musical-system-anuttara-para-vak-notationa",
+        "output:bioquaternion-graphiti-episodic-day-now-context",
+        "graph:report",
+        "graph:share-card",
+        "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+        "dashboard:dashboards/research-map",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "relatedSourceIds": [],
+      "createdAt": "2026-06-12T22:03:22.757Z",
+      "updatedAt": "2026-06-12T22:03:40.982Z",
+      "compiledFrom": [
+        "2026-06-12T22-03-22-765Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+      "path": "memory/tasks/2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int.md",
+      "title": "Memory Task: M' whole-derivation session 2026-07-02: Phase 0 full-shape spec reads...",
+      "kind": "memory_task",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "freshness": "stale",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "output:pratibimba-app-phase-1-m-whole-derivation",
+        "output:rotational-state-protocol-minor-arcana-37-27-split",
+        "output:vak-execution-language-lattice-syntax-musical-system-anuttara-para-vak-notationa",
+        "output:major-arcana-codon-chromosome-transcription-m3",
+        "graph:share-card",
+        "dashboard:dashboards/reading-log",
+        "dashboard:dashboards/index",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-07-02T11:47:04.267Z",
+      "updatedAt": "2026-07-02T12:33:27.332Z",
+      "compiledFrom": [
+        "2026-07-02T11-47-04-270Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+      "path": "memory/tasks/2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke.md",
+      "title": "Memory Task: S6.3 bell kernel contracts: ModalResonatorProfile + M123ChimeFrame la...",
+      "kind": "memory_task",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "freshness": "fresh",
+      "status": "completed",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "output:pratibimba-app-phase-1-m-whole-derivation",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-07-02T15:55:19.679Z",
+      "updatedAt": "2026-07-02T16:03:06.500Z",
+      "compiledFrom": [
+        "2026-07-02T15-55-19-688Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "path": "memory/tasks/2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt.md",
+      "title": "Memory Task: Author paramasiva tick canon-rooting session prompt",
+      "kind": "memory_task",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "freshness": "fresh",
+      "status": "completed",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "output:12-fold-tick-spanda-kerykeion-temporality-substrate",
+        "output:major-arcana-codon-chromosome-transcription-m3",
+        "output:rotational-state-protocol-minor-arcana-37-27-split",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-07-04T08:58:14.824Z",
+      "updatedAt": "2026-07-04T08:58:56.465Z",
+      "compiledFrom": [
+        "2026-07-04T08-58-14-830Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+      "path": "memory/tasks/2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt.md",
+      "title": "Memory Task: Author paramasiva tick canon-rooting session prompt",
+      "kind": "memory_task",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ],
+      "freshness": "fresh",
+      "status": "completed",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "output:12-fold-tick-spanda-kerykeion-temporality-substrate",
+        "output:major-arcana-codon-chromosome-transcription-m3",
+        "output:rotational-state-protocol-minor-arcana-37-27-split",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-07-04T08:58:24.650Z",
+      "updatedAt": "2026-07-04T08:58:47.363Z",
+      "compiledFrom": [
+        "2026-07-04T08-58-24-652Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "path": "memory/tasks/2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02.md",
+      "title": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+      "kind": "memory_task",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "freshness": "stale",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "output:12-fold-tick-spanda-kerykeion-temporality-substrate",
+        "output:major-arcana-codon-chromosome-transcription-m3",
+        "output:rotational-state-protocol-minor-arcana-37-27-split",
+        "graph:share-card",
+        "graph:report",
+        "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+        "dashboard:dashboards/research-map",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-07-04T09:44:30.522Z",
+      "updatedAt": "2026-07-04T09:44:30.522Z",
+      "compiledFrom": [
+        "2026-07-04T09-44-30-530Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+      "path": "memory/tasks/2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02.md",
+      "title": "Memory Task: Integrate Spanda dual-oscillator tick primitive into cycle-3 Track 02",
+      "kind": "memory_task",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ],
+      "freshness": "fresh",
+      "status": "completed",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "output:12-fold-tick-spanda-kerykeion-temporality-substrate",
+        "output:major-arcana-codon-chromosome-transcription-m3",
+        "output:rotational-state-protocol-minor-arcana-37-27-split",
+        "graph:share-card",
+        "graph:report",
+        "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+        "dashboard:dashboards/research-map",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-07-04T09:44:35.853Z",
+      "updatedAt": "2026-07-04T10:29:56.251Z",
+      "compiledFrom": [
+        "2026-07-04T09-44-35-854Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+      "path": "memory/tasks/2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha.md",
+      "title": "Memory Task: Execute Track 00 hardening P0 tranches T8 T9 T11 T14 T16 from 00-veri...",
+      "kind": "memory_task",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "decision:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha:decision:2026-07-06T12-37-17-167Z:1",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4"
+      ],
+      "freshness": "fresh",
+      "status": "completed",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "output:track-00-verification-harness-hardening-t8-backend-gate",
+        "output:rotational-state-protocol-minor-arcana-37-27-split",
+        "output:major-arcana-codon-chromosome-transcription-m3",
+        "output:bioquaternion-graphiti-episodic-day-now-context",
+        "graph:report",
+        "graph:share-card",
+        "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "dashboard:dashboards/research-map",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-07-04T17:17:30.090Z",
+      "updatedAt": "2026-07-06T13:04:31.709Z",
+      "compiledFrom": [
+        "2026-07-04T17-17-30-093Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "graph:report",
+      "path": "graph/report.md",
+      "title": "Graph Report",
+      "kind": "graph_report",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4"
+      ],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-06-08T15:08:51.252Z",
+      "updatedAt": "2026-07-06T14:20:25.278Z",
+      "compiledFrom": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "graph:share-card",
+      "path": "graph/share-card.md",
+      "title": "Share Card",
+      "kind": "graph_report",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ],
+      "relatedNodeIds": [
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-06-08T15:08:51.254Z",
+      "updatedAt": "2026-07-06T14:20:25.280Z",
+      "compiledFrom": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "graph:community:memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1",
+      "path": "graph/communities/memory-task-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-wr-1.md",
+      "title": "Community: Memory Task: Cycle-3 integration: Fibonacci Ground Level 0 temporal substrate — wr...",
+      "kind": "community_summary",
+      "sourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "projectIds": [],
+      "nodeIds": [
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+        "decision:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha:decision:2026-07-06T12-37-17-167Z:1",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [
+        "graph:report"
+      ],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [
+        "graph:report",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02"
+      ],
+      "relatedNodeIds": [
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T09-45-10-303Z:1",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-03-40-875Z:2",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-13-18-704Z:3",
+        "decision:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02:decision:2026-07-04T10-29-56-251Z:4",
+        "decision:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha:decision:2026-07-06T12-37-17-167Z:1",
+        "memory:2026-06-08T19-57-21-089Z-cycle-3-integration-fibonacci-ground-level-0-temporal-substrate-written-35-fibon",
+        "memory:2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl",
+        "memory:2026-07-02T11-47-04-267Z-m-whole-derivation-session-2026-07-02-phase-0-full-shape-spec-reads-m-system-int",
+        "memory:2026-07-02T15-55-19-679Z-s6-3-bell-kernel-contracts-modalresonatorprofile-m123chimeframe-landed-across-ke",
+        "memory:2026-07-04T08-58-14-824Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T08-58-24-650Z-author-paramasiva-tick-canon-rooting-session-prompt",
+        "memory:2026-07-04T09-44-30-522Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T09-44-35-853Z-integrate-spanda-dual-oscillator-tick-primitive-into-cycle-3-track-02",
+        "memory:2026-07-04T17-17-30-090Z-execute-track-00-hardening-p0-tranches-t8-t9-t11-t14-t16-from-00-verification-ha"
+      ],
+      "relatedSourceIds": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "createdAt": "2026-06-12T21:54:58.915Z",
+      "updatedAt": "2026-07-06T14:18:21.566Z",
+      "compiledFrom": [
+        "2026-06-12T22-03-22-757Z-synthesize-vak-anuttara-interpenetration-para-vak-notational-reality-as-final-pl"
+      ],
+      "managedBy": "system"
+    },
+    {
+      "id": "dashboard:dashboards/index",
+      "path": "dashboards/index.md",
+      "title": "Dashboards",
+      "kind": "index",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-07-06T14:20:25.282Z",
+      "updatedAt": "2026-07-06T14:20:25.282Z",
+      "compiledFrom": [],
+      "managedBy": "system"
+    },
+    {
+      "id": "dashboard:dashboards/recent-sources",
+      "path": "dashboards/recent-sources.md",
+      "title": "Recent Sources",
+      "kind": "index",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-07-06T14:20:25.283Z",
+      "updatedAt": "2026-07-06T14:20:25.283Z",
+      "compiledFrom": [],
+      "managedBy": "system"
+    },
+    {
+      "id": "dashboard:dashboards/reading-log",
+      "path": "dashboards/reading-log.md",
+      "title": "Reading Log",
+      "kind": "index",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-07-06T14:20:25.283Z",
+      "updatedAt": "2026-07-06T14:20:25.283Z",
+      "compiledFrom": [],
+      "managedBy": "system"
+    },
+    {
+      "id": "dashboard:dashboards/timeline",
+      "path": "dashboards/timeline.md",
+      "title": "Timeline",
+      "kind": "index",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-07-06T14:20:25.284Z",
+      "updatedAt": "2026-07-06T14:20:25.284Z",
+      "compiledFrom": [],
+      "managedBy": "system"
+    },
+    {
+      "id": "dashboard:dashboards/source-sessions",
+      "path": "dashboards/source-sessions.md",
+      "title": "Source Sessions",
+      "kind": "index",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-07-06T14:20:25.284Z",
+      "updatedAt": "2026-07-06T14:20:25.284Z",
+      "compiledFrom": [],
+      "managedBy": "system"
+    },
+    {
+      "id": "dashboard:dashboards/source-guides",
+      "path": "dashboards/source-guides.md",
+      "title": "Source Guides",
+      "kind": "index",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-07-06T14:20:25.285Z",
+      "updatedAt": "2026-07-06T14:20:25.285Z",
+      "compiledFrom": [],
+      "managedBy": "system"
+    },
+    {
+      "id": "dashboard:dashboards/research-map",
+      "path": "dashboards/research-map.md",
+      "title": "Research Map",
+      "kind": "index",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-07-06T14:20:25.285Z",
+      "updatedAt": "2026-07-06T14:20:25.285Z",
+      "compiledFrom": [],
+      "managedBy": "system"
+    },
+    {
+      "id": "dashboard:dashboards/contradictions",
+      "path": "dashboards/contradictions.md",
+      "title": "Contradictions",
+      "kind": "index",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-07-06T14:20:25.286Z",
+      "updatedAt": "2026-07-06T14:20:25.286Z",
+      "compiledFrom": [],
+      "managedBy": "system"
+    },
+    {
+      "id": "dashboard:dashboards/open-questions",
+      "path": "dashboards/open-questions.md",
+      "title": "Open Questions",
+      "kind": "index",
+      "sourceIds": [],
+      "projectIds": [],
+      "nodeIds": [],
+      "freshness": "fresh",
+      "status": "active",
+      "confidence": 1,
+      "backlinks": [],
+      "schemaHash": "874431dbbfdec0b254a4aa1bf002900574c9b485735a883690c2becb5f717720",
+      "sourceHashes": {},
+      "sourceSemanticHashes": {},
+      "relatedPageIds": [],
+      "relatedNodeIds": [],
+      "relatedSourceIds": [],
+      "createdAt": "2026-07-06T14:20:25.286Z",
+      "updatedAt": "2026-07-06T14:20:25.286Z",
+      "compiledFrom": [],
+      "managedBy": "system"
+    }
+  ]
+}

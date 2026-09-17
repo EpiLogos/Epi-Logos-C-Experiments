@@ -1,0 +1,35 @@
+{
+  "runId": "20260610T224707Z-27-T27.10",
+  "taskId": "27.T27.10",
+  "startedAt": "2026-06-10T22:47:07.637Z",
+  "owner": "codex-m-dev-27-t27-10",
+  "leaseExpiresAt": "2026-06-11T00:47:07.637Z",
+  "worktree": null,
+  "task": {
+    "id": "27.T27.10",
+    "trackId": "27",
+    "tranche": "T27.10",
+    "title": "ACR substrate → OmniPanel content model migration map + execution",
+    "effort": null,
+    "file": "27-omnipanel-tabs-deep.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/27-omnipanel-tabs-deep.md",
+    "dependsOn": [
+      "27.T27.1"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/omnipanel-shell/src/common/ACR-MIGRATION-MAP.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

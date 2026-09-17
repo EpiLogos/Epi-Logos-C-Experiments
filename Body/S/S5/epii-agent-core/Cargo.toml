@@ -8,6 +8,11 @@ epi-s5-epii-autoresearch-core = { path = "../epii-autoresearch-core" }
 epi-s5-epii-review-core = { path = "../epii-review-core" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+# S5 -> S-root is DOWNWARD and legal. This is the method-handler port S5
+# implements so S3 can route `s5'.epii.*` here without importing S5's
+# implementation (Track 53 T53.01/T53.08).
+epi-kernel-contract = { path = "../../epi-kernel-contract" }
 
 [dev-dependencies]
 portal-core = { path = "../../S0/portal-core" }
+tokio = { version = "1", features = ["macros", "rt"] }

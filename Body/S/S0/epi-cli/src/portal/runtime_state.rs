@@ -33,6 +33,13 @@ pub struct PortalTemporalSurface {
     pub kairos_source: String,
     pub redis_hydrated: bool,
     pub redis_session_now_key: Option<String>,
+    pub terminal_backed: bool,
+    pub terminal_provider: Option<String>,
+    pub terminal_status: Option<String>,
+    pub terminal_lease_expires_at_ms: Option<u128>,
+    pub terminal_capture_policy_mode: Option<String>,
+    pub terminal_capture_handle_ref: Option<String>,
+    pub terminal_metadata_key: Option<String>,
     pub spacetimedb_projection_source: Option<String>,
     pub spacetimedb_projection_table: Option<String>,
     pub spacetimedb_kairos_projection_table: Option<String>,
@@ -106,6 +113,13 @@ impl PortalTemporalSurface {
             kairos_source: "nara.kairos.current".to_string(),
             redis_hydrated: false,
             redis_session_now_key: None,
+            terminal_backed: false,
+            terminal_provider: None,
+            terminal_status: None,
+            terminal_lease_expires_at_ms: None,
+            terminal_capture_policy_mode: None,
+            terminal_capture_handle_ref: None,
+            terminal_metadata_key: None,
             spacetimedb_projection_source: None,
             spacetimedb_projection_table: None,
             spacetimedb_kairos_projection_table: None,
@@ -224,6 +238,17 @@ impl PortalTemporalSurface {
                 .pointer("/redis/sessionNowKey")
                 .and_then(serde_json::Value::as_str)
                 .map(ToOwned::to_owned),
+            terminal_backed: terminal_backed(value),
+            terminal_provider: terminal_string(value, "provider"),
+            terminal_status: terminal_string(value, "status"),
+            terminal_lease_expires_at_ms: terminal_u128(value, "leaseExpiresAtMs"),
+            terminal_capture_policy_mode: terminal_capture_policy_mode(value),
+            terminal_capture_handle_ref: terminal_string(value, "captureHandleRef"),
+            terminal_metadata_key: value
+                .pointer("/redis/terminalMetadataKey")
+                .or_else(|| value.pointer("/terminal/redisMetadataKey"))
+                .and_then(serde_json::Value::as_str)
+                .map(ToOwned::to_owned),
             spacetimedb_projection_source: value
                 .pointer("/spacetimedb/projectionSource")
                 .and_then(serde_json::Value::as_str)
@@ -286,6 +311,43 @@ fn gateway_value_string(value: Option<&serde_json::Value>, fallback: &str) -> St
             .unwrap_or_else(|| fallback.to_string()),
         _ => fallback.to_string(),
     }
+}
+
+fn terminal_value<'a>(value: &'a serde_json::Value, field: &str) -> Option<&'a serde_json::Value> {
+    value
+        .pointer(&format!("/terminal/{field}"))
+        .or_else(|| value.pointer(&format!("/globalTemporal/terminal/{field}")))
+}
+
+fn terminal_string(value: &serde_json::Value, field: &str) -> Option<String> {
+    terminal_value(value, field)
+        .and_then(serde_json::Value::as_str)
+        .filter(|value| !value.is_empty())
+        .map(ToOwned::to_owned)
+}
+
+fn terminal_u128(value: &serde_json::Value, field: &str) -> Option<u128> {
+    terminal_value(value, field).and_then(|value| {
+        value
+            .as_u64()
+            .map(u128::from)
+            .or_else(|| value.as_str().and_then(|raw| raw.parse::<u128>().ok()))
+    })
+}
+
+fn terminal_backed(value: &serde_json::Value) -> bool {
+    terminal_value(value, "terminalBacked")
+        .and_then(serde_json::Value::as_bool)
+        .unwrap_or_else(|| terminal_string(value, "status").is_some())
+}
+
+fn terminal_capture_policy_mode(value: &serde_json::Value) -> Option<String> {
+    value
+        .pointer("/terminal/capturePolicy/mode")
+        .or_else(|| value.pointer("/globalTemporal/terminal/capturePolicy/mode"))
+        .and_then(serde_json::Value::as_str)
+        .filter(|value| !value.is_empty())
+        .map(ToOwned::to_owned)
 }
 
 pub type SharedPortalTemporalSurface = Arc<Mutex<PortalTemporalSurface>>;
@@ -561,9 +623,10 @@ mod tests {
         assert_eq!(temporal.source, PortalTemporalSource::GatewayContext);
         assert_eq!(temporal.day_id.as_deref(), Some("07-05-2026"));
         assert_eq!(temporal.session_id.as_deref(), Some("session-main"));
+        // Key shape is owned by gateway-contract TemporalKeys::session_now_key (cache:hot: prefix).
         assert_eq!(
             temporal.redis_session_now_key.as_deref(),
-            Some("s3:gateway:temporal:session:session-main:now:md")
+            Some("cache:hot:s3:gateway:temporal:session:session-main:now:md")
         );
     }
 

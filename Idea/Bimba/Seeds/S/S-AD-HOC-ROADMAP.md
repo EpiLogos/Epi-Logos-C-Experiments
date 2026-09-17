@@ -128,7 +128,7 @@ Docs still needing reconciliation after the commit gate:
 - [[FLOW 2026 04 25 TS INTERFACE DEFINITIONS]] - shared typed contract.
 - [[FLOW 2026 05 06 SMART ENV HEN LINK CANDIDATE POOL]] - read-only Smart Env suggestion seam for [[Hen]] wikilink selection.
 - [[FLOW 2026 05 07 RUST DEPENDENCY COMPATIBILITY]] - Rust 1.89 compatibility override, portal image feature isolation, and Redis future-incompat note.
-- `Idea/Bimba/Seeds/M/M0'/epi-logos-kernel-spec.md` (previously `docs/epi-logos-kernel/`) - foundational kernel spec: bioquaternionic JEPA-EBM operator, matheme, Paramaśiva's tick.
+- `Idea/Bimba/Seeds/M/epi-logos-kernel-spec.md` (previously `docs/epi-logos-kernel/`) - foundational kernel spec: bioquaternionic JEPA-EBM operator, matheme, Paramaśiva's tick.
 - `Idea/Bimba/Seeds/M/M4'/mental-pole-mechanics.md` - mental-pole intelligence: LLM/EBM/Verifier bootstrap, 72-fold resonance vectors.
 - `Idea/Bimba/Seeds/M/M1'/physical-pole-stack-architecture.md` - physical-pole engine: torus, solar-chakral, codon-clock, Tauri v2 implementation.
 - `Idea/Bimba/Seeds/S/S4/S4'/Legacy/specs/2026-05-18-bimba-pointer-web-and-integration-spec.md` - active S2/S5 coordinate-topology input for the 36-fold pointer web, deep import, pointer refresh, and embeddings work that must be joined to kernel resonance and qvdata rather than left as a graph-only concern.

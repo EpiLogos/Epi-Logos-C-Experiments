@@ -1,0 +1,1904 @@
+{
+  "epilogos": {
+    "colour": {
+      "family": {
+        "p": {
+          "0": {
+            "$value": {
+              "light": "#f8fafc",
+              "dark": "#f2f4f7",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "P-tier foundation-neutral grade 0 hue for coordinate family P and archetype-position 0. Derivation: P-tier foundation-neutral × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "P-tier foundation-neutral × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "p",
+                "grade": 0
+              }
+            }
+          },
+          "1": {
+            "$value": {
+              "light": "#e5e7eb",
+              "dark": "#d8dee6",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "P-tier foundation-neutral grade 1 hue for coordinate family P and archetype-position 1. Derivation: P-tier foundation-neutral × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "P-tier foundation-neutral × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "p",
+                "grade": 1
+              }
+            }
+          },
+          "2": {
+            "$value": {
+              "light": "#d1d5db",
+              "dark": "#bec8d4",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "P-tier foundation-neutral grade 2 hue for coordinate family P and archetype-position 2. Derivation: P-tier foundation-neutral × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "P-tier foundation-neutral × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "p",
+                "grade": 2
+              }
+            }
+          },
+          "3": {
+            "$value": {
+              "light": "#9ca3af",
+              "dark": "#94a3b8",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "P-tier foundation-neutral grade 3 hue for coordinate family P and archetype-position 3. Derivation: P-tier foundation-neutral × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "P-tier foundation-neutral × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "p",
+                "grade": 3
+              }
+            }
+          },
+          "4": {
+            "$value": {
+              "light": "#6b645c",
+              "dark": "#7a7268",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#ffffff"
+              }
+            },
+            "$type": "color",
+            "$description": "P-tier foundation-neutral grade 4 hue for coordinate family P and archetype-position 4. Derivation: P-tier foundation-neutral × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "P-tier foundation-neutral × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "p",
+                "grade": 4
+              }
+            }
+          },
+          "5": {
+            "$value": {
+              "light": "#3f3a34",
+              "dark": "#5a5147",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#ffffff"
+              }
+            },
+            "$type": "color",
+            "$description": "P-tier foundation-neutral grade 5 hue for coordinate family P and archetype-position 5. Derivation: P-tier foundation-neutral × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "P-tier foundation-neutral × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "p",
+                "grade": 5
+              }
+            }
+          }
+        },
+        "s": {
+          "0": {
+            "$value": {
+              "light": "#e8eef6",
+              "dark": "#eef4fb",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "S-tier substrate-slate grade 0 hue for coordinate family S and archetype-position 0. Derivation: S-tier substrate-slate × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "S-tier substrate-slate × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "s",
+                "grade": 0
+              }
+            }
+          },
+          "1": {
+            "$value": {
+              "light": "#c7d3e1",
+              "dark": "#d8e3ef",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "S-tier substrate-slate grade 1 hue for coordinate family S and archetype-position 1. Derivation: S-tier substrate-slate × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "S-tier substrate-slate × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "s",
+                "grade": 1
+              }
+            }
+          },
+          "2": {
+            "$value": {
+              "light": "#9fb2c8",
+              "dark": "#bfd0df",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "S-tier substrate-slate grade 2 hue for coordinate family S and archetype-position 2. Derivation: S-tier substrate-slate × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "S-tier substrate-slate × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "s",
+                "grade": 2
+              }
+            }
+          },
+          "3": {
+            "$value": {
+              "light": "#7891ad",
+              "dark": "#9eb5c9",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "S-tier substrate-slate grade 3 hue for coordinate family S and archetype-position 3. Derivation: S-tier substrate-slate × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "S-tier substrate-slate × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "s",
+                "grade": 3
+              }
+            }
+          },
+          "4": {
+            "$value": {
+              "light": "#5e768f",
+              "dark": "#7f9ab2",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "S-tier substrate-slate grade 4 hue for coordinate family S and archetype-position 4. Derivation: S-tier substrate-slate × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "S-tier substrate-slate × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "s",
+                "grade": 4
+              }
+            }
+          },
+          "5": {
+            "$value": {
+              "light": "#43566d",
+              "dark": "#637d96",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "S-tier substrate-slate grade 5 hue for coordinate family S and archetype-position 5. Derivation: S-tier substrate-slate × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "S-tier substrate-slate × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "s",
+                "grade": 5
+              }
+            }
+          }
+        },
+        "t": {
+          "0": {
+            "$value": {
+              "light": "#fff7e6",
+              "dark": "#fff3d2",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "T-tier thought-parchment grade 0 hue for coordinate family T and archetype-position 0. Derivation: T-tier thought-parchment × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "T-tier thought-parchment × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "t",
+                "grade": 0
+              }
+            }
+          },
+          "1": {
+            "$value": {
+              "light": "#f4e7cc",
+              "dark": "#efdba9",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "T-tier thought-parchment grade 1 hue for coordinate family T and archetype-position 1. Derivation: T-tier thought-parchment × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "T-tier thought-parchment × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "t",
+                "grade": 1
+              }
+            }
+          },
+          "2": {
+            "$value": {
+              "light": "#e5d1a9",
+              "dark": "#d8bd82",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "T-tier thought-parchment grade 2 hue for coordinate family T and archetype-position 2. Derivation: T-tier thought-parchment × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "T-tier thought-parchment × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "t",
+                "grade": 2
+              }
+            }
+          },
+          "3": {
+            "$value": {
+              "light": "#d2b983",
+              "dark": "#bf9f62",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "T-tier thought-parchment grade 3 hue for coordinate family T and archetype-position 3. Derivation: T-tier thought-parchment × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "T-tier thought-parchment × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "t",
+                "grade": 3
+              }
+            }
+          },
+          "4": {
+            "$value": {
+              "light": "#b69760",
+              "dark": "#a48147",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "T-tier thought-parchment grade 4 hue for coordinate family T and archetype-position 4. Derivation: T-tier thought-parchment × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "T-tier thought-parchment × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "t",
+                "grade": 4
+              }
+            }
+          },
+          "5": {
+            "$value": {
+              "light": "#8d7146",
+              "dark": "#80653a",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#ffffff"
+              }
+            },
+            "$type": "color",
+            "$description": "T-tier thought-parchment grade 5 hue for coordinate family T and archetype-position 5. Derivation: T-tier thought-parchment × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "T-tier thought-parchment × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "t",
+                "grade": 5
+              }
+            }
+          }
+        },
+        "m": {
+          "0": {
+            "$value": {
+              "light": "#5a73a8",
+              "dark": "#8a9bbd",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#000000"
+              },
+              "nara-light": "#6579a0",
+              "nara-dark": "#8998b6",
+              "nara-glass": "#7182aa"
+            },
+            "$type": "color",
+            "$description": "M-tier subsystem-saturated grade 0 hue for coordinate family M and archetype-position 0. Derivation: M-tier subsystem-saturated × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "M-tier subsystem-saturated × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "m",
+                "grade": 0
+              }
+            }
+          },
+          "1": {
+            "$value": {
+              "light": "#d4a14a",
+              "dark": "#e0b366",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              },
+              "nara-light": "#cf9f55",
+              "nara-dark": "#d9ad68",
+              "nara-glass": "#d8aa63"
+            },
+            "$type": "color",
+            "$description": "M-tier subsystem-saturated grade 1 hue for coordinate family M and archetype-position 1. Derivation: M-tier subsystem-saturated × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "M-tier subsystem-saturated × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "m",
+                "grade": 1
+              }
+            }
+          },
+          "2": {
+            "$value": {
+              "light": "#7d4f9e",
+              "dark": "#a783c4",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#000000"
+              },
+              "nara-light": "#85609d",
+              "nara-dark": "#a07ab7",
+              "nara-glass": "#8e6dae"
+            },
+            "$type": "color",
+            "$description": "M-tier subsystem-saturated grade 2 hue for coordinate family M and archetype-position 2. Derivation: M-tier subsystem-saturated × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "M-tier subsystem-saturated × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "m",
+                "grade": 2
+              }
+            }
+          },
+          "3": {
+            "$value": {
+              "light": "#d4a574",
+              "dark": "#e0b67e",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              },
+              "nara-light": "#d1a36f",
+              "nara-dark": "#ddb27e",
+              "nara-glass": "#dbb17c"
+            },
+            "$type": "color",
+            "$description": "M-tier subsystem-saturated grade 3 hue for coordinate family M and archetype-position 3. Derivation: M-tier subsystem-saturated × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "M-tier subsystem-saturated × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "m",
+                "grade": 3
+              }
+            }
+          },
+          "4": {
+            "$value": {
+              "light": "#8a7355",
+              "dark": "#a88c65",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              },
+              "nara-light": "#95795a",
+              "nara-dark": "#a88a63",
+              "nara-glass": "#9d8060"
+            },
+            "$type": "color",
+            "$description": "M-tier subsystem-saturated grade 4 hue for coordinate family M and archetype-position 4. Derivation: M-tier subsystem-saturated × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "M-tier subsystem-saturated × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "m",
+                "grade": 4
+              }
+            }
+          },
+          "5": {
+            "$value": {
+              "light": "#d9a04f",
+              "dark": "#e6b86d",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              },
+              "nara-light": "#d5a45e",
+              "nara-dark": "#dfb675",
+              "nara-glass": "#ddb36f"
+            },
+            "$type": "color",
+            "$description": "M-tier subsystem-saturated grade 5 hue for coordinate family M and archetype-position 5. Derivation: M-tier subsystem-saturated × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "M-tier subsystem-saturated × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "m",
+                "grade": 5
+              }
+            }
+          }
+        },
+        "l": {
+          "0": {
+            "$value": {
+              "light": "#edf6fb",
+              "dark": "#e6f1f7",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "L-tier epistemic-mist grade 0 hue for coordinate family L and archetype-position 0. Derivation: L-tier epistemic-mist × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "L-tier epistemic-mist × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "l",
+                "grade": 0
+              }
+            }
+          },
+          "1": {
+            "$value": {
+              "light": "#d6e8f2",
+              "dark": "#cfe0ec",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "L-tier epistemic-mist grade 1 hue for coordinate family L and archetype-position 1. Derivation: L-tier epistemic-mist × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "L-tier epistemic-mist × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "l",
+                "grade": 1
+              }
+            }
+          },
+          "2": {
+            "$value": {
+              "light": "#bdd7e6",
+              "dark": "#adc7d8",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "L-tier epistemic-mist grade 2 hue for coordinate family L and archetype-position 2. Derivation: L-tier epistemic-mist × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "L-tier epistemic-mist × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "l",
+                "grade": 2
+              }
+            }
+          },
+          "3": {
+            "$value": {
+              "light": "#9fbdd0",
+              "dark": "#8faec3",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "L-tier epistemic-mist grade 3 hue for coordinate family L and archetype-position 3. Derivation: L-tier epistemic-mist × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "L-tier epistemic-mist × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "l",
+                "grade": 3
+              }
+            }
+          },
+          "4": {
+            "$value": {
+              "light": "#789caf",
+              "dark": "#7193aa",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "L-tier epistemic-mist grade 4 hue for coordinate family L and archetype-position 4. Derivation: L-tier epistemic-mist × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "L-tier epistemic-mist × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "l",
+                "grade": 4
+              }
+            }
+          },
+          "5": {
+            "$value": {
+              "light": "#5b7d91",
+              "dark": "#5c7b91",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "L-tier epistemic-mist grade 5 hue for coordinate family L and archetype-position 5. Derivation: L-tier epistemic-mist × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "L-tier epistemic-mist × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "l",
+                "grade": 5
+              }
+            }
+          }
+        },
+        "c": {
+          "0": {
+            "$value": {
+              "light": "#3f2a66",
+              "dark": "#7151b8",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#ffffff"
+              }
+            },
+            "$type": "color",
+            "$description": "C-tier ontological-deep-violet grade 0 hue for coordinate family C and archetype-position 0. Derivation: C-tier ontological-deep-violet × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "C-tier ontological-deep-violet × archetype-position grade 0; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "c",
+                "grade": 0
+              }
+            }
+          },
+          "1": {
+            "$value": {
+              "light": "#4c3175",
+              "dark": "#7e62c0",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#ffffff"
+              }
+            },
+            "$type": "color",
+            "$description": "C-tier ontological-deep-violet grade 1 hue for coordinate family C and archetype-position 1. Derivation: C-tier ontological-deep-violet × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "C-tier ontological-deep-violet × archetype-position grade 1; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "c",
+                "grade": 1
+              }
+            }
+          },
+          "2": {
+            "$value": {
+              "light": "#5b3a7e",
+              "dark": "#8d71ca",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "C-tier ontological-deep-violet grade 2 hue for coordinate family C and archetype-position 2. Derivation: C-tier ontological-deep-violet × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "C-tier ontological-deep-violet × archetype-position grade 2; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "c",
+                "grade": 2
+              }
+            }
+          },
+          "3": {
+            "$value": {
+              "light": "#6d4791",
+              "dark": "#9c80d2",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "C-tier ontological-deep-violet grade 3 hue for coordinate family C and archetype-position 3. Derivation: C-tier ontological-deep-violet × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "C-tier ontological-deep-violet × archetype-position grade 3; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "c",
+                "grade": 3
+              }
+            }
+          },
+          "4": {
+            "$value": {
+              "light": "#7d4f9e",
+              "dark": "#ad91dc",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "C-tier ontological-deep-violet grade 4 hue for coordinate family C and archetype-position 4. Derivation: C-tier ontological-deep-violet × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "C-tier ontological-deep-violet × archetype-position grade 4; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "c",
+                "grade": 4
+              }
+            }
+          },
+          "5": {
+            "$value": {
+              "light": "#3f2a66",
+              "dark": "#7151b8",
+              "foreground": {
+                "light": "#ffffff",
+                "dark": "#ffffff"
+              }
+            },
+            "$type": "color",
+            "$description": "C-tier ontological-deep-violet grade 5 hue for coordinate family C and archetype-position 5. Derivation: C-tier ontological-deep-violet × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/30-design-language-layer.md §30.2/§30.8 and ui-family-palette-derivation.md (Tranche 30.8)",
+                "derivation": "C-tier ontological-deep-violet × archetype-position grade 5; P/S/T/M/L/C family derivation is anchored in Tranche 30.8.",
+                "coordinateFamily": "c",
+                "grade": 5
+              }
+            }
+          }
+        }
+      },
+      "signature": {
+        "cool": {
+          "$value": {
+            "light": "#5a73a8",
+            "dark": "#8a9bbd",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Cl(4,2) signature -1 cool-indigo anchor for P0/P5 sin/cos polarity. Derivation: Signature -1 stays cool across light/dark inversion per §15.8 and M1-2 §5.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Idea/Bimba/Seeds/M/M1'/M1-2-ANANDA-VORTEX-ARCHITECTURE.md §5 and 15-ui-design-foundations.md §15.8",
+              "derivation": "Signature -1 stays cool across light/dark inversion per §15.8 and M1-2 §5.",
+              "cl42Signature": -1
+            }
+          }
+        },
+        "warm": {
+          "$value": {
+            "light": "#d4a14a",
+            "dark": "#e0b366",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Cl(4,2) signature +1 warm-amber anchor for P1-P4 tan/sec/cot/csc polarity. Derivation: Signature +1 stays warm across light/dark inversion per §15.8 and M1-2 §5.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Idea/Bimba/Seeds/M/M1'/M1-2-ANANDA-VORTEX-ARCHITECTURE.md §5 and 15-ui-design-foundations.md §15.8",
+              "derivation": "Signature +1 stays warm across light/dark inversion per §15.8 and M1-2 §5.",
+              "cl42Signature": 1
+            }
+          }
+        }
+      },
+      "flow": {
+        "mahamaya_gold": {
+          "$value": {
+            "light": "#d4a574",
+            "dark": "#e0b67e",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "DR_RING_MAHAMAYA ascending streamline gold. Derivation: Digital-root ring {1,2,4,8,7,5} ascends through the Mahamaya flow channel.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/S/S0/epi-lib/src/m1.c:122-123 and 30-design-language-layer.md §30.2",
+              "derivation": "Digital-root ring {1,2,4,8,7,5} ascends through the Mahamaya flow channel.",
+              "digitalRootRing": [
+                1,
+                2,
+                4,
+                8,
+                7,
+                5
+              ]
+            }
+          }
+        },
+        "parashakti_emerald": {
+          "$value": {
+            "light": "#4a8b6f",
+            "dark": "#5fa886",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "DR_RING_PARASHAKTI descending streamline emerald. Derivation: Digital-root ring {3,6,9,3,6,9} descends through the Parashakti flow channel.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/S/S0/epi-lib/src/m1.c:122-123 and 30-design-language-layer.md §30.2",
+              "derivation": "Digital-root ring {3,6,9,3,6,9} descends through the Parashakti flow channel.",
+              "digitalRootRing": [
+                3,
+                6,
+                9,
+                3,
+                6,
+                9
+              ]
+            }
+          }
+        }
+      },
+      "highlight-category": {
+        "daily-note": {
+          "$value": {
+            "light": "#fbbf24",
+            "dark": "#fcd34d",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "user-side daily note highlight promoted from the existing M4 Nara CSS palette. Derivation: Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/M/epi-theia/extensions/m4-nara/style/highlights.css and 11-theia-shell-surface-hosting.md §11.11",
+              "derivation": "Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment."
+            }
+          }
+        },
+        "oracle": {
+          "$value": {
+            "light": "#a78bfa",
+            "dark": "#c4b5fd",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "user-side oracle highlight promoted from the existing M4 Nara CSS palette. Derivation: Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/M/epi-theia/extensions/m4-nara/style/highlights.css and 11-theia-shell-surface-hosting.md §11.11",
+              "derivation": "Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment."
+            }
+          }
+        },
+        "dream": {
+          "$value": {
+            "light": "#60a5fa",
+            "dark": "#93c5fd",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "user-side dream highlight promoted from the existing M4 Nara CSS palette. Derivation: Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/M/epi-theia/extensions/m4-nara/style/highlights.css and 11-theia-shell-surface-hosting.md §11.11",
+              "derivation": "Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment."
+            }
+          }
+        },
+        "expand": {
+          "$value": {
+            "light": "#34d399",
+            "dark": "#6ee7b7",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "user-side expansion highlight promoted from the existing M4 Nara CSS palette. Derivation: Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/M/epi-theia/extensions/m4-nara/style/highlights.css and 11-theia-shell-surface-hosting.md §11.11",
+              "derivation": "Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment."
+            }
+          }
+        },
+        "recognition": {
+          "$value": {
+            "light": "#d4a574",
+            "dark": "#e0b67e",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "agent-side recognition highlight aligned with wisdom-gold. Derivation: Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/M/epi-theia/extensions/m4-nara/style/highlights.css and 11-theia-shell-surface-hosting.md §11.11",
+              "derivation": "Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment."
+            }
+          }
+        },
+        "prospective-surfacing": {
+          "$value": {
+            "light": "#e8a3a3",
+            "dark": "#f0b7b7",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "agent-side prospective surfacing highlight aligned with Eros relation-rose. Derivation: Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/M/epi-theia/extensions/m4-nara/style/highlights.css and 11-theia-shell-surface-hosting.md §11.11",
+              "derivation": "Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment."
+            }
+          }
+        },
+        "retrospective-surfacing": {
+          "$value": {
+            "light": "#8090a3",
+            "dark": "#9aa8b8",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "agent-side retrospective surfacing highlight aligned with memory slate. Derivation: Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/M/epi-theia/extensions/m4-nara/style/highlights.css and 11-theia-shell-surface-hosting.md §11.11",
+              "derivation": "Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment."
+            }
+          }
+        },
+        "kairos-touch": {
+          "$value": {
+            "light": "#b8c0cc",
+            "dark": "#cbd2dc",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "agent-side kairos touch highlight aligned with temporal contact chrome. Derivation: Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/M/epi-theia/extensions/m4-nara/style/highlights.css and 11-theia-shell-surface-hosting.md §11.11",
+              "derivation": "Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment."
+            }
+          }
+        },
+        "somatic-mark": {
+          "$value": {
+            "light": "#8a7355",
+            "dark": "#a88c65",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "agent-side somatic mark highlight aligned with Psyche depth-umber. Derivation: Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/M/epi-theia/extensions/m4-nara/style/highlights.css and 11-theia-shell-surface-hosting.md §11.11",
+              "derivation": "Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment."
+            }
+          }
+        },
+        "live-spread": {
+          "$value": {
+            "light": "#5b3a7e",
+            "dark": "#8d71ca",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "agent-side live spread highlight aligned with ontological violet. Derivation: Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "Body/M/epi-theia/extensions/m4-nara/style/highlights.css and 11-theia-shell-surface-hosting.md §11.11",
+              "derivation": "Tranche 11.11 highlight category is promoted into the shared colour-token namespace; agent-side values are canon-locked by 11.11 + 19.11 alignment."
+            }
+          }
+        }
+      },
+      "element": {
+        "aether": {
+          "$value": {
+            "light": "#7d4f9e",
+            "dark": "#a783c4",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Tattva element aether token: violet-akasha. Derivation: L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10.",
+          "$extensions": {
+            "epilogos": {
+              "source": "23-m2-parashakti-frontend-deep.md §23.4 and 25-m4-nara-frontend-deep.md §25.10 element-glyphs",
+              "derivation": "L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10."
+            }
+          }
+        },
+        "earth": {
+          "$value": {
+            "light": "#8a7355",
+            "dark": "#a88c65",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Tattva element earth token: earth/umber. Derivation: L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10.",
+          "$extensions": {
+            "epilogos": {
+              "source": "23-m2-parashakti-frontend-deep.md §23.4 and 25-m4-nara-frontend-deep.md §25.10 element-glyphs",
+              "derivation": "L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10."
+            }
+          }
+        },
+        "water": {
+          "$value": {
+            "light": "#5fa9b8",
+            "dark": "#83c1cd",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Tattva element water token: aquamarine. Derivation: L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10.",
+          "$extensions": {
+            "epilogos": {
+              "source": "23-m2-parashakti-frontend-deep.md §23.4 and 25-m4-nara-frontend-deep.md §25.10 element-glyphs",
+              "derivation": "L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10."
+            }
+          }
+        },
+        "air": {
+          "$value": {
+            "light": "#6ec1c8",
+            "dark": "#93d7dc",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Tattva element air token: cyan-vayu. Derivation: L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10.",
+          "$extensions": {
+            "epilogos": {
+              "source": "23-m2-parashakti-frontend-deep.md §23.4 and 25-m4-nara-frontend-deep.md §25.10 element-glyphs",
+              "derivation": "L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10."
+            }
+          }
+        },
+        "fire": {
+          "$value": {
+            "light": "#c5564b",
+            "dark": "#d7776e",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Tattva element fire token: vermilion-agni. Derivation: L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10.",
+          "$extensions": {
+            "epilogos": {
+              "source": "23-m2-parashakti-frontend-deep.md §23.4 and 25-m4-nara-frontend-deep.md §25.10 element-glyphs",
+              "derivation": "L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10."
+            }
+          }
+        },
+        "salt": {
+          "$value": {
+            "light": "#7d4f9e",
+            "dark": "#a783c4",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Tattva element salt token: violet-akasha prima/ultima materia. Derivation: L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10.",
+          "$extensions": {
+            "epilogos": {
+              "source": "23-m2-parashakti-frontend-deep.md §23.4 and 25-m4-nara-frontend-deep.md §25.10 element-glyphs",
+              "derivation": "L2-prime canonical post-5.16 tattva palette routes element glyphs through Track 23.4 and Track 25.10."
+            }
+          }
+        }
+      },
+      "psyche-facet": {
+        "anima": {
+          "$value": {
+            "light": "#a89c8e",
+            "dark": "#beb3a7",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Psyche facet anima token: root-neutral. Derivation: DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping.",
+          "$extensions": {
+            "epilogos": {
+              "source": "30-design-language-layer.md §30.2 DR-WC-DL-2 default and 26-m5-epii-frontend-deep.md §26.8",
+              "derivation": "DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping."
+            }
+          }
+        },
+        "eros": {
+          "$value": {
+            "light": "#e8a3a3",
+            "dark": "#f0b7b7",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Psyche facet eros token: relation-rose aligned with prospective-surfacing. Derivation: DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping.",
+          "$extensions": {
+            "epilogos": {
+              "source": "30-design-language-layer.md §30.2 DR-WC-DL-2 default and 26-m5-epii-frontend-deep.md §26.8",
+              "derivation": "DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping."
+            }
+          }
+        },
+        "logos": {
+          "$value": {
+            "light": "#6b7588",
+            "dark": "#8993a4",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Psyche facet logos token: structure-slate aligned with handle-only privacy. Derivation: DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping.",
+          "$extensions": {
+            "epilogos": {
+              "source": "30-design-language-layer.md §30.2 DR-WC-DL-2 default and 26-m5-epii-frontend-deep.md §26.8",
+              "derivation": "DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping."
+            }
+          }
+        },
+        "mythos": {
+          "$value": {
+            "light": "#d4a14a",
+            "dark": "#e0b366",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Psyche facet mythos token: narrative-amber aligned with signature warm. Derivation: DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping.",
+          "$extensions": {
+            "epilogos": {
+              "source": "30-design-language-layer.md §30.2 DR-WC-DL-2 default and 26-m5-epii-frontend-deep.md §26.8",
+              "derivation": "DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping."
+            }
+          }
+        },
+        "nous": {
+          "$value": {
+            "light": "#5a73a8",
+            "dark": "#8a9bbd",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Psyche facet nous token: clarity-indigo aligned with signature cool. Derivation: DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping.",
+          "$extensions": {
+            "epilogos": {
+              "source": "30-design-language-layer.md §30.2 DR-WC-DL-2 default and 26-m5-epii-frontend-deep.md §26.8",
+              "derivation": "DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping."
+            }
+          }
+        },
+        "psyche": {
+          "$value": {
+            "light": "#8a7355",
+            "dark": "#a88c65",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Psyche facet psyche token: depth-umber aligned with somatic-mark. Derivation: DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping.",
+          "$extensions": {
+            "epilogos": {
+              "source": "30-design-language-layer.md §30.2 DR-WC-DL-2 default and 26-m5-epii-frontend-deep.md §26.8",
+              "derivation": "DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping."
+            }
+          }
+        },
+        "sophia": {
+          "$value": {
+            "light": "#d4a574",
+            "dark": "#e0b67e",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Psyche facet sophia token: wisdom-gold aligned with recognition and Mahamaya gold. Derivation: DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping.",
+          "$extensions": {
+            "epilogos": {
+              "source": "30-design-language-layer.md §30.2 DR-WC-DL-2 default and 26-m5-epii-frontend-deep.md §26.8",
+              "derivation": "DR-WC-DL-2 defaults agent-function semantics rather than M-tier mapping."
+            }
+          }
+        }
+      },
+      "privacy": {
+        "protected_local": {
+          "$value": {
+            "light": "#8a7355",
+            "dark": "#a88c65",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            },
+            "nara-light": "#95795a",
+            "nara-dark": "#a88a63",
+            "nara-glass": "#9d8060"
+          },
+          "$type": "color",
+          "$description": "Privacy chrome token protected_local: protected-local is Psyche depth. Derivation: Track 25.18 keeps application ownership in M4 while the shared token records the structural psyche/logos/sophia alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "25-m4-nara-frontend-deep.md §25.18 and 30-design-language-layer.md §30.2",
+              "derivation": "Track 25.18 keeps application ownership in M4 while the shared token records the structural psyche/logos/sophia alignment."
+            }
+          }
+        },
+        "handle_only": {
+          "$value": {
+            "light": "#6b7588",
+            "dark": "#8993a4",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            },
+            "nara-light": "#737c8e",
+            "nara-dark": "#9099aa",
+            "nara-glass": "#80899a"
+          },
+          "$type": "color",
+          "$description": "Privacy chrome token handle_only: handle-only is Logos structure. Derivation: Track 25.18 keeps application ownership in M4 while the shared token records the structural psyche/logos/sophia alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "25-m4-nara-frontend-deep.md §25.18 and 30-design-language-layer.md §30.2",
+              "derivation": "Track 25.18 keeps application ownership in M4 while the shared token records the structural psyche/logos/sophia alignment."
+            }
+          }
+        },
+        "opt_in": {
+          "$value": {
+            "light": "#d4a574",
+            "dark": "#e0b67e",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            },
+            "nara-light": "#d1a36f",
+            "nara-dark": "#ddb27e",
+            "nara-glass": "#dbb17c"
+          },
+          "$type": "color",
+          "$description": "Privacy chrome token opt_in: opt-in is Sophia wisdom-sharing. Derivation: Track 25.18 keeps application ownership in M4 while the shared token records the structural psyche/logos/sophia alignment.",
+          "$extensions": {
+            "epilogos": {
+              "source": "25-m4-nara-frontend-deep.md §25.18 and 30-design-language-layer.md §30.2",
+              "derivation": "Track 25.18 keeps application ownership in M4 while the shared token records the structural psyche/logos/sophia alignment."
+            }
+          }
+        }
+      },
+      "mode-chip": {
+        "tranche-mode": {
+          "$value": {
+            "light": "#6b7588",
+            "dark": "#9aa4b5",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            },
+            "active": {
+              "light": "#4f5b70",
+              "dark": "#c8d0dc"
+            },
+            "inactive": {
+              "light": "#d8dee6",
+              "dark": "#38404d"
+            }
+          },
+          "$type": "color",
+          "$description": "Mode-chip token for tuning-bar tranche mode segment. Derivation: Track 11.12 tuning controls and Track 19.11 response-orbit cues resolve as segmented-control active/inactive variants.",
+          "$extensions": {
+            "epilogos": {
+              "source": "11-theia-shell-surface-hosting.md §11.12, 19-contemplation-surface-integration.md §19.11, and 30-design-language-layer.md §30.2",
+              "derivation": "Track 11.12 tuning controls and Track 19.11 response-orbit cues resolve as segmented-control active/inactive variants."
+            }
+          }
+        },
+        "response-orbit": {
+          "$value": {
+            "light": "#5a73a8",
+            "dark": "#8a9bbd",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            },
+            "active": {
+              "light": "#405a8f",
+              "dark": "#c3cee3"
+            },
+            "inactive": {
+              "light": "#dbe3f2",
+              "dark": "#38404d"
+            }
+          },
+          "$type": "color",
+          "$description": "Mode-chip token for Chronos response-orbit segment. Derivation: Track 11.12 tuning controls and Track 19.11 response-orbit cues resolve as segmented-control active/inactive variants.",
+          "$extensions": {
+            "epilogos": {
+              "source": "11-theia-shell-surface-hosting.md §11.12, 19-contemplation-surface-integration.md §19.11, and 30-design-language-layer.md §30.2",
+              "derivation": "Track 11.12 tuning controls and Track 19.11 response-orbit cues resolve as segmented-control active/inactive variants."
+            }
+          }
+        },
+        "sense-override": {
+          "$value": {
+            "light": "#d4a14a",
+            "dark": "#e0b366",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            },
+            "active": {
+              "light": "#aa7621",
+              "dark": "#f0d6a3"
+            },
+            "inactive": {
+              "light": "#f8e8c4",
+              "dark": "#38404d"
+            }
+          },
+          "$type": "color",
+          "$description": "Mode-chip token for sense override segment. Derivation: Track 11.12 tuning controls and Track 19.11 response-orbit cues resolve as segmented-control active/inactive variants.",
+          "$extensions": {
+            "epilogos": {
+              "source": "11-theia-shell-surface-hosting.md §11.12, 19-contemplation-surface-integration.md §19.11, and 30-design-language-layer.md §30.2",
+              "derivation": "Track 11.12 tuning controls and Track 19.11 response-orbit cues resolve as segmented-control active/inactive variants."
+            }
+          }
+        }
+      },
+      "readiness": {
+        "severity": {
+          "ready": {
+            "$value": {
+              "light": "#59c75a",
+              "dark": "#7bd87d",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness severity ready: Theia successForeground readiness band. Derivation: The shared m-extension runtime banner convention provides the severity base hue.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "The shared m-extension runtime banner convention provides the severity base hue."
+              }
+            }
+          },
+          "degraded": {
+            "$value": {
+              "light": "#d4a14a",
+              "dark": "#e0b366",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness severity degraded: Theia warningForeground readiness band. Derivation: The shared m-extension runtime banner convention provides the severity base hue.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "The shared m-extension runtime banner convention provides the severity base hue."
+              }
+            }
+          },
+          "blocked": {
+            "$value": {
+              "light": "#f48771",
+              "dark": "#f7a28f",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness severity blocked: Theia errorForeground readiness band. Derivation: The shared m-extension runtime banner convention provides the severity base hue.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "The shared m-extension runtime banner convention provides the severity base hue."
+              }
+            }
+          }
+        },
+        "id": {
+          "bridge_unavailable": {
+            "$value": {
+              "light": "#f0787f",
+              "dark": "#f6a0a6",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness id bridge_unavailable: cyan-leaning blocked red for connection-level loss. Derivation: Per-id tint inherits the blocked severity band while distinguishing the owning readiness cause for UI rendering.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "Per-id tint inherits the blocked severity band while distinguishing the owning readiness cause for UI rendering.",
+                "severity": "blocked"
+              }
+            }
+          },
+          "profile_missing_field": {
+            "$value": {
+              "light": "#d9a856",
+              "dark": "#e3bb75",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness id profile_missing_field: amber field-gap tint. Derivation: Per-id tint inherits the degraded severity band while distinguishing the owning readiness cause for UI rendering.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "Per-id tint inherits the degraded severity band while distinguishing the owning readiness cause for UI rendering.",
+                "severity": "degraded"
+              }
+            }
+          },
+          "s2_graph_blocked": {
+            "$value": {
+              "light": "#ee6f74",
+              "dark": "#f49a9f",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness id s2_graph_blocked: graph-blocked red with violet undertone. Derivation: Per-id tint inherits the blocked severity band while distinguishing the owning readiness cause for UI rendering.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "Per-id tint inherits the blocked severity band while distinguishing the owning readiness cause for UI rendering.",
+                "severity": "blocked"
+              }
+            }
+          },
+          "s3_subscription_blocked": {
+            "$value": {
+              "light": "#f07268",
+              "dark": "#f49c93",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness id s3_subscription_blocked: subscription-blocked coral red. Derivation: Per-id tint inherits the blocked severity band while distinguishing the owning readiness cause for UI rendering.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "Per-id tint inherits the blocked severity band while distinguishing the owning readiness cause for UI rendering.",
+                "severity": "blocked"
+              }
+            }
+          },
+          "s5_review_blocked": {
+            "$value": {
+              "light": "#f28b62",
+              "dark": "#f5aa86",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness id s5_review_blocked: review-level orange-tinted blocked red. Derivation: Per-id tint inherits the blocked severity band while distinguishing the owning readiness cause for UI rendering.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "Per-id tint inherits the blocked severity band while distinguishing the owning readiness cause for UI rendering.",
+                "severity": "blocked"
+              }
+            }
+          },
+          "authority_payload_missing": {
+            "$value": {
+              "light": "#c9963c",
+              "dark": "#d7ad62",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness id authority_payload_missing: authority-payload amber ochre. Derivation: Per-id tint inherits the degraded severity band while distinguishing the owning readiness cause for UI rendering.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "Per-id tint inherits the degraded severity band while distinguishing the owning readiness cause for UI rendering.",
+                "severity": "degraded"
+              }
+            }
+          },
+          "privacy_blocked": {
+            "$value": {
+              "light": "#a66c5e",
+              "dark": "#bc897c",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness id privacy_blocked: privacy-blocked earth red. Derivation: Per-id tint inherits the blocked severity band while distinguishing the owning readiness cause for UI rendering.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "Per-id tint inherits the blocked severity band while distinguishing the owning readiness cause for UI rendering.",
+                "severity": "blocked"
+              }
+            }
+          },
+          "degraded_but_readable": {
+            "$value": {
+              "light": "#c4a04f",
+              "dark": "#d5b96e",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness id degraded_but_readable: readable degraded brass. Derivation: Per-id tint inherits the degraded severity band while distinguishing the owning readiness cause for UI rendering.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "Per-id tint inherits the degraded severity band while distinguishing the owning readiness cause for UI rendering.",
+                "severity": "degraded"
+              }
+            }
+          },
+          "ready_public_current": {
+            "$value": {
+              "light": "#59c75a",
+              "dark": "#7bd87d",
+              "foreground": {
+                "light": "#000000",
+                "dark": "#000000"
+              }
+            },
+            "$type": "color",
+            "$description": "Readiness id ready_public_current: ready current public green. Derivation: Per-id tint inherits the ready severity band while distinguishing the owning readiness cause for UI rendering.",
+            "$extensions": {
+              "epilogos": {
+                "source": "Body/M/epi-theia/extensions/m-extension-runtime/style/index.css and 30-design-language-layer.md §30.2",
+                "derivation": "Per-id tint inherits the ready severity band while distinguishing the owning readiness cause for UI rendering.",
+                "severity": "ready"
+              }
+            }
+          }
+        }
+      },
+      "status-bar": {
+        "profile-tick": {
+          "$value": {
+            "light": "#d4a14a",
+            "dark": "#e0b366",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Status bar profile-tick token for profile tick clock pulse. Derivation: Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar.",
+          "$extensions": {
+            "epilogos": {
+              "source": "15-ui-design-foundations.md §15.10 and 30-design-language-layer.md §30.2",
+              "derivation": "Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar."
+            }
+          }
+        },
+        "day-now": {
+          "$value": {
+            "light": "#8a7355",
+            "dark": "#a88c65",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Status bar day-now token for DAY/NOW anchor. Derivation: Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar.",
+          "$extensions": {
+            "epilogos": {
+              "source": "15-ui-design-foundations.md §15.10 and 30-design-language-layer.md §30.2",
+              "derivation": "Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar."
+            }
+          }
+        },
+        "session-id": {
+          "$value": {
+            "light": "#6b7588",
+            "dark": "#8993a4",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Status bar session-id token for neutral session id. Derivation: Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar.",
+          "$extensions": {
+            "epilogos": {
+              "source": "15-ui-design-foundations.md §15.10 and 30-design-language-layer.md §30.2",
+              "derivation": "Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar."
+            }
+          }
+        },
+        "gateway-readiness": {
+          "$value": {
+            "light": "#59c75a",
+            "dark": "#7bd87d",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Status bar gateway-readiness token for readiness-state slot consuming readiness.severity at runtime. Derivation: Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar.",
+          "$extensions": {
+            "epilogos": {
+              "source": "15-ui-design-foundations.md §15.10 and 30-design-language-layer.md §30.2",
+              "derivation": "Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar."
+            }
+          }
+        },
+        "profile-generation": {
+          "$value": {
+            "light": "#8090a3",
+            "dark": "#9aa8b8",
+            "foreground": {
+              "light": "#000000",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Status bar profile-generation token for neutral profile generation. Derivation: Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar.",
+          "$extensions": {
+            "epilogos": {
+              "source": "15-ui-design-foundations.md §15.10 and 30-design-language-layer.md §30.2",
+              "derivation": "Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar."
+            }
+          }
+        },
+        "active-coordinate": {
+          "$value": {
+            "light": "#5a73a8",
+            "dark": "#8a9bbd",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "Status bar active-coordinate token for family-tier active coordinate slot. Derivation: Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar.",
+          "$extensions": {
+            "epilogos": {
+              "source": "15-ui-design-foundations.md §15.10 and 30-design-language-layer.md §30.2",
+              "derivation": "Track 15.10 limits the status bar to six entries and excludes privacy chrome from the global bar."
+            }
+          }
+        }
+      },
+      "provenance-pill": {
+        "canonical": {
+          "$value": {
+            "light": "#1f7a4d",
+            "dark": "#3fa76f",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "M0 provenance pill canonical: canonical green. Derivation: Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace.",
+          "$extensions": {
+            "epilogos": {
+              "source": "21-m0-anuttara-frontend-deep.md §21.18 and Body/M/epi-theia/extensions/m0-anuttara/style/provenance-pills.css",
+              "derivation": "Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace."
+            }
+          }
+        },
+        "canonical_absent": {
+          "$value": {
+            "light": "#5f6872",
+            "dark": "#818b96",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "M0 provenance pill canonical_absent: canonical absent gray. Derivation: Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace.",
+          "$extensions": {
+            "epilogos": {
+              "source": "21-m0-anuttara-frontend-deep.md §21.18 and Body/M/epi-theia/extensions/m0-anuttara/style/provenance-pills.css",
+              "derivation": "Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace."
+            }
+          }
+        },
+        "derived": {
+          "$value": {
+            "light": "#a46700",
+            "dark": "#c98724",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "M0 provenance pill derived: derived amber. Derivation: Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace.",
+          "$extensions": {
+            "epilogos": {
+              "source": "21-m0-anuttara-frontend-deep.md §21.18 and Body/M/epi-theia/extensions/m0-anuttara/style/provenance-pills.css",
+              "derivation": "Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace."
+            }
+          }
+        },
+        "inferred": {
+          "$value": {
+            "light": "#70592a",
+            "dark": "#92733b",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "M0 provenance pill inferred: inferred amber-dim. Derivation: Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace.",
+          "$extensions": {
+            "epilogos": {
+              "source": "21-m0-anuttara-frontend-deep.md §21.18 and Body/M/epi-theia/extensions/m0-anuttara/style/provenance-pills.css",
+              "derivation": "Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace."
+            }
+          }
+        },
+        "review_pending": {
+          "$value": {
+            "light": "#9f6400",
+            "dark": "#c48124",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "M0 provenance pill review_pending: review pending amber-pulse. Derivation: Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace.",
+          "$extensions": {
+            "epilogos": {
+              "source": "21-m0-anuttara-frontend-deep.md §21.18 and Body/M/epi-theia/extensions/m0-anuttara/style/provenance-pills.css",
+              "derivation": "Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace."
+            }
+          }
+        },
+        "blocked": {
+          "$value": {
+            "light": "#a23b3b",
+            "dark": "#c45c5c",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "M0 provenance pill blocked: blocked red. Derivation: Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace.",
+          "$extensions": {
+            "epilogos": {
+              "source": "21-m0-anuttara-frontend-deep.md §21.18 and Body/M/epi-theia/extensions/m0-anuttara/style/provenance-pills.css",
+              "derivation": "Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace."
+            }
+          }
+        },
+        "bridged_local": {
+          "$value": {
+            "light": "#7151b8",
+            "dark": "#9275d1",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "M0 provenance pill bridged_local: bridged local purple. Derivation: Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace.",
+          "$extensions": {
+            "epilogos": {
+              "source": "21-m0-anuttara-frontend-deep.md §21.18 and Body/M/epi-theia/extensions/m0-anuttara/style/provenance-pills.css",
+              "derivation": "Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace."
+            }
+          }
+        },
+        "bridged_public": {
+          "$value": {
+            "light": "#2f6fae",
+            "dark": "#5a90c8",
+            "foreground": {
+              "light": "#ffffff",
+              "dark": "#000000"
+            }
+          },
+          "$type": "color",
+          "$description": "M0 provenance pill bridged_public: bridged public blue. Derivation: Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace.",
+          "$extensions": {
+            "epilogos": {
+              "source": "21-m0-anuttara-frontend-deep.md §21.18 and Body/M/epi-theia/extensions/m0-anuttara/style/provenance-pills.css",
+              "derivation": "Track 21.x promotes the eight M0 Anuttara provenance-pill states into the shared colour-token namespace."
+            }
+          }
+        }
+      }
+    }
+  }
+}

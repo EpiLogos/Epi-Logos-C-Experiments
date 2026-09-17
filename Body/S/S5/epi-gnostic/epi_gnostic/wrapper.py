@@ -1,17 +1,26 @@
 """GnosticRAG — main entry point for ingest and query operations."""
 from __future__ import annotations
 
+from contextlib import contextmanager
+from pathlib import Path
 from typing import Optional
 from functools import partial
 
 from lightrag import LightRAG
 from lightrag.base import QueryParam
-from lightrag.llm.gemini import gemini_model_complete, gemini_embed
+from lightrag.llm.gemini import gemini_model_complete
 from lightrag.utils import EmbeddingFunc
 from raganything import RAGAnything, RAGAnythingConfig
 
 from epi_gnostic.config import GnosticConfig
-from epi_gnostic.storage.neo4j_vector import Neo4jVectorStorage
+from epi_gnostic.embedding import gemini_multimodal_embed
+from epi_gnostic.storage.neo4j_vector import Neo4jVectorStorage, POOL_FIELD
+
+
+# Suffixes MinerU cannot parse and must not be handed. RAG-Anything's parser is
+# for PDFs and images; a markdown file makes it exit non-zero and abort the
+# ingest. These go to `ainsert` instead — the correct reader, not a fallback.
+TEXT_SUFFIXES = {".md", ".markdown", ".txt", ".rst", ".org"}
 
 
 def _register_neo4j_vector_storage() -> None:
@@ -64,13 +73,24 @@ class GnosticRAG:
 
         api_key = self.config.gemini_api_key
 
+        # Per-input embeddings from a natively multimodal model. The vendored
+        # `gemini_embed` passes a bare list, which Gemini Embedding 2 treats as
+        # ONE aggregated input — the "Vector count mismatch" that failed every
+        # document and left the corpus empty. `supports_asymmetric` lets
+        # LightRAG tell us query from document so retrieval is embedded with the
+        # matching task type.
         embedding_func = EmbeddingFunc(
             embedding_dim=self.config.embedding_dim,
             max_token_size=8192,
-            func=lambda texts: gemini_embed(
+            model_name=self.config.embedding_model,
+            send_dimensions=True,
+            supports_asymmetric=True,
+            func=lambda texts, embedding_dim=None, context="document": gemini_multimodal_embed(
                 texts,
                 model=self.config.embedding_model,
                 api_key=api_key,
+                embedding_dim=embedding_dim or self.config.embedding_dim,
+                context=context,
             ),
         )
 
@@ -89,7 +109,11 @@ class GnosticRAG:
             graph_storage="Neo4JStorage",
             vector_storage="Neo4jVectorStorage",
             vector_db_storage_cls_kwargs={
-                "vector_index_name": f"{self.config.workspace}_entity_embedding",
+                # No `vector_index_name` here on purpose: all three vector
+                # stores share one workspace label and one `embedding`
+                # property, so they must share ONE index. The storage derives
+                # `vec_<workspace>` itself; pinning an entity-flavoured name
+                # here is what made the shared index look entity-specific.
                 "embedding_dim": self.config.embedding_dim,
             },
             auto_manage_storages_states=False,
@@ -127,9 +151,38 @@ class GnosticRAG:
         family: str = "#",
         output_dir: Optional[str] = None,
     ) -> dict:
-        """Ingest a document (PDF, image, etc.) via RAG-Anything."""
-        if self.rag_anything is None:
+        """Ingest a document into the gnostic corpus.
+
+        Routes by kind. MinerU is a PDF/image parser: handed a `.md` it exits
+        non-zero and the whole ingest fails. Plain-text sources therefore go
+        straight to `ainsert`, carrying `file_paths` so provenance (and the
+        pool stamp, which matches on `file_path`) survives. Everything else —
+        PDFs, images, office docs — goes through RAG-Anything's parse pipeline.
+        This is not a fallback: it is the correct reader for each kind, and it
+        matters because the bkmr pool sources `extract_path_candidate` finds are
+        exactly `.md`/`.markdown`/`.txt`.
+        """
+        if self.lightrag is None or self.rag_anything is None:
             raise RuntimeError("GnosticRAG not initialized. Call initialize() first.")
+
+        path = Path(file_path)
+        if path.suffix.lower() in TEXT_SUFFIXES:
+            text = path.read_text(encoding="utf-8", errors="replace")
+            if not text.strip():
+                return {
+                    "status": "error",
+                    "message": f"{file_path} is empty; nothing to ingest",
+                    "file_path": file_path,
+                }
+            await self.lightrag.ainsert(text, file_paths=str(path))
+            return {
+                "status": "success",
+                "file_path": file_path,
+                "coordinate": coordinate,
+                "family": family,
+                "reader": "text",
+            }
+
         out = output_dir or f"{self.config.working_dir}/parsed"
         await self.rag_anything.process_document_complete(
             file_path=file_path,
@@ -140,13 +193,95 @@ class GnosticRAG:
             "file_path": file_path,
             "coordinate": coordinate,
             "family": family,
+            "reader": "raganything",
         }
 
-    async def query(self, question: str, mode: str = "hybrid") -> str:
-        """Query the gnostic namespace."""
+    def _vector_stores(self) -> list[Neo4jVectorStorage]:
+        """Every Neo4j-backed vector store LightRAG built for this instance.
+
+        LightRAG constructs three (`entities_vdb`, `relationships_vdb`,
+        `chunks_vdb`) from the same class; a pool filter has to apply to all of
+        them or a hybrid query would leak un-pooled entities alongside pooled
+        chunks.
+        """
+        if self.lightrag is None:
+            return []
+        stores = []
+        for name in ("entities_vdb", "relationships_vdb", "chunks_vdb"):
+            store = getattr(self.lightrag, name, None)
+            if isinstance(store, Neo4jVectorStorage):
+                stores.append(store)
+        return stores
+
+    @contextmanager
+    def _pool_scope(self, pool: str | None):
+        """Apply a pool filter to every vector store for one query.
+
+        `QueryParam` has no channel for pool membership, so the filter rides on
+        the storage objects and is always removed again — a leaked filter would
+        silently narrow every later query in the process.
+        """
+        if pool is None:
+            yield
+            return
+        stores = self._vector_stores()
+        for store in stores:
+            store._pool_filter = pool
+        try:
+            yield
+        finally:
+            for store in stores:
+                store._pool_filter = None
+
+    async def stamp_pool(self, file_path: str, pool: str) -> int:
+        """Record pool membership on every chunk ingested from *file_path*.
+
+        Runs after ingestion, the same shape `cli.py` already uses to run
+        coordinate enrichment over freshly-ingested nodes. Membership is a LIST
+        so one source can sit in several pools (a session pool and a coordinate
+        pool at once), and re-stamping is idempotent.
+        """
         if self.lightrag is None:
             raise RuntimeError("GnosticRAG not initialized. Call initialize() first.")
-        result = await self.lightrag.aquery(question, param=QueryParam(mode=mode))
+        from neo4j import AsyncGraphDatabase
+
+        name = Path(file_path).name
+        cypher = (
+            f"MATCH (n:`{self.config.workspace}`) WHERE n.file_path CONTAINS $fp "
+            f"SET n.{POOL_FIELD} = "
+            f"  CASE WHEN n.{POOL_FIELD} IS NULL THEN [$pool] "
+            f"       WHEN $pool IN n.{POOL_FIELD} THEN n.{POOL_FIELD} "
+            f"       ELSE n.{POOL_FIELD} + $pool END "
+            f"RETURN count(n) AS stamped"
+        )
+        driver = AsyncGraphDatabase.driver(self.config.neo4j_uri)
+        try:
+            async with driver.session(database=self.config.neo4j_database) as session:
+                cursor = await session.run(cypher, fp=name, pool=pool)
+                record = await cursor.single()
+                return int(record["stamped"]) if record else 0
+        finally:
+            await driver.close()
+
+    async def query(
+        self,
+        question: str,
+        mode: str = "hybrid",
+        top_k: int | None = None,
+        pool: str | None = None,
+    ) -> str:
+        """Query the gnostic namespace.
+
+        ``top_k`` bounds how many retrieved items the mode considers.
+        ``QueryParam`` defaults it from the ``TOP_K`` environment variable, so
+        `None` means "leave LightRAG's own default alone" — passing `None`
+        explicitly would override that default with nothing and raise.
+        """
+        if self.lightrag is None:
+            raise RuntimeError("GnosticRAG not initialized. Call initialize() first.")
+        param = QueryParam(mode=mode) if top_k is None else QueryParam(mode=mode, top_k=top_k)
+        with self._pool_scope(pool):
+            result = await self.lightrag.aquery(question, param=param)
         return result if isinstance(result, str) else ""
 
     async def shutdown(self) -> None:

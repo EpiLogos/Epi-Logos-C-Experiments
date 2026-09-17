@@ -336,6 +336,7 @@ fn aletheia_entry(session_id: &str, lineage: DisclosureLineage) -> InboxEntry {
             cs: CsField {
                 code: "CS-release-gate".to_owned(),
                 direction: CsDirection::Day,
+                recognized: false,
             },
         },
         improvement_vectors: vec![
@@ -347,6 +348,7 @@ fn aletheia_entry(session_id: &str, lineage: DisclosureLineage) -> InboxEntry {
             "Aletheia disclosed a release-gate mediation seam".to_owned(),
         )]),
         artifacts: vec!["vault://Idea/Bimba/Seeds/S/S5/S5-SPEC.md".to_owned()],
+        q_proposals: vec![],
         closure_kind: "rehear".to_owned(),
         disclosure_lineage: Some(lineage),
     }

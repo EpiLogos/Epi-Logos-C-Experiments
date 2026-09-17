@@ -1,0 +1,36 @@
+{
+  "runId": "20260707T182051Z-01-T1.14",
+  "taskId": "01.T1.14",
+  "startedAt": "2026-07-07T18:20:51.807Z",
+  "owner": "fable-a-kernel",
+  "leaseExpiresAt": "2026-07-07T21:20:51.807Z",
+  "worktree": null,
+  "task": {
+    "id": "01.T1.14",
+    "trackId": "01",
+    "tranche": "T1.14",
+    "title": "Calculus completeness: equational theory, dash/address semantics, the seven underdetermination DRs, and the M0→M1 seam",
+    "effort": null,
+    "file": "01-m0-anuttara-reconciliation.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-07-03-m-prime-cycle-3-full-rerun/01-m0-anuttara-reconciliation.md",
+    "dependsOn": [
+      "01.T1.13"
+    ],
+    "writeScopes": [
+      "Body/S/S0/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/01-m0-anuttara-reconciliation.md"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

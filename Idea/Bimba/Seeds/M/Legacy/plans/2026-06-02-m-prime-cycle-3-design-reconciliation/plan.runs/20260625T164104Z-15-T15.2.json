@@ -1,0 +1,33 @@
+{
+  "runId": "20260625T164104Z-15-T15.2",
+  "taskId": "15.T15.2",
+  "startedAt": "2026-06-25T16:41:04.873Z",
+  "owner": "codex-m-dev-15-t15-2-omnipanel-membrane",
+  "leaseExpiresAt": "2026-06-25T18:41:04.873Z",
+  "worktree": null,
+  "task": {
+    "id": "15.T15.2",
+    "trackId": "15",
+    "tranche": "T15.2",
+    "title": "OmniPanel architecture as agentic membrane",
+    "effort": null,
+    "file": "15-ui-design-foundations.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/15-ui-design-foundations.md",
+    "dependsOn": [
+      "15.T15.12"
+    ],
+    "writeScopes": [],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": null,
+    "completedAt": null,
+    "owner": null,
+    "leaseExpiresAt": null,
+    "heartbeatAt": null,
+    "runId": null,
+    "worktree": null
+  }
+}

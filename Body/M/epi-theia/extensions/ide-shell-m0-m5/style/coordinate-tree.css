@@ -1,0 +1,138 @@
+/* Coordinate Tree — Task 28.T28.6.
+   CHROME-CONTRACT §2 keeps this as M0' chrome: read navigation plus governed-route write initiation. */
+
+.ide-shell-coordinate-tree .coordinate-tree-mode-toggle {
+    border: 1px solid var(--theia-button-border, var(--theia-focusBorder, #007acc));
+    border-radius: 3px;
+    background: var(--theia-button-secondaryBackground, transparent);
+    color: var(--theia-button-secondaryForeground, var(--theia-foreground, #d4d4d4));
+    padding: 0.15rem 0.45rem;
+    font-size: 0.75rem;
+}
+
+.ide-shell-coordinate-tree ul {
+    margin: 0.2rem 0 0;
+    padding-left: 1rem;
+}
+
+.coordinate-tree-node {
+    position: relative;
+    margin: 0.15rem 0;
+    padding: 0.12rem 0.2rem 0.12rem 0.35rem;
+    border-left: 3px solid var(--coordinate-family-colour, var(--theia-editorWidget-border, #444));
+    list-style: none;
+}
+
+.coordinate-node-row {
+    display: grid;
+    grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+.coordinate-expand-arrow,
+.coordinate-node-main,
+.coordinate-propose-edit {
+    font: inherit;
+}
+
+.coordinate-expand-arrow {
+    width: 1.15rem;
+    height: 1.15rem;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    background: transparent;
+    color: var(--theia-descriptionForeground, #9d9d9d);
+}
+
+.coordinate-expand-arrow:hover,
+.coordinate-expand-arrow:focus {
+    border-color: var(--theia-focusBorder, #007acc);
+    color: var(--theia-foreground, #d4d4d4);
+}
+
+.coordinate-expand-spacer {
+    width: 1.15rem;
+}
+
+.coordinate-node-main {
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--theia-foreground, #d4d4d4);
+    text-align: left;
+}
+
+.coordinate-node-main code {
+    color: var(--coordinate-family-colour, var(--theia-textLink-foreground, #3794ff));
+}
+
+.coordinate-node-label {
+    opacity: 0.8;
+}
+
+.coordinate-propose-edit {
+    opacity: 0;
+    border: 1px solid var(--theia-focusBorder, #007acc);
+    border-radius: 3px;
+    background: var(--theia-button-secondaryBackground, transparent);
+    color: var(--theia-button-secondaryForeground, var(--theia-foreground, #d4d4d4));
+    padding: 0.1rem 0.4rem;
+    font-size: 0.72rem;
+}
+
+.coordinate-tree-node:hover > .coordinate-node-row .coordinate-propose-edit,
+.coordinate-propose-edit:focus {
+    opacity: 1;
+}
+
+.active-coordinate {
+    background: color-mix(in srgb, var(--theia-focusBorder, #007acc) 18%, transparent);
+    outline: 1px solid var(--theia-focusBorder, #007acc);
+    outline-offset: 1px;
+}
+
+.coordinate-family-P { --coordinate-family-colour: #4ec9b0; }
+.coordinate-family-S { --coordinate-family-colour: #569cd6; }
+.coordinate-family-T { --coordinate-family-colour: #dcdcaa; }
+.coordinate-family-M { --coordinate-family-colour: #c586c0; }
+.coordinate-family-L { --coordinate-family-colour: #ce9178; }
+.coordinate-family-C { --coordinate-family-colour: #b5cea8; }
+
+.coordinate-namespace-empty {
+    background: color-mix(in srgb, #9cdcfe 12%, transparent);
+}
+
+.coordinate-namespace-pratibimba {
+    background: color-mix(in srgb, #c586c0 12%, transparent);
+}
+
+.coordinate-privacy-public,
+.coordinate-privacy-safe-public,
+.coordinate-privacy-safe-public-current-kernel-tick,
+.coordinate-privacy-public-current-with-graph-provenance {
+    --coordinate-privacy-opacity: 1;
+}
+
+.coordinate-privacy-blocked {
+    opacity: 0.48;
+    filter: grayscale(0.85);
+}
+
+.coordinate-privacy-blocked .coordinate-node-main,
+.coordinate-privacy-blocked .coordinate-propose-edit {
+    cursor: not-allowed;
+}
+
+.coordinate-privacy-blocked-overlay {
+    display: inline-block;
+    margin: 0.2rem 0 0 1.6rem;
+    padding: 0.05rem 0.35rem;
+    border: 1px solid var(--theia-editorWidget-border, #444);
+    border-radius: 3px;
+    background: var(--theia-editorWidget-background, rgba(128, 128, 128, 0.12));
+    color: var(--theia-descriptionForeground, #9d9d9d);
+    font-size: 0.7rem;
+    font-weight: 700;
+}

@@ -179,3 +179,70 @@ async def test_drop_clears_all(storage: Neo4jVectorStorage):
 
     remaining = await storage.get_by_ids(["id-drop1", "id-drop2"])
     assert len(remaining) == 0
+
+
+# ------------------------------------------------------------------ #
+# Pool-scoped retrieval (bkmr pooling -> sync -> RAG)
+# ------------------------------------------------------------------ #
+
+
+async def test_pool_filter_scopes_retrieval_to_pool_members(storage):
+    """A pool filter must return ONLY chunks carrying that pool.
+
+    This is the substrate notebook-scoped RAG stands on: a notebook is a pool of
+    sources, and retrieval over it has to be real RAG restricted to the pool —
+    not keyword search over a side store.
+    """
+    await storage.upsert({
+        "in-pool-1": {"content": "the torus is the primary workflow topology",
+                      "gnostic_pools": ["khora-session-alpha"]},
+        "in-pool-2": {"content": "the lemniscate folds inward at position four",
+                      "gnostic_pools": ["khora-session-alpha", "family-M"]},
+        "out-of-pool": {"content": "the klein bottle makes inside and outside one",
+                        "gnostic_pools": ["khora-session-beta"]},
+        "never-pooled": {"content": "a chunk that belongs to no pool at all"},
+    })
+
+    unscoped = await storage.query("topology", top_k=10)
+    assert len(unscoped) == 4, f"unscoped retrieval must see everything, got {len(unscoped)}"
+
+    storage._pool_filter = "khora-session-alpha"
+    try:
+        scoped = await storage.query("topology", top_k=10)
+    finally:
+        storage._pool_filter = None
+
+    ids = {row["vector_id"] for row in scoped}
+    assert ids == {"in-pool-1", "in-pool-2"}, (
+        f"pool filter must admit exactly its members, got {ids}"
+    )
+
+
+async def test_pool_membership_is_multi_valued(storage):
+    """One source can sit in several pools — a session pool and a coordinate
+    pool at once — so membership is a list, not a scalar."""
+    await storage.upsert({
+        "shared": {"content": "shared source", "gnostic_pools": ["pool-a", "pool-b"]},
+    })
+
+    for pool in ("pool-a", "pool-b"):
+        storage._pool_filter = pool
+        try:
+            rows = await storage.query("shared", top_k=5)
+        finally:
+            storage._pool_filter = None
+        assert {r["vector_id"] for r in rows} == {"shared"}, f"{pool} must admit the shared source"
+
+
+async def test_an_unknown_pool_returns_nothing_rather_than_everything(storage):
+    """A filter that matches no member must return empty — silently falling back
+    to the unscoped corpus is how a scoped query lies about what it read."""
+    await storage.upsert({
+        "a": {"content": "some content", "gnostic_pools": ["pool-a"]},
+    })
+    storage._pool_filter = "pool-that-does-not-exist"
+    try:
+        rows = await storage.query("content", top_k=5)
+    finally:
+        storage._pool_filter = None
+    assert rows == [], f"expected an honest empty, got {rows}"

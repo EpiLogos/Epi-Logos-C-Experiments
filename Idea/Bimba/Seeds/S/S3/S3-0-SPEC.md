@@ -34,7 +34,7 @@ Primary hooks are `connect`, `hello-ok`, `RequestFrame`, `ResponseFrame`, `Gatew
 
 ## Test Obligations
 
-Real tests are `Body/S/S3/gateway-contract/tests/hermes_inspired_contracts.rs`, `Body/S/S3/gateway/tests/protocol_contract.rs`, `Body/S/S3/gateway/tests/live_gateway_smoke.rs`, and `Body/S/S3/epi-app/tests/main/gateway-parity.test.ts`. They must verify protocol versioning, connect-first behavior, advertised methods/events, handler ownership, and app parity without mocks that bypass the gateway.
+Real tests are `Body/S/S3/gateway-contract/tests/hermes_inspired_contracts.rs`, `Body/S/S3/gateway/tests/protocol_contract.rs`, `Body/S/S3/gateway/tests/s3_runtime_inproc_contract.rs` (in-process S3 runtime — renamed from the misleading `live_gateway_smoke`; the through-the-gateway live smoke is the S0 counterpart `Body/S/S0/epi-cli/tests/gate_runtime_handler_owner.rs` via the real `TestGatewayClient`), and `Body/S/S3/epi-app/tests/main/gateway-parity.test.ts`. They must verify protocol versioning, connect-first behavior, advertised methods/events, handler ownership, and app parity without mocks that bypass the gateway.
 
 ## Open Gaps
 

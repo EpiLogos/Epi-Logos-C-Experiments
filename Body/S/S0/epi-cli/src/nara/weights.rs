@@ -12,6 +12,8 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
+use portal_core::tunable::{TunableRegistry, TunableValue};
+
 /// Default body weight: natal contribution (stable layer)
 pub const DEFAULT_BODY_NATAL: f32 = 0.50;
 /// Default body weight: transit contribution (live planetary hour)
@@ -98,23 +100,69 @@ impl NaraWeights {
 // ─── Config I/O ────────────────────────────────────────────────────────────
 
 fn config_path() -> PathBuf {
-    dirs::home_dir()
+    std::env::var_os("HOME")
+        .map(PathBuf::from)
         .unwrap_or_else(|| PathBuf::from("."))
         .join(".epi-logos")
         .join("config.toml")
 }
 
-/// Load NaraWeights from config.toml, returning defaults if absent.
-pub fn load_weights() -> Result<NaraWeights, String> {
-    let path = config_path();
-    if !path.exists() {
-        return Ok(NaraWeights::default());
-    }
-    let content = std::fs::read_to_string(&path).map_err(|e| format!("read config: {e}"))?;
+fn schema_dir() -> PathBuf {
+    std::env::var_os("EPI_TUNABLE_SCHEMA_DIR")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| {
+            let mut p = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+            p.push("..");
+            p.push("portal-core");
+            p.push("tunable-schema");
+            p
+        })
+}
 
-    // Parse TOML manually for [nara.weights] section
-    let weights = parse_weights_from_toml(&content);
+/// Load NaraWeights from config.toml, returning defaults if absent.
+/// Generic Track-38 boundary read: one f32 knob from the unified tunable
+/// surface, falling back to the schema/kernel default when the registry or
+/// key is unavailable. Kernel crates stay registry-free; boundaries inject.
+pub fn tunable_f32(key: &str, fallback: f32) -> f32 {
+    TunableRegistry::load_with_overrides(&schema_dir(), Some(&config_path()))
+        .ok()
+        .and_then(|registry| match registry.value(key) {
+            Some(portal_core::tunable::TunableValue::F32(v)) => Some(v),
+            _ => None,
+        })
+        .unwrap_or(fallback)
+}
+
+pub fn load_weights() -> Result<NaraWeights, String> {
+    let registry = TunableRegistry::load_with_overrides(&schema_dir(), Some(&config_path()))
+        .map_err(|e| e.to_string())?;
+    let mut weights = NaraWeights::default();
+    apply_f32(
+        &registry,
+        "nara.weights.body_natal",
+        &mut weights.body_natal,
+    );
+    apply_f32(
+        &registry,
+        "nara.weights.body_transit",
+        &mut weights.body_transit,
+    );
+    apply_f32(
+        &registry,
+        "nara.weights.body_oracle",
+        &mut weights.body_oracle,
+    );
+    apply_f32(&registry, "nara.weights.oracle_pp", &mut weights.oracle_pp);
+    apply_f32(&registry, "nara.weights.oracle_nn", &mut weights.oracle_nn);
+    apply_f32(&registry, "nara.weights.oracle_mp", &mut weights.oracle_mp);
+    apply_f32(&registry, "nara.weights.oracle_pm", &mut weights.oracle_pm);
     Ok(weights)
+}
+
+fn apply_f32(registry: &TunableRegistry, key: &str, target: &mut f32) {
+    if let Some(TunableValue::F32(value)) = registry.value(key) {
+        *target = value;
+    }
 }
 
 /// Save NaraWeights to config.toml [nara.weights] section.
@@ -148,40 +196,6 @@ pub fn save_weights(weights: &NaraWeights) -> Result<(), String> {
 
     std::fs::write(&path, format!("{cleaned}{new_section}"))
         .map_err(|e| format!("write config: {e}"))
-}
-
-/// Parse [nara.weights] section from TOML string.
-fn parse_weights_from_toml(toml: &str) -> NaraWeights {
-    let mut w = NaraWeights::default();
-    let mut in_section = false;
-
-    for line in toml.lines() {
-        let trimmed = line.trim();
-        if trimmed == "[nara.weights]" {
-            in_section = true;
-            continue;
-        }
-        if in_section {
-            if trimmed.starts_with('[') {
-                break; // Next section
-            }
-            if let Some((key, val)) = trimmed.split_once('=') {
-                let key = key.trim();
-                let val: f32 = val.trim().parse().unwrap_or(0.0);
-                match key {
-                    "body_natal" => w.body_natal = val,
-                    "body_transit" => w.body_transit = val,
-                    "body_oracle" => w.body_oracle = val,
-                    "oracle_pp" => w.oracle_pp = val,
-                    "oracle_nn" => w.oracle_nn = val,
-                    "oracle_mp" => w.oracle_mp = val,
-                    "oracle_pm" => w.oracle_pm = val,
-                    _ => {}
-                }
-            }
-        }
-    }
-    w
 }
 
 /// Remove a TOML section and all its key-value pairs.

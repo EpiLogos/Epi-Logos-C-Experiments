@@ -9,23 +9,44 @@ import { useCallback, useEffect, useState } from 'react';
 import { useEpiClawGatewayStore } from '../stores/epiClawGatewayStore';
 import type { GatewaySessionRow, CronJob } from '../controllers/epi-claw/types';
 import { ADVANCED_PANELS, isGatewayPanel } from './omni/contracts/panels';
+import { shouldAutoConnectLegacyGateway } from './omni/gateway/gatewayModel';
 import { PrimaryTabs } from './omni/layout/PrimaryTabs';
 import { OmniPanelHeader } from './omni/layout/OmniPanelHeader';
-import { ChatPanel } from './omni/chat/ChatPanel';
+import { PiChatPanel } from './omni/chat/PiChatPanel';
 import { OverviewPanel } from './omni/panels/OverviewPanel';
-import { SessionsPanel } from './omni/panels/SessionsPanel';
+import { SessionManagerPanel } from './omni/panels/SessionManagerPanel';
 import { ChannelsPanel } from './omni/panels/ChannelsPanel';
 import { InstancesPanel } from './omni/panels/InstancesPanel';
 import { CronPanel } from './omni/panels/CronPanel';
 import { SkillsPanel } from './omni/panels/SkillsPanel';
 import { NodesPanel } from './omni/panels/NodesPanel';
 import { ConfigPanel } from './omni/panels/ConfigPanel';
-import { DebugPanel } from './omni/panels/DebugPanel';
+import { DiagnosticsPanel } from './omni/panels/DiagnosticsPanel';
 import { LogsPanel } from './omni/panels/LogsPanel';
 import { SettingsPanel } from './omni/panels/SettingsPanel';
 import { ModelsPanel } from './omni/panels/ModelsPanel';
+import { GatewayPanel } from './omni/panels/GatewayPanel';
+import { DispatchTracePanel } from './omni/panels/DispatchTracePanel';
+import { ToolStreamPanel } from './omni/panels/ToolStreamPanel';
+import { EvidencePanel } from './omni/panels/EvidencePanel';
+import {
+  createIntentLogEntry,
+  reduceIntentLog
+} from './omni/diagnostics/CrossLayoutIntentLog';
 import { useDomainStore } from '../stores/domainStore';
 import { resolveThemeForDomain } from '../theme/resolveTheme';
+import type { DispatchGenealogySelection } from '../../common/dispatch-genealogy';
+import type { PrivacyDropAggregate } from '@pratibimba/ide-shell-m0-m5/lib/browser/services/privacy-drop-feed';
+import {
+  PENDING_M_READINESS,
+  type MExtensionReadinessSnapshot
+} from '@pratibimba/m-extension-runtime/lib/common/readiness';
+import { CROSS_LAYOUT_INTENT_TELEMETRY_EVENT } from '@pratibimba/pratibimba-layouts/lib/common/cross-layout-intent';
+import { extractSessionKey, MAIN_EPII_SESSION_KEY } from './omni/sessions/sessionManagerModel';
+import type {
+  GatewayResolvedSessionSurface,
+  PortalTemporalSurfaceContract
+} from '../../common/omnipanel-runtime';
 
 const OMNI_UI_FONT_STACK =
   '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif';
@@ -33,11 +54,43 @@ const OMNI_UI_FONT_STACK =
 interface OmniPanelProps {
   state: 'hidden' | 'minimal' | 'fullscreen';
   onClose: () => void;
+  onOpenSource?: (coordinate: string, sourceAnchor: string) => Promise<unknown> | unknown;
+  readinessSnapshot?: MExtensionReadinessSnapshot;
+  profileTickTelemetry?: {
+    subscriberCount: number;
+    tickHistory: readonly Array<{ generation: number | null; emittedAt: number; advanced: boolean }>;
+    lastTickProcessedAt: number | null;
+    laggingSubscribers: readonly Array<{ subscriberId: string; lagMs: number }>;
+  };
+  onInvokeGatewayRpc?: (method: string, params: Record<string, unknown>) => Promise<unknown>;
+  privacyDropAggregate?: PrivacyDropAggregate;
 }
 
-export function OmniPanel({ state, onClose }: OmniPanelProps) {
+const EMPTY_PRIVACY_DROP_AGGREGATE: PrivacyDropAggregate = {
+  byWidget: {},
+  byClass: {},
+  total: 0,
+};
+
+export function OmniPanel({
+  state,
+  onClose,
+  onOpenSource,
+  readinessSnapshot = PENDING_M_READINESS,
+  profileTickTelemetry = {
+    subscriberCount: 0,
+    tickHistory: [],
+    lastTickProcessedAt: null,
+    laggingSubscribers: [],
+  },
+  onInvokeGatewayRpc,
+  privacyDropAggregate = EMPTY_PRIVACY_DROP_AGGREGATE,
+}: OmniPanelProps) {
   const isVisible = state !== 'hidden';
   const { currentDomain } = useDomainStore();
+  const [intentLogEntries, setIntentLogEntries] = useState([]);
+  const [expandedIntentEntryId, setExpandedIntentEntryId] = useState<string | null>(null);
+  const [gatewayReconnectHistory, setGatewayReconnectHistory] = useState([]);
 
   const {
     connectionState,
@@ -59,6 +112,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     logs,
     nodes,
     devices,
+    dispatchGenealogy,
     connect,
     disconnect,
     setGatewayUrl,
@@ -113,6 +167,8 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     loadLogs,
     loadNodes,
     loadDevices,
+    loadDispatchGenealogy,
+    selectDispatchGenealogyNode,
     approveDevicePairing,
     rejectDevicePairing,
     rotateDeviceToken,
@@ -148,6 +204,41 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
   const [advancedMenuOpen, setAdvancedMenuOpen] = useState(false);
   const [workspaceSection, setWorkspaceSection] = useState<'cron' | 'models' | 'skills' | 'settings'>('cron');
   const [chatToolEventsTogglePending, setChatToolEventsTogglePending] = useState(false);
+  const latestProfileGeneration =
+    profileTickTelemetry.tickHistory.length > 0
+      ? profileTickTelemetry.tickHistory[profileTickTelemetry.tickHistory.length - 1].generation
+      : readinessSnapshot.profileGeneration;
+
+  useEffect(() => {
+    const target = globalThis as typeof globalThis & {
+      addEventListener?: (type: string, listener: EventListener) => void;
+      removeEventListener?: (type: string, listener: EventListener) => void;
+    };
+    if (typeof target.addEventListener !== 'function' || typeof target.removeEventListener !== 'function') {
+      return undefined;
+    }
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent).detail;
+      if (!detail?.intent) {
+        return;
+      }
+      setIntentLogEntries((entries) => reduceIntentLog(entries, createIntentLogEntry(detail.intent, {
+        timestamp: detail.timestamp,
+        status: detail.status,
+        error: detail.error ?? null,
+      })));
+    };
+    target.addEventListener(CROSS_LAYOUT_INTENT_TELEMETRY_EVENT, handler);
+    return () => target.removeEventListener(CROSS_LAYOUT_INTENT_TELEMETRY_EVENT, handler);
+  }, []);
+
+  useEffect(() => {
+    setGatewayReconnectHistory((entries) => reduceReconnectHistory(entries, {
+      timestamp: Date.now(),
+      state: connectionState,
+      reason: connectionError ?? readinessSnapshot.reason ?? null,
+    }));
+  }, [connectionState, connectionError, readinessSnapshot.reason]);
 
   useEffect(() => {
     if (state !== 'fullscreen') {
@@ -201,6 +292,14 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
       void loadSkills();
       void loadCronJobs();
     }
+    if (activePanel === 'gateway') {
+      void loadConfig();
+      void loadConfigSchema();
+      void loadSkills();
+      void loadCronJobs();
+      void loadNodes();
+      void loadDevices();
+    }
     if (activePanel === 'models') {
       void loadConfig();
       void loadConfigSchema();
@@ -221,6 +320,9 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
       void loadNodes();
       void loadDevices();
     }
+    if (activePanel === 'dispatch-trace' || activePanel === 'tool-stream' || activePanel === 'evidence') {
+      void loadDispatchGenealogy(chat.sessionKey);
+    }
   }, [
     activePanel,
     connectionState,
@@ -234,6 +336,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     loadLogs,
     loadNodes,
     loadDevices,
+    loadDispatchGenealogy,
     loadPresence,
     loadSessions,
     loadSkills,
@@ -241,6 +344,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     chat.chatLoading,
     chat.chatMessages.length,
     logsLimit,
+    chat.sessionKey,
     sessionsActiveMinutes,
     sessionsLimit,
     sessionsIncludeGlobal,
@@ -248,6 +352,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
   ]);
 
   const activeChatSession = sessions.sessionsResult?.sessions.find((session) => session.key === chat.sessionKey) ?? null;
+  const piMonitor = buildPiMonitorInput(activeChatSession, chat.sessionKey, readinessSnapshot, latestProfileGeneration);
   const toolEventsVerboseEnabled = (activeChatSession?.verboseLevel ?? '').toLowerCase() === 'on';
 
   const handleToggleChatToolEventsVerbose = useCallback(async () => {
@@ -293,6 +398,71 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     setActivePanel('chat');
   };
 
+  const handleStartKhoraSession = async (topic: string, dayId: string | null) => {
+    if (!client || connectionState !== 'connected') {
+      throw new Error('Gateway is not connected.');
+    }
+    const response = await client.request('s4.khora.session_start', {
+      topic: topic.trim() || undefined,
+      day_id: dayId,
+      parent: MAIN_EPII_SESSION_KEY,
+      compatibility_method: 'khora_session_start',
+    });
+    const sessionKey = extractSessionKey(response);
+    if (sessionKey) {
+      setSessionKey(sessionKey);
+    }
+    await loadSessions({
+      activeMinutes: 120,
+      limit: 200,
+      includeGlobal: true,
+      includeUnknown: false,
+    });
+    if (sessionKey) {
+      setActivePanel('chat');
+    }
+  };
+
+  const handleSelectDispatchNode = useCallback((selection: DispatchGenealogySelection) => {
+    selectDispatchGenealogyNode(selection.node.id);
+  }, [selectDispatchGenealogyNode]);
+
+  const handleOpenDispatchEvidence = useCallback((selection: DispatchGenealogySelection) => {
+    selectDispatchGenealogyNode(selection.node.id);
+    setActivePanel('evidence');
+  }, [selectDispatchGenealogyNode, setActivePanel]);
+
+  const handleOpenDispatchSource = useCallback((selection: DispatchGenealogySelection) => {
+    selectDispatchGenealogyNode(selection.node.id);
+    const source = selection.sourceCommand;
+    if (!source) {
+      return;
+    }
+    const detail = {
+      commandId: 'backend-studio.openSource',
+      coordinate: source.coordinate,
+      sourceAnchor: source.sourceAnchor,
+      selectedNodeId: selection.node.id,
+    };
+    if (onOpenSource) {
+      void onOpenSource(source.coordinate, source.sourceAnchor);
+      return;
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('pratibimba.backend-studio.open-source', { detail }));
+    }
+  }, [onOpenSource, selectDispatchGenealogyNode]);
+
+  const invokeGatewayRpc = useCallback(async (method: string, params: Record<string, unknown>) => {
+    if (onInvokeGatewayRpc) {
+      return onInvokeGatewayRpc(method, params);
+    }
+    if (!client || connectionState !== 'connected') {
+      throw new Error('Gateway is not connected.');
+    }
+    return client.request(method, params);
+  }, [client, connectionState, onInvokeGatewayRpc]);
+
   const handlePatchSessionLabel = async (session: GatewaySessionRow) => {
     const nextLabel = window.prompt('Session label', session.label ?? '');
     if (nextLabel === null) return;
@@ -316,16 +486,18 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
     if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
       return;
     }
-    if (!isVisible) {
-      return;
-    }
-    if (!client && (connectionState === 'disconnected' || connectionState === 'error')) {
+    if (shouldAutoConnectLegacyGateway({
+      bridgeRpcAvailable: Boolean(onInvokeGatewayRpc),
+      visible: isVisible,
+      hasClient: Boolean(client),
+      connectionState,
+    })) {
       void (async () => {
         await syncMainS3Connection();
         connect();
       })();
     }
-  }, [client, connect, connectionState, isVisible, syncMainS3Connection]);
+  }, [client, connect, connectionState, isVisible, onInvokeGatewayRpc, syncMainS3Connection]);
 
   const handleAddCron = async () => {
     try {
@@ -425,7 +597,7 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
         );
       case 'chat':
         return (
-          <ChatPanel
+          <PiChatPanel
             panelState={state}
             connectionState={connectionState}
             chat={chat}
@@ -462,9 +634,78 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
             onToggleToolEventsVerbose={() => {
               void handleToggleChatToolEventsVerbose();
             }}
+            onInvokeGatewayRpc={async (method, params) => {
+              if (!client || connectionState !== 'connected') {
+                throw new Error('Gateway is not connected.');
+              }
+              return client.request(method, params);
+            }}
+            onActivateTab={(tabId) => {
+              if (tabId === 'gateway') {
+                setActivePanel('workspace');
+              }
+              if (tabId === 'dispatch-trace') {
+                setActivePanel('dispatch-trace');
+              }
+              if (tabId === 'tool-stream') {
+                setActivePanel('tool-stream');
+              }
+              if (tabId === 'evidence') {
+                setActivePanel('evidence');
+              }
+            }}
             onSend={async (message, options) => {
               await sendMessage(message, options);
             }}
+          />
+        );
+      case 'dispatch-trace':
+        return (
+          <DispatchTracePanel
+            snapshot={dispatchGenealogy.snapshot}
+            selectedNodeId={dispatchGenealogy.selectedNodeId}
+            loading={dispatchGenealogy.loading}
+            error={dispatchGenealogy.error}
+            onRefresh={() => {
+              void loadDispatchGenealogy(chat.sessionKey);
+            }}
+            onSelectNode={(selection) => {
+              handleSelectDispatchNode(selection);
+              setActivePanel('tool-stream');
+            }}
+            onOpenEvidence={handleOpenDispatchEvidence}
+            onOpenSource={handleOpenDispatchSource}
+          />
+        );
+      case 'tool-stream':
+        return (
+          <ToolStreamPanel
+            snapshot={dispatchGenealogy.snapshot}
+            selectedNodeId={dispatchGenealogy.selectedNodeId}
+            loading={dispatchGenealogy.loading}
+            error={dispatchGenealogy.error}
+            onRefresh={() => {
+              void loadDispatchGenealogy(chat.sessionKey);
+            }}
+            onSelectNode={handleSelectDispatchNode}
+            onActivateDispatchTrace={(selection) => {
+              handleSelectDispatchNode(selection);
+              setActivePanel('dispatch-trace');
+            }}
+            onOpenEvidence={handleOpenDispatchEvidence}
+            onOpenSource={handleOpenDispatchSource}
+          />
+        );
+      case 'evidence':
+        return (
+          <EvidencePanel
+            snapshot={dispatchGenealogy.snapshot}
+            selectedNodeId={dispatchGenealogy.selectedNodeId}
+            onActivateDispatchTrace={(selection) => {
+              handleSelectDispatchNode(selection);
+              setActivePanel('dispatch-trace');
+            }}
+            onOpenSource={handleOpenDispatchSource}
           />
         );
       case 'models':
@@ -485,158 +726,193 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
           />
         );
       case 'workspace':
+      case 'gateway':
         return (
-          <div className="p-4 space-y-3">
-            <div className="flex gap-2">
-              {([
-                ['cron', 'Cron'],
-                ['models', 'Models'],
-                ['skills', 'Skills'],
-                ['settings', 'Settings'],
-              ] as const).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  className={`px-3 py-1.5 text-xs rounded border ${
-                    workspaceSection === id
-                      ? 'border-[var(--color-m5)]/50 bg-[var(--color-m5)]/15'
-                      : 'border-[var(--border-subtle)]'
-                  }`}
-                  onClick={() => setWorkspaceSection(id)}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            {workspaceSection === 'cron' ? (
-              <CronPanel
-                cron={cron}
-                cronName={cronName}
-                cronDescription={cronDescription}
-                cronAgentId={cronAgentId}
-                cronScheduleKind={cronScheduleKind}
-                cronEveryAmount={cronEveryAmount}
-                cronEveryUnit={cronEveryUnit}
-                cronAtValue={cronAtValue}
-                cronExpr={cronExpr}
-                cronTz={cronTz}
-                cronSessionTarget={cronSessionTarget}
-                cronWakeMode={cronWakeMode}
-                cronPayloadKind={cronPayloadKind}
-                cronPayloadText={cronPayloadText}
-                cronDeliver={cronDeliver}
-                cronChannel={cronChannel}
-                cronTo={cronTo}
-                cronTimeoutSeconds={cronTimeoutSeconds}
-                cronPostToMainPrefix={cronPostToMainPrefix}
-                onSetCronName={setCronName}
-                onSetCronDescription={setCronDescription}
-                onSetCronAgentId={setCronAgentId}
-                onSetCronScheduleKind={setCronScheduleKind}
-                onSetCronEveryAmount={setCronEveryAmount}
-                onSetCronEveryUnit={setCronEveryUnit}
-                onSetCronAtValue={setCronAtValue}
-                onSetCronExpr={setCronExpr}
-                onSetCronTz={setCronTz}
-                onSetCronSessionTarget={setCronSessionTarget}
-                onSetCronWakeMode={setCronWakeMode}
-                onSetCronPayloadKind={setCronPayloadKind}
-                onSetCronPayloadText={setCronPayloadText}
-                onSetCronDeliver={setCronDeliver}
-                onSetCronChannel={setCronChannel}
-                onSetCronTo={setCronTo}
-                onSetCronTimeoutSeconds={setCronTimeoutSeconds}
-                onSetCronPostToMainPrefix={setCronPostToMainPrefix}
-                onRefresh={() => {
-                  void loadCronJobs();
-                }}
-                onAdd={() => {
-                  void handleAddCron();
-                }}
-                onToggle={(job: CronJob) => {
-                  void toggleCronJob(job, !job.enabled);
-                }}
-                onRun={(job: CronJob) => {
-                  void runCronJob(job);
-                }}
-                onRuns={(job: CronJob) => {
-                  void loadCronRuns(job.id);
-                }}
-                onRemove={(job: CronJob) => {
-                  void removeCronJob(job);
-                }}
-              />
-            ) : null}
-
-            {workspaceSection === 'models' ? (
-              <ModelsPanel
-                connectionState={connectionState}
-                config={config}
-                onLoad={() => {
-                  void loadConfig();
-                }}
-                onSave={() => {
-                  return saveConfig();
-                }}
-                onApply={() => {
-                  return applyConfig();
-                }}
-                onSetRaw={setConfigRaw}
-              />
-            ) : null}
-
-            {workspaceSection === 'skills' ? (
-              <SkillsPanel
-                skills={skills}
-                filter={uiSettings.skillsFilter}
-                onRefresh={() => {
-                  void loadSkills();
-                }}
-                onFilterChange={setSkillsFilter}
-                onToggle={(skillKey, enabled) => {
-                  void toggleSkill(skillKey, enabled);
-                }}
-                onSetEdit={setSkillEdit}
-                onSaveKey={(skillKey) => {
-                  void saveSkillApiKey(skillKey);
-                }}
-                onInstall={(skillKey, name, installId) => {
-                  void installSkill(skillKey, name, installId);
-                }}
-              />
-            ) : null}
-
-            {workspaceSection === 'settings' ? (
-              <SettingsPanel
-                gatewayUrl={gatewayUrl}
-                gatewayToken={gatewayToken}
-                gatewayPassword={gatewayPassword}
-                connectionState={connectionState}
-                onSetGatewayUrl={setGatewayUrl}
-                onSetGatewayToken={setGatewayToken}
-                onSetGatewayPassword={setGatewayPassword}
-                uiSettings={uiSettings}
-                onSetUiTheme={setUiTheme}
-                onSetChatFocusMode={setChatFocusMode}
-                onSetChatShowThinking={setChatShowThinking}
-                onSetChatSplitRatio={setChatSplitRatio}
-                onSetNavCollapsed={setNavCollapsed}
-                onConnect={() => {
-                  void (async () => {
-                    await syncMainS3Connection();
-                    connect();
-                  })();
-                }}
-                onDisconnect={disconnect}
-              />
-            ) : null}
-          </div>
+          <GatewayPanel
+            connectionState={connectionState}
+            gatewayUrl={gatewayUrl}
+            readinessSnapshot={readinessSnapshot}
+            initialSubView={activePanel === 'workspace' ? workspaceSection : 'capabilities'}
+            onReconnect={() => {
+              void (async () => {
+                await syncMainS3Connection();
+                connect();
+              })();
+            }}
+            onActivateDiagnostics={() => {
+              setActivePanel('diagnostics');
+            }}
+            onInvokeGatewayRpc={invokeGatewayRpc}
+            onOpenSource={onOpenSource}
+            nodesProps={{
+              nodes,
+              devices,
+              onRefreshNodes: () => {
+                void loadNodes();
+              },
+              onRefreshDevices: () => {
+                void loadDevices();
+              },
+              onApprovePairing: (requestId) => {
+                void approveDevicePairing(requestId);
+              },
+              onRejectPairing: (requestId) => {
+                void rejectDevicePairing(requestId);
+              },
+              onRotateToken: (params) => {
+                void rotateDeviceToken(params);
+              },
+              onRevokeToken: (params) => {
+                void revokeDeviceToken(params);
+              },
+            }}
+            modelsProps={{
+              connectionState,
+              config,
+              onLoad: () => {
+                void loadConfig();
+              },
+              onSave: () => {
+                return saveConfig();
+              },
+              onApply: () => {
+                return applyConfig();
+              },
+              onSetRaw: setConfigRaw,
+            }}
+            skillsProps={{
+              skills,
+              filter: uiSettings.skillsFilter,
+              onRefresh: () => {
+                void loadSkills();
+              },
+              onFilterChange: setSkillsFilter,
+              onToggle: (skillKey, enabled) => {
+                void toggleSkill(skillKey, enabled);
+              },
+              onSetEdit: setSkillEdit,
+              onSaveKey: (skillKey) => {
+                void saveSkillApiKey(skillKey);
+              },
+              onInstall: (skillKey, name, installId) => {
+                void installSkill(skillKey, name, installId);
+              },
+            }}
+            cronProps={{
+              cron,
+              cronName,
+              cronDescription,
+              cronAgentId,
+              cronScheduleKind,
+              cronEveryAmount,
+              cronEveryUnit,
+              cronAtValue,
+              cronExpr,
+              cronTz,
+              cronSessionTarget,
+              cronWakeMode,
+              cronPayloadKind,
+              cronPayloadText,
+              cronDeliver,
+              cronChannel,
+              cronTo,
+              cronTimeoutSeconds,
+              cronPostToMainPrefix,
+              onSetCronName: setCronName,
+              onSetCronDescription: setCronDescription,
+              onSetCronAgentId: setCronAgentId,
+              onSetCronScheduleKind: setCronScheduleKind,
+              onSetCronEveryAmount: setCronEveryAmount,
+              onSetCronEveryUnit: setCronEveryUnit,
+              onSetCronAtValue: setCronAtValue,
+              onSetCronExpr: setCronExpr,
+              onSetCronTz: setCronTz,
+              onSetCronSessionTarget: setCronSessionTarget,
+              onSetCronWakeMode: setCronWakeMode,
+              onSetCronPayloadKind: setCronPayloadKind,
+              onSetCronPayloadText: setCronPayloadText,
+              onSetCronDeliver: setCronDeliver,
+              onSetCronChannel: setCronChannel,
+              onSetCronTo: setCronTo,
+              onSetCronTimeoutSeconds: setCronTimeoutSeconds,
+              onSetCronPostToMainPrefix: setCronPostToMainPrefix,
+              onRefresh: () => {
+                void loadCronJobs();
+              },
+              onAdd: () => {
+                void handleAddCron();
+              },
+              onToggle: (job: CronJob) => {
+                void toggleCronJob(job, !job.enabled);
+              },
+              onRun: (job: CronJob) => {
+                void runCronJob(job);
+              },
+              onRuns: (job: CronJob) => {
+                void loadCronRuns(job.id);
+              },
+              onRemove: (job: CronJob) => {
+                void removeCronJob(job);
+              },
+            }}
+            configProps={{
+              connectionState,
+              config,
+              mode: uiSettings.configPanelMode,
+              searchQuery: uiSettings.configSearchQuery,
+              activeSection: uiSettings.configActiveSection,
+              activeSubsection: uiSettings.configActiveSubsection,
+              onLoad: () => {
+                void loadConfig();
+              },
+              onSchema: () => {
+                void loadConfigSchema();
+              },
+              onSave: () => {
+                void saveConfig();
+              },
+              onApply: () => {
+                void applyConfig();
+              },
+              onUpdate: () => {
+                void runUpdate();
+              },
+              onSetApplySessionKey: setConfigApplySessionKey,
+              onSetRaw: setConfigRaw,
+              onSetMode: setConfigPanelMode,
+              onSetSearchQuery: setConfigSearchQuery,
+              onSetActiveSection: setConfigActiveSection,
+              onSetActiveSubsection: setConfigActiveSubsection,
+            }}
+            settingsProps={{
+              gatewayUrl,
+              gatewayToken,
+              gatewayPassword,
+              connectionState,
+              onSetGatewayUrl: setGatewayUrl,
+              onSetGatewayToken: setGatewayToken,
+              onSetGatewayPassword: setGatewayPassword,
+              uiSettings,
+              onSetUiTheme: setUiTheme,
+              onSetChatFocusMode: setChatFocusMode,
+              onSetChatShowThinking: setChatShowThinking,
+              onSetChatSplitRatio: setChatSplitRatio,
+              onSetNavCollapsed: setNavCollapsed,
+              onConnect: () => {
+                void (async () => {
+                  await syncMainS3Connection();
+                  connect();
+                })();
+              },
+              onDisconnect: disconnect,
+            }}
+          />
         );
       case 'sessions':
         return (
-          <SessionsPanel
+          <SessionManagerPanel
             connectionState={connectionState}
+            activeSessionKey={chat.sessionKey}
             sessions={sessions}
             sessionsActiveMinutes={sessionsActiveMinutes}
             sessionsLimit={sessionsLimit}
@@ -653,6 +929,9 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
                 includeGlobal: sessionsIncludeGlobal,
                 includeUnknown: sessionsIncludeUnknown,
               });
+            }}
+            onStartSession={(topic, dayId) => {
+              void handleStartKhoraSession(topic, dayId);
             }}
             onSelectSession={(key) => {
               void handleSelectSession(key);
@@ -852,23 +1131,38 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
             onSetActiveSubsection={setConfigActiveSubsection}
           />
         );
+      case 'diagnostics':
       case 'debug':
         return (
-          <DebugPanel
-            debug={debug}
-            debugMethod={debugMethod}
-            debugParams={debugParams}
-            onSetDebugMethod={setDebugMethod}
-            onSetDebugParams={setDebugParams}
-            onLoadStatus={() => {
-              void loadDebugStatus();
+          <DiagnosticsPanel
+            readinessLedger={[readinessSnapshot]}
+            profileGeneration={latestProfileGeneration}
+            profileTickHistory={profileTickTelemetry.tickHistory}
+            subscriberCount={profileTickTelemetry.subscriberCount}
+            lastTickProcessedAt={profileTickTelemetry.lastTickProcessedAt}
+            laggingSubscribers={profileTickTelemetry.laggingSubscribers}
+            pendingProfileFields={pendingProfileFieldsFromReadiness(readinessSnapshot)}
+            s2Graph={s2GraphFromReadiness(readinessSnapshot)}
+            gatewayWebSocket={{
+              state: connectionState,
+              url: gatewayUrl,
+              lastPingAt: readinessSnapshot.fetchedAt > 0 ? readinessSnapshot.fetchedAt : null,
+              latencyMs: null,
+              reconnectHistory: gatewayReconnectHistory,
             }}
-            onLoadHealth={() => {
-              void loadDebugHealth();
+            activeLayout={{
+              layoutId: 'daily-0-1',
+              dailyToggle: 'personal',
+              activeOmniPanelTab: activePanel === 'debug' ? 'diagnostics' : activePanel,
+              activeActivityBarMode: activePanel === 'workspace' ? 'gateway' : '0/1',
             }}
-            onCallMethod={() => {
-              void callDebugMethod(debugMethod, debugParams);
+            intentLogEntries={intentLogEntries}
+            expandedIntentEntryId={expandedIntentEntryId}
+            onToggleIntentEntry={(entryId) => {
+              setExpandedIntentEntryId(expandedIntentEntryId === entryId ? null : entryId);
             }}
+            privacyDropAggregate={privacyDropAggregate}
+            piMonitor={piMonitor}
           />
         );
       case 'logs':
@@ -963,4 +1257,139 @@ export function OmniPanel({ state, onClose }: OmniPanelProps) {
       )}
     </AnimatePresence>
   );
+}
+
+function reduceReconnectHistory(entries, next) {
+  const previous = entries[entries.length - 1];
+  if (previous && previous.state === next.state && previous.reason === next.reason) {
+    return entries;
+  }
+  return [...entries, next].slice(-8);
+}
+
+function pendingProfileFieldsFromReadiness(snapshot: MExtensionReadinessSnapshot) {
+  if (snapshot.state !== 'profile_missing_field' && snapshot.blockerIds.length === 0) {
+    return [];
+  }
+  return snapshot.blockerIds
+    .filter((blocker) => snapshot.state === 'profile_missing_field' || blocker.includes('profile') || blocker.includes('matheme'))
+    .map((blocker) => ({
+      fieldName: blocker.split('.').pop() || blocker,
+      gatingTranche: '10.x',
+      state: snapshot.state === 'profile_missing_field' ? 'pending' : snapshot.state,
+    }));
+}
+
+function s2GraphFromReadiness(snapshot: MExtensionReadinessSnapshot) {
+  const blocked = snapshot.state === 's2_graph_blocked';
+  const blockers = snapshot.blockerIds.join(' ').toLowerCase();
+  return {
+    bimbaReachable: snapshot.bridgeReachable && !blocked && !blockers.includes('bimba'),
+    gnosisReachable: snapshot.bridgeReachable && !blocked && !blockers.includes('gnosis'),
+    embeddingDimensions: 3072,
+    checkedAt: snapshot.fetchedAt > 0 ? snapshot.fetchedAt : null,
+    reason: snapshot.reason,
+  };
+}
+
+function buildPiMonitorInput(
+  session: GatewaySessionRow | null,
+  activeSessionKey: string | null,
+  readinessSnapshot: MExtensionReadinessSnapshot,
+  profileGeneration: number | null
+): {
+  portalTemporalSurface: PortalTemporalSurfaceContract;
+  resolvedSession: GatewayResolvedSessionSurface;
+} | null {
+  const raw = (session ?? {}) as GatewaySessionRow & Record<string, unknown>;
+  const sessionKey = firstSessionString(
+    raw.key,
+    raw.sessionKey,
+    raw.canonicalKey,
+    raw.sessionId,
+    activeSessionKey
+  );
+  if (!sessionKey) {
+    return null;
+  }
+
+  const resolvedSession: GatewayResolvedSessionSurface = {
+    canonicalKey: firstSessionString(raw.canonicalKey, raw.key, raw.sessionKey),
+    sessionKey,
+    sessionId: firstSessionString(raw.sessionId, raw.recordSessionId),
+    activeAgentId: firstSessionString(raw.activeAgentId, raw.active_coordinate, raw.activeCoordinate, raw.coordinate),
+    provider: firstSessionString(raw.provider, raw.modelProvider),
+    teamId: firstSessionString(raw.teamId),
+    teamRole: firstSessionString(raw.teamRole),
+    orchestrationKind: firstSessionString(raw.orchestrationKind, raw.kind),
+    parentSessionKey: firstSessionString(raw.parentSessionKey),
+    sourceSessionKey: firstSessionString(raw.sourceSessionKey),
+    sourceSessionKind: firstSessionString(raw.sourceSessionKind),
+    subagentLineage: Array.isArray(raw.subagentLineage)
+      ? raw.subagentLineage.filter((entry): entry is string => typeof entry === 'string')
+      : null,
+    dayId: firstSessionString(raw.dayId),
+    vaultNowPath: firstSessionString(raw.vaultNowPath, raw.nowPath),
+    cmuxWorkspace: firstSessionString(raw.cmuxWorkspace, raw.workspace, raw.runtimeCwd),
+    cmuxSurface: firstSessionString(raw.cmuxSurface, raw.surface),
+    cmuxPaneId: firstSessionString(raw.cmuxPaneId, raw.paneId),
+    terminalBinding: isSessionRecord(raw.terminalBinding) ? raw.terminalBinding : null,
+    capturePolicy: isSessionRecord(raw.capturePolicy) ? raw.capturePolicy : null,
+    captureHandleRef: firstSessionString(raw.captureHandleRef),
+    lastRunId: firstSessionString(raw.lastRunId),
+    runState: isSessionRecord(raw.runState) ? raw.runState : null,
+    updatedAtMs: typeof raw.updatedAt === 'number' || typeof raw.updatedAt === 'string' ? raw.updatedAt : null,
+  };
+
+  return {
+    portalTemporalSurface: {
+      canonicalSessionKey: sessionKey,
+      activeAgentId: firstSessionString(resolvedSession.activeAgentId),
+      dayId: firstSessionString(resolvedSession.dayId),
+      nowPath: firstSessionString(resolvedSession.vaultNowPath),
+      nowWikilink: firstSessionString(raw.nowWikilink),
+      kernelGeneration: profileGeneration,
+      kernelSubTick: null,
+      generation: readinessSnapshot.profileGeneration,
+      terminalBacked: Boolean(
+        isSessionRecord(resolvedSession.terminalBinding) &&
+        (
+          firstSessionString(resolvedSession.terminalBinding.tmuxPaneId) ||
+          firstSessionString(resolvedSession.terminalBinding.attachedSessionKey) ||
+          firstSessionString(resolvedSession.terminalBinding.terminalIdentifier)
+        )
+      ),
+      terminalProvider: isSessionRecord(resolvedSession.terminalBinding)
+        ? firstSessionString(resolvedSession.terminalBinding.provider)
+        : null,
+      terminalStatus: isSessionRecord(resolvedSession.terminalBinding)
+        ? firstSessionString(resolvedSession.terminalBinding.terminalStatus)
+        : null,
+      terminalLeaseExpiresAtMs: isSessionRecord(resolvedSession.terminalBinding)
+        ? firstSessionString(resolvedSession.terminalBinding.leaseExpiresAtMs)
+        : null,
+      terminalCapturePolicyMode: isSessionRecord(resolvedSession.capturePolicy)
+        ? firstSessionString(resolvedSession.capturePolicy.mode)
+        : null,
+      terminalCaptureHandleRef: firstSessionString(resolvedSession.captureHandleRef),
+      terminalMetadataKey: firstSessionString(raw.terminalMetadataKey),
+    },
+    resolvedSession,
+  };
+}
+
+function firstSessionString(...values: readonly unknown[]): string | null {
+  for (const value of values) {
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value;
+    }
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return String(value);
+    }
+  }
+  return null;
+}
+
+function isSessionRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }

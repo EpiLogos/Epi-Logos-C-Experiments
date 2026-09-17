@@ -138,7 +138,7 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
 
   it("consumePendingSophia distinguishes had_pending false (never recorded) from empty arrays", () => {
     const pending = consumePendingSophia("agent:never-recorded:main");
-    assert.deepEqual(pending, { had_pending: false, artifacts: [], improvement_vectors: [] });
+    assert.deepEqual(pending, { had_pending: false, artifacts: [], improvement_vectors: [], q_proposals: [] });
   });
 
   it("consumePendingSophia returns had_pending true even when recorded arrays are empty", () => {
@@ -149,6 +149,44 @@ describe("Sophia disclosure wiring (end-to-end)", () => {
       "tool was called even if it stashed empty arrays — that still signals deliberate close");
     assert.deepEqual(pending.artifacts, []);
     assert.deepEqual(pending.improvement_vectors, []);
+    assert.deepEqual(pending.q_proposals, []);
+  });
+
+  it("writes q_proposals through the single-writer JSONL envelope", () => {
+    const session_id = "agent:q-proposal-wire:main";
+    const day_id = "29-05-2026";
+    const witnessVak = rehearPhaseVakAddress();
+    const proposal = {
+      target_coordinate: "S3",
+      q_key: "q_5_integration_template",
+      q_value_candidate: "Like a lock finding its river, S3 gathers crossings into one governed current.",
+      qm_witness_session: session_id,
+      qm_witness_vak: witnessVak,
+      qm_witness_agent: "sophia",
+      rationale: "The session exposed integration as governed convergence rather than generic mediation.",
+      opens_questions: ["Which S3 crossings still lack a governed return path?"],
+      source_artifacts: ["/vault/session/now.md"],
+    };
+
+    recordPendingSophia(session_id, ["/vault/session/now.md"], ["q proposal"], [proposal]);
+    const consumed = consumePendingSophia(session_id);
+    assert.equal(consumed.had_pending, true);
+    assert.deepEqual(consumed.q_proposals, [proposal]);
+
+    const result = fireSophiaDisclosure({
+      session_id,
+      day_id,
+      artifacts: consumed.artifacts,
+      improvement_vectors: consumed.improvement_vectors,
+      q_proposals: consumed.q_proposals,
+      closure_kind: "rehear",
+    });
+    assert.equal(result.ok, true);
+    if (!result.ok) return;
+    const parsed = JSON.parse(readFileSync(result.path, "utf8").trim());
+    assert.equal(parsed.q_proposals.length, 1);
+    assert.equal(parsed.q_proposals[0].q_key, "q_5_integration_template");
+    assert.equal(parsed.q_proposals[0].qm_witness_session, session_id);
   });
 
   it("rehear VAK is used even if EPI_SESSION_VAK_ADDRESS holds a compose-phase VAK (I2)", () => {

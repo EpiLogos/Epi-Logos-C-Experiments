@@ -57,7 +57,17 @@ Graphiti placement is likewise explicit: architecturally, [[Graphiti]] belongs a
 
 S3/S3' is the temporal/runtime substrate behind [[M'-SYSTEM-SPEC]], [[M2'-SPEC]], [[M3'-SPEC]], [[M4'-SPEC]], and [[M5'-SPEC]]. The most direct anchors back into those consumers are [[Body/S/S3/gateway/src/lib.rs]], [[Body/S/S3/gateway/src/session_store.rs]], [[Body/S/S3/gateway-contract/src/lib.rs]], [[Body/S/S3/epi-spacetime-module/src/lib.rs]], [[Body/S/S3/graphiti-runtime/src/lib.rs]], and [[Body/S/S3/redis-context/src/lib.rs]].
 
+**Contemplation close contract (19.T19.6).** `nara.contemplate_session_close` is a live gateway route through the S0 host into the S3-owned composition law. It accepts a complete [[ContemplationObject]] supplied by the caller and returns the 4'-5'-0' reading (LLM/EBM/Verifier), [[wisdom_delta]], and symbolic-question round trips. The host adapter validates and delegates; it does not mint session evidence, substitute a mock reading, or bypass [[Anima]] re-verification metadata.
+
+**Governed session-close aggregate contract (22.T22.5).** `nara.session_open` mints a canonical `m4-protein://session/{session}/{kairos}` handle; `nara.session_close` rejects a handle bound to any other session. For the active [[M1']] Review carrier, the S0 host composes that route with the existing contemplation close, derives the twelve-position `+7 mod 12` closure and canonical octave return from bounded traversal evidence, reduces verifier evidence to an exact nine-bit virtue aggregate plus coherence, and persists one protected-local bundle beneath the full server-derived active-[[PASU]] scope. `nara.session_close.read` is a registered loopback-only route whose exact/latest lookup is confined to that PASU and requested session and returns only the opaque-ref aggregate. Raw trajectory, contemplation, protein body, pattern packet, and [[Graphiti]] relation bodies are neither persisted nor returned. This 7-8-9 close reading is session evidence, not the cumulative [[M1]]→[[M2]]→[[M3]] Third-Spanda 137 computation.
+
+**Oracle shared-state contract (Cycle-3 rerun, 2026-08-02).** `Body/S/S3/gateway/src/spacetime/presence.rs` owns `OracleSpreadPosition` and the shared temporal events `nara.oracle_spread` / `nara.oracle_position_state`, including card kind, target aspect, Klein face, and live-state transition law. These are S3 reducer/publication primitives, not direct RPC handlers. The S0 host exposes typed `nara.oracle.cast_iching`, `nara.oracle.cast_tarot`, `nara.oracle.history.read`, and `nara.oracle.update_position_state`: it persists the protected local transaction first, invokes the S3 projection best-effort, and returns `spacetimePublished` honestly. S3 never receives interpretation prose, question bodies, or raw personal field state through this projection.
+
+**CCT-21 [[BeingPattern]] contract (16.T16.21 / 29.T29.16).** `Body/S/S3/gateway/src/{s3_handlers,being_pattern}.rs` owns `s3'.being_pattern.observe`, `.project`, `.subscribe`, and `.review_candidate`. The producer never invents an inhabitant: an empty roster and unknown entity are explicit, an acceptance replay is labelled `acceptance-replay-fixture`, and all request/response payloads pass the protected-reference-only privacy guard. `review_candidate` admits only `ActualisingOne`, emits review evidence, and performs no [[S2]] canon mutation. The active [[Body/M/pratibimba-app]] Inhabited Bimba overlay consumes `.subscribe`, rejects stale generations, and remains read-only.
+
 ### M' Shell Consumed Contract Closure - Cycle 2 T12.T0
+
+**Carrier correction.** The active consumer is [[Body/M/pratibimba-app]] over one gateway WebSocket/bridge. The Theia-specific nouns below are frozen Cycle-2 provenance; their one-socket, one-profile, privacy-filter, reconnect, and capability-dispatch laws survive in the active carrier without reviving Theia plumbing.
 
 This closure narrows the M' surface to **only what the M'-Theia shell, `/body` lite-surface, OmniPanel, and M3/M4/M5 extensions actually consume** from S3/S3'. It is not a re-statement of the full S3 method manifest; it pins the consumed boundary so cycle 2 work stays subordinate to substrate already landed in `Body/S/S3` (and the live S0-hosted gateway dispatch that consults S3 route ownership).
 
@@ -75,6 +85,8 @@ This closure narrows the M' surface to **only what the M'-Theia shell, `/body` l
 | Temporal context for `/body` and shell `1` | `s3'.temporal.context` resolves DAY/NOW/Kairos/Redis/SpaceTimeDB projection + history archive placement; consumed by body-lite-surface to anchor `sessionKey`, `dayNow`, `profileGeneration`, `coordinate` in `CrossLayoutIntent` payloads | `Body/S/S0/epi-cli/src/gate/temporal.rs` (live `epi gate temporal context`) + S3' contract in §B.temporal | `body-lite-surface.test.mjs` proves `BODY_DEEP_LINK_CONTEXT_FIELDS` enumerates the 8 contract fields and intent dispatch preserves the full payload list across the cross-layout switch |
 
 **Reconnect / resubscribe lifecycle.** The kernel-bridge backend owns reconnect after gateway restart; the renderer-side `KernelBridgeAPI` singleton replays cached profile + connection status to late subscribers with `stale: true` until the next live observation. The single fan-out point ensures one upstream resubscribe regardless of how many M-extensions are mounted (Track 01 T5 background lifecycle deliverable depends on this contract).
+
+**Graph-revision propagation.** The gateway stamps the canonical [[S2]] `GraphMeta.graph_revision` into hydrated temporal context as `kernel.graphRevision` and publishes the same non-negative value additively on the shared `profile.update` envelope as `graphRevision`. The heartbeat samples a bounded reconnecting metadata reader; Neo4j latency never blocks the 1 Hz profile loop. Missing metadata is absence, not zero. [[M']] consumers may use this stamp to observe governed Bimba edits crossing renderings, but may not derive, increment, or privately poll it.
 
 **Verification evidence (2026-06-02).** `node --test extensions/test/kernel-bridge-theia-boundary.test.mjs extensions/test/shared-bridge-fan-out.test.mjs` returns 6/6 pass for the gateway-handshake, capability-dispatch, bridge-status, profile-mirror, and stream-subscription contracts. `body-lite-surface.test.mjs` (23/23) confirms the temporal-context payload preservation across the deep-link switch and the privacy floor blocking forbidden stream-row bodies.
 
@@ -138,13 +150,14 @@ The live implementation is broad but not yet coordinate-native:
 - `epi gate methods` returns a product/RPC-native manifest: `connect`, `chat.send`, `sessions.list`, `cron.add`, `node.invoke`, `exec.approval.request`, `models.list`, `skills.status`, `wizard.start`, and related methods.
 - Current canonical FLOW API wants coordinate-native methods: `s3.session.*`, `s3.channel.*`, `s3.message.route`, `s3'.temporal.*`, `s3'.day.*`, `s3'.kairos.*`, `s3'.presence.*`, and `s3'.context.*`.
 - `Body/S/S3/gateway-contract` owns the pure gateway/projection contract: product method names, event names, session record/patch shape, SpaceTimeDB projection table list, native/HTTP modes, `SubscribeMulti` message shape, S3'/S4/S5 owner fields, subscription row decoding for `session_surface` / `kairos_surface` / `global_temporal_surface` including `kernel_projection_json`, and route ownership for `s2.graph.kernel_resonance.record` / `s5.episodic.kernel_resonance.deposit`.
+- `s1'.base.ensure` is an exact advertised method with typed request/receipt shapes and an `S1HenAdapter` dispatch-plan row. The live [[S0]] host delegates to [[Hen]] and the registry/dispatch-plan addition is paired per [[DR-S3-5]]; the generic S3 `classify_method` implementation is unchanged.
 - `Body/S/S3/gateway` owns gateway protocol frame construction, runtime run/event/chat state, and the durable gateway session store: record creation with externally injected Pi/Khora runtime context, list/resolve/patch/delete authority, legacy OmniPanel row normalization, transcript path law, workspace/bootstrap scope derivation, and subagent launch validation. S0 remains the live server/runtime adapter that supplies cwd, vault root, session id, day id, and NOW path from the active Pi session and hosts domain-specific dispatch while it is being extracted.
 - `Body/S/S3/redis-context` owns Redis runtime residency and the RedisVL bridge path contract. It keeps `s2:graph:semantic` and `s3:gateway:temporal` as distinct namespaces over the same local Redis Stack substrate.
 - `spacetimedb_bridge.rs` is currently a file-backed/test event bridge plus a live reducer client for the S3/S3' SpaceTimeDB registration/projection plane. The current S0-hosted gateway can register gateway, client, agent, session, heartbeat, Kairos, safe kernel projection, global temporal, and temporal event surfaces when configured, and it can read the `session_surface` / `kairos_surface` / `global_temporal_surface` projection through HTTP SQL polling. Gateway readiness now also exposes the native WebSocket subscription plan over the same projection tables, and `epi portal` can use that S3-owned plan to open a `v1.json.spacetimedb` `SubscribeMulti` loop for `session_surface`, `kairos_surface`, and `global_temporal_surface` updates. The target remains one SpaceTimeDB deployment holding many gateway, agent, and client instances for the same installation/workspace.
 - The 2026-05-30 shared-cosmos contract adds the first native SpaceTimeDB world-plane tables and reducers to the S3/S3' law: `world_clock`, RLS-filtered `pratibimba_presence`, opt-in `shared_archetype_event`, and participant-filtered `coincidence`; reducers `advance_world_clock` at 1 Hz, `bind_pratibimba_presence`, and `detect_coincidences` at 1/min; quaternionic identity signatures where `quintessence_hash = BLAKE3(canonical_bytes(q_Nara) || caps)` is an indexing fingerprint over canonical quaternionic bytes, not the ontological identity itself.
 - `Body/S/S3/epi-spacetime-module` now carries the gateway-client registration module shape: gateway instances, PI-agent instances, TUI/desktop/browser clients, session temporal surfaces, global temporal surfaces, Kairos surfaces, and temporal activity events keyed by installation/workspace and instance identity.
-- `Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py` currently wraps the `graphiti-core` library in a FastAPI service on port `37778`. This proves Graphiti can be used as a Python library; the HTTP sidecar is only the current integration wrapper for Rust gateway/Nara callers and is now demoted behind `Body/S/S3/graphiti-runtime`.
-- There are now dedicated `Body/S/S3/redis-context`, `Body/S/S3/gateway`, and `Body/S/S3/graphiti-runtime` modules for Redis runtime residency, gateway protocol/session/runtime residency, and Graphiti runtime adapter law. The live gateway dispatch/server body is still S0-hosted, but it consults S3 route ownership and passes Graphiti envelope/provenance/deposit/search law through the S3 crate rather than owning it locally. `Body/S/S3` currently also holds `epi-app` and `epi-spacetime-module`; the next S3 extraction step is the live dispatch/server adapter.
+- `Body/S/S5/epi-gnostic/epi_gnostic/graphiti_service.py` wraps the `graphiti-core` library in a FastAPI service on port `37778`. This proves Graphiti can be used as a Python library; the HTTP sidecar is demoted behind `Body/S/S3/graphiti-runtime`. Nara relation insertion is now native and idempotent in the S3 crate for `HAS_DAY`, `CONTAINS_DAILY_NOTE`, `PART_OF_DAY`, and `NEXT_IN_ARC`, with protected metadata validation and read-back; remaining deposit/provenance compatibility calls may still use port `37778`.
+- There are now dedicated `Body/S/S3/redis-context`, `Body/S/S3/gateway`, `Body/S/S3/graphiti-runtime`, and `Body/S/S3/epi-spacetime-module` modules for Redis runtime residency, gateway protocol/session/runtime residency, Graphiti runtime adapter law, and the SpaceTimeDB module surface. The live gateway dispatch/server body is still S0-hosted, but it consults S3 route ownership and passes Graphiti envelope/provenance/deposit/search law through the S3 crate rather than owning it locally. `Body/S/S3/epi-app` is deprecated legacy parity material only; active M' shell authority is [[Body/M/pratibimba-app]], and the next S3 extraction step is the live dispatch/server adapter.
 
 ### Planning consequence
 
@@ -210,24 +223,23 @@ Current canonical S3 base technology:
 | Gateway method manifest | [[S3.1]] / [[S3.1']] | Rust | `gate/parity.rs` | Product/RPC compatibility surface |
 | SessionStore | [[S3.2]] / [[S3.2']] | `Body/S/S3/gateway` Rust/files, S0 Pi adapter | `.epi/gate/sessions` | Session identity and patch authority with Pi/Khora context injected at creation |
 | GatewayRuntimeState | [[S3.3]] | Rust memory | Process-local | Run registry, event listeners, chat process tracking |
-| OmniPanel / app bridge | [[S3.5]] | Current Electron/React app side; future Tauri v2 shell | Client process | Human-facing gateway client and eventual desktop mirror of the TUI portal |
+| M' Theia bridge | [[S3.5]] | `Body/M/epi-theia` kernel-bridge + M' extensions | Theia/Electron client process | Human-facing gateway client consuming the S3 gateway through the M' shell of record |
 | Graphiti runtime | [[S3.4']] / [[S3.5']] | Rust adapter over current Python library wrapper, target native library runtime | Current compatibility wrapper port `37778` | Temporal episodic architecture; `Body/S/S3/graphiti-runtime` owns envelope/provenance/deposit/search law, including kernel resonance deposition |
 
-### Desktop App / Tauri V2 Direction
+### M' Shell / Legacy `epi-app` Disposition
 
-Current checkup: `Body/S/S3/epi-app` is an Electron + Vite + React app. It already contains a gateway WebSocket client, Epi-Claw-compatible RPC client, shared capability/envelope types, and M0-M5 renderer domains. It currently also has Electron main-process filesystem and Neo4j access. The Tauri v2 migration should be specified before porting code.
+Current disposition: `Body/S/S3/epi-app` is deprecated legacy parity material. It is not the M' shell of record; active shell authority is `Body/M/epi-theia` per [[M'-SYSTEM-SPEC]] and the S3 consumed boundary above. Do not port or extend the Electron app here as a new product surface.
 
-Target shape:
+Decommission targets:
 
-| Layer | Current state | Tauri v2 target |
+| Surface | Current status | Target |
 |---|---|---|
-| Renderer | React M-domain shell, M0-M5 domain components, OmniPanel, command palette | Preserve useful renderer/domain components, but reshape primary layout to mirror the TUI `0` / `/` / `1` topology |
-| Main process | Electron IPC, direct filesystem helpers, direct Neo4j driver, gateway WebSocket client | Rust Tauri command layer that prefers gateway RPC and SpaceTimeDB subscriptions; direct filesystem access only through explicit S1/Hen/vault commands |
-| Live state | Gateway WebSocket plus local stores | Gateway RPC for commands and SpaceTimeDB registration/projection for gateway/agent/client/session liveness |
-| Settings | App-local config and UI panels | Same S0' portal surface registry/config ownership used by the TUI; no parallel desktop-only settings ontology |
-| Desktop role | M-domain exploration shell | External M-form mirror of the TUI portal: left `0` structural clock, centre `/` command/config/readiness, right `1` Nara/Epii/review/autoresearch |
+| Renderer domains / OmniPanel / command palette | Legacy parity reference | Port only still-useful behavior into `Body/M/epi-theia` M' extensions or acceptance tests |
+| Gateway WebSocket and Epi-Claw-compatible clients | Evidence of prior client behavior | Preserve required S3 invariants in `Body/S/S3/gateway*/tests` or the `Body/M/epi-theia` kernel-bridge test surface before archival |
+| Electron main-process filesystem / Neo4j access | Deprecated bypass of S1/S2/S3 ownership | Replace through explicit [[S1]] / [[Hen]] vault commands, [[S2]] graph contracts, and S3 gateway RPC/subscription surfaces |
+| Package root | Deprecated legacy material | Move/archive/delete only under an explicit follow-up; no new feature work lands here |
 
-The app port must not make Electron-to-Tauri a mechanical shell swap. The port is an architectural promotion: desktop state should be driven by the same gateway parity, SpaceTimeDB registration, and portal surface registry contracts used by `epi portal`.
+Any removal must first prove that no live S3 invariant is uniquely tested by `epi-app`. Until then, `epi-app` remains a named parity reference, not a current substrate or shell authority.
 
 ### API Methods Homed Here
 
@@ -657,7 +669,7 @@ S3' is not yet complete:
 - `s3'.context.*` is not yet a full Redis API family, but `s3'.temporal.context` now gives the first coordinate-native gateway method for reading and optionally hydrating the S3' temporal Redis context.
 - `s3'.temporal.state` target fields exist in TS but are only partially represented by the live `s3'.temporal.context` report.
 - `s3'.day.*` and `s3'.kairos.*` are designed, with related CLI/vault/nara surfaces elsewhere, but not cleanly unified under S3' gateway methods.
-- Graphiti is unnecessarily isolated behind the current FastAPI sidecar; target work should make it an S3 runtime/library component and leave S5/S5' to decide when and how to use it.
+- Graphiti relation insertion for Nara is native in S3; remaining episode deposit, search, and provenance compatibility calls still need migration off the FastAPI sidecar. S5/S5' continues to decide when and how the runtime is invoked.
 
 ### Internal 0-5 Breakdown
 
@@ -719,6 +731,10 @@ S3/S3' serves these [[Envelope]] layers:
 6. [[Graphiti]] is architecturally S3/S3' temporal episodic memory; S5/S5' owns invocation, usage, search, governance, and reflective meaning.
 7. Session identity is a gateway authority, while session inhabitation and reasoning are S4/S4'.
 
+## Contract-Surface Flag — 23.T23.9
+
+The existing `profile.update` heartbeat now transports the optional typed `harmonicProfile.cymaticSpheres` public-current projection for [[M2-5']]. The [[S3]] membrane does not compute chakra identities or planetary correspondence: it samples a fresh complete [[Kerykeion]] sky, invokes canonical [[F_routing]] through [[S0]], and carries the resulting Earth/Sun/active-ruler plus eight-row projection on the existing profile-generation clock. Absence is meaningful and must remain absent on stale, partial, or malformed provenance. No RPC method or gateway method-registry entry was added. The next full S3 parity harmonisation must include strict schema/live-wire coverage for this additive event field.
+
 ## Canonical Source Lock - 2026-06-02
 
 S3 owns the gateway control plane; S3' owns temporal/shared state, Day/NOW/Kairos projections, SpaceTimeDB subscription law, and Graphiti runtime boundary. Product RPC names may remain live, but coordinate ownership is canonical here and in [[ARCHITECTURE-DIAGRAM-PACK]].
@@ -728,7 +744,7 @@ S3 owns the gateway control plane; S3' owns temporal/shared state, Day/NOW/Kairo
 | World ontology | `Idea/Bimba/World/Types/Coordinates/S/S3/S3.md` mtime 2026-04-10 21:43:47; `Idea/Bimba/World/Types/Coordinates/S/S'/S3'/S3'.md` mtime 2026-04-10 17:52:42; `Idea/Bimba/World/NOW.md` and `Daily-Note.md` for S3' temporal artifact semantics |
 | docs/specs | `Idea/Bimba/Seeds/S/S3/S3'/Legacy/specs/S/S3-S3i-GATEWAY.md` mtime 2026-05-31 16:35:19; `Idea/Bimba/Seeds/S/Legacy/specs/S/S-STACK-INTEGRATION.md` mtime 2026-03-07 01:51:35 |
 | docs/plans | `Idea/Bimba/Seeds/M/Legacy/plans/2026-05-31-mprime-and-sprime-implementation-tracks/03-s3-gateway-and-spacetimedb.md` mtime 2026-06-01 18:27:27; `10-cross-cutting-integration-and-milestones.md` mtime 2026-06-02 00:17:57; `11-open-architectural-decisions.md` mtime 2026-06-02 00:14:24; `13-s-sprime-modularity-and-s0-membrane-cleanup.md` mtime 2026-06-01 23:57:36 |
-| Body substrate | `Body/S/S3/gateway-contract/**`, `Body/S/S3/gateway/**`, `Body/S/S3/redis-context/**`, `Body/S/S3/epi-spacetime-module/**`, `Body/S/S3/graphiti-runtime/**`, `Body/S/S3/epi-app/**`, `Body/S/S0/epi-cli/src/gate/**` |
+| Body substrate | `Body/S/S3/gateway-contract/**`, `Body/S/S3/gateway/**`, `Body/S/S3/redis-context/**`, `Body/S/S3/epi-spacetime-module/**`, `Body/S/S3/graphiti-runtime/**`, `Body/S/S0/epi-cli/src/gate/**`; deprecated legacy parity reference: `Body/S/S3/epi-app/**` |
 | sibling seeds | `S3-0-SPEC.md`..`S3-5-SPEC.md`, `S3'/S3'-SPEC.md`, `S3'/S3-0'-SPEC.md`..`S3'/S3-5'-SPEC.md`, `S3-SHARD-INDEX.md`, `S3-TRACEABILITY-INDEX.md`, `S3'/S3'-TRACEABILITY-INDEX.md` |
 | nominal tracks | Track 03 owns gateway/SpaceTimeDB; Track 13 owns later S0 membrane extraction; Track 10 owns integration gates |
 | open decisions | WebSocket surface, SpaceTimeDB auth/RLS, world-clock cadence, Graphiti runtime boundary, Theia subscription ownership, production fallback |

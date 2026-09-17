@@ -266,40 +266,22 @@ Already declared as a pending tranche by [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §4
 
 Corrected composition requirement: `ananda_vortex` must carry an `active_cell_value: AnandaVortexCell` with both raw/no-digi-root and digit-root faces. This is what lets the integrated surface show the raw vortex skeleton (`7X+1` hits `36/64`, `8X+0` hits `64/72`, and the parent marker gives `64+72+1=137`) while the operational heatmap remains driven by the digit-root face. The integrated plugin must not compute those values locally; it only renders profile-provided skeleton events and values.
 
-#### 4.2.2 `klein_flip` — boundary-quantised flip event (Tranche 02.2 / Tranche 10.X)
+#### 4.2.2 `klein_flip` — boundary-quantised flip event (Tranche 18.2 / DR-IG-2)
 
-Per Wave A M1 matrix Row 7 (CODE-PENDING). The integrated plugin's tick choreography (§6) needs this event to fire **synchronously across all three poles**: M1 visually folds K² through itself, M2 inverts the cymatic valence (helix-stripe colour reflection), M3 may or may not re-rotate the codon ring (decision below). Without a typed `klein_flip` field the composition has to detect the boundary from `tick12 == 5 || tick12 == 11` locally — which forks logic across renderers.
+Per [[13-decision-register]] DR-IG-2 and Tranche 18.2, the composition does not define a local flip carrier. The SSOT is the kernel `KleinFlipEvent` enum at `Body/S/S0/portal-core/src/events/flip_events.rs`, carried on `MathemeHarmonicProfile.klein_flip` and serialized across the bridge with a `kind` discriminator.
 
-Proposed field, mirroring the Ananda-vortex projection's `klein_flip_at_this_tick` boolean:
+The integrated plugin's tick choreography (§6) consumes all three variants exhaustively:
 
 ```rust
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct CosmicKleinFlip {
-    /// True on the exact tick where the flip fires.
-    pub at_this_tick: bool,
-    /// The from-lens index (Lens N).
-    pub from_lens: u8,
-    /// The to-lens index (Lens N+3 mod 12).
-    pub to_lens: u8,
-    /// Discriminator for the kind of crossing.
-    pub kind: KleinFlipKind,
+#[serde(tag = "kind", rename_all = "camelCase")]
+pub enum KleinFlipEvent {
+    M1TritoneCrossing { tick12: u8, lens_pair: (u8, u8) },
+    M2CymaticValenceInvert { valence_before: Valence, valence_after: Valence },
+    M3CodonRotationCross { codon_before: u8, codon_after: u8 },
 }
-
-#[repr(u8)]
-pub enum KleinFlipKind {
-    /// tick 5 → 6, helix 0 → 1 (bimba → pratibimba)
-    BimbaToPratibimba = 0,
-    /// tick 11 → 0, helix 1 → 0 (möbius return)
-    MobiusReturn = 1,
-}
-
-// Added to MathemeHarmonicProfile:
-//   #[serde(default)]
-//   pub klein_flip: Option<CosmicKleinFlip>,
 ```
 
-The composition reads `klein_flip` once per tick and dispatches the boundary-quantised render path to all three poles atomically.
+The composition reads the bridged `klein_flip` event once per tick and dispatches the boundary-quantised render path to all three poles atomically: M1 folds K² through itself, M2 inverts cymatic valence, and M3 performs the codon-ring axis flip.
 
 #### 4.2.3 `cosmic_composition_state` — the composition's own readiness projection
 
@@ -537,11 +519,11 @@ The Klein flip fires at `tick12 == 5` (bimba → pratibimba) and at `tick12 == 1
 |---|---|---|
 | **L0 (M1)** | K² folds through itself for ~200ms; helix sheet flips 0→1; Ananda matrix re-reads with `+1` axiom offset; Mahāmāyā streamline retreats; Paraśakti streamline activates | K² completes 720°; helix returns 0; full-surface bloom in lens-anchor colour; diamond emits identity pulse |
 | **L1 (M2)** | Cymatic valence inverts — peaks become troughs, colour-shell hue cycles to its complement; cymatic shimmer momentarily silver | Cymatic valence returns; colour-shell saturates back; the Möbius-return bloom from L0 colours the cymatic momentarily |
-| **L2 (M3) — DECISION** | The 64-codon ring **does not re-orient** spatially (the codons stay at their fixed angular positions); the active codon illumination **stays on its current cell**; the T/U phase indicator at the active codon **briefly flickers** to signal the flip | Same as 5→6 for the ring; the active codon illumination may **arc-sweep one extra cell** if the codon advances on this tick |
+| **L2 (M3) — RATIFIED** | The 64-codon ring executes a **200ms rotation-axis flip** concurrent with the M1 K² fold and M2 cymatic valence invert: the ring's rendering axis reverses direction (clockwise ↔ counter-clockwise) over the 200ms window; the active codon illumination stays on its current cell; the T/U phase indicator at the active codon pulses during the flip transition | The rotation-axis flip reverses back over 200ms; the active codon illumination may **arc-sweep one extra cell** if the codon advances on this tick |
 
-**Recommended decision (DR-IG-3 candidate):** M3 codon ring is **subscribed to klein_flip** but reacts **minimally** — it does not rotate, swap, or re-shuffle. The reasoning: the 64-codon LUT is **not Klein-symmetric** the way the 12-position ring is. A Klein flip is an M1-M2 event (the helix-stripe inversion). M3's codon-ring is a downstream projection of the same lens-mode; the flip's effect on M3 is mediated through `lens_mode.lens` advancing — which it does naturally at every tick. The minimal flicker affordance is the **acknowledgement** that the codon's substrate has flipped; nothing more.
+**Ratified decision (DR-IG-3 VALIDATED):** M3 codon ring is **subscribed to klein_flip** and executes a **200ms rotation-axis flip** (clockwise ↔ counter-clockwise) concurrent with the M1 K² fold and M2 cymatic valence invert. The reasoning: the 64-codon LUT is not Klein-symmetric, so full codon swap/re-shuffle is inappropriate — but a rotation-axis flip is a direct geometric response to the Klein operation on K² (the torus surface the codon annulus rides on). The 200ms animation window matches the M1 fold duration for perceptual synchrony. No rotation, swap, or re-shuffle of codon positions — only the rendering axis flips.
 
-This decision differs from the M2 case (M2 cymatic surface fully inverts valence) because M2 lives **directly on K²'s skin** while M3 lives **as an annular adornment around K²**. Surface texture and annular adornment have different topological relationships to the Klein operation.
+The rotation-axis flip is geometrically direct (the codon annulus rides on K²'s skin and inherits the torus's orientation), but codon-level is downstream — the flip affects rendering orientation, not codon identity. This differs from M2's full cymatic valence inversion because M2 is the surface texture of K² while M3 is an annular projection around it.
 
 ### 6.6 Layer-cadence summary
 
@@ -557,6 +539,8 @@ This decision differs from the M2 case (M2 cymatic surface fully inverts valence
 The composition is **deterministic under `(tick12, degree720, lens_mode, codon_id, ananda_vortex.active_matrix_op)`** — given those five values, the visual frame reproduces identically. The acceptance harness `acceptance-harness/tests/topology.test.mjs` (per Tranche 15.7) and the visual-regression suite (Tranche 15.12) verify this.
 
 Scrubbing (pause + `scrub_to_tick(t)`) is supported because the slerp is the only animation primitive — every other element is a function of profile state at the scrubbed tick. The single-primitive discipline (§6.1) is what makes scrubbing tractable.
+
+> **⚑ NAMING LAW (2026-07-11, DR-M1-5)** — this §6.7 scrubbability is **display-scrub** (face-local replay of received records; correct as landed in the carrier's modulation engine). The distinct **engine-walk** — holding/walking the kernel's own `SpandaPhaseAnchor`, broadcast to every subscriber — is designed at [[M1-3-SPANDA-TRANSPORT-ARCHITECTURE]] and is additive to, never a replacement for, this contract.
 
 ---
 
@@ -615,6 +599,8 @@ export interface CosmicEngineRenderContext {
 
 When the M-extension is loaded **standalone** (in `ide-deep` for example), its compositionMount is **not** activated — the extension's own widget renders instead. The compositionMount is only addressed when the integrated 1-2-3 plugin is the active layout.
 
+> **Carrier foothold (2026-07-02, pratibimba-app Sprint-8 E3 — flagged for canon ratification since it moves this contract surface):** the active M' carrier realises §7.3 as a **typed modulation graph** (`Body/M/pratibimba-app/src/engine/modulation/`): the torus is the oscillator, the lens system is the modulator, the clock is the temporal carrier, the profile is the patch. The carrier-side analogue of `CosmicEngineCompositionMount` is `ModulationCarrier { id, layer?, requiredInputs, onFrame, onTick?, onKleinFlip?, onUnready? }` — `requiredProfileFields`/`checkReadiness` become `requiredInputs` gated by the engine per frame (§5.6 inline degradation as one-shot `onUnready`); `CosmicEngineRenderContext` becomes the typed `ModulationFrame` (oscillator · division · tonality · codon · klein · kairos · cymatic), the SAME frame object fanned to every carrier from ONE profile subscription (§7.2 preserved) with the klein flip atomic across carriers (§6.5 preserved). The engine owns the rAF loop, §6.7 determinism (pure `deriveFrame` over records + frame fraction), and §8.8 pause/scrub over a 720-tick ring (deviation: cmd-space is macOS-owned; bare space with a focus guard + palette commands stand in). Two lens namespaces stay unmerged per M3'-SPEC: the 16+1 clock division apertures gear rendering AND the instrument's rhythmic subdivision (temporal canon [24,12,4]); (lens,mode) tonality is a separate kernel-owned modulator. The kernel's E1 `phaseSpace.lensCarrier` is the carried-tick authority (`source: 'kernel'`), local arithmetic an honestly-reported fallback.
+
 ### 7.4 Boundaries to other integrated plugins
 
 The integrated 1-2-3 (cosmic) and integrated 4-5-0 (personal) are **two sides of the same daily**. Their boundary contract:
@@ -669,6 +655,12 @@ The integrated 1-2-3 plugin **MUST NOT**:
 - **No local codon/72/tarot LUT** — every datum read from `profile.payload`, never from a forked TS/wgsl table (`cosmic-engine-no-local-tables.test.mjs`).
 - **No graph relation inference** — relation-walks consume S2 typed pointer descriptors via the bridge, never inferred locally.
 - **No private/journal content** — privacy class is `public_current`; protected-local is the 4-5-0 side's concern.
+
+### 7.9 M123ChimeFrame — additive composition proof (2026-07-02 foothold)
+
+`ModalResonatorProfile`, serialized at `modalResonator`, is the standing M2 contribution referenced by this proof; it does not replace the 8+4 bus.
+
+Per [[m123-modal-resonator-bell-kernel-spec]] §5/§13, landed: `M123ChimeFrame` (1 Hz `m123.chime` gateway event, contract `S0.kernel-bridge.m123-chime-frame`) is an **additive composition proof object over the existing handles** — it references the K² surface handle slot (§7.3), the M2 cymatic contribution (as `modalResonator` + a deterministic `cymaticFrameHandle` digest), and the M3 `codonRotationProjection` + world-clock binding, without replacing any of them. Coherence law: the frame's `tickMatchesProfile` / `degree720MatchesProfile` booleans are explicit; any mismatch makes the chime incoherent and blocks integrated readiness (the pratibimba-app carrier blocks the bell strike on it — silence, never a faked chime). The chime is proof only when the same profile generation, tick, degree720, and M2 address are coherent across all three contributors — the §7.2 single-subscription atomicity, now attested kernel-side per tick.
 
 ---
 
@@ -804,7 +796,7 @@ If any compositionMount fails to instantiate, the composition renders the blocke
 ### 9.2 Pending (cycle-3 deliverables, named contract, no rebuild)
 
 - **Tranche 02.6** — Build out `m1-paramasiva-played-torus/` with the Bevy/wgpu renderer; expose `K2SurfaceHandle` and `CosmicEngineCompositionMount` for L0.
-- **Tranche 02.2 / 10.X** — Land `klein_flip: Option<CosmicKleinFlip>` field on `MathemeHarmonicProfile` + emitter in `vimarsha_reading.rs`.
+- **Tranche 18.2 / DR-IG-2** — Consume `klein_flip: Option<KleinFlipEvent>` on `MathemeHarmonicProfile`; the kernel enum at `Body/S/S0/portal-core/src/events/flip_events.rs` is the SSOT and the integrated plugin exhaustively handles M1 tritone crossing, M2 cymatic valence invert, and M3 codon rotation cross.
 - **Tranche 10.10** — `ananda_vortex: AnandaVortexProjection` field on `MathemeHarmonicProfile` (per [[M1-2-ANANDA-VORTEX-ARCHITECTURE]] §4.3).
 - **Tranche 10.X (proposed)** — `cosmic_composition_state: Option<CosmicCompositionState>` field on `MathemeHarmonicProfile` for inline composition readiness inspection.
 - **Tranche 07.X (this architecture)** — Replace `<CosmicEnginePanes>` with `<CosmicEngineSurface>` implementing composition-over-juxtaposition; add `CosmicEngineCompositionMount` exports to m1-paramasiva-played-torus, m2-parashakti, m3-mahamaya.
@@ -866,7 +858,7 @@ The integrated 1-2-3 cosmic engine composition is acceptance-ready when:
 ### 10.6 Tick choreography deterministic
 
 11. Profile-tick replay: a 12-tick capture from a deterministic profile stream produces identical visual state across two runs (verified via visual-regression hash).
-12. Klein-flip atomicity: at tick 5→6, M1 fold animation + M2 cymatic valence inversion + M3 minimal flicker all fire within one render frame.
+12. Klein-flip atomicity: at tick 5→6, M1 K² fold animation + M2 cymatic valence inversion + M3 200ms rotation-axis flip all fire within one render frame.
 13. Möbius-return: at tick 11→0, K² helix sheet returns to 0, full-surface bloom fires, diamond emits identity pulse, codon ring continues normally.
 
 ### 10.7 Layer degradation

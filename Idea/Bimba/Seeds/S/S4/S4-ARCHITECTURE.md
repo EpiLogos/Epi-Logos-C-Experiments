@@ -1,6 +1,6 @@
 ---
 title: "S4 Agent Runtime Architecture — Ta-Onta Carriers, Pi Harness, Pleroma Capability Membrane, Aletheia Crystallisation Mode"
-label_correction: "Per S4 canon at Idea/Bimba/World/Types/Coordinates/S/S4/S4.md, S4 = Agent Runtime (harness-agnostic; PI Agent migrating toward claw-rust). 'Claude' is retired label. Carrier ↔ S-layer mapping: Khora=S4-0' actualises S0; Hen=S4-1' actualises S0+S1'; Pleroma=S4-2' actualises S0; Chronos=S4-3' actualises S0+S3; Anima=S4-4' actualises S0+S3 (hosts 7 constitutional agents Anima/Nous/Logos/Eros/Mythos/Psyche/Sophia); Aletheia=S4-5' is a MODE of Sophia/Psyche/Anima during crystallisation, NOT a peer agent; 7 Aletheia subagents (Techne+Anansi+Moirai+Janus+Mercurius+Agora+Zeithoven) dispatched BY Anima during crystallisation. Honours DR-B-3."
+label_correction: "Per S4 canon at Idea/Bimba/World/Types/Coordinates/S/S4/S4.md, S4 = Agent Runtime (harness-agnostic; the PI Agent is the canonical TypeScript runtime, with a local Codex/OMX lane). 'Claude' is retired label. Carrier ↔ S-layer mapping: Khora=S4-0' actualises S0; Hen=S4-1' actualises S0+S1'; Pleroma=S4-2' actualises S0; Chronos=S4-3' actualises S0+S3; Anima=S4-4' actualises S0+S3 (hosts 7 constitutional agents Anima/Nous/Logos/Eros/Mythos/Psyche/Sophia); Aletheia=S4-5' is a MODE of Sophia/Psyche/Anima during crystallisation, NOT a peer agent; 6 Aletheia techne-guardian subagents (Anansi+Moirai+Janus+Mercurius+Agora+Zeithoven) dispatched BY Anima during crystallisation, each stewarding specific techne classes within Pleroma-Techne. Techne is Pleroma's second face (atomic-skills repository, §2.4), NOT an Aletheia subagent. Honours DR-B-3 and DR-S4-TECHNE."
 coordinate: "S4 / S4'"
 status: "canonical-architecture-spec"
 created: 2026-06-03
@@ -34,7 +34,7 @@ related_tranches:
   - "12.7 / 12.8 — Pi tool-surface and ACR-role decisions"
   - "12.9 — dispatch_moirai_night_pass gateway audit"
   - "12.11 — TillDone residency audit"
-  - "12.13 — S4↔S5 shared-intelligence seam (3072-dim, RELATES_TO_COORDINATE)"
+  - "12.13 — S4↔S5 shared-intelligence seam (3072-dim, MAPS_TO_COORDINATE)"
 ---
 
 # S4 Architecture — Ta-Onta, Pi, Pleroma, Aletheia
@@ -46,7 +46,7 @@ related_tranches:
 The substrate has three physical roots under `Body/S/S4/`:
 
 - **`ta-onta/`** — the six S4'-carrier extensions (Khora · Hen · Pleroma · Chronos · Anima · Aletheia) wired through the spine compositor at [`Body/S/S4/ta-onta/composite-entry.ts:1-58`](Body/S/S4/ta-onta/composite-entry.ts) and the four-seam contract at [`Body/S/S4/ta-onta/spine/types.ts:1-51`](Body/S/S4/ta-onta/spine/types.ts) and [`Body/S/S4/ta-onta/spine/compositor.ts:1-99`](Body/S/S4/ta-onta/spine/compositor.ts).
-- **`pi-agent/`** — the harness foundation that managed PI runtimes mirror. Entrypoint [`Body/S/S4/pi-agent/composite-entry.ts:1-33`](Body/S/S4/pi-agent/composite-entry.ts). Source residency for `Body/S/S4/ta-onta` is reached through the symlink `Body/S/S4/pi-agent/extensions/ta-onta -> ../../ta-onta`.
+- **`pi-agent/`** — the harness foundation that managed PI runtimes mirror. Entrypoint [`Body/S/S4/pi-agent/composite-entry.ts:1-33`](Body/S/S4/pi-agent/composite-entry.ts). The sync projection copies `Body/S/S4/ta-onta` beside the managed `agent/` directory, and the entrypoint uses an explicit sibling import.
 - **`plugins/`** — body-native plugin registry. The canonical capability membrane is at `Body/S/S4/plugins/pleroma/` with the IOD-17 authority file `Body/S/S4/plugins/pleroma/capability-matrix.json` (23 KB). Source registry at `Body/S/S4/plugins/registry.jsonl` lists `claude-mem` (vendor) and `pleroma` (local).
 
 The single most load-bearing architectural fact: **the ta-onta package is the operational body of the S4' inhabitation law**. Each of the six carriers carries an S-family analogy (Khora=S0, Hen=S1, Pleroma=S2, Chronos=S3, Anima=S4, Aletheia=S5) but its implementation residency IS S4'. The carriers are the horizontal S-folds, VAK is the vertical dispatch grammar; they are coupled but not interchangeable ([`S4-SPEC.md:45-56`](Idea/Bimba/Seeds/S/S4/S4-SPEC.md)).
@@ -64,7 +64,7 @@ Verified against actual filesystem at `Body/S/S4/ta-onta/` (linked aliases + dir
 | **S4-2'** | Pleroma | `S4-2p-pleroma/` (alias `pleroma -> S4-2p-pleroma`) | S2 (Neo4j / graph) | Bounded primitive registry (PRIMITIVE_REGISTRY), Techne gateway lifecycle, cmux surface/pane assignment, TillDone execution backbone, damage-control patterns |
 | **S4-3'** | Chronos | `S4-3p-chronos/` (alias `chronos -> S4-3p-chronos`) | S3 (PAI / temporal) | Day/NOW initialisation, SEED.md morning injection into `## #0 Question`, Graphiti day-arc lifecycle, cron-evening Möbius trigger |
 | **S4-4'** | Anima | `S4-4p-anima/` (alias `anima -> S4-4p-anima`) | S4 (Claude / agent) | VAK evaluation, CF→constitutional routing, CFP1 parallel / CFP3 fusion / CFP2 chain dispatch, Moirai Night' pass, Sophia review hook |
-| **S4-5'** | Aletheia | `S4-5p-aletheia/` (alias `aletheia -> S4-5p-aletheia`) | S5 (Epii / synthesis) | Gnosis RAG (ingest/query/notebook), thought-route to T0-T5 buckets, SEED refresh, episodic record/search, gates (m/m-prime/s/ql/rupa/collab), **six CF-coded specialist subagents as techne-guardians** (each stewards specific techne classes within Pleroma-Techne, per DR-S4-TECHNE): **Anansi** (CF0 — guards coordinate-mapping / blueprint / Darshana-REPL techne), **Janus** (CF1 — guards temporal-structure / bhedabheda-threshold techne), **Moirai** (CF2 — guards GraphRAG-distillation Klotho/Lachesis/Atropos techne), **Mercurius** (CF3 — guards Kairos-signal / qualitative-temporal-pattern techne), **Agora** (CF4 — guards plugin-absorption / skill-index / multi-channel-aggregation techne), **Zeithoven** (CF5 — guards creative-advance / skill-and-agent-creation techne). **Techne itself is NOT here** — it is Pleroma's atomic-skills substrate (see §2.4); the S4 canon "Aletheia 7" mis-roster is corrected. |
+| **S4-5'** | Aletheia | `S4-5p-aletheia/` (alias `aletheia -> S4-5p-aletheia`) | S5 (Epii / synthesis) | Gnosis RAG (ingest/query/notebook), thought-route to T0-T5 buckets, SEED refresh, episodic record/search, gates (m/m-prime/s/ql/rupa/collab), **six CF-coded specialist subagents as techne-guardians** (each stewards specific techne classes within Pleroma-Techne, per DR-S4-TECHNE): **Anansi** (CF0 — guards coordinate-mapping / blueprint / Darshana-REPL techne), **Janus** (CF1 — guards temporal-structure / bhedabheda-threshold techne), **Moirai** (CF2 — guards GraphRAG-distillation Klotho/Lachesis/Atropos techne), **Mercurius** (CF3 — guards Kairos-signal / qualitative-temporal-pattern techne), **Agora** (CF4 — guards plugin-absorption / skill-index / multi-channel-aggregation techne), **Zeithoven** (CF5 — guards creative-advance / skill-and-agent-creation techne). **Techne itself is NOT here** — it is Pleroma's atomic-skills substrate (see §2.4); the S4 canon "six Aletheia guardians" mis-roster is corrected. |
 
 Each carrier has the same five-fold internal shape (verified via `ls Body/S/S4/ta-onta/S4-Np-*/`):
 
@@ -138,13 +138,13 @@ Contract at [`khora/CONTRACT.md:11-13`](Body/S/S4/ta-onta/S4-0p-khora/CONTRACT.m
 
 > **Aletheia's 6 CF-coded specialist subagents are GUARDIANS of particular techne classes within Pleroma's Techne repository.** See §2.7 for the per-subagent techne-domain enumeration. Aletheia is the crystallisation mode in which a guardian invokes the techne it stewards.
 
-> **Roster correction (per DR-S4-TECHNE):** The S4 canon §14-Agent Roster at `Idea/Bimba/World/Types/Coordinates/S/S4/S4.md` lists Techne as a 7th "Aletheia" member — this is a mis-classification. **Techne is NOT an agent**; it is Pleroma's atomic-skills substrate. No `techne.md` agent profile lands; instead, Pleroma's CONTRACT.md gains a §Techne section enumerating the skills repository the 6 Aletheia guardians steward. The cycle-3 sweep removes Techne from the agent roster and lands it as Pleroma's second face.
+> **Roster correction (per DR-S4-TECHNE):** The S4 canon §14-Agent Roster at `Idea/Bimba/World/Types/Coordinates/S/S4/S4.md` lists Techne as a 7th "Aletheia" member — this is a mis-classification. **Techne is NOT an agent**; it is Pleroma's atomic-skills substrate. No `Techne-profile file` agent profile lands; instead, Pleroma's CONTRACT.md gains a §Techne section enumerating the skills repository the 6 Aletheia guardians steward. The cycle-3 sweep removes Techne from the agent roster and lands it as Pleroma's second face.
 
 #### 2.4.1 Pleroma surface tools and substrate
 
 [`pleroma/extension.ts:7-350`](Body/S/S4/ta-onta/S4-2p-pleroma/extension.ts) registers:
 
-- The 7 bounded primitives loop at `extension.ts:15-17` and `registerPrimitiveTool` at `extension.ts:284-349`, consuming `PRIMITIVE_REGISTRY` from `S2/pleroma-primitives.ts`. Tool-name mapping at `extension.ts:289-298` retired `mprocs→cmux`, `gitbutler→worktrunk`, `notebooklm→aletheia_gnosis_query`; pending `ralph_tui→tildone`.
+- The 8 bounded primitives loop consumes `PRIMITIVE_REGISTRY` from `S2/pleroma-primitives.ts`: tmux, cmux, bkmr_kbase, onecontext, ralph_tui, worktrunk, epi_cli, and context7. Tool-name mapping retired `mprocs→cmux`, `gitbutler→worktrunk`, and `notebooklm→aletheia_gnosis_query`.
 - TillDone registration at `extension.ts:10-12` gated by `shouldRegisterTilldone()` at `extension.ts:270-282` (enabled when `EPI_AGENT_NAME=anima` OR `EPI_AGENT_MODE in {anima,execution}` OR `EPI_TILLDONE_MODE` opt-in). TillDone substrate is at `Body/S/S4/ta-onta/S4-2p-pleroma/S2/tilldone.ts` (resolves Wave-B 12.11 audit).
 - Techne gateway tools (`techne_gateway_start/stop/status`, `techne_session_list/patch`, `techne_logs_tail`, `techne_debug_status`) at `extension.ts:25-126`.
 - Cmux surface/pane management (VAK-coordinate-aware) at `extension.ts:151-259`. `techne_cmux_surface_create` writes `cmux_workspace/cmux_surface` to the gateway session record; `techne_cmux_pane_assign` writes `cmux_pane_id` to the gateway team store + sets `CF_IDENTITY` env so the spawned pane inherits constitutional type.
@@ -179,6 +179,7 @@ This is the canonical morning consumption of yesterday's Aletheia SEED → today
 - `anima_self_invoke` (`extension.ts:629-723`) — D2 gateway-routed cross-user Anima invocation via `epi gate dispatch anima-invoke`.
 - `before_agent_start` hook (`extension.ts:725-744`) — injects three VAK skills (`vak-coordinate-frame`, `vak-evaluate`, `anima-orchestration`) into systemPrompt by reading each `S4'/skills/{name}/SKILL.md` and stripping frontmatter.
 - `agent_end` hook (`extension.ts:746-756`) — fires Sophia review unless `EPI_AGENT_NAME` is non-anima (recursion guard).
+- [[Mythos]] symbolic-protein reader (`modules/symbolic-protein-reader.ts`) — active session-scoped trigger/history/close state machine over an opaque [[M4_Symbolic_Protein]] handle, governed chain fingerprint/position projection, and M1/M2/M3 cosmic weather. It emits numeric `MajorArcanaCardRef` values, enforces four-wikilink provenance and the reification guard, and never imports a private tarot table or protein body. It remains a direct module surface rather than a new always-active Anima tool.
 
 **Constitutional 7-fold roster** (`modules/dispatch-validate.ts:25-33`):
 
@@ -214,7 +215,7 @@ The Aletheia **gate suite** at `aletheia/S5'/skills/` carries `aletheia-m-gate`,
 
 [`pi-agent/composite-entry.ts:1-33`](Body/S/S4/pi-agent/composite-entry.ts) is the curated entrypoint that ta-onta-composite-entry rides on top of. It runs `taOntaCompositeEntry(api)` first, then opportunistically loads `epii-entitlement-activation.ts` on `session_start` for the epii persona only (`composite-entry.ts:19-25`). The activation module gates epii-side tool entitlements based on `agent-contract.json`.
 
-`pi-agent/lib/` carries the entitlement plumbing (`entitlement-loader.ts`, `entitlement.ts`). `pi-agent/extensions/` carries `epi-citta.ts`, `epii-entitlement-activation.ts`, `skill-entitlement.ts`, plus the `ta-onta` symlink. `pi-agent/agents/` carries the team-dispatch primitives: `anima.md` (the orchestrator profile), `teams.yaml`, `agent-chain.yaml`, plus `pi-pi/` (the Pi-Pi meta-mode agent). `pi-agent/prompts/` carries `epi-agent-help.md` and `epi-system.md` (injected system prompts).
+`pi-agent/lib/` carries the entitlement plumbing (`entitlement-loader.ts`, `entitlement.ts`). `pi-agent/extensions/` carries `epi-citta.ts`, `epii-entitlement-activation.ts`, and `skill-entitlement.ts`; the canonical `ta-onta/` carrier is synced as the managed agent directory's sibling. `pi-agent/agents/` carries the team-dispatch primitives: `anima.md` (the orchestrator profile), `teams.yaml`, `agent-chain.yaml`, plus `pi-pi/` (the Pi-Pi meta-mode agent). `pi-agent/prompts/` carries `epi-agent-help.md` and `epi-system.md` (injected system prompts).
 
 `pi-agent/damage-control-rules.yaml` (8.7 KB) is the regex bank consumed by `pleroma/S2/damage-control.ts` — destructive bash patterns (rm -rf, sudo rm, chmod 777, git reset --hard, git push --force, git stash clear).
 
@@ -424,11 +425,11 @@ Concrete proposals, ordered by priority. Each names scope, current shape, propos
 
 ### 5.8 Crate-level: pi-agent vs ta-onta residency boundary
 
-**Location:** Documented at [`pi-agent/README.md`](Body/S/S4/pi-agent/README.md): "`Body/S/S4/ta-onta` is the canonical S4' ta-onta source home. `extensions/ta-onta` is a symlink back to that source so managed PI agents still receive the expected extension tree during sync."
+**Location:** Documented at [`pi-agent/README.md`](Body/S/S4/pi-agent/README.md): `Body/S/S4/ta-onta` is the canonical S4' source home and sync projects it as the managed agent directory's sibling.
 
-**Current shape:** ALIGNED but fragile — the symlink pattern at `Body/S/S4/pi-agent/extensions/ta-onta -> ../../ta-onta` is correct per the documented intent (Body source tree is never edited by PI). However, the symlink dependency is implicit; any cross-machine clone or backup that flattens symlinks would silently break ta-onta loading.
+**Current shape:** ALIGNED — `pi-agent/composite-entry.ts` imports the canonical sibling source explicitly, and `epi agent extensions sync` copies the same `ta-onta/` tree beside each managed `agent/` directory. The Body source tree is never edited by PI and no filesystem symlink participates in loading.
 
-**Proposed refactor:** Replace the symlink with an explicit path-reference in `pi-agent/composite-entry.ts:4`. Currently: `import { default as taOntaCompositeEntry } from "./extensions/ta-onta/composite-entry.ts"`. After: `import { default as taOntaCompositeEntry } from "../ta-onta/composite-entry.ts"`. The symlink is retired; `epi agent extensions sync` is updated to copy from `Body/S/S4/ta-onta/` directly.
+**Implemented refactor:** `pi-agent/composite-entry.ts` imports `../ta-onta/composite-entry.ts`; `epi-citta.ts` imports its canonical Anima route module directly; `epi agent extensions sync` copies `Body/S/S4/ta-onta/` to the sibling runtime location and includes both trees in its sync hash.
 
 **Benefit:** Cross-platform robustness (Windows, restrictive backup tools); explicit path is what's documented.
 
@@ -557,10 +558,11 @@ The M' Theia shell lives at `Body/M/epi-theia/extensions/` (per user memory: she
 | Pleroma plugin package | `Body/S/S4/plugins/pleroma/{capability-matrix.json,settings.json,commands,skills,hooks,evals,tests}` | `ls` verified |
 | 7 constitutional agent profiles | `Body/S/S4/ta-onta/S4-4p-anima/S4'/agents/{nous,logos,eros,mythos,psyche,sophia,anima,techne-helper}.md` | `ls` verified — **resolves O-B-1 to ALIGNED** |
 | 6 CF-coded specialist subagent profiles | `Body/S/S4/ta-onta/S4-5p-aletheia/S5'/agents/{anansi,moirai,janus,mercurius,agora,zeithoven}.md` + `aletheia.md` (carrier parent) + README | `ls` verified |
-| ~~Techne profile (7th per S4 canon "Aletheia 7" claim)~~ **RESOLVED 2026-06-03 by DR-S4-TECHNE** | Per DR-S4-TECHNE ratified 2026-06-03: **Techne is NOT an agent**. It is Pleroma's atomic-skills substrate (Pleroma's second face alongside VAK). The S4 canon §14-Agent Roster Techne entry is corrected — no `techne.md` agent profile lands. Techne moves to Pleroma's CONTRACT.md as its §Techne section. The 6 Aletheia subagents are techne-guardians, stewarding specific techne classes within Pleroma-Techne. | RESOLVED — see DR-S4-TECHNE in cycle-3 Tranche 13 |
+| ~~Techne profile (7th per S4 canon "six Aletheia guardians" claim)~~ **RESOLVED 2026-06-03 by DR-S4-TECHNE** | Per DR-S4-TECHNE ratified 2026-06-03: **Techne is NOT an agent**. It is Pleroma's atomic-skills substrate (Pleroma's second face alongside VAK). The S4 canon §14-Agent Roster Techne entry is corrected — no `Techne-profile file` agent profile lands. Techne moves to Pleroma's CONTRACT.md as its §Techne section. The 6 Aletheia subagents are techne-guardians, stewarding specific techne classes within Pleroma-Techne. | RESOLVED — see DR-S4-TECHNE in cycle-3 Tranche 13 |
 | Aletheia gate suite | `Body/S/S4/ta-onta/S4-5p-aletheia/S5'/skills/aletheia-{m,m-prime,s,ql,rupa,collab}-gate/` | `ls` verified |
 | Shared VAK address mirror | `Body/S/S4/ta-onta/shared/vak_address.ts` + tests | 111 LOC + test files verified |
 | Dispatch validator | `Body/S/S4/ta-onta/S4-4p-anima/modules/dispatch-validate.ts` | 351 LOC verified |
+| Mythos symbolic-protein reader | `Body/S/S4/ta-onta/S4-4p-anima/modules/symbolic-protein-reader.ts` + `tests/symbolic_protein_reader.test.ts` | Trigger modes, protected projection, history/final close binding, provenance, voice, resolved tunables, and cosmic-weight sensitivity verified |
 | TillDone backbone | `Body/S/S4/ta-onta/S4-2p-pleroma/S2/tilldone.ts` | `ls` verified — **resolves 12.11 to ALIGNED** |
 | Damage-control rules | `Body/S/S4/pi-agent/damage-control-rules.yaml` (8.7 KB) | `cat` verified |
 | Plugin registry | `Body/S/S4/plugins/registry.jsonl` | 2 entries: claude-mem (vendor), pleroma (local) |
@@ -593,7 +595,7 @@ None claimed in this S4 architecture doc. The M' surfaces that consume S4 (ACR, 
 |---|---|---|
 | **S4-0' Khora** | `node --test Body/S/S4/ta-onta/S4-0p-khora/tests/*.test.ts` | All session-init/status/write/sync queue tests green |
 | **S4-1' Hen** | `node --test Body/S/S4/ta-onta/S4-1p-hen/tests/*.test.ts` | Template render + 126-key validation + VAK-frontmatter inline tests green |
-| **S4-2' Pleroma** | `node --test Body/S/S4/ta-onta/S4-2p-pleroma/staged/**/*.test.ts` AND `test -f Body/S/S4/ta-onta/S4-2p-pleroma/S2/tilldone.ts` AND `pnpm --filter pleroma test` (e2e parity) | TillDone present; bounded primitives loop registers; capability-matrix parity asserted |
+| **S4-2' Pleroma** | `node --test Body/S/S4/ta-onta/S4-2p-pleroma/tests/*.test.ts` AND `test -f Body/S/S4/ta-onta/S4-2p-pleroma/S2/tilldone.ts` AND `pnpm --filter pleroma test` (e2e parity) | TillDone present; bounded primitives loop registers; capability-matrix parity asserted |
 | **S4-3' Chronos** | `node --test Body/S/S4/ta-onta/S4-3p-chronos/tests/*.test.ts` | Day init + SEED injection + Graphiti day-arc tests green |
 | **S4-4' Anima** | `node --test Body/S/S4/ta-onta/S4-4p-anima/tests/*.test.ts` AND `node --test extensions/test/agentic-mediation-e2e/e2e.test.mjs Body/M/epi-theia/extensions/agentic-control-room/tests/*.test.mjs` | Dispatch validators + VAK address + e2e mediation green; ≥18/19 passing modulo the migrated-fixture issue ([`S4-SPEC.md:91`](Idea/Bimba/Seeds/S/S4/S4-SPEC.md)) |
 | **S4-5' Aletheia** | `node --test Body/S/S4/ta-onta/S4-5p-aletheia/tests/*.test.ts` AND `pytest Body/S/S5/epi-gnostic/tests/test_enrichment.py -q` | Thought-route + Gnosis ingest + episodic record tests green; cross-namespace edges (3072-dim) green |
@@ -659,7 +661,7 @@ The mediation e2e harness references a moved fixture (`docs/plans/...` → `Idea
 
 ## 11. Closing — Why S4 Carries the Agentic Layer
 
-The substrate verifies the spec. The six ta-onta carriers (Khora · Hen · Pleroma · Chronos · Anima · Aletheia) cover the S0-S5 fold from inside the agent runtime. The pi-agent harness mirrors them into managed PI runtimes through the symlink + composite-entry pattern. The pleroma capability matrix at `Body/S/S4/plugins/pleroma/capability-matrix.json` is the IOD-17 single source of truth that ACR, Anima, and the e2e parity harness all read.
+The substrate verifies the spec. The six ta-onta carriers (Khora · Hen · Pleroma · Chronos · Anima · Aletheia) cover the S0-S5 fold from inside the agent runtime. The pi-agent harness mirrors them into managed PI runtimes through explicit sibling imports and the composite-entry pattern. The pleroma capability matrix at `Body/S/S4/plugins/pleroma/capability-matrix.json` is the IOD-17 single source of truth that ACR, Anima, and the e2e parity harness all read.
 
 The two big files (anima/extension.ts at 761 LOC, aletheia/extension.ts at 1114 LOC) carry the dispatch spine and synthesis spine respectively. They are big because they ARE the operative content of the carrier contract — every other carrier is a bounded-primitive shell. The right refactor is internal organisation (split into `S4'/tools/*`, `S5'/tools/*`) not splitting the carrier itself.
 

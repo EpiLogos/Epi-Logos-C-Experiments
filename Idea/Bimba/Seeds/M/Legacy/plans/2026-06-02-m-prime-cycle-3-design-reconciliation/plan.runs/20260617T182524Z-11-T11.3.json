@@ -1,0 +1,37 @@
+{
+  "runId": "20260617T182524Z-11-T11.3",
+  "taskId": "11.T11.3",
+  "startedAt": "2026-06-17T18:25:24.885Z",
+  "owner": "codex-m-dev-11-t11-3",
+  "leaseExpiresAt": "2026-06-17T20:25:24.885Z",
+  "worktree": null,
+  "task": {
+    "id": "11.T11.3",
+    "trackId": "11",
+    "tranche": "T11.3",
+    "title": "Daily-layer widget ownership trace + ORPHAN closure",
+    "effort": null,
+    "file": "11-theia-shell-surface-hosting.md",
+    "path": "Idea/Bimba/Seeds/M/Legacy/plans/2026-06-02-m-prime-cycle-3-design-reconciliation/11-theia-shell-surface-hosting.md",
+    "dependsOn": [
+      "11.T11.2"
+    ],
+    "writeScopes": [
+      "Body/M/epi-theia/extensions/<owner>/**",
+      "Idea/Bimba/Seeds/M/Legacy/plans/**",
+      "Idea/Bimba/Seeds/S/Legacy/plans/**"
+    ],
+    "status": "pending",
+    "computedStatus": "ready",
+    "missingDeps": [],
+    "unmetDeps": [],
+    "evidence": [],
+    "claimedAt": "2026-06-17T18:00:42.420Z",
+    "completedAt": null,
+    "owner": "codex-m-dev-11-t11-3",
+    "leaseExpiresAt": "2026-06-17T20:00:42.420Z",
+    "heartbeatAt": "2026-06-17T18:00:42.420Z",
+    "runId": "20260617T180042Z-11-T11.3",
+    "worktree": null
+  }
+}

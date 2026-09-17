@@ -1,0 +1,477 @@
+use portal_core::m3_transcription_bridge::{M3_BACKBONE_DEGREE_STEP, M3_BACKBONE_NODE_COUNT};
+use portal_core::pentadic_trace::EpogdoonRuntimeEvidence;
+use portal_core::{
+    kernel_tick_from_epogdoon, AnuttaraPentadicRuntimeTrace, MathemeHarmonicProfile,
+};
+
+// The canonical complement-family law from the statically-linked C substrate
+// (pointer_web.c: mirror = 5 − position, the pentadic-hinge involution) — the
+// 36.2 tests bind the expected pairs to THIS, never to old letter names.
+extern "C" {
+    fn hc_mirror_position(ql_position: u8) -> u8;
+}
+
+#[derive(Debug)]
+struct AnuttaraPentadicRuntimeTraceProbe {
+    tick: u64,
+    tick12: u8,
+    position6: u8,
+    whole_number_endpoint: u8,
+    natural_number_endpoint: u8,
+    family_b_complement: [u8; 2],
+    line_change_operator: u16,
+    backbone_identity: &'static str,
+    line_graph_identity: &'static str,
+}
+
+impl AnuttaraPentadicRuntimeTraceProbe {
+    fn from_profile(profile: &MathemeHarmonicProfile) -> Self {
+        Self {
+            tick: profile.tick,
+            tick12: profile.tick12,
+            position6: profile.position6,
+            whole_number_endpoint: 5,
+            natural_number_endpoint: 6,
+            family_b_complement: [profile.position6, profile.chromatic.mirror_position],
+            line_change_operator: profile.binary.line_change_operator_address,
+            backbone_identity: "24x15=360",
+            line_graph_identity: "360+24=384",
+        }
+    }
+}
+
+fn trace_for(cycle: u64, tick12: u8) -> AnuttaraPentadicRuntimeTraceProbe {
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(cycle, tick12));
+    AnuttaraPentadicRuntimeTraceProbe::from_profile(&profile)
+}
+
+fn kernel_bridge_types_source() -> String {
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../../M/pratibimba-app/src/bridge/types.ts");
+    std::fs::read_to_string(&path)
+        .unwrap_or_else(|err| panic!("failed to read {}: {err}", path.display()))
+}
+
+#[test]
+fn anuttara_family_b_complement_pairs_are_pentadic_runtime_hinges() {
+    let source = kernel_bridge_types_source();
+    assert!(
+        source.contains(
+            "readonly familyBComplement: readonly [0 | 1 | 2 | 3 | 4 | 5, 0 | 1 | 2 | 3 | 4 | 5];"
+        ),
+        "AnuttaraPentadicRuntimeTrace must expose the bounded familyBComplement pair"
+    );
+
+    for tick12 in 0..12 {
+        let trace = trace_for(0, tick12);
+        let [left, right] = trace.family_b_complement;
+
+        assert!(
+            left <= 5 && right <= 5,
+            "tick {tick12} complement endpoints must stay in the 0..5 pentadic hinge space: {trace:?}"
+        );
+        assert_ne!(
+            (left + right) % 6,
+            0,
+            "tick {tick12} must be a genuine complement pair, not a mod-6 self-pair: {trace:?}"
+        );
+
+        // 36.2: bind the expected pair to the canonical substrate involution
+        // (C hc_mirror_position: 5 − p), not to an old family letter name —
+        // every complement pair IS a pentadic runtime hinge: left + right = 5.
+        let expected_right = unsafe { hc_mirror_position(left) };
+        assert_eq!(
+            right, expected_right,
+            "tick {tick12}: complement must equal the canonical C mirror involution: {trace:?}"
+        );
+        assert_eq!(
+            left + right,
+            5,
+            "tick {tick12}: complement pair must close on the whole-number hinge 5: {trace:?}"
+        );
+    }
+}
+
+/// 36.3 / 10.P5 — the trace is FIRST-CLASS on the profile bus: every
+/// `from_tick` profile carries `anuttara_pentadic_trace = Some(..)` equal to
+/// the pure derivation, and the serialized profile emits the camelCase key
+/// (the bridge serializes the whole profile; no field allowlist to update).
+#[test]
+fn pentadic_trace_rides_the_profile_bus_first_class() {
+    for tick12 in 0..12u8 {
+        let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(2, tick12));
+        let on_bus = profile
+            .anuttara_pentadic_trace
+            .as_ref()
+            .expect("from_tick must attach the pentadic trace");
+        assert_eq!(
+            on_bus,
+            &AnuttaraPentadicRuntimeTrace::from_profile(&profile),
+            "bus trace must equal the pure derivation (one source)"
+        );
+        let wire = serde_json::to_value(&profile).expect("profile serializes");
+        assert!(
+            wire.get("anuttaraPentadicTrace")
+                .is_some_and(|v| !v.is_null()),
+            "serialized profile must emit anuttaraPentadicTrace"
+        );
+    }
+}
+
+#[test]
+fn tick_substrate_0_1_projects_to_position5_without_losing_position6_completion() {
+    // The 0/1 tick substrate must be PRESENT in the trace (the test fails if
+    // the trace drops it): tick 0 is the '0' pole, tick 1 the '1' pole, all
+    // later ticks the fused '0/1' non-dual substrate.
+    let real = |cycle: u64, tick12: u8| {
+        let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(cycle, tick12));
+        AnuttaraPentadicRuntimeTrace::from_profile(&profile)
+    };
+    assert_eq!(real(0, 0).source_binary_state, "0");
+    assert_eq!(real(0, 1).source_binary_state, "1");
+    for tick12 in 2..12u8 {
+        assert_eq!(
+            real(0, tick12).source_binary_state,
+            "0/1",
+            "tick {tick12}: the fused 0/1 substrate must stay on the trace"
+        );
+    }
+
+    // Whole-number addressing reaches position 5 from 0 (position 5 must not
+    // be swallowed by the 6-count) while the natural-number 1→6 completion is
+    // simultaneously held on the SAME trace — one hinge, two addressing modes.
+    for tick12 in [5u8, 11] {
+        let trace = real(0, tick12);
+        assert_eq!(
+            trace.position6, 5,
+            "tick {tick12}: whole-number addressing must reach position 5"
+        );
+        assert_eq!(trace.whole_number_endpoint, 5);
+        assert_eq!(
+            trace.natural_number_endpoint, 6,
+            "tick {tick12}: the natural 1→6 completion must not be lost when position 5 is reached"
+        );
+    }
+}
+
+#[test]
+fn whole_number_five_and_natural_number_six_are_the_same_hinge_in_two_addressing_modes() {
+    let source = kernel_bridge_types_source();
+    assert!(source.contains("readonly wholeNumberEndpoint: 5;"));
+    assert!(source.contains("readonly naturalNumberEndpoint: 6;"));
+
+    for tick12 in 0..12 {
+        let trace = trace_for(0, tick12);
+        assert_eq!(trace.whole_number_endpoint, 5);
+        assert_eq!(trace.natural_number_endpoint, 6);
+    }
+}
+
+#[test]
+fn tick_substrate_0_through_11_yields_valid_position6_and_hinge() {
+    for tick12 in 0..12 {
+        let trace = trace_for(0, tick12);
+        assert_eq!(trace.tick12, tick12);
+        assert_eq!(trace.position6, tick12 % 6);
+        assert!(trace.position6 <= 5);
+        assert!(trace.line_change_operator < 384);
+    }
+
+    let before_wrap = trace_for(0, 11);
+    let after_wrap = trace_for(1, 0);
+    assert_eq!(before_wrap.tick, 11);
+    assert_eq!(before_wrap.tick12, 11);
+    assert_eq!(before_wrap.position6, 5);
+    assert_eq!(after_wrap.tick, 12);
+    assert_eq!(after_wrap.tick12, 0);
+    assert_eq!(after_wrap.position6, 0);
+    assert!(before_wrap.line_change_operator < 384);
+    assert!(after_wrap.line_change_operator < 384);
+}
+
+#[test]
+fn backbone_identity_24x15_equals_360_and_360_plus_24_equals_384() {
+    let source = kernel_bridge_types_source();
+    assert!(source.contains("readonly backboneIdentity: '24x15=360';"));
+    assert!(source.contains("readonly lineGraphIdentity: '360+24=384';"));
+
+    let trace = trace_for(0, 0);
+    assert_eq!(trace.backbone_identity, "24x15=360");
+    assert_eq!(trace.line_graph_identity, "360+24=384");
+}
+
+fn real_trace(cycle: u64, tick12: u8) -> AnuttaraPentadicRuntimeTrace {
+    let profile = MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(cycle, tick12));
+    AnuttaraPentadicRuntimeTrace::from_profile(&profile)
+}
+
+/// Tranche 36.T36.1 bullet 1 — the Rust trace round-trips JSON and every
+/// serialized key is declared verbatim by the kernel-bridge TS interface;
+/// one projection law on both sides of the wire.
+#[test]
+fn pentadic_trace_round_trips_json_against_the_kernel_bridge_interface() {
+    let source = kernel_bridge_types_source();
+    let trace = real_trace(4, 7);
+
+    let wire = serde_json::to_value(&trace).expect("trace serializes");
+    for key in wire.as_object().expect("trace is an object").keys() {
+        assert!(
+            source.contains(&format!("readonly {key}")),
+            "kernel-bridge interface must declare `{key}`"
+        );
+    }
+
+    let decoded: AnuttaraPentadicRuntimeTrace =
+        serde_json::from_value(wire).expect("trace deserializes");
+    assert_eq!(decoded, trace);
+    assert_eq!(decoded.whole_number_endpoint, 5);
+    assert_eq!(decoded.natural_number_endpoint, 6);
+    assert_eq!(
+        decoded.third_spanda.epogdoon.round_trip_loss,
+        decoded.third_spanda.epogdoon.source_address72
+            - decoded.third_spanda.epogdoon.expanded_address72
+    );
+}
+
+/// Tranche 36.T36.1 bullet 3 — the 72-sample grid: 72 x 5 = 360, the
+/// epogdoon 8/9 compression, and the mahamaya 64/360 address law all hold
+/// on the trace's projected values (codec path checked against the raw
+/// floor identities, not against itself).
+#[test]
+fn seventy_two_sample_grid_holds_the_epogdoon_and_mahamaya_floor_laws() {
+    assert_eq!(
+        72u16 * 5,
+        M3_BACKBONE_DEGREE_STEP * M3_BACKBONE_NODE_COUNT,
+        "72 x 5 = 360 = the backbone tiling"
+    );
+
+    for cycle in 0..6u64 {
+        for tick12 in 0..12u8 {
+            let trace = real_trace(cycle, tick12);
+            assert!(trace.resonance72_index < 72, "{trace:?}");
+            assert_eq!(trace.shem_degree_quantum, 5);
+            assert!(trace.degree360 < 360);
+            assert_eq!(
+                trace.m2_to_m3_symbol as usize,
+                (trace.resonance72_index * 8) / 9,
+                "epogdoon 8/9 law at cycle {cycle} tick {tick12}"
+            );
+            assert_eq!(
+                u32::from(trace.mahamaya_address64),
+                u32::from(trace.degree360 % 360) * 64 / 360,
+                "mahamaya 64/360 address law at cycle {cycle} tick {tick12}"
+            );
+        }
+    }
+}
+
+#[test]
+fn third_spanda_trace_carries_one_live_m1_m2_m3_generation() {
+    for cycle in 0..6u64 {
+        for tick12 in 0..12u8 {
+            let profile =
+                MathemeHarmonicProfile::from_tick(kernel_tick_from_epogdoon(cycle, tick12));
+            let trace = profile
+                .anuttara_pentadic_trace
+                .as_ref()
+                .expect("profile carries the runtime trace");
+            let third = &trace.third_spanda;
+
+            assert_eq!(
+                third.m1.ring_quaternion, profile.ananda_vortex.ring_quaternion,
+                "M1 activity must use the real ring state, never the M3 codon-charge quaternion"
+            );
+            assert_eq!(third.m1.degree720, profile.degree720);
+            assert_eq!(
+                third.m1.parent_attribution,
+                profile.m1_topology.parent_attribution
+            );
+
+            assert_eq!(
+                third.m2.address72 as usize,
+                profile.resonance72.lens_anchor_index
+            );
+            assert_eq!(
+                third.m2.axis_views.index72(),
+                Some(third.m2.address72),
+                "all six M2 axes must decode and re-encode the same live address"
+            );
+
+            assert_eq!(
+                third.epogdoon.source_address72, third.m2.address72,
+                "the bridge evidence must describe this generation's M2 state"
+            );
+            assert_eq!(
+                third.epogdoon.compressed_address64,
+                profile.binary.m2_to_m3_symbol
+            );
+
+            assert_eq!(
+                third.m3.det_reception_address64,
+                profile.binary.m2_to_m3_symbol
+            );
+            assert_eq!(
+                third.m3.world_clock_address64,
+                profile
+                    .binary
+                    .mahamaya_address64
+                    .expect("clock address is live")
+            );
+            assert_eq!(third.m3.codon_rotation, profile.codon_rotation_projection);
+        }
+    }
+}
+
+#[test]
+fn epogdoon_evidence_separates_nine_eight_and_sixty_four() {
+    let mut collision_pairs = std::collections::BTreeSet::new();
+    let mut exact_round_trips = 0usize;
+    let mut non_exact_round_trips = 0usize;
+
+    for source_address72 in 0..72u8 {
+        let evidence = EpogdoonRuntimeEvidence::from_address72(source_address72);
+        let source = evidence.source_address72;
+
+        assert_eq!(evidence.ratio_numerator, 9);
+        assert_eq!(evidence.ratio_denominator, 8);
+        assert_eq!(evidence.block_index, source / 9);
+        assert_eq!(evidence.block_phase, source % 9);
+        assert_eq!(
+            evidence.compressed_address64 as u16,
+            u16::from(source) * 8 / 9
+        );
+        assert_eq!(
+            evidence.expanded_address72 as u16,
+            u16::from(evidence.compressed_address64) * 9 / 8
+        );
+        assert_eq!(
+            evidence.round_trip_loss,
+            source - evidence.expanded_address72
+        );
+        assert_eq!(evidence.round_trip_exact, evidence.round_trip_loss == 0);
+
+        if evidence.round_trip_exact {
+            exact_round_trips += 1;
+        } else {
+            non_exact_round_trips += 1;
+        }
+        if let Some(collision) = &evidence.collision {
+            assert_eq!(
+                collision.source_pair72,
+                [collision.ordinal * 9, collision.ordinal * 9 + 1]
+            );
+            assert!(collision.source_pair72.contains(&source));
+            collision_pairs.insert(collision.source_pair72);
+        }
+
+        assert_eq!(evidence.cardinality.block_size, 9);
+        assert_eq!(evidence.cardinality.block_count, 8);
+        assert_eq!(evidence.cardinality.collision_pair_count, 8);
+        assert_eq!(evidence.cardinality.exact_round_trip_count, 8);
+        assert_eq!(evidence.cardinality.non_exact_round_trip_count, 64);
+    }
+
+    assert_eq!(collision_pairs.len(), 8, "72→64 has eight collision pairs");
+    assert_eq!(exact_round_trips, 8, "only the eight block anchors close");
+    assert_eq!(
+        non_exact_round_trips, 64,
+        "the other 64 source addresses lose one step on round trip"
+    );
+}
+
+/// Tranche 36.T36.1 bullet 4 — the paired fifteens and both identity
+/// strings are sourced from the M3 transcription-bridge constants, not
+/// duplicated literals.
+#[test]
+fn mahamaya_backbone_paired_fifteens_are_sourced_from_m3_helpers() {
+    let trace = real_trace(0, 3);
+    assert_eq!(
+        trace.paired_mahamaya_fifteens,
+        [M3_BACKBONE_DEGREE_STEP, M3_BACKBONE_DEGREE_STEP]
+    );
+    assert_eq!(
+        trace.backbone_identity,
+        format!(
+            "{}x{}={}",
+            M3_BACKBONE_NODE_COUNT,
+            M3_BACKBONE_DEGREE_STEP,
+            M3_BACKBONE_NODE_COUNT * M3_BACKBONE_DEGREE_STEP
+        )
+    );
+    assert_eq!(trace.backbone_identity, "24x15=360");
+    assert_eq!(trace.line_graph_identity, "360+24=384");
+}
+
+/// Tranche 36.5 privacy invariant — the trace is public-safe BECAUSE it
+/// carries addresses, handles, and provenance, never protected bodies: no raw
+/// quaternion, journal body, natal-chart body, or raw model feature vector
+/// may appear on any serialized trace.
+#[test]
+fn pentadic_trace_is_public_safe_and_carries_no_protected_bodies() {
+    for tick12 in 0..12u8 {
+        let trace = real_trace(3, tick12);
+        let s = serde_json::to_value(&trace)
+            .expect("trace serializes")
+            .to_string();
+        for forbidden in [
+            "natalChart",
+            "natal_chart",
+            "qPersonal",
+            "q_personal",
+            "identityHash",
+            "identity_hash",
+            "journalBody",
+            "journal_body",
+            "featureVector",
+            "feature_vector",
+            "modelWeights",
+            "model_weights",
+            "bioquaternion",
+        ] {
+            assert!(
+                !s.contains(forbidden),
+                "public-safe trace must not carry {forbidden}; got: {s}"
+            );
+        }
+        // The Q reference is a HANDLE/address, never a raw quaternion body.
+        assert!(
+            !trace.q_cosmic_ref.contains('['),
+            "q_cosmic_ref must be a reference, not a serialized vector: {}",
+            trace.q_cosmic_ref
+        );
+        assert!(
+            !trace.provenance.is_empty(),
+            "provenance handles must be present"
+        );
+    }
+}
+
+/// Tranche 36.5 EBM feature-context pairing at the contract level: the trace
+/// is accepted in zero-gradient bootstrap mode (no checkpoint ref — the
+/// Option is absent on the wire) AND with a real checkpoint ref + composed-Q
+/// handle (both round-trip verbatim). The M5 consumer reads this pairing;
+/// it never receives raw model features.
+#[test]
+fn trace_pairs_with_checkpoint_ref_in_bootstrap_and_real_modes() {
+    // zero-gradient bootstrap: from_tick emits no checkpoint ref
+    let bootstrap = real_trace(0, 4);
+    assert_eq!(bootstrap.learned_predictor_checkpoint_ref, None);
+    assert_eq!(bootstrap.q_composed_handle, None);
+    let wire = serde_json::to_value(&bootstrap).expect("serializes");
+    assert!(
+        wire.get("learnedPredictorCheckpointRef").is_none(),
+        "bootstrap mode: absent ref must be absent on the wire, not null-faked"
+    );
+
+    // real checkpoint mode: refs are handles and round-trip verbatim
+    let mut with_ref = bootstrap.clone();
+    with_ref.learned_predictor_checkpoint_ref = Some("ebm-checkpoint://v0.3".to_owned());
+    with_ref.q_composed_handle = Some("q_composed://session/demo".to_owned());
+    let wire = serde_json::to_value(&with_ref).expect("serializes");
+    let decoded: AnuttaraPentadicRuntimeTrace = serde_json::from_value(wire).expect("deserializes");
+    assert_eq!(decoded, with_ref);
+    assert_eq!(
+        decoded.learned_predictor_checkpoint_ref.as_deref(),
+        Some("ebm-checkpoint://v0.3")
+    );
+}

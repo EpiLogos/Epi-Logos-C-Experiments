@@ -105,8 +105,10 @@ function commonIndex(entry) {
   const compactViews = compactExports.map((exportName, index) => ({
     exportName,
     viewId: entry.viewIds[index] ?? primaryView,
-    miniModes,
-    requiredSelectors: ['currentProfile', 'readiness', 'coordinateContext']
+    miniModes: exportName === 'M2CymaticTextureContribution' ? ['mini-view'] : miniModes,
+    requiredSelectors: exportName === 'M2CymaticTextureContribution'
+      ? ['currentProfile', 'coordinateContext', 'compositionMountPoint']
+      : ['currentProfile', 'readiness', 'coordinateContext']
   }));
   const evidenceKind = `${entry.id}.evidence`;
   const evidenceRequiredHandles = entry.id === 'm4-nara'
@@ -114,6 +116,17 @@ function commonIndex(entry) {
     : entry.id === 'm5-epii'
       ? ['reviewItemHandle', 'provenanceHandle']
       : ['coordinateContext', 'provenanceHandle'];
+  const stateSelectors = [
+    {
+      id: `${entry.id}.currentProfile`,
+      reads: ['profile', 'readiness', 'coordinateContext']
+    },
+    {
+      id: `${entry.id}.currentEvidenceContext`,
+      reads: ['coordinateContext', 'profileGeneration', 'privacyClass']
+    },
+    ...(entry.currentStateSelectors ?? [])
+  ];
   const compactViewsTs = compactViews
     .map(view => `Object.freeze({
             exportName: '${view.exportName}',
@@ -125,7 +138,9 @@ function commonIndex(entry) {
   const routePredicate = routeIds.length > 0
     ? `${JSON.stringify(routeIds)}.includes(contract.id)`
     : 'false';
-  return `// Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
+  return `// Generated from Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json.
+// Boundary authority: forbiddenImports / forbiddenImportsFromLayer live in that JSON.
+// Do not hand-edit.
 import {
     CROSS_EXTENSION_ROUTE_CONTRACTS,
     MExtensionContributionContract,
@@ -158,16 +173,11 @@ export const TRACK_08_CONTRIBUTION: MExtensionContributionContract = Object.free
         })
     ]),
     currentStateSelectors: Object.freeze([
-        Object.freeze({
-            id: '${entry.id}.currentProfile',
+        ${stateSelectors.map(selector => `Object.freeze({
+            id: '${selector.id}',
             source: 'shared-bridge',
-            reads: Object.freeze(['profile', 'readiness', 'coordinateContext'])
-        }),
-        Object.freeze({
-            id: '${entry.id}.currentEvidenceContext',
-            source: 'shared-bridge',
-            reads: Object.freeze(['coordinateContext', 'profileGeneration', 'privacyClass'])
-        })
+            reads: Object.freeze(${JSON.stringify(selector.reads)})
+        })`).join(',\n        ')}
     ]),
     evidenceSerializers: Object.freeze([
         Object.freeze({
@@ -226,7 +236,9 @@ function widgetTsx(entry) {
     .slice(1)
     .map(p => p[0].toUpperCase() + p.slice(1))
     .join(' ')}`;
-  return `// Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
+  return `// Generated from Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json.
+// Boundary authority: forbiddenImports / forbiddenImportsFromLayer live in that JSON.
+// Do not hand-edit.
 import * as React from 'react';
 import { injectable, inject, postConstruct } from '@theia/core/shared/inversify';
 import { ReactWidget } from '@theia/core/lib/browser/widgets/react-widget';
@@ -349,7 +361,19 @@ function frontendModuleTs(entry) {
       .split('-')
       .map(p => p[0].toUpperCase() + p.slice(1))
       .join('') + 'Contribution';
-  return `// Generated from contracts/07-t0-extension-contract-preflight.json. Do not hand-edit.
+  const intentTargets = entry.intentTargets ?? [];
+  const intentTargetRegistrations = intentTargets
+    .map(target => `        registerIntentTarget(
+            commands,
+            EXTENSION_ID,
+            '${target.contributionId}',
+            '${target.label}',
+            () => this.openView({ activate: true, reveal: true })
+        );`)
+    .join('\n');
+  return `// Generated from Body/M/epi-theia/extensions/contracts/07-t0-extension-contract-preflight.json.
+// Boundary authority: forbiddenImports / forbiddenImportsFromLayer live in that JSON.
+// Do not hand-edit.
 import { ContainerModule, injectable, interfaces, inject } from '@theia/core/shared/inversify';
 import { CommandContribution, CommandRegistry } from '@theia/core/lib/common';
 import {
@@ -362,7 +386,8 @@ import {
     MObservabilityPublisher,
     SharedBridgeAdapter,
     SHARED_BRIDGE_ADAPTER,
-    parseExtensionRoute
+    parseExtensionRoute,
+    registerIntentTarget
 } from '@pratibimba/m-extension-runtime';
 import { ${className} } from './${entry.id}-widget';
 import {
@@ -424,6 +449,7 @@ export class ${contributionClass}
                 }
             }
         );
+${intentTargetRegistrations}
     }
 }
 

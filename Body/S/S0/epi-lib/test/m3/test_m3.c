@@ -292,6 +292,67 @@ static void test_integral_invariant(void) {
 }
 
 /* ===================================================================
+ * FR 2.3.15 (runtime, tarot partition): Suit integrals at RUN time
+ * (Track 00.T14.C7)
+ *
+ * m3.h pins the suit integrals only as a compile-time _Static_assert
+ * over the four #defines, and test_integral_invariant() above sums by
+ * the codon's OUTER-nucleotide bits. This walks the tarot map's OWN
+ * suit partition (M3_TAROT_CODON_MAP, dual-codon courts included) and
+ * proves at runtime that (a) the 4x14 card layout covers all 64 codons
+ * exactly once, and (b) each SUIT's (+,+) evaluation integral carries
+ * the spec value — Cups=84, Wands=96, Pentacles=88, Swords=92, total
+ * 360 (x4 in the raw charge domain) — via evaluate_codon(), the
+ * spec-named "(+,+) codon evaluation" surface.
+ * =================================================================== */
+
+static void test_suit_integral_runtime_tarot_partition(void) {
+    int32_t suit_pp[4] = {0, 0, 0, 0};
+    uint8_t seen[64] = {0};
+    int codon_count = 0;
+    int suit, rank, k, c;
+
+    for (suit = 0; suit < (int)M3_TAROT_SUITS; suit++) {
+        for (rank = 0; rank <= M3_TAROT_PIP_KING; rank++) {
+            const M3_TarotCodonEntry* entry = &M3_TAROT_CODON_MAP[suit][rank];
+            uint8_t codons[2];
+            TEST("tarot entry suit field matches its row",
+                 entry->suit == (uint8_t)suit);
+            codons[0] = entry->codon_a;
+            codons[1] = entry->codon_b;
+            for (k = 0; k < 2; k++) {
+                uint8_t codon = codons[k];
+                if (codon == M3_TAROT_SINGLE_CODON) continue;
+                TEST("tarot codon in 6-bit range", codon < 64);
+                seen[codon & 0x3F]++;
+                codon_count++;
+                suit_pp[suit] += evaluate_codon(codon).pp;
+            }
+        }
+    }
+
+    TEST("tarot partition carries 64 codons", codon_count == 64);
+    for (c = 0; c < 64; c++) {
+        TEST("each codon appears exactly once in the tarot map", seen[c] == 1);
+    }
+
+    TEST("Cups runtime suit integral = 4x84",
+         suit_pp[0] == 4 * (int32_t)M3_SUIT_A_INTEGRAL);
+    TEST("Wands runtime suit integral = 4x96",
+         suit_pp[1] == 4 * (int32_t)M3_SUIT_T_INTEGRAL);
+    TEST("Pentacles runtime suit integral = 4x88",
+         suit_pp[2] == 4 * (int32_t)M3_SUIT_C_INTEGRAL);
+    TEST("Swords runtime suit integral = 4x92",
+         suit_pp[3] == 4 * (int32_t)M3_SUIT_G_INTEGRAL);
+    TEST("runtime suit integrals close at 4x360",
+         suit_pp[0] + suit_pp[1] + suit_pp[2] + suit_pp[3] ==
+         4 * (int32_t)M3_INTEGRAL_INVARIANT);
+    TEST("suit-level projection closes at 360",
+         (suit_pp[0] + suit_pp[1] + suit_pp[2] + suit_pp[3]) / 4 ==
+         (int32_t)M3_INTEGRAL_INVARIANT);
+}
+
+/* ===================================================================
  * FR 2.3.9: Three Matrix Operators
  * =================================================================== */
 
@@ -327,6 +388,25 @@ static void test_quaternion_overlay_foundations(void) {
     TEST("matrix i axis", approxf(M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_COMPLEMENTARY].x, 1.0f));
     TEST("matrix j axis", approxf(M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_MOVING_RESTING].y, 1.0f));
     TEST("matrix k axis", approxf(M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_SAME_QUALITY].z, 1.0f));
+
+    /* P4 (HMS Sec.V): the three matrices ARE the quaternion imaginary units, so
+     * they must compose as the group — i*j=k, j*k=i, k*i=j, i^2=-1 — for the
+     * codon<->hexagram translation to be a genuine rotation rather than three
+     * labelled axes. */
+    Quaternion mi = M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_COMPLEMENTARY];
+    Quaternion mj = M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_MOVING_RESTING];
+    Quaternion mk = M3_MATRIX_QUATERNION_AXIS[M3_MATRIX_SAME_QUALITY];
+    Quaternion ij = quat_mul(mi, mj);
+    TEST("i*j = k (3-matrix composition)",
+         approxf(ij.w, 0.0f) && approxf(ij.x, 0.0f) && approxf(ij.y, 0.0f) && approxf(ij.z, 1.0f));
+    Quaternion jk = quat_mul(mj, mk);
+    TEST("j*k = i (3-matrix composition)",
+         approxf(jk.w, 0.0f) && approxf(jk.x, 1.0f) && approxf(jk.y, 0.0f) && approxf(jk.z, 0.0f));
+    Quaternion ki = quat_mul(mk, mi);
+    TEST("k*i = j (3-matrix composition)",
+         approxf(ki.w, 0.0f) && approxf(ki.x, 0.0f) && approxf(ki.y, 1.0f) && approxf(ki.z, 0.0f));
+    Quaternion ii = quat_mul(mi, mi);
+    TEST("i^2 = -1 (matrix squares to the negative real)", approxf(ii.w, -1.0f));
 }
 
 static void test_codon_quaternions(void) {
@@ -341,6 +421,37 @@ static void test_codon_quaternions(void) {
 
     uint8_t state = m3_quat_active_state(quat_from_ring_pos(3u), aaa);
     TEST("active state is in range", state < 8u);
+
+    /* P3.2 — j/k symmetry (DR-ENV; HMS Sec.V). The retired law read only the
+     * i-axis half-angle atan2(x, w), discarding the codon's Mod (k/z = sum%6)
+     * and any j environmental torque. The full-angle law folds all three axes in. */
+    Quaternion id_env = { .w = 1.0f, .x = 0.0f, .y = 0.0f, .z = 0.0f };
+    bool mod_axis_now_matters = false;
+    for (uint8_t c = 0u; c < 64u; ++c) {
+        Quaternion base = m3_quat_from_codon(c);
+        float a = atan2f(base.x, base.w);           /* retired i-only reading */
+        if (a < 0.0f) a += 6.2831853071795865f;
+        uint8_t retired = (uint8_t)(a / 0.7853981633974483f) & 0x07u;
+        if (m3_quat_active_state(id_env, c) != retired) {
+            mod_axis_now_matters = true;
+            break;
+        }
+    }
+    TEST("Mod (k) axis now affects codon state (was discarded by the i-only law)",
+         mod_axis_now_matters);
+
+    /* Composite state 7 is reachable — construct env so composed = (-10, 1, 1, 1):
+     * angle = 2*atan2(sqrt(3), -10) ~= 340.3 deg -> bucket 7. Unreachable under the
+     * i-only law (which read x=1, w=-10 -> ~2*8.9 deg region, never the composite). */
+    uint8_t aca = encode_codon(M3_NUC_A, M3_NUC_C, M3_NUC_A);
+    Quaternion b = m3_quat_from_codon(aca);
+    float nsq = b.w * b.w + b.x * b.x + b.y * b.y + b.z * b.z;
+    Quaternion conj = { .w = b.w, .x = -b.x, .y = -b.y, .z = -b.z };
+    Quaternion desired = { .w = -10.0f, .x = 1.0f, .y = 1.0f, .z = 1.0f };
+    Quaternion num = quat_mul(desired, conj);       /* env = desired (X) base^-1 */
+    Quaternion env7 = { .w = num.w / nsq, .x = num.x / nsq, .y = num.y / nsq, .z = num.z / nsq };
+    TEST("composite state 7 is reachable in the w<0 hemisphere",
+         m3_quat_active_state(env7, aca) == 7u);
 }
 
 static void test_prime_attractors_and_eval_mapping(void) {
@@ -581,6 +692,67 @@ static void test_rna(void) {
 }
 
 /* ===================================================================
+ * Transcript surface contract
+ * =================================================================== */
+
+static uint8_t expected_t_count(uint8_t codon) {
+    uint8_t outer = (uint8_t)((codon >> 4) & 0x03);
+    uint8_t middle = (uint8_t)((codon >> 2) & 0x03);
+    uint8_t inner = (uint8_t)(codon & 0x03);
+    return (uint8_t)((outer == M3_NUC_T) + (middle == M3_NUC_T) + (inner == M3_NUC_T));
+}
+
+static void test_transcript_surface_contract(void) {
+    TEST("transcript class SHARED = 0", M3_TRANSCRIPT_CLASS_SHARED == 0);
+    TEST("transcript class TRANSCRIBABLE = 1", M3_TRANSCRIPT_CLASS_TRANSCRIBABLE == 1);
+    TEST("governance role NONE = 0", M3_GOVERNANCE_ROLE_NONE == 0);
+    TEST("governance role START = 1", M3_GOVERNANCE_ROLE_START == 1);
+    TEST("governance role STOP = 2", M3_GOVERNANCE_ROLE_STOP == 2);
+
+    TEST("ATG/AUG start codon constant", M3_CODON_ATG_AUG == encode_codon(M3_NUC_A, M3_NUC_T, M3_NUC_G));
+    TEST("STOP TAA constant", M3_STOP_CODONS[0] == encode_codon(M3_NUC_T, M3_NUC_A, M3_NUC_A));
+    TEST("STOP TAG constant", M3_STOP_CODONS[1] == encode_codon(M3_NUC_T, M3_NUC_A, M3_NUC_G));
+    TEST("STOP TGA constant", M3_STOP_CODONS[2] == encode_codon(M3_NUC_T, M3_NUC_G, M3_NUC_A));
+
+    TEST("AAA has zero T bases", m3_codon_t_count(encode_codon(M3_NUC_A, M3_NUC_A, M3_NUC_A)) == 0u);
+    TEST("ATG has one T base", m3_codon_t_count(M3_CODON_ATG_AUG) == 1u);
+    TEST("TTA has two T bases", m3_codon_t_count(encode_codon(M3_NUC_T, M3_NUC_T, M3_NUC_A)) == 2u);
+    TEST("TTT has three T bases", m3_codon_t_count(encode_codon(M3_NUC_T, M3_NUC_T, M3_NUC_T)) == 3u);
+
+    uint8_t shared = 0;
+    uint8_t transcribable = 0;
+    uint8_t starts = 0;
+    uint8_t stops = 0;
+
+    for (uint8_t codon = 0; codon < 64u; codon++) {
+        uint8_t t_count = expected_t_count(codon);
+        M3_TranscriptClass expected_class = t_count == 0u
+            ? M3_TRANSCRIPT_CLASS_SHARED
+            : M3_TRANSCRIPT_CLASS_TRANSCRIBABLE;
+
+        TEST("t-count arithmetic contract", m3_codon_t_count(codon) == t_count);
+        TEST("t-count FFI parity", m3_codon_t_count_ffi(codon) == m3_codon_t_count(codon));
+        TEST("transcript class contract", m3_codon_transcript_class(codon) == expected_class);
+        TEST("transcript class FFI parity", m3_codon_transcript_class_ffi(codon) == m3_codon_transcript_class(codon));
+        TEST("governance role FFI parity", m3_codon_governance_role_ffi(codon) == m3_codon_governance_role(codon));
+
+        if (m3_codon_transcript_class(codon) == M3_TRANSCRIPT_CLASS_SHARED) shared++;
+        if (m3_codon_transcript_class(codon) == M3_TRANSCRIPT_CLASS_TRANSCRIBABLE) transcribable++;
+        if (m3_codon_governance_role(codon) == M3_GOVERNANCE_ROLE_START) starts++;
+        if (m3_codon_governance_role(codon) == M3_GOVERNANCE_ROLE_STOP) {
+            stops++;
+            TEST("STOP role comes from AA sentinel", M3_CODON_TO_AA[codon] == M3_STOP_CODON_AA);
+        }
+    }
+
+    TEST("transcript_surface_contract shared count = 27", shared == 27u);
+    TEST("transcript_surface_contract transcribable count = 37", transcribable == 37u);
+    TEST("transcript_surface_contract start count = 1", starts == 1u);
+    TEST("transcript_surface_contract stop count = 3", stops == 3u);
+    TEST("m3_verify_transcript_surface_boot", m3_verify_transcript_surface() == 0);
+}
+
+/* ===================================================================
  * FR 2.3.16: Tarot-Codon LUT
  * =================================================================== */
 
@@ -712,7 +884,30 @@ static void test_tarot(void) {
     TEST("major 21 maps to amino acid 21", M3_MAJOR_ARCANA[21].amino_acid_index == 21u);
     TEST("tarot translation stays in codon space", m3_tarot_translate(0u, encode_codon(0,0,0), 1) < 64u);
     TEST("tarot major translation stays in codon space", m3_tarot_translate(56u, encode_codon(0,1,3), 1) < 64u);
+    for (uint8_t card = 0; card < M3_TAROT_QUATERNION_COUNT; card++) {
+        for (uint8_t codon = 0; codon < 64u; codon++) {
+            uint8_t hexagram = m3_tarot_translate(card, codon, 1);
+            uint8_t roundtrip = m3_tarot_translate(card, hexagram, 0);
+            TEST("tarot codon<->hexagram translation is invertible", roundtrip == codon);
+        }
+    }
 #undef COD
+}
+
+static void test_major_arcana_from_codon(void) {
+    for (uint8_t codon = 0u; codon < 64u; ++codon) {
+        uint8_t card = m3_major_arcana_from_codon(codon);
+        if (M3_CODON_TO_AA[codon] == M3_STOP_CODON_AA) {
+            TEST("major arcana refuses STOP codon", card == 0xFFu);
+        } else {
+            TEST("major arcana maps non-STOP codon", card < M3_MAJOR_ARCANA_COUNT);
+            if (card < M3_MAJOR_ARCANA_COUNT) {
+                TEST("major arcana reverses amino-acid mapping",
+                     M3_MAJOR_ARCANA[card].amino_acid_index == M3_CODON_TO_AA[codon]);
+            }
+        }
+    }
+    TEST("major arcana refuses out-of-range codon", m3_major_arcana_from_codon(64u) == 0xFFu);
 }
 
 /* ===================================================================
@@ -792,6 +987,45 @@ static void test_det_coverage(void) {
  * Main
  * =================================================================== */
 
+/* Tranche 4.15 backbone_table_contract (handoff §2.3): after m3_build_backbone
+ * every one of the 24 nodes carries the exact clock law — degree = i·15,
+ * hour_of_day = i, zodiac_sign = i/2, is_cusp = (i%2==0), amino_acid_idx = i
+ * into the 24-entry amino/codon table, is_palindromic = 1. */
+static void test_backbone_table_contract(void) {
+    m3_build_backbone();
+    for (int i = 0; i < 24; i++) {
+        TEST("backbone degree = i*15", CLOCK_BACKBONE[i].degree == (uint16_t)(i * 15));
+        TEST("backbone index = i", CLOCK_BACKBONE[i].backbone_index == (uint8_t)i);
+        TEST("backbone hour = i", CLOCK_BACKBONE[i].hour_of_day == (uint8_t)i);
+        TEST("backbone zodiac = i/2", CLOCK_BACKBONE[i].zodiac_sign == (uint8_t)(i / 2));
+        TEST("backbone cusp = (i%2==0)", CLOCK_BACKBONE[i].is_cusp == (uint8_t)((i % 2) == 0));
+        TEST("backbone amino idx = i", CLOCK_BACKBONE[i].amino_acid_idx == (uint8_t)i);
+        TEST("backbone palindromic", CLOCK_BACKBONE[i].is_palindromic == 1u);
+    }
+    /* rebuilding is idempotent — the init path may call it more than once */
+    m3_build_backbone();
+    TEST("backbone rebuild idempotent", CLOCK_BACKBONE[23].degree == 345);
+}
+
+/* Tranche 4.15 pisano LUT contract (Track 35 §1.2): the .rodata table IS the
+ * Fibonacci digit recurrence over the full Pisano-60 period — seeded 0,1,
+ * every entry the mod-10 sum of its two predecessors, closing the 60-wrap
+ * (F(60) ≡ 0, F(61) ≡ 1), never a hand-drifted list. */
+static void test_pisano_digit_lut_contract(void) {
+    TEST("pisano seed F(0)=0", pisano_digit_lut[0] == 0);
+    TEST("pisano seed F(1)=1", pisano_digit_lut[1] == 1);
+    for (int n = 2; n < 60; n++) {
+        TEST("pisano recurrence",
+             pisano_digit_lut[n] ==
+                 (uint8_t)((pisano_digit_lut[n - 1] + pisano_digit_lut[n - 2]) % 10));
+    }
+    /* the cycle closes at period 60: F(60) = F(59)+F(58), F(61) = F(60)+F(59) */
+    TEST("pisano wrap F(60)=0",
+         (uint8_t)((pisano_digit_lut[59] + pisano_digit_lut[58]) % 10) == pisano_digit_lut[0]);
+    TEST("pisano wrap F(61)=1",
+         (uint8_t)((pisano_digit_lut[0] + pisano_digit_lut[59]) % 10) == pisano_digit_lut[1]);
+}
+
 int main(void) {
     printf("=== M3 (Mahamaya) Verification Suite ===\n\n");
 
@@ -803,6 +1037,7 @@ int main(void) {
     test_nondual();
     test_charges();
     test_integral_invariant();
+    test_suit_integral_runtime_tarot_partition();
     test_matrices();
     test_quaternion_overlay_foundations();
     test_su2();
@@ -814,9 +1049,13 @@ int main(void) {
     test_codon_quaternions();
     test_prime_attractors_and_eval_mapping();
     test_rna();
+    test_transcript_surface_contract();
     test_tarot();
+    test_major_arcana_from_codon();
     test_m3_api();
     test_det_coverage();
+    test_backbone_table_contract();
+    test_pisano_digit_lut_contract();
 
     printf("\n=== Results: %d passed, %d failed (of %d) ===\n",
            pass_count, fail_count, pass_count + fail_count);
