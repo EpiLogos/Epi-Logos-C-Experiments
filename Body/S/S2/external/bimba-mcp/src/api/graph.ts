@@ -14,6 +14,7 @@ import { readFile } from 'fs/promises';
 import { join } from 'node:path';
 import { resolvePresentRoot } from '../repo-paths.js';
 import { convertHashToMFamily } from '../coordinates/syntax.js';
+import { int } from 'neo4j-driver';
 
 // =============================================================================
 // Helper for Node Property Translation
@@ -162,7 +163,7 @@ export async function queryByCoordinate(
 
     const queryParams = {
       ...params,
-      limit,
+      limit: int(limit),
     };
 
     // Execute query
@@ -316,7 +317,7 @@ export async function traverse(
       query,
       {
         startUuid,
-        pathLimit,
+        pathLimit: int(pathLimit),
       }
     );
 
@@ -533,7 +534,7 @@ export async function traversePositions(
 
       const posRecords = await connectionManager.executeRead<Record<string, unknown>>(posQuery, {
         nodeUuids: currentNodes,
-        limit: maxPerPosition,
+        limit: int(maxPerPosition),
       });
 
       // Convert records to NodeRef objects
@@ -686,7 +687,7 @@ export async function context(
       query,
       {
         entityUuid,
-        resultLimit,
+        resultLimit: int(resultLimit),
       }
     );
 
@@ -1024,7 +1025,7 @@ export async function spec(
       connectedQuery,
       {
         uuid,
-        resultLimit,
+        resultLimit: int(resultLimit),
       }
     );
 
@@ -1202,7 +1203,7 @@ async function performGraphSearch(
   const graphQuery = `
     MATCH (node:Bimba)
     ${coordinateFilterCondition ? `WHERE ${coordinateFilterCondition}` : ''}
-    WITH node, size(()--(node)) AS degree
+    WITH node, COUNT { ()--(node) } AS degree
     RETURN {
       node: {uuid: coalesce(node.c_2_uuid, node.uuid), labels: labels(node), properties: properties(node)},
       degree: degree
@@ -1269,7 +1270,7 @@ async function performChunkAwareSearch(
     MATCH (node)
     WHERE (node:Bimba OR node:Chunk)
     ${coordinateFilterCondition ? `AND ${coordinateFilterCondition}` : ''}
-    WITH node, size(()--(node)) AS degree, labels(node) AS nodeLabels
+    WITH node, COUNT { ()--(node) } AS degree, labels(node) AS nodeLabels
     RETURN {
       node: {uuid: coalesce(node.c_2_uuid, node.uuid), labels: nodeLabels, properties: properties(node)},
       degree: degree,
@@ -1910,7 +1911,7 @@ async function getConnectedEntitiesByPosition(
 
     const records = await connectionManager.executeRead<Record<string, unknown>>(
       query,
-      { uuid: entityUuid, limit }
+      { uuid: entityUuid, limit: int(limit) }
     );
 
     return records
