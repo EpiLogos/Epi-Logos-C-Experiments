@@ -6,7 +6,8 @@
   "main": "dist/legacy.js",
   "bin": {
     "bimba-mcp": "dist/legacy.js",
-    "bimba-mcp-modern": "dist/modern.js"
+    "bimba-mcp-modern": "dist/modern.js",
+    "bimba-mcp-health": "dist/health.js"
   },
   "scripts": {
     "build": "tsc",

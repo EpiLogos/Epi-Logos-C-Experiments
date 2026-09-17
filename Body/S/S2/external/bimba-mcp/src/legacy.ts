@@ -4,6 +4,8 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { createInterface } from 'node:readline';
 import { authorityFromEnvironment } from './application/service.js';
+import { getNeo4jConnectionManager } from './db/neo4j.js';
+import { requireSelectedMap } from './selection.js';
 import {
   LEGACY_PROTOCOL_REVISIONS,
   isModernProtocolRequest,
@@ -59,8 +61,27 @@ function denyAuthority(request: JsonRpcRequestLike, required: string): void {
   });
 }
 
+function denyUnavailable(request: JsonRpcRequestLike, message: string): void {
+  send({
+    jsonrpc: '2.0',
+    id: requestId(request),
+    result: {
+      content: [{ type: 'text', text: message }],
+      isError: true,
+    },
+  });
+}
+
+async function requireAvailableMap(): Promise<void> {
+  await requireSelectedMap();
+  const manager = getNeo4jConnectionManager();
+  await manager.connect();
+  const health = await manager.healthCheck();
+  if (!health.isHealthy) throw new Error('Bimba map is unavailable');
+}
+
 const input = createInterface({ input: process.stdin, crlfDelay: Infinity });
-input.on('line', line => {
+input.on('line', async line => {
   if (!line.trim()) return;
 
   let parsed: unknown;
@@ -91,6 +112,12 @@ input.on('line', line => {
     const authority = authorityFromEnvironment();
     if (!authority.permissions.has(required)) {
       denyAuthority(request, required);
+      return;
+    }
+    try {
+      await requireAvailableMap();
+    } catch {
+      denyUnavailable(request, 'Bimba map is not selected or unavailable');
       return;
     }
   }

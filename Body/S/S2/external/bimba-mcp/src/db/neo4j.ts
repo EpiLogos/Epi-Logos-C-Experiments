@@ -14,6 +14,16 @@ import neo4j, {
 
 type SessionMode = typeof sessionConstants.READ | typeof sessionConstants.WRITE;
 
+function normalizeQueryParameters(params?: Record<string, unknown>): Record<string, unknown> | undefined {
+  if (!params) return undefined;
+  return Object.fromEntries(
+    Object.entries(params).map(([key, value]) => [
+      key,
+      typeof value === 'number' && Number.isSafeInteger(value) ? neo4j.int(value) : value,
+    ])
+  );
+}
+
 // =============================================================================
 // Configuration Types
 // =============================================================================
@@ -22,6 +32,7 @@ export interface Neo4jConfig {
   uri: string;
   user: string;
   password: string;
+  authMode: 'basic' | 'none';
   maxConnectionPoolSize: number;
   connectionAcquisitionTimeout: number;
   connectionTimeout: number;
@@ -50,6 +61,7 @@ const DEFAULT_CONFIG: Neo4jConfig = {
   uri: process.env['NEO4J_URI'] ?? 'bolt://localhost:7687',
   user: process.env['NEO4J_USER'] ?? 'neo4j',
   password: process.env['NEO4J_PASSWORD'] ?? 'neo4j',
+  authMode: process.env['NEO4J_AUTH_MODE'] === 'none' ? 'none' : 'basic',
   maxConnectionPoolSize: parseInt(process.env['NEO4J_POOL_SIZE'] ?? '50', 10),
   connectionAcquisitionTimeout: 30000,
   connectionTimeout: 10000,
@@ -125,9 +137,15 @@ export class Neo4jConnectionManager {
   }
 
   private async createDriver(): Promise<void> {
+    const unauthenticated = neo4jAuth as typeof neo4jAuth & {
+      none: () => ReturnType<typeof neo4jAuth.basic>;
+    };
+    const authToken = this.config.authMode === 'none'
+      ? unauthenticated.none()
+      : neo4jAuth.basic(this.config.user, this.config.password);
     this.driver = neo4j.driver(
       this.config.uri,
-      neo4jAuth.basic(this.config.user, this.config.password),
+      authToken,
       {
         maxConnectionPoolSize: this.config.maxConnectionPoolSize,
         connectionAcquisitionTimeout: this.config.connectionAcquisitionTimeout,
@@ -197,7 +215,7 @@ export class Neo4jConnectionManager {
   ): Promise<T[]> {
     const session = this.getReadSession(database);
     try {
-      const result = await session.run(query, params);
+      const result = await session.run(query, normalizeQueryParameters(params));
       return result.records.map((record) => record.toObject() as T);
     } finally {
       await this.releaseSession(session);
@@ -214,7 +232,7 @@ export class Neo4jConnectionManager {
   ): Promise<T[]> {
     const session = this.getWriteSession(database);
     try {
-      const result = await session.run(query, params);
+      const result = await session.run(query, normalizeQueryParameters(params));
       return result.records.map((record) => record.toObject() as T);
     } finally {
       await this.releaseSession(session);

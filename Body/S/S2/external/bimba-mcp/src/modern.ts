@@ -6,7 +6,9 @@ import { queryByCoordinate, search, embed } from './api/graph.js';
 import { getNeo4jConnectionManager } from './db/neo4j.js';
 import type { BimbaBackend } from './application/contracts.js';
 import { BimbaApplicationService, authorityFromEnvironment } from './application/service.js';
+import { BimbaRequestError } from './application/contracts.js';
 import { createModernBimbaServer } from './mcp/modern-server.js';
+import { requireSelectedMap } from './selection.js';
 
 const backend: BimbaBackend = {
   queryByCoordinate: (coordinate, includeNested, limit) =>
@@ -25,13 +27,23 @@ const backend: BimbaBackend = {
 const service = new BimbaApplicationService(backend);
 const manager = getNeo4jConnectionManager();
 
+async function requireAvailableMap(): Promise<void> {
+  await requireSelectedMap();
+  const health = await manager.healthCheck();
+  if (!health.isHealthy) throw new BimbaRequestError('Bimba map is unavailable');
+}
+
 async function main(): Promise<void> {
   await manager.connect();
 
   // Explicitly reject the 2025 initialize-era protocol here. Existing clients
   // use dist/legacy.js; there is no ambiguous hybrid interpretation.
   await serveStdio(
-    () => createModernBimbaServer(service, () => authorityFromEnvironment()),
+    () => createModernBimbaServer(
+      service,
+      () => authorityFromEnvironment(),
+      requireAvailableMap
+    ),
     { legacy: 'reject' }
   );
 }
