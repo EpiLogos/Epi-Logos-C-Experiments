@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { renderMapSymbolSvg, M2_1_FAMILY_COORDINATES } from './map-symbol-svg';
+import { renderMapSymbolSvg, M2_1_FAMILY_COORDINATES } from './map-symbol-svg.js';
 
 describe('map symbol SVG generator (48.3 M2-1 worked example, DR-M0-4 own-generated law)', () => {
   it('enumerates the full M2-1 MEF lens family: root + 6 groups + 36 lenses', () => {

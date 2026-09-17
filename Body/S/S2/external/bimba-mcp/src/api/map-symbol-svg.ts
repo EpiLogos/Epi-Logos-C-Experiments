@@ -138,11 +138,15 @@ export function renderMapSymbolSvg(coordinate: string): string | null {
       `<circle cx="${CX - 19}" cy="${CY}" r="34" fill="none" stroke="${GOLD}" stroke-width="2"/>` +
       `<circle cx="${CX + 19}" cy="${CY}" r="34" fill="none" stroke="${GOLD}" stroke-width="2"/>` +
       `<circle cx="${CX}" cy="${CY}" r="4.5" fill="${GOLD}"/>`;
-    return svgShell(265, apertureBlades(null, (x) => GROUP_HUES[x]) + vesica);
+    // apertureBlades iterates the six groups only, so the lookup is total.
+    return svgShell(265, apertureBlades(null, (x) => GROUP_HUES[x]!) + vesica);
   }
 
   const x = Number(xRaw);
+  // The regex bounds x to 0-5, but the index type stays honest: an out-of-
+  // range hue yields the same null as an unmatched coordinate.
   const hue = GROUP_HUES[x];
+  if (hue === undefined) return null;
   if (yRaw === undefined) {
     // Group node: the group-hued aperture with its six positions in orbit.
     const orbit: string[] = [];
