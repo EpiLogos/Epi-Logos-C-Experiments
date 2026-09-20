@@ -9,6 +9,7 @@ import {
 import { BimbaApplicationService } from '../application/service.js';
 
 export type AuthorityProvider = () => BimbaAuthority;
+export type AvailabilityProvider = () => Promise<void>;
 
 function resultContent(result: BimbaResult<unknown>): {
   content: Array<{ type: 'text'; text: string }>;
@@ -44,7 +45,8 @@ function safeFailure(error: unknown): {
  */
 export function createModernBimbaServer(
   service: BimbaApplicationService,
-  authorityProvider: AuthorityProvider
+  authorityProvider: AuthorityProvider,
+  availabilityProvider: AvailabilityProvider = async () => undefined
 ): McpServer {
   const server = new McpServer({
     name: 'bimba-mcp',
@@ -69,6 +71,7 @@ export function createModernBimbaServer(
     },
     async ({ coordinate, include_nested, limit }) => {
       try {
+        await availabilityProvider();
         return resultContent(await service.get(
           { kind: 'coordinate', value: coordinate },
           {
@@ -103,6 +106,7 @@ export function createModernBimbaServer(
     },
     async ({ query, top_k, mode, search_chunks, expand_to_parent }) => {
       try {
+        await availabilityProvider();
         return resultContent(await service.search(
           query,
           {
@@ -138,6 +142,7 @@ export function createModernBimbaServer(
     },
     async ({ uuid, text, task_type, dimensions }) => {
       try {
+        await availabilityProvider();
         return resultContent(await service.storeEmbedding(
           {
             ref: { kind: 'uuid', value: uuid },
