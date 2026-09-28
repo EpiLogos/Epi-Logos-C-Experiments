@@ -141,11 +141,14 @@ test('I-Ching cast produces six lines, a hexagram number, transformed hexagram, 
     ]));
     assert.equal(cast.lines.length, 6);
     assert.deepEqual(cast.lines.map(line => line.value), [6, 9, 7, 8, 8, 7]);
-    assert.deepEqual(cast.lines.map(line => line.nucleotide), ['A', 'T', 'C', 'G', 'G', 'C']);
+    assert.deepEqual(cast.lines.map(line => line.nucleotide), ['A', 'T', 'G', 'C', 'C', 'G']);
+    assert.deepEqual(cast.lines.map(line => line.polarity), ['yin', 'yang', 'yang', 'yin', 'yin', 'yang']);
     assert.deepEqual(cast.movingLines, [1, 2]);
     assert.equal(typeof cast.hexagramNumber, 'number');
     assert.ok(cast.hexagramNumber >= 1 && cast.hexagramNumber <= 64);
-    assert.equal(typeof cast.transformedHexagramNumber, 'number');
+    // bottom-up yang bits 0b100110 -> 38 + 1; moving 6->7 (yang), 9->8 (yin) -> 0b100101 -> 37 + 1
+    assert.equal(cast.hexagramNumber, 39);
+    assert.equal(cast.transformedHexagramNumber, 38);
 
     const read = buildIChingCastResult(cast.lines, {
         judgement: 'primary judgement',

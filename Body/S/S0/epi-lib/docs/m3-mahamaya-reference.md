@@ -129,11 +129,12 @@ A single boolean flag toggles the entire polarity table between DNA and RNA mode
 The root arithmetic of the system:
 
 ```c
-static const uint8_t NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 7, 8};
+const uint8_t NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 8, 7};
 ```
 
 - **Sum = 30** (compile-time asserted)
-- A=6 (Old Yin), T=9 (Old Yang), C=7 (Young Yin), G=8 (Young Yang)
+- A=6 (Old Yin), T=9 (Old Yang), C=8 (Young Yin), G=7 (Young Yang) — odd is yang;
+  corrected from the parity-violating {6,9,7,8} (M3-COIN-1, owner ruling)
 
 These values drive ALL pair sums, codon sums, charge calculations, and the 360
 integral invariant. The `get_iching_value()` and `get_codon_iching_sum()` functions
@@ -663,14 +664,14 @@ Expected output: 1295/1295 tests passed.
 
 | Area | Tests | What It Verifies |
 |------|-------|-----------------|
-| Nucleotide I-Ching | 7 | A=6, T=9, C=7, G=8, sum=30, accessor round-trip |
+| Nucleotide I-Ching | 7 | A=6, T=9, C=8, G=7, sum=30, accessor round-trip |
 | Nucleotide logic | 16 | Polarity, mobility, base pairing, codon encode/decompose |
 | PAIR_MATRIX | 28 | All 16 pairs: sums, diffs, antisymmetry, homo diff=0, min/max bounds |
 | Rotational state | 4 | Composition correctness, gap rejection, PROVISIONAL flag |
 | Hexagram ops | ~70+ | Complement, line change, trigram compose/split, LUT double-complement |
 | Non-dual codons | 48+ | Count=16, LUT entries pass check, outer==inner pattern |
 | Inner charges | 68+ | AAA/TTT exact values, 4X invariant for all 64 codons |
-| 360 integral | 10 | Raw totals 1440, per-suit 336/384/352/368, /4 = 84/96/88/92 |
+| 360 integral | 10 | Raw totals 1440, per-suit 336/384/368/352, /4 = 84/96/92/88 |
 | Matrix operators | 136+ | comp[i]=i^0x3F, move[i]=swap trigrams, 8 resonance gaps |
 | SU(2) polar | 722+ | Known values, shadow preservation, double application = identity |
 | Epogdoon | ~66+ | All 64 values covered, 72-64=8 collisions |

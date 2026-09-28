@@ -2190,7 +2190,7 @@ mod m0_calc_dash_pentavalence {
 
 /// Tranche 01.T1.17 — R#/## tao-elements: the classic coin method
 /// (Yin R# = 2, Yang ## = 3, 4-slot frame, value = yang-count + 5)
-/// constructs the canonical nucleotide I-Ching values {6, 9, 7, 8}.
+/// constructs the canonical nucleotide I-Ching values {6, 9, 8, 7} (M3-COIN-1).
 #[cfg(test)]
 mod m0_calc_tao_coin_method {
     use std::os::raw::c_int;
@@ -2201,11 +2201,11 @@ mod m0_calc_tao_coin_method {
     }
 
     // (yin R#, yang ##) counts per nucleotide A/T/C/G — findings §III.6 table.
-    const COIN: [(i32, i32); 4] = [(3, 1), (0, 4), (2, 2), (1, 3)];
+    const COIN: [(i32, i32); 4] = [(3, 1), (0, 4), (1, 3), (2, 2)]; // M3-COIN-1
 
     #[test]
     fn coin_method_reproduces_the_canonical_iching_values() {
-        let expected = [6, 9, 7, 8]; // A Old Yin, T Old Yang, C Young Yin, G Young Yang
+        let expected = [6, 9, 8, 7]; // A Old Yin, T Old Yang, C Young Yin, G Young Yang (M3-COIN-1)
         for (n, (yin, yang)) in COIN.iter().enumerate() {
             let v = unsafe { m0_calc_nucleotide_from_coin(*yin, *yang) };
             assert_eq!(v, expected[n], "nucleotide {n}");
@@ -2246,7 +2246,7 @@ mod m0_calc_tao_is_codon_eval {
 
     #[test]
     fn charges_are_the_sign_algebra_over_coin_values_for_every_codon() {
-        const COIN: [(i32, i32); 4] = [(3, 1), (0, 4), (2, 2), (1, 3)];
+        const COIN: [(i32, i32); 4] = [(3, 1), (0, 4), (1, 3), (2, 2)]; // M3-COIN-1
         for codon in 0u8..64 {
             let value = |shift: u8| {
                 let (yin, yang) = COIN[((codon >> shift) & 0x03) as usize];

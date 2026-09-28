@@ -17,8 +17,8 @@ use crate::luts::codon::{codon_to_amino_acid, wc_anticodon};
 use crate::m3_transcription_bridge::{major_arcana, MajorArcanaCard};
 
 /// Nucleotide → I Ching value, indexed 0=A, 1=T, 2=C, 3=G (mirrors the C kernel
-/// `NUCLEOTIDE_ICHING_VALUE`, m3.c:25 — A=6, T=9, C=7, G=8).
-const NUCLEOTIDE_ICHING_VALUE: [u8; 4] = [6, 9, 7, 8];
+/// `NUCLEOTIDE_ICHING_VALUE`, m3.c:25 — A=6, T=9, C=8, G=7; M3-COIN-1).
+const NUCLEOTIDE_ICHING_VALUE: [u8; 4] = [6, 9, 8, 7];
 
 /// The Euler primes that mark transcription attractor checkpoints (HMS FR 2.Q.10).
 const EULER_PRIME_ATTRACTORS: [u8; 2] = [41, 43];
@@ -102,22 +102,24 @@ mod tests {
     use super::*;
 
     // codon encoding: (n1<<4)|(n2<<2)|n3, with 0=A,1=T,2=C,3=G (codon.rs:44).
-    const ACA: u8 = 0b00_10_00; // A,C,A -> I Ching 6+7+6 = 19
-    const ACT: u8 = 0b00_10_01; // A,C,T -> 6+7+9 = 22   (ACA+ACT = 41)
-    const ACG: u8 = 0b00_10_11; // A,C,G -> 6+7+8 = 21   (ACG+ACT = 43)
+    const ACA: u8 = 0b00_10_00; // A,C,A -> I Ching 6+8+6 = 20
+    const ACT: u8 = 0b00_10_01; // A,C,T -> 6+8+9 = 23   (ACA+ACT = 43)
+    const ACG: u8 = 0b00_10_11; // A,C,G -> 6+8+7 = 21
+    const AAC: u8 = 0b00_00_10; // A,A,C -> 6+6+8 = 20   (ACG+AAC = 41)
 
     #[test]
     fn iching_sum_mirrors_the_c_kernel() {
-        assert_eq!(codon_iching_sum(ACA), 19);
-        assert_eq!(codon_iching_sum(ACT), 22);
+        assert_eq!(codon_iching_sum(ACA), 20);
+        assert_eq!(codon_iching_sum(ACT), 23);
         assert_eq!(codon_iching_sum(ACG), 21);
     }
 
     #[test]
     fn prime_attractor_fires_at_both_euler_primes_41_and_43() {
-        assert!(is_prime_attractor(ACA, ACT), "19+22 = 41");
-        assert!(is_prime_attractor(ACG, ACT), "21+22 = 43");
-        assert!(!is_prime_attractor(ACA, ACA), "19+19 = 38, no attractor");
+        assert!(is_prime_attractor(ACG, AAC), "21+20 = 41");
+        assert!(is_prime_attractor(ACA, ACT), "20+23 = 43");
+        assert!(!is_prime_attractor(ACG, ACT), "21+23 = 44, no attractor");
+        assert!(!is_prime_attractor(ACA, ACA), "20+20 = 40, no attractor");
     }
 
     #[test]
@@ -161,7 +163,7 @@ mod tests {
 
     #[test]
     fn walk_expresses_each_env_selected_state_and_flags_the_checkpoint() {
-        let codons = [ACA, ACT, ACG];
+        let codons = [ACG, AAC, ACT];
         let states = [1u8, 4, 7];
         let seq = walk_expression(&codons, &states);
         assert_eq!(seq.len(), 3);
@@ -174,11 +176,11 @@ mod tests {
         assert!(!seq[0].checkpoint, "first step has no preceding codon");
         assert!(
             seq[1].checkpoint,
-            "ACA→ACT is an Euler-prime (41) checkpoint"
+            "ACG→AAC is an Euler-prime (41) checkpoint"
         );
         assert!(
             seq[2].checkpoint,
-            "ACT→ACG is an Euler-prime (43) checkpoint"
+            "AAC→ACT is an Euler-prime (43) checkpoint"
         );
     }
 

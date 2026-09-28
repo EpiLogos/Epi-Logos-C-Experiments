@@ -170,8 +170,9 @@ fn nucleotide_for_line(value: u8) -> Result<char, String> {
     match value {
         6 => Ok('A'),
         9 => Ok('T'),
-        7 => Ok('C'),
-        8 => Ok('G'),
+        // C=8 young yin, G=7 young yang (M3-COIN-1, owner ruling).
+        7 => Ok('G'),
+        8 => Ok('C'),
         other => Err(format!("I-Ching line value must be 6-9, got {other}")),
     }
 }

@@ -61,6 +61,12 @@ export const registeredTargets = new Set([
   // 2026-07-29 recovery registration — read by the live gateway, previously
   // unregistered, therefore unrecoverable after the unscoped delete.
   "c_0_modal_signature",
+  // 2026-09-28 owner ruling D0 (QL-MEF #254): re-authored into the live map;
+  // registered here so a wipe can recover them.
+  "m_2_5_scalar_degree",
+  "m_2_5_interval_from_root",
+  "m_2_5_scale_function",
+  "m_3_1_associated_codons",
   "l_2_vedic_mantra",
   "l_3_spiritual_function",
   "s_4_english_translation",
@@ -71,6 +77,8 @@ export const registeredTargets = new Set([
   // afterwards, and the moment to fix that is before it exists, not after it
   // is lost. Hen populates the values; this line is what makes them restorable.
   "c_1_source_artifact_span",
+  // Owner ruling D0 (QL-MEF #254): the codons a hexagram yields, as a list.
+  "m_3_1_associated_codons",
 ]);
 
 // RECOVERY BOUNDARY — read this before assuming the standard restore chain is

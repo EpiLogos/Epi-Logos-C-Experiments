@@ -17,7 +17,7 @@ function fixture() {
                 value,
                 lineType: ['old-yin', 'young-yang', 'young-yin', 'old-yang', 'young-yang', 'young-yin'][index],
                 moving: value === 6 || value === 9,
-                nucleotide: ['A', 'C', 'G', 'T', 'C', 'G'][index],
+                nucleotide: ['A', 'G', 'C', 'T', 'G', 'C'][index],
                 codonRef: `m3-codon://ACG#line-${index + 1}`
             })),
             primaryHexagramId: 12,

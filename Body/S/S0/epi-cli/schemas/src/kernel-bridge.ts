@@ -133,7 +133,9 @@ export const LensCodonBinaryDegree = z
   .strict();
 export type LensCodonBinaryDegree = z.infer<typeof LensCodonBinaryDegree>;
 
-const M3_I_CHING_VALUE = [6, 9, 7, 8] as const;
+// Nucleotide I-Ching coin value, index A,T,C,G — mirrors the C kernel
+// NUCLEOTIDE_ICHING_VALUE (A=6 Old Yin, T=9 Old Yang, C=8 Young Yin, G=7 Young Yang).
+const M3_I_CHING_VALUE = [6, 9, 8, 7] as const;
 
 export const LensCodonBinaryProjection = z
   .object({

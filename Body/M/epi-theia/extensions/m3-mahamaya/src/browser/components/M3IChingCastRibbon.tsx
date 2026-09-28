@@ -84,14 +84,14 @@ export const M3_NUCLEOTIDE_I_CHING_CASTS: Readonly<
         'heads',
         'heads'
     ]),
-    C: nucleotideCast('C', 7, 'Young Yin', 'Pentacles', 'Earth', 'broken', false, [
-        'tails',
-        'tails',
-        'heads'
-    ]),
-    G: nucleotideCast('G', 8, 'Young Yang', 'Swords', 'Air', 'solid', false, [
-        'tails',
+    C: nucleotideCast('C', 8, 'Young Yin', 'Pentacles', 'Earth', 'broken', false, [
         'heads',
+        'heads',
+        'tails'
+    ]),
+    G: nucleotideCast('G', 7, 'Young Yang', 'Swords', 'Air', 'solid', false, [
+        'tails',
+        'tails',
         'heads'
     ])
 });
@@ -99,8 +99,8 @@ export const M3_NUCLEOTIDE_I_CHING_CASTS: Readonly<
 const CAST_BY_LINE_VALUE: Readonly<Record<M3IChingLineValue, M3IChingNucleotideCast>> =
     Object.freeze({
         6: M3_NUCLEOTIDE_I_CHING_CASTS.A,
-        7: M3_NUCLEOTIDE_I_CHING_CASTS.C,
-        8: M3_NUCLEOTIDE_I_CHING_CASTS.G,
+        7: M3_NUCLEOTIDE_I_CHING_CASTS.G,
+        8: M3_NUCLEOTIDE_I_CHING_CASTS.C,
         9: M3_NUCLEOTIDE_I_CHING_CASTS.T
     });
 
@@ -193,7 +193,7 @@ export const M3IChingCastRibbon: React.FC<M3IChingCastRibbonProps> = ({
                 >
                     {castPending ? 'Casting' : 'Cast'}
                 </button>
-                <div aria-label="A=6 T=9 C=7 G=8 correspondence" style={legendStyle}>
+                <div aria-label="A=6 T=9 C=8 G=7 correspondence" style={legendStyle}>
                     {(Object.keys(M3_NUCLEOTIDE_I_CHING_CASTS) as M3IChingNucleotide[]).map(key => {
                         const entry = M3_NUCLEOTIDE_I_CHING_CASTS[key];
                         return (

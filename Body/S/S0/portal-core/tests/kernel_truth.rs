@@ -42,9 +42,9 @@ fn repo_root() -> PathBuf {
         .to_path_buf()
 }
 
-/// NUCLEOTIDE_ICHING_VALUE law (m3.c): A=6, T=9, C=7, G=8.
+/// NUCLEOTIDE_ICHING_VALUE law (m3.c): A=6, T=9, C=8, G=7 (M3-COIN-1).
 fn nucleotide_value(two_bits: u8) -> i16 {
-    [6i16, 9, 7, 8][(two_bits & 0x3) as usize]
+    [6i16, 9, 8, 7][(two_bits & 0x3) as usize]
 }
 
 // ---------------------------------------------------------------------------

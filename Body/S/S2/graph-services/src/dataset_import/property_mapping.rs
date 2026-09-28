@@ -15,6 +15,8 @@ use serde_json::Value;
 
 pub(super) const STRING_LIST_TARGETS: &[&str] = &[
     "c_1_asset_uri",
+    "m_2_4_planetary_color",
+    "m_3_1_associated_codons",
     "c_4_ql_operator_types",
     "c_5_resonances",
     "l_2_therapeutic_properties",
@@ -397,6 +399,12 @@ fn explicit_deep_property_key(source_key: &str) -> Option<String> {
         "dhikrApplication" => "m_2_dhikr_application",
         "recitationCount" => "m_2_recitation_count",
         "zodiacalInfluence" => "m_2_zodiacal_influence",
+        // Owner ruling D0 (QL-MEF #254, 2026-09-28): the planetary just octave and
+        // the codon↔hexagram pairing were dropped on import; they are map facts.
+        "scalarDegree" => "m_2_scalar_degree",
+        "intervalFromRoot" => "m_2_interval_from_root",
+        "scaleFunction" => "m_2_scale_function",
+        "associatedCodons" => "m_3_associated_codons",
         "therapeuticCluster" => "m_2_therapeutic_cluster",
         "digitalRoot" => "m_2_digital_root",
         "matrixConstant" => "m_2_matrix_constant",
@@ -503,6 +511,8 @@ fn explicit_deep_relation_property_key(source_key: &str) -> Option<String> {
         "patternStructure" => "p_3_pattern_structure",
         "patternName" => "p_3_pattern_name",
         "developmentalFunction" => "t_3_developmental_function",
+        // Owner ruling D0 (QL-MEF #254): Shem colour on the Shem → planet relation.
+        "planetaryColor" => "m_2_4_planetary_color",
         _ => return None,
     };
     Some(target.to_string())
