@@ -2,6 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const BODY_ROOT = resolve(__dirname, '..', '..', '..', '..');
 
 if (!globalThis.Element) {
     globalThis.Element = class Element {
@@ -51,7 +56,7 @@ try {
 
 const baselineProfile = JSON.parse(
     readFileSync(
-        '/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/portal-core/contract-inventory/baseline-profile.json',
+        resolve(BODY_ROOT, 'S', 'S0', 'portal-core', 'contract-inventory', 'baseline-profile.json'),
         'utf8'
     )
 );
@@ -64,7 +69,7 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 
 const OVERLAY_SOURCE =
-    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3ClockFieldEdgeOverlay.tsx';
+    resolve(__dirname, '..', 'm3-mahamaya', 'src', 'browser', 'components', 'M3ClockFieldEdgeOverlay.tsx');
 
 function boundary(generation, payload) {
     return Object.freeze({

@@ -1,8 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const BODY_ROOT = resolve(__dirname, '..', '..', '..', '..');
 
 if (!globalThis.Element) {
     globalThis.Element = class Element {
@@ -52,7 +56,7 @@ try {
 
 const baselineProfile = JSON.parse(
     readFileSync(
-        '/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/portal-core/contract-inventory/baseline-profile.json',
+        resolve(BODY_ROOT, 'S', 'S0', 'portal-core', 'contract-inventory', 'baseline-profile.json'),
         'utf8'
     )
 );
@@ -77,11 +81,11 @@ const {
 } = require('../m3-mahamaya/lib/browser/components/QuintessenceIndicator.js');
 
 const INSPECTORS_SOURCE =
-    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3SummonableInspectors.tsx';
+    resolve(__dirname, '..', 'm3-mahamaya', 'src', 'browser', 'components', 'M3SummonableInspectors.tsx');
 const DEPTH_VIEW_SOURCE =
-    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3DepthViewModes.tsx';
+    resolve(__dirname, '..', 'm3-mahamaya', 'src', 'browser', 'components', 'M3DepthViewModes.tsx');
 const M3_BROWSER_SOURCE_DIR =
-    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser';
+    resolve(__dirname, '..', 'm3-mahamaya', 'src', 'browser');
 const M1_LENS_CONSUMER_SOURCE = join(M3_BROWSER_SOURCE_DIR, 'components/M1ChromaticLensConsumer.tsx');
 const M3_LENS_SWITCHER_SOURCE = join(M3_BROWSER_SOURCE_DIR, 'components/M3LensApertureSwitcher.tsx');
 const QUINTESSENCE_INDICATOR_SOURCE = join(M3_BROWSER_SOURCE_DIR, 'components/QuintessenceIndicator.tsx');

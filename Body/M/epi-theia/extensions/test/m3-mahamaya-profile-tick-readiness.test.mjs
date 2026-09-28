@@ -1,8 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 if (!globalThis.Element) {
     globalThis.Element = class Element {
@@ -65,7 +68,7 @@ const {
 } = require('../m3-mahamaya/lib/browser/components/ReadinessChip.js');
 
 const M3_BROWSER_SOURCE_DIR =
-    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser';
+    resolve(__dirname, '..', 'm3-mahamaya', 'src', 'browser');
 const COMPONENT_SOURCE_DIR = join(M3_BROWSER_SOURCE_DIR, 'components');
 const PROFILE_TICK_CONTEXT_SOURCE = join(M3_BROWSER_SOURCE_DIR, 'context/M3ProfileTickContext.tsx');
 const TRANSCRIPTION_ENGINE_SOURCE = join(COMPONENT_SOURCE_DIR, 'M3TranscriptionEngine.tsx');

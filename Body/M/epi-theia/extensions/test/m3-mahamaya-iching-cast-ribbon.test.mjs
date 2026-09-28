@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 
 if (!globalThis.Element) {
     globalThis.Element = class Element {
@@ -57,8 +58,9 @@ const {
     m3IChingCastModelFromSurface
 } = require('../m3-mahamaya/lib/browser/components/M3IChingCastRibbon.js');
 
-const SOURCE_FILE =
-    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3IChingCastRibbon.tsx';
+const SOURCE_FILE = fileURLToPath(
+    new URL('../m3-mahamaya/src/browser/components/M3IChingCastRibbon.tsx', import.meta.url)
+);
 
 test('nucleotide 3-coin correspondence asserts A=6, T=9, C=7, G=8 suit and element law', () => {
     assert.deepEqual(mappingFor('A'), {

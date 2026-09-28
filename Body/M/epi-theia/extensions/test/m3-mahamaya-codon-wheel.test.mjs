@@ -2,6 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const BODY_ROOT = resolve(__dirname, '..', '..', '..', '..');
 
 if (!globalThis.Element) {
     globalThis.Element = class Element {
@@ -50,7 +55,7 @@ try {
 }
 const baselineProfile = JSON.parse(
     readFileSync(
-        '/Users/admin/Documents/Epi-Logos C Experiments/Body/S/S0/portal-core/contract-inventory/baseline-profile.json',
+        resolve(BODY_ROOT, 'S', 'S0', 'portal-core', 'contract-inventory', 'baseline-profile.json'),
         'utf8'
     )
 );
@@ -85,13 +90,13 @@ const {
 } = require('../m3-mahamaya/lib/browser/composition/M3CodonRotationProjectionForLensRing.js');
 
 const SOURCE_FILE =
-    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/common/codon-wheel.ts';
+    resolve(__dirname, '..', 'm3-mahamaya', 'src', 'common', 'codon-wheel.ts');
 const THIRD_SPANDA_PANEL_SOURCE =
-    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/ThirdSpandaMathemeProofPanel.tsx';
+    resolve(__dirname, '..', 'm3-mahamaya', 'src', 'browser', 'components', 'ThirdSpandaMathemeProofPanel.tsx');
 const PENTADIC_RELATION_INSPECTOR_SOURCE =
-    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3PentadicRelationInspector.tsx';
+    resolve(__dirname, '..', 'm3-mahamaya', 'src', 'browser', 'components', 'M3PentadicRelationInspector.tsx');
 const COSMIC_WHEEL_SOURCE =
-    '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser/components/M3CosmicWheelRenderService.tsx';
+    resolve(__dirname, '..', 'm3-mahamaya', 'src', 'browser', 'components', 'M3CosmicWheelRenderService.tsx');
 
 function boundary(generation, payload = baselineProfile) {
     return Object.freeze({
@@ -245,7 +250,7 @@ test('M3 lens-ring projection is a pure read-only descriptor export', () => {
 
 test('K2LensRingCellDescriptor source declares the required readonly fields', () => {
     const source = readFileSync(
-        '/Users/admin/Documents/Epi-Logos C Experiments/Body/M/epi-theia/extensions/m3-mahamaya/src/browser/composition/M3CodonRotationProjectionForLensRing.ts',
+        resolve(__dirname, '..', 'm3-mahamaya', 'src', 'browser', 'composition', 'M3CodonRotationProjectionForLensRing.ts'),
         'utf8'
     );
     for (const field of [
@@ -573,8 +578,8 @@ test('pentadic relation inspector routes unavailable trace fields through readin
     const sparsePayload = Object.freeze({
         ...baselineProfile,
         coupling_flow_alignment: profilePayloadWithPentadicTrace().coupling_flow_alignment,
-        anuttara_pentadic_trace: Object.freeze({
-            ...profilePayloadWithPentadicTrace().anuttara_pentadic_trace,
+        anuttaraPentadicTrace: Object.freeze({
+            ...profilePayloadWithPentadicTrace().anuttaraPentadicTrace,
             qCosmicRef: undefined
         })
     });
@@ -734,7 +739,8 @@ test('Fibonacci Ground renderer reads backend fields and embeds no local derivat
 });
 
 test('pentadic relation inspector does not reconstruct missing trace or local arithmetic identities', () => {
-    const model = pentadicRelationModelFromProfilePayload(baselineProfile, readiness('profile_missing_field'));
+    const { anuttaraPentadicTrace: _baselineTrace, ...profileWithoutTrace } = baselineProfile;
+    const model = pentadicRelationModelFromProfilePayload(profileWithoutTrace, readiness('profile_missing_field'));
     assert.equal(model.ready, false);
     assert.ok(model.pendingFields.includes('profile.anuttara_pentadic_trace'));
     assert.equal(model.trace, null);
@@ -808,7 +814,7 @@ function profilePayloadWithPentadicTrace() {
                 scalarFiberCondition: 'scalar/fiber condition'
             })
         }),
-        anuttara_pentadic_trace: Object.freeze({
+        anuttaraPentadicTrace: Object.freeze({
             tick: 8,
             tick12: 8,
             helix: 0,
