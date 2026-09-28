@@ -42,15 +42,15 @@ static uint8_t pair_idx(uint8_t n1, uint8_t n2) {
 static void test_nucleotide_iching(void) {
     TEST("A I-Ching = 6", NUCLEOTIDE_ICHING_VALUE[M3_NUC_A] == 6);
     TEST("T I-Ching = 9", NUCLEOTIDE_ICHING_VALUE[M3_NUC_T] == 9);
-    TEST("C I-Ching = 7", NUCLEOTIDE_ICHING_VALUE[M3_NUC_C] == 7);
-    TEST("G I-Ching = 8", NUCLEOTIDE_ICHING_VALUE[M3_NUC_G] == 8);
+    TEST("C I-Ching = 8", NUCLEOTIDE_ICHING_VALUE[M3_NUC_C] == 8);
+    TEST("G I-Ching = 7", NUCLEOTIDE_ICHING_VALUE[M3_NUC_G] == 7);
     TEST("NUC sum = 30", NUCLEOTIDE_ICHING_VALUE[0] + NUCLEOTIDE_ICHING_VALUE[1] +
                           NUCLEOTIDE_ICHING_VALUE[2] + NUCLEOTIDE_ICHING_VALUE[3] == 30);
     TEST("A+T = 15", NUCLEOTIDE_ICHING_VALUE[M3_NUC_A] + NUCLEOTIDE_ICHING_VALUE[M3_NUC_T] == 15);
     TEST("C+G = 15", NUCLEOTIDE_ICHING_VALUE[M3_NUC_C] + NUCLEOTIDE_ICHING_VALUE[M3_NUC_G] == 15);
 
     TEST("get_iching_value(0) = 6", get_iching_value(0) == 6);
-    TEST("get_iching_value(3) = 8", get_iching_value(3) == 8);
+    TEST("get_iching_value(3) = 7", get_iching_value(3) == 7);
 }
 
 /* ===================================================================
@@ -100,20 +100,20 @@ static void test_pair_matrix(void) {
     } expected_pairs[] = {
         { 0, 12,  0 }, /* AA */
         { 1, 15, -3 }, /* AT */
-        { 2, 13, -1 }, /* AC */
-        { 3, 14,  2 }, /* AG */
+        { 2, 14, -2 }, /* AC */
+        { 3, 13,  1 }, /* AG */
         { 4, 15,  3 }, /* TA */
         { 5, 18,  0 }, /* TT */
-        { 6, 16, -2 }, /* TC */
-        { 7, 17,  1 }, /* TG */
-        { 8, 13,  1 }, /* CA */
-        { 9, 16, -2 }, /* CT */
-        { 10,14,  0 }, /* CC */
+        { 6, 17, -1 }, /* TC */
+        { 7, 16,  2 }, /* TG */
+        { 8, 14,  2 }, /* CA */
+        { 9, 17, -1 }, /* CT */
+        { 10,16,  0 }, /* CC */
         { 11,15,  1 }, /* CG */
-        { 12,14,  2 }, /* GA */
-        { 13,17, -1 }, /* GT */
+        { 12,13,  1 }, /* GA */
+        { 13,16, -2 }, /* GT */
         { 14,15, -1 }, /* GC */
-        { 15,16,  0 }, /* GG */
+        { 15,14,  0 }, /* GG */
     };
 
     for (size_t i = 0; i < sizeof(expected_pairs) / sizeof(expected_pairs[0]); i++) {
@@ -124,8 +124,8 @@ static void test_pair_matrix(void) {
     /* Homogeneous pairs: differenceValue=0, shared across all 3 matrices */
     TEST("AA sumValue=12", M3_PAIR_MATRIX[0].sum_value == 12);
     TEST("TT sumValue=18", M3_PAIR_MATRIX[5].sum_value == 18);
-    TEST("CC sumValue=14", M3_PAIR_MATRIX[10].sum_value == 14);
-    TEST("GG sumValue=16", M3_PAIR_MATRIX[15].sum_value == 16);
+    TEST("CC sumValue=16", M3_PAIR_MATRIX[10].sum_value == 16);
+    TEST("GG sumValue=14", M3_PAIR_MATRIX[15].sum_value == 14);
     TEST("AA differenceValue=0", M3_PAIR_MATRIX[0].difference_value == 0);
     TEST("TT differenceValue=0", M3_PAIR_MATRIX[5].difference_value == 0);
     TEST("CC differenceValue=0", M3_PAIR_MATRIX[10].difference_value == 0);
@@ -142,20 +142,20 @@ static void test_pair_matrix(void) {
     TEST("CG/GC differenceValue antisymmetric", M3_PAIR_MATRIX[14].difference_value == -M3_PAIR_MATRIX[11].difference_value);
 
     /* Matrix 2 (Cross-complementary): dataset uses class-stable differenceValues */
-    TEST("AG sumValue=14", M3_PAIR_MATRIX[3].sum_value == 14);
-    TEST("GA sumValue=14", M3_PAIR_MATRIX[12].sum_value == 14);
-    TEST("TC sumValue=16", M3_PAIR_MATRIX[6].sum_value == 16);
-    TEST("CT sumValue=16", M3_PAIR_MATRIX[9].sum_value == 16);
-    TEST("AG differenceValue=+2", M3_PAIR_MATRIX[3].difference_value == 2);
-    TEST("GA differenceValue=+2", M3_PAIR_MATRIX[12].difference_value == 2);
-    TEST("TC differenceValue=-2", M3_PAIR_MATRIX[6].difference_value == -2);
-    TEST("CT differenceValue=-2", M3_PAIR_MATRIX[9].difference_value == -2);
+    TEST("AG sumValue=13", M3_PAIR_MATRIX[3].sum_value == 13);
+    TEST("GA sumValue=13", M3_PAIR_MATRIX[12].sum_value == 13);
+    TEST("TC sumValue=17", M3_PAIR_MATRIX[6].sum_value == 17);
+    TEST("CT sumValue=17", M3_PAIR_MATRIX[9].sum_value == 17);
+    TEST("AG differenceValue=+1", M3_PAIR_MATRIX[3].difference_value == 1);
+    TEST("GA differenceValue=+1", M3_PAIR_MATRIX[12].difference_value == 1);
+    TEST("TC differenceValue=-1", M3_PAIR_MATRIX[6].difference_value == -1);
+    TEST("CT differenceValue=-1", M3_PAIR_MATRIX[9].difference_value == -1);
 
-    /* Matrix 3 (Cross-diagonal): AC/CA sumValue=13, TG/GT sumValue=17 */
-    TEST("AC sumValue=13", M3_PAIR_MATRIX[2].sum_value == 13);
-    TEST("CA sumValue=13", M3_PAIR_MATRIX[8].sum_value == 13);
-    TEST("TG sumValue=17", M3_PAIR_MATRIX[7].sum_value == 17);
-    TEST("GT sumValue=17", M3_PAIR_MATRIX[13].sum_value == 17);
+    /* Matrix 3 (Cross-diagonal): AC/CA sumValue=14, TG/GT sumValue=16 */
+    TEST("AC sumValue=14", M3_PAIR_MATRIX[2].sum_value == 14);
+    TEST("CA sumValue=14", M3_PAIR_MATRIX[8].sum_value == 14);
+    TEST("TG sumValue=16", M3_PAIR_MATRIX[7].sum_value == 16);
+    TEST("GT sumValue=16", M3_PAIR_MATRIX[13].sum_value == 16);
 
     /* TT is MAX sumValue (18) */
     for (int i = 0; i < 16; i++) {
@@ -283,12 +283,12 @@ static void test_integral_invariant(void) {
     TEST("1440/4 = 360", total / 4 == 360);
     TEST("Cups raw = 336",      suit_totals[0] == 336);
     TEST("Wands raw = 384",     suit_totals[1] == 384);
-    TEST("Pentacles raw = 352", suit_totals[2] == 352);
-    TEST("Swords raw = 368",    suit_totals[3] == 368);
+    TEST("Pentacles raw = 368", suit_totals[2] == 368);
+    TEST("Swords raw = 352",    suit_totals[3] == 352);
     TEST("Cups/4 = 84",         suit_totals[0] / 4 == (int)M3_SUIT_A_INTEGRAL);
     TEST("Wands/4 = 96",        suit_totals[1] / 4 == (int)M3_SUIT_T_INTEGRAL);
-    TEST("Pentacles/4 = 88",    suit_totals[2] / 4 == (int)M3_SUIT_C_INTEGRAL);
-    TEST("Swords/4 = 92",       suit_totals[3] / 4 == (int)M3_SUIT_G_INTEGRAL);
+    TEST("Pentacles/4 = 92",    suit_totals[2] / 4 == (int)M3_SUIT_C_INTEGRAL);
+    TEST("Swords/4 = 88",       suit_totals[3] / 4 == (int)M3_SUIT_G_INTEGRAL);
 }
 
 /* ===================================================================
@@ -459,7 +459,11 @@ static void test_prime_attractors_and_eval_mapping(void) {
     uint8_t act = encode_codon(M3_NUC_A, M3_NUC_C, M3_NUC_T);
     uint8_t acg = encode_codon(M3_NUC_A, M3_NUC_C, M3_NUC_G);
     TEST("ACA+ACT hits prime attractor", m3_is_prime_attractor(aca, act));
-    TEST("ACG+ACT hits prime attractor", m3_is_prime_attractor(acg, act));
+    uint8_t aac = encode_codon(M3_NUC_A, M3_NUC_A, M3_NUC_C);
+    /* C=8/G=7 (M3-COIN-1): ACA 20 + ACT 23 = 43; ACG 21 + AAC 20 = 41;
+     * ACG 21 + ACT 23 = 44 is no attractor. */
+    TEST("ACG+AAC hits prime attractor", m3_is_prime_attractor(acg, aac));
+    TEST("ACG+ACT does not hit a prime attractor", !m3_is_prime_attractor(acg, act));
 
     M3_CodonEvaluation eval = evaluate_codon(encode_codon(M3_NUC_A, M3_NUC_T, M3_NUC_G));
     Quaternion q = m3_eval_to_quat(eval);
@@ -593,13 +597,14 @@ static void test_rotational_protocol_generation(void) {
     TEST("ATG pos[2] pair1 = AC", states[6].pair1_idx == pair_idx(M3_NUC_A, M3_NUC_C));
     TEST("ATG pos[3] pair1 = AG", states[7].pair1_idx == pair_idx(M3_NUC_A, M3_NUC_G));
 
-    TEST("ATG negative value AG = 17", states[0].rotational_value == 17);
-    TEST("ATG negative value TG = 16", states[1].rotational_value == 16);
-    TEST("ATG positive value AA = 17", states[4].rotational_value == 17);
-    TEST("ATG positive value AT = 14", states[5].rotational_value == 14);
+    /* C=8/G=7 (M3-COIN-1): AT sum 15 + pair2 difference; pair1 difference + TG sum 16. */
+    TEST("ATG negative value AG = 16", states[0].rotational_value == 16);
+    TEST("ATG negative value TG = 17", states[1].rotational_value == 17);
+    TEST("ATG positive value AA = 16", states[4].rotational_value == 16);
+    TEST("ATG positive value AT = 13", states[5].rotational_value == 13);
 
     TEST("ATG lowest value ranks first", states[5].rotation_slot == 0u && states[5].rotation_degrees == 0u);
-    TEST("ATG negative ties rank before positive tie", states[1].rotation_slot < states[6].rotation_slot && states[2].rotation_slot < states[6].rotation_slot);
+    TEST("ATG negative ties rank before positive tie", states[0].rotation_slot < states[4].rotation_slot && states[2].rotation_slot < states[4].rotation_slot && states[1].rotation_slot < states[7].rotation_slot);
     TEST("ATG highest value ranks last", states[7].rotation_slot == 7u && states[7].rotation_degrees == 315u);
 }
 

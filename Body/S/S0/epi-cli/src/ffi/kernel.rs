@@ -124,10 +124,10 @@ pub fn compute_codon_charges(codon6bit: u8) -> M3CodonCharges {
 mod tests {
     use super::*;
 
-    /// Mirror of the canonical C `NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 7, 8}`
+    /// Mirror of the canonical C `NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 8, 7}` (C=8/G=7, M3-COIN-1)
     /// (`Body/S/S0/epi-lib/src/m3.c:25`). The test derives its own golden values
     /// from this LUT — it does NOT re-call the FFI to produce the expected side.
-    const ICHING: [i16; 4] = [6, 9, 7, 8];
+    const ICHING: [i16; 4] = [6, 9, 8, 7];
 
     fn golden(codon: u8) -> (i16, i16, i16) {
         let x = ICHING[((codon >> 4) & 0x03) as usize];
@@ -155,7 +155,7 @@ mod tests {
     /// Aggregate integral invariant, in parity with the C
     /// `m3_verify_integral_invariant` (`m3.c:930`): the raw sum of `pp` over all
     /// 64 codons is 1440 (= 360 × 4, the "integral invariant"), and the per-suit
-    /// (outer-nucleotide) raw sums are 336/384/352/368 (each ÷4 = 84/96/88/92,
+    /// (outer-nucleotide) raw sums are 336/384/368/352 (each ÷4 = 84/96/92/88,
     /// the suit integrals). Proves the FFI reproduces the kernel invariant.
     #[test]
     fn ffi_pp_integral_invariant_matches_c_kernel() {
@@ -172,8 +172,8 @@ mod tests {
         );
         assert_eq!(
             per_suit,
-            [336, 384, 352, 368],
-            "per-suit pp integrals (÷4 = 84/96/88/92)"
+            [336, 384, 368, 352],
+            "per-suit pp integrals (÷4 = 84/96/92/88; C=8/G=7, M3-COIN-1)"
         );
     }
 }

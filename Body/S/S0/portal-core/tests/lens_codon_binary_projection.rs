@@ -3,7 +3,7 @@ use portal_core::{
     M3_LENS_CODON_BINARY_SOURCE, M3_LENS_DIVISION_COUNT, M3_PRIMARY_GROUND_LENS_ID,
 };
 
-const I_CHING_VALUE: [i16; 4] = [6, 9, 7, 8];
+const I_CHING_VALUE: [i16; 4] = [6, 9, 8, 7];
 const SLICES: [u16; 16] = [1, 2, 4, 8, 9, 10, 12, 15, 24, 30, 36, 40, 45, 90, 180, 360];
 
 #[test]

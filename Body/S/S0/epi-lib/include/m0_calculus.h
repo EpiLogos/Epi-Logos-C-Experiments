@@ -224,15 +224,15 @@ M0CalcDashReading m0_calc_dash_reading(const char* term, size_t pos);
 int m0_calc_tokenize(const char* formulation, M0CalcToken* tokens, int max_tokens);
 
 /**
- * Derive the I-Ching nucleotide value {6,9,7,8} from the coin method.
+ * Derive the I-Ching nucleotide value {6,9,8,7} from the coin method.
  *
  * Coin method: Yin (R#) = 2, Yang (##) = 3. Value = yang_count + 5.
  *   A = 3×R# + 1×##  →  6   (yin_count=3, yang_count=1)
  *   T = 0×R# + 4×##  →  9   (yin_count=0, yang_count=4)
- *   C = 2×R# + 2×##  →  7   (yin_count=2, yang_count=2)
- *   G = 1×R# + 3×##  →  8   (yin_count=1, yang_count=3)
+ *   C = 1×R# + 3×##  →  8   (yin_count=1, yang_count=3)  (M3-COIN-1)
+ *   G = 2×R# + 2×##  →  7   (yin_count=2, yang_count=2)  (M3-COIN-1)
  *
- * Reproduces NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 7, 8} (m3 canon).
+ * Reproduces NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 8, 7} (m3 canon, M3-COIN-1).
  *
  * @param yin_count  Number of R# (Yin) elements (0-4).
  * @param yang_count Number of ## (Yang) elements (0-4).

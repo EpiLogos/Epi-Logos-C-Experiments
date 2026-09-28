@@ -732,7 +732,7 @@ int m0_calc_witness(const KernelState* state, uint8_t* syntax_witness_out) {
 int m0_calc_nucleotide_from_coin(int yin_count, int yang_count) {
     /* Coin method: Yin (R#) = 2, Yang (##) = 3.
      * Value = yang_count + 5 over a 4-slot frame.
-     * Produces NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 7, 8} */
+     * Produces NUCLEOTIDE_ICHING_VALUE[4] = {6, 9, 8, 7} (M3-COIN-1) */
     if (yin_count < 0 || yang_count < 0) return -1;
     if (yin_count + yang_count != 4) return -1;
     return yang_count + 5;
@@ -745,14 +745,14 @@ bool m0_calc_tao_is_codon_eval(void) {
      *   (1) the apex exists: Tao at kinship position 5, dominant
      *       synthesis on the verbatim 5-/5 chiral coordinate;
      *   (2) the R#/## coin construction (4-slot frame, yang+5)
-     *       regenerates NUCLEOTIDE_ICHING_VALUE {6,9,7,8};
+     *       regenerates NUCLEOTIDE_ICHING_VALUE {6,9,8,7} (M3-COIN-1);
      *   (3) for every codon, m3_compute_charges equals the X#
      *       sign-algebra over those coin-constructed values. */
     static const int coin_counts[4][2] = {
         { 3, 1 }, /* A — Old Yin     3xR# + 1x## -> 6 */
         { 0, 4 }, /* T — Old Yang    0xR# + 4x## -> 9 */
-        { 2, 2 }, /* C — Young Yin   2xR# + 2x## -> 7 */
-        { 1, 3 }, /* G — Young Yang  1xR# + 3x## -> 8 */
+        { 1, 3 }, /* C — Young Yin   1xR# + 3x## -> 8 (M3-COIN-1) */
+        { 2, 2 }, /* G — Young Yang  2xR# + 2x## -> 7 (M3-COIN-1) */
     };
 
     const Nara_Entry* tao = &NARA_MSHARP_LUT[5];
@@ -948,7 +948,7 @@ static void test_nucleotide_from_coin(void) {
     assert(m0_calc_nucleotide_from_coin(2, 3) == -1);  /* sums to 5 */
     assert(m0_calc_nucleotide_from_coin(0, 0) == -1);
 
-    printf("  PASS: nucleotide I-Ching derivation {6,9,7,8}\n");
+    printf("  PASS: nucleotide I-Ching derivation {6,9,8,7}\n");
 }
 
 static void test_tao_codon_binding(void) {

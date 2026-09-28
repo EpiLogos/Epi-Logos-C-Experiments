@@ -860,6 +860,6 @@ mod tests {
     }
 
     fn nucleotide_iching_value(nuc: u8) -> u8 {
-        [6, 9, 7, 8][(nuc & 0x03) as usize]
+        [6, 9, 8, 7][(nuc & 0x03) as usize]
     }
 }

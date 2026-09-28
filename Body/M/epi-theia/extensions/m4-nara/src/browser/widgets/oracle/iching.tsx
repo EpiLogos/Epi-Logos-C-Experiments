@@ -58,17 +58,17 @@ const LINE_BY_VALUE: Readonly<Record<IChingLineValue, Omit<IChingLine, 'index'>>
     }),
     7: Object.freeze({
         value: 7,
-        nucleotide: 'C',
-        polarity: 'yin',
-        moving: false,
-        label: 'young yin'
-    }),
-    8: Object.freeze({
-        value: 8,
         nucleotide: 'G',
         polarity: 'yang',
         moving: false,
         label: 'young yang'
+    }),
+    8: Object.freeze({
+        value: 8,
+        nucleotide: 'C',
+        polarity: 'yin',
+        moving: false,
+        label: 'young yin'
     }),
     9: Object.freeze({
         value: 9,
@@ -266,11 +266,12 @@ function coinValue(random: RandomSource): 2 | 3 {
 }
 
 function transformMovingLine(line: IChingLine): IChingLine {
+    // Old yin (6) turns to young yang (7); old yang (9) turns to young yin (8).
     if (line.value === 6) {
-        return Object.freeze({ ...LINE_BY_VALUE[8], index: line.index });
+        return Object.freeze({ ...LINE_BY_VALUE[7], index: line.index });
     }
     if (line.value === 9) {
-        return Object.freeze({ ...LINE_BY_VALUE[7], index: line.index });
+        return Object.freeze({ ...LINE_BY_VALUE[8], index: line.index });
     }
     return line;
 }

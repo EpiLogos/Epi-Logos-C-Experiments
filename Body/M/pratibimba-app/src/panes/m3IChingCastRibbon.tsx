@@ -61,7 +61,7 @@ export function M3IChingCastRibbon({ receipt, pending, error, onCast }: {
         <M3ReadinessBoundary bindingKey="m3.iching-cast" fallback={readiness}>
             <section className="m3-iching-ribbon" data-testid="m3-iching-cast-ribbon" data-state={pending ? 'pending' : receipt ? 'received' : 'idle'}>
                 <button type="button" className="instrument-toggle" data-testid="m3-iching-cast" disabled={binding.state !== 'ready'} onClick={onCast}>Cast 3 coins</button>
-                <p className="m3-iching-legend">A=6 Cups/Water · T=9 Wands/Fire · C=7 Pentacles/Earth · G=8 Swords/Air</p>
+                <p className="m3-iching-legend">A=6 Cups/Water · T=9 Wands/Fire · C=8 Pentacles/Earth · G=7 Swords/Air</p>
                 {receipt ? <div data-testid="m3-iching-lines">{receipt.lines.map((line, index) => <span key={index} data-line={line} data-changing={receipt.changingLineIndices.includes(index)}>{index + 1}:{line}</span>)}<span className="m3-iching-summary">Hex {receipt.primaryHexagramId}{receipt.derivedHexagramId ? ` → ${receipt.derivedHexagramId}` : ''}</span><HexagramString value={receipt.primaryHexagramId} changingLines={receipt.changingLineIndices} />{receipt.derivedHexagramId ? <HexagramString value={receipt.derivedHexagramId} /> : null}</div> : null}
             </section>
         </M3ReadinessBoundary>
